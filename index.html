@@ -1,0 +1,1372 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
+    <title>Lima Ribeiro Imóveis · Encontre seu lar</title>
+
+    <!-- FONTS & ICONS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
+    <style>
+        /* ===== RESET & BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #f5f7fc;
+            font-family: 'Inter', sans-serif;
+            color: #1a1a2e;
+            line-height: 1.5;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* ===== CORES ===== */
+        :root {
+            --azul-quinto: #001EF0;
+            --azul-escuro: #0011a0;
+            --azul-claro: #e8edff;
+            --cinza-claro: #f0f2f8;
+            --branco: #ffffff;
+            --texto-escuro: #1a1a2e;
+            --texto-cinza: #5a5a72;
+            --sombra-suave: 0 8px 32px rgba(0, 30, 240, 0.06);
+            --sombra-media: 0 12px 48px rgba(0, 30, 240, 0.10);
+            --border-radius: 16px;
+            --border-radius-lg: 24px;
+        }
+
+        /* ===== HEADER / NAV ===== */
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 24px;
+            flex-wrap: wrap;
+            gap: 12px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(0, 30, 240, 0.06);
+        }
+
+        .logo-link {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .logo-img {
+            height: 42px;
+            width: auto;
+            object-fit: contain;
+            display: block;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: var(--texto-escuro);
+            text-decoration: none;
+            transition: 0.2s;
+            border-bottom: 2px solid transparent;
+            padding-bottom: 4px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .nav-links a:hover {
+            color: var(--azul-quinto);
+            border-bottom-color: var(--azul-quinto);
+        }
+
+        .btn-outline-blue {
+            background: transparent;
+            border: 1.5px solid var(--azul-quinto);
+            color: var(--azul-quinto);
+            padding: 8px 24px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: 0.25s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .btn-outline-blue:hover {
+            background: var(--azul-quinto);
+            color: #fff;
+            box-shadow: 0 6px 20px rgba(0, 30, 240, 0.25);
+            transform: scale(1.02);
+        }
+
+        .btn-indique-nav {
+            background: linear-gradient(135deg, #001EF0, #0044ff);
+            color: #fff !important;
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-decoration: none;
+            transition: 0.25s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            border: none;
+            cursor: pointer;
+            white-space: nowrap;
+            border-bottom: none !important;
+        }
+
+        .btn-indique-nav:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(0, 30, 240, 0.3);
+            color: #fff !important;
+            border-bottom: none !important;
+        }
+
+        /* ===== HERO ===== */
+        .hero {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 40px;
+            padding: 32px 0 40px;
+            align-items: stretch;
+        }
+
+        .hero-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .hero-content h1 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            line-height: 1.08;
+            letter-spacing: -1.5px;
+            margin-bottom: 12px;
+            color: var(--texto-escuro);
+        }
+
+        .hero-content h1 .destaque-azul {
+            color: var(--azul-quinto);
+        }
+
+        .hero-content p {
+            font-size: 1.05rem;
+            color: var(--texto-cinza);
+            max-width: 480px;
+            margin-bottom: 24px;
+            font-weight: 400;
+            line-height: 1.6;
+        }
+
+        .hero-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .btn-primary-blue {
+            background: var(--azul-quinto);
+            border: none;
+            color: #fff;
+            padding: 14px 32px;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: 0.2s;
+            text-decoration: none;
+            box-shadow: 0 4px 16px rgba(0, 30, 240, 0.2);
+        }
+
+        .btn-primary-blue:hover {
+            background: var(--azul-escuro);
+            transform: scale(1.02);
+            box-shadow: 0 8px 24px rgba(0, 30, 240, 0.3);
+        }
+
+        .btn-secondary-light {
+            background: var(--branco);
+            border: 1.5px solid #d0d7e6;
+            color: var(--texto-escuro);
+            padding: 14px 28px;
+            border-radius: 60px;
+            font-weight: 500;
+            font-size: 0.95rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: 0.2s;
+            text-decoration: none;
+        }
+
+        .btn-secondary-light i {
+            color: var(--azul-quinto);
+        }
+
+        .btn-secondary-light:hover {
+            border-color: var(--azul-quinto);
+            background: var(--azul-claro);
+            transform: scale(1.02);
+        }
+
+        .hero-tags {
+            display: flex;
+            gap: 24px;
+            font-size: 0.9rem;
+            color: var(--texto-cinza);
+            flex-wrap: wrap;
+        }
+
+        .hero-tags span i {
+            color: var(--azul-quinto);
+            margin-right: 6px;
+        }
+
+        /* ===== CARROSSEL HORIZONTAL ===== */
+        .carousel-wrapper {
+            background: var(--branco);
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--sombra-media);
+            overflow: hidden;
+            position: relative;
+            border: 1px solid rgba(0, 30, 240, 0.06);
+            height: 100%;
+            min-height: 420px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .carousel-track {
+            display: flex;
+            transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            height: 100%;
+            flex: 1;
+        }
+
+        .carousel-slide {
+            flex: 0 0 50%;
+            padding: 8px;
+            box-sizing: border-box;
+            cursor: pointer;
+            height: 100%;
+            display: flex;
+            align-items: stretch;
+        }
+
+        .carousel-slide:hover {
+            transform: scale(1.01);
+        }
+
+        .carousel-card {
+            border-radius: 12px;
+            overflow: hidden;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 20px 20px 24px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            transition: 0.3s;
+            min-height: 260px;
+        }
+
+        .carousel-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.65) 0%, transparent 55%);
+            border-radius: 12px;
+        }
+
+        .carousel-card .card-content {
+            position: relative;
+            z-index: 2;
+            color: #fff;
+        }
+
+        .carousel-card .card-content h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .carousel-card .card-content p {
+            font-size: 0.8rem;
+            opacity: 0.9;
+            margin-bottom: 2px;
+        }
+
+        .carousel-card .card-content .preco {
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: #fff;
+        }
+
+        .carousel-indicators {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 0 14px;
+            background: var(--branco);
+            flex-shrink: 0;
+        }
+
+        .carousel-indicators span {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #d0d7e6;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .carousel-indicators span.active {
+            background: var(--azul-quinto);
+            width: 24px;
+            border-radius: 6px;
+        }
+
+        /* ===== BANNERS FIXOS ===== */
+        .banners-fixos {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            padding: 16px 0 36px;
+        }
+
+        .banner-fixo {
+            background: var(--branco);
+            border-radius: var(--border-radius-lg);
+            padding: 28px 30px;
+            box-shadow: var(--sombra-media);
+            border: 1px solid rgba(0, 30, 240, 0.06);
+            transition: 0.3s;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 140px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .banner-fixo::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -30%;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(0, 30, 240, 0.03) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .banner-fixo:hover {
+            transform: translateY(-4px);
+            border-color: var(--azul-quinto);
+            box-shadow: 0 16px 48px rgba(0, 30, 240, 0.12);
+        }
+
+        .banner-fixo .banner-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 10px;
+        }
+
+        .banner-fixo .banner-icon {
+            font-size: 2rem;
+            color: var(--azul-quinto);
+            width: 48px;
+            height: 48px;
+            background: var(--azul-claro);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .banner-fixo .banner-icon.gold {
+            color: #f5a623;
+            background: #fff5e0;
+        }
+
+        .banner-fixo h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--texto-escuro);
+        }
+
+        .banner-fixo p {
+            color: var(--texto-cinza);
+            font-size: 0.92rem;
+            line-height: 1.5;
+            max-width: 90%;
+        }
+
+        .banner-fixo .btn-banner {
+            margin-top: 14px;
+            align-self: flex-start;
+            background: var(--azul-quinto);
+            color: #fff;
+            border: none;
+            padding: 8px 22px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .banner-fixo .btn-banner:hover {
+            background: var(--azul-escuro);
+            transform: scale(1.03);
+        }
+
+        .banner-fixo .btn-banner-outline {
+            background: transparent;
+            border: 1.5px solid var(--azul-quinto);
+            color: var(--azul-quinto);
+            padding: 8px 22px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .banner-fixo .btn-banner-outline:hover {
+            background: var(--azul-quinto);
+            color: #fff;
+        }
+
+        /* ===== SEÇÃO DIFERENCIAIS ===== */
+        .features-section {
+            padding: 24px 0 40px;
+            border-top: 1px solid rgba(0, 30, 240, 0.06);
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            margin-bottom: 10px;
+            color: var(--texto-escuro);
+        }
+
+        .section-title .azul {
+            color: var(--azul-quinto);
+        }
+
+        .section-sub {
+            color: var(--texto-cinza);
+            font-size: 1rem;
+            max-width: 560px;
+            margin-bottom: 32px;
+        }
+
+        .differentials {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .diff-item {
+            background: var(--branco);
+            padding: 24px 22px;
+            border-radius: var(--border-radius);
+            border: 1px solid rgba(0, 30, 240, 0.06);
+            transition: 0.25s;
+            box-shadow: var(--sombra-suave);
+        }
+
+        .diff-item:hover {
+            border-color: var(--azul-quinto);
+            transform: translateY(-3px);
+            box-shadow: var(--sombra-media);
+        }
+
+        .diff-item i {
+            font-size: 1.8rem;
+            color: var(--azul-quinto);
+            margin-bottom: 12px;
+        }
+
+        .diff-item h4 {
+            font-size: 1.05rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .diff-item p {
+            color: var(--texto-cinza);
+            font-size: 0.9rem;
+        }
+
+        /* ===== BADGE TECNOLOGIA ===== */
+        .tech-badge {
+            background: linear-gradient(135deg, var(--azul-claro), #dce3ff);
+            border-radius: var(--border-radius-lg);
+            padding: 24px 32px;
+            margin: 12px 0 28px;
+            border: 1px solid rgba(0, 30, 240, 0.08);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .tech-badge i {
+            font-size: 2rem;
+            color: var(--azul-quinto);
+            margin-bottom: 10px;
+        }
+
+        .tech-badge p {
+            font-weight: 500;
+            color: var(--texto-escuro);
+            font-size: 1.05rem;
+            max-width: 700px;
+            line-height: 1.6;
+        }
+
+        .tech-badge strong {
+            color: var(--azul-quinto);
+        }
+
+        .tech-badge .highlight {
+            background: var(--azul-quinto);
+            color: #fff;
+            padding: 2px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            padding: 24px 0 18px;
+            border-top: 1px solid rgba(0, 30, 240, 0.06);
+            margin-top: 12px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 16px;
+            color: var(--texto-cinza);
+            font-size: 0.85rem;
+        }
+
+        .footer .social a {
+            color: var(--texto-cinza);
+            margin-left: 16px;
+            font-size: 1.1rem;
+            transition: 0.2s;
+        }
+
+        .footer .social a:hover {
+            color: var(--azul-quinto);
+        }
+
+        /* ===== WHATSAPP FLOAT ===== */
+        .whatsapp-float {
+            position: fixed;
+            bottom: 28px;
+            right: 28px;
+            z-index: 999;
+            background: #25d366;
+            color: #fff;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.2rem;
+            box-shadow: 0 6px 24px rgba(37, 211, 102, 0.35);
+            cursor: pointer;
+            transition: 0.25s;
+            border: none;
+        }
+
+        .whatsapp-float:hover {
+            transform: scale(1.08);
+            box-shadow: 0 10px 32px rgba(37, 211, 102, 0.5);
+        }
+
+        /* ===== MODAIS ===== */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(6px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-box {
+            background: var(--branco);
+            max-width: 440px;
+            width: 100%;
+            border-radius: 24px;
+            padding: 32px 28px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2);
+            animation: fadeUp 0.3s ease;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-box h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: var(--texto-escuro);
+        }
+
+        .modal-box .sub {
+            color: var(--texto-cinza);
+            margin-bottom: 20px;
+            font-size: 0.92rem;
+        }
+
+        .contact-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px 16px;
+            border-radius: 14px;
+            background: var(--cinza-claro);
+            text-decoration: none;
+            color: var(--texto-escuro);
+            transition: 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .contact-item:hover {
+            border-color: var(--azul-quinto);
+            background: var(--azul-claro);
+        }
+
+        .contact-item .avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: #d0d7e6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--azul-quinto);
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+
+        .contact-item .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .contact-item .info {
+            flex: 1;
+        }
+
+        .contact-item .info .name {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .contact-item .info .role {
+            font-size: 0.8rem;
+            color: var(--texto-cinza);
+        }
+
+        .contact-item .whatsapp-icon {
+            color: #25d366;
+            font-size: 1.4rem;
+        }
+
+        .modal-close {
+            margin-top: 20px;
+            width: 100%;
+            padding: 12px;
+            border: none;
+            background: var(--cinza-claro);
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .modal-close:hover {
+            background: #d0d7e6;
+        }
+
+        .modal-box ul {
+            list-style: none;
+            padding: 0;
+            margin: 12px 0 18px;
+        }
+
+        .modal-box ul li {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+            font-size: 0.92rem;
+        }
+
+        .modal-box ul li:last-child {
+            border-bottom: none;
+        }
+
+        /* ===== RESPONSIVO ===== */
+        @media (max-width: 1024px) {
+            .hero {
+                grid-template-columns: 1fr 1fr;
+                gap: 30px;
+            }
+            .hero-content h1 {
+                font-size: 2.4rem;
+            }
+            .carousel-wrapper {
+                min-height: 360px;
+            }
+            .carousel-slide {
+                flex: 0 0 50%;
+            }
+            .carousel-card {
+                min-height: 220px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                grid-template-columns: 1fr;
+                gap: 24px;
+                padding: 20px 0 28px;
+            }
+
+            .hero-content h1 {
+                font-size: 2.2rem;
+            }
+
+            .hero-content p {
+                max-width: 100%;
+            }
+
+            .carousel-wrapper {
+                min-height: 320px;
+            }
+
+            .carousel-slide {
+                flex: 0 0 50%;
+                padding: 6px;
+            }
+
+            .carousel-card {
+                min-height: 200px;
+                padding: 16px;
+            }
+
+            .banners-fixos {
+                grid-template-columns: 1fr;
+                gap: 16px;
+                padding: 12px 0 24px;
+            }
+
+            .banner-fixo {
+                min-height: 120px;
+                padding: 20px 24px;
+            }
+
+            .banner-fixo p {
+                max-width: 100%;
+            }
+
+            .navbar {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+                padding: 12px 16px;
+            }
+
+            .nav-links {
+                gap: 12px;
+                width: 100%;
+                flex-wrap: wrap;
+            }
+
+            .nav-links a {
+                font-size: 0.85rem;
+            }
+
+            .btn-outline-blue,
+            .btn-indique-nav {
+                font-size: 0.8rem;
+                padding: 6px 16px;
+            }
+
+            .tech-badge {
+                padding: 20px 24px;
+            }
+
+            .tech-badge p {
+                font-size: 0.95rem;
+            }
+
+            .footer {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+
+            .footer .social a {
+                margin: 0 8px;
+            }
+
+            .whatsapp-float {
+                width: 52px;
+                height: 52px;
+                font-size: 1.8rem;
+                bottom: 20px;
+                right: 20px;
+            }
+
+            .modal-box {
+                padding: 24px 18px;
+                margin: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-content h1 {
+                font-size: 1.8rem;
+            }
+
+            .hero-content p {
+                font-size: 0.95rem;
+            }
+
+            .btn-primary-blue,
+            .btn-secondary-light {
+                width: 100%;
+                justify-content: center;
+                padding: 12px 20px;
+                font-size: 0.9rem;
+            }
+
+            .hero-tags {
+                gap: 12px;
+                font-size: 0.8rem;
+            }
+
+            .carousel-wrapper {
+                min-height: 260px;
+            }
+
+            .carousel-card {
+                min-height: 160px;
+                padding: 12px 14px;
+            }
+
+            .carousel-card .card-content h4 {
+                font-size: 0.85rem;
+            }
+
+            .carousel-card .card-content .preco {
+                font-size: 0.8rem;
+            }
+
+            .carousel-indicators {
+                padding: 8px 0 10px;
+            }
+
+            .banner-fixo {
+                padding: 16px 18px;
+                min-height: 100px;
+            }
+
+            .banner-fixo h3 {
+                font-size: 1rem;
+            }
+
+            .banner-fixo p {
+                font-size: 0.82rem;
+            }
+
+            .banner-fixo .banner-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 1.4rem;
+            }
+
+            .section-title {
+                font-size: 1.4rem;
+            }
+
+            .diff-item {
+                padding: 18px 16px;
+            }
+
+            .tech-badge {
+                padding: 16px 18px;
+            }
+
+            .tech-badge p {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== NAV ===== -->
+    <nav class="navbar">
+        <a href="#" class="logo-link" onclick="window.location.href='#'; return false;" title="Página inicial">
+            <img src="https://gkpb.com.br/wp-content/uploads/2022/01/novo-logo-quinto-andar-png-1024x166.png" alt="Lima Ribeiro Imóveis" class="logo-img" id="logoImg" />
+        </a>
+        <div class="nav-links">
+            <a href="#" onclick="alert('Página de Lançamentos (em breve)')">Lançamentos</a>
+            <a href="#" onclick="alert('Página de Imóveis (em breve)')">Imóveis</a>
+            <a href="#" onclick="openModal('sobre')">Sobre</a>
+            <a href="#" onclick="openModal('contato')">Contato</a>
+            <a href="#" onclick="openModal('privacidade')">Política de Privacidade</a>
+            <a href="#" onclick="alert('Página Indique e Ganhe (em breve)')" class="btn-indique-nav">
+                <i class="fas fa-dollar-sign"></i> Indique e Ganhe
+            </a>
+        </div>
+        <a href="#" class="btn-outline-blue" onclick="openWhatsAppModal()">
+            <i class="fab fa-whatsapp"></i> Fale conosco
+        </a>
+    </nav>
+
+    <div class="container">
+
+        <!-- ===== HERO ===== -->
+        <section class="hero">
+            <div class="hero-content">
+                <h1>
+                    Encontre o <span class="destaque-azul">seu lar</span><br />
+                    com quem entende você
+                </h1>
+                <p>
+                    Na Lima Ribeiro, acreditamos que cada mudança é única.
+                    Nossa missão é filtrar exatamente o que você precisa,
+                    para que você economize tempo e comece a curtir seu novo imóvel mais rápido.
+                </p>
+                <div class="hero-buttons">
+                    <a href="#" class="btn-primary-blue" onclick="openWhatsAppModal()">
+                        <i class="fab fa-whatsapp"></i> Conversar com especialista
+                    </a>
+                    <a href="https://wa.me/5511999999999?text=Olá! Gostaria de agendar uma visita aos imóveis da Lima Ribeiro." target="_blank" class="btn-secondary-light">
+                        <i class="far fa-calendar-alt"></i> Agendar visita
+                    </a>
+                </div>
+                <div class="hero-tags">
+                    <span><i class="fas fa-check-circle"></i> Atendimento personalizado</span>
+                    <span><i class="fas fa-check-circle"></i> Filtro sob medida</span>
+                </div>
+            </div>
+
+            <!-- ===== CARROSSEL HORIZONTAL ===== -->
+            <div class="carousel-wrapper">
+                <div class="carousel-track" id="carouselTrack">
+                    <!-- injetado via JS -->
+                </div>
+                <div class="carousel-indicators" id="carouselIndicators"></div>
+            </div>
+        </section>
+
+        <!-- ===== BANNERS FIXOS ===== -->
+        <div class="banners-fixos">
+            <!-- Banner 1: Calculadora QPreço -->
+            <div class="banner-fixo" onclick="openModal('qpreco')">
+                <div class="banner-header">
+                    <div class="banner-icon"><i class="fas fa-calculator"></i></div>
+                    <h3>QPreço · QuintoAndar</h3>
+                </div>
+                <p>Calcule o valor de mercado do seu imóvel com dados exclusivos e públicos. Gratuito e confiável.</p>
+                <button class="btn-banner">
+                    <i class="fas fa-arrow-right"></i> Simular agora
+                </button>
+            </div>
+
+            <!-- Banner 2: Indique e Ganhe -->
+            <div class="banner-fixo" onclick="openModal('indique')">
+                <div class="banner-header">
+                    <div class="banner-icon gold"><i class="fas fa-dollar-sign"></i></div>
+                    <h3>Indique e Ganhe</h3>
+                </div>
+                <p>
+                    Indique imóveis à venda e ganhe prêmios em dinheiro! Bonificações progressivas 
+                    acompanhadas em tempo real.
+                </p>
+                <button class="btn-banner-outline">
+                    <i class="fas fa-rocket"></i> Participar agora
+                </button>
+            </div>
+        </div>
+
+        <!-- ===== BADGE TECNOLOGIA (centralizado e melhorado) ===== -->
+        <div class="tech-badge">
+            <i class=""></i>
+            <p>
+                <strong>Toda tecnologia QuintoAndar</strong>  <br>
+                <span class="highlight">com o atendimento personalizado </span> <br>
+                <strong> e humanizado da Lima Ribeiro Imóveis</strong>.<br />
+                <span style="font-weight: 400; color: var(--texto-cinza);">
+                    O melhor dos dois mundos para você encontrar seu lar.
+                </span>
+            </p>
+        </div>
+
+        <!-- ===== DIFERENCIAIS ===== -->
+        <section class="features-section">
+            <h2 class="section-title">Por que a <span class="azul">Lima Ribeiro</span>?</h2>
+            <div class="section-sub">Entendemos que encontrar um imóvel é sobre pessoas, não apenas sobre paredes.</div>
+            <div class="differentials">
+                <div class="diff-item">
+                    <i class="fas fa-user-check"></i>
+                    <h4>Escuta ativa</h4>
+                    <p>Entendemos suas necessidades para filtrar apenas o que realmente importa para você.</p>
+                </div>
+                <div class="diff-item">
+                    <i class="fas fa-clock"></i>
+                    <h4>Economia de tempo</h4>
+                    <p>Menos tempo procurando, mais tempo curtindo seu novo lar com quem você ama.</p>
+                </div>
+                <div class="diff-item">
+                    <i class="fas fa-heart"></i>
+                    <h4>Jornada emocional</h4>
+                    <p>Acompanhamos cada etapa com empatia, pois sabemos que é uma mudança importante.</p>
+                </div>
+                <div class="diff-item">
+                    <i class="fas fa-chart-line"></i>
+                    <h4>Dados confiáveis</h4>
+                    <p>Usamos o QPreço para te dar uma visão realista do valor do seu imóvel.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== FOOTER ===== -->
+        <footer class="footer">
+            <div>© 2026 Lima Ribeiro Imóveis · Encontrar o seu lar é o que nos move.</div>
+            <div class="social">
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-youtube"></i></a>
+                <a href="#" onclick="openWhatsAppModal()"><i class="fab fa-whatsapp"></i></a>
+            </div>
+        </footer>
+    </div>
+
+    <!-- ===== WHATSAPP FLOAT ===== -->
+    <button class="whatsapp-float" onclick="openWhatsAppModal()" aria-label="WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+    </button>
+
+    <!-- ===== MODAL WHATSAPP ===== -->
+    <div class="modal-overlay" id="whatsappModal">
+        <div class="modal-box">
+            <h3><i class="fab fa-whatsapp" style="color: #25d366;"></i> Fale com a gente</h3>
+            <p class="sub">Escolha um de nossos especialistas para atendimento personalizado.</p>
+            <div class="contact-list">
+                <a href="https://wa.me/5511999999999?text=Olá! Gostaria de saber mais sobre os imóveis da Lima Ribeiro." target="_blank" class="contact-item">
+                    <div class="avatar">
+                        <img src="https://i.pravatar.cc/100?img=1" alt="Foto Carlos" />
+                    </div>
+                    <div class="info">
+                        <div class="name">Carlos Mendes</div>
+                        <div class="role">Especialista em residências</div>
+                    </div>
+                    <i class="fab fa-whatsapp whatsapp-icon"></i>
+                </a>
+                <a href="https://wa.me/5511888888888?text=Olá! Gostaria de saber mais sobre os imóveis da Lima Ribeiro." target="_blank" class="contact-item">
+                    <div class="avatar">
+                        <img src="https://i.pravatar.cc/100?img=5" alt="Foto Fernanda" />
+                    </div>
+                    <div class="info">
+                        <div class="name">Fernanda Lima</div>
+                        <div class="role">Consultora de imóveis</div>
+                    </div>
+                    <i class="fab fa-whatsapp whatsapp-icon"></i>
+                </a>
+                <a href="https://wa.me/5511777777777?text=Olá! Gostaria de saber mais sobre os imóveis da Lima Ribeiro." target="_blank" class="contact-item">
+                    <div class="avatar">
+                        <img src="https://i.pravatar.cc/100?img=10" alt="Foto Rodrigo" />
+                    </div>
+                    <div class="info">
+                        <div class="name">Rodrigo Alves</div>
+                        <div class="role">Gerente de relacionamento</div>
+                    </div>
+                    <i class="fab fa-whatsapp whatsapp-icon"></i>
+                </a>
+            </div>
+            <button class="modal-close" onclick="closeWhatsAppModal()">Fechar</button>
+        </div>
+    </div>
+
+    <!-- ===== MODAL GENÉRICO ===== -->
+    <div class="modal-overlay" id="genericModal">
+        <div class="modal-box">
+            <h3 id="modalTitle">Título</h3>
+            <div id="modalBody" style="color: var(--texto-cinza); margin: 16px 0 20px; line-height: 1.6;">Conteúdo do modal</div>
+            <button class="modal-close" onclick="closeGenericModal()">Fechar</button>
+        </div>
+    </div>
+
+    <script>
+        // ============================================================
+        // 1. CARROSSEL HORIZONTAL (10 imóveis, 2 por vez)
+        // ============================================================
+        const imoveis = [
+            { titulo: 'Cobertura duplex', local: 'Jardim Europa, SP', preco: 'R$ 2.450.000', img: 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=600&h=450&fit=crop' },
+            { titulo: 'Apartamento 3 suítes', local: 'Vila Nova, SP', preco: 'R$ 1.890.000', img: 'https://images.unsplash.com/photo-1560185007-cde436f6a4d0?w=600&h=450&fit=crop' },
+            { titulo: 'Casa com piscina', local: 'Alphaville, SP', preco: 'R$ 3.200.000', img: 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=600&h=450&fit=crop' },
+            { titulo: 'Flat moderno', local: 'Itaim Bibi, SP', preco: 'R$ 1.250.000', img: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=600&h=450&fit=crop' },
+            { titulo: 'Sobrado com varanda', local: 'Moema, SP', preco: 'R$ 2.100.000', img: 'https://images.unsplash.com/photo-1576941089067-2de3c901e126?w=600&h=450&fit=crop' },
+            { titulo: 'Penthouse 360°', local: 'Jardim Paulista, SP', preco: 'R$ 4.500.000', img: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600&h=450&fit=crop' },
+            { titulo: 'Studio alto padrão', local: 'Pinheiros, SP', preco: 'R$ 980.000', img: 'https://images.unsplash.com/photo-1560185127-6ed189bf02f4?w=600&h=450&fit=crop' },
+            { titulo: 'Casa de campo', local: 'Atibaia, SP', preco: 'R$ 1.750.000', img: 'https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=600&h=450&fit=crop' },
+            { titulo: 'Duplex com terraço', local: 'Brooklin, SP', preco: 'R$ 2.890.000', img: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=600&h=450&fit=crop' },
+            { titulo: 'Loft industrial', local: 'Barra Funda, SP', preco: 'R$ 1.450.000', img: 'https://images.unsplash.com/photo-1560185127-6ed189bf02f4?w=600&h=450&fit=crop' }
+        ];
+
+        let currentIndex = 0;
+        let autoInterval = null;
+        const track = document.getElementById('carouselTrack');
+        const indicators = document.getElementById('carouselIndicators');
+
+        function renderCarousel() {
+            track.innerHTML = '';
+            imoveis.forEach((item, idx) => {
+                const slide = document.createElement('div');
+                slide.className = 'carousel-slide';
+                slide.innerHTML = `
+                    <div class="carousel-card" style="background-image: url('${item.img}');">
+                        <div class="card-content">
+                            <h4>${item.titulo}</h4>
+                            <p>${item.local}</p>
+                            <div class="preco">${item.preco}</div>
+                        </div>
+                    </div>
+                `;
+                slide.addEventListener('click', () => {
+                    alert(`🔗 Você será direcionado para mais detalhes sobre: ${item.titulo}\n(Link personalizado em breve)`);
+                });
+                track.appendChild(slide);
+            });
+
+            const totalPairs = Math.ceil(imoveis.length / 2);
+            indicators.innerHTML = '';
+            for (let i = 0; i < totalPairs; i++) {
+                const dot = document.createElement('span');
+                dot.dataset.index = i;
+                dot.addEventListener('click', () => goToSlide(i));
+                indicators.appendChild(dot);
+            }
+            goToSlide(0);
+        }
+
+        function goToSlide(index) {
+            const totalPairs = Math.ceil(imoveis.length / 2);
+            if (index >= totalPairs) index = 0;
+            if (index < 0) index = totalPairs - 1;
+            currentIndex = index;
+            const offset = -index * 100;
+            track.style.transform = `translateX(${offset}%)`;
+
+            document.querySelectorAll('#carouselIndicators span').forEach((dot, i) => {
+                dot.classList.toggle('active', i === index);
+            });
+        }
+
+        function nextSlide() {
+            goToSlide(currentIndex + 1);
+        }
+
+        function startAutoSlide() {
+            if (autoInterval) clearInterval(autoInterval);
+            autoInterval = setInterval(nextSlide, 3000);
+        }
+
+        const wrapper = document.querySelector('.carousel-wrapper');
+        wrapper.addEventListener('mouseenter', () => clearInterval(autoInterval));
+        wrapper.addEventListener('mouseleave', startAutoSlide);
+
+        // ============================================================
+        // 2. MODAIS
+        // ============================================================
+        function openWhatsAppModal() {
+            document.getElementById('whatsappModal').classList.add('active');
+        }
+
+        function closeWhatsAppModal() {
+            document.getElementById('whatsappModal').classList.remove('active');
+        }
+
+        function openModal(type) {
+            const modal = document.getElementById('genericModal');
+            const title = document.getElementById('modalTitle');
+            const body = document.getElementById('modalBody');
+
+            if (type === 'sobre') {
+                title.textContent = '💙 Sobre a Lima Ribeiro';
+                body.innerHTML = `
+                    Somos uma imobiliária que acredita que encontrar um lar é uma das decisões mais importantes da vida.
+                    Por isso, unimos tecnologia (com o apoio do QuintoAndar) e atendimento humano para filtrar exatamente
+                    o que você precisa. Nossa missão: economizar seu tempo e tornar essa mudança mais leve e emocionante.
+                `;
+            } else if (type === 'contato') {
+                title.textContent = '📞 Fale com a gente';
+                body.innerHTML = `
+                    <strong>E-mail:</strong> contato@limaribeiro.com.br<br />
+                    <strong>Telefone:</strong> (11) 99999-9999<br /><br />
+                    Ou clique no botão flutuante do WhatsApp para conversar com um de nossos especialistas.
+                `;
+            } else if (type === 'privacidade') {
+                title.textContent = '🔒 Política de Privacidade';
+                body.innerHTML = `
+                    <p>A Lima Ribeiro Imóveis valoriza sua privacidade. Seus dados são utilizados exclusivamente para:</p>
+                    <ul>
+                        <li>✅ Entender suas necessidades imobiliárias</li>
+                        <li>✅ Oferecer recomendações personalizadas</li>
+                        <li>✅ Manter contato sobre imóveis de seu interesse</li>
+                    </ul>
+                    <p style="margin-top:12px;">Não compartilhamos seus dados com terceiros. Você pode solicitar a exclusão a qualquer momento.</p>
+                `;
+            } else if (type === 'qpreco') {
+                title.textContent = '🏠 QPreço · Calcule o valor do seu imóvel';
+                body.innerHTML = `
+                    O QPreço combina dados exclusivos e públicos para oferecer uma estimativa confiável do valor de mercado
+                    do seu imóvel. Clique no botão abaixo para iniciar a simulação gratuita.<br /><br />
+                    <button class="btn-primary-blue" style="width:100%; justify-content:center; border-radius:60px; padding:14px;" onclick="alert('Simulação QPreço iniciada (integração em breve)')">
+                        <i class="fas fa-calculator"></i> Simular agora
+                    </button>
+                `;
+            } else if (type === 'indique') {
+                title.textContent = '💰 Indique e Ganhe';
+                body.innerHTML = `
+                    <p style="margin-bottom:12px;">
+                        <strong>Participe do nosso programa de indicação!</strong><br />
+                        Indique imóveis à venda e ganhe prêmios em dinheiro. As bonificações são progressivas
+                        e você acompanha tudo em tempo real.
+                    </p>
+                    <ul>
+                        <li>✅ <strong>Nível 1:</strong> Indicação aprovada - <strong>R$ 500</strong></li>
+                        <li>✅ <strong>Nível 2:</strong> Visita agendada - <strong>+ R$ 300</strong></li>
+                        <li>✅ <strong>Nível 3:</strong> Proposta assinada - <strong>+ R$ 1.000</strong></li>
+                        <li>✅ <strong>Nível 4:</strong> Venda concretizada - <strong>+ R$ 2.500</strong></li>
+                    </ul>
+                    <button class="btn-primary-blue" style="width:100%; justify-content:center; border-radius:60px; padding:14px;" onclick="alert('Cadastro no programa Indique e Ganhe (em breve)')">
+                        <i class="fas fa-rocket"></i> Quero participar
+                    </button>
+                `;
+            } else {
+                title.textContent = 'Em breve';
+                body.textContent = 'Esta funcionalidade será disponibilizada em breve.';
+            }
+
+            modal.classList.add('active');
+        }
+
+        function closeGenericModal() {
+            document.getElementById('genericModal').classList.remove('active');
+        }
+
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) {
+                    overlay.classList.remove('active');
+                }
+            });
+        });
+
+        // ============================================================
+        // 3. INICIALIZAÇÃO
+        // ============================================================
+        document.addEventListener('DOMContentLoaded', () => {
+            renderCarousel();
+            startAutoSlide();
+        });
+
+        window.openWhatsAppModal = openWhatsAppModal;
+        window.closeWhatsAppModal = closeWhatsAppModal;
+        window.openModal = openModal;
+        window.closeGenericModal = closeGenericModal;
+
+        console.log('🏠 Lima Ribeiro Imóveis · Encontre seu lar!');
+        console.log('💙 Design profissional e responsivo.');
+    </script>
+
+</body>
+</html>
