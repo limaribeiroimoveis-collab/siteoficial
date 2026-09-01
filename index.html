@@ -25,6 +25,7 @@
             color: #1a1a2e;
             line-height: 1.5;
             overflow-x: hidden;
+            padding-bottom: 70px;
         }
 
         .container {
@@ -69,13 +70,25 @@
             align-items: center;
             text-decoration: none;
             cursor: pointer;
+            flex-shrink: 0;
+            border: none !important;
+            outline: none !important;
         }
 
         .logo-img {
-            height: 42px;
+            height: 52px;
             width: auto;
             object-fit: contain;
             display: block;
+            border: none !important;
+            outline: none !important;
+        }
+
+        .nav-right {
+            display: none;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
         }
 
         .nav-links {
@@ -149,6 +162,84 @@
             box-shadow: 0 6px 20px rgba(0, 30, 240, 0.3);
             color: #fff !important;
             border-bottom: none !important;
+        }
+
+        /* ===== MENU INFERIOR (Mobile) - Mais moderno ===== */
+        .bottom-menu {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(12px);
+            border-top: 1px solid rgba(0, 30, 240, 0.06);
+            box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.04);
+            z-index: 999;
+            padding: 8px 0 env(safe-area-inset-bottom, 10px);
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .bottom-menu-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 4px 6px;
+            text-decoration: none;
+            color: var(--texto-cinza);
+            font-size: 0.55rem;
+            font-weight: 500;
+            transition: 0.25s ease;
+            gap: 2px;
+            min-width: 44px;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            position: relative;
+            border-radius: 12px;
+            padding: 6px 10px;
+        }
+
+        .bottom-menu-item i {
+            font-size: 1.2rem;
+            color: var(--texto-cinza);
+            transition: 0.25s ease;
+        }
+
+        .bottom-menu-item:hover i,
+        .bottom-menu-item.active i {
+            color: var(--azul-quinto);
+            transform: translateY(-2px);
+        }
+
+        .bottom-menu-item:hover,
+        .bottom-menu-item.active {
+            color: var(--azul-quinto);
+        }
+
+        .bottom-menu-item .menu-label {
+            font-size: 0.5rem;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+            opacity: 0.7;
+        }
+
+        .bottom-menu-item.active .menu-label {
+            opacity: 1;
+            font-weight: 600;
+        }
+
+        .bottom-menu-item .menu-badge {
+            background: var(--azul-quinto);
+            color: #fff;
+            font-size: 0.45rem;
+            padding: 1px 6px;
+            border-radius: 10px;
+            margin-top: 1px;
+            font-weight: 600;
         }
 
         /* ===== HERO ===== */
@@ -299,7 +390,6 @@
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
-            padding: 20px 20px 24px;
             background-size: cover;
             background-position: center;
             position: relative;
@@ -311,32 +401,8 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: linear-gradient(to top, rgba(0, 0, 0, 0.65) 0%, transparent 55%);
+            background: rgba(0, 0, 0, 0.1);
             border-radius: 12px;
-        }
-
-        .carousel-card .card-content {
-            position: relative;
-            z-index: 2;
-            color: #fff;
-        }
-
-        .carousel-card .card-content h4 {
-            font-size: 1rem;
-            font-weight: 600;
-            margin-bottom: 2px;
-        }
-
-        .carousel-card .card-content p {
-            font-size: 0.8rem;
-            opacity: 0.9;
-            margin-bottom: 2px;
-        }
-
-        .carousel-card .card-content .preco {
-            font-weight: 700;
-            font-size: 0.95rem;
-            color: #fff;
         }
 
         .carousel-indicators {
@@ -562,12 +628,6 @@
             justify-content: center;
         }
 
-        .tech-badge i {
-            font-size: 2.2rem;
-            color: var(--azul-quinto);
-            margin-bottom: 12px;
-        }
-
         .tech-badge p {
             font-weight: 500;
             color: var(--texto-escuro);
@@ -788,7 +848,11 @@
             border-bottom: none;
         }
 
+        /* ============================================================ */
         /* ===== RESPONSIVO ===== */
+        /* ============================================================ */
+
+        /* Tablets e telas médias */
         @media (max-width: 1024px) {
             .hero {
                 grid-template-columns: 1fr 1fr;
@@ -808,7 +872,56 @@
             }
         }
 
+        /* Mobile */
         @media (max-width: 768px) {
+            body {
+                padding-bottom: 70px;
+            }
+
+            /* MENU SUPERIOR - apenas logo e botões essenciais */
+            .navbar {
+                padding: 10px 16px;
+                gap: 8px;
+            }
+
+            .nav-links {
+                display: none !important;
+            }
+
+            .nav-right {
+                display: flex !important;
+                align-items: center;
+                gap: 6px;
+            }
+
+            .btn-outline-blue {
+                display: none !important;
+            }
+
+            .btn-indique-nav {
+                font-size: 0.7rem;
+                padding: 6px 14px;
+            }
+
+            .logo-img {
+                height: 42px;
+            }
+
+            /* MENU INFERIOR - Moderno */
+            .bottom-menu {
+                display: flex !important;
+            }
+
+            /* WHATSAPP FLOAT - mais para cima no mobile */
+            .whatsapp-float {
+                bottom: 80px;
+                right: 16px;
+                width: 52px;
+                height: 52px;
+                font-size: 1.8rem;
+            }
+
+            /* HERO */
             .hero {
                 grid-template-columns: 1fr;
                 gap: 24px;
@@ -816,15 +929,16 @@
             }
 
             .hero-content h1 {
-                font-size: 2.2rem;
+                font-size: 2rem;
             }
 
             .hero-content p {
                 max-width: 100%;
+                font-size: 0.95rem;
             }
 
             .carousel-wrapper {
-                min-height: 320px;
+                min-height: 280px;
             }
 
             .carousel-slide {
@@ -833,10 +947,10 @@
             }
 
             .carousel-card {
-                min-height: 200px;
-                padding: 16px;
+                min-height: 180px;
             }
 
+            /* BANNERS */
             .banners-fixos {
                 grid-template-columns: 1fr;
                 gap: 16px;
@@ -844,78 +958,80 @@
             }
 
             .banner-fixo {
-                min-height: 120px;
-                padding: 20px 24px;
+                min-height: 110px;
+                padding: 18px 20px;
             }
 
             .banner-fixo p {
                 max-width: 100%;
-            }
-
-            .navbar {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 10px;
-                padding: 12px 16px;
-            }
-
-            .nav-links {
-                gap: 12px;
-                width: 100%;
-                flex-wrap: wrap;
-            }
-
-            .nav-links a {
                 font-size: 0.85rem;
             }
 
-            .btn-outline-blue,
-            .btn-indique-nav {
-                font-size: 0.8rem;
-                padding: 6px 16px;
+            .banner-fixo h3 {
+                font-size: 1.05rem;
             }
 
+            .banner-fixo .banner-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 1.4rem;
+            }
+
+            /* TECH BADGE */
             .tech-badge {
-                padding: 20px 24px;
+                padding: 18px 20px;
             }
 
             .tech-badge p {
+                font-size: 0.9rem;
+                line-height: 1.6;
+            }
+
+            /* DIFERENCIAIS */
+            .differentials {
+                grid-template-columns: 1fr 1fr;
+                gap: 12px;
+            }
+
+            .diff-item {
+                padding: 18px 16px;
+            }
+
+            .diff-item i {
+                font-size: 1.4rem;
+            }
+
+            .diff-item h4 {
                 font-size: 0.95rem;
             }
 
+            .diff-item p {
+                font-size: 0.82rem;
+            }
+
+            .section-title {
+                font-size: 1.4rem;
+            }
+
+            .section-sub {
+                font-size: 0.9rem;
+            }
+
+            /* FOOTER */
             .footer {
                 flex-direction: column;
                 align-items: center;
                 text-align: center;
+                padding: 18px 0 12px;
+                font-size: 0.75rem;
             }
 
             .footer .social a {
-                margin: 0 8px;
+                margin: 0 10px;
+                font-size: 1rem;
             }
 
-            .whatsapp-float {
-                width: 52px;
-                height: 52px;
-                font-size: 1.8rem;
-                bottom: 20px;
-                right: 20px;
-            }
-
-            .modal-box {
-                padding: 24px 18px;
-                margin: 10px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .hero-content h1 {
-                font-size: 1.8rem;
-            }
-
-            .hero-content p {
-                font-size: 0.95rem;
-            }
-
+            /* BOTÕES HERO */
             .btn-primary-blue,
             .btn-secondary-light {
                 width: 100%;
@@ -929,60 +1045,69 @@
                 font-size: 0.8rem;
             }
 
-            .carousel-wrapper {
-                min-height: 260px;
-            }
-
-            .carousel-card {
-                min-height: 160px;
-                padding: 12px 14px;
-            }
-
-            .carousel-card .card-content h4 {
-                font-size: 0.85rem;
-            }
-
-            .carousel-card .card-content .preco {
-                font-size: 0.8rem;
-            }
-
             .carousel-indicators {
                 padding: 8px 0 10px;
             }
 
-            .banner-fixo {
-                padding: 16px 18px;
-                min-height: 100px;
+            .modal-box {
+                padding: 20px 16px;
+                margin: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-content h1 {
+                font-size: 1.6rem;
             }
 
-            .banner-fixo h3 {
+            .carousel-wrapper {
+                min-height: 220px;
+            }
+
+            .carousel-card {
+                min-height: 140px;
+            }
+
+            .banner-fixo {
+                padding: 14px 16px;
+                min-height: 90px;
+            }
+
+            .banner-fixo .btn-banner,
+            .banner-fixo .btn-banner-outline {
+                font-size: 0.75rem;
+                padding: 6px 16px;
+            }
+
+            .differentials {
+                grid-template-columns: 1fr;
+            }
+
+            .btn-indique-nav {
+                font-size: 0.65rem;
+                padding: 5px 12px;
+            }
+
+            .bottom-menu-item {
+                font-size: 0.5rem;
+                padding: 4px 6px;
+                min-width: 36px;
+            }
+
+            .bottom-menu-item i {
                 font-size: 1rem;
             }
 
-            .banner-fixo p {
-                font-size: 0.82rem;
+            .bottom-menu-item .menu-label {
+                font-size: 0.45rem;
             }
 
-            .banner-fixo .banner-icon {
-                width: 40px;
-                height: 40px;
-                font-size: 1.4rem;
-            }
-
-            .section-title {
-                font-size: 1.4rem;
-            }
-
-            .diff-item {
-                padding: 18px 16px;
-            }
-
-            .tech-badge {
-                padding: 16px 18px;
-            }
-
-            .tech-badge p {
-                font-size: 0.9rem;
+            .whatsapp-float {
+                width: 48px;
+                height: 48px;
+                font-size: 1.6rem;
+                bottom: 74px;
+                right: 12px;
             }
         }
     </style>
@@ -1008,6 +1133,30 @@
             <i class="fab fa-whatsapp"></i> Fale conosco
         </a>
     </nav>
+
+    <!-- ===== MENU INFERIOR (Mobile) - Moderno ===== -->
+    <div class="bottom-menu" id="bottomMenu">
+        <button class="bottom-menu-item" onclick="alert('Página de Lançamentos (em breve)')">
+            <i class="fas fa-rocket"></i>
+            <span class="menu-label">Lançamentos</span>
+        </button>
+        <button class="bottom-menu-item" onclick="alert('Página de Imóveis (em breve)')">
+            <i class="fas fa-home"></i>
+            <span class="menu-label">Imóveis</span>
+        </button>
+        <button class="bottom-menu-item" onclick="openModal('contato')">
+            <i class="fas fa-envelope"></i>
+            <span class="menu-label">Contato</span>
+        </button>
+        <button class="bottom-menu-item" onclick="window.open('https://limaribeiroimoveis.com.br/politicadeprivacidade.html', '_blank')">
+            <i class="fas fa-shield-alt"></i>
+            <span class="menu-label">Privacidade</span>
+        </button>
+        <button class="bottom-menu-item" onclick="openModal('qpreco')">
+            <i class="fas fa-calculator"></i>
+            <span class="menu-label">QPreço</span>
+        </button>
+    </div>
 
     <div class="container">
 
@@ -1078,11 +1227,10 @@
 
         <!-- ===== BADGE TECNOLOGIA ===== -->
         <div class="tech-badge">
-            <i class=""></i>
             <p>
-                 <strong>Toda tecnologia QuintoAndar</strong>  <br>
-                <span class="highlight">com o atendimento personalizado </span> <br>
-                <strong> e humanizado da Lima Ribeiro Imóveis</strong>.<br />
+                <strong>Toda tecnologia QuintoAndar</strong><br>
+                <span class="highlight">com o atendimento personalizado</span><br>
+                <strong>e humanizado da Lima Ribeiro Imóveis</strong>.<br />
                 <span style="font-weight: 400; color: var(--texto-cinza);">
                     O melhor dos dois mundos para você encontrar seu lar.
                 </span>
@@ -1106,7 +1254,7 @@
                 </div>
                 <div class="diff-item">
                     <i class="fas fa-heart"></i>
-                    <h4>Jornada emocional</h4>
+                    <h4>Jornada Humanizada</h4>
                     <p>Acompanhamos cada etapa com empatia, pois sabemos que é uma mudança importante.</p>
                 </div>
                 <div class="diff-item">
@@ -1176,19 +1324,19 @@
 
     <script>
         // ============================================================
-        // 1. CARROSSEL HORIZONTAL (10 imóveis, 2 por vez)
+        // 1. CARROSSEL HORIZONTAL (10 imóveis, 2 por vez) - SEM TEXTOS
         // ============================================================
         const imoveis = [
-            { titulo: 'Cobertura duplex', local: 'Jardim Europa, SP', preco: 'R$ 2.450.000', img: 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=600&h=450&fit=crop' },
-            { titulo: 'Apartamento 3 suítes', local: 'Vila Nova, SP', preco: 'R$ 1.890.000', img: 'https://images.unsplash.com/photo-1560185007-cde436f6a4d0?w=600&h=450&fit=crop' },
-            { titulo: 'Casa com piscina', local: 'Alphaville, SP', preco: 'R$ 3.200.000', img: 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=600&h=450&fit=crop' },
-            { titulo: 'Flat moderno', local: 'Itaim Bibi, SP', preco: 'R$ 1.250.000', img: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=600&h=450&fit=crop' },
-            { titulo: 'Sobrado com varanda', local: 'Moema, SP', preco: 'R$ 2.100.000', img: 'https://images.unsplash.com/photo-1576941089067-2de3c901e126?w=600&h=450&fit=crop' },
-            { titulo: 'Penthouse 360°', local: 'Jardim Paulista, SP', preco: 'R$ 4.500.000', img: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600&h=450&fit=crop' },
-            { titulo: 'Studio alto padrão', local: 'Pinheiros, SP', preco: 'R$ 980.000', img: 'https://images.unsplash.com/photo-1560185127-6ed189bf02f4?w=600&h=450&fit=crop' },
-            { titulo: 'Casa de campo', local: 'Atibaia, SP', preco: 'R$ 1.750.000', img: 'https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=600&h=450&fit=crop' },
-            { titulo: 'Duplex com terraço', local: 'Brooklin, SP', preco: 'R$ 2.890.000', img: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=600&h=450&fit=crop' },
-            { titulo: 'Loft industrial', local: 'Barra Funda, SP', preco: 'R$ 1.450.000', img: 'https://images.unsplash.com/photo-1560185127-6ed189bf02f4?w=600&h=450&fit=crop' }
+            { img: 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=600&h=450&fit=crop' },
+            { img: 'https://images.unsplash.com/photo-1560185007-cde436f6a4d0?w=600&h=450&fit=crop' },
+            { img: 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=600&h=450&fit=crop' },
+            { img: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=600&h=450&fit=crop' },
+            { img: 'https://images.unsplash.com/photo-1576941089067-2de3c901e126?w=600&h=450&fit=crop' },
+            { img: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600&h=450&fit=crop' },
+            { img: 'https://images.unsplash.com/photo-1560185127-6ed189bf02f4?w=600&h=450&fit=crop' },
+            { img: 'https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=600&h=450&fit=crop' },
+            { img: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=600&h=450&fit=crop' },
+            { img: 'https://images.unsplash.com/photo-1560185127-6ed189bf02f4?w=600&h=450&fit=crop' }
         ];
 
         let currentIndex = 0;
@@ -1198,20 +1346,15 @@
 
         function renderCarousel() {
             track.innerHTML = '';
-            imoveis.forEach((item, idx) => {
+            imoveis.forEach((item) => {
                 const slide = document.createElement('div');
                 slide.className = 'carousel-slide';
                 slide.innerHTML = `
                     <div class="carousel-card" style="background-image: url('${item.img}');">
-                        <div class="card-content">
-                            <h4>${item.titulo}</h4>
-                            <p>${item.local}</p>
-                            <div class="preco">${item.preco}</div>
-                        </div>
                     </div>
                 `;
                 slide.addEventListener('click', () => {
-                    alert(`🔗 Você será direcionado para mais detalhes sobre: ${item.titulo}\n(Link personalizado em breve)`);
+                    alert('🔗 Em breve você poderá ver mais detalhes deste imóvel.');
                 });
                 track.appendChild(slide);
             });
@@ -1274,7 +1417,7 @@
                 body.innerHTML = `
                     Somos uma imobiliária que acredita que encontrar um lar é uma das decisões mais importantes da vida.
                     Por isso, unimos tecnologia (com o apoio do QuintoAndar) e atendimento humano para filtrar exatamente
-                    o que você precisa. Nossa missão: economizar seu tempo e tornar essa mudança mais leve e emocionante.
+                    o que você precisa. Nossa missão: economizar seu tempo e tornar essa mudança mais leve e fácil.
                 `;
             } else if (type === 'contato') {
                 title.textContent = '📞 Fale com a gente';
@@ -1311,11 +1454,7 @@
                         Indique imóveis à venda e ganhe prêmios em dinheiro. As bonificações são progressivas
                         e você acompanha tudo em tempo real.
                     </p>
-                    <ul>
-                        <li>✅ <strong>Nível 1:</strong> Indicação aprovada - <strong>R$ 500</strong></li>
-                        <li>✅ <strong>Nível 2:</strong> Visita agendada - <strong>+ R$ 300</strong></li>
-                        <li>✅ <strong>Nível 3:</strong> Proposta assinada - <strong>+ R$ 1.000</strong></li>
-                        <li>✅ <strong>Nível 4:</strong> Venda concretizada - <strong>+ R$ 2.500</strong></li>
+                    <ul>Disponível em Breve (Construção)<br> acompanhe as novidades
                     </ul>
                     <button class="btn-primary-blue" style="width:100%; justify-content:center; border-radius:60px; padding:14px;" onclick="alert('Cadastro no programa Indique e Ganhe (em breve)')">
                         <i class="fas fa-rocket"></i> Quero participar
