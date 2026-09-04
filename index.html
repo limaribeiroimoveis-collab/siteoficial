@@ -703,7 +703,7 @@
 
         .modal-box {
             background: var(--branco);
-            max-width: 440px;
+            max-width: 480px;
             width: 100%;
             border-radius: 24px;
             padding: 32px 28px;
@@ -740,7 +740,7 @@
         .contact-list {
             display: flex;
             flex-direction: column;
-            gap: 14px;
+            gap: 12px;
         }
 
         .contact-item {
@@ -762,14 +762,14 @@
         }
 
         .contact-item .avatar {
-            width: 48px;
-            height: 48px;
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 700;
-            font-size: 1.1rem;
+            font-size: 1rem;
             color: var(--azul-quinto);
             flex-shrink: 0;
             overflow: hidden;
@@ -779,6 +779,19 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+        }
+
+        .contact-item .avatar-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--azul-claro);
+            color: var(--azul-quinto);
+            font-size: 1.2rem;
+            flex-shrink: 0;
         }
 
         .contact-item .info {
@@ -795,14 +808,37 @@
             color: var(--texto-cinza);
         }
 
-        .contact-item .whatsapp-icon {
-            color: #25d366;
-            font-size: 1.4rem;
+        .contact-item .icon-right {
+            font-size: 1.2rem;
+            color: var(--azul-quinto);
+            flex-shrink: 0;
         }
 
-        .contact-item .arrow-icon {
-            color: var(--azul-quinto);
-            font-size: 1.2rem;
+        .contact-item .icon-right.whatsapp {
+            color: #25d366;
+        }
+
+        .contact-item .icon-right.instagram {
+            color: #E4405F;
+        }
+
+        .contact-item .icon-right.email {
+            color: #EA4335;
+        }
+
+        .modal-divider {
+            border: none;
+            border-top: 1px solid #e8ecf2;
+            margin: 6px 0 12px;
+        }
+
+        .modal-section-title {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--texto-cinza);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin: 8px 0 4px;
         }
 
         .modal-close {
@@ -841,7 +877,6 @@
         /* ===== RESPONSIVO ===== */
         /* ============================================================ */
 
-        /* Tablets e telas médias */
         @media (max-width: 1024px) {
             .hero {
                 grid-template-columns: 1fr 1fr;
@@ -861,7 +896,6 @@
             }
         }
 
-        /* Mobile */
         @media (max-width: 768px) {
             body {
                 padding-bottom: 70px;
@@ -1041,6 +1075,21 @@
             .modal-box {
                 padding: 20px 16px;
                 margin: 10px;
+                max-width: 100%;
+            }
+
+            .contact-item {
+                padding: 10px 12px;
+            }
+
+            .contact-item .avatar,
+            .contact-item .avatar-icon {
+                width: 38px;
+                height: 38px;
+            }
+
+            .contact-item .info .name {
+                font-size: 0.85rem;
             }
         }
 
@@ -1096,6 +1145,10 @@
                 font-size: 1.6rem;
                 bottom: 74px;
                 right: 12px;
+            }
+
+            .modal-box {
+                padding: 16px 12px;
             }
         }
     </style>
@@ -1162,7 +1215,7 @@
                     <a href="#" class="btn-primary-blue" onclick="openWhatsAppModal()">
                         <i class="fab fa-whatsapp"></i> Conversar com especialista
                     </a>
-                    <a href="#" class="btn-secondary-light" onclick="openAgendamentoModal()">
+                    <a href="#" class="btn-secondary-light" onclick="openModal('contato')">
                         <i class="far fa-calendar-alt"></i> Agendar visita
                     </a>
                 </div>
@@ -1183,7 +1236,6 @@
 
         <!-- ===== BANNERS FIXOS ===== -->
         <div class="banners-fixos">
-            <!-- Banner 1: Calculadora QPreço -->
             <div class="banner-fixo" onclick="openModal('qpreco')">
                 <div class="banner-header">
                     <div class="banner-icon"><i class="fas fa-calculator"></i></div>
@@ -1195,7 +1247,6 @@
                 </button>
             </div>
 
-            <!-- Banner 2: Indique e Ganhe -->
             <div class="banner-fixo" onclick="window.open('https://www.limaribeiroimoveis.com.br/indiqueeganhe', '_blank')">
                 <div class="banner-header">
                     <div class="banner-icon gold"><i class="fas fa-dollar-sign"></i></div>
@@ -1287,7 +1338,7 @@
                         <div class="name">Carolina Lima</div>
                         <div class="role">Consultora de Imóveis</div>
                     </div>
-                    <i class="fab fa-whatsapp whatsapp-icon"></i>
+                    <i class="fab fa-whatsapp icon-right whatsapp"></i>
                 </a>
                 <a href="https://wa.me/5531996070930?text=Olá! Gostaria de saber mais sobre os imóveis da Lima Ribeiro." target="_blank" class="contact-item">
                     <div class="avatar">
@@ -1297,41 +1348,114 @@
                         <div class="name">Hugo Ribeiro</div>
                         <div class="role">Consultor de Imóveis</div>
                     </div>
-                    <i class="fab fa-whatsapp whatsapp-icon"></i>
+                    <i class="fab fa-whatsapp icon-right whatsapp"></i>
                 </a>
             </div>
             <button class="modal-close" onclick="closeWhatsAppModal()">Fechar</button>
         </div>
     </div>
 
-    <!-- ===== MODAL AGENDAMENTO ===== -->
-    <div class="modal-overlay" id="agendamentoModal">
+    <!-- ===== MODAL CONTATO COMPLETO ===== -->
+    <div class="modal-overlay" id="contatoModal">
         <div class="modal-box">
-            <h3><i class="far fa-calendar-alt" style="color: var(--azul-quinto);"></i> Agendar Visita</h3>
-            <p class="sub">Com qual corretor você gostaria de agendar uma visita?</p>
+            <h3><i class="fas fa-address-book" style="color: var(--azul-quinto);"></i> Contatos</h3>
+            <p class="sub">Escolha a melhor forma de falar com a gente.</p>
+
+            <!-- WhatsApp -->
+            <div class="modal-section-title"><i class="fab fa-whatsapp" style="color:#25d366;"></i> WhatsApp</div>
             <div class="contact-list">
-                <a href="https://www.quintoandar.com.br/corretor/atendimento/CarolinaLima-ZADT" target="_blank" class="contact-item">
+                <a href="https://wa.me/5531996273985?text=Olá! Gostaria de saber mais sobre os imóveis da Lima Ribeiro." target="_blank" class="contact-item">
                     <div class="avatar">
-                        <img src="https://img.magnific.com/fotos-gratis/retrato-3d-de-mulher_23-2150793881.jpg?semt=ais_hybrid&w=740&q=80" alt="Foto Carolina" />
+                        <img src="https://img.magnific.com/fotos-gratis/retrato-3d-de-mulher_23-2150793881.jpg?semt=ais_hybrid&w=740&q=80" alt="Carolina" />
                     </div>
                     <div class="info">
                         <div class="name">Carolina Lima</div>
                         <div class="role">Consultora de Imóveis</div>
                     </div>
-                    <i class="fas fa-arrow-right arrow-icon"></i>
+                    <i class="fab fa-whatsapp icon-right whatsapp"></i>
                 </a>
-                <a href="https://www.quintoandar.com.br/corretor/atendimento/HugoFelipePereiraRibeiro-3M2K" target="_blank" class="contact-item">
+                <a href="https://wa.me/5531996070930?text=Olá! Gostaria de saber mais sobre os imóveis da Lima Ribeiro." target="_blank" class="contact-item">
                     <div class="avatar">
-                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9Io1_SmAkNzTW8drLCEVnd3fxWFNnAqNIJuFOnmzzMJZo5xhcGMc-7ZtY&s=10" alt="Foto Hugo" />
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9Io1_SmAkNzTW8drLCEVnd3fxWFNnAqNIJuFOnmzzMJZo5xhcGMc-7ZtY&s=10" alt="Hugo" />
                     </div>
                     <div class="info">
                         <div class="name">Hugo Ribeiro</div>
                         <div class="role">Consultor de Imóveis</div>
                     </div>
-                    <i class="fas fa-arrow-right arrow-icon"></i>
+                    <i class="fab fa-whatsapp icon-right whatsapp"></i>
                 </a>
             </div>
-            <button class="modal-close" onclick="closeAgendamentoModal()">Fechar</button>
+
+            <hr class="modal-divider" />
+
+            <!-- Agendamento de Visitas -->
+            <div class="modal-section-title"><i class="far fa-calendar-alt" style="color: var(--azul-quinto);"></i> Agendar Visita</div>
+            <div class="contact-list">
+                <a href="https://www.quintoandar.com.br/corretor/atendimento/CarolinaLima-ZADT" target="_blank" class="contact-item">
+                    <div class="avatar">
+                        <img src="https://img.magnific.com/fotos-gratis/retrato-3d-de-mulher_23-2150793881.jpg?semt=ais_hybrid&w=740&q=80" alt="Carolina" />
+                    </div>
+                    <div class="info">
+                        <div class="name">Carolina Lima</div>
+                        <div class="role">Agendar visita</div>
+                    </div>
+                    <i class="fas fa-arrow-right icon-right"></i>
+                </a>
+                <a href="https://www.quintoandar.com.br/corretor/atendimento/HugoFelipePereiraRibeiro-3M2K" target="_blank" class="contact-item">
+                    <div class="avatar">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9Io1_SmAkNzTW8drLCEVnd3fxWFNnAqNIJuFOnmzzMJZo5xhcGMc-7ZtY&s=10" alt="Hugo" />
+                    </div>
+                    <div class="info">
+                        <div class="name">Hugo Ribeiro</div>
+                        <div class="role">Agendar visita</div>
+                    </div>
+                    <i class="fas fa-arrow-right icon-right"></i>
+                </a>
+            </div>
+
+            <hr class="modal-divider" />
+
+            <!-- E-mail -->
+            <div class="modal-section-title"><i class="fas fa-envelope" style="color:#EA4335;"></i> E-mail</div>
+            <div class="contact-list">
+                <a href="mailto:limaribeiroimoveis@gmail.com" class="contact-item">
+                    <div class="avatar-icon"><i class="fas fa-envelope"></i></div>
+                    <div class="info">
+                        <div class="name">limaribeiroimoveis@gmail.com</div>
+                        <div class="role">Envie um e-mail</div>
+                    </div>
+                    <i class="fas fa-arrow-right icon-right email"></i>
+                </a>
+            </div>
+
+            <hr class="modal-divider" />
+
+            <!-- Instagram -->
+            <div class="modal-section-title"><i class="fab fa-instagram" style="color:#E4405F;"></i> Instagram</div>
+            <div class="contact-list">
+                <a href="https://www.instagram.com/carollimaimoveisbh/" target="_blank" class="contact-item">
+                    <div class="avatar">
+                        <img src="https://img.magnific.com/fotos-gratis/retrato-3d-de-mulher_23-2150793881.jpg?semt=ais_hybrid&w=740&q=80" alt="Carolina" />
+                    </div>
+                    <div class="info">
+                        <div class="name">@carollimaimoveisbh</div>
+                        <div class="role">Carolina Lima</div>
+                    </div>
+                    <i class="fab fa-instagram icon-right instagram"></i>
+                </a>
+                <a href="https://www.instagram.com/hugoribeiro.imoveis/" target="_blank" class="contact-item">
+                    <div class="avatar">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9Io1_SmAkNzTW8drLCEVnd3fxWFNnAqNIJuFOnmzzMJZo5xhcGMc-7ZtY&s=10" alt="Hugo" />
+                    </div>
+                    <div class="info">
+                        <div class="name">@hugoribeiro.imoveis</div>
+                        <div class="role">Hugo Ribeiro</div>
+                    </div>
+                    <i class="fab fa-instagram icon-right instagram"></i>
+                </a>
+            </div>
+
+            <button class="modal-close" onclick="closeContatoModal()">Fechar</button>
         </div>
     </div>
 
@@ -1346,7 +1470,7 @@
 
     <script>
         // ============================================================
-        // 1. CARROSSEL HORIZONTAL (10 imóveis, 2 por vez)
+        // 1. CARROSSEL HORIZONTAL
         // ============================================================
         const imoveis = [
             { img: 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=600&h=450&fit=crop' },
@@ -1429,15 +1553,20 @@
             document.getElementById('whatsappModal').classList.remove('active');
         }
 
-        function openAgendamentoModal() {
-            document.getElementById('agendamentoModal').classList.add('active');
+        function openContatoModal() {
+            document.getElementById('contatoModal').classList.add('active');
         }
 
-        function closeAgendamentoModal() {
-            document.getElementById('agendamentoModal').classList.remove('active');
+        function closeContatoModal() {
+            document.getElementById('contatoModal').classList.remove('active');
         }
 
         function openModal(type) {
+            if (type === 'contato') {
+                openContatoModal();
+                return;
+            }
+
             const modal = document.getElementById('genericModal');
             const title = document.getElementById('modalTitle');
             const body = document.getElementById('modalBody');
@@ -1448,13 +1577,6 @@
                     Somos uma imobiliária que acredita que encontrar um lar é uma das decisões mais importantes da vida.
                     Por isso, unimos tecnologia (com o apoio do QuintoAndar) e atendimento humano para filtrar exatamente
                     o que você precisa. Nossa missão: economizar seu tempo e tornar essa mudança mais leve e fácil.
-                `;
-            } else if (type === 'contato') {
-                title.textContent = '📞 Fale com a gente';
-                body.innerHTML = `
-                    <strong>E-mail:</strong> limaribeiroimobeis@gmail.com<br />
-                    <strong>Telefone:</strong> (31) 99627-3985<br /><br />
-                    Ou clique no botão flutuante do WhatsApp para conversar com um de nossos especialistas.
                 `;
             } else if (type === 'privacidade') {
                 title.textContent = '🔒 Política de Privacidade';
@@ -1506,14 +1628,14 @@
 
         window.openWhatsAppModal = openWhatsAppModal;
         window.closeWhatsAppModal = closeWhatsAppModal;
-        window.openAgendamentoModal = openAgendamentoModal;
-        window.closeAgendamentoModal = closeAgendamentoModal;
+        window.openContatoModal = openContatoModal;
+        window.closeContatoModal = closeContatoModal;
         window.openModal = openModal;
         window.closeGenericModal = closeGenericModal;
 
         console.log('🏠 Lima Ribeiro Imóveis · Encontre seu lar!');
         console.log('💙 Design profissional e responsivo.');
-        console.log('📧 E-mail: limaribeiroimobeis@gmail.com');
+        console.log('📧 E-mail: limaribeiroimoveis@gmail.com');
         console.log('📱 WhatsApp: Carolina (31) 99627-3985 | Hugo (31) 99607-0930');
         console.log('📸 Instagram: @carollimaimoveisbh | @hugoribeiro.imoveis');
         console.log('💰 Indique e Ganhe: www.limaribeiroimoveis.com.br/indiqueeganhe');
