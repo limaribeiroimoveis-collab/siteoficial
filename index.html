@@ -355,7 +355,8 @@
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
-            background-size: cover;
+            background-size: contain;
+            background-repeat: no-repeat;
             background-position: center;
             position: relative;
             transition: 0.3s;
@@ -873,6 +874,191 @@
             border-bottom: none;
         }
 
+        /* ===== MODAL INFORMATIVOS ===== */
+        .info-accordion {
+            margin: 12px 0;
+        }
+
+        .info-accordion-item {
+            border: 1px solid #e8ecf2;
+            border-radius: 12px;
+            margin-bottom: 8px;
+            overflow: hidden;
+        }
+
+        .info-accordion-item .accordion-header {
+            background: var(--cinza-claro);
+            padding: 14px 18px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.95rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: 0.2s;
+            user-select: none;
+        }
+
+        .info-accordion-item .accordion-header:hover {
+            background: #e0e4ef;
+        }
+
+        .info-accordion-item .accordion-header i {
+            color: var(--azul-quinto);
+            font-size: 1rem;
+            transition: 0.3s;
+        }
+
+        .info-accordion-item .accordion-header .arrow {
+            transition: 0.3s;
+        }
+
+        .info-accordion-item .accordion-header .arrow.open {
+            transform: rotate(180deg);
+        }
+
+        .info-accordion-item .accordion-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            background: var(--branco);
+        }
+
+        .info-accordion-item .accordion-body .body-content {
+            padding: 16px 18px;
+            font-size: 0.9rem;
+            line-height: 1.7;
+            color: var(--texto-escuro);
+            white-space: pre-wrap;
+            position: relative;
+        }
+
+        .info-accordion-item .accordion-body .body-content .copy-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: var(--azul-claro);
+            border: none;
+            border-radius: 30px;
+            padding: 4px 14px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--azul-quinto);
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .info-accordion-item .accordion-body .body-content .copy-btn:hover {
+            background: var(--azul-quinto);
+            color: #fff;
+        }
+
+        .info-accordion-item .accordion-body .body-content .copy-btn.copied {
+            background: #25d366;
+            color: #fff;
+        }
+
+        /* ===== MODAL QPRECO ===== */
+        .qpreco-step {
+            display: block;
+        }
+
+        .qpreco-step.hidden {
+            display: none;
+        }
+
+        .qpreco-step .form-group {
+            margin-bottom: 16px;
+        }
+
+        .qpreco-step .form-group label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.85rem;
+            margin-bottom: 4px;
+            color: var(--texto-escuro);
+        }
+
+        .qpreco-step .form-group input,
+        .qpreco-step .form-group select {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1.5px solid #d0d7e6;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-family: 'Inter', sans-serif;
+            transition: 0.2s;
+            background: var(--branco);
+        }
+
+        .qpreco-step .form-group input:focus,
+        .qpreco-step .form-group select:focus {
+            border-color: var(--azul-quinto);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0, 30, 240, 0.1);
+        }
+
+        .qpreco-step .form-group input::placeholder {
+            color: #b0b8cc;
+        }
+
+        .qpreco-step .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .qpreco-step .btn-next {
+            width: 100%;
+            padding: 14px;
+            background: var(--azul-quinto);
+            color: #fff;
+            border: none;
+            border-radius: 60px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 8px;
+        }
+
+        .qpreco-step .btn-next:hover {
+            background: var(--azul-escuro);
+            transform: scale(1.02);
+        }
+
+        .qpreco-step .step-indicator {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin: 16px 0 20px;
+        }
+
+        .qpreco-step .step-indicator .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #d0d7e6;
+            transition: 0.3s;
+        }
+
+        .qpreco-step .step-indicator .dot.active {
+            background: var(--azul-quinto);
+            width: 28px;
+            border-radius: 6px;
+        }
+
+        .qpreco-step .step-counter {
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--texto-cinza);
+            font-weight: 500;
+            margin-bottom: 12px;
+        }
+
         /* ============================================================ */
         /* ===== RESPONSIVO ===== */
         /* ============================================================ */
@@ -1013,6 +1199,13 @@
                 line-height: 1.6;
             }
 
+            .tech-badge .highlight {
+                background: transparent !important;
+                color: var(--azul-quinto) !important;
+                padding: 0 !important;
+                display: inline !important;
+            }
+
             .differentials {
                 grid-template-columns: 1fr 1fr;
                 gap: 12px;
@@ -1091,6 +1284,10 @@
             .contact-item .info .name {
                 font-size: 0.85rem;
             }
+
+            .qpreco-step .form-row {
+                grid-template-columns: 1fr;
+            }
         }
 
         @media (max-width: 480px) {
@@ -1163,7 +1360,8 @@
         <div class="nav-links">
             <a href="#" onclick="alert('Página de Imóveis (em breve)')">Imóveis</a>
             <a href="#" onclick="openModal('sobre')">Sobre</a>
-            <a href="#" onclick="openModal('contato')">Contato</a>
+            <a href="#" onclick="openModal('contatoCompleto')">Contato</a>
+            <a href="#" onclick="openModal('informativos')">Informativos</a>
             <a href="https://limaribeiroimoveis.com.br/politicadeprivacidade.html" target="_blank">Política de Privacidade</a>
         </div>
         <div class="nav-right">
@@ -1175,17 +1373,17 @@
 
     <!-- ===== MENU INFERIOR (Mobile) - Moderno ===== -->
     <div class="bottom-menu" id="bottomMenu">
+        <button class="bottom-menu-item" onclick="openModal('menuMobile')">
+            <i class="fas fa-bars"></i>
+            <span class="menu-label">Menu</span>
+        </button>
         <button class="bottom-menu-item" onclick="alert('Página de Imóveis (em breve)')">
             <i class="fas fa-home"></i>
             <span class="menu-label">Imóveis</span>
         </button>
-        <button class="bottom-menu-item" onclick="openModal('contato')">
+        <button class="bottom-menu-item" onclick="openModal('contatoCompleto')">
             <i class="fas fa-envelope"></i>
             <span class="menu-label">Contato</span>
-        </button>
-        <button class="bottom-menu-item" onclick="window.open('https://limaribeiroimoveis.com.br/politicadeprivacidade.html', '_blank')">
-            <i class="fas fa-shield-alt"></i>
-            <span class="menu-label">Privacidade</span>
         </button>
         <button class="bottom-menu-item" onclick="openModal('qpreco')">
             <i class="fas fa-calculator"></i>
@@ -1215,7 +1413,7 @@
                     <a href="#" class="btn-primary-blue" onclick="openWhatsAppModal()">
                         <i class="fab fa-whatsapp"></i> Conversar com especialista
                     </a>
-                    <a href="#" class="btn-secondary-light" onclick="openModal('contato')">
+                    <a href="#" class="btn-secondary-light" onclick="openModal('agendarVisita')">
                         <i class="far fa-calendar-alt"></i> Agendar visita
                     </a>
                 </div>
@@ -1266,7 +1464,7 @@
         <div class="tech-badge">
             <p>
                 <strong>Toda tecnologia QuintoAndar</strong><br>
-                <span class="highlight">com o atendimento personalizado</span><br>
+                <span style="font-weight:600;">com o atendimento personalizado</span><br>
                 <strong>e humanizado da Lima Ribeiro Imóveis</strong>.<br />
                 <span style="font-weight: 400; color: var(--texto-cinza);">
                     O melhor dos dois mundos para você encontrar seu lar.
@@ -1355,10 +1553,10 @@
         </div>
     </div>
 
-    <!-- ===== MODAL CONTATO COMPLETO ===== -->
-    <div class="modal-overlay" id="contatoModal">
+    <!-- ===== MODAL CONTATO COMPLETO (todos os contatos juntos) ===== -->
+    <div class="modal-overlay" id="contatoCompletoModal">
         <div class="modal-box">
-            <h3><i class="fas fa-address-book" style="color: var(--azul-quinto);"></i> Contatos</h3>
+            <h3><i class="fas fa-address-book" style="color: var(--azul-quinto);"></i> Contato</h3>
             <p class="sub">Escolha a melhor forma de falar com a gente.</p>
 
             <!-- WhatsApp -->
@@ -1455,7 +1653,68 @@
                 </a>
             </div>
 
-            <button class="modal-close" onclick="closeContatoModal()">Fechar</button>
+            <button class="modal-close" onclick="closeContatoCompletoModal()">Fechar</button>
+        </div>
+    </div>
+
+    <!-- ===== MODAL AGENDAR VISITA (somente agendamento) ===== -->
+    <div class="modal-overlay" id="agendarVisitaModal">
+        <div class="modal-box">
+            <h3><i class="fas fa-calendar-check" style="color: var(--azul-quinto);"></i> Agendar Visita</h3>
+            <p class="sub">Escolha um de nossos consultores para agendar sua visita.</p>
+
+            <div class="contact-list">
+                <a href="https://www.quintoandar.com.br/corretor/atendimento/CarolinaLima-ZADT" target="_blank" class="contact-item">
+                    <div class="avatar">
+                        <img src="https://img.magnific.com/fotos-gratis/retrato-3d-de-mulher_23-2150793881.jpg?semt=ais_hybrid&w=740&q=80" alt="Carolina" />
+                    </div>
+                    <div class="info">
+                        <div class="name">Carolina Lima</div>
+                        <div class="role">Agendar visita</div>
+                    </div>
+                    <i class="fas fa-arrow-right icon-right"></i>
+                </a>
+                <a href="https://www.quintoandar.com.br/corretor/atendimento/HugoFelipePereiraRibeiro-3M2K" target="_blank" class="contact-item">
+                    <div class="avatar">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9Io1_SmAkNzTW8drLCEVnd3fxWFNnAqNIJuFOnmzzMJZo5xhcGMc-7ZtY&s=10" alt="Hugo" />
+                    </div>
+                    <div class="info">
+                        <div class="name">Hugo Ribeiro</div>
+                        <div class="role">Agendar visita</div>
+                    </div>
+                    <i class="fas fa-arrow-right icon-right"></i>
+                </a>
+            </div>
+
+            <button class="modal-close" onclick="closeAgendarVisitaModal()">Fechar</button>
+        </div>
+    </div>
+
+    <!-- ===== MODAL INFORMATIVOS ===== -->
+    <div class="modal-overlay" id="informativosModal">
+        <div class="modal-box" style="max-width: 600px;">
+            <h3><i class="fas fa-info-circle" style="color: var(--azul-quinto);"></i> Informativos</h3>
+            <p class="sub">Clique nos títulos para expandir e copiar o conteúdo.</p>
+            <div class="info-accordion" id="infoAccordion">
+                <!-- injetado via JS -->
+            </div>
+            <button class="modal-close" onclick="closeInformativosModal()">Fechar</button>
+        </div>
+    </div>
+
+    <!-- ===== MODAL MENU MOBILE ===== -->
+    <div class="modal-overlay" id="menuMobileModal">
+        <div class="modal-box" style="max-width: 400px;">
+            <h3><i class="fas fa-bars" style="color: var(--azul-quinto);"></i> Menu</h3>
+            <div style="display:flex; flex-direction:column; gap:12px; margin:16px 0;">
+                <a href="#" onclick="alert('Página de Imóveis (em breve)')" style="padding:12px 16px; background:var(--cinza-claro); border-radius:12px; text-decoration:none; color:var(--texto-escuro); font-weight:500;">🏠 Imóveis</a>
+                <a href="#" onclick="openModal('sobre'); closeMenuMobileModal();" style="padding:12px 16px; background:var(--cinza-claro); border-radius:12px; text-decoration:none; color:var(--texto-escuro); font-weight:500;">ℹ️ Sobre</a>
+                <a href="#" onclick="openModal('contatoCompleto'); closeMenuMobileModal();" style="padding:12px 16px; background:var(--cinza-claro); border-radius:12px; text-decoration:none; color:var(--texto-escuro); font-weight:500;">📞 Contato</a>
+                <a href="#" onclick="openModal('informativos'); closeMenuMobileModal();" style="padding:12px 16px; background:var(--cinza-claro); border-radius:12px; text-decoration:none; color:var(--texto-escuro); font-weight:500;">📄 Informativos</a>
+                <a href="https://limaribeiroimoveis.com.br/politicadeprivacidade.html" target="_blank" style="padding:12px 16px; background:var(--cinza-claro); border-radius:12px; text-decoration:none; color:var(--texto-escuro); font-weight:500;">🔒 Política de Privacidade</a>
+                <a href="https://www.limaribeiroimoveis.com.br/indiqueeganhe" target="_blank" style="padding:12px 16px; background:var(--azul-quinto); border-radius:12px; text-decoration:none; color:#fff; font-weight:600; text-align:center;">💰 Indique e Ganhe</a>
+            </div>
+            <button class="modal-close" onclick="closeMenuMobileModal()">Fechar</button>
         </div>
     </div>
 
@@ -1468,21 +1727,64 @@
         </div>
     </div>
 
+    <!-- ===== MODAL QPRECO ===== -->
+    <div class="modal-overlay" id="qprecoModal">
+        <div class="modal-box" style="max-width: 520px;">
+            <h3><i class="fas fa-calculator" style="color: var(--azul-quinto);"></i> QPreço</h3>
+            <p class="sub">Descubra o valor ideal do seu imóvel em poucos passos.</p>
+            <div id="qprecoContainer">
+                <!-- injetado via JS -->
+            </div>
+            <button class="modal-close" onclick="closeQprecoModal()">Fechar</button>
+        </div>
+    </div>
+
+
     <script>
+        // ============================================================
+        // 0. FUNÇÃO PARA CONVERTER LINK DO GOOGLE DRIVE
+        // ============================================================
+        function converterLinkGoogleDrive(url) {
+            // Se for link do Google Drive, extrai o ID e monta a URL de thumbnail
+            if (url && url.includes('drive.google.com/file/d/')) {
+                const match = url.match(/\/d\/([^\/]+)/);
+                if (match) {
+                    return `https://drive.google.com/thumbnail?id=${match[1]}&sz=w800`;
+                }
+            }
+            return url;
+        }
+
         // ============================================================
         // 1. CARROSSEL HORIZONTAL
         // ============================================================
         const imoveis = [
-            { img: 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=600&h=450&fit=crop' },
-            { img: 'https://images.unsplash.com/photo-1560185007-cde436f6a4d0?w=600&h=450&fit=crop' },
-            { img: 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=600&h=450&fit=crop' },
-            { img: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=600&h=450&fit=crop' },
-            { img: 'https://images.unsplash.com/photo-1576941089067-2de3c901e126?w=600&h=450&fit=crop' },
-            { img: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600&h=450&fit=crop' },
-            { img: 'https://images.unsplash.com/photo-1560185127-6ed189bf02f4?w=600&h=450&fit=crop' },
-            { img: 'https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=600&h=450&fit=crop' },
-            { img: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=600&h=450&fit=crop' },
-            { img: 'https://images.unsplash.com/photo-1560185127-6ed189bf02f4?w=600&h=450&fit=crop' }
+            {
+                img: 'https://drive.google.com/file/d/1LILRfrJgeeMFe-Zr5ji-I4XlpCROrdeq/view?usp=sharing',
+                link: 'https://wa.me/5531996070930?text=Olá! Gostaria de saber mais sobre este imóvel.'
+            },
+            {
+                img: 'https://drive.google.com/file/d/1ZsijdtbL4q1DWHqoKQvpUUhDki2zEEzq/view?usp=sharing',
+                link: 'http://quin.to/112ggova'
+            },
+            {
+                img: 'https://drive.google.com/file/d/1etfiJNpBZx6D0JuGH7yf7yiNAeLswx1M/view?usp=sharing',
+                link: ''
+            },
+            {
+                img: 'https://drive.google.com/file/d/1PhEvZdMqzJuE_u_LCEi8Yu0RitOLHdt4/view?usp=sharing',
+                link: ''
+            },
+            {
+                img: 'https://drive.google.com/file/d/1oxnmSg_OFiJVtlmTAjgc5PLUe8xfNYX_/view?usp=sharing',
+                link: ''
+            },
+            {
+                img: 'https://drive.google.com/file/d/1uUH3x5rHKCo3dB7YV5JuNOedIiUPxliY/view?usp=sharing',
+                link: ''
+            }
+           
+            
         ];
 
         let currentIndex = 0;
@@ -1492,16 +1794,24 @@
 
         function renderCarousel() {
             track.innerHTML = '';
-            imoveis.forEach((item) => {
+            imoveis.forEach((item, index) => {
                 const slide = document.createElement('div');
                 slide.className = 'carousel-slide';
+                // Converte o link do Google Drive se necessário
+                const imgUrl = converterLinkGoogleDrive(item.img);
                 slide.innerHTML = `
-                    <div class="carousel-card" style="background-image: url('${item.img}');">
+                    <div class="carousel-card" style="background-image: url('${imgUrl}');">
                     </div>
                 `;
-                slide.addEventListener('click', () => {
-                    alert('🔗 Em breve você poderá ver mais detalhes deste imóvel.');
-                });
+                // Só adiciona evento de clique se houver link
+                if (item.link && item.link.trim() !== '') {
+                    slide.addEventListener('click', () => {
+                        window.open(item.link, '_blank');
+                    });
+                } else {
+                    // Se não tiver link, o cursor fica como default e não faz nada
+                    slide.style.cursor = 'default';
+                }
                 track.appendChild(slide);
             });
 
@@ -1543,7 +1853,430 @@
         wrapper.addEventListener('mouseleave', startAutoSlide);
 
         // ============================================================
-        // 2. MODAIS
+        // 2. INFORMATIVOS
+        // ============================================================
+        const informativosData = [{
+            titulo: '📋 FLUXO DA VENDA À VISTA',
+            conteudo: `FLUXO DA VENDA À VISTA
+
+        1. Aceite da proposta
+        Comprador e vendedor alinham valor, pagamento, prazos e condições da negociação.
+
+        2. Preenchimento do formulário
+        Após o aceite, as partes recebem o link para preenchimento dos dados e elaboração do Contrato de Compra e Venda (CCV).
+
+        3. Assinatura do CCV
+        O contrato é enviado por e-mail e assinado digitalmente pela DocSign. Condições negociadas fora do padrão ficam na Cláusula 12, Condições Específicas, prevalecendo sobre as condições padrão.
+
+        4. Sinal / Caução
+        O comprador paga a caução ao QuintoAndar em até 4 dias úteis após a assinatura do CCV. O valor fica retido como garantia do negócio e só é convertido em comissão quando a documentação estiver apta e o vendedor receber a entrada do comprador.
+
+        5. Diligência – ATÉ 10 DIAS ÚTEIS
+        É feita a análise das certidões dos vendedores e da documentação do imóvel para verificar se está tudo apto para a compra e venda.
+
+        Com a diligência aprovada, o comprador fica apto a realizar o pagamento da entrada ao vendedor.
+
+        6. Escritura e registro
+        A equipe do Cartório Jaguarão, localizado na Rua da Bahia, 1.000, Centro de Belo Horizonte, é dedicada aos processos de compra e venda à vista do QuintoAndar e entra em contato diretamente com as partes.
+
+        Os escreventes auxiliam na tramitação da escritura até o registro do imóvel. Não é serviço de despachante e não há cobrança de honorários por essa assessoria.
+
+        Normalmente, a escritura ocorre em até 30 dias, ou dentro do prazo combinado entre as partes.
+
+        7. Quitação e posse
+        O saldo é pago conforme estabelecido no CCV. A posse e a entrega das chaves seguem o que foi acordado entre as partes, sempre a partir da quitação integral do negócio.
+
+        RESUMO:
+        Proposta → Formulário → CCV → Caução (até 4 dias úteis) → Diligência (ATÉ 10 dias úteis) → Entrada → Escritura/Quitação → Registro → Posse.
+
+        Os prazos são estimativas e podem variar conforme documentação, cartório e condições específicas da negociação.`
+        }, {
+            titulo: '📋 FLUXO DA VENDA FINANCIADA',
+            conteudo: `FLUXO DA VENDA FINANCIADA
+
+        1. Aceite da proposta
+        Comprador e vendedor alinham valor, forma de pagamento, financiamento, prazos e condições da negociação.
+
+        2. Preenchimento do formulário
+        Após o aceite, as partes recebem um link para preencher os dados necessários para elaboração do Contrato de Compra e Venda (CCV).
+
+        3. Assinatura do CCV
+        Comprador e vendedor recebem o CCV por e-mail e assinam digitalmente pela plataforma DocSign.
+
+        O contrato formaliza tudo o que foi negociado. Condições diferentes do padrão QuintoAndar ficam registradas na Cláusula 12, Condições Específicas, que prevalece sobre as condições padrão quando houver divergência.
+
+        4. Sinal / Caução do negócio
+        O comprador paga a caução ao QuintoAndar em até 4 dias, garantindo o negócio.
+
+        O valor fica retido e ainda não é comissão. Somente é convertido em comissão após o cumprimento das condições previstas no CCV para continuidade do negócio.
+
+        5. Diligência e financiamento
+        A documentação do imóvel e dos vendedores é analisada. Paralelamente, o banco realiza a análise do financiamento e a avaliação do imóvel.
+
+        6. Assinatura com o banco + entrada
+        Estando documentação, crédito e imóvel aptos, comprador e vendedor assinam o contrato de financiamento. Nesse momento é realizado o pagamento da entrada ao vendedor.
+
+        Estimativa comercial para chegar nessa etapa: 45 a 60 dias.
+
+        7. Registro do imóvel
+        O contrato bancário segue para registro no Cartório de Registro de Imóveis.
+
+        Estimativa comercial: 15 a 30 dias.
+
+        8. Liberação do financiamento
+        Após o registro, o banco libera o saldo financiado ao vendedor, normalmente em até 5 dias úteis, conforme a instituição financeira.
+
+        9. Quitação e posse
+        Com o recebimento integral dos valores, ocorre a quitação do negócio. A entrega das chaves segue o que foi combinado no CCV, sempre a partir da quitação integral do imóvel.
+
+        RESUMO:
+        Proposta → Formulário → CCV → Caução → Diligência/Avaliação → Contrato bancário + Entrada → Registro → Liberação do financiamento → Quitação → Posse.
+
+        Os prazos são estimativas comerciais e podem variar conforme banco, documentação, avaliação do imóvel, cartório e particularidades do processo.`
+        }];
+
+        function renderInformativos() {
+            const container = document.getElementById('infoAccordion');
+            container.innerHTML = '';
+            informativosData.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'info-accordion-item';
+                div.innerHTML = `
+                    <div class="accordion-header" data-index="${index}">
+                        <span>${item.titulo}</span>
+                        <i class="fas fa-chevron-down arrow"></i>
+                    </div>
+                    <div class="accordion-body">
+                        <div class="body-content">
+                            <button class="copy-btn" data-index="${index}"><i class="fas fa-copy"></i> Copiar</button>
+                            ${item.conteudo.replace(/\n/g, '<br>')}
+                        </div>
+                    </div>
+                `;
+                container.appendChild(div);
+
+                const header = div.querySelector('.accordion-header');
+                const body = div.querySelector('.accordion-body');
+                const arrow = header.querySelector('.arrow');
+
+                header.addEventListener('click', () => {
+                    // Fecha todos os outros
+                    document.querySelectorAll('.info-accordion-item .accordion-body').forEach(b => {
+                        if (b !== body) {
+                            b.style.maxHeight = '0';
+                            b.previousElementSibling.querySelector('.arrow').classList.remove('open');
+                        }
+                    });
+                    // Alterna o atual
+                    if (body.style.maxHeight && body.style.maxHeight !== '0px') {
+                        body.style.maxHeight = '0';
+                        arrow.classList.remove('open');
+                    } else {
+                        body.style.maxHeight = body.scrollHeight + 'px';
+                        arrow.classList.add('open');
+                    }
+                });
+
+                // Copiar
+                const copyBtn = div.querySelector('.copy-btn');
+                copyBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const text = item.conteudo;
+                    navigator.clipboard.writeText(text).then(() => {
+                        copyBtn.innerHTML = '<i class="fas fa-check"></i> Copiado!';
+                        copyBtn.classList.add('copied');
+                        setTimeout(() => {
+                            copyBtn.innerHTML = '<i class="fas fa-copy"></i> Copiar';
+                            copyBtn.classList.remove('copied');
+                        }, 2000);
+                    }).catch(() => {
+                        // Fallback
+                        const textarea = document.createElement('textarea');
+                        textarea.value = text;
+                        document.body.appendChild(textarea);
+                        textarea.select();
+                        document.execCommand('copy');
+                        document.body.removeChild(textarea);
+                        copyBtn.innerHTML = '<i class="fas fa-check"></i> Copiado!';
+                        copyBtn.classList.add('copied');
+                        setTimeout(() => {
+                            copyBtn.innerHTML = '<i class="fas fa-copy"></i> Copiar';
+                            copyBtn.classList.remove('copied');
+                        }, 2000);
+                    });
+                });
+            });
+        }
+
+        // ============================================================
+        // 3. QPRECO - Formulário em etapas
+        // ============================================================
+        let qprecoData = {};
+
+        function renderQprecoStep(step) {
+            const container = document.getElementById('qprecoContainer');
+            let html = `
+                <div class="step-counter">Passo ${step} de 5</div>
+                <div class="step-indicator">
+                    ${[1,2,3,4,5].map(i => `<span class="dot ${i === step ? 'active' : ''}"></span>`).join('')}
+                </div>
+                <div class="qpreco-step" id="qprecoStep${step}">
+            `;
+
+            if (step === 1) {
+                html += `
+                    <div class="form-group">
+                        <label>Rua / Avenida *</label>
+                        <input type="text" id="qRua" placeholder="Ex: Rua das Flores" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Número *</label>
+                            <input type="text" id="qNumero" placeholder="123" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Complemento</label>
+                            <input type="text" id="qComplemento" placeholder="Apto 101">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>CEP *</label>
+                        <input type="text" id="qCep" placeholder="00000-000" required>
+                    </div>
+                    <button class="btn-next" onclick="nextQprecoStep(2)">Calcular o valor da venda →</button>
+                `;
+            } else if (step === 2) {
+                html += `
+                    <div class="form-group">
+                        <label>Qual o tipo do imóvel? *</label>
+                        <select id="qTipo" required>
+                            <option value="">Selecione</option>
+                            <option value="Apartamento">Apartamento</option>
+                            <option value="Casa">Casa</option>
+                            <option value="Studio">Studio</option>
+                            <option value="Cobertura">Cobertura</option>
+                            <option value="Casa de condomínio">Casa de condomínio</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Em qual andar ele está? *</label>
+                        <input type="text" id="qAndar" placeholder="Ex: 5º andar, Térreo" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Qual a área útil em m²? *</label>
+                        <input type="number" id="qArea" placeholder="Ex: 85" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Qual sua relação com o imóvel? *</label>
+                        <select id="qRelacao" required onchange="toggleDisponibilidade()">
+                            <option value="">Selecione</option>
+                            <option value="Proprietário">Proprietário</option>
+                            <option value="Corretor / Representante">Corretor / Representante</option>
+                            <option value="Interessado">Interessado</option>
+                            <option value="Outro">Outro</option>
+                        </select>
+                    </div>
+                    <div id="disponibilidadeGroup" style="display:none;">
+                        <div class="form-group">
+                            <label>Quando o imóvel estará disponível? *</label>
+                            <select id="qDisponibilidade" required>
+                                <option value="">Selecione</option>
+                                <option value="Disponível (vazio)">Disponível (vazio)</option>
+                                <option value="Estará em até 1 mês">Estará em até 1 mês</option>
+                                <option value="Estará em até 3 meses">Estará em até 3 meses</option>
+                                <option value="Estará em até 6 meses">Estará em até 6 meses</option>
+                                <option value="Em um ano ou mais">Em um ano ou mais</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button class="btn-next" onclick="nextQprecoStep(3)">Próximo →</button>
+                `;
+            } else if (step === 3) {
+                html += `
+                    <p style="color: var(--texto-cinza); margin-bottom:16px; font-weight:500;">Falta pouco, só preciso de mais detalhes para achar o preço perfeito pra você.</p>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Quantos banheiros? *</label>
+                            <input type="number" id="qBanheiros" placeholder="0" min="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Quantas suítes? *</label>
+                            <input type="number" id="qSuites" placeholder="0" min="0" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Quantos quartos? *</label>
+                            <input type="number" id="qQuartos" placeholder="0" min="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Quantas vagas de garagem? *</label>
+                            <input type="number" id="qGaragem" placeholder="0" min="0" required>
+                        </div>
+                    </div>
+                    <button class="btn-next" onclick="nextQprecoStep(4)">Próximo →</button>
+                `;
+            } else if (step === 4) {
+                html += `
+                    <p style="color: var(--texto-cinza); margin-bottom:16px; font-weight:500;">Esse é nosso último passo.</p>
+                    <div class="form-group">
+                        <label>Qual o valor do condomínio? *</label>
+                        <input type="number" id="qCondominio" placeholder="0" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Qual o valor do IPTU? *</label>
+                        <input type="number" id="qIptu" placeholder="0" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Informações adicionais que valorizam seu imóvel</label>
+                        <input type="text" id="qInfoExtra" placeholder="Ex: vista para o mar, piscina, área gourmet...">
+                    </div>
+                    <button class="btn-next" onclick="nextQprecoStep(5)">Próximo →</button>
+                `;
+            } else if (step === 5) {
+                html += `
+                    <p style="color: var(--texto-cinza); margin-bottom:16px; font-weight:500;">Quase lá! Deixe seu WhatsApp para receber o valor ideal.</p>
+                    <div class="form-group">
+                        <label>Seu WhatsApp com DDD *</label>
+                        <input type="tel" id="qWhatsapp" placeholder="(31) 99999-9999" required>
+                    </div>
+                    <button class="btn-next" onclick="submitQpreco()">Enviar e receber valor →</button>
+                `;
+            }
+
+            html += `</div>`;
+            container.innerHTML = html;
+        }
+
+        let currentQprecoStep = 1;
+
+        function nextQprecoStep(step) {
+            // Validação básica
+            if (step === 2) {
+                const rua = document.getElementById('qRua');
+                const numero = document.getElementById('qNumero');
+                const cep = document.getElementById('qCep');
+                if (!rua.value.trim() || !numero.value.trim() || !cep.value.trim()) {
+                    alert('Por favor, preencha todos os campos obrigatórios.');
+                    return;
+                }
+            }
+            if (step === 3) {
+                const tipo = document.getElementById('qTipo');
+                const andar = document.getElementById('qAndar');
+                const area = document.getElementById('qArea');
+                const relacao = document.getElementById('qRelacao');
+                if (!tipo.value || !andar.value.trim() || !area.value.trim() || !relacao.value) {
+                    alert('Por favor, preencha todos os campos obrigatórios.');
+                    return;
+                }
+                // Verifica disponibilidade se for proprietário
+                if (relacao.value === 'Proprietário') {
+                    const disp = document.getElementById('qDisponibilidade');
+                    if (!disp.value) {
+                        alert('Por favor, informe a disponibilidade do imóvel.');
+                        return;
+                    }
+                }
+            }
+            if (step === 4) {
+                const banheiros = document.getElementById('qBanheiros');
+                const suites = document.getElementById('qSuites');
+                const quartos = document.getElementById('qQuartos');
+                const garagem = document.getElementById('qGaragem');
+                if (!banheiros.value || !suites.value || !quartos.value || !garagem.value) {
+                    alert('Por favor, preencha todos os campos obrigatórios.');
+                    return;
+                }
+            }
+            if (step === 5) {
+                const cond = document.getElementById('qCondominio');
+                const iptu = document.getElementById('qIptu');
+                if (!cond.value || !iptu.value) {
+                    alert('Por favor, preencha todos os campos obrigatórios.');
+                    return;
+                }
+            }
+
+            currentQprecoStep = step;
+            renderQprecoStep(step);
+            // Re-aplica eventos
+            setTimeout(() => {
+                if (document.getElementById('qRelacao')) {
+                    document.getElementById('qRelacao').addEventListener('change', toggleDisponibilidade);
+                }
+            }, 50);
+        }
+
+        function toggleDisponibilidade() {
+            const relacao = document.getElementById('qRelacao');
+            const group = document.getElementById('disponibilidadeGroup');
+            if (relacao.value === 'Proprietário') {
+                group.style.display = 'block';
+                document.getElementById('qDisponibilidade').required = true;
+            } else {
+                group.style.display = 'none';
+                document.getElementById('qDisponibilidade').required = false;
+            }
+        }
+
+        function submitQpreco() {
+            const whatsapp = document.getElementById('qWhatsapp');
+            if (!whatsapp.value.trim() || whatsapp.value.trim().length < 10) {
+                alert('Por favor, insira um número de WhatsApp válido.');
+                return;
+            }
+
+            // Coleta todos os dados
+            const data = {
+                endereco: document.getElementById('qRua')?.value || '',
+                numero: document.getElementById('qNumero')?.value || '',
+                complemento: document.getElementById('qComplemento')?.value || '',
+                cep: document.getElementById('qCep')?.value || '',
+                tipo: document.getElementById('qTipo')?.value || '',
+                andar: document.getElementById('qAndar')?.value || '',
+                area: document.getElementById('qArea')?.value || '',
+                relacao: document.getElementById('qRelacao')?.value || '',
+                disponibilidade: document.getElementById('qDisponibilidade')?.value || '',
+                banheiros: document.getElementById('qBanheiros')?.value || '0',
+                suites: document.getElementById('qSuites')?.value || '0',
+                quartos: document.getElementById('qQuartos')?.value || '0',
+                garagem: document.getElementById('qGaragem')?.value || '0',
+                condominio: document.getElementById('qCondominio')?.value || '0',
+                iptu: document.getElementById('qIptu')?.value || '0',
+                infoExtra: document.getElementById('qInfoExtra')?.value || '',
+                whatsapp: whatsapp.value.trim()
+            };
+
+            // Monta mensagem para WhatsApp
+            let msg = `📊 *QPreço - Avaliação de Imóvel*%0A%0A`;
+            msg += `📍 Endereço: ${data.endereco}, ${data.numero}${data.complemento ? ', ' + data.complemento : ''}%0A`;
+            msg += `📮 CEP: ${data.cep}%0A`;
+            msg += `🏠 Tipo: ${data.tipo}%0A`;
+            msg += `📌 Andar: ${data.andar}%0A`;
+            msg += `📐 Área útil: ${data.area} m²%0A`;
+            msg += `👤 Relação: ${data.relacao}%0A`;
+            if (data.disponibilidade) msg += `📅 Disponibilidade: ${data.disponibilidade}%0A`;
+            msg += `🚿 Banheiros: ${data.banheiros}%0A`;
+            msg += `🛏️ Suítes: ${data.suites}%0A`;
+            msg += `🛌 Quartos: ${data.quartos}%0A`;
+            msg += `🚗 Garagem: ${data.garagem}%0A`;
+            msg += `💰 Condomínio: R$ ${data.condominio}%0A`;
+            msg += `🏷️ IPTU: R$ ${data.iptu}%0A`;
+            if (data.infoExtra) msg += `✨ Informações extras: ${data.infoExtra}%0A`;
+            msg += `%0A📱 WhatsApp: ${data.whatsapp}`;
+
+            // Envia para o WhatsApp
+            const url = `https://wa.me/5531996070930?text=${msg}`;
+            window.open(url, '_blank');
+
+            // Fecha o modal
+            closeQprecoModal();
+            alert('✅ Seus dados foram enviados! Em breve você receberá uma mensagem com o valor ideal.');
+        }
+
+        // ============================================================
+        // 4. MODAIS
         // ============================================================
         function openWhatsAppModal() {
             document.getElementById('whatsappModal').classList.add('active');
@@ -1553,17 +2286,68 @@
             document.getElementById('whatsappModal').classList.remove('active');
         }
 
-        function openContatoModal() {
-            document.getElementById('contatoModal').classList.add('active');
+        function openContatoCompletoModal() {
+            document.getElementById('contatoCompletoModal').classList.add('active');
         }
 
-        function closeContatoModal() {
-            document.getElementById('contatoModal').classList.remove('active');
+        function closeContatoCompletoModal() {
+            document.getElementById('contatoCompletoModal').classList.remove('active');
+        }
+
+        function openAgendarVisitaModal() {
+            document.getElementById('agendarVisitaModal').classList.add('active');
+        }
+
+        function closeAgendarVisitaModal() {
+            document.getElementById('agendarVisitaModal').classList.remove('active');
+        }
+
+        function openInformativosModal() {
+            document.getElementById('informativosModal').classList.add('active');
+            renderInformativos();
+        }
+
+        function closeInformativosModal() {
+            document.getElementById('informativosModal').classList.remove('active');
+        }
+
+        function openMenuMobileModal() {
+            document.getElementById('menuMobileModal').classList.add('active');
+        }
+
+        function closeMenuMobileModal() {
+            document.getElementById('menuMobileModal').classList.remove('active');
+        }
+
+        function openQprecoModal() {
+            document.getElementById('qprecoModal').classList.add('active');
+            currentQprecoStep = 1;
+            renderQprecoStep(1);
+        }
+
+        function closeQprecoModal() {
+            document.getElementById('qprecoModal').classList.remove('active');
         }
 
         function openModal(type) {
-            if (type === 'contato') {
-                openContatoModal();
+            if (type === 'contatoCompleto') {
+                openContatoCompletoModal();
+                return;
+            }
+            if (type === 'agendarVisita') {
+                openAgendarVisitaModal();
+                return;
+            }
+            if (type === 'informativos') {
+                openInformativosModal();
+                return;
+            }
+            if (type === 'menuMobile') {
+                openMenuMobileModal();
+                return;
+            }
+            if (type === 'qpreco') {
+                openQprecoModal();
                 return;
             }
 
@@ -1577,26 +2361,6 @@
                     Somos uma imobiliária que acredita que encontrar um lar é uma das decisões mais importantes da vida.
                     Por isso, unimos tecnologia (com o apoio do QuintoAndar) e atendimento humano para filtrar exatamente
                     o que você precisa. Nossa missão: economizar seu tempo e tornar essa mudança mais leve e fácil.
-                `;
-            } else if (type === 'privacidade') {
-                title.textContent = '🔒 Política de Privacidade';
-                body.innerHTML = `
-                    <p>A Lima Ribeiro Imóveis valoriza sua privacidade. Seus dados são utilizados exclusivamente para:</p>
-                    <ul>
-                        <li>✅ Entender suas necessidades imobiliárias</li>
-                        <li>✅ Oferecer recomendações personalizadas</li>
-                        <li>✅ Manter contato sobre imóveis de seu interesse</li>
-                    </ul>
-                    <p style="margin-top:12px;">Não compartilhamos seus dados com terceiros. Você pode solicitar a exclusão a qualquer momento.</p>
-                `;
-            } else if (type === 'qpreco') {
-                title.textContent = '🏠 QPreço · Calcule o valor do seu imóvel';
-                body.innerHTML = `
-                    O QPreço combina dados exclusivos e públicos para oferecer uma estimativa confiável do valor de mercado
-                    do seu imóvel. Clique no botão abaixo para iniciar a simulação gratuita.<br /><br />
-                    <button class="btn-primary-blue" style="width:100%; justify-content:center; border-radius:60px; padding:14px;" onclick="alert('Simulação QPreço iniciada (integração em breve)')">
-                        <i class="fas fa-calculator"></i> Simular agora
-                    </button>
                 `;
             } else {
                 title.textContent = 'Em breve';
@@ -1619,19 +2383,32 @@
         });
 
         // ============================================================
-        // 3. INICIALIZAÇÃO
+        // 5. INICIALIZAÇÃO
         // ============================================================
         document.addEventListener('DOMContentLoaded', () => {
             renderCarousel();
             startAutoSlide();
+            renderInformativos();
         });
 
+        // Expor funções globalmente
         window.openWhatsAppModal = openWhatsAppModal;
         window.closeWhatsAppModal = closeWhatsAppModal;
-        window.openContatoModal = openContatoModal;
-        window.closeContatoModal = closeContatoModal;
+        window.openContatoCompletoModal = openContatoCompletoModal;
+        window.closeContatoCompletoModal = closeContatoCompletoModal;
+        window.openAgendarVisitaModal = openAgendarVisitaModal;
+        window.closeAgendarVisitaModal = closeAgendarVisitaModal;
+        window.openInformativosModal = openInformativosModal;
+        window.closeInformativosModal = closeInformativosModal;
+        window.openMenuMobileModal = openMenuMobileModal;
+        window.closeMenuMobileModal = closeMenuMobileModal;
+        window.openQprecoModal = openQprecoModal;
+        window.closeQprecoModal = closeQprecoModal;
         window.openModal = openModal;
         window.closeGenericModal = closeGenericModal;
+        window.nextQprecoStep = nextQprecoStep;
+        window.submitQpreco = submitQpreco;
+        window.toggleDisponibilidade = toggleDisponibilidade;
 
         console.log('🏠 Lima Ribeiro Imóveis · Encontre seu lar!');
         console.log('💙 Design profissional e responsivo.');
