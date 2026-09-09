@@ -1526,9 +1526,9 @@
     <div class="modal-overlay" id="whatsappModal">
         <div class="modal-box">
             <h3><i class="fab fa-whatsapp" style="color: #25d366;"></i> Fale com a gente</h3>
-            <p class="sub">Escolha um de nossos especialistas para atendimento personalizado.</p>
+            <p class="sub" id="whatsappModalSub">Escolha um de nossos especialistas para atendimento personalizado.</p>
             <div class="contact-list">
-                <a href="https://wa.me/5531996273985?text=Olá! Gostaria de saber mais sobre os imóveis da Lima Ribeiro." target="_blank" class="contact-item">
+                <a href="https://wa.me/5531996273985?text=Olá! Gostaria de saber mais sobre os imóveis da Lima Ribeiro." target="_blank" class="contact-item" id="whatsappCarolina">
                     <div class="avatar">
                         <img src="https://img.magnific.com/fotos-gratis/retrato-3d-de-mulher_23-2150793881.jpg?semt=ais_hybrid&w=740&q=80" alt="Foto Carolina" />
                     </div>
@@ -1538,7 +1538,7 @@
                     </div>
                     <i class="fab fa-whatsapp icon-right whatsapp"></i>
                 </a>
-                <a href="https://wa.me/5531996070930?text=Olá! Gostaria de saber mais sobre os imóveis da Lima Ribeiro." target="_blank" class="contact-item">
+                <a href="https://wa.me/5531996070930?text=Olá! Gostaria de saber mais sobre os imóveis da Lima Ribeiro." target="_blank" class="contact-item" id="whatsappHugo">
                     <div class="avatar">
                         <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9Io1_SmAkNzTW8drLCEVnd3fxWFNnAqNIJuFOnmzzMJZo5xhcGMc-7ZtY&s=10" alt="Foto Hugo" />
                     </div>
@@ -1745,7 +1745,6 @@
         // 0. FUNÇÃO PARA CONVERTER LINK DO GOOGLE DRIVE
         // ============================================================
         function converterLinkGoogleDrive(url) {
-            // Se for link do Google Drive, extrai o ID e monta a URL de thumbnail
             if (url && url.includes('drive.google.com/file/d/')) {
                 const match = url.match(/\/d\/([^\/]+)/);
                 if (match) {
@@ -1761,30 +1760,34 @@
         const imoveis = [
             {
                 img: 'https://drive.google.com/file/d/1LILRfrJgeeMFe-Zr5ji-I4XlpCROrdeq/view?usp=sharing',
-                link: 'https://wa.me/5531996070930?text=Olá! Gostaria de saber mais sobre este imóvel.'
+                link: '',
+                mensagem: 'Olá! Quero vender meu imóvel. Podem me ajudar?'
             },
             {
                 img: 'https://drive.google.com/file/d/1ZsijdtbL4q1DWHqoKQvpUUhDki2zEEzq/view?usp=sharing',
-                link: 'http://quin.to/112ggova'
+                link: '',
+                mensagem: 'Olá! Quero ver imóveis de 290 a 590 mil reais.'
             },
             {
                 img: 'https://drive.google.com/file/d/1etfiJNpBZx6D0JuGH7yf7yiNAeLswx1M/view?usp=sharing',
-                link: ''
+                link: '',
+                mensagem: 'Olá! Quero ver imóveis de 600 mil a 1 milhão.'
             },
             {
                 img: 'https://drive.google.com/file/d/1PhEvZdMqzJuE_u_LCEi8Yu0RitOLHdt4/view?usp=sharing',
-                link: ''
+                link: '',
+                mensagem: 'Olá! Quero ver imóveis acima de 1 milhão.'
             },
             {
                 img: 'https://drive.google.com/file/d/1oxnmSg_OFiJVtlmTAjgc5PLUe8xfNYX_/view?usp=sharing',
-                link: ''
+                link: '',
+                mensagem: 'Olá! Quero ver imóveis no Gutierrez em BH.'
             },
             {
                 img: 'https://drive.google.com/file/d/1uUH3x5rHKCo3dB7YV5JuNOedIiUPxliY/view?usp=sharing',
-                link: ''
+                link: '',
+                mensagem: 'Olá! Quero ver imóveis na região da Savassi, Santo Antônio e imediações.'
             }
-           
-            
         ];
 
         let currentIndex = 0;
@@ -1797,20 +1800,21 @@
             imoveis.forEach((item, index) => {
                 const slide = document.createElement('div');
                 slide.className = 'carousel-slide';
-                // Converte o link do Google Drive se necessário
                 const imgUrl = converterLinkGoogleDrive(item.img);
                 slide.innerHTML = `
                     <div class="carousel-card" style="background-image: url('${imgUrl}');">
                     </div>
                 `;
-                // Só adiciona evento de clique se houver link
+                
                 if (item.link && item.link.trim() !== '') {
                     slide.addEventListener('click', () => {
                         window.open(item.link, '_blank');
                     });
                 } else {
-                    // Se não tiver link, o cursor fica como default e não faz nada
-                    slide.style.cursor = 'default';
+                    slide.style.cursor = 'pointer';
+                    slide.addEventListener('click', () => {
+                        openWhatsAppComMensagem(item.mensagem);
+                    });
                 }
                 track.appendChild(slide);
             });
@@ -1851,6 +1855,34 @@
         const wrapper = document.querySelector('.carousel-wrapper');
         wrapper.addEventListener('mouseenter', () => clearInterval(autoInterval));
         wrapper.addEventListener('mouseleave', startAutoSlide);
+
+        // ============================================================
+        // FUNÇÃO PARA ABRIR WHATSAPP COM MENSAGEM PERSONALIZADA
+        // ============================================================
+        function openWhatsAppComMensagem(mensagem) {
+            const modal = document.getElementById('whatsappModal');
+            const sub = document.getElementById('whatsappModalSub');
+            
+            if (mensagem) {
+                sub.textContent = `"${mensagem}" - Escolha um especialista para continuar:`;
+            } else {
+                sub.textContent = 'Escolha um de nossos especialistas para atendimento personalizado.';
+            }
+            
+            const mensagemEncoded = encodeURIComponent(mensagem || 'Olá! Gostaria de saber mais sobre os imóveis da Lima Ribeiro.');
+            
+            const linkCarolina = document.getElementById('whatsappCarolina');
+            const linkHugo = document.getElementById('whatsappHugo');
+            
+            if (linkCarolina) {
+                linkCarolina.href = `https://wa.me/5531996273985?text=${mensagemEncoded}`;
+            }
+            if (linkHugo) {
+                linkHugo.href = `https://wa.me/5531996070930?text=${mensagemEncoded}`;
+            }
+            
+            modal.classList.add('active');
+        }
 
         // ============================================================
         // 2. INFORMATIVOS
@@ -1933,6 +1965,36 @@
         Proposta → Formulário → CCV → Caução → Diligência/Avaliação → Contrato bancário + Entrada → Registro → Liberação do financiamento → Quitação → Posse.
 
         Os prazos são estimativas comerciais e podem variar conforme banco, documentação, avaliação do imóvel, cartório e particularidades do processo.`
+        },{
+            titulo: '📋 SINAL E GARANTIAS',
+            conteudo: `SINAL E GARANTIAS
+
+        Como funciona o sinal na sua compra com o QuintoAndar:
+
+        O sinal (arras) é uma garantia para as duas partes e já faz parte do valor do imóvel. Ele fica guardado em segurança pelo QuintoAndar enquanto é feita a análise completa da documentação e do crédito.
+
+        Esse é um procedimento padrão, legal e muito comum em toda negociação imobiliária, justamente para dar total segurança para comprador e vendedor.
+
+        Como funciona na prática:
+
+        Se tudo for aprovado: o valor do sinal já é abatido do total da compra e seguimos para a escritura.
+
+        Se o financiamento não for aprovado: o contrato pode ser rescindido sem custos para as duas partes, desde que o comprador apresente a negativa formal de pelo menos 3 instituições financeiras, sem que tenha contribuído para a negativa. Nesse caso o valor fica guardado e é 100% restituído.
+
+        Se o COMPRADOR solicitar a desistência por outros motivos: o contrato prevê a possibilidade de retenção do sinal a título de indenização, conforme cláusula penal do CCV e Art. 418 do Código Civil.
+
+        Se o VENDEDOR solicitar a desistência: o valor é restituído ao comprador com o acréscimo previsto em contrato.
+
+        Se houver alguma pendência documental do imóvel: não há nenhuma penalidade. O valor é 100% restituído ao comprador assim que o distrato é formalizado.
+
+        Tudo é feito com contrato, com transparência e para proteger você em todas as etapas.
+
+        ---
+        Fontes oficiais:
+        Termos e Condições: https://www.quintoandar.com.br/termos
+        O que acontece se o financiamento não for aprovado: https://www.quintoandar.com.br/ajuda/artigo/o-que-acontece-se-meu-financiamento-nao-for-aprovado
+        Valor do sinal: https://www.quintoandar.com.br/ajuda/artigo/qual-o-valor-do-sinal-no-processo-de-compra-posso-parcelar
+        Desistência após CCV: https://www.quintoandar.com.br/ajuda/artigo/posso-desistir-da-compra-ou-venda-depois-que-assinei-o-ccv`
         }];
 
         function renderInformativos() {
@@ -1960,14 +2022,12 @@
                 const arrow = header.querySelector('.arrow');
 
                 header.addEventListener('click', () => {
-                    // Fecha todos os outros
                     document.querySelectorAll('.info-accordion-item .accordion-body').forEach(b => {
                         if (b !== body) {
                             b.style.maxHeight = '0';
                             b.previousElementSibling.querySelector('.arrow').classList.remove('open');
                         }
                     });
-                    // Alterna o atual
                     if (body.style.maxHeight && body.style.maxHeight !== '0px') {
                         body.style.maxHeight = '0';
                         arrow.classList.remove('open');
@@ -1977,7 +2037,6 @@
                     }
                 });
 
-                // Copiar
                 const copyBtn = div.querySelector('.copy-btn');
                 copyBtn.addEventListener('click', (e) => {
                     e.stopPropagation();
@@ -1990,7 +2049,6 @@
                             copyBtn.classList.remove('copied');
                         }, 2000);
                     }).catch(() => {
-                        // Fallback
                         const textarea = document.createElement('textarea');
                         textarea.value = text;
                         document.body.appendChild(textarea);
@@ -2016,7 +2074,7 @@
         function renderQprecoStep(step) {
             const container = document.getElementById('qprecoContainer');
             let html = `
-                <div class="step-counter">Passo ${step} de 5</div>
+                <div class="step-counter"></div>
                 <div class="step-indicator">
                     ${[1,2,3,4,5].map(i => `<span class="dot ${i === step ? 'active' : ''}"></span>`).join('')}
                 </div>
@@ -2151,7 +2209,6 @@
         let currentQprecoStep = 1;
 
         function nextQprecoStep(step) {
-            // Validação básica
             if (step === 2) {
                 const rua = document.getElementById('qRua');
                 const numero = document.getElementById('qNumero');
@@ -2170,7 +2227,6 @@
                     alert('Por favor, preencha todos os campos obrigatórios.');
                     return;
                 }
-                // Verifica disponibilidade se for proprietário
                 if (relacao.value === 'Proprietário') {
                     const disp = document.getElementById('qDisponibilidade');
                     if (!disp.value) {
@@ -2200,7 +2256,6 @@
 
             currentQprecoStep = step;
             renderQprecoStep(step);
-            // Re-aplica eventos
             setTimeout(() => {
                 if (document.getElementById('qRelacao')) {
                     document.getElementById('qRelacao').addEventListener('change', toggleDisponibilidade);
@@ -2227,7 +2282,6 @@
                 return;
             }
 
-            // Coleta todos os dados
             const data = {
                 endereco: document.getElementById('qRua')?.value || '',
                 numero: document.getElementById('qNumero')?.value || '',
@@ -2248,7 +2302,6 @@
                 whatsapp: whatsapp.value.trim()
             };
 
-            // Monta mensagem para WhatsApp
             let msg = `📊 *QPreço - Avaliação de Imóvel*%0A%0A`;
             msg += `📍 Endereço: ${data.endereco}, ${data.numero}${data.complemento ? ', ' + data.complemento : ''}%0A`;
             msg += `📮 CEP: ${data.cep}%0A`;
@@ -2266,11 +2319,9 @@
             if (data.infoExtra) msg += `✨ Informações extras: ${data.infoExtra}%0A`;
             msg += `%0A📱 WhatsApp: ${data.whatsapp}`;
 
-            // Envia para o WhatsApp
             const url = `https://wa.me/5531996070930?text=${msg}`;
             window.open(url, '_blank');
 
-            // Fecha o modal
             closeQprecoModal();
             alert('✅ Seus dados foram enviados! Em breve você receberá uma mensagem com o valor ideal.');
         }
@@ -2279,7 +2330,25 @@
         // 4. MODAIS
         // ============================================================
         function openWhatsAppModal() {
-            document.getElementById('whatsappModal').classList.add('active');
+            const modal = document.getElementById('whatsappModal');
+            const sub = document.getElementById('whatsappModalSub');
+            
+            sub.textContent = 'Escolha um de nossos especialistas para atendimento personalizado.';
+            
+            const mensagemPadrao = 'Olá! Gostaria de saber mais sobre os imóveis da Lima Ribeiro.';
+            const mensagemEncoded = encodeURIComponent(mensagemPadrao);
+            
+            const linkCarolina = document.getElementById('whatsappCarolina');
+            const linkHugo = document.getElementById('whatsappHugo');
+            
+            if (linkCarolina) {
+                linkCarolina.href = `https://wa.me/5531996273985?text=${mensagemEncoded}`;
+            }
+            if (linkHugo) {
+                linkHugo.href = `https://wa.me/5531996070930?text=${mensagemEncoded}`;
+            }
+            
+            modal.classList.add('active');
         }
 
         function closeWhatsAppModal() {
@@ -2409,6 +2478,7 @@
         window.nextQprecoStep = nextQprecoStep;
         window.submitQpreco = submitQpreco;
         window.toggleDisponibilidade = toggleDisponibilidade;
+        window.openWhatsAppComMensagem = openWhatsAppComMensagem;
 
         console.log('🏠 Lima Ribeiro Imóveis · Encontre seu lar!');
         console.log('💙 Design profissional e responsivo.');
