@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Calculadora de Custos de Compra de Imóvel - BH e Região</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        html, body {
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+        body {
+            background: #f5f6fa;
+            padding: 12px;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 640px;
+            width: 100%;
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            padding: 20px 16px;
+        }
+        h1 {
+            font-size: 20px;
+            margin: 0 0 6px;
+            color: #1a1a2e;
+            line-height: 1.3;
+        }
+        .sub {
+            color: #666;
+            font-size: 13px;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+        .field {
+            margin-bottom: 16px;
+        }
+        .label-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 6px;
+        }
+        label {
+            font-weight: 600;
+            font-size: 13.5px;
+            color: #333;
+            line-height: 1.3;
+        }
+
+        .info-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #5063F0;
+            color: #fff;
+            font-size: 12px;
+            font-weight: 700;
+            font-style: italic;
+            font-family: Georgia, serif;
+            cursor: pointer;
+            position: relative;
+            flex-shrink: 0;
+            user-select: none;
+            transition: background 0.2s;
+        }
+        .info-icon:hover {
+            background: #3d4ed8;
+        }
+        .info-icon .tooltip {
+            visibility: hidden;
+            opacity: 0;
+            width: 240px;
+            max-width: 80vw;
+            background: #1a1a2e;
+            color: #fff;
+            text-align: left;
+            border-radius: 10px;
+            padding: 10px 12px;
+            position: absolute;
+            z-index: 9999;
+            bottom: 130%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 12px;
+            font-weight: 400;
+            font-style: normal;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            line-height: 1.5;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+            transition: opacity 0.15s, visibility 0.15s;
+            pointer-events: none;
+        }
+        .info-icon .tooltip::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -6px;
+            border-width: 6px;
+            border-style: solid;
+            border-color: #1a1a2e transparent transparent transparent;
+        }
+        .info-icon:hover .tooltip,
+        .info-icon.active .tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+        .info-icon.tooltip-left .tooltip {
+            left: 0;
+            transform: translateX(-20%);
+        }
+        .info-icon.tooltip-left .tooltip::after {
+            left: 30%;
+        }
+
+        select, input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 12px 12px;
+            border: 1.5px solid #ddd;
+            border-radius: 10px;
+            font-size: 15px;
+            outline: none;
+            transition: border 0.2s;
+            background: #fff;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+        select {
+            background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%235063F0%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px top 50%;
+            background-size: 10px auto;
+            padding-right: 34px;
+        }
+        select:focus, input:focus {
+            border-color: #5063F0;
+        }
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 4px;
+        }
+        .checkbox-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            padding: 10px 12px;
+            background: #f9f9fb;
+            border-radius: 10px;
+            border: 1.5px solid #eee;
+            transition: all 0.2s;
+        }
+        .checkbox-item:active {
+            border-color: #5063F0;
+            background: #f0f2ff;
+        }
+        .checkbox-item input {
+            width: 20px;
+            height: 20px;
+            accent-color: #5063F0;
+            cursor: pointer;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+        .checkbox-item label {
+            margin: 0;
+            font-weight: 400;
+            cursor: pointer;
+            font-size: 13.5px;
+            color: #333;
+            flex: 1;
+            line-height: 1.4;
+        }
+        button.calcular {
+            width: 100%;
+            padding: 16px;
+            background: #5063F0;
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: background 0.2s;
+            -webkit-appearance: none;
+        }
+        button.calcular:hover,
+        button.calcular:active {
+            background: #3d4ed8;
+        }
+        .resultado {
+            margin-top: 24px;
+            display: none;
+        }
+        .resultado.visible {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .resultado h2 {
+            font-size: 17px;
+            color: #1a1a2e;
+            margin: 0 0 14px;
+        }
+        .linha {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 14px;
+        }
+        .linha:last-child {
+            border-bottom: none;
+        }
+        .linha .label {
+            color: #555;
+            flex: 1;
+            line-height: 1.35;
+        }
+        .linha .valor {
+            font-weight: 600;
+            color: #1a1a2e;
+            white-space: nowrap;
+            text-align: right;
+        }
+        .total {
+            background: #f0f2ff;
+            padding: 14px;
+            border-radius: 12px;
+            margin-top: 12px;
+        }
+        .total .linha {
+            border: none;
+            padding: 6px 0;
+        }
+        .total .linha .label {
+            font-weight: 700;
+            color: #1a1a2e;
+            font-size: 14.5px;
+        }
+        .total .linha .valor {
+            font-size: 16px;
+            color: #5063F0;
+        }
+        .total .linha.destaque .label,
+        .total .linha.destaque .valor {
+            font-size: 16px;
+        }
+        .aviso {
+            margin-top: 16px;
+            padding: 14px;
+            background: #fff8e6;
+            border-left: 4px solid #f5a623;
+            border-radius: 8px;
+            font-size: 12.5px;
+            color: #7a5c1e;
+            line-height: 1.55;
+        }
+        .aviso strong {
+            color: #5c4415;
+        }
+        .percentual {
+            font-size: 11px;
+            color: #888;
+            margin-left: 3px;
+            white-space: nowrap;
+        }
+
+        @media (max-width: 360px) {
+            .container { padding: 16px 12px; }
+            h1 { font-size: 18px; }
+            label { font-size: 13px; }
+            .checkbox-item label { font-size: 13px; }
+            .linha { font-size: 13px; }
+            .info-icon .tooltip { width: 220px; font-size: 11.5px; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Calculadora de Custos de Compra</h1>
+    <p class="sub">Estime os custos extras além do valor do imóvel em BH e Região Metropolitana.</p>
+
+    <div class="field">
+        <div class="label-row">
+            <label for="cidade">Cidade do imóvel</label>
+            <span class="info-icon" onclick="toggleInfo(event, this)">
+                i
+                <span class="tooltip">O ITBI é um imposto municipal. Cada cidade cobra uma alíquota diferente. Por isso a cidade escolhida muda o cálculo.</span>
+            </span>
+        </div>
+        <select id="cidade">
+            <option value="3">Belo Horizonte (ITBI 3%)</option>
+            <option value="2">Nova Lima / Vila da Serra (ITBI 2%)</option>
+            <option value="3">Contagem (ITBI 3%)</option>
+            <option value="3">Betim (ITBI 3%)</option>
+            <option value="3">Santa Luzia (ITBI 3%)</option>
+            <option value="3">Lagoa Santa (ITBI 3%)</option>
+        </select>
+    </div>
+
+    <div class="field">
+        <div class="label-row">
+            <label for="valor">Valor do imóvel</label>
+            <span class="info-icon" onclick="toggleInfo(event, this)">
+                i
+                <span class="tooltip">Informe o valor total de venda do imóvel, conforme o anúncio ou o contrato. É sobre esse valor que calculamos o ITBI e as taxas de cartório.</span>
+            </span>
+        </div>
+        <input type="text" id="valor" placeholder="R$ 0,00" inputmode="numeric" autocomplete="off">
+    </div>
+
+    <div class="field">
+        <div class="label-row">
+            <label for="tipo">Tipo de imóvel</label>
+            <span class="info-icon" onclick="toggleInfo(event, this)">
+                i
+                <span class="tooltip">Imóveis comerciais costumam ter taxa de avaliação bancária mais alta e não entram nos benefícios de primeira compra residencial.</span>
+            </span>
+        </div>
+        <select id="tipo">
+            <option value="residencial">Residencial</option>
+            <option value="comercial">Comercial</option>
+        </select>
+    </div>
+
+    <div class="field">
+        <div class="label-row">
+            <label for="forma">Forma de compra</label>
+            <span class="info-icon" onclick="toggleInfo(event, this)">
+                i
+                <span class="tooltip">À vista: você paga o valor total de uma vez, sem banco. Financiado: você paga uma entrada e o banco financia o restante — nesse caso há taxa de avaliação do imóvel.</span>
+            </span>
+        </div>
+        <select id="forma">
+            <option value="avista">À vista</option>
+            <option value="financiado">Financiado</option>
+        </select>
+    </div>
+
+    <div class="field">
+        <div class="label-row">
+            <label for="situacao">Situação do imóvel</label>
+            <span class="info-icon" onclick="toggleInfo(event, this)">
+                i
+                <span class="tooltip">Pronto para morar: imóvel já construído. Na planta: imóvel ainda em construção, comprado direto da construtora — nesse caso não há escritura pública, só o contrato e o registro.</span>
+            </span>
+        </div>
+        <select id="situacao">
+            <option value="pronto">Pronto para morar</option>
+            <option value="planta">Na planta</option>
+        </select>
+    </div>
+
+    <div class="field">
+        <div class="label-row">
+            <label>Marque o que se aplica ao seu caso</label>
+        </div>
+        <div class="checkbox-group">
+            <div class="checkbox-item">
+                <input type="checkbox" id="primeiraCompra">
+                <label for="primeiraCompra">É minha primeira compra de imóvel residencial</label>
+                <span class="info-icon" onclick="toggleInfo(event, this)">
+                    i
+                    <span class="tooltip">Se você nunca teve um imóvel residencial no seu nome, pode ter direito a descontos em algumas taxas — como 50% de redução no registro, quando combinado com financiamento SFH.</span>
+                </span>
+            </div>
+            <div class="checkbox-item">
+                <input type="checkbox" id="sfh">
+                <label for="sfh">O financiamento será pelo SFH (Sistema Financeiro de Habitação)</label>
+                <span class="info-icon" onclick="toggleInfo(event, this)">
+                    i
+                    <span class="tooltip">SFH é o sistema de financiamento habitacional mais comum no Brasil. Imóveis até R$ 2,25 milhões podem ser financiados por ele. Quem é primeira compra e usa SFH ganha 50% de desconto na taxa de registro.</span>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <button class="calcular" onclick="calcular()">Calcular custos</button>
+
+    <div class="resultado" id="resultado">
+        <h2>Estimativa de custos</h2>
+        <div id="linhasResultado"></div>
+        <div class="total" id="totalBox"></div>
+        <div class="aviso">
+            <strong>⚠️ Valores de referência.</strong> Esta calculadora faz estimativas superficiais com base em alíquotas e médias conhecidas. Os valores reais podem variar conforme a prefeitura, o cartório específico, o banco e a avaliação do imóvel. Consulte sempre um profissional ou o cartório antes de fechar negócio.
+        </div>
+    </div>
+</div>
+
+<script>
+/* ===== MÁSCARA DE MOEDA ===== */
+const inputValor = document.getElementById('valor');
+
+function formatarMoeda(valor) {
+    // valor é uma string só com dígitos (ex: "500000")
+    // transforma em "5.000,00"
+    if (!valor) return '';
+    // Remove tudo que não for dígito
+    valor = valor.replace(/\D/g, '');
+    if (!valor) return '';
+
+    // Converte para número considerando centavos
+    let numero = parseInt(valor, 10);
+    let reais = Math.floor(numero / 100);
+    let centavos = numero % 100;
+
+    // Formata reais com pontos de milhar
+    let reaisFormatado = reais.toLocaleString('pt-BR');
+
+    // Se o usuário digitou menos de 3 dígitos, ainda não mostra centavos cheios
+    // Ex: digitou "5" → "R$ 0,05"
+    let centavosFormatado = centavos.toString().padStart(2, '0');
+
+    return 'R$ ' + reaisFormatado + ',' + centavosFormatado;
+}
+
+inputValor.addEventListener('input', function(e) {
+    const cursorPos = this.selectionStart;
+    const valorAntes = this.value;
+    const formatado = formatarMoeda(this.value);
+    this.value = formatado;
+
+    // Reposiciona o cursor de forma simples: mantém no fim
+    // (para valores formatados com ponto e vírgula, o mais natural é deixar no fim)
+    this.setSelectionRange(this.value.length, this.value.length);
+});
+
+inputValor.addEventListener('keydown', function(e) {
+    // Permite: backspace, delete, tab, escape, enter, setas
+    const permitidos = ['Backspace', 'Delete', 'Tab', 'Escape', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End'];
+    if (permitidos.includes(e.key)) return;
+    // Permite Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
+    if (e.ctrlKey || e.metaKey) return;
+    // Bloqueia qualquer tecla que não seja número
+    if (!/^\d$/.test(e.key)) {
+        e.preventDefault();
+    }
+});
+
+inputValor.addEventListener('paste', function(e) {
+    e.preventDefault();
+    const texto = (e.clipboardData || window.clipboardData).getData('text');
+    const apenasDigitos = texto.replace(/\D/g, '');
+    if (apenasDigitos) {
+        // Simula digitação
+        this.value = apenasDigitos;
+        this.dispatchEvent(new Event('input'));
+    }
+});
+
+/* ===== TOOLTIPS ===== */
+function toggleInfo(event, el) {
+    if (event) event.stopPropagation();
+    if (!el) el = event.currentTarget;
+
+    const rect = el.getBoundingClientRect();
+    const tooltipWidth = Math.min(240, window.innerWidth * 0.8);
+    if (rect.left + tooltipWidth / 2 > window.innerWidth) {
+        el.classList.add('tooltip-left');
+    } else {
+        el.classList.remove('tooltip-left');
+    }
+
+    document.querySelectorAll('.info-icon.active').forEach(i => {
+        if (i !== el) i.classList.remove('active');
+    });
+    el.classList.toggle('active');
+}
+
+/* ===== CÁLCULO ===== */
+function formatar(valor) {
+    return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+}
+
+function calcular() {
+    const aliquotaITBI = parseFloat(document.getElementById('cidade').value) / 100;
+
+    // Converte o valor formatado de volta para número
+    const valorTexto = document.getElementById('valor').value;
+    const apenasDigitos = valorTexto.replace(/\D/g, '');
+    const valorImovel = apenasDigitos ? parseInt(apenasDigitos, 10) / 100 : 0;
+
+    const tipoImovel = document.getElementById('tipo').value;
+    const formaCompra = document.getElementById('forma').value;
+    const situacao = document.getElementById('situacao').value;
+    const primeiraCompra = document.getElementById('primeiraCompra').checked;
+    const sfh = document.getElementById('sfh').checked;
+
+    if (valorImovel <= 0) {
+        alert('Por favor, informe o valor do imóvel.');
+        return;
+    }
+
+    let linhas = [];
+    let total = 0;
+
+    // ITBI
+    let itbi = valorImovel * aliquotaITBI;
+    linhas.push({
+        label: 'ITBI',
+        valor: itbi,
+        percentual: (aliquotaITBI * 100).toFixed(1) + '%'
+    });
+    total += itbi;
+
+    // Escritura (só à vista e não na planta)
+    if (formaCompra === 'avista' && situacao !== 'planta') {
+        let escritura = valorImovel * 0.012;
+        linhas.push({
+            label: 'Escritura pública (estimada)',
+            valor: escritura,
+            percentual: '~1,2%'
+        });
+        total += escritura;
+    }
+
+    // Registro
+    let registro = valorImovel * 0.01;
+    let descontoRegistro = false;
+
+    if (primeiraCompra && sfh && tipoImovel === 'residencial' && valorImovel <= 2250000) {
+        registro = registro * 0.5;
+        descontoRegistro = true;
+    }
+
+    linhas.push({
+        label: 'Registro no Cartório de Imóveis' + (descontoRegistro ? ' (50% desc. SFH)' : ''),
+        valor: registro,
+        percentual: descontoRegistro ? '~0,5%' : '~1%'
+    });
+    total += registro;
+
+    // Taxa de avaliação bancária
+    if (formaCompra === 'financiado') {
+        let avaliacao = 2500;
+        if (tipoImovel === 'comercial') {
+            avaliacao = 4000;
+        }
+        linhas.push({
+            label: 'Taxa de avaliação bancária (estimada)',
+            valor: avaliacao,
+            percentual: 'fixo aprox.'
+        });
+        total += avaliacao;
+    }
+
+    const containerLinhas = document.getElementById('linhasResultado');
+    containerLinhas.innerHTML = '';
+
+    linhas.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'linha';
+        div.innerHTML = `
+            <span class="label">${item.label} <span class="percentual">(${item.percentual})</span></span>
+            <span class="valor">${formatar(item.valor)}</span>
+        `;
+        containerLinhas.appendChild(div);
+    });
+
+    const percentualTotal = ((total / valorImovel) * 100).toFixed(1);
+    document.getElementById('totalBox').innerHTML = `
+        <div class="linha">
+            <span class="label">Total de custos extras</span>
+            <span class="valor">${formatar(total)}</span>
+        </div>
+        <div class="linha">
+            <span class="label">Percentual sobre o imóvel</span>
+            <span class="valor">${percentualTotal}%</span>
+        </div>
+        <div class="linha destaque">
+            <span class="label">Valor total (imóvel + custos)</span>
+            <span class="valor">${formatar(valorImovel + total)}</span>
+        </div>
+    `;
+
+    const resultado = document.getElementById('resultado');
+    resultado.classList.add('visible');
+
+    setTimeout(() => {
+        resultado.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+}
+
+document.addEventListener('click', () => {
+    document.querySelectorAll('.info-icon.active').forEach(i => i.classList.remove('active'));
+});
+</script>
+</body>
+</html>
