@@ -673,6 +673,46 @@
     border-radius: 4px; font-size: .66rem; min-width: 16px; text-align: center; font-weight: 700;
   }
   .sub-chip:not(.active) .count{ background: var(--bg-alt); color: var(--muted); }
+  .sub-chip-relatorio{
+    background: #fff; color: var(--success);
+    border: 1px dashed var(--success);
+    font-size: .72rem; padding: 5px 10px; border-radius: 6px;
+    cursor: pointer; font-family: inherit; font-weight: 700;
+    margin-left: -2px;
+    transition: all .15s;
+  }
+  .sub-chip-relatorio:hover{ background: var(--success); color: #fff; border-style: solid; }
+  .sub-chip-relatorio .ico{ font-size: .85rem; }
+
+  /* FILTROS DE STATUS */
+  .status-filtros{
+    display: flex; gap: 6px; flex-wrap: wrap;
+    background: #fafbfc; padding: 10px 16px;
+    border-radius: var(--radius);
+    margin-bottom: 12px; align-items: center;
+    border: 1px solid var(--border-soft);
+  }
+  .status-filtros .label{
+    font-size: .72rem; font-weight: 700;
+    color: var(--muted); text-transform: uppercase;
+    letter-spacing: .4px; margin-right: 4px;
+  }
+  .status-chip{
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 12px; border-radius: 6px;
+    background: #fff; border: 1px solid var(--border);
+    font-size: .78rem; font-weight: 600; cursor: pointer;
+    transition: all .15s; font-family: inherit; color: var(--text-soft);
+  }
+  .status-chip:hover{ border-color: var(--primary); color: var(--primary); }
+  .status-chip.active{ background: var(--primary); color: #fff; border-color: var(--primary); }
+  .status-chip .count{
+    background: rgba(255,255,255,.25); padding: 1px 6px;
+    border-radius: 4px; font-size: .66rem; min-width: 16px; text-align: center; font-weight: 700;
+  }
+  .status-chip:not(.active) .count{ background: var(--bg-alt); color: var(--muted); }
+  .status-chip.ativo-chip.active{ background: var(--success); border-color: var(--success); }
+  .status-chip.inativo-chip.active{ background: var(--danger); border-color: var(--danger); }
 
   .clientes-toolbar{
     display: flex; gap: 10px; flex-wrap: wrap;
@@ -695,6 +735,11 @@
     box-shadow: var(--shadow-md);
     transform: translateY(-1px);
   }
+  .cliente-item.inativo{
+    opacity: .6;
+    background: #f8f9fa;
+    border-left: 3px solid var(--danger);
+  }
   .cliente-item .nome{
     font-size: .95rem; font-weight: 700; color: var(--text);
     display: flex; align-items: center; gap: 8px;
@@ -706,6 +751,7 @@
     display: flex; align-items: center; justify-content: center;
     flex-shrink: 0;
   }
+  .cliente-item.inativo .nome .initial{ background: var(--muted); }
   .cliente-item .tel{ font-size: .78rem; color: var(--muted); display: flex; align-items: center; gap: 5px; }
   .cliente-item .meta{ display: flex; gap: 5px; flex-wrap: wrap; margin-top: 4px; }
   .tag{
@@ -716,6 +762,8 @@
   .tag-corretor{ background: #e6edf5; color: var(--primary); }
   .tag-parceria{ background: #f5efe2; color: #7a6432; }
   .tag-data{ background: var(--bg-alt); color: var(--muted); }
+  .tag-status-ativo{ background: #e2ede7; color: var(--success); }
+  .tag-status-inativo{ background: #f0dede; color: var(--danger); }
   .cliente-item .obs-preview{
     font-size: .75rem; color: var(--muted);
     font-style: italic; overflow: hidden; text-overflow: ellipsis;
@@ -800,16 +848,30 @@
   }
   .loading-inline .loader-lg{ display: inline-block; margin-bottom: 10px; }
 
-  /* Overlay de carregamento da vitrine */
   .overlay-loading-vitrine{
     position: fixed; inset: 0; background: rgba(15,23,42,.75);
-    z-index: 9998; display: flex; align-items: center; justify-content: center;
+    z-index: 9998; display: none; align-items: center; justify-content: center;
     flex-direction: column; gap: 14px; color: #fff; text-align: center; padding: 20px;
   }
   .overlay-loading-vitrine .spinner{
     width: 50px; height: 50px; border: 4px solid rgba(255,255,255,.2);
     border-top-color: #fff; border-radius: 50%; animation: spin .8s linear infinite;
   }
+
+  /* Label com botão instruções */
+  .label-with-btn{
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 6px;
+  }
+  .label-with-btn label{ margin-bottom: 0; }
+  .btn-instrucoes{
+    background: #eef2f7; color: var(--primary);
+    border: 1px solid #d8e2ee; border-radius: 6px;
+    padding: 4px 10px; font-size: .7rem; font-weight: 700;
+    cursor: pointer; font-family: inherit;
+    transition: all .15s; display: inline-flex; align-items: center; gap: 4px;
+  }
+  .btn-instrucoes:hover{ background: var(--primary); color: #fff; border-color: var(--primary); }
 </style>
 </head>
 <body>
@@ -908,9 +970,24 @@
         <h3 style="font-size:.95rem; font-weight:700;">👥 Clientes</h3>
         <button class="btn btn-primary btn-sm" onclick="abrirNovoCliente()">➕ Novo cliente</button>
       </div>
+
       <div class="sub-filtros" id="subFiltros">
-        <span class="label">Filtros:</span>
+        <span class="label">Parcerias:</span>
       </div>
+
+      <div class="status-filtros" id="statusFiltros">
+        <span class="label">Status:</span>
+        <button class="status-chip active" data-status="todos" onclick="setStatusFiltro('todos', this)">
+          📊 Todos <span class="count" id="cnt-status-todos">0</span>
+        </button>
+        <button class="status-chip ativo-chip" data-status="ativo" onclick="setStatusFiltro('ativo', this)">
+          ✅ Ativos <span class="count" id="cnt-status-ativo">0</span>
+        </button>
+        <button class="status-chip inativo-chip" data-status="inativo" onclick="setStatusFiltro('inativo', this)">
+          💤 Inativos <span class="count" id="cnt-status-inativo">0</span>
+        </button>
+      </div>
+
       <div class="clientes-toolbar">
         <input type="search" class="search" id="buscaCliente"
                placeholder="🔍 Buscar por nome ou telefone..."
@@ -934,7 +1011,7 @@
   </div>
 </div>
 
-<!-- VITRINE (visão do cliente pelo admin) -->
+<!-- VITRINE -->
 <div class="container hidden" id="vitrineView">
   <div class="info-cliente-bar" id="infoClienteBar">
     <div>
@@ -1064,14 +1141,54 @@
       </div>
       <div class="form-group">
         <label>Parceria</label>
-        <input type="text" id="cliParceria" placeholder="Ex: Iasmin">
+        <select id="cliParceria">
+          <option value="">— Sem parceria —</option>
+        </select>
       </div>
     </div>
     <div class="form-group">
-      <label>Observações internas</label>
-      <textarea id="cliObservacao"></textarea>
+      <div class="label-with-btn">
+        <label>Observações internas</label>
+        <button type="button" class="btn-instrucoes" onclick="abrirInstrucoes()">ℹ️ Instruções</button>
+      </div>
+      <textarea id="cliObservacao" placeholder="Ex: prefere manhã, ou INATIVO para marcar como inativo"></textarea>
     </div>
     <button class="btn btn-primary btn-full" id="btnSalvarCliente" onclick="salvarCliente()">💾 Salvar cliente</button>
+  </div>
+</div>
+
+<!-- MODAL INSTRUÇÕES -->
+<div class="modal-backdrop" id="instrucoesModalBackdrop" onclick="if(event.target===this) fecharInstrucoes()">
+  <div class="modal" style="max-width:480px;">
+    <button class="modal-close" onclick="fecharInstrucoes()">×</button>
+    <div style="text-align:center; margin-bottom:16px;">
+      <div style="font-size:2rem; margin-bottom:8px;">ℹ️</div>
+      <h2 style="margin-bottom:6px;">Como usar as observações</h2>
+    </div>
+    <div style="background:#eef2f7; border:1px solid #d8e2ee; border-radius:10px; padding:16px; margin-bottom:14px; font-size:.88rem; line-height:1.6; color:var(--text);">
+      <p style="margin-bottom:12px;">
+        <strong>Por padrão, todos os clientes são considerados ATIVOS.</strong>
+      </p>
+      <p style="margin-bottom:12px;">
+        Para marcar um cliente como <strong>INATIVO</strong>, escreva a palavra
+        <code style="background:#fff; padding:2px 6px; border-radius:4px; font-family:'Courier New', monospace; color:var(--danger); font-weight:700;">inativo</code>
+        em qualquer posição do texto (separada por vírgula).
+      </p>
+      <p style="font-size:.78rem; color:var(--muted); margin-bottom:8px;"><strong>Exemplos válidos:</strong></p>
+      <ul style="margin-left:20px; font-size:.82rem; color:var(--text-soft); line-height:1.9;">
+        <li><code>"INATIVO, mudou de cidade"</code></li>
+        <li><code>"urgente, inativo, não perturbar"</code></li>
+        <li><code>"cliente inativo"</code></li>
+      </ul>
+      <p style="font-size:.78rem; color:var(--muted); margin-top:12px; margin-bottom:6px;"><strong>Exemplos que continuam ATIVOS:</strong></p>
+      <ul style="margin-left:20px; font-size:.82rem; color:var(--text-soft); line-height:1.9;">
+        <li><code>"prefere manhã"</code></li>
+        <li><code>"URGENTE, ligar depois das 18h"</code></li>
+        <li><code>"ATIVO, cliente novo"</code></li>
+        <li><code>""</code> (em branco)</li>
+      </ul>
+    </div>
+    <button class="btn btn-primary btn-full" onclick="fecharInstrucoes()">Entendi</button>
   </div>
 </div>
 
@@ -1135,7 +1252,7 @@
     <div style="font-size:2.5rem; margin-bottom:8px;">✅</div>
     <h2 style="margin-bottom:8px;">Acesso criado!</h2>
     <p class="text-muted" style="margin-bottom:16px; font-size:.82rem;">
-      Envie esta senha para o cliente no WhatsApp.
+      Use o botão abaixo para gerar o texto e enviar ao cliente.
     </p>
     <div style="background:#f9f5ec; border:1px dashed #c9a86a; border-radius:10px; padding:16px; margin-bottom:14px;">
       <div style="font-size:.68rem; color:#7a6432; font-weight:700; text-transform:uppercase; letter-spacing:.5px; margin-bottom:6px;">Apelido</div>
@@ -1143,7 +1260,8 @@
       <div style="font-size:.68rem; color:#7a6432; font-weight:700; text-transform:uppercase; letter-spacing:.5px; margin-bottom:6px;">Senha de acesso</div>
       <div id="senhaGeradaValor" style="font-family:'Courier New', monospace; font-size:1.8rem; font-weight:700; letter-spacing:6px; color:var(--danger);"></div>
     </div>
-    <button class="btn btn-primary btn-full" onclick="copiarSenhaGerada()">📋 Copiar senha</button>
+    <button class="btn btn-primary btn-full" onclick="gerarTextoWhatsAppSenhaGerada()">💬 Gerar texto para WhatsApp</button>
+    <button class="btn btn-ghost btn-full mt-2" onclick="fecharSenhaGerada()">Fechar</button>
   </div>
 </div>
 
@@ -1155,6 +1273,11 @@
   <div class="sub">Em seguida o site será fechado.</div>
 </div>
 
+<div class="overlay-loading-vitrine" id="overlayLoadingVitrine">
+  <div class="spinner"></div>
+  <div style="font-size:1rem;font-weight:600;" id="overlayLoadingVitrineMsg">Carregando vitrine do cliente...</div>
+</div>
+
 <script>
 /* =====================================================
    CONFIG
@@ -1162,8 +1285,13 @@
 const API_URL = 'https://script.google.com/macros/s/AKfycbxixzI5uFmyC6TOzoXqTnwUaNK-iWMPxDaxCiY-dM4ZRSFIt1K4dco_ShW7D7hMIdMX/exec';
 const ADMIN_KEY = 'vitrine_admin';
 const CORRETORES_CACHE_KEY = 'vitrine_corretores_cache';
+const ESTADO_KEY = 'vitrine_admin_estado';
 const BUSCAR_BASE = 'https://corretor.quintoandar.com.br/informacoes-de-entrada';
+const VITRINE_URL_BASE = 'https://limaribeiroimoveis.com.br/vitrine';
 const TIMEOUT_API = 45000;
+
+// Quantos nomes na planilha são corretores (linhas 1-4)
+const NUM_CORRETORES = 4;
 
 /* =====================================================
    ESTADO
@@ -1176,10 +1304,13 @@ const state = {
   isAdmin: false,
   adminSenha: null,
   corretores: [],
+  parceiros: [],
   clientes: [],
   acessos: [],
   agendamentos: [],
   corretorFiltro: null,
+  parceriaFiltro: null,
+  statusFiltro: 'todos',
   salvando: 0,
   querVisitarCache: [],
   abaAtiva: 'agenda',
@@ -1232,7 +1363,7 @@ function marcarSalvando(inicio){
 function estaSalvando(){ return state.salvando > 0; }
 
 /* =====================================================
-   API VIA FETCH GET (com retry)
+   API
 ===================================================== */
 async function apiOnce(action, params, timeoutMs){
   const qs = new URLSearchParams({
@@ -1350,21 +1481,6 @@ function toInputDateTime(iso){
   } catch(e){ return ''; }
 }
 
-function detectarNavegador(){
-  const ua = navigator.userAgent;
-  let nav = 'Navegador', os = '';
-  if(/iPhone|iPad|iPod/i.test(ua)) os = 'iPhone';
-  else if(/Android/i.test(ua)) os = 'Android';
-  else if(/Windows/i.test(ua)) os = 'Windows';
-  else if(/Mac OS X/i.test(ua)) os = 'Mac';
-  else if(/Linux/i.test(ua)) os = 'Linux';
-  if(/Edg\//i.test(ua)) nav = 'Edge';
-  else if(/Chrome/i.test(ua) && !/Edg\//i.test(ua)) nav = 'Chrome';
-  else if(/Safari/i.test(ua) && !/Chrome/i.test(ua)) nav = 'Safari';
-  else if(/Firefox/i.test(ua)) nav = 'Firefox';
-  return (nav + (os ? ' • ' + os : '')).trim();
-}
-
 function classificarAgendamento(iso){
   if(!iso) return { label: '—', classe: 'when-distante' };
   const d = new Date(iso);
@@ -1385,36 +1501,98 @@ function classificarAgendamento(iso){
 }
 
 /* =====================================================
+   DETECÇÃO DE STATUS (ATIVO/INATIVO)
+===================================================== */
+function statusDoCliente(cliente){
+  const obs = (cliente.observacao || '').toLowerCase();
+  // Verifica se tem palavra "inativo" isolada
+  const partes = obs.split(',').map(p => p.trim());
+  const temInativo = partes.some(p => /\binativo\b/.test(p));
+  return temInativo ? 'inativo' : 'ativo';
+}
+
+/* =====================================================
    NAVEGAÇÃO
 ===================================================== */
 function mostrarView(id){
-  ['adminLoginView','corretorView','vitrineView']
-    .forEach(v => {
-      const el = $(v);
-      if(el) el.classList.add('hidden');
-    });
+  ['adminLoginView','corretorView','vitrineView'].forEach(v => {
+    const el = $(v);
+    if(el) el.classList.add('hidden');
+  });
   if(id && $(id)) $(id).classList.remove('hidden');
 }
 
 /* =====================================================
-   OVERLAY DE CARREGAMENTO DA VITRINE
+   OVERLAY VITRINE
 ===================================================== */
 function mostrarOverlayVitrine(msg){
-  let ov = document.getElementById('overlayLoadingVitrine');
-  if(!ov){
-    ov = document.createElement('div');
-    ov.id = 'overlayLoadingVitrine';
-    ov.className = 'overlay-loading-vitrine';
-    ov.innerHTML = '<div class="spinner"></div><div style="font-size:1rem;font-weight:600;" id="overlayLoadingVitrineMsg"></div>';
-    document.body.appendChild(ov);
-  }
-  document.getElementById('overlayLoadingVitrineMsg').textContent = msg || 'Carregando vitrine do cliente...';
+  const ov = $('overlayLoadingVitrine');
+  if(!ov) return;
+  $('overlayLoadingVitrineMsg').textContent = msg || 'Carregando vitrine do cliente...';
   ov.style.display = 'flex';
 }
-
 function esconderOverlayVitrine(){
-  const ov = document.getElementById('overlayLoadingVitrine');
+  const ov = $('overlayLoadingVitrine');
   if(ov) ov.style.display = 'none';
+}
+
+/* =====================================================
+   ESTADO PERSISTENTE (F5 mantém tela)
+===================================================== */
+function salvarEstado(){
+  if(!state.isAdmin) return;
+  const estado = {
+    tela: !$('vitrineView').classList.contains('hidden') ? 'vitrine' : 'home',
+    aba: state.abaAtiva,
+    telefone: state.telefone || null,
+    ts: Date.now()
+  };
+  try { localStorage.setItem(ESTADO_KEY, JSON.stringify(estado)); } catch(e){}
+}
+
+function limparEstado(){
+  try { localStorage.removeItem(ESTADO_KEY); } catch(e){}
+}
+
+async function restaurarEstado(){
+  try {
+    const raw = localStorage.getItem(ESTADO_KEY);
+    if(!raw) return false;
+    const estado = JSON.parse(raw);
+    if(!estado || !estado.tela) return false;
+
+    if(estado.tela === 'vitrine' && estado.telefone){
+      // Aguarda carregar as listas necessárias
+      await Promise.all([
+        carregarCorretores(),
+        carregarClientesSilencioso()
+      ]);
+      await carregarAgenda(false);
+      await carregarNotificacoes(false);
+      state.telefone = normalizaTel(estado.telefone);
+      await irParaVitrine();
+      return true;
+    }
+
+    if(estado.aba && ['agenda','visitar','clientes'].includes(estado.aba)){
+      await Promise.all([
+        carregarCorretores(),
+        carregarClientesSilencioso()
+      ]);
+      await Promise.all([
+        carregarAgenda(false),
+        carregarNotificacoes(false)
+      ]);
+      trocarAbaUI(estado.aba);
+      if(estado.aba === 'agenda') renderizarAgenda();
+      if(estado.aba === 'visitar') renderizarQuerVisitar();
+      if(estado.aba === 'clientes'){ montarSubFiltros(); renderizarClientes(); }
+      return true;
+    }
+  } catch(e){
+    console.error('Erro ao restaurar estado:', e);
+  }
+  return false;
 }
 
 /* =====================================================
@@ -1453,34 +1631,33 @@ async function carregarHomeAdmin(){
   state.abaAtiva = 'agenda';
   trocarAbaUI('agenda');
 
-  // Corretores (com cache) + clientes em paralelo
   await Promise.all([
     carregarCorretores(),
     carregarClientesSilencioso()
   ]);
 
-  // Agenda + notificações em paralelo
   await Promise.all([
     carregarAgenda(true),
     carregarNotificacoes(false)
   ]);
+
+  salvarEstado();
 }
 
 /* =====================================================
-   CARREGAR CORRETORES COM CACHE
+   CARREGAR CORRETORES E PARCEIROS DA PLANILHA
 ===================================================== */
 async function carregarCorretores(){
   try {
     const cache = JSON.parse(localStorage.getItem(CORRETORES_CACHE_KEY) || 'null');
     if(cache && Array.isArray(cache.data) && cache.data.length > 0){
-      state.corretores = cache.data;
-      montarBarraCorretor();
+      aplicarListaCorretores(cache.data);
     }
   } catch(e){}
 
   const resCor = await api('listarCorretores', { senha: state.adminSenha });
   if(resCor.ok && resCor.data && resCor.data.length > 0){
-    state.corretores = resCor.data;
+    aplicarListaCorretores(resCor.data);
     try {
       localStorage.setItem(CORRETORES_CACHE_KEY, JSON.stringify({
         data: resCor.data,
@@ -1489,12 +1666,29 @@ async function carregarCorretores(){
     } catch(e){}
   } else if(!state.corretores.length){
     state.corretores = ['Hugo', 'Carolina'];
+    state.parceiros = [];
+    montarBarraCorretor();
   }
+}
+
+function aplicarListaCorretores(lista){
+  const nomes = lista.map(n => String(n || '').trim()).filter(n => n.length > 0);
+  state.corretores = nomes.slice(0, NUM_CORRETORES);
+  state.parceiros = nomes.slice(NUM_CORRETORES);
   montarBarraCorretor();
+  preencherSelectParcerias();
+}
+
+function preencherSelectParcerias(valorAtual){
+  const sel = $('cliParceria');
+  if(!sel) return;
+  sel.innerHTML = '<option value="">— Sem parceria —</option>' +
+    state.parceiros.map(p => `<option value="${esc(p)}">${esc(p)}</option>`).join('');
+  if(valorAtual) sel.value = valorAtual;
 }
 
 /* =====================================================
-   CARREGAR CLIENTES SILENCIOSO (sem render)
+   CARREGAR CLIENTES SILENCIOSO
 ===================================================== */
 async function carregarClientesSilencioso(){
   if(state.cache.clientesCarregados) return;
@@ -1502,6 +1696,7 @@ async function carregarClientesSilencioso(){
   state.clientes = (res.ok && res.data) ? res.data : [];
   state.cache.clientesCarregados = true;
   montarBarraCorretor();
+  atualizarContadoresStatus();
 }
 
 /* =====================================================
@@ -1519,8 +1714,8 @@ function trocarAbaUI(aba){
 
 async function trocarAba(aba, btn){
   trocarAbaUI(aba);
+  salvarEstado();
 
-  // GARANTE que clientes estejam carregados antes de qualquer render
   if(!state.cache.clientesCarregados){
     if(aba === 'visitar'){
       $('querVisitarCards').innerHTML = `<div class="loading-inline" style="grid-column:1/-1;"><span class="loader loader-lg"></span><p>Carregando clientes...</p></div>`;
@@ -1542,6 +1737,7 @@ async function trocarAba(aba, btn){
     }
   } else if(aba === 'clientes'){
     montarSubFiltros();
+    atualizarContadoresStatus();
     renderizarClientes();
   }
 }
@@ -1557,22 +1753,21 @@ async function recarregarAba(aba){
     state.cache.clientesCarregados = false;
     await carregarClientesSilencioso();
     montarSubFiltros();
+    atualizarContadoresStatus();
     renderizarClientes();
   }
 }
 
 /* =====================================================
-   CARREGAMENTO SOB DEMANDA
+   CARREGAMENTO
 ===================================================== */
 async function carregarNotificacoes(mostrarLoading){
   if(mostrarLoading){
     $('querVisitarCards').innerHTML = `<div class="loading-inline" style="grid-column:1/-1;"><span class="loader loader-lg"></span><p>Carregando solicitações...</p></div>`;
   }
-
   if(!state.cache.clientesCarregados){
     await carregarClientesSilencioso();
   }
-
   const res = await api('listarNotificacoes', { senha: state.adminSenha });
   if(res.ok && res.data){
     state.querVisitarCache = res.data.visita || [];
@@ -1588,11 +1783,9 @@ async function carregarAgenda(mostrarLoading){
   if(mostrarLoading){
     $('agendaCards').innerHTML = `<div class="loading-inline" style="grid-column:1/-1;"><span class="loader loader-lg"></span><p>Carregando agenda...</p></div>`;
   }
-
   if(!state.cache.clientesCarregados){
     await carregarClientesSilencioso();
   }
-
   const res = await api('listarAgendamentos', { senha: state.adminSenha });
   state.agendamentos = (res.ok && res.data) ? res.data : [];
   state.cache.agendaCarregada = true;
@@ -1604,11 +1797,7 @@ function atualizarBadgeAbaVisitar(){
   if(!badge) return;
   const total = state.querVisitarCache.length || 0;
   badge.textContent = total > 99 ? '99+' : total;
-  if(total > 0){
-    badge.classList.remove('zero');
-  } else {
-    badge.classList.add('zero');
-  }
+  badge.classList.toggle('zero', total === 0);
 }
 
 /* =====================================================
@@ -1636,316 +1825,150 @@ function montarBarraCorretor(){
 
 function setCorretorFiltro(corretor){
   state.corretorFiltro = corretor;
+  state.parceriaFiltro = null;
   montarBarraCorretor();
-  if(state.cache.clientesCarregados){ montarSubFiltros(); renderizarClientes(); }
+  if(state.cache.clientesCarregados){ montarSubFiltros(); renderizarClientes(); atualizarContadoresStatus(); }
   if(state.cache.notificacoesCarregadas) renderizarQuerVisitar();
   if(state.cache.agendaCarregada) renderizarAgenda();
 }
 
 /* =====================================================
-   PAINEL QUERO VISITAR
-===================================================== */
-function renderizarQuerVisitar(){
-  const cards = $('querVisitarCards');
-  const badge = $('querVisitarTotalBadge');
-
-  const lista = state.querVisitarCache || [];
-  const filtrada = state.corretorFiltro
-    ? lista.filter(a => {
-        const cli = state.clientes.find(c => normalizaTel(c.telefone) === normalizaTel(a.telefone));
-        return cli && cli.corretor === state.corretorFiltro;
-      })
-    : lista;
-
-  if(filtrada.length === 0){
-    badge.textContent = '0';
-    badge.classList.add('zero');
-    cards.innerHTML = `<div class="quer-visitar-empty" style="grid-column:1/-1;">✅ Nenhum cliente aguardando agendamento.</div>`;
-    return;
-  }
-
-  badge.textContent = filtrada.length;
-  badge.classList.remove('zero');
-
-  const porCorretor = {};
-  state.corretores.forEach(c => { porCorretor[c] = []; });
-  filtrada.forEach(a => {
-    const cli = state.clientes.find(c => normalizaTel(c.telefone) === normalizaTel(a.telefone));
-    const corretor = (cli && cli.corretor) || '(sem corretor)';
-    if(!porCorretor[corretor]) porCorretor[corretor] = [];
-    porCorretor[corretor].push({ ...a, clienteNome: cli ? cli.nome : '(sem cadastro)' });
-  });
-
-  cards.innerHTML = Object.keys(porCorretor).map(corretor => {
-    const lst = porCorretor[corretor] || [];
-    const countClass = lst.length === 0 ? 'zero' : '';
-    if(lst.length === 0){
-      return `
-        <div class="quer-visitar-corretor">
-          <div class="quer-visitar-corretor-header">
-            <div class="nome"><div class="avatar-sm">${esc(corretor.charAt(0))}</div>${esc(corretor)}</div>
-            <span class="count ${countClass}">Sem solicitações</span>
-          </div>
-          <div class="quer-visitar-empty">Nada por aqui</div>
-        </div>`;
-    }
-    const itens = lst.map(a => `
-      <div class="quer-visitar-item" data-tel="${esc(a.telefone)}" data-id="${esc(a.id)}" onclick="abrirImovelDaAgenda(this.dataset.tel, this.dataset.id, false)">
-        <div class="quando-ico">📅</div>
-        <div class="info">
-          <div class="cliente">👤 ${esc(a.clienteNome)}</div>
-          <div class="detalhe">
-            <span>📱 ${esc(fmtTel(a.telefone))}</span>
-            ${a.codigo ? `<span class="codigo">#${esc(a.codigo)}</span>` : ''}
-            <span>${esc((a.titulo || '').substring(0, 30))}${a.titulo && a.titulo.length > 30 ? '...' : ''}</span>
-          </div>
-        </div>
-        <span class="arrow-right">→</span>
-      </div>
-    `).join('');
-    return `
-      <div class="quer-visitar-corretor">
-        <div class="quer-visitar-corretor-header">
-          <div class="nome"><div class="avatar-sm">${esc(corretor.charAt(0))}</div>${esc(corretor)}</div>
-          <span class="count ${countClass}">${lst.length} solicitaç${lst.length === 1 ? 'ão' : 'ões'}</span>
-        </div>
-        <div class="quer-visitar-corretor-body">${itens}</div>
-      </div>`;
-  }).join('');
-}
-
-/* =====================================================
-   AGENDA
-===================================================== */
-function renderizarAgenda(){
-  const cards = $('agendaCards');
-  const badge = $('agendaTotalBadge');
-
-  const hoje = new Date(); hoje.setHours(0,0,0,0);
-  let futuras = state.agendamentos.filter(a => new Date(a.dataVisitaAgendada) >= hoje);
-  if(state.corretorFiltro){
-    futuras = futuras.filter(a => (a.corretor || '') === state.corretorFiltro);
-  }
-
-  if(futuras.length === 0){
-    badge.textContent = '0';
-    badge.classList.add('zero');
-  } else {
-    badge.textContent = futuras.length;
-    badge.classList.remove('zero');
-  }
-
-  const porCorretor = {};
-  state.corretores.forEach(c => { porCorretor[c] = []; });
-  futuras.forEach(a => {
-    const c = a.corretor || '(sem corretor)';
-    if(!porCorretor[c]) porCorretor[c] = [];
-    porCorretor[c].push(a);
-  });
-
-  if(futuras.length === 0){
-    cards.innerHTML = `<div class="agenda-empty" style="grid-column:1/-1;">📭 Nenhuma visita agendada no momento.</div>`;
-    return;
-  }
-
-  cards.innerHTML = state.corretores.map(corretor => {
-    const lista = porCorretor[corretor] || [];
-    const count = lista.length;
-    const countClass = count === 0 ? 'zero' : '';
-    if(count === 0){
-      return `
-        <div class="agenda-corretor">
-          <div class="agenda-corretor-header">
-            <div class="nome"><div class="avatar-sm">${esc(corretor.charAt(0))}</div>${esc(corretor)}</div>
-            <span class="count ${countClass}">Sem agendamentos</span>
-          </div>
-          <div class="agenda-empty">Nenhuma visita agendada</div>
-        </div>`;
-    }
-    const top3 = lista.slice(0, 3);
-    const itens = top3.map(a => agendaItemHTML(a)).join('');
-    const botaoVerTodos = lista.length > 3
-      ? `<button class="agenda-ver-todos" onclick="abrirAgendaCorretor('${esc(corretor)}')">📂 Ver todos os ${count} agendamentos →</button>`
-      : '';
-    return `
-      <div class="agenda-corretor">
-        <div class="agenda-corretor-header">
-          <div class="nome"><div class="avatar-sm">${esc(corretor.charAt(0))}</div>${esc(corretor)}</div>
-          <span class="count ${countClass}">${count} agendamento${count === 1 ? '' : 's'}</span>
-        </div>
-        <div class="agenda-corretor-body">${itens}</div>
-        ${botaoVerTodos}
-      </div>`;
-  }).join('');
-}
-
-function agendaItemHTML(a){
-  const quando = classificarAgendamento(a.dataVisitaAgendada);
-  return `
-    <div class="agenda-item" data-tel="${esc(a.telefone)}" data-id="${esc(a.id)}" onclick="abrirImovelDaAgenda(this.dataset.tel, this.dataset.id)">
-      <div class="when ${quando.classe}">${esc(quando.label)}</div>
-      <div class="info">
-        <div class="cliente">👤 ${esc(a.clienteNome)}</div>
-        <div class="detalhe">
-          ${a.codigo ? `<span class="codigo">#${esc(a.codigo)}</span>` : ''}
-          <span>${esc((a.titulo || '').substring(0, 30))}${a.titulo && a.titulo.length > 30 ? '...' : ''}</span>
-        </div>
-      </div>
-      <span class="arrow-right">→</span>
-    </div>
-  `;
-}
-
-function abrirAgendaCorretor(corretor){
-  const hoje = new Date(); hoje.setHours(0,0,0,0);
-  const lista = state.agendamentos.filter(a =>
-    (a.corretor || '(sem corretor)') === corretor && new Date(a.dataVisitaAgendada) >= hoje
-  );
-  const itens = lista.map(a => {
-    const quando = classificarAgendamento(a.dataVisitaAgendada);
-    const codigoHtml = a.codigo ? `<span class="codigo">#${esc(a.codigo)}</span>` : '';
-    return `
-      <div class="agenda-item" style="padding:14px 8px;" data-tel="${esc(a.telefone)}" data-id="${esc(a.id)}" onclick="abrirImovelDaAgenda(this.dataset.tel, this.dataset.id, true)">
-        <div class="when ${quando.classe}">${esc(quando.label)}</div>
-        <div class="info">
-          <div class="cliente">👤 ${esc(a.clienteNome)}</div>
-          <div class="detalhe" style="margin-top:4px;">
-            ${codigoHtml}
-            <span>${esc(a.titulo)}</span>
-          </div>
-        </div>
-        <span class="arrow-right">→</span>
-      </div>
-    `;
-  }).join('') || '<div class="agenda-empty">Nenhum agendamento futuro.</div>';
-
-  $('agendaModalContent').innerHTML = `
-    <button class="modal-close" onclick="fecharAgendaModal()">×</button>
-    <h2 style="margin-bottom:6px;">📅 Agenda — ${esc(corretor)}</h2>
-    <p class="text-muted" style="margin-bottom:16px; font-size:.82rem;">
-      ${lista.length} agendamento${lista.length === 1 ? '' : 's'} a partir de hoje
-    </p>
-    <div style="max-height:60vh; overflow-y:auto;">${itens}</div>
-  `;
-  $('agendaModalBackdrop').classList.add('show');
-}
-
-function fecharAgendaModal(){ $('agendaModalBackdrop').classList.remove('show'); }
-
-/* =====================================================
-   IR PARA IMÓVEL DA AGENDA
-===================================================== */
-async function abrirImovelDaAgenda(telefone, imovelId, fecharModalPrimeiro){
-  if(fecharModalPrimeiro) fecharAgendaModal();
-
-  if(state.telefone === normalizaTel(telefone) && state.imoveis.length > 0){
-    destacarCard(imovelId);
-    return;
-  }
-
-  await abrirVitrineDoCliente(telefone);
-
-  let tentativas = 0;
-  const maxTentativas = 40;
-  const aguardar = setInterval(() => {
-    tentativas++;
-    const card = document.querySelector(`.card[data-id="${imovelId}"]`);
-    if(card){
-      clearInterval(aguardar);
-      destacarCard(imovelId);
-    } else if(tentativas >= maxTentativas){
-      clearInterval(aguardar);
-      toast('Imóvel não encontrado.', 'error');
-    }
-  }, 200);
-}
-
-function destacarCard(imovelId){
-  if(state.filtro !== 'todos'){
-    state.filtro = 'todos';
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    const el = document.querySelector('.filter-btn[data-filter="todos"]');
-    if(el) el.classList.add('active');
-    renderizarImoveis();
-  }
-
-  const card = document.querySelector(`.card[data-id="${imovelId}"]`);
-  if(!card){
-    toast('Imóvel não encontrado na lista', 'error');
-    return;
-  }
-  card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  card.classList.remove('destacado');
-  void card.offsetWidth;
-  card.classList.add('destacado');
-  setTimeout(() => card.classList.remove('destacado'), 3000);
-}
-
-/* =====================================================
-   SUB-FILTROS
+   SUB-FILTROS DE PARCERIA
 ===================================================== */
 function montarSubFiltros(){
   const wrap = $('subFiltros');
   if(!wrap) return;
 
   if(!state.corretorFiltro){
-    wrap.innerHTML = '<span class="label">Filtros:</span><span class="text-muted" style="font-size:.82rem;">Selecione um corretor específico para ver filtros de parceria.</span>';
+    wrap.innerHTML = '<span class="label">Parcerias:</span><span class="text-muted" style="font-size:.82rem;">Selecione um corretor no topo para ver filtros de parceria.</span>';
     return;
   }
+
   const doCorretor = state.clientes.filter(c => c.corretor === state.corretorFiltro);
+  const semParceria = doCorretor.filter(c => !(c.parceria || '').trim()).length;
+
+  // Conta parcerias
   const contagem = {};
-  let semParceria = 0;
   doCorretor.forEach(c => {
     const p = (c.parceria || '').trim();
     if(p) contagem[p] = (contagem[p] || 0) + 1;
-    else semParceria++;
   });
-  const total = doCorretor.length;
   const parcerias = Object.keys(contagem).sort();
+
   const chips = [];
+
+  // Chip "Todos Hugo"
   chips.push(`
-    <button class="sub-chip active" onclick="setSubFiltro('todos', this)">
-      👤 Somente ${esc(state.corretorFiltro)} <span class="count">${total}</span>
+    <button class="sub-chip ${!state.parceriaFiltro ? 'active' : ''}" onclick="setParceriaFiltro(null, this)">
+      👤 Todos ${esc(state.corretorFiltro)} <span class="count">${doCorretor.length}</span>
     </button>
   `);
+
+  // Chip "Sem parceria"
   chips.push(`
-    <button class="sub-chip" onclick="setSubFiltro('sem-parceria', this)">
+    <button class="sub-chip ${state.parceriaFiltro === 'sem' ? 'active' : ''}" onclick="setParceriaFiltro('sem', this)">
       🚫 Sem parceria <span class="count">${semParceria}</span>
     </button>
   `);
+
+  // Chips Hugo/X
   parcerias.forEach(p => {
+    const ativo = state.parceriaFiltro === p;
     chips.push(`
-      <button class="sub-chip" onclick="setSubFiltro('${esc(p)}', this)">
+      <button class="sub-chip ${ativo ? 'active' : ''}" onclick="setParceriaFiltro('${esc(p)}', this)">
         🤝 ${esc(state.corretorFiltro)}/${esc(p)} <span class="count">${contagem[p]}</span>
       </button>
     `);
+    if(ativo){
+      chips.push(`
+        <button class="sub-chip-relatorio" onclick="abrirRelatorio('${esc(state.corretorFiltro)}', '${esc(p)}')" title="Relatório desta parceria">
+          📊 Relatório
+        </button>
+      `);
+    }
   });
-  wrap.innerHTML = '<span class="label">Filtros:</span>' + chips.join('');
+
+  wrap.innerHTML = '<span class="label">Parcerias:</span>' + chips.join('');
 }
 
-function setSubFiltro(valor, el){
-  document.querySelectorAll('#subFiltros .sub-chip').forEach(c => c.classList.remove('active'));
-  if(el) el.classList.add('active');
+function setParceriaFiltro(valor, el){
+  state.parceriaFiltro = valor;
+  montarSubFiltros();
   renderizarClientes();
+  atualizarContadoresStatus();
+}
+
+function abrirRelatorio(corretor, parceiro){
+  toast(`📊 Relatório de ${corretor}/${parceiro} — em breve`, 'success');
+  // TODO: implementar relatório
 }
 
 /* =====================================================
-   LISTA CLIENTES
+   FILTRO DE STATUS
+===================================================== */
+function setStatusFiltro(status, el){
+  state.statusFiltro = status;
+  document.querySelectorAll('.status-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  renderizarClientes();
+}
+
+function atualizarContadoresStatus(){
+  let base = [...state.clientes];
+  if(state.corretorFiltro){
+    base = base.filter(c => c.corretor === state.corretorFiltro);
+    if(state.parceriaFiltro === 'sem'){
+      base = base.filter(c => !(c.parceria || '').trim());
+    } else if(state.parceriaFiltro){
+      base = base.filter(c => (c.parceria || '').trim() === state.parceriaFiltro);
+    }
+  }
+
+  const total = base.length;
+  const ativos = base.filter(c => statusDoCliente(c) === 'ativo').length;
+  const inativos = base.filter(c => statusDoCliente(c) === 'inativo').length;
+
+  const el1 = $('cnt-status-todos'); if(el1) el1.textContent = total;
+  const el2 = $('cnt-status-ativo'); if(el2) el2.textContent = ativos;
+  const el3 = $('cnt-status-inativo'); if(el3) el3.textContent = inativos;
+}
+
+/* =====================================================
+   RENDERIZAR CLIENTES
 ===================================================== */
 function renderizarClientes(){
   const busca = ($('buscaCliente').value || '').toLowerCase().trim();
   const ordem = $('ordenacao').value;
   let lista = [...state.clientes];
 
+  // Filtro corretor
   if(state.corretorFiltro){
     lista = lista.filter(c => c.corretor === state.corretorFiltro);
   }
+
+  // Filtro parceria
+  if(state.corretorFiltro){
+    if(state.parceriaFiltro === 'sem'){
+      lista = lista.filter(c => !(c.parceria || '').trim());
+    } else if(state.parceriaFiltro){
+      lista = lista.filter(c => (c.parceria || '').trim() === state.parceriaFiltro);
+    }
+  }
+
+  // Filtro status
+  if(state.statusFiltro !== 'todos'){
+    lista = lista.filter(c => statusDoCliente(c) === state.statusFiltro);
+  }
+
+  // Busca
   if(busca){
     lista = lista.filter(c =>
       (c.nome || '').toLowerCase().includes(busca) ||
       normalizaTel(c.telefone).includes(normalizaTel(busca))
     );
   }
+
+  // Ordenação
   if(ordem === 'alfabetica'){
     lista.sort((a,b) => (a.nome || '').localeCompare(b.nome || '', 'pt-BR', {sensitivity:'base'}));
   } else if(ordem === 'data'){
@@ -1963,34 +1986,42 @@ function renderizarClientes(){
   }
   empty.classList.add('hidden');
 
-  list.innerHTML = lista.map(c => `
-    <div class="cliente-item">
-      <div class="nome" data-tel="${esc(c.telefone)}" onclick="abrirVitrineDoCliente(this.dataset.tel)" style="cursor:pointer;">
-        <div class="initial">${esc(primeiraLetra(c.nome))}</div>
-        ${esc(c.nome || 'Sem nome')}
+  list.innerHTML = lista.map(c => {
+    const st = statusDoCliente(c);
+    const inativoClass = st === 'inativo' ? ' inativo' : '';
+    return `
+      <div class="cliente-item${inativoClass}">
+        <div class="nome" data-tel="${esc(c.telefone)}" onclick="abrirVitrineDoCliente(this.dataset.tel)" style="cursor:pointer;">
+          <div class="initial">${esc(primeiraLetra(c.nome))}</div>
+          ${esc(c.nome || 'Sem nome')}
+        </div>
+        <div class="tel">📱 ${esc(fmtTel(c.telefone))}</div>
+        <div class="meta">
+          ${c.corretor ? `<span class="tag tag-corretor">👤 ${esc(c.corretor)}</span>` : ''}
+          ${c.parceria ? `<span class="tag tag-parceria">🤝 ${esc(c.parceria)}</span>` : ''}
+          <span class="tag ${st === 'inativo' ? 'tag-status-inativo' : 'tag-status-ativo'}">${st === 'inativo' ? '💤 Inativo' : '✅ Ativo'}</span>
+          ${c.dataCadastro ? `<span class="tag tag-data">📅 ${fmtData(c.dataCadastro)}</span>` : ''}
+        </div>
+        ${c.observacao ? `<div class="obs-preview">💬 ${esc(c.observacao)}</div>` : ''}
+        <div class="cliente-actions">
+          <button class="btn btn-ghost btn-xs" style="flex:1;" data-tel="${esc(c.telefone)}" onclick="event.stopPropagation(); abrirEditarClientePorTel(this.dataset.tel)">✏️ Editar</button>
+          <button class="btn btn-primary btn-xs" style="flex:1;" data-tel="${esc(c.telefone)}" onclick="event.stopPropagation(); abrirVitrineDoCliente(this.dataset.tel)">🏠 Ver vitrine</button>
+        </div>
       </div>
-      <div class="tel">📱 ${esc(fmtTel(c.telefone))}</div>
-      <div class="meta">
-        ${c.corretor ? `<span class="tag tag-corretor">👤 ${esc(c.corretor)}</span>` : ''}
-        ${c.parceria ? `<span class="tag tag-parceria">🤝 ${esc(c.parceria)}</span>` : ''}
-        ${c.dataCadastro ? `<span class="tag tag-data">📅 ${fmtData(c.dataCadastro)}</span>` : ''}
-      </div>
-      ${c.observacao ? `<div class="obs-preview">💬 ${esc(c.observacao)}</div>` : ''}
-      <div class="cliente-actions">
-        <button class="btn btn-ghost btn-xs" style="flex:1;" data-tel="${esc(c.telefone)}" onclick="event.stopPropagation(); abrirEditarClientePorTel(this.dataset.tel)">✏️ Editar</button>
-        <button class="btn btn-primary btn-xs" style="flex:1;" data-tel="${esc(c.telefone)}" onclick="event.stopPropagation(); abrirVitrineDoCliente(this.dataset.tel)">🏠 Ver vitrine</button>
-      </div>
-    </div>
-  `).join('');
+    `;
+  }).join('');
 }
 
+/* =====================================================
+   MODAL CLIENTE
+===================================================== */
 function abrirNovoCliente(){
   $('clienteModalTitle').textContent = '👤 Cadastrar cliente';
   $('cliTelefone').value = '';
   $('cliNome').value = '';
-  $('cliParceria').value = '';
   $('cliObservacao').value = '';
   preencherSelectCorretores();
+  preencherSelectParcerias();
   $('clienteModalBackdrop').classList.add('show');
   setTimeout(()=> $('cliTelefone').focus(), 100);
 }
@@ -2005,11 +2036,14 @@ function preencherSelectCorretores(valorAtual){
 
 function fecharClienteModal(){ $('clienteModalBackdrop').classList.remove('show'); }
 
+function abrirInstrucoes(){ $('instrucoesModalBackdrop').classList.add('show'); }
+function fecharInstrucoes(){ $('instrucoesModalBackdrop').classList.remove('show'); }
+
 async function salvarCliente(){
   const tel = normalizaTel($('cliTelefone').value);
   const nome = $('cliNome').value.trim();
   const corretor = $('cliCorretor').value;
-  const parceria = $('cliParceria').value.trim();
+  const parceria = $('cliParceria').value;
   const observacao = $('cliObservacao').value.trim();
 
   if(tel.length < 10){ toast('Telefone inválido (com DDD)', 'error'); return; }
@@ -2034,13 +2068,13 @@ async function salvarCliente(){
 
   state.cache.clientesCarregados = false;
   await carregarClientesSilencioso();
-  if(state.abaAtiva === 'clientes'){ montarSubFiltros(); renderizarClientes(); }
+  if(state.abaAtiva === 'clientes'){ montarSubFiltros(); renderizarClientes(); atualizarContadoresStatus(); }
   if(state.abaAtiva === 'visitar') renderizarQuerVisitar();
   if(state.abaAtiva === 'agenda') renderizarAgenda();
 }
 
 /* =====================================================
-   VITRINE — ADMIN ENTRA
+   VITRINE
 ===================================================== */
 async function abrirVitrineDoCliente(telefone){
   if(!telefone){ toast('Telefone inválido', 'error'); return; }
@@ -2051,6 +2085,7 @@ async function abrirVitrineDoCliente(telefone){
   mostrarOverlayVitrine('Carregando vitrine do cliente...');
   try {
     await irParaVitrine();
+    salvarEstado();
   } catch(err){
     console.error('Erro ao carregar vitrine:', err);
     toast('Erro ao carregar vitrine: ' + (err.message || err), 'error');
@@ -2060,15 +2095,12 @@ async function abrirVitrineDoCliente(telefone){
 }
 
 async function irParaVitrine(){
-  // Diagnóstico defensivo — avisa se algo faltar no HTML
   const ids = ['vitrineView','adminToolbar','infoClienteBar','userInfo','btnSair',
                'adminPanel','acessosSection','headerCorretorChips','infoClienteNome',
-               'infoClienteExtra','adTelefone','gridImoveis','buscaInput','emptyState',
-               'cnt-todos','cnt-pendente','cnt-quero-visitar','cnt-gostei','cnt-nao-gostei'];
+               'infoClienteExtra','adTelefone','gridImoveis','buscaInput','emptyState'];
   const faltando = ids.filter(id => !document.getElementById(id));
   if(faltando.length > 0){
-    console.error('❌ IDs faltando no HTML:', faltando);
-    toast('Erro: elementos faltando (' + faltando.join(', ') + ')', 'error');
+    console.error('❌ IDs faltando:', faltando);
     throw new Error('IDs faltando: ' + faltando.join(', '));
   }
 
@@ -2128,6 +2160,7 @@ function voltarParaClientes(){
     $('headerCorretorChips').classList.remove('hidden');
     $('userInfo').textContent = '👑 Painel';
     montarBarraCorretor();
+    salvarEstado();
   }
 }
 
@@ -2141,19 +2174,15 @@ function abrirEditarClienteAtual(){
   $('clienteModalTitle').textContent = '✏️ Editar cliente';
   $('cliTelefone').value = fmtTel(state.clienteInfo.telefone);
   $('cliNome').value = state.clienteInfo.nome || '';
-  $('cliParceria').value = state.clienteInfo.parceria || '';
   $('cliObservacao').value = state.clienteInfo.observacao || '';
   preencherSelectCorretores(state.clienteInfo.corretor);
+  preencherSelectParcerias(state.clienteInfo.parceria || '');
   $('clienteModalBackdrop').classList.add('show');
 }
 
-/* =====================================================
-   EDITAR CLIENTE DIRETO PELO CARD
-===================================================== */
 async function abrirEditarClientePorTel(telefone){
   const tel = normalizaTel(telefone);
   let cli = state.clientes.find(c => normalizaTel(c.telefone) === tel);
-
   if(!cli){
     marcarSalvando(true);
     const res = await api('buscarCliente', { senha: state.adminSenha, telefone: tel });
@@ -2165,14 +2194,14 @@ async function abrirEditarClientePorTel(telefone){
   $('clienteModalTitle').textContent = '✏️ Editar cliente';
   $('cliTelefone').value = fmtTel(cli.telefone);
   $('cliNome').value = cli.nome || '';
-  $('cliParceria').value = cli.parceria || '';
   $('cliObservacao').value = cli.observacao || '';
   preencherSelectCorretores(cli.corretor);
+  preencherSelectParcerias(cli.parceria || '');
   $('clienteModalBackdrop').classList.add('show');
 }
 
 /* =====================================================
-   PAINEL DE IMÓVEL
+   PAINEL IMÓVEL
 ===================================================== */
 function abrirPainelNovoImovel(){
   limparFormAdmin();
@@ -2234,6 +2263,7 @@ function renderizarAcessos(){
           <strong>Status:</strong> ${esc(a.status)}${navegadorTxt}<br>${criado}<br>${ultimo}
         </div>
         <div style="display:flex; gap:6px; flex-wrap:wrap;">
+          <button class="btn btn-success btn-xs" onclick="gerarTextoWhatsApp('${esc(a.senha)}', this)">💬 Gerar texto WhatsApp</button>
           <button class="btn btn-ghost btn-xs" onclick="trocarSenhaAcesso('${esc(a.id)}')">🔄 Trocar senha</button>
           <button class="btn btn-warn btn-xs" onclick="bloquearAcesso('${esc(a.id)}')">
             ${a.status === 'Bloqueado' ? '🔓 Desbloquear' : '🚫 Bloquear'}
@@ -2244,24 +2274,57 @@ function renderizarAcessos(){
   }).join('');
 }
 
-function copiarSenha(senha){
+function gerarTextoWhatsApp(senha, btn){
+  if(!state.telefone || !senha){
+    toast('Dados incompletos', 'error');
+    return;
+  }
+  const tel = state.telefone.replace(/\D/g, '');
+  const url = `${VITRINE_URL_BASE}?tel=${tel}&senha=${senha}`;
+
+  const texto =
+`Olá! 👋
+
+Esse é o link da sua vitrine exclusiva de imóveis. Clique abaixo para acessar em seu dispositivo:
+
+🔗 ${url}
+
+📌 Importante: para acessar em outros dispositivos, solicite um novo link ao seu corretor.
+
+Qualquer dúvida, estou à disposição!`;
+
+  copiarTexto(texto);
+}
+
+function gerarTextoWhatsAppSenhaGerada(){
+  const senha = $('senhaGeradaValor').textContent;
+  if(!senha) return;
+  gerarTextoWhatsApp(senha);
+}
+
+function copiarTexto(texto){
   if(navigator.clipboard && window.isSecureContext){
-    navigator.clipboard.writeText(senha).then(() => toast('Senha copiada 📋', 'success'))
-      .catch(() => fallbackCopySenha(senha));
+    navigator.clipboard.writeText(texto).then(() => {
+      toast('Texto copiado! Cole no WhatsApp 📋', 'success');
+    }).catch(() => fallbackCopyTexto(texto));
   } else {
-    fallbackCopySenha(senha);
+    fallbackCopyTexto(texto);
   }
 }
 
-function fallbackCopySenha(senha){
+function fallbackCopyTexto(texto){
   const ta = document.createElement('textarea');
-  ta.value = senha;
+  ta.value = texto;
   ta.style.position = 'fixed'; ta.style.opacity = '0';
   document.body.appendChild(ta);
   ta.select();
-  try { document.execCommand('copy'); toast('Senha copiada 📋', 'success'); }
+  try { document.execCommand('copy'); toast('Texto copiado! Cole no WhatsApp 📋', 'success'); }
   catch(e){ toast('Não foi possível copiar', 'error'); }
   document.body.removeChild(ta);
+}
+
+function copiarSenha(senha){
+  copiarTexto(senha);
 }
 
 function abrirNovoAcesso(){
@@ -2292,16 +2355,6 @@ async function criarAcesso(ev){
 }
 
 function fecharSenhaGerada(){ $('senhaGeradaModal').classList.remove('show'); }
-
-function copiarSenhaGerada(){
-  const senha = $('senhaGeradaValor').textContent;
-  if(navigator.clipboard && window.isSecureContext){
-    navigator.clipboard.writeText(senha).then(() => toast('Senha copiada 📋', 'success'))
-      .catch(() => fallbackCopySenha(senha));
-  } else {
-    fallbackCopySenha(senha);
-  }
-}
 
 async function trocarSenhaAcesso(acessoId){
   if(!confirm('Gerar uma nova senha? A atual deixará de funcionar.')) return;
@@ -2336,7 +2389,7 @@ async function removerAcesso(acessoId){
 }
 
 /* =====================================================
-   ATUALIZAR CONTADORES
+   IMÓVEIS (contadores, filtros, cards)
 ===================================================== */
 function atualizarContadores(){
   const counts = { todos: state.imoveis.length, gostei: 0, 'quero-visitar': 0, 'nao-gostei': 0, pendente: 0 };
@@ -2569,7 +2622,7 @@ function abrirBuscar(codigo){
 }
 
 /* =====================================================
-   OBSERVAÇÃO
+   OBSERVAÇÃO DO IMÓVEL
 ===================================================== */
 function toggleObs(obsId){
   const text = $(obsId + '-text');
@@ -2629,26 +2682,19 @@ async function marcar(id, acao){
   im.status = novaAcao;
   atualizarContadores();
   renderizarImoveis();
-
   state.cache.notificacoesCarregadas = false;
 
   marcarSalvando(true);
   const tel = state.telefone || (im ? im.telefone : '');
   try {
-    await api('atualizarStatus', {
-      id, telefone: tel, acao: novaAcao
-    });
+    await api('atualizarStatus', { id, telefone: tel, acao: novaAcao });
   } catch(e){
     console.error('Erro ao salvar status:', e);
   } finally {
     marcarSalvando(false);
   }
 
-  if(novaAcao !== 'pendente'){
-    toast('Marcado como: ' + novaAcao, 'success');
-  } else {
-    toast('Voltou para aguardando', 'success');
-  }
+  toast(novaAcao !== 'pendente' ? 'Marcado como: ' + novaAcao : 'Voltou para aguardando', 'success');
 }
 
 function copiarCodigo(codigo, el){
@@ -2661,21 +2707,11 @@ function copiarCodigo(codigo, el){
     setTimeout(() => { el.classList.remove('copiado'); el.innerHTML = original; }, 1400);
   }
   if(navigator.clipboard && window.isSecureContext){
-    navigator.clipboard.writeText(texto).then(feedback).catch(() => fallbackCopy(texto, feedback));
+    navigator.clipboard.writeText(texto).then(feedback).catch(() => fallbackCopyTexto(texto));
   } else {
-    fallbackCopy(texto, feedback);
+    fallbackCopyTexto(texto);
+    feedback();
   }
-}
-
-function fallbackCopy(texto, cb){
-  const ta = document.createElement('textarea');
-  ta.value = texto;
-  ta.style.position = 'fixed'; ta.style.opacity = '0';
-  document.body.appendChild(ta);
-  ta.select();
-  try { document.execCommand('copy'); cb && cb(); }
-  catch(e){ toast('Não foi possível copiar', 'error'); }
-  document.body.removeChild(ta);
 }
 
 /* =====================================================
@@ -2861,8 +2897,7 @@ async function salvarVisita(ev){
   const id = $('visitaImovelId').value;
   const data = $('visitaData').value;
   const avaliacao = $('visitaAvaliacao').value.trim();
-  if(!id){ toast('Imóvel não identificado', 'error'); return; }
-  if(!data){ toast('Informe a data', 'error'); return; }
+  if(!id || !data){ toast('Preencha a data', 'error'); return; }
 
   const btn = ev?.target;
   if(btn) btn.disabled = true;
@@ -2955,16 +2990,13 @@ function fecharAgendarModal(){ $('agendarModalBackdrop').classList.remove('show'
 async function salvarAgendamento(ev){
   const id = $('agendarImovelId').value;
   const dataHora = $('agendarDataHora').value;
-  if(!id){ toast('Imóvel não identificado', 'error'); return; }
-  if(!dataHora){ toast('Informe a data e hora', 'error'); return; }
+  if(!id || !dataHora){ toast('Informe a data e hora', 'error'); return; }
 
   const btn = ev?.target;
   if(btn) btn.disabled = true;
   marcarSalvando(true);
   const iso = new Date(dataHora).toISOString();
-  const res = await api('agendarVisita', {
-    senha: state.adminSenha, id, dataAgendada: iso
-  });
+  const res = await api('agendarVisita', { senha: state.adminSenha, id, dataAgendada: iso });
   marcarSalvando(false);
   if(btn) btn.disabled = false;
   if(!res.ok){ toast(res.error || 'Erro', 'error'); return; }
@@ -2991,7 +3023,6 @@ async function cancelarAgendamento(){
   if(im) im.dataVisitaAgendada = '';
   fecharAgendarModal();
   renderizarImoveis();
-
   state.cache.agendaCarregada = false;
   state.cache.notificacoesCarregadas = false;
 }
@@ -3006,9 +3037,230 @@ async function cancelarAgendamentoDireto(id){
   const im = state.imoveis.find(i => i.id === id);
   if(im) im.dataVisitaAgendada = '';
   renderizarImoveis();
-
   state.cache.agendaCarregada = false;
   state.cache.notificacoesCarregadas = false;
+}
+
+/* =====================================================
+   AGENDA E QUERO VISITAR (render)
+===================================================== */
+function renderizarQuerVisitar(){
+  const cards = $('querVisitarCards');
+  const badge = $('querVisitarTotalBadge');
+  const lista = state.querVisitarCache || [];
+  const filtrada = state.corretorFiltro
+    ? lista.filter(a => {
+        const cli = state.clientes.find(c => normalizaTel(c.telefone) === normalizaTel(a.telefone));
+        return cli && cli.corretor === state.corretorFiltro;
+      })
+    : lista;
+
+  if(filtrada.length === 0){
+    badge.textContent = '0';
+    badge.classList.add('zero');
+    cards.innerHTML = `<div class="quer-visitar-empty" style="grid-column:1/-1;">✅ Nenhum cliente aguardando agendamento.</div>`;
+    return;
+  }
+  badge.textContent = filtrada.length;
+  badge.classList.remove('zero');
+
+  const porCorretor = {};
+  state.corretores.forEach(c => { porCorretor[c] = []; });
+  filtrada.forEach(a => {
+    const cli = state.clientes.find(c => normalizaTel(c.telefone) === normalizaTel(a.telefone));
+    const corretor = (cli && cli.corretor) || '(sem corretor)';
+    if(!porCorretor[corretor]) porCorretor[corretor] = [];
+    porCorretor[corretor].push({ ...a, clienteNome: cli ? cli.nome : '(sem cadastro)' });
+  });
+
+  cards.innerHTML = Object.keys(porCorretor).map(corretor => {
+    const lst = porCorretor[corretor] || [];
+    const countClass = lst.length === 0 ? 'zero' : '';
+    if(lst.length === 0){
+      return `
+        <div class="quer-visitar-corretor">
+          <div class="quer-visitar-corretor-header">
+            <div class="nome"><div class="avatar-sm">${esc(corretor.charAt(0))}</div>${esc(corretor)}</div>
+            <span class="count ${countClass}">Sem solicitações</span>
+          </div>
+          <div class="quer-visitar-empty">Nada por aqui</div>
+        </div>`;
+    }
+    const itens = lst.map(a => `
+      <div class="quer-visitar-item" data-tel="${esc(a.telefone)}" data-id="${esc(a.id)}" onclick="abrirImovelDaAgenda(this.dataset.tel, this.dataset.id, false)">
+        <div class="quando-ico">📅</div>
+        <div class="info">
+          <div class="cliente">👤 ${esc(a.clienteNome)}</div>
+          <div class="detalhe">
+            <span>📱 ${esc(fmtTel(a.telefone))}</span>
+            ${a.codigo ? `<span class="codigo">#${esc(a.codigo)}</span>` : ''}
+            <span>${esc((a.titulo || '').substring(0, 30))}${a.titulo && a.titulo.length > 30 ? '...' : ''}</span>
+          </div>
+        </div>
+        <span class="arrow-right">→</span>
+      </div>
+    `).join('');
+    return `
+      <div class="quer-visitar-corretor">
+        <div class="quer-visitar-corretor-header">
+          <div class="nome"><div class="avatar-sm">${esc(corretor.charAt(0))}</div>${esc(corretor)}</div>
+          <span class="count ${countClass}">${lst.length} solicitaç${lst.length === 1 ? 'ão' : 'ões'}</span>
+        </div>
+        <div class="quer-visitar-corretor-body">${itens}</div>
+      </div>`;
+  }).join('');
+}
+
+function renderizarAgenda(){
+  const cards = $('agendaCards');
+  const badge = $('agendaTotalBadge');
+
+  const hoje = new Date(); hoje.setHours(0,0,0,0);
+  let futuras = state.agendamentos.filter(a => new Date(a.dataVisitaAgendada) >= hoje);
+  if(state.corretorFiltro){
+    futuras = futuras.filter(a => (a.corretor || '') === state.corretorFiltro);
+  }
+
+  badge.textContent = futuras.length === 0 ? '0' : futuras.length;
+  badge.classList.toggle('zero', futuras.length === 0);
+
+  const porCorretor = {};
+  state.corretores.forEach(c => { porCorretor[c] = []; });
+  futuras.forEach(a => {
+    const c = a.corretor || '(sem corretor)';
+    if(!porCorretor[c]) porCorretor[c] = [];
+    porCorretor[c].push(a);
+  });
+
+  if(futuras.length === 0){
+    cards.innerHTML = `<div class="agenda-empty" style="grid-column:1/-1;">📭 Nenhuma visita agendada no momento.</div>`;
+    return;
+  }
+
+  cards.innerHTML = state.corretores.map(corretor => {
+    const lista = porCorretor[corretor] || [];
+    const count = lista.length;
+    const countClass = count === 0 ? 'zero' : '';
+    if(count === 0){
+      return `
+        <div class="agenda-corretor">
+          <div class="agenda-corretor-header">
+            <div class="nome"><div class="avatar-sm">${esc(corretor.charAt(0))}</div>${esc(corretor)}</div>
+            <span class="count ${countClass}">Sem agendamentos</span>
+          </div>
+          <div class="agenda-empty">Nenhuma visita agendada</div>
+        </div>`;
+    }
+    const top3 = lista.slice(0, 3);
+    const itens = top3.map(a => agendaItemHTML(a)).join('');
+    const botaoVerTodos = lista.length > 3
+      ? `<button class="agenda-ver-todos" onclick="abrirAgendaCorretor('${esc(corretor)}')">📂 Ver todos os ${count} agendamentos →</button>`
+      : '';
+    return `
+      <div class="agenda-corretor">
+        <div class="agenda-corretor-header">
+          <div class="nome"><div class="avatar-sm">${esc(corretor.charAt(0))}</div>${esc(corretor)}</div>
+          <span class="count ${countClass}">${count} agendamento${count === 1 ? '' : 's'}</span>
+        </div>
+        <div class="agenda-corretor-body">${itens}</div>
+        ${botaoVerTodos}
+      </div>`;
+  }).join('');
+}
+
+function agendaItemHTML(a){
+  const quando = classificarAgendamento(a.dataVisitaAgendada);
+  return `
+    <div class="agenda-item" data-tel="${esc(a.telefone)}" data-id="${esc(a.id)}" onclick="abrirImovelDaAgenda(this.dataset.tel, this.dataset.id)">
+      <div class="when ${quando.classe}">${esc(quando.label)}</div>
+      <div class="info">
+        <div class="cliente">👤 ${esc(a.clienteNome)}</div>
+        <div class="detalhe">
+          ${a.codigo ? `<span class="codigo">#${esc(a.codigo)}</span>` : ''}
+          <span>${esc((a.titulo || '').substring(0, 30))}${a.titulo && a.titulo.length > 30 ? '...' : ''}</span>
+        </div>
+      </div>
+      <span class="arrow-right">→</span>
+    </div>
+  `;
+}
+
+function abrirAgendaCorretor(corretor){
+  const hoje = new Date(); hoje.setHours(0,0,0,0);
+  const lista = state.agendamentos.filter(a =>
+    (a.corretor || '(sem corretor)') === corretor && new Date(a.dataVisitaAgendada) >= hoje
+  );
+  const itens = lista.map(a => {
+    const quando = classificarAgendamento(a.dataVisitaAgendada);
+    const codigoHtml = a.codigo ? `<span class="codigo">#${esc(a.codigo)}</span>` : '';
+    return `
+      <div class="agenda-item" style="padding:14px 8px;" data-tel="${esc(a.telefone)}" data-id="${esc(a.id)}" onclick="abrirImovelDaAgenda(this.dataset.tel, this.dataset.id, true)">
+        <div class="when ${quando.classe}">${esc(quando.label)}</div>
+        <div class="info">
+          <div class="cliente">👤 ${esc(a.clienteNome)}</div>
+          <div class="detalhe" style="margin-top:4px;">
+            ${codigoHtml}
+            <span>${esc(a.titulo)}</span>
+          </div>
+        </div>
+        <span class="arrow-right">→</span>
+      </div>
+    `;
+  }).join('') || '<div class="agenda-empty">Nenhum agendamento futuro.</div>';
+
+  $('agendaModalContent').innerHTML = `
+    <button class="modal-close" onclick="fecharAgendaModal()">×</button>
+    <h2 style="margin-bottom:6px;">📅 Agenda — ${esc(corretor)}</h2>
+    <p class="text-muted" style="margin-bottom:16px; font-size:.82rem;">
+      ${lista.length} agendamento${lista.length === 1 ? '' : 's'} a partir de hoje
+    </p>
+    <div style="max-height:60vh; overflow-y:auto;">${itens}</div>
+  `;
+  $('agendaModalBackdrop').classList.add('show');
+}
+
+function fecharAgendaModal(){ $('agendaModalBackdrop').classList.remove('show'); }
+
+async function abrirImovelDaAgenda(telefone, imovelId, fecharModalPrimeiro){
+  if(fecharModalPrimeiro) fecharAgendaModal();
+
+  if(state.telefone === normalizaTel(telefone) && state.imoveis.length > 0){
+    destacarCard(imovelId);
+    return;
+  }
+
+  await abrirVitrineDoCliente(telefone);
+
+  let tentativas = 0;
+  const maxTentativas = 40;
+  const aguardar = setInterval(() => {
+    tentativas++;
+    const card = document.querySelector(`.card[data-id="${imovelId}"]`);
+    if(card){
+      clearInterval(aguardar);
+      destacarCard(imovelId);
+    } else if(tentativas >= maxTentativas){
+      clearInterval(aguardar);
+      toast('Imóvel não encontrado.', 'error');
+    }
+  }, 200);
+}
+
+function destacarCard(imovelId){
+  if(state.filtro !== 'todos'){
+    state.filtro = 'todos';
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    const el = document.querySelector('.filter-btn[data-filter="todos"]');
+    if(el) el.classList.add('active');
+    renderizarImoveis();
+  }
+  const card = document.querySelector(`.card[data-id="${imovelId}"]`);
+  if(!card){ toast('Imóvel não encontrado na lista', 'error'); return; }
+  card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  card.classList.remove('destacado');
+  void card.offsetWidth;
+  card.classList.add('destacado');
+  setTimeout(() => card.classList.remove('destacado'), 3000);
 }
 
 /* =====================================================
@@ -3021,6 +3273,7 @@ function sair(){
       if(!estaSalvando()){
         clearInterval(check);
         localStorage.removeItem(ADMIN_KEY);
+        limparEstado();
         location.reload();
       }
     }, 200);
@@ -3028,6 +3281,7 @@ function sair(){
   }
 
   localStorage.removeItem(ADMIN_KEY);
+  limparEstado();
   state.isAdmin = false;
   state.adminSenha = null;
   state.clienteInfo = null;
@@ -3036,6 +3290,8 @@ function sair(){
   state.acessos = [];
   state.agendamentos = [];
   state.corretorFiltro = null;
+  state.parceriaFiltro = null;
+  state.statusFiltro = 'todos';
   state.telefone = null;
   state.cache.clientesCarregados = false;
   state.cache.notificacoesCarregadas = false;
@@ -3063,28 +3319,37 @@ window.addEventListener('beforeunload', function(e){
 /* =====================================================
    INIT
 ===================================================== */
-(function init(){
+(async function init(){
   const senhaAdminSalva = localStorage.getItem(ADMIN_KEY);
 
   if(senhaAdminSalva){
     $('inputAdminSenha').value = senhaAdminSalva;
-    $('adminLoginSub').textContent = 'Senha salva. Clique em "Entrar no painel" para acessar.';
-    (async () => {
-      marcarSalvando(true);
-      const res = await api('adminListar', { senha: senhaAdminSalva });
-      marcarSalvando(false);
-      if(res.ok){
-        state.isAdmin = true;
-        state.adminSenha = senhaAdminSalva;
+    $('adminLoginSub').textContent = 'Senha salva. Restaurando sessão...';
+
+    marcarSalvando(true);
+    const res = await api('adminListar', { senha: senhaAdminSalva });
+    marcarSalvando(false);
+
+    if(res.ok){
+      state.isAdmin = true;
+      state.adminSenha = senhaAdminSalva;
+      mostrarView('corretorView');
+      $('btnSair').classList.remove('hidden');
+      $('userInfo').textContent = '👑 Painel';
+      $('headerCorretorChips').classList.remove('hidden');
+
+      // Tenta restaurar estado
+      const restaurado = await restaurarEstado();
+      if(!restaurado){
         await carregarHomeAdmin();
       } else {
-        localStorage.removeItem(ADMIN_KEY);
-        mostrarView('adminLoginView');
-        $('adminLoginSub').textContent = 'Sessão expirada. Digite a senha novamente.';
-        setTimeout(() => $('inputAdminSenha').focus(), 200);
+        salvarEstado();
       }
-    })();
-    return;
+      return;
+    } else {
+      localStorage.removeItem(ADMIN_KEY);
+      limparEstado();
+    }
   }
 
   mostrarView('adminLoginView');
