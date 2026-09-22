@@ -438,6 +438,42 @@
   .text-muted{ color: var(--muted); }
   .text-center{ text-align: center; }
 
+  /* SKELETON (carregamento rápido dos cards) */
+  @keyframes shimmer{
+    0%{ background-position: -400px 0; }
+    100%{ background-position: 400px 0; }
+  }
+  .skeleton-card{
+    background: var(--card); border-radius: var(--radius);
+    border: 1px solid var(--border-soft);
+    box-shadow: var(--shadow-sm);
+    padding: 12px;
+    display: flex; gap: 12px;
+    margin-top: 22px;
+    overflow: hidden;
+  }
+  .skeleton-img{
+    flex: 0 0 110px; width: 110px; height: 110px;
+    border-radius: 10px;
+    background: linear-gradient(90deg, #e8ecf1 0%, #f4f6f8 50%, #e8ecf1 100%);
+    background-size: 800px 100%;
+    animation: shimmer 1.4s infinite linear;
+    flex-shrink: 0;
+  }
+  .skeleton-info{
+    flex: 1; display: flex; flex-direction: column; gap: 8px;
+    padding-top: 4px;
+  }
+  .skeleton-line{
+    height: 12px; border-radius: 6px;
+    background: linear-gradient(90deg, #e8ecf1 0%, #f4f6f8 50%, #e8ecf1 100%);
+    background-size: 800px 100%;
+    animation: shimmer 1.4s infinite linear;
+  }
+  .skeleton-line.short{ width: 40%; }
+  .skeleton-line.medium{ width: 70%; }
+  .skeleton-line.long{ width: 90%; }
+
   /* RESPONSIVO */
   @media(max-width:480px){
     .grid{ grid-template-columns: 1fr; }
@@ -445,6 +481,7 @@
     .card-title{ font-size: .85rem; }
     .btn-zap-inline{ font-size: .62rem; padding: 3px 7px; }
     .card-date, .card-code{ font-size: .6rem; padding: 2px 5px; }
+    .skeleton-img{ flex: 0 0 90px; width: 90px; height: 90px; }
   }
 </style>
 </head>
@@ -584,6 +621,7 @@
 const API_URL = 'https://script.google.com/macros/s/AKfycbxixzI5uFmyC6TOzoXqTnwUaNK-iWMPxDaxCiY-dM4ZRSFIt1K4dco_ShW7D7hMIdMX/exec';
 const TEL_KEY   = 'vitrine_telefone';
 const TOKEN_KEY = 'vitrine_device_token';
+const NOME_KEY  = 'vitrine_nome';
 const TIMEOUT_API = 45000;
 
 const ZAP_CORRETORES = {
@@ -848,6 +886,29 @@ function limparUrl(){
 }
 
 /* =====================================================
+   SKELETON — mostra cards falsos enquanto carrega
+===================================================== */
+function mostrarSkeleton(qtd = 4){
+  const grid = $('gridImoveis');
+  let html = '';
+  for(let i = 0; i < qtd; i++){
+    html += `
+      <div class="skeleton-card">
+        <div class="skeleton-img"></div>
+        <div class="skeleton-info">
+          <div class="skeleton-line short"></div>
+          <div class="skeleton-line long"></div>
+          <div class="skeleton-line medium"></div>
+          <div class="skeleton-line short"></div>
+        </div>
+      </div>
+    `;
+  }
+  grid.innerHTML = html;
+  $('emptyState').classList.add('hidden');
+}
+
+/* =====================================================
    LOGIN CLIENTE
 ===================================================== */
 function toggleAjudaSenha(){ $('ajudaSenha').classList.toggle('hidden'); }
@@ -893,6 +954,7 @@ async function entrarCliente(){
 
   localStorage.setItem(TEL_KEY, tel);
   localStorage.setItem(TOKEN_KEY, state.deviceToken);
+  if(res.nome) localStorage.setItem(NOME_KEY, res.nome);
 
   toast('Bem-vindo, ' + (res.nome || 'cliente'), 'success');
   limparUrl();
@@ -900,7 +962,7 @@ async function entrarCliente(){
 }
 
 /* =====================================================
-   IR PARA VITRINE
+   IR PARA VITRINE (mostra na hora + skeleton)
 ===================================================== */
 async function irParaVitrine(){
   mostrarView('vitrineView');
@@ -908,6 +970,10 @@ async function irParaVitrine(){
     ? '👤 ' + state.clienteInfo.nome
     : '📱 ' + fmtTel(state.telefone);
 
+  // Mostra skeleton imediatamente — o usuário já vê a tela na hora
+  mostrarSkeleton(4);
+
+  // Carrega em paralelo/em seguida
   await carregarImoveis();
 }
 
@@ -915,13 +981,6 @@ async function irParaVitrine(){
    CARREGAR IMÓVEIS
 ===================================================== */
 async function carregarImoveis(){
-  const grid = $('gridImoveis');
-  grid.innerHTML = `
-    <div style="grid-column:1/-1; text-align:center; padding:50px; color:var(--primary);">
-      <span style="display:inline-block;width:38px;height:38px;border:3px solid currentColor;border-top-color:transparent;border-radius:50%;animation:spin .6s linear infinite;"></span>
-      <p class="text-muted" style="margin-top:12px;">Carregando imóveis...</p>
-    </div>`;
-
   const res = await api('listarImoveis', {
     telefone: state.telefone,
     deviceToken: state.deviceToken
@@ -932,15 +991,19 @@ async function carregarImoveis(){
       mostrarBloqueioDispositivo();
       return;
     }
-    if((res.error || '').toLowerCase().includes('sess')){
+    // Se a API rejeitar o token (sessão expirada / inválida)
+    if((res.error || '').toLowerCase().match(/sess|token|inv[áa]lid|expirad|autentic|unauthor/)){
       localStorage.removeItem(TOKEN_KEY);
       mostrarView('loginView');
       $('inputTelefone').value = fmtTel(state.telefone);
+      $('senhaGroup').style.display = 'block';
+      $('loginSub').textContent = 'Digite sua senha para entrar novamente.';
       setTimeout(() => $('inputSenha').focus(), 200);
       return;
     }
+    // Erro genérico
     toast(res.error || 'Erro ao carregar', 'error');
-    grid.innerHTML = '';
+    $('gridImoveis').innerHTML = '';
     $('emptyState').classList.remove('hidden');
     $('emptyMsg').textContent = 'Erro ao carregar imóveis.';
     return;
@@ -1279,7 +1342,11 @@ function fallbackCopy(texto, cb){
 }
 
 /* =====================================================
-   INIT — 3 cenários possíveis
+   INIT — Login ULTRA-RÁPIDO a partir da 2ª vez
+   - Cenário 1: link com ?tel=&senha= → login automático (aguarda API)
+   - Cenário 2: já tem tel+token salvos → MOSTRA VITRINE NA HORA + skeleton
+                (uma única chamada de API: listarImoveis)
+   - Cenário 3: nada salvo → login
 ===================================================== */
 (async function init(){
   const params = new URLSearchParams(window.location.search);
@@ -1306,6 +1373,7 @@ function fallbackCopy(texto, cb){
       state.clienteInfo = { nome: res.nome, apelido: res.apelido };
       localStorage.setItem(TEL_KEY, telUrl);
       localStorage.setItem(TOKEN_KEY, state.deviceToken);
+      if(res.nome) localStorage.setItem(NOME_KEY, res.nome);
 
       limparUrl();
 
@@ -1332,41 +1400,70 @@ function fallbackCopy(texto, cb){
     return;
   }
 
-  // ── CENÁRIO 2: localStorage tem dados salvos ──
+  // ── CENÁRIO 2: já tem tel+token salvos → ENTRA DIRETO ──
   const telSalvo = localStorage.getItem(TEL_KEY);
   const tokenSalvo = localStorage.getItem(TOKEN_KEY);
+  const nomeSalvo = localStorage.getItem(NOME_KEY);
 
   if(telSalvo && tokenSalvo){
     state.telefone = telSalvo;
     state.deviceToken = tokenSalvo;
+    state.clienteInfo = { nome: nomeSalvo || null, apelido: null };
 
-    mostrarView('loadingView');
-    $('loadingMsg').textContent = 'Validando acesso...';
+    // 🚀 Mostra a vitrine NA HORA com skeleton — sem esperar API de login
+    mostrarView('vitrineView');
+    $('userInfo').textContent = nomeSalvo
+      ? '👤 ' + nomeSalvo
+      : '📱 ' + fmtTel(telSalvo);
 
-    const res = await api('loginCliente', {
+    mostrarSkeleton(4);
+
+    // Uma única chamada: listarImoveis
+    const res = await api('listarImoveis', {
       telefone: telSalvo,
-      senha: '',
-      deviceToken: tokenSalvo,
-      navegador: detectarNavegador()
+      deviceToken: tokenSalvo
     });
 
     if(res.ok){
-      state.clienteInfo = { nome: res.nome, apelido: res.apelido };
-      $('loadingMsg').textContent = 'Buscando seus imóveis...';
-      await irParaVitrine();
+      state.imoveis = (res.data || []).sort((a,b) => {
+        const da = new Date(a.dataCadastro||0).getTime() || 0;
+        const db = new Date(b.dataCadastro||0).getTime() || 0;
+        return db - da;
+      });
+
+      try {
+        const primeiroCorretor = state.imoveis.map(getCorretor).find(Boolean);
+        if(primeiroCorretor) localStorage.setItem('vitrine_corretor_pref', primeiroCorretor);
+      } catch(e){}
+
+      atualizarContadores();
+      renderizarImoveis();
       return;
     }
 
+    // Algo deu errado → trata o erro
     if(erroEhDispositivoVinculado(res.error)){
       mostrarBloqueioDispositivo();
       return;
     }
 
+    // Token inválido / sessão expirada → volta pro login
+    if((res.error || '').toLowerCase().match(/sess|token|inv[áa]lid|expirad|autentic|unauthor/)){
+      localStorage.removeItem(TOKEN_KEY);
+      mostrarView('loginView');
+      $('inputTelefone').value = fmtTel(telSalvo);
+      $('senhaGroup').style.display = 'block';
+      $('loginSub').textContent = 'Digite sua senha para entrar novamente.';
+      setTimeout(() => $('inputSenha').focus(), 200);
+      return;
+    }
+
+    // Falha de conexão → também volta pro login
     localStorage.removeItem(TOKEN_KEY);
     mostrarView('loginView');
     $('inputTelefone').value = fmtTel(telSalvo);
     $('senhaGroup').style.display = 'block';
-    $('loginSub').textContent = 'Digite sua senha para entrar novamente.';
+    $('loginSub').textContent = 'Não conseguimos conectar. Entre novamente.';
     setTimeout(() => $('inputSenha').focus(), 200);
     return;
   }
