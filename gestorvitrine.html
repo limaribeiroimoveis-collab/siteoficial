@@ -721,6 +721,10 @@
     font-style: italic; overflow: hidden; text-overflow: ellipsis;
     display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
   }
+  .cliente-item .cliente-actions{
+    display: flex; gap: 6px; margin-top: 6px;
+    padding-top: 8px; border-top: 1px dashed var(--border-soft);
+  }
 
   .empty-state{
     text-align: center; padding: 60px 20px; color: var(--muted);
@@ -795,6 +799,17 @@
     text-align: center; padding: 40px 20px; color: var(--primary);
   }
   .loading-inline .loader-lg{ display: inline-block; margin-bottom: 10px; }
+
+  /* Overlay de carregamento da vitrine */
+  .overlay-loading-vitrine{
+    position: fixed; inset: 0; background: rgba(15,23,42,.75);
+    z-index: 9998; display: flex; align-items: center; justify-content: center;
+    flex-direction: column; gap: 14px; color: #fff; text-align: center; padding: 20px;
+  }
+  .overlay-loading-vitrine .spinner{
+    width: 50px; height: 50px; border: 4px solid rgba(255,255,255,.2);
+    border-top-color: #fff; border-radius: 50%; animation: spin .8s linear infinite;
+  }
 </style>
 </head>
 <body>
@@ -1146,6 +1161,7 @@
 ===================================================== */
 const API_URL = 'https://script.google.com/macros/s/AKfycbxixzI5uFmyC6TOzoXqTnwUaNK-iWMPxDaxCiY-dM4ZRSFIt1K4dco_ShW7D7hMIdMX/exec';
 const ADMIN_KEY = 'vitrine_admin';
+const CORRETORES_CACHE_KEY = 'vitrine_corretores_cache';
 const BUSCAR_BASE = 'https://corretor.quintoandar.com.br/informacoes-de-entrada';
 const TIMEOUT_API = 45000;
 
@@ -1378,27 +1394,29 @@ function mostrarView(id){
 }
 
 /* =====================================================
-   LOGIN ADMIN - AUTO-LOGIN
+   OVERLAY DE CARREGAMENTO DA VITRINE
 ===================================================== */
-function abrirLoginAdmin(){
-  const senhaSalva = localStorage.getItem(ADMIN_KEY) || '';
-  $('inputAdminSenha').value = senhaSalva;
-  $('inputAdminSenha').type = 'password';
-  const eyeBtn = document.querySelector('#adminLoginView .btn-eye');
-  if(eyeBtn) eyeBtn.textContent = '👁️';
-
-  if(senhaSalva){
-    $('adminLoginSub').textContent = 'Senha salva. Clique em "Entrar no painel" para acessar.';
-  } else {
-    $('adminLoginSub').textContent = 'Acesso restrito à equipe Lima Ribeiro.';
+function mostrarOverlayVitrine(msg){
+  let ov = document.getElementById('overlayLoadingVitrine');
+  if(!ov){
+    ov = document.createElement('div');
+    ov.id = 'overlayLoadingVitrine';
+    ov.className = 'overlay-loading-vitrine';
+    ov.innerHTML = '<div class="spinner"></div><div style="font-size:1rem;font-weight:600;" id="overlayLoadingVitrineMsg"></div>';
+    document.body.appendChild(ov);
   }
-
-  mostrarView('adminLoginView');
-  setTimeout(() => {
-    if(!senhaSalva) $('inputAdminSenha').focus();
-  }, 100);
+  document.getElementById('overlayLoadingVitrineMsg').textContent = msg || 'Carregando vitrine do cliente...';
+  ov.style.display = 'flex';
 }
 
+function esconderOverlayVitrine(){
+  const ov = document.getElementById('overlayLoadingVitrine');
+  if(ov) ov.style.display = 'none';
+}
+
+/* =====================================================
+   LOGIN ADMIN - AUTO-LOGIN
+===================================================== */
 async function entrarAdmin(){
   const senha = $('inputAdminSenha').value.trim();
   if(!senha){ toast('Digite a senha', 'error'); return; }
@@ -1433,15 +1451,41 @@ async function carregarHomeAdmin(){
   state.abaAtiva = 'agenda';
   trocarAbaUI('agenda');
 
-  // ETAPA 1: Corretores (rápido)
-  const resCor = await api('listarCorretores', { senha: state.adminSenha });
-  state.corretores = (resCor.ok && resCor.data) ? resCor.data : ['Hugo', 'Carolina'];
-
-  montarBarraCorretor();
+  // ETAPA 1: Corretores (rápido, com cache no localStorage)
+  await carregarCorretores();
 
   // ETAPA 2: Carrega AGENDA (aba padrão) + Notificações em background
   await carregarAgenda(true);
   carregarNotificacoesBackground();
+}
+
+/* =====================================================
+   CARREGAR CORRETORES COM CACHE
+===================================================== */
+async function carregarCorretores(){
+  // Tenta usar cache primeiro
+  try {
+    const cache = JSON.parse(localStorage.getItem(CORRETORES_CACHE_KEY) || 'null');
+    if(cache && Array.isArray(cache.data) && cache.data.length > 0){
+      state.corretores = cache.data;
+      montarBarraCorretor();
+    }
+  } catch(e){}
+
+  // Busca em background para atualizar
+  const resCor = await api('listarCorretores', { senha: state.adminSenha });
+  if(resCor.ok && resCor.data && resCor.data.length > 0){
+    state.corretores = resCor.data;
+    try {
+      localStorage.setItem(CORRETORES_CACHE_KEY, JSON.stringify({
+        data: resCor.data,
+        ts: Date.now()
+      }));
+    } catch(e){}
+  } else if(!state.corretores.length){
+    state.corretores = ['Hugo', 'Carolina'];
+  }
+  montarBarraCorretor();
 }
 
 /* =====================================================
@@ -1525,7 +1569,6 @@ async function carregarNotificacoes(mostrarLoading){
 }
 
 async function carregarNotificacoesBackground(){
-  // Busca silenciosamente para o badge da aba
   const res = await api('listarNotificacoes', { senha: state.adminSenha });
   if(res.ok && res.data){
     state.querVisitarCache = res.data.visita || [];
@@ -1584,8 +1627,7 @@ function montarBarraCorretor(){
 function setCorretorFiltro(corretor){
   state.corretorFiltro = corretor;
   montarBarraCorretor();
-  if(state.cache.clientesCarregados) montarSubFiltros();
-  if(state.cache.clientesCarregados) renderizarClientes();
+  if(state.cache.clientesCarregados){ montarSubFiltros(); renderizarClientes(); }
   if(state.cache.notificacoesCarregadas) renderizarQuerVisitar();
   if(state.cache.agendaCarregada) renderizarAgenda();
 }
@@ -1638,7 +1680,7 @@ function renderizarQuerVisitar(){
         </div>`;
     }
     const itens = lst.map(a => `
-      <div class="quer-visitar-item" onclick="abrirImovelDaAgenda('${esc(a.telefone)}', '${esc(a.id)}', false)">
+      <div class="quer-visitar-item" data-tel="${esc(a.telefone)}" data-id="${esc(a.id)}" onclick="abrirImovelDaAgenda(this.dataset.tel, this.dataset.id, false)">
         <div class="quando-ico">📅</div>
         <div class="info">
           <div class="cliente">👤 ${esc(a.clienteNome)}</div>
@@ -1730,7 +1772,7 @@ function renderizarAgenda(){
 function agendaItemHTML(a){
   const quando = classificarAgendamento(a.dataVisitaAgendada);
   return `
-    <div class="agenda-item" onclick="abrirImovelDaAgenda('${esc(a.telefone)}', '${esc(a.id)}')">
+    <div class="agenda-item" data-tel="${esc(a.telefone)}" data-id="${esc(a.id)}" onclick="abrirImovelDaAgenda(this.dataset.tel, this.dataset.id)">
       <div class="when ${quando.classe}">${esc(quando.label)}</div>
       <div class="info">
         <div class="cliente">👤 ${esc(a.clienteNome)}</div>
@@ -1753,7 +1795,7 @@ function abrirAgendaCorretor(corretor){
     const quando = classificarAgendamento(a.dataVisitaAgendada);
     const codigoHtml = a.codigo ? `<span class="codigo">#${esc(a.codigo)}</span>` : '';
     return `
-      <div class="agenda-item" style="padding:14px 8px;" onclick="abrirImovelDaAgenda('${esc(a.telefone)}', '${esc(a.id)}', true)">
+      <div class="agenda-item" style="padding:14px 8px;" data-tel="${esc(a.telefone)}" data-id="${esc(a.id)}" onclick="abrirImovelDaAgenda(this.dataset.tel, this.dataset.id, true)">
         <div class="when ${quando.classe}">${esc(quando.label)}</div>
         <div class="info">
           <div class="cliente">👤 ${esc(a.clienteNome)}</div>
@@ -1792,7 +1834,7 @@ async function abrirImovelDaAgenda(telefone, imovelId, fecharModalPrimeiro){
   }
 
   state.telefone = normalizaTel(telefone);
-  await irParaVitrine();
+  await abrirVitrineDoCliente(telefone);
 
   let tentativas = 0;
   const maxTentativas = 30;
@@ -1919,8 +1961,10 @@ function renderizarClientes(){
     return;
   }
   empty.classList.add('hidden');
+
+  // CORREÇÃO: usa data-tel no card (evita problemas de escape no onclick inline)
   list.innerHTML = lista.map(c => `
-    <div class="cliente-item" onclick="abrirVitrineDoCliente('${esc(c.telefone)}')">
+    <div class="cliente-item" data-tel="${esc(c.telefone)}" onclick="abrirVitrineDoCliente(this.dataset.tel)">
       <div class="nome">
         <div class="initial">${esc(primeiraLetra(c.nome))}</div>
         ${esc(c.nome || 'Sem nome')}
@@ -1932,6 +1976,10 @@ function renderizarClientes(){
         ${c.dataCadastro ? `<span class="tag tag-data">📅 ${fmtData(c.dataCadastro)}</span>` : ''}
       </div>
       ${c.observacao ? `<div class="obs-preview">💬 ${esc(c.observacao)}</div>` : ''}
+      <div class="cliente-actions">
+        <button class="btn btn-ghost btn-xs" style="flex:1;" data-tel="${esc(c.telefone)}" onclick="event.stopPropagation(); abrirEditarClientePorTel(this.dataset.tel)">✏️ Editar</button>
+        <button class="btn btn-primary btn-xs" style="flex:1;" data-tel="${esc(c.telefone)}" onclick="event.stopPropagation(); abrirVitrineDoCliente(this.dataset.tel)">🏠 Ver vitrine</button>
+      </div>
     </div>
   `).join('');
 }
@@ -1986,7 +2034,15 @@ async function salvarCliente(){
 
   // Recarrega clientes (invalida cache)
   state.cache.clientesCarregados = false;
-  await carregarClientes();
+  if(state.abaAtiva === 'clientes'){
+    await carregarClientes();
+  } else {
+    // Só atualiza a barra se não estiver na aba
+    const res2 = await api('listarClientes', { senha: state.adminSenha });
+    state.clientes = (res2.ok && res2.data) ? res2.data : [];
+    state.cache.clientesCarregados = true;
+    montarBarraCorretor();
+  }
   if(state.cache.notificacoesCarregadas) carregarNotificacoesBackground();
 }
 
@@ -1994,8 +2050,20 @@ async function salvarCliente(){
    VITRINE
 ===================================================== */
 async function abrirVitrineDoCliente(telefone){
-  state.telefone = normalizaTel(telefone);
-  await irParaVitrine();
+  if(!telefone){ toast('Telefone inválido', 'error'); return; }
+  const tel = normalizaTel(telefone);
+  if(!tel || tel.length < 10){ toast('Telefone inválido', 'error'); return; }
+
+  state.telefone = tel;
+  mostrarOverlayVitrine('Carregando vitrine do cliente...');
+  try {
+    await irParaVitrine();
+  } catch(err){
+    console.error('Erro ao carregar vitrine:', err);
+    toast('Erro ao carregar vitrine', 'error');
+  } finally {
+    esconderOverlayVitrine();
+  }
 }
 
 async function irParaVitrine(){
@@ -2036,6 +2104,7 @@ async function irParaVitrine(){
   carregarAcessos();
 
   mostrarView('vitrineView');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
   atualizarContadores();
   renderizarImoveis();
 }
@@ -2044,11 +2113,13 @@ function voltarParaClientes(){
   state.telefone = null;
   state.imoveis = [];
   state.clienteInfo = null;
-  mostrarView('corretorView');
-  $('btnSair').classList.remove('hidden');
-  $('headerCorretorChips').classList.remove('hidden');
-  $('userInfo').textContent = '👑 Painel';
-  montarBarraCorretor();
+  if(state.isAdmin){
+    mostrarView('corretorView');
+    $('btnSair').classList.remove('hidden');
+    $('headerCorretorChips').classList.remove('hidden');
+    $('userInfo').textContent = '👑 Painel';
+    montarBarraCorretor();
+  }
 }
 
 function abrirEditarClienteAtual(){
@@ -2064,6 +2135,30 @@ function abrirEditarClienteAtual(){
   $('cliParceria').value = state.clienteInfo.parceria || '';
   $('cliObservacao').value = state.clienteInfo.observacao || '';
   preencherSelectCorretores(state.clienteInfo.corretor);
+  $('clienteModalBackdrop').classList.add('show');
+}
+
+/* =====================================================
+   EDITAR CLIENTE DIRETO PELO CARD
+===================================================== */
+async function abrirEditarClientePorTel(telefone){
+  const tel = normalizaTel(telefone);
+  let cli = state.clientes.find(c => normalizaTel(c.telefone) === tel);
+
+  if(!cli){
+    marcarSalvando(true);
+    const res = await api('buscarCliente', { senha: state.adminSenha, telefone: tel });
+    marcarSalvando(false);
+    if(res.ok && res.data) cli = res.data;
+  }
+  if(!cli){ toast('Cliente não encontrado', 'error'); return; }
+
+  $('clienteModalTitle').textContent = '✏️ Editar cliente';
+  $('cliTelefone').value = fmtTel(cli.telefone);
+  $('cliNome').value = cli.nome || '';
+  $('cliParceria').value = cli.parceria || '';
+  $('cliObservacao').value = cli.observacao || '';
+  preencherSelectCorretores(cli.corretor);
   $('clienteModalBackdrop').classList.add('show');
 }
 
@@ -2703,7 +2798,6 @@ async function verHistorico(id){
           </div>
         </div>
       `).join('');
-  // Cria modal ad-hoc
   let backdrop = document.getElementById('modalBackdropTemp');
   if(!backdrop){
     backdrop = document.createElement('div');
@@ -2800,7 +2894,6 @@ async function salvarVisita(ev){
   fecharVisitaModal();
   renderizarImoveis();
 
-  // Invalida cache de agenda
   state.cache.agendaCarregada = false;
   if(state.abaAtiva === 'agenda') carregarAgenda(true);
 }
