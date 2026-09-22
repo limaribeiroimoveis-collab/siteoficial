@@ -33,9 +33,10 @@
   }
   .container{ max-width: 1280px; margin: 0 auto; padding: 16px; }
 
+  /* HEADER */
   header.app-header{
     background: linear-gradient(90deg, #16263e 0%, #1e3a5f 100%);
-    color: #fff; padding: 8px 12px;
+    color: #fff; padding: 6px 12px;
     box-shadow: 0 1px 4px rgba(0,0,0,.08);
     position: sticky; top: 0; z-index: 100;
     border-bottom: 1px solid rgba(255,255,255,.06);
@@ -43,74 +44,67 @@
   .header-inner{
     max-width: 1280px; margin: 0 auto;
     display: flex; align-items: center; justify-content: space-between;
-    gap: 8px; flex-wrap: nowrap; min-height: 38px;
+    gap: 8px; flex-wrap: nowrap; min-height: 34px;
   }
-  .brand{ display: flex; align-items: center; gap: 8px; min-width: 0; }
+  .brand{ display: flex; align-items: center; gap: 8px; min-width: 0; flex-shrink: 0; }
   .brand-icon{
-    width: 28px; height: 28px; flex-shrink: 0;
+    width: 26px; height: 26px; flex-shrink: 0;
     background: var(--accent); border-radius: 6px;
     display: flex; align-items: center; justify-content: center;
-    font-size: .85rem; color: #fff; font-weight: 800;
+    font-size: .8rem; color: #fff; font-weight: 800;
   }
   .brand-text{ display: flex; flex-direction: column; line-height: 1; min-width: 0; }
-  .brand-title{ font-size: .85rem; font-weight: 700; letter-spacing: .2px; }
-  .brand-sub{ font-size: .58rem; opacity: .7; letter-spacing: 1px; text-transform: uppercase; margin-top: 1px; }
+  .brand-title{ font-size: .82rem; font-weight: 700; letter-spacing: .2px; }
+  .brand-sub{ font-size: .55rem; opacity: .7; letter-spacing: 1px; text-transform: uppercase; margin-top: 1px; }
   .header-right{ display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
-  .user-info{ font-size: .72rem; opacity: .8; display: flex; align-items: center; gap: 4px; }
+
+  /* BOTÕES PEQUENOS DE CORRETOR NO HEADER */
+  .header-corretor-chips{
+    display: flex; align-items: center; gap: 4px; margin-right: 4px;
+  }
+  .chip-sm{
+    padding: 4px 10px; border-radius: 999px;
+    background: rgba(255,255,255,.08);
+    color: rgba(255,255,255,.8);
+    border: 1px solid rgba(255,255,255,.15);
+    font-size: .7rem; font-weight: 600;
+    cursor: pointer; transition: all .15s; font-family: inherit;
+    display: inline-flex; align-items: center; gap: 4px;
+    white-space: nowrap;
+  }
+  .chip-sm:hover{ background: rgba(255,255,255,.16); color: #fff; }
+  .chip-sm.active{ background: var(--accent); color: #fff; border-color: var(--accent); }
+  .chip-sm .cnt{
+    background: rgba(0,0,0,.2); padding: 0px 5px;
+    border-radius: 999px; font-size: .6rem; font-weight: 700;
+    min-width: 14px; text-align: center;
+  }
+  .chip-sm.active .cnt{ background: rgba(0,0,0,.25); }
+  @media(max-width:600px){
+    .chip-sm{ padding: 4px 7px; font-size: .65rem; }
+    .chip-sm .cnt{ display: none; }
+  }
+
+  .user-info{ font-size: .7rem; opacity: .8; display: flex; align-items: center; gap: 4px; }
   @media(max-width:480px){ .user-info{ display: none; } }
   .btn-header{
     background: rgba(255,255,255,.08); color: #fff;
     border: 1px solid rgba(255,255,255,.18);
-    padding: 5px 12px; border-radius: 6px; cursor: pointer;
-    font-size: .72rem; font-weight: 600;
+    padding: 5px 10px; border-radius: 6px; cursor: pointer;
+    font-size: .7rem; font-weight: 600;
     transition: all .15s; font-family: inherit;
   }
   .btn-header:hover{ background: rgba(255,255,255,.16); }
-
-  /* MENU DE CORRETOR FIXO NO TOPO (SÓ ADMIN) */
-  .admin-corretor-bar{
-    background: #16263e;
-    border-bottom: 1px solid rgba(255,255,255,.08);
-    padding: 6px 12px;
-    position: sticky; top: 54px; z-index: 99;
-  }
-  .admin-corretor-bar-inner{
-    max-width: 1280px; margin: 0 auto;
-    display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
-  }
-  .admin-corretor-bar .lbl{
-    color: rgba(255,255,255,.5); font-size: .68rem;
-    text-transform: uppercase; letter-spacing: .5px;
-    font-weight: 700; margin-right: 4px;
-  }
-  .chip-corretor{
-    padding: 6px 14px; border-radius: 999px;
-    background: rgba(255,255,255,.08);
-    color: rgba(255,255,255,.85);
-    border: 1px solid rgba(255,255,255,.15);
-    font-size: .75rem; font-weight: 600;
-    cursor: pointer; transition: all .15s; font-family: inherit;
-    display: inline-flex; align-items: center; gap: 5px;
-  }
-  .chip-corretor:hover{ background: rgba(255,255,255,.16); color: #fff; }
-  .chip-corretor.active{
-    background: var(--accent); color: #fff; border-color: var(--accent);
-  }
-  .chip-corretor .cnt{
-    background: rgba(0,0,0,.2); padding: 1px 7px;
-    border-radius: 999px; font-size: .65rem; font-weight: 700;
-  }
-  .chip-corretor.active .cnt{ background: rgba(0,0,0,.25); }
-
   .btn-admin-discreto{
     background: transparent; border: none;
     color: rgba(255,255,255,.25);
     font-size: .95rem; cursor: pointer;
-    padding: 5px 7px; border-radius: 5px;
+    padding: 4px 6px; border-radius: 5px;
     transition: all .2s; line-height: 1; font-family: inherit;
   }
   .btn-admin-discreto:hover{ color: rgba(255,255,255,.9); background: rgba(255,255,255,.08); }
 
+  /* LOGIN */
   .login-wrap{
     display: flex; justify-content: center; align-items: center;
     min-height: 82vh; padding: 16px;
@@ -202,17 +196,10 @@
     0%,100% { box-shadow: 0 0 0 4px rgba(139,115,85,.18), 0 8px 24px rgba(0,0,0,.1); }
     50% { box-shadow: 0 0 0 8px rgba(139,115,85,.3), 0 8px 24px rgba(0,0,0,.1); }
   }
-
-  /* CARD "NÃO GOSTEI" - cinza claro */
   .card.card-nao-gostei{
-    opacity: .55;
-    filter: grayscale(65%);
-    background: #f5f5f5;
+    opacity: .55; filter: grayscale(65%); background: #f5f5f5;
   }
-  .card.card-nao-gostei:hover{
-    opacity: .78;
-    filter: grayscale(50%);
-  }
+  .card.card-nao-gostei:hover{ opacity: .78; filter: grayscale(50%); }
   .card.card-nao-gostei .card-img{ filter: grayscale(100%) brightness(0.95); }
   .card.card-nao-gostei .btn{ opacity: .85; }
   .card.card-nao-gostei .btn:hover{ opacity: 1; }
@@ -222,7 +209,6 @@
     background: var(--bg-alt); display: block;
   }
   .card-body{ padding: 16px; flex: 1; display: flex; flex-direction: column; gap: 10px; }
-
   .card-top-meta{ display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
   .card-date{
     display: inline-flex; align-items: center; gap: 4px;
@@ -238,7 +224,6 @@
   }
   .card-code:hover{ background: #e6e0f2; }
   .card-code.copiado{ background: var(--success); color: #fff; border-color: var(--success); }
-
   .btn-zap{
     display: inline-flex; align-items: center; gap: 4px;
     font-size: .7rem; color: #fff;
@@ -249,20 +234,14 @@
     text-decoration: none; font-family: inherit;
   }
   .btn-zap:hover{ background: #1da851; transform: translateY(-1px); }
-
   .card-title{ font-size: 1rem; font-weight: 700; line-height: 1.3; color: var(--text); }
-
-  /* DESCRIÇÃO COLAPSÁVEL */
   .card-desc{
     font-size: .83rem; color: var(--text-soft); line-height: 1.5;
     display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;
-    overflow: hidden; cursor: pointer;
-    white-space: pre-wrap;
+    overflow: hidden; cursor: pointer; white-space: pre-wrap;
     transition: all .15s;
   }
-  .card-desc.expandido{
-    display: block; -webkit-line-clamp: unset; overflow: visible;
-  }
+  .card-desc.expandido{ display: block; -webkit-line-clamp: unset; overflow: visible; }
   .card-desc:hover{ color: var(--text); }
   .card-desc-toggle{
     display: inline-flex; align-items: center; gap: 4px;
@@ -271,7 +250,6 @@
     cursor: pointer; margin-top: 2px; padding: 2px 0; font-family: inherit;
   }
   .card-desc-toggle:hover{ text-decoration: underline; }
-
   .status-badge{
     position: absolute; top: 10px; right: 10px;
     padding: 4px 10px; border-radius: 4px;
@@ -284,8 +262,6 @@
   .status-nao-gostei{ background: rgba(139,58,58,.92); }
   .status-quero-visitar{ background: rgba(139,111,58,.92); }
   .status-pendente{ background: rgba(75,85,99,.85); }
-
-  /* BOTÕES DE AÇÃO COM TOGGLE */
   .card-actions{
     display: grid; grid-template-columns: 1fr 1fr 1fr;
     gap: 6px; margin-top: 6px;
@@ -297,8 +273,6 @@
   }
   .card-actions .btn .ico{ font-size: 1.05rem; line-height: 1; }
   .card-actions .btn .lbl{ font-size: .68rem; letter-spacing: .2px; }
-
-  /* ESTADO ATIVO (botão pressionado) */
   .card-actions .btn.ativo{
     box-shadow: 0 0 0 3px rgba(0,0,0,.08) inset, 0 3px 10px rgba(0,0,0,.15);
     border-color: rgba(0,0,0,.15);
@@ -307,7 +281,6 @@
   .card-actions .btn-success.ativo{ background: #245540; }
   .card-actions .btn-warn.ativo{ background: #6f582d; }
   .card-actions .btn-danger.ativo{ background: #6f2d2d; }
-
   .btn-ver-anuncio{
     display: flex; align-items: center; justify-content: center; gap: 8px;
     background: var(--primary); color: #fff; text-decoration: none;
@@ -317,7 +290,6 @@
   }
   .btn-ver-anuncio:hover{ background: var(--primary-hover); }
   .btn-ver-anuncio .arrow{ margin-left: auto; opacity: .7; font-size: .95rem; }
-
   .btn-buscar{
     display: flex; align-items: center; justify-content: center; gap: 8px;
     background: #fff; color: var(--text-soft);
@@ -327,7 +299,6 @@
     margin-top: 6px; transition: all .15s; font-family: inherit;
   }
   .btn-buscar:hover{ background: var(--bg-alt); border-color: #c4cbd3; color: var(--primary); }
-
   .obs-wrap{
     margin-top: 6px; background: var(--bg-alt);
     border: 1px solid var(--border-soft); border-radius: 8px;
@@ -401,7 +372,6 @@
   .agendamento-actions .btn-principal{
     flex: 1; min-width: 200px; padding: 10px 14px; font-size: .82rem;
   }
-
   .visita-box{
     margin-top: 8px;
     background: #f9f5ec; border: 1px solid #e6dcc4;
@@ -434,22 +404,19 @@
     display: inline-flex; align-items: center; justify-content: center; gap: 6px;
     width: 100%;
   }
-  .filters .filter-btn:nth-child(1){ grid-column: 1 / 2; }  /* Todos */
-  .filters .filter-btn:nth-child(2){ grid-column: 2 / 3; }  /* Aguardando */
-  .filters .filter-btn:nth-child(3){ grid-column: 3 / 4; }  /* Quero visitar */
-  .filters .filter-btn:nth-child(4){ grid-column: 1 / 2; }  /* Gostei */
-  .filters .filter-btn:nth-child(5){ grid-column: 2 / 3; }  /* Não gostei */
-  .filters .filter-btn:nth-child(6){ grid-column: 3 / 4; }  /* Recentes */
+  .filters .filter-btn:nth-child(1){ grid-column: 1 / 2; }
+  .filters .filter-btn:nth-child(2){ grid-column: 2 / 3; }
+  .filters .filter-btn:nth-child(3){ grid-column: 3 / 4; }
+  .filters .filter-btn:nth-child(4){ grid-column: 1 / 2; }
+  .filters .filter-btn:nth-child(5){ grid-column: 2 / 3; }
+  .filters .filter-btn:nth-child(6){ grid-column: 3 / 4; }
   .filters .filter-btn:hover{ border-color: var(--primary); color: var(--primary); }
   .filters .filter-btn.active{ background: var(--primary); color: #fff; border-color: var(--primary); }
   .filters .filter-btn.btn-recentes{
-    background: #fff; color: var(--purple);
-    border-color: #ddd4ec;
+    background: #fff; color: var(--purple); border-color: #ddd4ec;
   }
   .filters .filter-btn.btn-recentes:hover{ border-color: var(--purple); }
-  .filters .filter-btn.btn-recentes.active{
-    background: var(--purple); color: #fff; border-color: var(--purple);
-  }
+  .filters .filter-btn.btn-recentes.active{ background: var(--purple); color: #fff; border-color: var(--purple); }
   .filter-count{
     background: rgba(255,255,255,.25); padding: 1px 7px;
     border-radius: 4px; font-size: .68rem; min-width: 18px; text-align: center; font-weight: 700;
@@ -478,7 +445,6 @@
     transition: all .15s;
   }
   .admin-panel .close-x:hover{ background: var(--bg-alt); color: var(--text); }
-
   .form-row{ display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   @media(max-width:640px){ .form-row{ grid-template-columns: 1fr; } }
   .preview-wrap{ display: flex; align-items: flex-start; gap: 12px; margin-top: 8px; }
@@ -498,7 +464,7 @@
   .info-cliente-bar strong{ font-weight: 700; }
   .info-cliente-bar .actions{ display: flex; gap: 6px; flex-wrap: wrap; }
 
-  /* PAINEL DE QUERO VISITAR (TOPO DO ADMIN) */
+  /* PAINEL QUERO VISITAR */
   .quer-visitar-wrap{
     background: #fff; border-radius: var(--radius);
     padding: 16px 18px; margin-top: 14px;
@@ -516,12 +482,10 @@
     padding: 2px 10px; border-radius: 999px;
   }
   .quer-visitar-wrap h2 .badge-total.zero{ background: var(--bg-alt); color: var(--muted); }
-
   .quer-visitar-cards{
     display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
   }
   @media(max-width:720px){ .quer-visitar-cards{ grid-template-columns: 1fr; } }
-
   .quer-visitar-corretor{
     background: #fafbfc; border: 1px solid var(--border);
     border-radius: 10px; overflow: hidden;
@@ -547,16 +511,13 @@
     padding: 2px 9px; border-radius: 999px;
   }
   .quer-visitar-corretor-header .count.zero{ background: var(--bg-alt); color: var(--muted); }
-
   .quer-visitar-corretor-body{ padding: 8px 12px; }
-
   .quer-visitar-item{
     padding: 10px 8px;
     border-bottom: 1px dashed var(--border-soft);
     display: flex; align-items: flex-start; gap: 10px;
     border-radius: 6px;
-    cursor: pointer;
-    transition: all .15s;
+    cursor: pointer; transition: all .15s;
   }
   .quer-visitar-item:hover{ background: #fef9ee; }
   .quer-visitar-item:last-child{ border-bottom: none; }
@@ -586,12 +547,12 @@
     opacity: .5; align-self: center;
   }
   .quer-visitar-item:hover .arrow-right{ opacity: 1; color: var(--warn); }
-
   .quer-visitar-empty{
     padding: 16px; text-align: center;
     font-size: .8rem; color: var(--muted); font-style: italic;
   }
 
+  /* AGENDA */
   .agenda-wrap{
     background: #fff; border-radius: var(--radius);
     padding: 20px; margin-top: 16px;
@@ -612,12 +573,10 @@
     padding: 2px 10px; border-radius: 999px;
   }
   .agenda-header .badge-total.zero{ background: var(--bg-alt); color: var(--muted); }
-
   .agenda-cards{
     display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
   }
   @media(max-width:720px){ .agenda-cards{ grid-template-columns: 1fr; } }
-
   .agenda-corretor{
     background: #fafbfc; border: 1px solid var(--border);
     border-radius: 10px; overflow: hidden;
@@ -644,14 +603,12 @@
   }
   .agenda-corretor-header .count.zero{ background: var(--bg-alt); color: var(--muted); }
   .agenda-corretor-body{ padding: 10px 14px; }
-
   .agenda-item{
     padding: 10px 8px;
     border-bottom: 1px dashed var(--border-soft);
     display: flex; align-items: flex-start; gap: 10px;
     border-radius: 6px;
-    cursor: pointer;
-    transition: all .15s;
+    cursor: pointer; transition: all .15s;
   }
   .agenda-item:hover{ background: #eef2f7; }
   .agenda-item:last-child{ border-bottom: none; }
@@ -664,7 +621,6 @@
   .agenda-item .when-amanha{ background: #fef3c7; color: #92400e; }
   .agenda-item .when-semana{ background: #dcfce7; color: #166534; }
   .agenda-item .when-distante{ background: var(--bg-alt); color: var(--muted); }
-
   .agenda-item .info{ flex: 1; min-width: 0; }
   .agenda-item .cliente{
     font-size: .85rem; font-weight: 700; color: var(--text);
@@ -685,7 +641,6 @@
     opacity: .5; align-self: center;
   }
   .agenda-item:hover .arrow-right{ opacity: 1; color: var(--primary); }
-
   .agenda-empty{
     padding: 20px; text-align: center;
     font-size: .82rem; color: var(--muted); font-style: italic;
@@ -698,6 +653,7 @@
   }
   .agenda-ver-todos:hover{ background: #f4f7fb; }
 
+  /* SUB-FILTROS */
   .sub-filtros{
     display: flex; gap: 6px; flex-wrap: wrap;
     background: #fff; padding: 12px 16px;
@@ -841,7 +797,6 @@
   }
   .admin-section-header h3{ font-size: .95rem; margin: 0; color: var(--text); font-weight: 700; }
 
-  /* OVERLAY DE "SALVANDO" */
   .saving-overlay{
     position: fixed; inset: 0; background: rgba(15,23,42,.75);
     z-index: 9999; display: none; align-items: center; justify-content: center;
@@ -868,6 +823,12 @@
         <div class="brand-sub">Imóveis</div>
       </div>
     </div>
+
+    <!-- BOTÕES PEQUENOS DE CORRETOR (só admin) -->
+    <div class="header-corretor-chips hidden" id="headerCorretorChips">
+      <!-- preenchido via JS -->
+    </div>
+
     <div class="header-right">
       <span class="user-info" id="userInfo"></span>
       <button class="btn-header hidden" id="btnSair" onclick="sair()">Sair</button>
@@ -875,13 +836,6 @@
     </div>
   </div>
 </header>
-
-<!-- BARRA DE CORRETOR (só admin, fixa no topo) -->
-<div class="admin-corretor-bar hidden" id="adminCorretorBar">
-  <div class="admin-corretor-bar-inner" id="adminCorretorBarInner">
-    <!-- Preenchido via JS -->
-  </div>
-</div>
 
 <!-- LOGIN CLIENTE -->
 <div class="login-wrap" id="loginView">
@@ -915,12 +869,12 @@
   </div>
 </div>
 
-<!-- LOGIN ADMIN -->
+<!-- LOGIN ADMIN (auto-login com senha oculta) -->
 <div class="login-wrap hidden" id="adminLoginView">
   <div class="login-card">
     <div class="login-logo" style="background: var(--accent);">🔐</div>
     <h2>Painel Administrativo</h2>
-    <p class="sub">Acesso restrito à equipe Lima Ribeiro.</p>
+    <p class="sub" id="adminLoginSub">Acesso restrito à equipe Lima Ribeiro.</p>
     <div class="form-group">
       <label>Senha do administrador</label>
       <div class="input-pass-wrap">
@@ -940,7 +894,7 @@
 <!-- HOME ADMIN -->
 <div class="container hidden" id="corretorView">
 
-  <!-- PAINEL QUERO VISITAR (notificações) -->
+  <!-- PAINEL QUERO VISITAR -->
   <div class="quer-visitar-wrap" id="querVisitarWrap">
     <h2>
       📅 Clientes querendo visitar
@@ -995,7 +949,7 @@
   </div>
 </div>
 
-<!-- VITRINE (clientes) / (admin vendo cliente) -->
+<!-- VITRINE -->
 <div class="container hidden" id="vitrineView">
   <div class="info-cliente-bar hidden" id="infoClienteBar">
     <div>
@@ -1210,7 +1164,6 @@
 
 <div class="toast" id="toast"></div>
 
-<!-- OVERLAY DE "SALVANDO" -->
 <div class="saving-overlay" id="savingOverlay">
   <div class="spinner"></div>
   <div class="msg">Aguarde, estamos salvando as alterações feitas...</div>
@@ -1224,9 +1177,10 @@
 const API_URL = 'https://script.google.com/macros/s/AKfycbxixzI5uFmyC6TOzoXqTnwUaNK-iWMPxDaxCiY-dM4ZRSFIt1K4dco_ShW7D7hMIdMX/exec';
 const TOKEN_KEY = 'vitrine_device_token';
 const TEL_KEY   = 'vitrine_telefone';
+const ADMIN_KEY = 'vitrine_admin';
 const BUSCAR_BASE = 'https://corretor.quintoandar.com.br/informacoes-de-entrada';
+const TIMEOUT_API = 60000; // 60s
 
-/* ZAPS DOS CORRETORES */
 const ZAP_CORRETORES = {
   'Hugo': '5531996070930',
   'Carolina': '5531996273985'
@@ -1248,9 +1202,7 @@ const state = {
   acessos: [],
   agendamentos: [],
   corretorFiltro: null,
-  editandoClienteTel: null,
   salvando: 0,
-  // Cache para "quero visitar" no topo
   querVisitarCache: { gostei: [], visita: [] }
 };
 
@@ -1272,7 +1224,7 @@ function mascaraTelefone(input){
 }
 
 /* =====================================================
-   INPUT DE SENHA ADMIN - OLHO
+   OLHO SENHA
 ===================================================== */
 function toggleSenhaAdmin(btn){
   const input = $('inputAdminSenha');
@@ -1287,52 +1239,53 @@ function toggleSenhaAdmin(btn){
 }
 
 /* =====================================================
-   CONTROLE DE SALVAMENTO (para evitar fechar durante save)
+   SALVAMENTO
 ===================================================== */
 function marcarSalvando(inicio){
-  if(inicio){
-    state.salvando++;
-  } else {
-    state.salvando = Math.max(0, state.salvando - 1);
-  }
+  if(inicio) state.salvando++;
+  else state.salvando = Math.max(0, state.salvando - 1);
 }
-
 function estaSalvando(){ return state.salvando > 0; }
 
 /* =====================================================
-   API VIA FETCH GET
+   API VIA FETCH GET (com retry automático)
 ===================================================== */
-async function api(action, params = {}, timeoutMs = 25000) {
+async function apiOnce(action, params, timeoutMs){
+  const qs = new URLSearchParams({
+    action, ...params, _t: Date.now()
+  }).toString();
+  const url = API_URL + '?' + qs;
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
   try {
-    const qs = new URLSearchParams({
-      action,
-      ...params,
-      _t: Date.now()
-    }).toString();
-
-    const url = API_URL + '?' + qs;
-
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), timeoutMs);
-
     const resp = await fetch(url, {
-      method: 'GET',
-      mode: 'cors',
+      method: 'GET', mode: 'cors',
       headers: { 'Accept': 'application/json' },
       redirect: 'follow',
       signal: controller.signal
     });
-
     clearTimeout(timer);
-
     if (!resp.ok) throw new Error('HTTP ' + resp.status);
-
-    const json = await resp.json();
-    return json;
+    return await resp.json();
   } catch (err) {
-    console.error('API erro:', err, { action, params });
-    return { ok: false, error: 'Falha ao conectar: ' + err.message };
+    clearTimeout(timer);
+    throw err;
   }
+}
+
+async function api(action, params = {}, timeoutMs = TIMEOUT_API, retries = 2) {
+  let lastErr;
+  for (let i = 0; i <= retries; i++) {
+    try {
+      return await apiOnce(action, params, timeoutMs);
+    } catch (err) {
+      lastErr = err;
+      console.warn('Tentativa ' + (i+1) + ' falhou para "' + action + '":', err.message);
+      if (i < retries) await new Promise(r => setTimeout(r, 1000 * (i + 1)));
+    }
+  }
+  console.error('API falhou após retries:', lastErr, { action, params });
+  return { ok: false, error: 'Falha ao conectar: ' + lastErr.message };
 }
 
 /* =====================================================
@@ -1516,15 +1469,25 @@ async function entrarCliente(){
 }
 
 /* =====================================================
-   LOGIN ADMIN - NÃO SALVA EM LOCALSTORAGE
+   LOGIN ADMIN - AUTO-LOGIN COM SENHA SALVA
 ===================================================== */
 function abrirLoginAdmin(){
-  $('inputAdminSenha').value = '';
+  const senhaSalva = localStorage.getItem(ADMIN_KEY) || '';
+  $('inputAdminSenha').value = senhaSalva;
   $('inputAdminSenha').type = 'password';
   const eyeBtn = document.querySelector('#adminLoginView .btn-eye');
   if(eyeBtn) eyeBtn.textContent = '👁️';
+
+  if(senhaSalva){
+    $('adminLoginSub').textContent = 'Senha salva. Clique em "Entrar no painel" para acessar.';
+  } else {
+    $('adminLoginSub').textContent = 'Acesso restrito à equipe Lima Ribeiro.';
+  }
+
   mostrarView('adminLoginView');
-  setTimeout(() => $('inputAdminSenha').focus(), 100);
+  setTimeout(() => {
+    if(!senhaSalva) $('inputAdminSenha').focus();
+  }, 100);
 }
 
 function voltarLoginCliente(){
@@ -1559,60 +1522,61 @@ async function entrarAdmin(){
   if(!res.ok){ toast(res.error || 'Senha incorreta', 'error'); return; }
   state.isAdmin = true;
   state.adminSenha = senha;
-  // NÃO salva em localStorage - admin sempre pede senha
+  localStorage.setItem(ADMIN_KEY, senha); // Salva para auto-login
   await carregarHomeAdmin();
 }
 
 /* =====================================================
-   HOME ADMIN (quero visitar + agenda + clientes)
+   HOME ADMIN - CARREGAMENTO EM ETAPAS
 ===================================================== */
 async function carregarHomeAdmin(){
   mostrarView('corretorView');
-  $('adminCorretorBar').classList.remove('hidden');
   $('btnAdminDiscreto').classList.add('hidden');
   $('btnSair').classList.remove('hidden');
   $('userInfo').textContent = '👑 Painel';
 
-  // Carrega corretores
-  await carregarCorretores();
+  // 1. Corretores
+  const resCor = await api('listarCorretores', { senha: state.adminSenha });
+  state.corretores = (resCor.ok && resCor.data) ? resCor.data : ['Hugo', 'Carolina'];
 
-  // Monta barra de corretor
+  // 2. Clientes
+  $('clientesList').innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:30px; color:var(--muted);"><span class="loader"></span> Carregando clientes...</div>`;
+  const resCli = await api('listarClientes', { senha: state.adminSenha });
+  state.clientes = (resCli.ok && resCli.data) ? resCli.data : [];
+
+  // Renderiza clientes imediatamente
   montarBarraCorretor();
-
-  // Carrega dados em paralelo
-  const [resClientes, resNotif, resAgenda] = await Promise.all([
-    api('listarClientes', { senha: state.adminSenha }),
-    api('listarNotificacoes', { senha: state.adminSenha }),
-    api('listarAgendamentos', { senha: state.adminSenha })
-  ]);
-
-  state.clientes = (resClientes.ok && resClientes.data) ? resClientes.data : [];
-  state.querVisitarCache = (resNotif.ok && resNotif.data) ? resNotif.data : { gostei: [], visita: [] };
-  state.agendamentos = (resAgenda.ok && resAgenda.data) ? resAgenda.data : [];
-
-  renderizarQuerVisitar();
-  renderizarAgenda();
   renderizarClientes();
+
+  // 3. Notificações (quero visitar)
+  const resNot = await api('listarNotificacoes', { senha: state.adminSenha });
+  state.querVisitarCache = (resNot.ok && resNot.data) ? resNot.data : { gostei: [], visita: [] };
+  renderizarQuerVisitar();
+
+  // 4. Agenda
+  const resAge = await api('listarAgendamentos', { senha: state.adminSenha });
+  state.agendamentos = (resAge.ok && resAge.data) ? resAge.data : [];
+  renderizarAgenda();
 }
 
 function montarBarraCorretor(){
-  const inner = $('adminCorretorBarInner');
-  if(!inner) return;
-  const total = state.clientes.length;
+  const wrap = $('headerCorretorChips');
+  if(!wrap) return;
+  wrap.classList.remove('hidden');
 
+  const total = state.clientes.length;
   const chips = [
-    `<span class="lbl">Filtrar:</span>`,
-    `<button class="chip-corretor ${!state.corretorFiltro ? 'active' : ''}" onclick="setCorretorFiltro(null)">
-       👥 Todos <span class="cnt">${total}</span>
+    `<button class="chip-sm ${!state.corretorFiltro ? 'active' : ''}" onclick="setCorretorFiltro(null)">
+       Todos <span class="cnt">${total}</span>
      </button>`,
     ...state.corretores.map(c => {
       const cnt = state.clientes.filter(cl => cl.corretor === c).length;
-      return `<button class="chip-corretor ${state.corretorFiltro === c ? 'active' : ''}" onclick="setCorretorFiltro('${esc(c)}')">
-        👤 ${esc(c)} <span class="cnt">${cnt}</span>
+      return `<button class="chip-sm ${state.corretorFiltro === c ? 'active' : ''}" onclick="setCorretorFiltro('${esc(c)}')">
+        ${esc(c)} <span class="cnt">${cnt}</span>
       </button>`;
     })
   ];
-  inner.innerHTML = chips.join('');
+  wrap.innerHTML = chips.join('');
 }
 
 function setCorretorFiltro(corretor){
@@ -1624,10 +1588,9 @@ function setCorretorFiltro(corretor){
 }
 
 /* =====================================================
-   PAINEL QUERO VISITAR (topo)
+   PAINEL QUERO VISITAR
 ===================================================== */
 function renderizarQuerVisitar(){
-  const wrap = $('querVisitarWrap');
   const cards = $('querVisitarCards');
   const badge = $('querVisitarTotalBadge');
 
@@ -1649,10 +1612,8 @@ function renderizarQuerVisitar(){
   badge.textContent = filtrada.length;
   badge.classList.remove('zero');
 
-  // Agrupa por corretor
   const porCorretor = {};
   state.corretores.forEach(c => { porCorretor[c] = []; });
-
   filtrada.forEach(a => {
     const cli = state.clientes.find(c => normalizaTel(c.telefone) === normalizaTel(a.telefone));
     const corretor = (cli && cli.corretor) || '(sem corretor)';
@@ -1707,7 +1668,6 @@ function renderizarAgenda(){
 
   const hoje = new Date(); hoje.setHours(0,0,0,0);
   let futuras = state.agendamentos.filter(a => new Date(a.dataVisitaAgendada) >= hoje);
-
   if(state.corretorFiltro){
     futuras = futuras.filter(a => (a.corretor || '') === state.corretorFiltro);
   }
@@ -1808,7 +1768,7 @@ function abrirAgendaCorretor(corretor){
     <button class="modal-close" onclick="fecharAgendaModal()">×</button>
     <h2 style="margin-bottom:6px;">📅 Agenda — ${esc(corretor)}</h2>
     <p class="text-muted" style="margin-bottom:16px; font-size:.82rem;">
-      ${lista.length} agendamento${lista.length === 1 ? '' : 's'} a partir de hoje · <em>Clique em qualquer item para ir direto ao imóvel</em>
+      ${lista.length} agendamento${lista.length === 1 ? '' : 's'} a partir de hoje
     </p>
     <div style="max-height:60vh; overflow-y:auto;">${itens}</div>
   `;
@@ -1818,7 +1778,7 @@ function abrirAgendaCorretor(corretor){
 function fecharAgendaModal(){ $('agendaModalBackdrop').classList.remove('show'); }
 
 /* =====================================================
-   IR PARA IMÓVEL DA AGENDA (CORRIGIDO)
+   IR PARA IMÓVEL DA AGENDA
 ===================================================== */
 async function abrirImovelDaAgenda(telefone, imovelId, fecharModalPrimeiro){
   if(fecharModalPrimeiro) fecharAgendaModal();
@@ -1828,19 +1788,16 @@ async function abrirImovelDaAgenda(telefone, imovelId, fecharModalPrimeiro){
     return;
   }
 
-  // Se já estamos na vitrine do mesmo cliente E já temos os imóveis carregados, só destaca
   if(state.telefone === normalizaTel(telefone) && state.imoveis.length > 0){
     destacarCard(imovelId);
     return;
   }
 
-  // Senão, abre a vitrine do cliente (e garante carregamento completo)
   state.telefone = normalizaTel(telefone);
   await irParaVitrine();
 
-  // Espera o carregamento terminar antes de destacar
   let tentativas = 0;
-  const maxTentativas = 20; // 20 * 250ms = 5s
+  const maxTentativas = 30;
   const aguardar = setInterval(() => {
     tentativas++;
     const card = document.querySelector(`.card[data-id="${imovelId}"]`);
@@ -1857,7 +1814,6 @@ async function abrirImovelDaAgenda(telefone, imovelId, fecharModalPrimeiro){
 function destacarCard(imovelId){
   const card = document.querySelector(`.card[data-id="${imovelId}"]`);
   if(!card){
-    // Se o filtro atual esconder, muda para "todos"
     if(state.filtro !== 'todos'){
       state.filtro = 'todos';
       document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
@@ -1882,14 +1838,6 @@ function destacarCard(imovelId){
   void card.offsetWidth;
   card.classList.add('destacado');
   setTimeout(() => card.classList.remove('destacado'), 2500);
-}
-
-/* =====================================================
-   SELETOR DE CORRETOR
-===================================================== */
-async function carregarCorretores(){
-  const res = await api('listarCorretores', { senha: state.adminSenha });
-  state.corretores = (res.ok && res.data) ? res.data : ['Hugo', 'Carolina'];
 }
 
 /* =====================================================
@@ -1987,8 +1935,6 @@ async function salvarCliente(){
   if(!res.ok){ toast(res.error || 'Erro ao salvar', 'error'); return; }
   toast('Cliente salvo ✅', 'success');
   fecharClienteModal();
-
-  // Recarrega tudo
   await carregarHomeAdmin();
 }
 
@@ -2010,10 +1956,10 @@ async function irParaVitrine(){
     $('adminToolbar').classList.remove('hidden');
     $('infoClienteBar').classList.remove('hidden');
     $('userInfo').textContent = '';
-    $('btnAdminDiscreto').classList.add('hidden');
     $('btnSair').classList.remove('hidden');
     $('adminPanel').classList.add('hidden');
     $('acessosSection').classList.add('hidden');
+    $('headerCorretorChips').classList.add('hidden');
 
     const nome = state.clienteInfo?.nome || '(sem cadastro)';
     const corr = state.clienteInfo?.corretor ? ` · 👤 ${state.clienteInfo.corretor}` : '';
@@ -2029,6 +1975,7 @@ async function irParaVitrine(){
     $('infoClienteBar').classList.add('hidden');
     $('btnSair').classList.add('hidden');
     $('btnAdminDiscreto').classList.add('hidden');
+    $('headerCorretorChips').classList.add('hidden');
     $('userInfo').textContent = '📱 ' + fmtTel(state.telefone);
   }
 
@@ -2104,20 +2051,23 @@ function renderizarAcessos(){
     return;
   }
   list.innerHTML = state.acessos.map(a => {
-    const statusClass = a.status === 'Bloqueado' ? 'status-bloqueado' : a.status === 'Pendente' ? 'status-pendente' : '';
-    const statusTagClass = a.status === 'Bloqueado' ? 'status-bloqueado-tag' : a.status === 'Pendente' ? 'status-pendente-tag' : 'status-ativo';
+    const statusTag = a.status === 'Bloqueado'
+      ? 'background:#f0dede; color:var(--danger);'
+      : a.status === 'Pendente'
+        ? 'background:#f2ead5; color:var(--warn);'
+        : 'background:#e2ede7; color:var(--success);';
     const navegadorTxt = a.navegador ? ` · ${esc(a.navegador)}` : '';
     const ultimo = a.ultimoAcesso ? `Último acesso ${fmtDataHora(a.ultimoAcesso)}` : 'Nunca acessou';
     const criado = `Criado em ${fmtDataHora(a.dataCriacao)}`;
     return `
-      <div class="acesso-item" style="background:#fafbfc; border:1px solid var(--border-soft); border-radius:8px; padding:12px; margin-bottom:10px;">
+      <div style="background:#fafbfc; border:1px solid var(--border-soft); border-radius:8px; padding:12px; margin-bottom:10px;">
         <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:10px; margin-bottom:8px; flex-wrap:wrap;">
           <div style="font-size:.88rem; font-weight:700; color:var(--text);">📱 ${esc(a.apelido || 'Sem apelido')}</div>
-          <span style="font-size:.64rem; font-weight:700; padding:2px 8px; border-radius:4px; text-transform:uppercase; letter-spacing:.3px; ${a.status === 'Bloqueado' ? 'background:#f0dede; color:var(--danger);' : a.status === 'Pendente' ? 'background:#f2ead5; color:var(--warn);' : 'background:#e2ede7; color:var(--success);'}">${esc(a.status)}</span>
+          <span style="font-size:.64rem; font-weight:700; padding:2px 8px; border-radius:4px; text-transform:uppercase; letter-spacing:.3px; ${statusTag}">${esc(a.status)}</span>
         </div>
         <div style="display:flex; align-items:center; gap:8px; background:#fff; border:1px solid var(--border); border-radius:6px; padding:8px 12px; margin-bottom:8px; font-family:'Courier New', monospace;">
           <span style="font-size:.7rem; color:var(--muted); font-weight:700; text-transform:uppercase;">Senha</span>
-          <span id="senha-${esc(a.id)}" style="font-size:1.05rem; font-weight:700; letter-spacing:2px; color:var(--danger); flex:1; user-select:all;">${esc(a.senha)}</span>
+          <span style="font-size:1.05rem; font-weight:700; letter-spacing:2px; color:var(--danger); flex:1; user-select:all;">${esc(a.senha)}</span>
           <button onclick="copiarSenha('${esc(a.senha)}')" title="Copiar" style="background:transparent; border:none; cursor:pointer; font-size:.95rem; padding:4px;">📋</button>
         </div>
         <div style="font-size:.72rem; color:var(--muted); line-height:1.5; margin-bottom:8px;">
@@ -2254,8 +2204,12 @@ async function carregarImoveis(){
     return;
   }
 
-  // Ordenação padrão: por data decrescente (mais recente primeiro)
-  state.imoveis = (res.data || []).sort((a,b) => {
+  // Injeta corretor em cada imóvel (para o botão Zap)
+  const corretorCliente = state.clienteInfo?.corretor || '';
+  state.imoveis = (res.data || []).map(im => {
+    im._corretor = corretorCliente;
+    return im;
+  }).sort((a,b) => {
     const da = new Date(a.dataCadastro||0).getTime() || 0;
     const db = new Date(b.dataCadastro||0).getTime() || 0;
     return db - da;
@@ -2290,25 +2244,22 @@ function renderizarImoveis(){
   let lista = [...state.imoveis];
 
   if(state.filtro === 'recentes'){
-    // Ordena por data de cadastro (mais recente primeiro)
     lista.sort((a,b) => {
       const da = new Date(a.dataCadastro||0).getTime() || 0;
       const db = new Date(b.dataCadastro||0).getTime() || 0;
       return db - da;
     });
   } else if(state.filtro === 'todos'){
-    // ORDEM: Aguardando → Quero visitar → Gostei → Não gostei
     const ordem = { 'pendente': 0, 'quero-visitar': 1, 'gostei': 2, 'nao-gostei': 3 };
     lista.sort((a,b) => {
       const oa = ordem[(a.status || 'pendente')] ?? 99;
       const ob = ordem[(b.status || 'pendente')] ?? 99;
       if(oa !== ob) return oa - ob;
-      // Dentro do mesmo status, mais recente primeiro
       const da = new Date(a.dataCadastro||0).getTime() || 0;
       const db = new Date(b.dataCadastro||0).getTime() || 0;
       return db - da;
     });
-  } else if(state.filtro !== 'todos'){
+  } else {
     lista = lista.filter(i => (i.status || 'pendente') === state.filtro);
   }
 
@@ -2354,7 +2305,6 @@ function cardHTML(im){
 
   const cardExtraClass = (statusAtual === 'nao-gostei') ? ' card-nao-gostei' : '';
 
-  // Botões com estado ativo
   const btnGostei = (statusAtual === 'gostei') ? 'ativo' : '';
   const btnVisitar = (statusAtual === 'quero-visitar') ? 'ativo' : '';
   const btnNao = (statusAtual === 'nao-gostei') ? 'ativo' : '';
@@ -2414,7 +2364,6 @@ function cardHTML(im){
     }
   }
 
-  // Botão Zap
   const zapHtml = im._corretor && ZAP_CORRETORES[im._corretor]
     ? `<button class="btn-zap" onclick="abrirZap('${esc(im.id)}')" title="Pergunte pelo Zap">
          💬 Pergunte pelo Zap
@@ -2508,9 +2457,6 @@ function toggleDesc(descId){
   }
 }
 
-/* =====================================================
-   BOTÃO ZAP
-===================================================== */
 function abrirZap(imovelId){
   const im = state.imoveis.find(i => i.id === imovelId);
   if(!im) return;
@@ -2534,9 +2480,6 @@ function abrirZap(imovelId){
   window.open(url, '_blank');
 }
 
-/* =====================================================
-   BUSCAR ENTRADA
-===================================================== */
 function abrirBuscar(codigo){
   const url = codigo ? `${BUSCAR_BASE}/${codigo}` : BUSCAR_BASE;
   window.open(url, '_blank');
@@ -2593,13 +2536,12 @@ async function salvarEdicaoObs(id, obsId){
 }
 
 /* =====================================================
-   AÇÕES - MARCAR (com toggle e salvamento garantido)
+   MARCAR STATUS
 ===================================================== */
 async function marcar(id, acao){
   const im = state.imoveis.find(i => i.id === id);
   if(!im) return;
 
-  // Toggle: se já está com esse status, volta para "pendente"
   const statusAtual = im.status || 'pendente';
   const novaAcao = (statusAtual === acao) ? 'pendente' : acao;
 
@@ -2609,13 +2551,10 @@ async function marcar(id, acao){
     if(novaAcao === 'quero-visitar') im.atendidoVisita = '';
   }
 
-  // Atualiza UI imediatamente
   atualizarContadores();
   renderizarImoveis();
 
-  // Se está marcando "quero-visitar" ou "gostei", recarrega o painel de notificações no admin
   if(state.isAdmin && (novaAcao === 'quero-visitar' || novaAcao === 'gostei' || novaAcao === 'pendente')){
-    // Recarrega notificações em background
     api('listarNotificacoes', { senha: state.adminSenha }).then(r => {
       if(r.ok && r.data){
         state.querVisitarCache = r.data;
@@ -2624,7 +2563,6 @@ async function marcar(id, acao){
     });
   }
 
-  // Salvamento garantido (marca salvando)
   marcarSalvando(true);
   const tel = state.telefone || (im ? im.telefone : '');
   try {
@@ -2730,8 +2668,6 @@ async function salvarImovel(){
     if(r.ok && r.imagem) imagemFinal = r.imagem;
   }
 
-  // Anexa o corretor do cliente para o botão Zap
-  const clienteInfo = state.clienteInfo || {};
   const res = await api('salvarImovel', {
     senha: state.adminSenha, id: $('editingId').value || '',
     telefone: tel, titulo, descricao: $('adDescricao').value.trim(),
@@ -2797,13 +2733,23 @@ async function verHistorico(id){
           </div>
         </div>
       `).join('');
-  $('modalContent') && ($('modalContent').innerHTML = `
-    <button class="modal-close" onclick="fecharModal()">×</button>
-    <h2 style="margin-bottom:8px;">📜 Histórico</h2>
-    <p class="text-muted" style="margin-bottom:14px; font-size:.85rem;">${esc(im.titulo)}</p>
-    <div style="max-height:300px; overflow-y:auto; border:1px solid var(--border-soft); border-radius:8px; padding:10px; background:#fafbfc;">${html}</div>
-    <button class="btn btn-ghost btn-full mt-3" onclick="fecharModal()">Fechar</button>
-  `);
+  if($('modalContent')){
+    $('modalContent').innerHTML = `
+      <button class="modal-close" onclick="fecharModal()">×</button>
+      <h2 style="margin-bottom:8px;">📜 Histórico</h2>
+      <p class="text-muted" style="margin-bottom:14px; font-size:.85rem;">${esc(im.titulo)}</p>
+      <div style="max-height:300px; overflow-y:auto; border:1px solid var(--border-soft); border-radius:8px; padding:10px; background:#fafbfc;">${html}</div>
+      <button class="btn btn-ghost btn-full mt-3" onclick="fecharModal()">Fechar</button>
+    `;
+    if(!document.getElementById('modalBackdrop')){
+      const bd = document.createElement('div');
+      bd.className = 'modal-backdrop';
+      bd.id = 'modalBackdrop';
+      bd.innerHTML = '<div class="modal" id="modalContentInner"></div>';
+      document.body.appendChild(bd);
+    }
+    document.getElementById('modalBackdrop').classList.add('show');
+  }
 }
 
 /* =====================================================
@@ -2849,7 +2795,6 @@ async function salvarVisita(ev){
 
   marcarSalvando(true);
 
-  // Guarda a data agendada antes de mexer
   const im = state.imoveis.find(i => i.id === id);
   const dataAgendadaAntiga = im ? im.dataVisitaAgendada : '';
 
@@ -2880,7 +2825,6 @@ async function salvarVisita(ev){
 
   fecharVisitaModal();
   renderizarImoveis();
-  // Recarrega também a home admin se estiver logado
   if(state.isAdmin){
     api('listarAgendamentos', { senha: state.adminSenha }).then(r => {
       if(r.ok && r.data){ state.agendamentos = r.data; renderizarAgenda(); }
@@ -2894,7 +2838,6 @@ async function limparVisita(){
   if(!confirm('Desfazer esta visita? O agendamento voltará a aparecer na agenda.')) return;
 
   const im = state.imoveis.find(i => i.id === id);
-  // Guarda a data agendada para re-agendar depois (a API apaga tudo)
   const dataReagendar = (im && im._dataAgendadaAntes) || (im && im.dataVisitaAgendada) || '';
 
   marcarSalvando(true);
@@ -2905,7 +2848,6 @@ async function limparVisita(){
     return;
   }
 
-  // Re-agenda a visita automaticamente para "desfazer" a limpeza
   if(dataReagendar){
     await api('agendarVisita', { senha: state.adminSenha, id, dataAgendada: dataReagendar });
   }
@@ -2921,8 +2863,6 @@ async function limparVisita(){
   }
   fecharVisitaModal();
   renderizarImoveis();
-
-  // Recarrega home admin
   if(state.isAdmin){
     api('listarAgendamentos', { senha: state.adminSenha }).then(r => {
       if(r.ok && r.data){ state.agendamentos = r.data; renderizarAgenda(); }
@@ -3010,13 +2950,15 @@ async function cancelarAgendamentoDireto(id){
   }
 }
 
-function fecharModal(){ document.querySelectorAll('.modal-backdrop').forEach(el => el.classList.remove('show')); document.body.style.overflow = ''; }
+function fecharModal(){
+  document.querySelectorAll('.modal-backdrop').forEach(el => el.classList.remove('show'));
+  document.body.style.overflow = '';
+}
 
 /* =====================================================
    SAIR
 ===================================================== */
 function sair(){
-  // Se ainda está salvando, avisa
   if(estaSalvando()){
     $('savingOverlay').classList.add('show');
     const check = setInterval(() => {
@@ -3024,7 +2966,7 @@ function sair(){
         clearInterval(check);
         localStorage.removeItem(TOKEN_KEY);
         localStorage.removeItem(TEL_KEY);
-        // NÃO limpa admin (nem salvou)
+        // NÃO limpa ADMIN_KEY (admin fica salvo para auto-login)
         location.reload();
       }
     }, 200);
@@ -3033,6 +2975,7 @@ function sair(){
 
   localStorage.removeItem(TOKEN_KEY);
   localStorage.removeItem(TEL_KEY);
+  // NÃO limpa ADMIN_KEY
   state.telefone = null;
   state.deviceToken = null;
   state.isAdmin = false;
@@ -3046,7 +2989,7 @@ function sair(){
   $('btnSair').classList.add('hidden');
   $('userInfo').textContent = '';
   $('btnAdminDiscreto').classList.remove('hidden');
-  $('adminCorretorBar').classList.add('hidden');
+  $('headerCorretorChips').classList.add('hidden');
   $('inputTelefone').value = '';
   $('inputSenha').value = '';
   mostrarView('loginView');
@@ -3070,8 +3013,14 @@ window.addEventListener('beforeunload', function(e){
 (function init(){
   const telSalvo = localStorage.getItem(TEL_KEY);
   const tokenSalvo = localStorage.getItem(TOKEN_KEY);
+  const senhaAdminSalva = localStorage.getItem(ADMIN_KEY);
 
-  // AUTO-LOGIN do cliente (não pede senha)
+  // Se tem senha admin salva, pré-preenche
+  if(senhaAdminSalva){
+    $('inputAdminSenha').value = senhaAdminSalva;
+  }
+
+  // AUTO-LOGIN CLIENTE (sem pedir senha)
   if(telSalvo && tokenSalvo){
     state.telefone = telSalvo;
     state.deviceToken = tokenSalvo;
@@ -3083,7 +3032,6 @@ window.addEventListener('beforeunload', function(e){
         state.clienteInfo = { nome: res.nome, apelido: res.apelido };
         irParaVitrine();
       } else {
-        // Token expirado - limpa e mostra login
         localStorage.removeItem(TOKEN_KEY);
         mostrarView('loginView');
         atualizarCamposLogin();
@@ -3094,7 +3042,7 @@ window.addEventListener('beforeunload', function(e){
     return;
   }
 
-  // Sem auto-login: mostra tela de login
+  // Sem auto-login cliente
   mostrarView('loginView');
   atualizarCamposLogin();
   setTimeout(() => {
