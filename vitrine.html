@@ -15,14 +15,14 @@
     --danger:#8b3a3a; --danger-hover:#6f2d2d;
     --warn:#8b6f3a; --warn-hover:#6f582d;
     --purple:#4a3d6b;
-    --bg:#f5f6f8; --bg-alt:#eef0f3;
+    --bg:#e2e6ea; --bg-alt:#d6dbe1;
     --card:#ffffff;
     --text:#1f2937; --text-soft:#4b5563; --muted:#6b7280;
     --border:#d8dde3; --border-soft:#e6e9ee;
     --radius:10px;
-    --shadow-sm: 0 1px 2px rgba(0,0,0,.04);
-    --shadow-md: 0 2px 8px rgba(0,0,0,.06);
-    --shadow-lg: 0 8px 24px rgba(0,0,0,.10);
+    --shadow-sm: 0 1px 2px rgba(0,0,0,.06);
+    --shadow-md: 0 2px 8px rgba(0,0,0,.09);
+    --shadow-lg: 0 8px 24px rgba(0,0,0,.12);
   }
   html, body { height: 100%; }
   body{
@@ -56,12 +56,6 @@
   .brand-title{ font-size: .85rem; font-weight: 700; letter-spacing: .2px; }
   .brand-sub{ font-size: .58rem; opacity: .7; letter-spacing: 1px; text-transform: uppercase; margin-top: 1px; }
   .header-right{ display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
-  .badge-admin{
-    background: var(--accent); color: #fff;
-    font-size: .6rem; font-weight: 700;
-    padding: 2px 8px; border-radius: 4px;
-    text-transform: uppercase; letter-spacing: .5px;
-  }
   .user-info{ font-size: .72rem; opacity: .8; display: flex; align-items: center; gap: 4px; }
   @media(max-width:480px){ .user-info{ display: none; } }
   .btn-header{
@@ -72,21 +66,42 @@
     transition: all .15s; font-family: inherit;
   }
   .btn-header:hover{ background: rgba(255,255,255,.16); }
-  .btn-notif{
-    position: relative; background: transparent; border: none; color: #fff;
-    font-size: 1rem; cursor: pointer; padding: 5px 7px; border-radius: 6px;
-    transition: all .15s; line-height: 1; font-family: inherit; opacity: .85;
+
+  /* MENU DE CORRETOR FIXO NO TOPO (SÓ ADMIN) */
+  .admin-corretor-bar{
+    background: #16263e;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+    padding: 6px 12px;
+    position: sticky; top: 54px; z-index: 99;
   }
-  .btn-notif:hover{ background: rgba(255,255,255,.12); opacity: 1; }
-  .notif-badge{
-    position: absolute; top: -1px; right: -1px;
-    background: var(--danger); color: #fff;
-    font-size: .58rem; font-weight: 800;
-    min-width: 15px; height: 15px;
-    border-radius: 999px; padding: 0 4px;
-    display: flex; align-items: center; justify-content: center;
-    border: 2px solid #1e3a5f;
+  .admin-corretor-bar-inner{
+    max-width: 1280px; margin: 0 auto;
+    display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
   }
+  .admin-corretor-bar .lbl{
+    color: rgba(255,255,255,.5); font-size: .68rem;
+    text-transform: uppercase; letter-spacing: .5px;
+    font-weight: 700; margin-right: 4px;
+  }
+  .chip-corretor{
+    padding: 6px 14px; border-radius: 999px;
+    background: rgba(255,255,255,.08);
+    color: rgba(255,255,255,.85);
+    border: 1px solid rgba(255,255,255,.15);
+    font-size: .75rem; font-weight: 600;
+    cursor: pointer; transition: all .15s; font-family: inherit;
+    display: inline-flex; align-items: center; gap: 5px;
+  }
+  .chip-corretor:hover{ background: rgba(255,255,255,.16); color: #fff; }
+  .chip-corretor.active{
+    background: var(--accent); color: #fff; border-color: var(--accent);
+  }
+  .chip-corretor .cnt{
+    background: rgba(0,0,0,.2); padding: 1px 7px;
+    border-radius: 999px; font-size: .65rem; font-weight: 700;
+  }
+  .chip-corretor.active .cnt{ background: rgba(0,0,0,.25); }
+
   .btn-admin-discreto{
     background: transparent; border: none;
     color: rgba(255,255,255,.25);
@@ -133,6 +148,18 @@
     font-family: 'Courier New', monospace; padding: 14px;
   }
 
+  /* INPUT COM OLHO */
+  .input-pass-wrap{ position: relative; }
+  .input-pass-wrap input{ padding-right: 44px; }
+  .btn-eye{
+    position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+    background: transparent; border: none; cursor: pointer;
+    font-size: 1.1rem; padding: 6px 8px; border-radius: 6px;
+    color: var(--muted); line-height: 1;
+    transition: background .15s, color .15s;
+  }
+  .btn-eye:hover{ background: var(--bg-alt); color: var(--text); }
+
   .btn{
     display: inline-flex; align-items: center; justify-content: center; gap: 6px;
     padding: 11px 18px; border-radius: 8px; border: none; cursor: pointer;
@@ -176,7 +203,7 @@
     50% { box-shadow: 0 0 0 8px rgba(139,115,85,.3), 0 8px 24px rgba(0,0,0,.1); }
   }
 
-  /* Card "não gostei" - visual desabilitado */
+  /* CARD "NÃO GOSTEI" - cinza claro */
   .card.card-nao-gostei{
     opacity: .55;
     filter: grayscale(65%);
@@ -186,15 +213,13 @@
     opacity: .78;
     filter: grayscale(50%);
   }
-  .card.card-nao-gostei .card-img{
-    filter: grayscale(100%) brightness(0.95);
-  }
+  .card.card-nao-gostei .card-img{ filter: grayscale(100%) brightness(0.95); }
   .card.card-nao-gostei .btn{ opacity: .85; }
   .card.card-nao-gostei .btn:hover{ opacity: 1; }
 
   .card-img{
     width: 100%; height: 190px; object-fit: cover;
-    background: var(--bg-alt); display: block; cursor: pointer;
+    background: var(--bg-alt); display: block;
   }
   .card-body{ padding: 16px; flex: 1; display: flex; flex-direction: column; gap: 10px; }
 
@@ -214,8 +239,38 @@
   .card-code:hover{ background: #e6e0f2; }
   .card-code.copiado{ background: var(--success); color: #fff; border-color: var(--success); }
 
+  .btn-zap{
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: .7rem; color: #fff;
+    background: #25D366; padding: 4px 10px; border-radius: 4px;
+    font-weight: 700; cursor: pointer;
+    border: 1px solid #1da851;
+    transition: all .15s; margin-left: auto;
+    text-decoration: none; font-family: inherit;
+  }
+  .btn-zap:hover{ background: #1da851; transform: translateY(-1px); }
+
   .card-title{ font-size: 1rem; font-weight: 700; line-height: 1.3; color: var(--text); }
-  .card-desc{ font-size: .83rem; color: var(--text-soft); line-height: 1.5; }
+
+  /* DESCRIÇÃO COLAPSÁVEL */
+  .card-desc{
+    font-size: .83rem; color: var(--text-soft); line-height: 1.5;
+    display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;
+    overflow: hidden; cursor: pointer;
+    white-space: pre-wrap;
+    transition: all .15s;
+  }
+  .card-desc.expandido{
+    display: block; -webkit-line-clamp: unset; overflow: visible;
+  }
+  .card-desc:hover{ color: var(--text); }
+  .card-desc-toggle{
+    display: inline-flex; align-items: center; gap: 4px;
+    background: transparent; border: none;
+    color: var(--primary); font-size: .72rem; font-weight: 600;
+    cursor: pointer; margin-top: 2px; padding: 2px 0; font-family: inherit;
+  }
+  .card-desc-toggle:hover{ text-decoration: underline; }
 
   .status-badge{
     position: absolute; top: 10px; right: 10px;
@@ -230,6 +285,7 @@
   .status-quero-visitar{ background: rgba(139,111,58,.92); }
   .status-pendente{ background: rgba(75,85,99,.85); }
 
+  /* BOTÕES DE AÇÃO COM TOGGLE */
   .card-actions{
     display: grid; grid-template-columns: 1fr 1fr 1fr;
     gap: 6px; margin-top: 6px;
@@ -237,9 +293,20 @@
   .card-actions .btn{
     padding: 9px 6px; font-size: .72rem; border-radius: 7px;
     flex-direction: column; gap: 3px; min-height: 52px; font-weight: 600;
+    border: 2px solid transparent;
   }
   .card-actions .btn .ico{ font-size: 1.05rem; line-height: 1; }
   .card-actions .btn .lbl{ font-size: .68rem; letter-spacing: .2px; }
+
+  /* ESTADO ATIVO (botão pressionado) */
+  .card-actions .btn.ativo{
+    box-shadow: 0 0 0 3px rgba(0,0,0,.08) inset, 0 3px 10px rgba(0,0,0,.15);
+    border-color: rgba(0,0,0,.15);
+    transform: scale(.97);
+  }
+  .card-actions .btn-success.ativo{ background: #245540; }
+  .card-actions .btn-warn.ativo{ background: #6f582d; }
+  .card-actions .btn-danger.ativo{ background: #6f2d2d; }
 
   .btn-ver-anuncio{
     display: flex; align-items: center; justify-content: center; gap: 8px;
@@ -351,11 +418,7 @@
   .visita-actions{ display: flex; gap: 6px; flex-wrap: wrap; }
   .visita-actions .btn{ padding: 6px 10px; font-size: .72rem; border-radius: 6px; }
 
-  /* =========================================
-     FILTROS EM 2 LINHAS
-     Linha 1: Todos | Aguardando | Gostei
-     Linha 2: Quero visitar | Não gostei
-  ========================================= */
+  /* FILTROS */
   .filters{
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
@@ -371,22 +434,28 @@
     display: inline-flex; align-items: center; justify-content: center; gap: 6px;
     width: 100%;
   }
-  .filters .filter-btn:nth-child(1){ grid-column: 1 / 2; }
-  .filters .filter-btn:nth-child(2){ grid-column: 2 / 3; }
-  .filters .filter-btn:nth-child(3){ grid-column: 3 / 4; }
-  .filters .filter-btn:nth-child(4){ grid-column: 1 / 3; }
-  .filters .filter-btn:nth-child(5){ grid-column: 3 / 4; }
+  .filters .filter-btn:nth-child(1){ grid-column: 1 / 2; }  /* Todos */
+  .filters .filter-btn:nth-child(2){ grid-column: 2 / 3; }  /* Aguardando */
+  .filters .filter-btn:nth-child(3){ grid-column: 3 / 4; }  /* Quero visitar */
+  .filters .filter-btn:nth-child(4){ grid-column: 1 / 2; }  /* Gostei */
+  .filters .filter-btn:nth-child(5){ grid-column: 2 / 3; }  /* Não gostei */
+  .filters .filter-btn:nth-child(6){ grid-column: 3 / 4; }  /* Recentes */
   .filters .filter-btn:hover{ border-color: var(--primary); color: var(--primary); }
   .filters .filter-btn.active{ background: var(--primary); color: #fff; border-color: var(--primary); }
+  .filters .filter-btn.btn-recentes{
+    background: #fff; color: var(--purple);
+    border-color: #ddd4ec;
+  }
+  .filters .filter-btn.btn-recentes:hover{ border-color: var(--purple); }
+  .filters .filter-btn.btn-recentes.active{
+    background: var(--purple); color: #fff; border-color: var(--purple);
+  }
   .filter-count{
     background: rgba(255,255,255,.25); padding: 1px 7px;
     border-radius: 4px; font-size: .68rem; min-width: 18px; text-align: center; font-weight: 700;
   }
   .filters .filter-btn:not(.active) .filter-count{ background: var(--bg-alt); color: var(--muted); }
-
-  @media(max-width:600px){
-    .filters .filter-btn{ font-size: .7rem; padding: 8px 6px; }
-  }
+  @media(max-width:600px){ .filters .filter-btn{ font-size: .68rem; padding: 8px 4px; } }
 
   .admin-toolbar{ display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
   .admin-toolbar .btn{ padding: 10px 16px; font-size: .82rem; }
@@ -429,38 +498,99 @@
   .info-cliente-bar strong{ font-weight: 700; }
   .info-cliente-bar .actions{ display: flex; gap: 6px; flex-wrap: wrap; }
 
-  .corretor-selector{
-    background: #fff; border-radius: 14px;
-    padding: 32px 24px; margin-top: 16px;
+  /* PAINEL DE QUERO VISITAR (TOPO DO ADMIN) */
+  .quer-visitar-wrap{
+    background: #fff; border-radius: var(--radius);
+    padding: 16px 18px; margin-top: 14px;
     box-shadow: var(--shadow-md);
-    max-width: 900px; margin-left: auto; margin-right: auto;
     border: 1px solid var(--border-soft);
+    border-left: 4px solid var(--warn);
   }
-  .corretor-selector h2{ font-size: 1.15rem; margin-bottom: 6px; font-weight: 700; text-align: center; color: var(--text); }
-  .corretor-selector .sub{ color: var(--muted); margin-bottom: 26px; font-size: .85rem; text-align: center; }
-  .corretor-grid{
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 12px; margin-bottom: 20px;
+  .quer-visitar-wrap h2{
+    font-size: .95rem; font-weight: 700; color: var(--text);
+    display: flex; align-items: center; gap: 8px; margin-bottom: 12px;
   }
-  .corretor-card{
+  .quer-visitar-wrap h2 .badge-total{
+    background: var(--warn); color: #fff;
+    font-size: .68rem; font-weight: 700;
+    padding: 2px 10px; border-radius: 999px;
+  }
+  .quer-visitar-wrap h2 .badge-total.zero{ background: var(--bg-alt); color: var(--muted); }
+
+  .quer-visitar-cards{
+    display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+  }
+  @media(max-width:720px){ .quer-visitar-cards{ grid-template-columns: 1fr; } }
+
+  .quer-visitar-corretor{
     background: #fafbfc; border: 1px solid var(--border);
-    border-radius: 10px; padding: 22px 16px; cursor: pointer;
-    transition: all .2s; text-align: center;
+    border-radius: 10px; overflow: hidden;
   }
-  .corretor-card:hover{
-    border-color: var(--primary); background: #f4f7fb;
-    box-shadow: 0 4px 12px rgba(30,58,95,.08);
+  .quer-visitar-corretor-header{
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 14px; background: #fef9ee;
+    border-bottom: 1px solid var(--border);
   }
-  .corretor-card .avatar{
-    width: 52px; height: 52px; border-radius: 50%;
-    background: var(--primary);
-    color: #fff; font-size: 1.3rem; font-weight: 700;
+  .quer-visitar-corretor-header .nome{
+    font-size: .88rem; font-weight: 700; color: var(--text);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .quer-visitar-corretor-header .nome .avatar-sm{
+    width: 24px; height: 24px; border-radius: 50%;
+    background: var(--warn); color: #fff;
+    font-size: .72rem; font-weight: 700;
     display: flex; align-items: center; justify-content: center;
-    margin: 0 auto 10px;
   }
-  .corretor-card .nome{ font-size: 1rem; font-weight: 700; color: var(--text); }
-  .corretor-card .count{ font-size: .75rem; color: var(--muted); margin-top: 4px; }
-  .corretor-card.todos .avatar{ background: var(--accent); }
+  .quer-visitar-corretor-header .count{
+    background: var(--warn); color: #fff;
+    font-size: .68rem; font-weight: 700;
+    padding: 2px 9px; border-radius: 999px;
+  }
+  .quer-visitar-corretor-header .count.zero{ background: var(--bg-alt); color: var(--muted); }
+
+  .quer-visitar-corretor-body{ padding: 8px 12px; }
+
+  .quer-visitar-item{
+    padding: 10px 8px;
+    border-bottom: 1px dashed var(--border-soft);
+    display: flex; align-items: flex-start; gap: 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .quer-visitar-item:hover{ background: #fef9ee; }
+  .quer-visitar-item:last-child{ border-bottom: none; }
+  .quer-visitar-item .quando-ico{
+    flex-shrink: 0; width: 34px; height: 34px; border-radius: 8px;
+    background: #fef3c7; color: #92400e;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem;
+  }
+  .quer-visitar-item .info{ flex: 1; min-width: 0; }
+  .quer-visitar-item .cliente{
+    font-size: .85rem; font-weight: 700; color: var(--text);
+    margin-bottom: 2px;
+  }
+  .quer-visitar-item .detalhe{
+    font-size: .72rem; color: var(--text-soft);
+    display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+  }
+  .quer-visitar-item .detalhe .codigo{
+    font-family: 'Courier New', monospace;
+    background: #f1eef7; color: var(--purple);
+    padding: 1px 6px; border-radius: 3px;
+    font-size: .66rem; font-weight: 700;
+  }
+  .quer-visitar-item .arrow-right{
+    flex-shrink: 0; color: var(--muted); font-size: 1rem;
+    opacity: .5; align-self: center;
+  }
+  .quer-visitar-item:hover .arrow-right{ opacity: 1; color: var(--warn); }
+
+  .quer-visitar-empty{
+    padding: 16px; text-align: center;
+    font-size: .8rem; color: var(--muted); font-style: italic;
+  }
 
   .agenda-wrap{
     background: #fff; border-radius: var(--radius);
@@ -672,147 +802,6 @@
     display: flex; align-items: center; justify-content: center;
   }
   .modal-close:hover{ background: var(--bg-alt); color: var(--text); }
-  .modal-img{
-    width: 100%; max-height: 360px; object-fit: cover;
-    border-radius: 10px; margin-bottom: 16px;
-  }
-  .modal h2{ font-size: 1.2rem; margin-bottom: 8px; font-weight: 700; }
-  .modal .desc{ color: var(--text-soft); margin-bottom: 18px; white-space: pre-wrap; line-height: 1.55; font-size: .9rem; }
-
-  .notif-panel{
-    position: fixed; top: 0; right: -420px;
-    width: 420px; max-width: 100vw; height: 100vh;
-    background: #fff; z-index: 1500;
-    box-shadow: -8px 0 30px rgba(0,0,0,.15);
-    transition: right .3s ease;
-    display: flex; flex-direction: column;
-  }
-  .notif-panel.show{ right: 0; }
-  @media(max-width:480px){ .notif-panel{ width: 100vw; } }
-  .notif-header{
-    background: var(--primary); color: #fff;
-    padding: 14px 18px;
-    display: flex; align-items: center; justify-content: space-between;
-    flex-shrink: 0;
-  }
-  .notif-header h3{ font-size: .95rem; font-weight: 700; display: flex; align-items: center; gap: 8px; }
-  .notif-close{
-    background: rgba(255,255,255,.12); color: #fff;
-    border: none; width: 30px; height: 30px; border-radius: 6px;
-    font-size: 1.1rem; cursor: pointer; line-height: 1;
-    transition: background .15s;
-    display: flex; align-items: center; justify-content: center;
-  }
-  .notif-close:hover{ background: rgba(255,255,255,.22); }
-  .notif-tabs{ display: flex; gap: 0; background: var(--bg-alt); flex-shrink: 0; border-bottom: 1px solid var(--border); }
-  .notif-tab{
-    flex: 1; padding: 12px; background: transparent; border: none;
-    font-family: inherit; cursor: pointer; font-size: .8rem; font-weight: 600;
-    color: var(--muted); border-bottom: 2px solid transparent;
-    transition: all .15s; display: flex; align-items: center; justify-content: center; gap: 6px;
-  }
-  .notif-tab.active{ background: #fff; color: var(--primary); border-bottom-color: var(--primary); }
-  .notif-tab .badge{
-    background: var(--danger); color: #fff;
-    font-size: .62rem; font-weight: 700;
-    padding: 1px 6px; border-radius: 999px;
-    min-width: 16px; text-align: center;
-  }
-  .notif-tab.active .badge{ background: var(--primary); }
-  .notif-body{ flex: 1; overflow-y: auto; padding: 14px; background: var(--bg-alt); }
-  .notif-empty{ text-align: center; padding: 40px 20px; color: var(--muted); font-size: .85rem; }
-  .notif-empty .ico{ font-size: 2.2rem; margin-bottom: 10px; opacity: .5; }
-  .notif-item{ background: #fff; border: 1px solid var(--border-soft); border-radius: 10px; padding: 12px; margin-bottom: 10px; }
-  .notif-item .head{ display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px; }
-  .notif-item .thumb{
-    width: 52px; height: 52px; border-radius: 6px;
-    object-fit: cover; flex-shrink: 0; background: var(--bg-alt);
-  }
-  .notif-item .info{ flex: 1; min-width: 0; }
-  .notif-item .nome{ font-size: .85rem; font-weight: 700; color: var(--text); margin-bottom: 3px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .notif-item .cliente{ font-size: .75rem; color: var(--text-soft); display: flex; align-items: center; gap: 4px; margin-bottom: 2px; }
-  .notif-item .cliente strong{ color: var(--primary); font-weight: 700; }
-  .notif-item .data{ font-size: .68rem; color: var(--muted); font-weight: 600; }
-  .notif-item .acoes{ display: flex; gap: 6px; flex-wrap: wrap; border-top: 1px solid var(--border-soft); padding-top: 10px; }
-  .notif-item .acoes .btn{ flex: 1; padding: 7px 10px; font-size: .72rem; border-radius: 6px; min-width: 0; }
-  .notif-overlay{ position: fixed; inset: 0; background: rgba(15,23,42,.4); z-index: 1499; display: none; }
-  .notif-overlay.show{ display: block; }
-
-  .acessos-section{
-    background: #fff; border-radius: var(--radius);
-    padding: 18px; margin-top: 14px;
-    box-shadow: var(--shadow-sm);
-    border: 1px solid var(--border-soft);
-  }
-  .acessos-section h3{
-    display: flex; align-items: center; justify-content: space-between;
-    gap: 10px; font-size: .9rem; color: var(--text); margin-bottom: 12px;
-    font-weight: 700;
-  }
-  .acessos-section h3 .count{
-    background: var(--bg-alt); color: var(--text-soft);
-    font-size: .68rem; font-weight: 700;
-    padding: 2px 8px; border-radius: 4px;
-  }
-  .acesso-item{
-    background: #fafbfc; border: 1px solid var(--border-soft);
-    border-radius: 8px; padding: 12px; margin-bottom: 10px;
-  }
-  .acesso-item:last-child{ margin-bottom: 0; }
-  .acesso-item.status-bloqueado{ background: #fcf5f5; border-color: #ecdede; }
-  .acesso-item.status-pendente{ background: #fdfaf3; border-color: #ebe2cf; }
-  .acesso-head{
-    display: flex; align-items: flex-start; justify-content: space-between;
-    gap: 10px; margin-bottom: 8px; flex-wrap: wrap;
-  }
-  .acesso-apelido{
-    font-size: .88rem; font-weight: 700; color: var(--text);
-    display: flex; align-items: center; gap: 6px;
-  }
-  .acesso-status{
-    font-size: .64rem; font-weight: 700;
-    padding: 2px 8px; border-radius: 4px;
-    text-transform: uppercase; letter-spacing: .3px;
-  }
-  .status-ativo{ background: #e2ede7; color: var(--success); }
-  .status-pendente-tag{ background: #f2ead5; color: var(--warn); }
-  .status-bloqueado-tag{ background: #f0dede; color: var(--danger); }
-
-  .acesso-senha{
-    display: flex; align-items: center; gap: 8px;
-    background: #fff; border: 1px solid var(--border);
-    border-radius: 6px; padding: 8px 12px; margin-bottom: 8px;
-    font-family: 'Courier New', monospace;
-  }
-  .acesso-senha-valor{
-    font-size: 1.05rem; font-weight: 700; letter-spacing: 2px;
-    color: var(--danger); flex: 1; user-select: all;
-  }
-  .acesso-senha-valor.escondida{ color: var(--muted); letter-spacing: 4px; }
-  .acesso-btn-ver{
-    background: transparent; border: none; cursor: pointer;
-    font-size: .95rem; padding: 4px; border-radius: 4px;
-  }
-  .acesso-btn-ver:hover{ background: var(--bg-alt); }
-  .acesso-meta{ font-size: .72rem; color: var(--muted); line-height: 1.5; margin-bottom: 8px; }
-  .acesso-meta strong{ color: var(--text-soft); }
-  .acesso-acoes{ display: flex; gap: 6px; flex-wrap: wrap; }
-
-  .historico-lista{
-    max-height: 300px; overflow-y: auto;
-    border: 1px solid var(--border-soft); border-radius: 8px;
-    padding: 10px; background: #fafbfc;
-  }
-  .historico-item{
-    display: flex; gap: 10px; align-items: flex-start;
-    padding: 8px 6px; border-bottom: 1px solid var(--border-soft);
-    font-size: .8rem; line-height: 1.4;
-  }
-  .historico-item:last-child{ border-bottom: none; }
-  .historico-ico{ font-size: 1rem; flex-shrink: 0; }
-  .historico-texto{ flex: 1; }
-  .historico-texto .apelido{ font-weight: 700; color: var(--primary); }
-  .historico-texto .quando{ font-size: .7rem; color: var(--muted); margin-top: 2px; }
 
   .toast{
     position: fixed; bottom: 20px; left: 50%;
@@ -851,7 +840,20 @@
     border: 1px solid var(--border-soft);
   }
   .admin-section-header h3{ font-size: .95rem; margin: 0; color: var(--text); font-weight: 700; }
-  .admin-section-header .corretor-nome{ color: var(--primary); font-weight: 700; }
+
+  /* OVERLAY DE "SALVANDO" */
+  .saving-overlay{
+    position: fixed; inset: 0; background: rgba(15,23,42,.75);
+    z-index: 9999; display: none; align-items: center; justify-content: center;
+    flex-direction: column; gap: 14px; color: #fff; text-align: center; padding: 20px;
+  }
+  .saving-overlay.show{ display: flex; }
+  .saving-overlay .spinner{
+    width: 50px; height: 50px; border: 4px solid rgba(255,255,255,.2);
+    border-top-color: #fff; border-radius: 50%; animation: spin .8s linear infinite;
+  }
+  .saving-overlay .msg{ font-size: 1rem; font-weight: 600; }
+  .saving-overlay .sub{ font-size: .82rem; opacity: .7; }
 </style>
 </head>
 <body>
@@ -867,16 +869,19 @@
       </div>
     </div>
     <div class="header-right">
-      <button class="btn-notif hidden" id="btnNotif" onclick="abrirNotificacoes()" title="Notificações">
-        🔔<span class="notif-badge hidden" id="notifBadge">0</span>
-      </button>
-      <span class="badge-admin hidden" id="badgeAdmin">👑 Admin</span>
       <span class="user-info" id="userInfo"></span>
       <button class="btn-header hidden" id="btnSair" onclick="sair()">Sair</button>
       <button class="btn-admin-discreto" id="btnAdminDiscreto" title="Acesso restrito" onclick="abrirLoginAdmin()">⚙️</button>
     </div>
   </div>
 </header>
+
+<!-- BARRA DE CORRETOR (só admin, fixa no topo) -->
+<div class="admin-corretor-bar hidden" id="adminCorretorBar">
+  <div class="admin-corretor-bar-inner" id="adminCorretorBarInner">
+    <!-- Preenchido via JS -->
+  </div>
+</div>
 
 <!-- LOGIN CLIENTE -->
 <div class="login-wrap" id="loginView">
@@ -918,8 +923,11 @@
     <p class="sub">Acesso restrito à equipe Lima Ribeiro.</p>
     <div class="form-group">
       <label>Senha do administrador</label>
-      <input type="password" id="inputAdminSenha"
-             onkeydown="if(event.key==='Enter') entrarAdmin()">
+      <div class="input-pass-wrap">
+        <input type="password" id="inputAdminSenha" placeholder="Digite a senha"
+               onkeydown="if(event.key==='Enter') entrarAdmin()">
+        <button type="button" class="btn-eye" onclick="toggleSenhaAdmin(this)" title="Ver senha">👁️</button>
+      </div>
     </div>
     <button class="btn btn-primary btn-full" id="btnEntrarAdmin" onclick="entrarAdmin()">Entrar no painel</button>
     <div style="text-align:center; margin-top:14px;">
@@ -929,15 +937,28 @@
   </div>
 </div>
 
-<!-- SELECTOR + AGENDA -->
+<!-- HOME ADMIN -->
 <div class="container hidden" id="corretorView">
+
+  <!-- PAINEL QUERO VISITAR (notificações) -->
+  <div class="quer-visitar-wrap" id="querVisitarWrap">
+    <h2>
+      📅 Clientes querendo visitar
+      <span class="badge-total zero" id="querVisitarTotalBadge">0</span>
+    </h2>
+    <div class="quer-visitar-cards" id="querVisitarCards">
+      <div class="quer-visitar-empty" style="grid-column: 1/-1;">Carregando...</div>
+    </div>
+  </div>
+
+  <!-- AGENDA DE VISITAS -->
   <div class="agenda-wrap">
     <div class="agenda-header">
       <h2>
-        📅 Agenda de Visitas
+        🗓️ Agenda de Visitas
         <span class="badge-total zero" id="agendaTotalBadge">0</span>
       </h2>
-      <button class="btn btn-ghost btn-sm" onclick="carregarAgenda()">🔄 Atualizar</button>
+      <button class="btn btn-ghost btn-sm" onclick="carregarHomeAdmin()">🔄 Atualizar</button>
     </div>
     <div class="agenda-cards" id="agendaCards">
       <div class="agenda-empty" style="grid-column: 1/-1;">
@@ -946,25 +967,12 @@
     </div>
   </div>
 
-  <div class="corretor-selector">
-    <h2>Escolha o corretor</h2>
-    <p class="sub">Selecione um corretor para visualizar sua carteira de clientes.</p>
-    <div class="corretor-grid" id="corretorGrid"></div>
-    <div style="text-align:center;">
-      <button class="btn btn-ghost btn-sm" onclick="sair()">Sair do painel</button>
-    </div>
+  <!-- LISTA DE CLIENTES -->
+  <div class="admin-section-header" style="margin-top:20px;">
+    <h3>👥 Clientes</h3>
+    <button class="btn btn-primary btn-sm" onclick="abrirNovoCliente()">➕ Novo cliente</button>
   </div>
-</div>
 
-<!-- LISTA CLIENTES -->
-<div class="container hidden" id="clientesView">
-  <div class="admin-section-header">
-    <h3>👥 Clientes — <span class="corretor-nome" id="corretorAtual"></span></h3>
-    <button class="btn btn-ghost btn-sm" onclick="voltarSelecaoCorretor()">← Trocar corretor</button>
-  </div>
-  <div class="sub-filtros" id="subFiltros">
-    <span class="label">Filtros:</span>
-  </div>
   <div class="clientes-toolbar">
     <input type="search" class="search" id="buscaCliente"
            placeholder="🔍 Buscar por nome ou telefone..."
@@ -974,8 +982,8 @@
       <option value="data">Ordenar: Mais recentes</option>
       <option value="data-antiga">Ordenar: Mais antigos</option>
     </select>
-    <button class="btn btn-primary btn-sm" onclick="abrirNovoCliente()">➕ Novo cliente</button>
   </div>
+
   <div class="clientes-list" id="clientesList"></div>
   <div class="empty-state hidden" id="clientesEmpty">
     <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -987,7 +995,7 @@
   </div>
 </div>
 
-<!-- VITRINE -->
+<!-- VITRINE (clientes) / (admin vendo cliente) -->
 <div class="container hidden" id="vitrineView">
   <div class="info-cliente-bar hidden" id="infoClienteBar">
     <div>
@@ -1049,8 +1057,8 @@
     </div>
   </div>
 
-  <div class="acessos-section hidden" id="acessosSection">
-    <h3>
+  <div class="acessos-section hidden" id="acessosSection" style="background:#fff; border-radius:10px; padding:18px; margin-top:14px; box-shadow:0 2px 8px rgba(0,0,0,.06); border:1px solid var(--border-soft);">
+    <h3 style="display:flex; align-items:center; justify-content:space-between; gap:10px; font-size:.9rem; color:var(--text); margin-bottom:12px; font-weight:700;">
       <span>🔐 Acessos do cliente</span>
       <button class="btn btn-primary btn-xs" onclick="abrirNovoAcesso()">➕ Criar acesso</button>
     </h3>
@@ -1068,14 +1076,17 @@
     <button class="filter-btn" data-filter="pendente" onclick="setFiltro('pendente', this)">
       ⏳ Aguardando <span class="filter-count" id="cnt-pendente">0</span>
     </button>
-    <button class="filter-btn" data-filter="gostei" onclick="setFiltro('gostei', this)">
-      ❤️ Gostei <span class="filter-count" id="cnt-gostei">0</span>
-    </button>
     <button class="filter-btn" data-filter="quero-visitar" onclick="setFiltro('quero-visitar', this)">
       📅 Quero visitar <span class="filter-count" id="cnt-quero-visitar">0</span>
     </button>
+    <button class="filter-btn" data-filter="gostei" onclick="setFiltro('gostei', this)">
+      ❤️ Gostei <span class="filter-count" id="cnt-gostei">0</span>
+    </button>
     <button class="filter-btn" data-filter="nao-gostei" onclick="setFiltro('nao-gostei', this)">
       ❌ Não gostei <span class="filter-count" id="cnt-nao-gostei">0</span>
+    </button>
+    <button class="filter-btn btn-recentes" data-filter="recentes" onclick="setFiltro('recentes', this)">
+      🆕 Recentes
     </button>
   </div>
 
@@ -1091,10 +1102,6 @@
 </div>
 
 <!-- MODAIS -->
-<div class="modal-backdrop" id="modalBackdrop" onclick="if(event.target===this) fecharModal()">
-  <div class="modal" id="modalContent"></div>
-</div>
-
 <div class="modal-backdrop" id="agendaModalBackdrop" onclick="if(event.target===this) fecharAgendaModal()">
   <div class="modal" id="agendaModalContent"></div>
 </div>
@@ -1201,30 +1208,14 @@
   </div>
 </div>
 
-<!-- NOTIFICAÇÕES -->
-<div class="notif-overlay" id="notifOverlay" onclick="fecharNotificacoes()"></div>
-<aside class="notif-panel" id="notifPanel">
-  <div class="notif-header">
-    <h3>🔔 Notificações</h3>
-    <button class="notif-close" onclick="fecharNotificacoes()">×</button>
-  </div>
-  <div class="notif-tabs">
-    <button class="notif-tab active" data-tab="gostei" onclick="trocarTabNotif('gostei')">
-      ❤️ Gostei <span class="badge" id="notifTabGostei">0</span>
-    </button>
-    <button class="notif-tab" data-tab="visita" onclick="trocarTabNotif('visita')">
-      📅 Visitar <span class="badge" id="notifTabVisita">0</span>
-    </button>
-  </div>
-  <div class="notif-body" id="notifBody">
-    <div class="notif-empty">
-      <div class="ico">✅</div>
-      <p>Tudo em ordem!</p>
-    </div>
-  </div>
-</aside>
-
 <div class="toast" id="toast"></div>
+
+<!-- OVERLAY DE "SALVANDO" -->
+<div class="saving-overlay" id="savingOverlay">
+  <div class="spinner"></div>
+  <div class="msg">Aguarde, estamos salvando as alterações feitas...</div>
+  <div class="sub">Em seguida o site será fechado.</div>
+</div>
 
 <script>
 /* =====================================================
@@ -1233,8 +1224,13 @@
 const API_URL = 'https://script.google.com/macros/s/AKfycbxixzI5uFmyC6TOzoXqTnwUaNK-iWMPxDaxCiY-dM4ZRSFIt1K4dco_ShW7D7hMIdMX/exec';
 const TOKEN_KEY = 'vitrine_device_token';
 const TEL_KEY   = 'vitrine_telefone';
-const ADMIN_KEY = 'vitrine_admin';
 const BUSCAR_BASE = 'https://corretor.quintoandar.com.br/informacoes-de-entrada';
+
+/* ZAPS DOS CORRETORES */
+const ZAP_CORRETORES = {
+  'Hugo': '5531996070930',
+  'Carolina': '5531996273985'
+};
 
 /* =====================================================
    ESTADO
@@ -1252,10 +1248,10 @@ const state = {
   acessos: [],
   agendamentos: [],
   corretorFiltro: null,
-  subFiltroParceria: 'todos',
   editandoClienteTel: null,
-  notifTab: 'gostei',
-  notificacoes: { gostei: [], visita: [] }
+  salvando: 0,
+  // Cache para "quero visitar" no topo
+  querVisitarCache: { gostei: [], visita: [] }
 };
 
 const $ = id => document.getElementById(id);
@@ -1274,6 +1270,34 @@ function mascaraTelefone(input){
   else out = '(' + v.slice(0,2) + ') ' + v.slice(2,3) + ' ' + v.slice(3,7) + '-' + v.slice(7);
   input.value = out;
 }
+
+/* =====================================================
+   INPUT DE SENHA ADMIN - OLHO
+===================================================== */
+function toggleSenhaAdmin(btn){
+  const input = $('inputAdminSenha');
+  if(!input) return;
+  if(input.type === 'password'){
+    input.type = 'text';
+    btn.textContent = '🙈';
+  } else {
+    input.type = 'password';
+    btn.textContent = '👁️';
+  }
+}
+
+/* =====================================================
+   CONTROLE DE SALVAMENTO (para evitar fechar durante save)
+===================================================== */
+function marcarSalvando(inicio){
+  if(inicio){
+    state.salvando++;
+  } else {
+    state.salvando = Math.max(0, state.salvando - 1);
+  }
+}
+
+function estaSalvando(){ return state.salvando > 0; }
 
 /* =====================================================
    API VIA FETCH GET
@@ -1428,13 +1452,13 @@ function classificarAgendamento(iso){
    NAVEGAÇÃO
 ===================================================== */
 function mostrarView(id){
-  ['loginView','adminLoginView','corretorView','clientesView','vitrineView']
+  ['loginView','adminLoginView','corretorView','vitrineView']
     .forEach(v => $(v).classList.add('hidden'));
   if(id) $(id).classList.remove('hidden');
 }
 
 /* =====================================================
-   LOGIN CLIENTE
+   LOGIN CLIENTE - AUTO-LOGIN
 ===================================================== */
 function toggleAjudaSenha(){ $('ajudaSenha').classList.toggle('hidden'); }
 
@@ -1460,9 +1484,11 @@ async function entrarCliente(){
   btn.disabled = true;
   btn.innerHTML = '<span class="loader"></span> Entrando...';
 
+  marcarSalvando(true);
   const res = await api('loginCliente', {
     telefone: tel, senha: senhaDigitada, deviceToken: deviceToken, navegador: navegador
   });
+  marcarSalvando(false);
 
   btn.disabled = false;
   btn.textContent = 'Entrar na minha vitrine';
@@ -1490,10 +1516,13 @@ async function entrarCliente(){
 }
 
 /* =====================================================
-   LOGIN ADMIN
+   LOGIN ADMIN - NÃO SALVA EM LOCALSTORAGE
 ===================================================== */
 function abrirLoginAdmin(){
   $('inputAdminSenha').value = '';
+  $('inputAdminSenha').type = 'password';
+  const eyeBtn = document.querySelector('#adminLoginView .btn-eye');
+  if(eyeBtn) eyeBtn.textContent = '👁️';
   mostrarView('adminLoginView');
   setTimeout(() => $('inputAdminSenha').focus(), 100);
 }
@@ -1522,36 +1551,167 @@ async function entrarAdmin(){
   const btn = $('btnEntrarAdmin');
   btn.disabled = true;
   btn.innerHTML = '<span class="loader"></span> Validando...';
+  marcarSalvando(true);
   const res = await api('adminListar', { senha });
+  marcarSalvando(false);
   btn.disabled = false;
   btn.textContent = 'Entrar no painel';
   if(!res.ok){ toast(res.error || 'Senha incorreta', 'error'); return; }
   state.isAdmin = true;
   state.adminSenha = senha;
-  localStorage.setItem(ADMIN_KEY, senha);
+  // NÃO salva em localStorage - admin sempre pede senha
+  await carregarHomeAdmin();
+}
+
+/* =====================================================
+   HOME ADMIN (quero visitar + agenda + clientes)
+===================================================== */
+async function carregarHomeAdmin(){
+  mostrarView('corretorView');
+  $('adminCorretorBar').classList.remove('hidden');
+  $('btnAdminDiscreto').classList.add('hidden');
+  $('btnSair').classList.remove('hidden');
+  $('userInfo').textContent = '👑 Painel';
+
+  // Carrega corretores
   await carregarCorretores();
-  await atualizarNotificacoes();
-  await irParaSelecaoCorretor();
+
+  // Monta barra de corretor
+  montarBarraCorretor();
+
+  // Carrega dados em paralelo
+  const [resClientes, resNotif, resAgenda] = await Promise.all([
+    api('listarClientes', { senha: state.adminSenha }),
+    api('listarNotificacoes', { senha: state.adminSenha }),
+    api('listarAgendamentos', { senha: state.adminSenha })
+  ]);
+
+  state.clientes = (resClientes.ok && resClientes.data) ? resClientes.data : [];
+  state.querVisitarCache = (resNotif.ok && resNotif.data) ? resNotif.data : { gostei: [], visita: [] };
+  state.agendamentos = (resAgenda.ok && resAgenda.data) ? resAgenda.data : [];
+
+  renderizarQuerVisitar();
+  renderizarAgenda();
+  renderizarClientes();
+}
+
+function montarBarraCorretor(){
+  const inner = $('adminCorretorBarInner');
+  if(!inner) return;
+  const total = state.clientes.length;
+
+  const chips = [
+    `<span class="lbl">Filtrar:</span>`,
+    `<button class="chip-corretor ${!state.corretorFiltro ? 'active' : ''}" onclick="setCorretorFiltro(null)">
+       👥 Todos <span class="cnt">${total}</span>
+     </button>`,
+    ...state.corretores.map(c => {
+      const cnt = state.clientes.filter(cl => cl.corretor === c).length;
+      return `<button class="chip-corretor ${state.corretorFiltro === c ? 'active' : ''}" onclick="setCorretorFiltro('${esc(c)}')">
+        👤 ${esc(c)} <span class="cnt">${cnt}</span>
+      </button>`;
+    })
+  ];
+  inner.innerHTML = chips.join('');
+}
+
+function setCorretorFiltro(corretor){
+  state.corretorFiltro = corretor;
+  montarBarraCorretor();
+  renderizarClientes();
+  renderizarQuerVisitar();
+  renderizarAgenda();
+}
+
+/* =====================================================
+   PAINEL QUERO VISITAR (topo)
+===================================================== */
+function renderizarQuerVisitar(){
+  const wrap = $('querVisitarWrap');
+  const cards = $('querVisitarCards');
+  const badge = $('querVisitarTotalBadge');
+
+  const lista = state.querVisitarCache.visita || [];
+  const filtrada = state.corretorFiltro
+    ? lista.filter(a => {
+        const cli = state.clientes.find(c => normalizaTel(c.telefone) === normalizaTel(a.telefone));
+        return cli && cli.corretor === state.corretorFiltro;
+      })
+    : lista;
+
+  if(filtrada.length === 0){
+    badge.textContent = '0';
+    badge.classList.add('zero');
+    cards.innerHTML = `<div class="quer-visitar-empty" style="grid-column:1/-1;">✅ Nenhum cliente aguardando agendamento.</div>`;
+    return;
+  }
+
+  badge.textContent = filtrada.length;
+  badge.classList.remove('zero');
+
+  // Agrupa por corretor
+  const porCorretor = {};
+  state.corretores.forEach(c => { porCorretor[c] = []; });
+
+  filtrada.forEach(a => {
+    const cli = state.clientes.find(c => normalizaTel(c.telefone) === normalizaTel(a.telefone));
+    const corretor = (cli && cli.corretor) || '(sem corretor)';
+    if(!porCorretor[corretor]) porCorretor[corretor] = [];
+    porCorretor[corretor].push({ ...a, clienteNome: cli ? cli.nome : '(sem cadastro)' });
+  });
+
+  cards.innerHTML = Object.keys(porCorretor).map(corretor => {
+    const lst = porCorretor[corretor] || [];
+    const countClass = lst.length === 0 ? 'zero' : '';
+    if(lst.length === 0){
+      return `
+        <div class="quer-visitar-corretor">
+          <div class="quer-visitar-corretor-header">
+            <div class="nome"><div class="avatar-sm">${esc(corretor.charAt(0))}</div>${esc(corretor)}</div>
+            <span class="count ${countClass}">Sem solicitações</span>
+          </div>
+          <div class="quer-visitar-empty">Nada por aqui</div>
+        </div>`;
+    }
+    const itens = lst.map(a => `
+      <div class="quer-visitar-item" onclick="abrirImovelDaAgenda('${esc(a.telefone)}', '${esc(a.id)}', true)">
+        <div class="quando-ico">📅</div>
+        <div class="info">
+          <div class="cliente">👤 ${esc(a.clienteNome)}</div>
+          <div class="detalhe">
+            <span>📱 ${esc(fmtTel(a.telefone))}</span>
+            ${a.codigo ? `<span class="codigo">#${esc(a.codigo)}</span>` : ''}
+            <span>${esc((a.titulo || '').substring(0, 30))}${a.titulo && a.titulo.length > 30 ? '...' : ''}</span>
+          </div>
+        </div>
+        <span class="arrow-right">→</span>
+      </div>
+    `).join('');
+    return `
+      <div class="quer-visitar-corretor">
+        <div class="quer-visitar-corretor-header">
+          <div class="nome"><div class="avatar-sm">${esc(corretor.charAt(0))}</div>${esc(corretor)}</div>
+          <span class="count ${countClass}">${lst.length} solicitaç${lst.length === 1 ? 'ão' : 'ões'}</span>
+        </div>
+        <div class="quer-visitar-corretor-body">${itens}</div>
+      </div>`;
+  }).join('');
 }
 
 /* =====================================================
    AGENDA
 ===================================================== */
-async function carregarAgenda(){
+function renderizarAgenda(){
   const cards = $('agendaCards');
-  cards.innerHTML = `<div class="agenda-empty" style="grid-column:1/-1;"><span class="loader"></span> Carregando agenda...</div>`;
-
-  const res = await api('listarAgendamentos', { senha: state.adminSenha });
-  if(!res.ok){
-    cards.innerHTML = `<div class="agenda-empty" style="grid-column:1/-1;">Erro ao carregar agenda.</div>`;
-    return;
-  }
-  state.agendamentos = res.data || [];
+  const badge = $('agendaTotalBadge');
 
   const hoje = new Date(); hoje.setHours(0,0,0,0);
-  const futuras = state.agendamentos.filter(a => new Date(a.dataVisitaAgendada) >= hoje);
+  let futuras = state.agendamentos.filter(a => new Date(a.dataVisitaAgendada) >= hoje);
 
-  const badge = $('agendaTotalBadge');
+  if(state.corretorFiltro){
+    futuras = futuras.filter(a => (a.corretor || '') === state.corretorFiltro);
+  }
+
   if(futuras.length === 0){
     badge.textContent = '0';
     badge.classList.add('zero');
@@ -1657,6 +1817,9 @@ function abrirAgendaCorretor(corretor){
 
 function fecharAgendaModal(){ $('agendaModalBackdrop').classList.remove('show'); }
 
+/* =====================================================
+   IR PARA IMÓVEL DA AGENDA (CORRIGIDO)
+===================================================== */
 async function abrirImovelDaAgenda(telefone, imovelId, fecharModalPrimeiro){
   if(fecharModalPrimeiro) fecharAgendaModal();
 
@@ -1665,20 +1828,44 @@ async function abrirImovelDaAgenda(telefone, imovelId, fecharModalPrimeiro){
     return;
   }
 
+  // Se já estamos na vitrine do mesmo cliente E já temos os imóveis carregados, só destaca
   if(state.telefone === normalizaTel(telefone) && state.imoveis.length > 0){
     destacarCard(imovelId);
     return;
   }
 
+  // Senão, abre a vitrine do cliente (e garante carregamento completo)
   state.telefone = normalizaTel(telefone);
   await irParaVitrine();
-  setTimeout(() => destacarCard(imovelId), 400);
+
+  // Espera o carregamento terminar antes de destacar
+  let tentativas = 0;
+  const maxTentativas = 20; // 20 * 250ms = 5s
+  const aguardar = setInterval(() => {
+    tentativas++;
+    const card = document.querySelector(`.card[data-id="${imovelId}"]`);
+    if(card){
+      clearInterval(aguardar);
+      destacarCard(imovelId);
+    } else if(tentativas >= maxTentativas){
+      clearInterval(aguardar);
+      toast('Aguarde o carregamento...', 'error');
+    }
+  }, 250);
 }
 
 function destacarCard(imovelId){
   const card = document.querySelector(`.card[data-id="${imovelId}"]`);
   if(!card){
-    toast('Imóvel não encontrado nesta vitrine', 'error');
+    // Se o filtro atual esconder, muda para "todos"
+    if(state.filtro !== 'todos'){
+      state.filtro = 'todos';
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      const el = document.querySelector('.filter-btn[data-filter="todos"]');
+      if(el) el.classList.add('active');
+      renderizarImoveis();
+      setTimeout(() => destacarCard(imovelId), 150);
+    }
     return;
   }
   if(state.filtro !== 'todos'){
@@ -1687,7 +1874,7 @@ function destacarCard(imovelId){
     const el = document.querySelector('.filter-btn[data-filter="todos"]');
     if(el) el.classList.add('active');
     renderizarImoveis();
-    setTimeout(() => destacarCard(imovelId), 100);
+    setTimeout(() => destacarCard(imovelId), 150);
     return;
   }
   card.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -1705,99 +1892,6 @@ async function carregarCorretores(){
   state.corretores = (res.ok && res.data) ? res.data : ['Hugo', 'Carolina'];
 }
 
-async function irParaSelecaoCorretor(){
-  const res = await api('listarClientes', { senha: state.adminSenha });
-  state.clientes = (res.ok && res.data) ? res.data : [];
-
-  $('btnNotif').classList.remove('hidden');
-  await atualizarNotificacoes();
-  await carregarAgenda();
-
-  const grid = $('corretorGrid');
-  const total = state.clientes.length;
-  const cards = [
-    { chave: '__todos__', nome: 'Todos os clientes', count: total, icon: '👥', classe: 'todos' },
-    ...state.corretores.map(c => ({
-      chave: c, nome: c,
-      count: state.clientes.filter(cl => cl.corretor === c).length,
-      icon: c.charAt(0).toUpperCase(),
-      classe: ''
-    }))
-  ];
-  grid.innerHTML = cards.map(c => `
-    <div class="corretor-card ${c.classe}" onclick="selecionarCorretor('${esc(c.chave)}')">
-      <div class="avatar">${c.classe === 'todos' ? c.icon : esc(c.icon)}</div>
-      <div class="nome">${esc(c.nome)}</div>
-      <div class="count">${c.count} cliente${c.count === 1 ? '' : 's'}</div>
-    </div>
-  `).join('');
-
-  mostrarView('corretorView');
-}
-
-function selecionarCorretor(chave){
-  state.corretorFiltro = (chave === '__todos__') ? null : chave;
-  state.subFiltroParceria = 'todos';
-  $('corretorAtual').textContent = chave === '__todos__' ? 'Todos os clientes' : chave;
-  $('buscaCliente').value = '';
-  $('ordenacao').value = 'alfabetica';
-  montarSubFiltros();
-  renderizarClientes();
-  mostrarView('clientesView');
-}
-
-function voltarSelecaoCorretor(){ irParaSelecaoCorretor(); }
-
-/* =====================================================
-   SUB-FILTROS
-===================================================== */
-function montarSubFiltros(){
-  const wrap = $('subFiltros');
-  if(!state.corretorFiltro){
-    wrap.innerHTML = '<span class="label">Filtros:</span><span class="text-muted" style="font-size:.82rem;">Selecione um corretor específico para ver filtros de parceria.</span>';
-    return;
-  }
-  const doCorretor = state.clientes.filter(c => c.corretor === state.corretorFiltro);
-  const contagem = {};
-  let semParceria = 0;
-  doCorretor.forEach(c => {
-    const p = (c.parceria || '').trim();
-    if(p) contagem[p] = (contagem[p] || 0) + 1;
-    else semParceria++;
-  });
-  const total = doCorretor.length;
-  const parcerias = Object.keys(contagem).sort();
-  const chips = [];
-  chips.push(`
-    <button class="sub-chip ${state.subFiltroParceria === 'todos' ? 'active' : ''}"
-            onclick="setSubFiltro('todos', this)">
-      👤 Somente ${esc(state.corretorFiltro)} <span class="count">${total}</span>
-    </button>
-  `);
-  chips.push(`
-    <button class="sub-chip ${state.subFiltroParceria === 'sem-parceria' ? 'active' : ''}"
-            onclick="setSubFiltro('sem-parceria', this)">
-      🚫 Sem parceria <span class="count">${semParceria}</span>
-    </button>
-  `);
-  parcerias.forEach(p => {
-    chips.push(`
-      <button class="sub-chip ${state.subFiltroParceria === p ? 'active' : ''}"
-              onclick="setSubFiltro('${esc(p)}', this)">
-        🤝 ${esc(state.corretorFiltro)}/${esc(p)} <span class="count">${contagem[p]}</span>
-      </button>
-    `);
-  });
-  wrap.innerHTML = '<span class="label">Filtros:</span>' + chips.join('');
-}
-
-function setSubFiltro(valor, el){
-  state.subFiltroParceria = valor;
-  document.querySelectorAll('#subFiltros .sub-chip').forEach(c => c.classList.remove('active'));
-  if(el) el.classList.add('active');
-  renderizarClientes();
-}
-
 /* =====================================================
    LISTA CLIENTES
 ===================================================== */
@@ -1807,13 +1901,6 @@ function renderizarClientes(){
   let lista = [...state.clientes];
 
   if(state.corretorFiltro) lista = lista.filter(c => c.corretor === state.corretorFiltro);
-  if(state.corretorFiltro){
-    if(state.subFiltroParceria === 'sem-parceria'){
-      lista = lista.filter(c => !c.parceria || !c.parceria.trim());
-    } else if(state.subFiltroParceria !== 'todos'){
-      lista = lista.filter(c => (c.parceria || '').trim() === state.subFiltroParceria);
-    }
-  }
   if(busca){
     lista = lista.filter(c =>
       (c.nome || '').toLowerCase().includes(busca) ||
@@ -1854,7 +1941,6 @@ function renderizarClientes(){
 }
 
 function abrirNovoCliente(){
-  state.editandoClienteTel = null;
   $('clienteModalTitle').textContent = '👤 Cadastrar cliente';
   $('cliTelefone').value = '';
   $('cliNome').value = '';
@@ -1890,9 +1976,11 @@ async function salvarCliente(){
   btn.disabled = true;
   btn.innerHTML = '<span class="loader"></span> Salvando...';
 
+  marcarSalvando(true);
   const res = await api('salvarCliente', {
     senha: state.adminSenha, telefone: tel, nome, corretor, parceria, observacao
   });
+  marcarSalvando(false);
 
   btn.disabled = false;
   btn.textContent = '💾 Salvar cliente';
@@ -1900,11 +1988,8 @@ async function salvarCliente(){
   toast('Cliente salvo ✅', 'success');
   fecharClienteModal();
 
-  const r2 = await api('listarClientes', { senha: state.adminSenha });
-  if(r2.ok) state.clientes = r2.data || [];
-  montarSubFiltros();
-  renderizarClientes();
-  atualizarNotificacoes();
+  // Recarrega tudo
+  await carregarHomeAdmin();
 }
 
 /* =====================================================
@@ -1922,13 +2007,11 @@ async function irParaVitrine(){
   }
 
   if(state.isAdmin){
-    $('badgeAdmin').classList.remove('hidden');
     $('adminToolbar').classList.remove('hidden');
     $('infoClienteBar').classList.remove('hidden');
     $('userInfo').textContent = '';
     $('btnAdminDiscreto').classList.add('hidden');
     $('btnSair').classList.remove('hidden');
-    $('btnNotif').classList.remove('hidden');
     $('adminPanel').classList.add('hidden');
     $('acessosSection').classList.add('hidden');
 
@@ -1940,27 +2023,29 @@ async function irParaVitrine(){
     $('adTelefone').value = fmtTel(state.telefone);
     carregarAcessos();
   } else {
-    $('badgeAdmin').classList.add('hidden');
     $('adminToolbar').classList.add('hidden');
     $('adminPanel').classList.add('hidden');
     $('acessosSection').classList.add('hidden');
     $('infoClienteBar').classList.add('hidden');
     $('btnSair').classList.add('hidden');
     $('btnAdminDiscreto').classList.add('hidden');
-    $('btnNotif').classList.add('hidden');
     $('userInfo').textContent = '📱 ' + fmtTel(state.telefone);
   }
 
   mostrarView('vitrineView');
-  carregarImoveis();
+  await carregarImoveis();
 }
 
 function voltarParaClientes(){
   state.telefone = null;
   state.imoveis = [];
   state.clienteInfo = null;
-  mostrarView('clientesView');
-  renderizarClientes();
+  if(state.isAdmin){
+    carregarHomeAdmin();
+  } else {
+    mostrarView('loginView');
+    atualizarCamposLogin();
+  }
 }
 
 function abrirEditarClienteAtual(){
@@ -1970,7 +2055,6 @@ function abrirEditarClienteAtual(){
     $('cliTelefone').value = fmtTel(state.telefone);
     return;
   }
-  state.editandoClienteTel = state.clienteInfo.telefone;
   $('clienteModalTitle').textContent = '✏️ Editar cliente';
   $('cliTelefone').value = fmtTel(state.clienteInfo.telefone);
   $('cliNome').value = state.clienteInfo.nome || '';
@@ -2026,21 +2110,20 @@ function renderizarAcessos(){
     const ultimo = a.ultimoAcesso ? `Último acesso ${fmtDataHora(a.ultimoAcesso)}` : 'Nunca acessou';
     const criado = `Criado em ${fmtDataHora(a.dataCriacao)}`;
     return `
-      <div class="acesso-item ${statusClass}">
-        <div class="acesso-head">
-          <div class="acesso-apelido">📱 ${esc(a.apelido || 'Sem apelido')}</div>
-          <span class="acesso-status ${statusTagClass}">${esc(a.status)}</span>
+      <div class="acesso-item" style="background:#fafbfc; border:1px solid var(--border-soft); border-radius:8px; padding:12px; margin-bottom:10px;">
+        <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:10px; margin-bottom:8px; flex-wrap:wrap;">
+          <div style="font-size:.88rem; font-weight:700; color:var(--text);">📱 ${esc(a.apelido || 'Sem apelido')}</div>
+          <span style="font-size:.64rem; font-weight:700; padding:2px 8px; border-radius:4px; text-transform:uppercase; letter-spacing:.3px; ${a.status === 'Bloqueado' ? 'background:#f0dede; color:var(--danger);' : a.status === 'Pendente' ? 'background:#f2ead5; color:var(--warn);' : 'background:#e2ede7; color:var(--success);'}">${esc(a.status)}</span>
         </div>
-        <div class="acesso-senha">
+        <div style="display:flex; align-items:center; gap:8px; background:#fff; border:1px solid var(--border); border-radius:6px; padding:8px 12px; margin-bottom:8px; font-family:'Courier New', monospace;">
           <span style="font-size:.7rem; color:var(--muted); font-weight:700; text-transform:uppercase;">Senha</span>
-          <span class="acesso-senha-valor" id="senha-${esc(a.id)}">${esc(a.senha)}</span>
-          <button class="acesso-btn-ver" onclick="toggleSenha('${esc(a.id)}', this)" title="Mostrar/ocultar">👁️</button>
-          <button class="acesso-btn-ver" onclick="copiarSenha('${esc(a.senha)}')" title="Copiar">📋</button>
+          <span id="senha-${esc(a.id)}" style="font-size:1.05rem; font-weight:700; letter-spacing:2px; color:var(--danger); flex:1; user-select:all;">${esc(a.senha)}</span>
+          <button onclick="copiarSenha('${esc(a.senha)}')" title="Copiar" style="background:transparent; border:none; cursor:pointer; font-size:.95rem; padding:4px;">📋</button>
         </div>
-        <div class="acesso-meta">
+        <div style="font-size:.72rem; color:var(--muted); line-height:1.5; margin-bottom:8px;">
           <strong>Status:</strong> ${esc(a.status)}${navegadorTxt}<br>${criado}<br>${ultimo}
         </div>
-        <div class="acesso-acoes">
+        <div style="display:flex; gap:6px; flex-wrap:wrap;">
           <button class="btn btn-ghost btn-xs" onclick="trocarSenhaAcesso('${esc(a.id)}')">🔄 Trocar senha</button>
           <button class="btn btn-warn btn-xs" onclick="bloquearAcesso('${esc(a.id)}')">
             ${a.status === 'Bloqueado' ? '🔓 Desbloquear' : '🚫 Bloquear'}
@@ -2049,21 +2132,6 @@ function renderizarAcessos(){
         </div>
       </div>`;
   }).join('');
-}
-
-function toggleSenha(acessoId, btn){
-  const el = document.getElementById('senha-' + acessoId);
-  if(!el) return;
-  if(el.classList.contains('escondida')){
-    el.classList.remove('escondida');
-    el.textContent = el.dataset.senhaOriginal || el.textContent;
-    btn.textContent = '👁️';
-  } else {
-    el.dataset.senhaOriginal = el.textContent;
-    el.classList.add('escondida');
-    el.textContent = '••••••';
-    btn.textContent = '🙈';
-  }
 }
 
 function copiarSenha(senha){
@@ -2099,9 +2167,11 @@ async function criarAcesso(ev){
   if(!apelido){ toast('Digite um apelido para o dispositivo', 'error'); return; }
   const btn = ev?.target;
   if(btn){ btn.disabled = true; btn.innerHTML = '<span class="loader"></span> Gerando...'; }
+  marcarSalvando(true);
   const res = await api('criarAcesso', {
     senha: state.adminSenha, telefone: state.telefone, apelido: apelido
   });
+  marcarSalvando(false);
   if(btn){ btn.disabled = false; btn.textContent = '🔑 Gerar senha'; }
   if(!res.ok){ toast(res.error || 'Erro ao criar acesso', 'error'); return; }
   fecharNovoAcesso();
@@ -2125,7 +2195,9 @@ function copiarSenhaGerada(){
 
 async function trocarSenhaAcesso(acessoId){
   if(!confirm('Gerar uma nova senha? A atual deixará de funcionar.')) return;
+  marcarSalvando(true);
   const res = await api('trocarSenhaAcesso', { senha: state.adminSenha, acessoId });
+  marcarSalvando(false);
   if(!res.ok){ toast(res.error || 'Erro', 'error'); return; }
   toast('Nova senha gerada ✅', 'success');
   $('senhaGeradaApelido').textContent = 'Senha alterada';
@@ -2135,7 +2207,9 @@ async function trocarSenhaAcesso(acessoId){
 }
 
 async function bloquearAcesso(acessoId){
+  marcarSalvando(true);
   const res = await api('bloquearAcesso', { senha: state.adminSenha, acessoId });
+  marcarSalvando(false);
   if(!res.ok){ toast(res.error || 'Erro', 'error'); return; }
   toast('Status atualizado', 'success');
   carregarAcessos();
@@ -2143,7 +2217,9 @@ async function bloquearAcesso(acessoId){
 
 async function removerAcesso(acessoId){
   if(!confirm('Remover este acesso? O cliente não poderá mais entrar com essa senha.')) return;
+  marcarSalvando(true);
   const res = await api('removerAcesso', { senha: state.adminSenha, acessoId });
+  marcarSalvando(false);
   if(!res.ok){ toast(res.error || 'Erro', 'error'); return; }
   toast('Acesso removido', 'success');
   carregarAcessos();
@@ -2178,6 +2254,7 @@ async function carregarImoveis(){
     return;
   }
 
+  // Ordenação padrão: por data decrescente (mais recente primeiro)
   state.imoveis = (res.data || []).sort((a,b) => {
     const da = new Date(a.dataCadastro||0).getTime() || 0;
     const db = new Date(b.dataCadastro||0).getTime() || 0;
@@ -2211,9 +2288,30 @@ function setFiltro(f, el){
 function renderizarImoveis(){
   const grid = $('gridImoveis');
   let lista = [...state.imoveis];
-  if(state.filtro !== 'todos'){
+
+  if(state.filtro === 'recentes'){
+    // Ordena por data de cadastro (mais recente primeiro)
+    lista.sort((a,b) => {
+      const da = new Date(a.dataCadastro||0).getTime() || 0;
+      const db = new Date(b.dataCadastro||0).getTime() || 0;
+      return db - da;
+    });
+  } else if(state.filtro === 'todos'){
+    // ORDEM: Aguardando → Quero visitar → Gostei → Não gostei
+    const ordem = { 'pendente': 0, 'quero-visitar': 1, 'gostei': 2, 'nao-gostei': 3 };
+    lista.sort((a,b) => {
+      const oa = ordem[(a.status || 'pendente')] ?? 99;
+      const ob = ordem[(b.status || 'pendente')] ?? 99;
+      if(oa !== ob) return oa - ob;
+      // Dentro do mesmo status, mais recente primeiro
+      const da = new Date(a.dataCadastro||0).getTime() || 0;
+      const db = new Date(b.dataCadastro||0).getTime() || 0;
+      return db - da;
+    });
+  } else if(state.filtro !== 'todos'){
     lista = lista.filter(i => (i.status || 'pendente') === state.filtro);
   }
+
   const busca = ($('buscaInput').value || '').toLowerCase().trim();
   if(busca){
     lista = lista.filter(i =>
@@ -2222,6 +2320,7 @@ function renderizarImoveis(){
       (i.observacao || '').toLowerCase().includes(busca)
     );
   }
+
   if(lista.length === 0){
     grid.innerHTML = '';
     $('emptyState').classList.remove('hidden');
@@ -2234,14 +2333,15 @@ function renderizarImoveis(){
 }
 
 function cardHTML(im){
+  const statusAtual = im.status || 'pendente';
   const statusClass = {
     'gostei':'status-gostei','nao-gostei':'status-nao-gostei',
     'quero-visitar':'status-quero-visitar','pendente':'status-pendente'
-  }[im.status || 'pendente'] || 'status-pendente';
+  }[statusAtual] || 'status-pendente';
   const statusLabel = {
     'gostei':'❤️ Gostei','nao-gostei':'❌ Não gostei',
     'quero-visitar':'📅 Quero visitar','pendente':'⏳ Aguardando'
-  }[im.status || 'pendente'];
+  }[statusAtual];
 
   const img = im.imagem || 'https://via.placeholder.com/400x250/e2e8f0/64748b?text=Sem+imagem';
   const id = esc(im.id);
@@ -2249,9 +2349,15 @@ function cardHTML(im){
   const obsTexto = (im.observacao || '').trim();
   const obsLonga = obsTexto.length > 140;
   const obsId = 'obs-' + id;
+  const descTexto = (im.descricao || '').trim();
+  const descId = 'desc-' + id;
 
-  // Classe extra para "não gostei"
-  const cardExtraClass = (im.status === 'nao-gostei') ? ' card-nao-gostei' : '';
+  const cardExtraClass = (statusAtual === 'nao-gostei') ? ' card-nao-gostei' : '';
+
+  // Botões com estado ativo
+  const btnGostei = (statusAtual === 'gostei') ? 'ativo' : '';
+  const btnVisitar = (statusAtual === 'quero-visitar') ? 'ativo' : '';
+  const btnNao = (statusAtual === 'nao-gostei') ? 'ativo' : '';
 
   let agendamentoHtml = '';
   if(state.isAdmin){
@@ -2308,28 +2414,38 @@ function cardHTML(im){
     }
   }
 
+  // Botão Zap
+  const zapHtml = im._corretor && ZAP_CORRETORES[im._corretor]
+    ? `<button class="btn-zap" onclick="abrirZap('${esc(im.id)}')" title="Pergunte pelo Zap">
+         💬 Pergunte pelo Zap
+       </button>`
+    : '';
+
   return `
     <div class="card${cardExtraClass}" data-id="${id}">
       <span class="status-badge ${statusClass}">${statusLabel}</span>
       <img class="card-img" src="${esc(img)}" alt="${esc(im.titulo)}" loading="lazy"
-           onclick="abrirModal('${id}')"
            onerror="this.src='https://via.placeholder.com/400x250/e2e8f0/64748b?text=Sem+imagem'">
       <div class="card-body">
         <div class="card-top-meta">
           ${dataFmt ? `<span class="card-date">📅 ${dataFmt}</span>` : ''}
           ${im.codigo ? `<span class="card-code" onclick="copiarCodigo('${esc(im.codigo)}', this)" title="Clique para copiar">#${esc(im.codigo)} 📋</span>` : ''}
+          ${zapHtml}
         </div>
         <div class="card-title">${esc(im.titulo) || 'Sem endereço'}</div>
-        ${im.descricao ? `<div class="card-desc">${esc(im.descricao)}</div>` : ''}
+        ${descTexto ? `
+          <div class="card-desc" id="${descId}" onclick="toggleDesc('${descId}')">${esc(descTexto)}</div>
+          ${descTexto.length > 180 ? `<button class="card-desc-toggle" onclick="toggleDesc('${descId}')" id="${descId}-toggle">▼ Ver mais</button>` : ''}
+        ` : ''}
 
         <div class="card-actions">
-          <button class="btn btn-success" onclick="marcar('${id}','gostei')">
+          <button class="btn btn-success ${btnGostei}" onclick="marcar('${id}','gostei')">
             <span class="ico">❤️</span><span class="lbl">Gostei</span>
           </button>
-          <button class="btn btn-warn" onclick="marcar('${id}','quero-visitar')">
+          <button class="btn btn-warn ${btnVisitar}" onclick="marcar('${id}','quero-visitar')">
             <span class="ico">📅</span><span class="lbl">Visitar</span>
           </button>
-          <button class="btn btn-danger" onclick="marcar('${id}','nao-gostei')">
+          <button class="btn btn-danger ${btnNao}" onclick="marcar('${id}','nao-gostei')">
             <span class="ico">❌</span><span class="lbl">Não</span>
           </button>
         </div>
@@ -2378,9 +2494,51 @@ function cardHTML(im){
   `;
 }
 
+function toggleDesc(descId){
+  const el = $(descId);
+  const toggle = $(descId + '-toggle');
+  if(!el) return;
+  const expandido = el.classList.contains('expandido');
+  if(expandido){
+    el.classList.remove('expandido');
+    if(toggle) toggle.innerHTML = '▼ Ver mais';
+  } else {
+    el.classList.add('expandido');
+    if(toggle) toggle.innerHTML = '▲ Ver menos';
+  }
+}
+
+/* =====================================================
+   BOTÃO ZAP
+===================================================== */
+function abrirZap(imovelId){
+  const im = state.imoveis.find(i => i.id === imovelId);
+  if(!im) return;
+  const corretor = im._corretor;
+  const zap = ZAP_CORRETORES[corretor];
+  if(!zap){ toast('Corretor sem WhatsApp cadastrado', 'error'); return; }
+
+  const nomeCliente = state.clienteInfo?.nome || 'Cliente';
+  const endereco = im.titulo || 'imóvel';
+  const codigo = im.codigo || '';
+  const link = im.link || '';
+
+  let msg = `Olá ${corretor}! 👋\n\n`;
+  msg += `Sou *${nomeCliente}* e gostaria de informações sobre este imóvel:\n\n`;
+  msg += `🏠 *${endereco}*\n`;
+  if(codigo) msg += `🔖 Código: ${codigo}\n`;
+  if(link) msg += `🔗 ${link}\n`;
+  msg += `\nPode me ajudar?`;
+
+  const url = `https://wa.me/${zap}?text=${encodeURIComponent(msg)}`;
+  window.open(url, '_blank');
+}
+
+/* =====================================================
+   BUSCAR ENTRADA
+===================================================== */
 function abrirBuscar(codigo){
-  const base = BUSCAR_BASE;
-  const url = codigo ? `${base}/${codigo}` : base;
+  const url = codigo ? `${BUSCAR_BASE}/${codigo}` : BUSCAR_BASE;
   window.open(url, '_blank');
 }
 
@@ -2422,38 +2580,68 @@ async function salvarEdicaoObs(id, obsId){
   const novaObs = input.value.trim();
   const im = state.imoveis.find(i => i.id === id);
   if(im) im.observacao = novaObs;
-  const res = await api('salvarObservacao', {
-    id, observacao: novaObs, deviceToken: state.deviceToken
-  });
-  if(!res.ok){ toast(res.error || 'Erro ao salvar', 'error'); return; }
   const wrap = $(obsId);
   if(wrap) wrap.classList.remove('editing');
   toast('Observação salva ✅', 'success');
   renderizarImoveis();
+
+  marcarSalvando(true);
+  await api('salvarObservacao', {
+    id, observacao: novaObs, deviceToken: state.deviceToken
+  });
+  marcarSalvando(false);
 }
 
 /* =====================================================
-   AÇÕES
+   AÇÕES - MARCAR (com toggle e salvamento garantido)
 ===================================================== */
 async function marcar(id, acao){
   const im = state.imoveis.find(i => i.id === id);
-  if(im){
-    im.status = acao;
-    if(state.isAdmin){
-      if(acao === 'gostei') im.atendidoGostei = '';
-      if(acao === 'quero-visitar') im.atendidoVisita = '';
-    }
+  if(!im) return;
+
+  // Toggle: se já está com esse status, volta para "pendente"
+  const statusAtual = im.status || 'pendente';
+  const novaAcao = (statusAtual === acao) ? 'pendente' : acao;
+
+  im.status = novaAcao;
+  if(state.isAdmin){
+    if(novaAcao === 'gostei') im.atendidoGostei = '';
+    if(novaAcao === 'quero-visitar') im.atendidoVisita = '';
   }
+
+  // Atualiza UI imediatamente
   atualizarContadores();
   renderizarImoveis();
 
+  // Se está marcando "quero-visitar" ou "gostei", recarrega o painel de notificações no admin
+  if(state.isAdmin && (novaAcao === 'quero-visitar' || novaAcao === 'gostei' || novaAcao === 'pendente')){
+    // Recarrega notificações em background
+    api('listarNotificacoes', { senha: state.adminSenha }).then(r => {
+      if(r.ok && r.data){
+        state.querVisitarCache = r.data;
+        renderizarQuerVisitar();
+      }
+    });
+  }
+
+  // Salvamento garantido (marca salvando)
+  marcarSalvando(true);
   const tel = state.telefone || (im ? im.telefone : '');
-  const res = await api('atualizarStatus', {
-    id, telefone: tel, acao, deviceToken: state.deviceToken
-  });
-  if(!res.ok) toast(res.error || 'Erro ao salvar', 'error');
-  else toast('Salvo!', 'success');
-  if(state.isAdmin) atualizarNotificacoes();
+  try {
+    await api('atualizarStatus', {
+      id, telefone: tel, acao: novaAcao, deviceToken: state.deviceToken
+    });
+  } catch(e){
+    console.error('Erro ao salvar status:', e);
+  } finally {
+    marcarSalvando(false);
+  }
+
+  if(novaAcao !== 'pendente'){
+    toast('Marcado como: ' + novaAcao, 'success');
+  } else {
+    toast('Voltou para aguardando', 'success');
+  }
 }
 
 function copiarCodigo(codigo, el){
@@ -2534,17 +2722,23 @@ async function salvarImovel(){
   btn.disabled = true;
   btn.innerHTML = '<span class="loader"></span> Salvando...';
 
+  marcarSalvando(true);
+
   let imagemFinal = imagem;
   if(link && !imagemFinal){
     const r = await api('buscarImagem', { url: link });
     if(r.ok && r.imagem) imagemFinal = r.imagem;
   }
 
+  // Anexa o corretor do cliente para o botão Zap
+  const clienteInfo = state.clienteInfo || {};
   const res = await api('salvarImovel', {
     senha: state.adminSenha, id: $('editingId').value || '',
     telefone: tel, titulo, descricao: $('adDescricao').value.trim(),
     link, imagem: imagemFinal, status: 'pendente'
   });
+
+  marcarSalvando(false);
 
   btn.disabled = false;
   btn.textContent = '💾 Salvar imóvel';
@@ -2552,7 +2746,6 @@ async function salvarImovel(){
   toast('Imóvel salvo ✅', 'success');
   fecharPainelImovel();
   carregarImoveis();
-  atualizarNotificacoes();
 }
 
 function editarImovel(id){
@@ -2574,7 +2767,9 @@ function editarImovel(id){
 
 async function excluirImovel(id){
   if(!confirm('Excluir este imóvel? Essa ação não pode ser desfeita.')) return;
+  marcarSalvando(true);
   const res = await api('excluirImovel', { senha: state.adminSenha, id });
+  marcarSalvando(false);
   if(!res.ok){ toast(res.error || 'Erro ao excluir', 'error'); return; }
   toast('Imóvel excluído', 'success');
   state.imoveis = state.imoveis.filter(i => i.id !== id);
@@ -2594,23 +2789,21 @@ async function verHistorico(id){
   const html = historico.length === 0
     ? `<div style="text-align:center; padding:20px; color:var(--muted); font-size:.85rem;">Nenhuma ação registrada ainda.</div>`
     : historico.map(h => `
-        <div class="historico-item">
-          <div class="historico-ico">${icons[h.acao] || '•'}</div>
-          <div class="historico-texto">
-            <span class="apelido">${esc(h.apelido || 'Sistema')}</span> marcou <strong>${esc(h.acao)}</strong>
-            <div class="quando">${fmtDataHora(h.dataHora)}</div>
+        <div style="display:flex; gap:10px; align-items:flex-start; padding:8px 6px; border-bottom:1px solid var(--border-soft); font-size:.8rem; line-height:1.4;">
+          <div style="font-size:1rem; flex-shrink:0;">${icons[h.acao] || '•'}</div>
+          <div style="flex:1;">
+            <span style="font-weight:700; color:var(--primary);">${esc(h.apelido || 'Sistema')}</span> marcou <strong>${esc(h.acao)}</strong>
+            <div style="font-size:.7rem; color:var(--muted); margin-top:2px;">${fmtDataHora(h.dataHora)}</div>
           </div>
         </div>
       `).join('');
-  $('modalContent').innerHTML = `
+  $('modalContent') && ($('modalContent').innerHTML = `
     <button class="modal-close" onclick="fecharModal()">×</button>
     <h2 style="margin-bottom:8px;">📜 Histórico</h2>
     <p class="text-muted" style="margin-bottom:14px; font-size:.85rem;">${esc(im.titulo)}</p>
-    <div class="historico-lista">${html}</div>
+    <div style="max-height:300px; overflow-y:auto; border:1px solid var(--border-soft); border-radius:8px; padding:10px; background:#fafbfc;">${html}</div>
     <button class="btn btn-ghost btn-full mt-3" onclick="fecharModal()">Fechar</button>
-  `;
-  $('modalBackdrop').classList.add('show');
-  document.body.style.overflow = 'hidden';
+  `);
 }
 
 /* =====================================================
@@ -2654,19 +2847,26 @@ async function salvarVisita(ev){
   const btn = ev?.target;
   if(btn) btn.disabled = true;
 
+  marcarSalvando(true);
+
+  // Guarda a data agendada antes de mexer
+  const im = state.imoveis.find(i => i.id === id);
+  const dataAgendadaAntiga = im ? im.dataVisitaAgendada : '';
+
   const res = await api('marcarVisita', { id, dataVisita: data, avaliacaoVisita: avaliacao });
   if(!res.ok){
     if(btn) btn.disabled = false;
+    marcarSalvando(false);
     toast(res.error || 'Erro', 'error');
     return;
   }
 
-  const im = state.imoveis.find(i => i.id === id);
   if(im && im.dataVisitaAgendada){
     await api('cancelarAgendamento', { senha: state.adminSenha, id });
     im.dataVisitaAgendada = '';
   }
 
+  marcarSalvando(false);
   if(btn) btn.disabled = false;
 
   toast('Visita registrada ✅', 'success');
@@ -2675,24 +2875,59 @@ async function salvarVisita(ev){
     im.dataVisita = new Date(data + 'T12:00:00').toISOString();
     im.avaliacaoVisita = avaliacao;
     im.visitaFeita = 'Sim';
+    im._dataAgendadaAntes = dataAgendadaAntiga;
   }
 
   fecharVisitaModal();
   renderizarImoveis();
-  carregarAgenda();
+  // Recarrega também a home admin se estiver logado
+  if(state.isAdmin){
+    api('listarAgendamentos', { senha: state.adminSenha }).then(r => {
+      if(r.ok && r.data){ state.agendamentos = r.data; renderizarAgenda(); }
+    });
+  }
 }
 
 async function limparVisita(){
   const id = $('visitaImovelId').value;
   if(!id) return;
-  if(!confirm('Remover registro desta visita?')) return;
-  const res = await api('limparVisita', { id });
-  if(!res.ok){ toast(res.error || 'Erro', 'error'); return; }
-  toast('Visita removida', 'success');
+  if(!confirm('Desfazer esta visita? O agendamento voltará a aparecer na agenda.')) return;
+
   const im = state.imoveis.find(i => i.id === id);
-  if(im){ im.dataVisita = ''; im.avaliacaoVisita = ''; im.visitaFeita = 'Não'; }
+  // Guarda a data agendada para re-agendar depois (a API apaga tudo)
+  const dataReagendar = (im && im._dataAgendadaAntes) || (im && im.dataVisitaAgendada) || '';
+
+  marcarSalvando(true);
+  const res = await api('limparVisita', { id });
+  if(!res.ok){
+    marcarSalvando(false);
+    toast(res.error || 'Erro', 'error');
+    return;
+  }
+
+  // Re-agenda a visita automaticamente para "desfazer" a limpeza
+  if(dataReagendar){
+    await api('agendarVisita', { senha: state.adminSenha, id, dataAgendada: dataReagendar });
+  }
+
+  marcarSalvando(false);
+
+  toast('Visita desfeita ✅', 'success');
+  if(im){
+    im.dataVisita = '';
+    im.avaliacaoVisita = '';
+    im.visitaFeita = 'Não';
+    im.dataVisitaAgendada = dataReagendar || '';
+  }
   fecharVisitaModal();
   renderizarImoveis();
+
+  // Recarrega home admin
+  if(state.isAdmin){
+    api('listarAgendamentos', { senha: state.adminSenha }).then(r => {
+      if(r.ok && r.data){ state.agendamentos = r.data; renderizarAgenda(); }
+    });
+  }
 }
 
 /* =====================================================
@@ -2718,10 +2953,12 @@ async function salvarAgendamento(ev){
 
   const btn = ev?.target;
   if(btn) btn.disabled = true;
+  marcarSalvando(true);
   const iso = new Date(dataHora).toISOString();
   const res = await api('agendarVisita', {
     senha: state.adminSenha, id, dataAgendada: iso
   });
+  marcarSalvando(false);
   if(btn) btn.disabled = false;
   if(!res.ok){ toast(res.error || 'Erro', 'error'); return; }
   toast('Visita agendada ✅', 'success');
@@ -2729,198 +2966,73 @@ async function salvarAgendamento(ev){
   if(im) im.dataVisitaAgendada = iso;
   fecharAgendarModal();
   renderizarImoveis();
-  carregarAgenda();
+  if(state.isAdmin){
+    api('listarAgendamentos', { senha: state.adminSenha }).then(r => {
+      if(r.ok && r.data){ state.agendamentos = r.data; renderizarAgenda(); }
+    });
+  }
 }
 
 async function cancelarAgendamento(){
   const id = $('agendarImovelId').value;
   if(!id) return;
   if(!confirm('Cancelar o agendamento desta visita?')) return;
+  marcarSalvando(true);
   const res = await api('cancelarAgendamento', { senha: state.adminSenha, id });
+  marcarSalvando(false);
   if(!res.ok){ toast(res.error || 'Erro', 'error'); return; }
   toast('Agendamento cancelado', 'success');
   const im = state.imoveis.find(i => i.id === id);
   if(im) im.dataVisitaAgendada = '';
   fecharAgendarModal();
   renderizarImoveis();
-  carregarAgenda();
+  if(state.isAdmin){
+    api('listarAgendamentos', { senha: state.adminSenha }).then(r => {
+      if(r.ok && r.data){ state.agendamentos = r.data; renderizarAgenda(); }
+    });
+  }
 }
 
 async function cancelarAgendamentoDireto(id){
   if(!confirm('Cancelar o agendamento desta visita?')) return;
+  marcarSalvando(true);
   const res = await api('cancelarAgendamento', { senha: state.adminSenha, id });
+  marcarSalvando(false);
   if(!res.ok){ toast(res.error || 'Erro', 'error'); return; }
   toast('Agendamento cancelado', 'success');
   const im = state.imoveis.find(i => i.id === id);
   if(im) im.dataVisitaAgendada = '';
   renderizarImoveis();
-  carregarAgenda();
-}
-
-/* =====================================================
-   MODAL DETALHES
-===================================================== */
-function abrirModal(id){
-  const im = state.imoveis.find(i => i.id === id);
-  if(!im) return;
-  const img = im.imagem || 'https://via.placeholder.com/800x400/e2e8f0/64748b?text=Sem+imagem';
-  const dataFmt = fmtData(im.dataCadastro);
-
-  $('modalContent').innerHTML = `
-    <button class="modal-close" onclick="fecharModal()">×</button>
-    <img class="modal-img" src="${esc(img)}" alt="${esc(im.titulo)}"
-         onerror="this.src='https://via.placeholder.com/800x400/e2e8f0/64748b?text=Sem+imagem'">
-    <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px;">
-      ${dataFmt ? `<span class="card-date">📅 Cadastrado em ${dataFmt}</span>` : ''}
-      ${im.codigo ? `<span class="card-code" onclick="copiarCodigo('${esc(im.codigo)}', this)">#${esc(im.codigo)} 📋</span>` : ''}
-    </div>
-    <h2>${esc(im.titulo)}</h2>
-    <p class="desc">${esc(im.descricao) || 'Sem descrição.'}</p>
-
-    <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px;">
-      <button class="btn btn-success btn-sm" onclick="marcar('${esc(im.id)}','gostei'); fecharModal();">❤️ Gostei</button>
-      <button class="btn btn-warn btn-sm" onclick="marcar('${esc(im.id)}','quero-visitar'); fecharModal();">📅 Quero visitar</button>
-      <button class="btn btn-danger btn-sm" onclick="marcar('${esc(im.id)}','nao-gostei'); fecharModal();">❌ Não gostei</button>
-    </div>
-
-    ${im.link ? `<a class="btn btn-primary btn-full" href="${esc(im.link)}" target="_blank" rel="noopener" style="margin-bottom:8px;">🔗 Abrir anúncio original</a>` : ''}
-    ${state.isAdmin && im.link ? `<button class="btn btn-ghost btn-full" onclick="abrirBuscar('${esc(im.codigo)}')" style="margin-bottom:16px;">🔎 BUSCAR entrada</button>` : ''}
-
-    <div class="form-group">
-      <label>Observação</label>
-      <textarea id="modalObs" placeholder="Escreva uma observação...">${esc(im.observacao)}</textarea>
-    </div>
-    <button class="btn btn-primary btn-full" onclick="salvarObsModal('${esc(im.id)}')">💾 Salvar observação</button>
-  `;
-  $('modalBackdrop').classList.add('show');
-  document.body.style.overflow = 'hidden';
-}
-
-function salvarObsModal(id){
-  const obs = $('modalObs').value;
-  const im = state.imoveis.find(i => i.id === id);
-  if(im) im.observacao = obs;
-  api('salvarObservacao', { id, observacao: obs, deviceToken: state.deviceToken }).then(res => {
-    if(!res.ok) toast(res.error || 'Erro', 'error');
-    else toast('Observação salva', 'success');
-  });
-  fecharModal();
-  renderizarImoveis();
-}
-
-function fecharModal(){
-  $('modalBackdrop').classList.remove('show');
-  document.body.style.overflow = '';
-}
-
-/* =====================================================
-   NOTIFICAÇÕES
-===================================================== */
-async function atualizarNotificacoes(){
-  if(!state.isAdmin) return;
-  const res = await api('listarNotificacoes', { senha: state.adminSenha });
-  if(!res.ok) return;
-  state.notificacoes = res.data || { gostei: [], visita: [] };
-  const total = (state.notificacoes.gostei?.length || 0) + (state.notificacoes.visita?.length || 0);
-  const badge = $('notifBadge');
-  if(total > 0){
-    badge.textContent = total > 99 ? '99+' : total;
-    badge.classList.remove('hidden');
-  } else {
-    badge.classList.add('hidden');
+  if(state.isAdmin){
+    api('listarAgendamentos', { senha: state.adminSenha }).then(r => {
+      if(r.ok && r.data){ state.agendamentos = r.data; renderizarAgenda(); }
+    });
   }
-  $('notifTabGostei').textContent = state.notificacoes.gostei?.length || 0;
-  $('notifTabVisita').textContent = state.notificacoes.visita?.length || 0;
-  renderizarNotificacoes();
 }
 
-function abrirNotificacoes(){
-  $('notifPanel').classList.add('show');
-  $('notifOverlay').classList.add('show');
-  atualizarNotificacoes();
-}
-
-function fecharNotificacoes(){
-  $('notifPanel').classList.remove('show');
-  $('notifOverlay').classList.remove('show');
-}
-
-function trocarTabNotif(tab){
-  state.notifTab = tab;
-  document.querySelectorAll('.notif-tab').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
-  renderizarNotificacoes();
-}
-
-function renderizarNotificacoes(){
-  const body = $('notifBody');
-  const lista = state.notificacoes[state.notifTab] || [];
-  if(lista.length === 0){
-    body.innerHTML = `<div class="notif-empty"><div class="ico">✅</div><p>Nada pendente aqui.</p></div>`;
-    return;
-  }
-  body.innerHTML = lista.map(item => {
-    const cliente = state.clientes.find(c => normalizaTel(c.telefone) === normalizaTel(item.telefone));
-    const nomeCliente = cliente?.nome || fmtTel(item.telefone);
-    const img = item.imagem || 'https://via.placeholder.com/56x56/e2e8f0/64748b?text=—';
-    return `
-      <div class="notif-item">
-        <div class="head">
-          <img class="thumb" src="${esc(img)}" alt=""
-               onerror="this.src='https://via.placeholder.com/56x56/e2e8f0/64748b?text=—'">
-          <div class="info">
-            <div class="nome">${esc(item.titulo)}</div>
-            <div class="cliente">👤 <strong>${esc(nomeCliente)}</strong></div>
-            <div class="data">📅 ${fmtData(item.dataCadastro)}${item.codigo ? ` · #${esc(item.codigo)}` : ''}</div>
-          </div>
-        </div>
-        <div class="acoes">
-          <button class="btn btn-primary" onclick="verClienteDaNotif('${esc(item.telefone)}')">👁️ Ver</button>
-          <button class="btn btn-success" onclick="marcarAtendido('${esc(item.id)}','${state.notifTab}', this)">✔️ Já atendi</button>
-        </div>
-      </div>
-    `;
-  }).join('');
-}
-
-async function marcarAtendido(id, tipo, btn){
-  if(btn){ btn.disabled = true; btn.innerHTML = '<span class="loader"></span>'; }
-  const res = await api('marcarAtendido', {
-    senha: state.adminSenha, id,
-    tipo: tipo === 'visita' ? 'visita' : 'gostei',
-    atendido: 'Sim'
-  });
-  if(!res.ok){
-    toast(res.error || 'Erro ao marcar', 'error');
-    if(btn){ btn.disabled = false; btn.textContent = '✔️ Já atendi'; }
-    return;
-  }
-  toast('Marcado como atendido ✅', 'success');
-  state.notificacoes[state.notifTab] = state.notificacoes[state.notifTab].filter(i => i.id !== id);
-  atualizarNotificacoes();
-}
-
-function verClienteDaNotif(telefone){ fecharNotificacoes(); abrirVitrineDoCliente(telefone); }
-
-document.addEventListener('keydown', e => {
-  if(e.key === 'Escape'){
-    fecharModal();
-    fecharClienteModal();
-    fecharVisitaModal();
-    fecharAgendarModal();
-    fecharAgendaModal();
-    fecharNotificacoes();
-    fecharNovoAcesso();
-    fecharSenhaGerada();
-  }
-});
+function fecharModal(){ document.querySelectorAll('.modal-backdrop').forEach(el => el.classList.remove('show')); document.body.style.overflow = ''; }
 
 /* =====================================================
    SAIR
 ===================================================== */
 function sair(){
+  // Se ainda está salvando, avisa
+  if(estaSalvando()){
+    $('savingOverlay').classList.add('show');
+    const check = setInterval(() => {
+      if(!estaSalvando()){
+        clearInterval(check);
+        localStorage.removeItem(TOKEN_KEY);
+        localStorage.removeItem(TEL_KEY);
+        // NÃO limpa admin (nem salvou)
+        location.reload();
+      }
+    }, 200);
+    return;
+  }
+
   localStorage.removeItem(TOKEN_KEY);
   localStorage.removeItem(TEL_KEY);
-  localStorage.removeItem(ADMIN_KEY);
   state.telefone = null;
   state.deviceToken = null;
   state.isAdmin = false;
@@ -2931,11 +3043,10 @@ function sair(){
   state.acessos = [];
   state.agendamentos = [];
   state.corretorFiltro = null;
-  $('badgeAdmin').classList.add('hidden');
   $('btnSair').classList.add('hidden');
-  $('btnNotif').classList.add('hidden');
   $('userInfo').textContent = '';
   $('btnAdminDiscreto').classList.remove('hidden');
+  $('adminCorretorBar').classList.add('hidden');
   $('inputTelefone').value = '';
   $('inputSenha').value = '';
   mostrarView('loginView');
@@ -2943,14 +3054,25 @@ function sair(){
 }
 
 /* =====================================================
+   AVISO AO SAIR/FECHAR DURANTE SALVAMENTO
+===================================================== */
+window.addEventListener('beforeunload', function(e){
+  if(estaSalvando()){
+    e.preventDefault();
+    e.returnValue = 'Aguarde, estamos salvando as alterações feitas...';
+    return e.returnValue;
+  }
+});
+
+/* =====================================================
    INIT
 ===================================================== */
 (function init(){
   const telSalvo = localStorage.getItem(TEL_KEY);
   const tokenSalvo = localStorage.getItem(TOKEN_KEY);
-  const senhaAdmin = localStorage.getItem(ADMIN_KEY);
 
-  if(telSalvo && tokenSalvo && !senhaAdmin){
+  // AUTO-LOGIN do cliente (não pede senha)
+  if(telSalvo && tokenSalvo){
     state.telefone = telSalvo;
     state.deviceToken = tokenSalvo;
     api('loginCliente', {
@@ -2961,6 +3083,7 @@ function sair(){
         state.clienteInfo = { nome: res.nome, apelido: res.apelido };
         irParaVitrine();
       } else {
+        // Token expirado - limpa e mostra login
         localStorage.removeItem(TOKEN_KEY);
         mostrarView('loginView');
         atualizarCamposLogin();
@@ -2971,16 +3094,7 @@ function sair(){
     return;
   }
 
-  if(senhaAdmin){
-    state.isAdmin = true;
-    state.adminSenha = senhaAdmin;
-    carregarCorretores().then(() => {
-      atualizarNotificacoes();
-      irParaSelecaoCorretor();
-    });
-    return;
-  }
-
+  // Sem auto-login: mostra tela de login
   mostrarView('loginView');
   atualizarCamposLogin();
   setTimeout(() => {
