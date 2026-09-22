@@ -162,7 +162,7 @@
     background: var(--card); border-radius: var(--radius);
     overflow: hidden; box-shadow: var(--shadow-sm);
     display: flex; flex-direction: column;
-    transition: box-shadow .2s, transform .2s, border-color .4s;
+    transition: box-shadow .2s, transform .2s, border-color .4s, opacity .2s, filter .2s;
     position: relative; border: 1px solid var(--border-soft);
   }
   .card:hover{ box-shadow: var(--shadow-md); transform: translateY(-2px); }
@@ -175,6 +175,23 @@
     0%,100% { box-shadow: 0 0 0 4px rgba(139,115,85,.18), 0 8px 24px rgba(0,0,0,.1); }
     50% { box-shadow: 0 0 0 8px rgba(139,115,85,.3), 0 8px 24px rgba(0,0,0,.1); }
   }
+
+  /* Card "não gostei" - visual desabilitado */
+  .card.card-nao-gostei{
+    opacity: .55;
+    filter: grayscale(65%);
+    background: #f5f5f5;
+  }
+  .card.card-nao-gostei:hover{
+    opacity: .78;
+    filter: grayscale(50%);
+  }
+  .card.card-nao-gostei .card-img{
+    filter: grayscale(100%) brightness(0.95);
+  }
+  .card.card-nao-gostei .btn{ opacity: .85; }
+  .card.card-nao-gostei .btn:hover{ opacity: 1; }
+
   .card-img{
     width: 100%; height: 190px; object-fit: cover;
     background: var(--bg-alt); display: block; cursor: pointer;
@@ -334,25 +351,42 @@
   .visita-actions{ display: flex; gap: 6px; flex-wrap: wrap; }
   .visita-actions .btn{ padding: 6px 10px; font-size: .72rem; border-radius: 6px; }
 
+  /* =========================================
+     FILTROS EM 2 LINHAS
+     Linha 1: Todos | Aguardando | Gostei
+     Linha 2: Quero visitar | Não gostei
+  ========================================= */
   .filters{
-    display: flex; gap: 8px; flex-wrap: wrap;
-    margin: 16px 0 4px; overflow-x: auto; padding-bottom: 4px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+    margin: 16px 0 4px;
   }
-  .filter-btn{
-    padding: 8px 14px; border-radius: 6px;
+  .filters .filter-btn{
+    padding: 9px 8px; border-radius: 6px;
     border: 1px solid var(--border);
     background: #fff; cursor: pointer;
-    font-size: .78rem; font-weight: 600; color: var(--text-soft);
-    transition: all .15s; white-space: nowrap; font-family: inherit;
-    display: inline-flex; align-items: center; gap: 6px;
+    font-size: .74rem; font-weight: 600; color: var(--text-soft);
+    transition: all .15s; font-family: inherit;
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    width: 100%;
   }
-  .filter-btn:hover{ border-color: var(--primary); color: var(--primary); }
-  .filter-btn.active{ background: var(--primary); color: #fff; border-color: var(--primary); }
+  .filters .filter-btn:nth-child(1){ grid-column: 1 / 2; }
+  .filters .filter-btn:nth-child(2){ grid-column: 2 / 3; }
+  .filters .filter-btn:nth-child(3){ grid-column: 3 / 4; }
+  .filters .filter-btn:nth-child(4){ grid-column: 1 / 3; }
+  .filters .filter-btn:nth-child(5){ grid-column: 3 / 4; }
+  .filters .filter-btn:hover{ border-color: var(--primary); color: var(--primary); }
+  .filters .filter-btn.active{ background: var(--primary); color: #fff; border-color: var(--primary); }
   .filter-count{
     background: rgba(255,255,255,.25); padding: 1px 7px;
     border-radius: 4px; font-size: .68rem; min-width: 18px; text-align: center; font-weight: 700;
   }
-  .filter-btn:not(.active) .filter-count{ background: var(--bg-alt); color: var(--muted); }
+  .filters .filter-btn:not(.active) .filter-count{ background: var(--bg-alt); color: var(--muted); }
+
+  @media(max-width:600px){
+    .filters .filter-btn{ font-size: .7rem; padding: 8px 6px; }
+  }
 
   .admin-toolbar{ display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
   .admin-toolbar .btn{ padding: 10px 16px; font-size: .82rem; }
@@ -985,7 +1019,7 @@
         <input type="tel" id="adTelefone" inputmode="numeric" maxlength="16" oninput="mascaraTelefone(this)">
       </div>
       <div class="form-group">
-        <label>Título <span class="req">*</span></label>
+        <label>Rua/Endereço <span class="req">*</span></label>
         <input type="text" id="adTitulo">
       </div>
     </div>
@@ -1024,11 +1058,14 @@
   </div>
 
   <div class="mt-4">
-    <input type="search" id="buscaInput" placeholder="🔍 Buscar por título ou descrição..." oninput="renderizarImoveis()">
+    <input type="search" id="buscaInput" placeholder="🔍 Buscar por rua/endereço ou descrição..." oninput="renderizarImoveis()">
   </div>
 
   <div class="filters" id="filters">
-    <button class="filter-btn active" data-filter="pendente" onclick="setFiltro('pendente', this)">
+    <button class="filter-btn active" data-filter="todos" onclick="setFiltro('todos', this)">
+      📋 Todos <span class="filter-count" id="cnt-todos">0</span>
+    </button>
+    <button class="filter-btn" data-filter="pendente" onclick="setFiltro('pendente', this)">
       ⏳ Aguardando <span class="filter-count" id="cnt-pendente">0</span>
     </button>
     <button class="filter-btn" data-filter="gostei" onclick="setFiltro('gostei', this)">
@@ -1039,9 +1076,6 @@
     </button>
     <button class="filter-btn" data-filter="nao-gostei" onclick="setFiltro('nao-gostei', this)">
       ❌ Não gostei <span class="filter-count" id="cnt-nao-gostei">0</span>
-    </button>
-    <button class="filter-btn" data-filter="todos" onclick="setFiltro('todos', this)">
-      📋 Todos <span class="filter-count" id="cnt-todos">0</span>
     </button>
   </div>
 
@@ -1210,7 +1244,7 @@ const state = {
   deviceToken: null,
   clienteInfo: null,
   imoveis: [],
-  filtro: 'pendente',
+  filtro: 'todos',
   isAdmin: false,
   adminSenha: null,
   corretores: [],
@@ -1242,7 +1276,7 @@ function mascaraTelefone(input){
 }
 
 /* =====================================================
-   API VIA FETCH GET (substitui JSONP)
+   API VIA FETCH GET
 ===================================================== */
 async function api(action, params = {}, timeoutMs = 25000) {
   try {
@@ -1254,7 +1288,6 @@ async function api(action, params = {}, timeoutMs = 25000) {
 
     const url = API_URL + '?' + qs;
 
-    // Timeout manual com AbortController
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), timeoutMs);
 
@@ -2217,6 +2250,9 @@ function cardHTML(im){
   const obsLonga = obsTexto.length > 140;
   const obsId = 'obs-' + id;
 
+  // Classe extra para "não gostei"
+  const cardExtraClass = (im.status === 'nao-gostei') ? ' card-nao-gostei' : '';
+
   let agendamentoHtml = '';
   if(state.isAdmin){
     const temAgendamento = !!im.dataVisitaAgendada;
@@ -2273,7 +2309,7 @@ function cardHTML(im){
   }
 
   return `
-    <div class="card" data-id="${id}">
+    <div class="card${cardExtraClass}" data-id="${id}">
       <span class="status-badge ${statusClass}">${statusLabel}</span>
       <img class="card-img" src="${esc(img)}" alt="${esc(im.titulo)}" loading="lazy"
            onclick="abrirModal('${id}')"
@@ -2283,7 +2319,7 @@ function cardHTML(im){
           ${dataFmt ? `<span class="card-date">📅 ${dataFmt}</span>` : ''}
           ${im.codigo ? `<span class="card-code" onclick="copiarCodigo('${esc(im.codigo)}', this)" title="Clique para copiar">#${esc(im.codigo)} 📋</span>` : ''}
         </div>
-        <div class="card-title">${esc(im.titulo) || 'Sem título'}</div>
+        <div class="card-title">${esc(im.titulo) || 'Sem endereço'}</div>
         ${im.descricao ? `<div class="card-desc">${esc(im.descricao)}</div>` : ''}
 
         <div class="card-actions">
@@ -2492,7 +2528,7 @@ async function salvarImovel(){
   const link = $('adLink').value.trim();
   const imagem = $('adImagem').value.trim();
   if(!tel || tel.length < 10){ toast('Telefone inválido', 'error'); return; }
-  if(!titulo){ toast('Informe um título', 'error'); return; }
+  if(!titulo){ toast('Informe a rua/endereço', 'error'); return; }
 
   const btn = $('btnSalvarImovel');
   btn.disabled = true;
