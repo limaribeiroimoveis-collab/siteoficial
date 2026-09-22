@@ -404,7 +404,7 @@
   </div>
 </header>
 
-<!-- TELA DE CARREGAMENTO (aparece quando já tem login salvo) -->
+<!-- TELA DE CARREGAMENTO -->
 <div class="loading-screen hidden" id="loadingView">
   <div class="loading-logo">🏢</div>
   <h2>Carregando sua vitrine exclusiva</h2>
@@ -445,7 +445,7 @@
   </div>
 </div>
 
-<!-- VITRINE (área logada) -->
+<!-- VITRINE -->
 <div class="container hidden" id="vitrineView">
 
   <div class="search-wrap">
@@ -586,7 +586,7 @@ function detectarNavegador(){
 }
 
 /* =====================================================
-   API VIA FETCH GET
+   API
 ===================================================== */
 async function apiOnce(action, params, timeoutMs){
   const qs = new URLSearchParams({ action, ...params, _t: Date.now() }).toString();
@@ -624,7 +624,7 @@ async function api(action, params = {}, timeoutMs = TIMEOUT_API, retries = 1) {
 }
 
 /* =====================================================
-   NAVEGAÇÃO ENTRE VIEWS
+   NAVEGAÇÃO
 ===================================================== */
 function mostrarView(id){
   ['loadingView','loginView','vitrineView'].forEach(v => {
@@ -632,6 +632,21 @@ function mostrarView(id){
     if(el) el.classList.add('hidden');
   });
   if(id) $(id).classList.remove('hidden');
+}
+
+/* =====================================================
+   LIMPAR URL (remove ?tel= e ?senha=)
+===================================================== */
+function limparUrl(){
+  try {
+    const url = new URL(window.location.href);
+    if(url.searchParams.has('tel') || url.searchParams.has('senha')){
+      url.searchParams.delete('tel');
+      url.searchParams.delete('senha');
+      const novaUrl = url.pathname + (url.searchParams.toString() ? '?' + url.searchParams.toString() : '');
+      window.history.replaceState({}, document.title, novaUrl);
+    }
+  } catch(e){}
 }
 
 /* =====================================================
@@ -654,7 +669,7 @@ async function entrarCliente(){
 
   const btn = $('btnEntrar');
   btn.disabled = true;
-  btn.innerHTML = '<span class="loader"></span> Entrando...';
+  btn.innerHTML = '<span class="spinner" style="width:16px;height:16px;border-width:2px;border-top-color:transparent;border-color:currentColor;display:inline-block;vertical-align:middle;margin-right:6px;"></span> Entrando...';
 
   const res = await api('loginCliente', {
     telefone: tel, senha: senhaDigitada, deviceToken: '', navegador: navegador
@@ -676,6 +691,7 @@ async function entrarCliente(){
   localStorage.setItem(TOKEN_KEY, state.deviceToken);
 
   toast('Bem-vindo, ' + (res.nome || 'cliente'), 'success');
+  limparUrl();
   irParaVitrine();
 }
 
@@ -698,7 +714,7 @@ async function carregarImoveis(){
   const grid = $('gridImoveis');
   grid.innerHTML = `
     <div style="grid-column:1/-1; text-align:center; padding:50px; color:var(--primary);">
-      <span class="loader loader-lg" style="display:inline-block;width:38px;height:38px;border:3px solid currentColor;border-top-color:transparent;border-radius:50%;animation:spin .6s linear infinite;"></span>
+      <span style="display:inline-block;width:38px;height:38px;border:3px solid currentColor;border-top-color:transparent;border-radius:50%;animation:spin .6s linear infinite;"></span>
       <p class="text-muted" style="margin-top:12px;">Carregando imóveis...</p>
     </div>`;
 
@@ -709,7 +725,6 @@ async function carregarImoveis(){
 
   if(!res.ok){
     toast(res.error || 'Erro ao carregar', 'error');
-    // Se sessão expirou, volta pro login
     if((res.error || '').toLowerCase().includes('sess')){
       localStorage.removeItem(TOKEN_KEY);
       mostrarView('loginView');
@@ -723,7 +738,6 @@ async function carregarImoveis(){
     return;
   }
 
-  // Ordena por data (mais recente primeiro)
   state.imoveis = (res.data || []).sort((a,b) => {
     const da = new Date(a.dataCadastro||0).getTime() || 0;
     const db = new Date(b.dataCadastro||0).getTime() || 0;
@@ -765,8 +779,7 @@ function renderizarImoveis(){
   let lista = [...state.imoveis];
 
   if(state.filtro === 'recentes'){
-    // já está ordenado por data desc
-    // (mantém ordem)
+    // mantém ordenação por data desc
   } else if(state.filtro === 'todos'){
     const ordem = { 'pendente': 0, 'quero-visitar': 1, 'gostei': 2, 'nao-gostei': 3 };
     lista.sort((a,b) => {
@@ -827,7 +840,6 @@ function cardHTML(im){
   const btnVisitar = (statusAtual === 'quero-visitar') ? 'ativo' : '';
   const btnNao = (statusAtual === 'nao-gostei') ? 'ativo' : '';
 
-  // Botão Zap (só aparece se o cliente tem corretor)
   const zapHtml = (im._corretor && ZAP_CORRETORES[im._corretor])
     ? `<button class="btn-zap" onclick="abrirZap('${id}')">
          <span class="ico">💬</span> Pergunte pelo Zap
@@ -918,7 +930,7 @@ function abrirZap(imovelId){
 }
 
 /* =====================================================
-   MARCAR STATUS (TOGGLE)
+   MARCAR STATUS
 ===================================================== */
 async function marcar(id, acao){
   const im = state.imoveis.find(i => i.id === id);
@@ -937,16 +949,11 @@ async function marcar(id, acao){
 
   if(!res.ok){
     toast(res.error || 'Erro ao salvar', 'error');
-    // Reverte
     im.status = statusAtual;
     atualizarContadores();
     renderizarImoveis();
   } else {
-    if(novaAcao !== 'pendente'){
-      toast('Marcado como: ' + novaAcao, 'success');
-    } else {
-      toast('Voltou para aguardando', 'success');
-    }
+    toast(novaAcao !== 'pendente' ? 'Marcado como: ' + novaAcao : 'Voltou para aguardando', 'success');
   }
 }
 
@@ -1043,45 +1050,92 @@ function fallbackCopy(texto, cb){
 }
 
 /* =====================================================
-   INIT
+   INIT — 3 cenários possíveis
+   1) URL tem ?tel=&senha= → login automático via link
+   2) localStorage tem tel+token → auto-login normal
+   3) Nada → mostra login
 ===================================================== */
-(function init(){
+(async function init(){
+  const params = new URLSearchParams(window.location.search);
+  const telUrl = normalizaTel(params.get('tel'));
+  const senhaUrl = (params.get('senha') || '').toUpperCase().trim();
+
+  // ── CENÁRIO 1: veio de link com tel+senha ──
+  if(telUrl.length >= 10 && senhaUrl.length > 0){
+    mostrarView('loadingView');
+    $('loadingMsg').textContent = 'Preparando sua vitrine exclusiva...';
+
+    const navegador = detectarNavegador();
+
+    const res = await api('loginCliente', {
+      telefone: telUrl,
+      senha: senhaUrl,
+      deviceToken: '',
+      navegador: navegador
+    });
+
+    if(res.ok){
+      state.telefone = telUrl;
+      state.deviceToken = res.deviceToken || '';
+      state.clienteInfo = { nome: res.nome, apelido: res.apelido };
+      localStorage.setItem(TEL_KEY, telUrl);
+      localStorage.setItem(TOKEN_KEY, state.deviceToken);
+
+      // Limpa a URL (tira os parâmetros por segurança)
+      limparUrl();
+
+      $('loadingMsg').textContent = 'Buscando seus imóveis...';
+      await irParaVitrine();
+      return;
+    }
+
+    // Link inválido → mostra login com os campos preenchidos
+    limparUrl();
+    mostrarView('loginView');
+    $('inputTelefone').value = fmtTel(telUrl);
+    $('inputSenha').value = senhaUrl;
+    $('senhaGroup').style.display = 'block';
+    $('loginSub').textContent = 'Confira seus dados e clique em Entrar.';
+    if(res.error) toast(res.error, 'error');
+    return;
+  }
+
+  // ── CENÁRIO 2: localStorage tem dados salvos ──
   const telSalvo = localStorage.getItem(TEL_KEY);
   const tokenSalvo = localStorage.getItem(TOKEN_KEY);
 
-  // Já tem telefone + token → tenta auto-login
   if(telSalvo && tokenSalvo){
     state.telefone = telSalvo;
     state.deviceToken = tokenSalvo;
 
-    // Mostra tela de carregamento
     mostrarView('loadingView');
     $('loadingMsg').textContent = 'Validando acesso...';
 
-    api('loginCliente', {
+    const res = await api('loginCliente', {
       telefone: telSalvo,
       senha: '',
       deviceToken: tokenSalvo,
       navegador: detectarNavegador()
-    }).then(res => {
-      if(res.ok){
-        state.clienteInfo = { nome: res.nome, apelido: res.apelido };
-        $('loadingMsg').textContent = 'Buscando seus imóveis...';
-        irParaVitrine();
-      } else {
-        // Token inválido → limpa e mostra login
-        localStorage.removeItem(TOKEN_KEY);
-        mostrarView('loginView');
-        $('inputTelefone').value = fmtTel(telSalvo);
-        $('senhaGroup').style.display = 'block';
-        $('loginSub').textContent = 'Digite sua senha para entrar novamente.';
-        setTimeout(() => $('inputSenha').focus(), 200);
-      }
     });
+
+    if(res.ok){
+      state.clienteInfo = { nome: res.nome, apelido: res.apelido };
+      $('loadingMsg').textContent = 'Buscando seus imóveis...';
+      await irParaVitrine();
+      return;
+    }
+
+    // Token inválido
+    localStorage.removeItem(TOKEN_KEY);
+    mostrarView('loginView');
+    $('inputTelefone').value = fmtTel(telSalvo);
+    $('senhaGroup').style.display = 'block';
+    $('loginSub').textContent = 'Digite sua senha para entrar novamente.';
+    setTimeout(() => $('inputSenha').focus(), 200);
     return;
   }
 
-  // Não tem dados salvos → mostra login
+  // ── CENÁRIO 3: nada salvo → mostra login ──
   mostrarView('loginView');
   $('senhaGroup').style.display = 'block';
   setTimeout(() => $('inputTelefone').focus(), 200);
