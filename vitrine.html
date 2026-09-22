@@ -157,19 +157,20 @@
   /* GRID */
   .grid{
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 16px;
-    margin-top: 16px;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 20px;
+    margin-top: 34px;
   }
 
   /* CARD */
   .card{
     background: var(--card); border-radius: var(--radius);
-    overflow: hidden; box-shadow: var(--shadow-sm);
+    box-shadow: var(--shadow-sm);
     display: flex; flex-direction: column;
     transition: box-shadow .2s, transform .2s, border-color .3s, opacity .2s, filter .2s;
     position: relative;
     border: 1px solid var(--border-soft);
+    margin-top: 16px;
   }
   .card:hover{ box-shadow: var(--shadow-md); transform: translateY(-2px); }
   .card.card-nao-gostei{
@@ -179,147 +180,199 @@
   .card.card-nao-gostei .card-img{ filter: grayscale(100%) brightness(0.95); }
   .card.card-nao-gostei .btn{ opacity: .85; }
 
-  .card-img{
-    width: 100%; height: 200px; object-fit: cover;
-    background: var(--bg-alt); display: block;
-  }
-  .card-body{ padding: 16px; flex: 1; display: flex; flex-direction: column; gap: 10px; }
-
-  .card-top-meta{ display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-  .card-date{
+  /* BALÃO DE STATUS — alinhado à direita */
+  .status-balloon{
+    position: absolute;
+    top: -13px; right: 14px;
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: .62rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .4px;
+    color: #fff; z-index: 5;
+    box-shadow: 0 2px 6px rgba(0,0,0,.18);
+    white-space: nowrap;
     display: inline-flex; align-items: center; gap: 4px;
-    font-size: .7rem; color: var(--muted);
-    background: var(--bg-alt); padding: 3px 9px; border-radius: 5px; font-weight: 600;
+  }
+  .status-balloon::after{
+    content: '';
+    position: absolute;
+    bottom: -4px; right: 20px;
+    width: 0; height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid currentColor;
+    filter: brightness(.85);
+  }
+  .status-gostei{ background: var(--success); color: var(--success); }
+  .status-gostei span{ color: #fff; }
+  .status-nao-gostei{ background: var(--danger); color: var(--danger); }
+  .status-nao-gostei span{ color: #fff; }
+  .status-quero-visitar{ background: var(--warn); color: var(--warn); }
+  .status-quero-visitar span{ color: #fff; }
+  .status-pendente{ background: #9aa3ad; color: #9aa3ad; }
+  .status-pendente span{ color: #fff; }
+
+  /* Layout compacto: imagem esquerda + dados direita */
+  .card-main{
+    display: flex; gap: 12px; padding: 12px;
+  }
+  .card-img-wrap{
+    flex: 0 0 110px; width: 110px; height: 110px;
+    border-radius: 10px; overflow: hidden;
+    background: var(--bg-alt); flex-shrink: 0;
+  }
+  .card-img{
+    width: 100%; height: 100%; object-fit: cover; display: block;
+  }
+  .card-info{
+    flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px;
+    justify-content: flex-start;
+  }
+
+  /* Primeira linha: data + código + WhatsApp */
+  .card-top-meta{
+    display: flex; align-items: center; gap: 5px; flex-wrap: nowrap;
+  }
+  .card-date{
+    display: inline-flex; align-items: center; gap: 3px;
+    font-size: .63rem; color: var(--muted);
+    background: var(--bg-alt); padding: 2px 7px; border-radius: 5px; font-weight: 600;
+    flex-shrink: 0;
   }
   .card-code{
-    display: inline-flex; align-items: center; gap: 4px;
-    font-size: .7rem; color: var(--purple);
-    background: #f1eef7; padding: 3px 9px; border-radius: 5px;
+    display: inline-flex; align-items: center; gap: 3px;
+    font-size: .63rem; color: var(--purple);
+    background: #f1eef7; padding: 2px 7px; border-radius: 5px;
     font-weight: 600; cursor: pointer;
     border: 1px solid #ddd4ec; transition: all .15s;
+    flex-shrink: 0;
   }
   .card-code:hover{ background: #e6e0f2; }
   .card-code.copiado{ background: var(--success); color: #fff; border-color: var(--success); }
 
-  .card-title{ font-size: 1.05rem; font-weight: 700; line-height: 1.3; color: var(--text); }
+  /* Botão WhatsApp na primeira linha (à direita) */
+  .btn-zap-inline{
+    margin-left: auto;
+    display: inline-flex; align-items: center; justify-content: center; gap: 4px;
+    background: #25D366; color: #fff;
+    padding: 4px 10px; border-radius: 6px;
+    font-size: .68rem; font-weight: 700;
+    border: none; cursor: pointer;
+    transition: all .15s; font-family: inherit;
+    box-shadow: 0 1px 4px rgba(37,211,102,.25);
+    flex-shrink: 0;
+  }
+  .btn-zap-inline:hover{
+    background: #1da851;
+    transform: translateY(-1px);
+    box-shadow: 0 3px 8px rgba(37,211,102,.35);
+  }
+  .btn-zap-inline .ico{ font-size: .82rem; }
+
+  .card-title{
+    font-size: .9rem; font-weight: 700; line-height: 1.25; color: var(--text);
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  }
 
   .card-desc{
-    font-size: .85rem; color: var(--text-soft); line-height: 1.55;
-    display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;
+    font-size: .78rem; color: var(--text-soft); line-height: 1.45;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
     overflow: hidden; cursor: pointer; white-space: pre-wrap;
     transition: all .15s;
   }
   .card-desc.expandido{ display: block; -webkit-line-clamp: unset; overflow: visible; }
   .card-desc-toggle{
-    display: inline-flex; align-items: center; gap: 4px;
+    display: inline-flex; align-items: center; gap: 3px;
     background: transparent; border: none;
-    color: var(--primary); font-size: .72rem; font-weight: 600;
-    cursor: pointer; margin-top: 2px; padding: 2px 0; font-family: inherit;
+    color: var(--primary); font-size: .68rem; font-weight: 600;
+    cursor: pointer; margin-top: 1px; padding: 1px 0; font-family: inherit;
   }
   .card-desc-toggle:hover{ text-decoration: underline; }
 
-  .status-badge{
-    position: absolute; top: 10px; right: 10px;
-    padding: 4px 10px; border-radius: 5px;
-    font-size: .65rem; font-weight: 700;
-    text-transform: uppercase; letter-spacing: .4px;
-    color: #fff; z-index: 2;
-    box-shadow: 0 1px 4px rgba(0,0,0,.15);
-  }
-  .status-gostei{ background: rgba(47,107,79,.95); }
-  .status-nao-gostei{ background: rgba(139,58,58,.95); }
-  .status-quero-visitar{ background: rgba(139,111,58,.95); }
-  .status-pendente{ background: rgba(75,85,99,.85); }
-
+  /* Ações compactas */
   .card-actions{
     display: grid; grid-template-columns: 1fr 1fr 1fr;
-    gap: 6px; margin-top: 6px;
+    gap: 5px; padding: 0 12px 10px;
   }
   .card-actions .btn{
-    padding: 10px 6px; font-size: .72rem; border-radius: 8px;
-    flex-direction: column; gap: 3px; min-height: 56px; font-weight: 600;
-    border: 2px solid transparent;
+    padding: 7px 4px; font-size: .68rem; border-radius: 7px;
+    flex-direction: column; gap: 2px; min-height: 44px; font-weight: 600;
+    border: 1px solid transparent;
+    background: #f3f5f8; color: var(--text-soft);
+    transition: all .15s;
   }
-  .card-actions .btn .ico{ font-size: 1.15rem; line-height: 1; }
-  .card-actions .btn .lbl{ font-size: .7rem; letter-spacing: .2px; }
-  .card-actions .btn.ativo{
-    box-shadow: 0 0 0 3px rgba(0,0,0,.08) inset, 0 3px 10px rgba(0,0,0,.15);
-    border-color: rgba(0,0,0,.15);
-    transform: scale(.97);
+  .card-actions .btn .ico{ font-size: .95rem; line-height: 1; }
+  .card-actions .btn .lbl{ font-size: .62rem; letter-spacing: .2px; }
+  .card-actions .btn:hover{ background: #e8ecf1; }
+
+  .card-actions .btn-success.ativo{
+    background: var(--success); color: #fff;
+    border-color: var(--success);
+    box-shadow: 0 2px 8px rgba(47,107,79,.25);
   }
-  .card-actions .btn-success.ativo{ background: #245540; }
-  .card-actions .btn-warn.ativo{ background: #6f582d; }
-  .card-actions .btn-danger.ativo{ background: #6f2d2d; }
+  .card-actions .btn-warn.ativo{
+    background: var(--warn); color: #fff;
+    border-color: var(--warn);
+    box-shadow: 0 2px 8px rgba(139,111,58,.25);
+  }
+  .card-actions .btn-danger.ativo{
+    background: var(--danger); color: #fff;
+    border-color: var(--danger);
+    box-shadow: 0 2px 8px rgba(139,58,58,.25);
+  }
 
   .btn-ver-anuncio{
-    display: flex; align-items: center; justify-content: center; gap: 8px;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
     background: var(--primary); color: #fff; text-decoration: none;
-    padding: 12px 16px; border-radius: 10px;
-    font-size: .88rem; font-weight: 600;
-    margin-top: 6px; transition: all .15s;
+    padding: 8px 12px; border-radius: 8px;
+    font-size: .78rem; font-weight: 600;
+    margin: 0 12px 8px; transition: all .15s;
   }
   .btn-ver-anuncio:hover{ background: var(--primary-dark); }
-  .btn-ver-anuncio .arrow{ margin-left: auto; opacity: .7; font-size: .95rem; }
-
-  /* BOTÃO WHATSAPP */
-  .btn-zap{
-    display: flex; align-items: center; justify-content: center; gap: 8px;
-    background: #25D366; color: #fff;
-    padding: 11px 16px; border-radius: 10px;
-    font-size: .85rem; font-weight: 700;
-    margin-top: 6px; border: none; cursor: pointer;
-    transition: all .15s; font-family: inherit;
-    box-shadow: 0 3px 10px rgba(37,211,102,.25);
-  }
-  .btn-zap:hover{
-    background: #1da851;
-    transform: translateY(-1px);
-    box-shadow: 0 6px 16px rgba(37,211,102,.35);
-  }
-  .btn-zap .ico{ font-size: 1.05rem; }
+  .btn-ver-anuncio .arrow{ margin-left: auto; opacity: .7; font-size: .85rem; }
 
   /* OBSERVAÇÃO */
   .obs-wrap{
-    margin-top: 6px; background: var(--bg-alt);
-    border: 1px solid var(--border-soft); border-radius: 10px;
-    padding: 10px 12px;
+    margin: 0 12px 10px; background: var(--bg-alt);
+    border: 1px solid var(--border-soft); border-radius: 8px;
+    padding: 8px 10px;
   }
   .obs-label{
-    font-size: .7rem; font-weight: 700;
+    font-size: .65rem; font-weight: 700;
     color: var(--muted); text-transform: uppercase;
-    letter-spacing: .4px; margin-bottom: 6px;
-    display: flex; align-items: center; gap: 5px;
+    letter-spacing: .4px; margin-bottom: 4px;
+    display: flex; align-items: center; gap: 4px;
   }
   .obs-text{
-    font-size: .85rem; color: var(--text);
-    line-height: 1.5; white-space: pre-wrap;
+    font-size: .78rem; color: var(--text);
+    line-height: 1.4; white-space: pre-wrap;
     overflow: hidden; display: -webkit-box;
-    -webkit-line-clamp: 3; -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2; -webkit-box-orient: vertical;
   }
   .obs-text.expandido{ display: block; -webkit-line-clamp: unset; overflow: visible; }
   .obs-toggle{
-    display: inline-flex; align-items: center; gap: 4px;
+    display: inline-flex; align-items: center; gap: 3px;
     background: transparent; border: none;
-    color: var(--primary); font-size: .75rem; font-weight: 600;
-    cursor: pointer; margin-top: 5px; padding: 2px 0; font-family: inherit;
+    color: var(--primary); font-size: .68rem; font-weight: 600;
+    cursor: pointer; margin-top: 3px; padding: 1px 0; font-family: inherit;
   }
   .obs-edit-btn{
-    display: inline-flex; align-items: center; gap: 4px;
+    display: inline-flex; align-items: center; gap: 3px;
     background: transparent; border: none;
-    color: var(--muted); font-size: .7rem; font-weight: 600;
-    cursor: pointer; padding: 2px 6px; border-radius: 4px;
+    color: var(--muted); font-size: .65rem; font-weight: 600;
+    cursor: pointer; padding: 1px 5px; border-radius: 4px;
     font-family: inherit; margin-left: auto;
   }
   .obs-edit-btn:hover{ background: #fff; color: var(--primary); }
-  .obs-textarea{ min-height: 76px; font-size: .85rem; display: none; }
-  .obs-edit-actions{ display: none; gap: 6px; margin-top: 8px; }
+  .obs-textarea{ min-height: 60px; font-size: .78rem; display: none; }
+  .obs-edit-actions{ display: none; gap: 5px; margin-top: 6px; }
   .obs-wrap.editing .obs-text{ display: none; }
   .obs-wrap.editing .obs-toggle{ display: none; }
   .obs-wrap.editing .obs-textarea{ display: block; }
   .obs-wrap.editing .obs-edit-actions{ display: flex; }
   .obs-empty{
-    color: var(--muted); font-style: italic; font-size: .82rem;
-    cursor: pointer; padding: 4px 0;
+    color: var(--muted); font-style: italic; font-size: .75rem;
+    cursor: pointer; padding: 2px 0;
   }
   .obs-empty:hover{ color: var(--primary); }
 
@@ -384,6 +437,15 @@
   .hidden{ display: none !important; }
   .text-muted{ color: var(--muted); }
   .text-center{ text-align: center; }
+
+  /* RESPONSIVO */
+  @media(max-width:480px){
+    .grid{ grid-template-columns: 1fr; }
+    .card-img-wrap{ flex: 0 0 90px; width: 90px; height: 90px; }
+    .card-title{ font-size: .85rem; }
+    .btn-zap-inline{ font-size: .62rem; padding: 3px 7px; }
+    .card-date, .card-code{ font-size: .6rem; padding: 2px 5px; }
+  }
 </style>
 </head>
 <body>
@@ -583,6 +645,51 @@ function detectarNavegador(){
   else if(/Safari/i.test(ua) && !/Chrome/i.test(ua)) nav = 'Safari';
   else if(/Firefox/i.test(ua)) nav = 'Firefox';
   return (nav + (os ? ' · ' + os : '')).trim();
+}
+
+/* =====================================================
+   Detectar corretor do imóvel
+   - Propriedades diretas (se existirem)
+   - Fallback: extrai do LINK do QuintoAndar
+     Ex: .../894625789/HugoFelipePereiraRibeiro-3M2K
+===================================================== */
+function getCorretor(im){
+  if(!im) return null;
+
+  // 1) Propriedades diretas
+  const cands = [im._corretor, im.corretor, im.Corretor, im.corretores, im.responsavel];
+  for(const c of cands){
+    if(!c) continue;
+    const s = String(c).trim().toLowerCase();
+    for(const nome of Object.keys(ZAP_CORRETORES)){
+      if(s === nome.toLowerCase() || s.includes(nome.toLowerCase())) return nome;
+    }
+  }
+
+  // 2) Fallback: extrai do LINK (QuintoAndar)
+  if(im.link && typeof im.link === 'string'){
+    try {
+      const partes = im.link.split('/').filter(Boolean);
+      const ultimo = partes[partes.length - 1] || '';
+      const semHash = ultimo.replace(/-[A-Za-z0-9]{3,6}$/, '');
+      const normalizado = semHash
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase();
+
+      for(const nome of Object.keys(ZAP_CORRETORES)){
+        const nomeNorm = nome
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .toLowerCase();
+        if(normalizado.includes(nomeNorm)) return nome;
+      }
+    } catch(e){
+      console.warn('Erro ao extrair corretor do link:', e);
+    }
+  }
+
+  return null;
 }
 
 /* =====================================================
@@ -829,7 +936,7 @@ function cardHTML(im){
   const id = esc(im.id);
   const dataFmt = fmtData(im.dataCadastro);
   const obsTexto = (im.observacao || '').trim();
-  const obsLonga = obsTexto.length > 140;
+  const obsLonga = obsTexto.length > 100;
   const obsId = 'obs-' + id;
   const descTexto = (im.descricao || '').trim();
   const descId = 'desc-' + id;
@@ -840,63 +947,71 @@ function cardHTML(im){
   const btnVisitar = (statusAtual === 'quero-visitar') ? 'ativo' : '';
   const btnNao = (statusAtual === 'nao-gostei') ? 'ativo' : '';
 
-  const zapHtml = (im._corretor && ZAP_CORRETORES[im._corretor])
-    ? `<button class="btn-zap" onclick="abrirZap('${id}')">
-         <span class="ico">💬</span> Pergunte pelo Zap
+  // Detecta corretor (link do QuintoAndar ou propriedade direta)
+  const corretor = getCorretor(im);
+  const zapInline = corretor
+    ? `<button class="btn-zap-inline" onclick="abrirZap('${id}')" title="Falar com ${esc(corretor)} no WhatsApp">
+         <span class="ico">💬</span> Zap
        </button>`
     : '';
 
   return `
     <div class="card${cardExtraClass}" data-id="${id}">
-      <span class="status-badge ${statusClass}">${statusLabel}</span>
-      <img class="card-img" src="${esc(img)}" alt="${esc(im.titulo)}" loading="lazy"
-           onerror="this.src='https://via.placeholder.com/400x250/e2e8f0/64748b?text=Sem+imagem'">
-      <div class="card-body">
-        <div class="card-top-meta">
-          ${dataFmt ? `<span class="card-date">📅 ${dataFmt}</span>` : ''}
-          ${im.codigo ? `<span class="card-code" onclick="copiarCodigo('${esc(im.codigo)}', this)">#${esc(im.codigo)} 📋</span>` : ''}
+      <div class="status-balloon ${statusClass}">
+        <span>${statusLabel}</span>
+      </div>
+
+      <div class="card-main">
+        <div class="card-img-wrap">
+          <img class="card-img" src="${esc(img)}" alt="${esc(im.titulo)}" loading="lazy"
+               onerror="this.src='https://via.placeholder.com/400x250/e2e8f0/64748b?text=Sem+imagem'">
         </div>
-        <div class="card-title">${esc(im.titulo) || 'Sem endereço'}</div>
-        ${descTexto ? `
-          <div class="card-desc" id="${descId}" onclick="toggleDesc('${descId}')">${esc(descTexto)}</div>
-          ${descTexto.length > 180 ? `<button class="card-desc-toggle" onclick="toggleDesc('${descId}')" id="${descId}-toggle">▼ Ver mais</button>` : ''}
-        ` : ''}
-
-        <div class="card-actions">
-          <button class="btn btn-success ${btnGostei}" onclick="marcar('${id}','gostei')">
-            <span class="ico">❤️</span><span class="lbl">Gostei</span>
-          </button>
-          <button class="btn btn-warn ${btnVisitar}" onclick="marcar('${id}','quero-visitar')">
-            <span class="ico">📅</span><span class="lbl">Visitar</span>
-          </button>
-          <button class="btn btn-danger ${btnNao}" onclick="marcar('${id}','nao-gostei')">
-            <span class="ico">❌</span><span class="lbl">Não</span>
-          </button>
+        <div class="card-info">
+          <div class="card-top-meta">
+            ${dataFmt ? `<span class="card-date">📅 ${dataFmt}</span>` : ''}
+            ${im.codigo ? `<span class="card-code" onclick="copiarCodigo('${esc(im.codigo)}', this)">#${esc(im.codigo)} 📋</span>` : ''}
+            ${zapInline}
+          </div>
+          <div class="card-title">${esc(im.titulo) || 'Sem endereço'}</div>
+          ${descTexto ? `
+            <div class="card-desc" id="${descId}" onclick="toggleDesc('${descId}')">${esc(descTexto)}</div>
+            ${descTexto.length > 120 ? `<button class="card-desc-toggle" onclick="toggleDesc('${descId}')" id="${descId}-toggle">▼ Ver mais</button>` : ''}
+          ` : ''}
         </div>
+      </div>
 
-        ${im.link ? `
-          <a class="btn-ver-anuncio" href="${esc(im.link)}" target="_blank" rel="noopener">
-            🔗 Ver anúncio completo
-            <span class="arrow">→</span>
-          </a>
-        ` : ''}
+      <div class="card-actions">
+        <button class="btn btn-success ${btnGostei}" onclick="marcar('${id}','gostei')">
+          <span class="ico">❤️</span><span class="lbl">Gostei</span>
+        </button>
+        <button class="btn btn-warn ${btnVisitar}" onclick="marcar('${id}','quero-visitar')">
+          <span class="ico">📅</span><span class="lbl">Visitar</span>
+        </button>
+        <button class="btn btn-danger ${btnNao}" onclick="marcar('${id}','nao-gostei')">
+          <span class="ico">❌</span><span class="lbl">Não</span>
+        </button>
+      </div>
 
-        ${zapHtml}
+      ${im.link ? `
+        <a class="btn-ver-anuncio" href="${esc(im.link)}" target="_blank" rel="noopener">
+          🔗 Ver anúncio completo
+          <span class="arrow">→</span>
+        </a>
+      ` : ''}
 
-        <div class="obs-wrap" id="${obsId}">
-          <div class="obs-label">
-            💬 Observação
-            <button class="obs-edit-btn" onclick="abrirEdicaoObs('${obsId}')">✏️ Editar</button>
-          </div>
-          ${obsTexto ? `
-            <div class="obs-text ${obsLonga ? '' : 'expandido'}" id="${obsId}-text">${esc(obsTexto)}</div>
-            ${obsLonga ? `<button class="obs-toggle" onclick="toggleObs('${obsId}')" id="${obsId}-toggle">▼ Ver mais</button>` : ''}
-          ` : `<div class="obs-empty" onclick="abrirEdicaoObs('${obsId}')">— Clique para adicionar —</div>`}
-          <textarea class="obs-textarea" id="${obsId}-input" placeholder="Escreva uma observação...">${esc(obsTexto)}</textarea>
-          <div class="obs-edit-actions">
-            <button class="btn btn-primary btn-sm" style="flex:1" onclick="salvarEdicaoObs('${id}', '${obsId}')">💾 Salvar</button>
-            <button class="btn btn-ghost btn-sm" onclick="cancelarEdicaoObs('${obsId}')">Cancelar</button>
-          </div>
+      <div class="obs-wrap" id="${obsId}">
+        <div class="obs-label">
+          💬 Observação
+          <button class="obs-edit-btn" onclick="abrirEdicaoObs('${obsId}')">✏️ Editar</button>
+        </div>
+        ${obsTexto ? `
+          <div class="obs-text ${obsLonga ? '' : 'expandido'}" id="${obsId}-text">${esc(obsTexto)}</div>
+          ${obsLonga ? `<button class="obs-toggle" onclick="toggleObs('${obsId}')" id="${obsId}-toggle">▼ Ver mais</button>` : ''}
+        ` : `<div class="obs-empty" onclick="abrirEdicaoObs('${obsId}')">— Clique para adicionar —</div>`}
+        <textarea class="obs-textarea" id="${obsId}-input" placeholder="Escreva uma observação...">${esc(obsTexto)}</textarea>
+        <div class="obs-edit-actions">
+          <button class="btn btn-primary btn-sm" style="flex:1" onclick="salvarEdicaoObs('${id}', '${obsId}')">💾 Salvar</button>
+          <button class="btn btn-ghost btn-sm" onclick="cancelarEdicaoObs('${obsId}')">Cancelar</button>
         </div>
       </div>
     </div>
@@ -904,13 +1019,14 @@ function cardHTML(im){
 }
 
 /* =====================================================
-   WHATSAPP
+   WHATSAPP — direciona para o corretor correto
 ===================================================== */
 function abrirZap(imovelId){
   const im = state.imoveis.find(i => i.id === imovelId);
-  if(!im) return;
-  const corretor = im._corretor;
-  const zap = ZAP_CORRETORES[corretor];
+  if(!im){ toast('Imóvel não encontrado', 'error'); return; }
+
+  const corretor = getCorretor(im);
+  const zap = corretor ? ZAP_CORRETORES[corretor] : null;
   if(!zap){ toast('Corretor sem WhatsApp cadastrado', 'error'); return; }
 
   const nomeCliente = state.clienteInfo?.nome || 'Cliente';
@@ -1051,9 +1167,6 @@ function fallbackCopy(texto, cb){
 
 /* =====================================================
    INIT — 3 cenários possíveis
-   1) URL tem ?tel=&senha= → login automático via link
-   2) localStorage tem tel+token → auto-login normal
-   3) Nada → mostra login
 ===================================================== */
 (async function init(){
   const params = new URLSearchParams(window.location.search);
@@ -1081,7 +1194,6 @@ function fallbackCopy(texto, cb){
       localStorage.setItem(TEL_KEY, telUrl);
       localStorage.setItem(TOKEN_KEY, state.deviceToken);
 
-      // Limpa a URL (tira os parâmetros por segurança)
       limparUrl();
 
       $('loadingMsg').textContent = 'Buscando seus imóveis...';
@@ -1089,7 +1201,6 @@ function fallbackCopy(texto, cb){
       return;
     }
 
-    // Link inválido → mostra login com os campos preenchidos
     limparUrl();
     mostrarView('loginView');
     $('inputTelefone').value = fmtTel(telUrl);
@@ -1125,7 +1236,6 @@ function fallbackCopy(texto, cb){
       return;
     }
 
-    // Token inválido
     localStorage.removeItem(TOKEN_KEY);
     mostrarView('loginView');
     $('inputTelefone').value = fmtTel(telSalvo);
