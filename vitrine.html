@@ -141,8 +141,6 @@
     letter-spacing: .35rem; text-transform: uppercase;
     font-family: 'Courier New', monospace; padding: 14px;
   }
-
-  /* INPUT COM OLHO */
   .input-pass-wrap{ position: relative; }
   .input-pass-wrap input{ padding-right: 44px; }
   .btn-eye{
@@ -175,6 +173,44 @@
   .btn-sm{ padding: 7px 12px; font-size: .78rem; border-radius: 6px; }
   .btn-xs{ padding: 5px 9px; font-size: .7rem; border-radius: 5px; }
 
+  /* ABAS ADMIN */
+  .admin-tabs{
+    display: flex; gap: 0; background: #fff;
+    border-radius: var(--radius) var(--radius) 0 0;
+    box-shadow: var(--shadow-sm);
+    margin-top: 14px; overflow-x: auto;
+    border: 1px solid var(--border-soft); border-bottom: none;
+  }
+  .admin-tab{
+    flex: 1; min-width: 110px; padding: 12px 16px;
+    background: transparent; border: none; cursor: pointer;
+    font-family: inherit; font-size: .85rem; font-weight: 700;
+    color: var(--muted); border-bottom: 3px solid transparent;
+    transition: all .15s; display: flex; align-items: center; justify-content: center; gap: 6px;
+    white-space: nowrap;
+  }
+  .admin-tab:hover{ color: var(--primary); background: #f8fafc; }
+  .admin-tab.active{ color: var(--primary); border-bottom-color: var(--primary); background: #f8fafc; }
+  .admin-tab .badge{
+    background: var(--danger); color: #fff;
+    font-size: .62rem; font-weight: 800;
+    padding: 1px 7px; border-radius: 999px;
+    min-width: 18px; text-align: center;
+  }
+  .admin-tab.active .badge{ background: var(--primary); }
+  .admin-tab .badge.zero{ background: var(--bg-alt); color: var(--muted); }
+
+  .admin-tab-content{
+    background: #fff; border-radius: 0 0 var(--radius) var(--radius);
+    box-shadow: var(--shadow-sm);
+    padding: 16px; min-height: 400px;
+    border: 1px solid var(--border-soft); border-top: none;
+  }
+
+  .tab-pane{ display: none; }
+  .tab-pane.active{ display: block; }
+
+  /* GRID / CARD */
   .grid{
     display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 16px; margin-top: 16px;
@@ -467,8 +503,7 @@
   /* PAINEL QUERO VISITAR */
   .quer-visitar-wrap{
     background: #fff; border-radius: var(--radius);
-    padding: 16px 18px; margin-top: 14px;
-    box-shadow: var(--shadow-md);
+    padding: 16px 18px;
     border: 1px solid var(--border-soft);
     border-left: 4px solid var(--warn);
   }
@@ -553,26 +588,6 @@
   }
 
   /* AGENDA */
-  .agenda-wrap{
-    background: #fff; border-radius: var(--radius);
-    padding: 20px; margin-top: 16px;
-    box-shadow: var(--shadow-md);
-    border: 1px solid var(--border-soft);
-  }
-  .agenda-header{
-    display: flex; align-items: center; justify-content: space-between;
-    margin-bottom: 14px; flex-wrap: wrap; gap: 10px;
-  }
-  .agenda-header h2{
-    font-size: 1rem; font-weight: 700; color: var(--text);
-    display: flex; align-items: center; gap: 8px;
-  }
-  .agenda-header .badge-total{
-    background: var(--danger); color: #fff;
-    font-size: .68rem; font-weight: 700;
-    padding: 2px 10px; border-radius: 999px;
-  }
-  .agenda-header .badge-total.zero{ background: var(--bg-alt); color: var(--muted); }
   .agenda-cards{
     display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
   }
@@ -656,10 +671,9 @@
   /* SUB-FILTROS */
   .sub-filtros{
     display: flex; gap: 6px; flex-wrap: wrap;
-    background: #fff; padding: 12px 16px;
+    background: #fafbfc; padding: 12px 16px;
     border-radius: var(--radius);
-    box-shadow: var(--shadow-sm);
-    margin-top: 12px; align-items: center;
+    margin-bottom: 12px; align-items: center;
     border: 1px solid var(--border-soft);
   }
   .sub-filtros .label{
@@ -684,13 +698,13 @@
 
   .clientes-toolbar{
     display: flex; gap: 10px; flex-wrap: wrap;
-    align-items: center; margin-top: 12px;
+    align-items: center; margin-bottom: 12px;
   }
   .clientes-toolbar .search{ flex: 1; min-width: 220px; }
   .clientes-toolbar select{ width: auto; min-width: 200px; }
   .clientes-list{
     display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 12px; margin-top: 16px;
+    gap: 12px;
   }
   .cliente-item{
     background: #fff; border: 1px solid var(--border-soft);
@@ -732,8 +746,6 @@
 
   .empty-state{
     text-align: center; padding: 60px 20px; color: var(--muted);
-    background: #fff; border-radius: var(--radius); margin-top: 16px;
-    border: 1px solid var(--border-soft);
   }
   .empty-state svg{ width: 56px; height: 56px; margin-bottom: 12px; opacity: .35; }
   .empty-state h3{ font-size: .95rem; margin-bottom: 4px; color: var(--text-soft); }
@@ -788,15 +800,6 @@
   .text-muted{ color: var(--muted); }
   .text-center{ text-align: center; }
 
-  .admin-section-header{
-    display: flex; align-items: center; justify-content: space-between;
-    gap: 12px; flex-wrap: wrap; margin-top: 14px;
-    background: #fff; padding: 14px 18px;
-    border-radius: var(--radius); box-shadow: var(--shadow-sm);
-    border: 1px solid var(--border-soft);
-  }
-  .admin-section-header h3{ font-size: .95rem; margin: 0; color: var(--text); font-weight: 700; }
-
   .saving-overlay{
     position: fixed; inset: 0; background: rgba(15,23,42,.75);
     z-index: 9999; display: none; align-items: center; justify-content: center;
@@ -809,6 +812,12 @@
   }
   .saving-overlay .msg{ font-size: 1rem; font-weight: 600; }
   .saving-overlay .sub{ font-size: .82rem; opacity: .7; }
+
+  /* LOADING INLINE */
+  .loading-inline{
+    text-align: center; padding: 40px 20px; color: var(--primary);
+  }
+  .loading-inline .loader-lg{ display: inline-block; margin-bottom: 10px; }
 </style>
 </head>
 <body>
@@ -824,10 +833,7 @@
       </div>
     </div>
 
-    <!-- BOTÕES PEQUENOS DE CORRETOR (só admin) -->
-    <div class="header-corretor-chips hidden" id="headerCorretorChips">
-      <!-- preenchido via JS -->
-    </div>
+    <div class="header-corretor-chips hidden" id="headerCorretorChips"></div>
 
     <div class="header-right">
       <span class="user-info" id="userInfo"></span>
@@ -869,7 +875,7 @@
   </div>
 </div>
 
-<!-- LOGIN ADMIN (auto-login com senha oculta) -->
+<!-- LOGIN ADMIN -->
 <div class="login-wrap hidden" id="adminLoginView">
   <div class="login-card">
     <div class="login-logo" style="background: var(--accent);">🔐</div>
@@ -891,61 +897,85 @@
   </div>
 </div>
 
-<!-- HOME ADMIN -->
+<!-- HOME ADMIN COM ABAS -->
 <div class="container hidden" id="corretorView">
-
-  <!-- PAINEL QUERO VISITAR -->
-  <div class="quer-visitar-wrap" id="querVisitarWrap">
-    <h2>
-      📅 Clientes querendo visitar
-      <span class="badge-total zero" id="querVisitarTotalBadge">0</span>
-    </h2>
-    <div class="quer-visitar-cards" id="querVisitarCards">
-      <div class="quer-visitar-empty" style="grid-column: 1/-1;">Carregando...</div>
-    </div>
+  <div class="admin-tabs" id="adminTabs">
+    <button class="admin-tab active" data-tab="clientes" onclick="trocarAba('clientes', this)">
+      👥 Clientes
+    </button>
+    <button class="admin-tab" data-tab="visitar" onclick="trocarAba('visitar', this)">
+      📅 Querem Visitar <span class="badge zero" id="tabBadgeVisitar">0</span>
+    </button>
+    <button class="admin-tab" data-tab="agenda" onclick="trocarAba('agenda', this)">
+      🗓️ Agenda
+    </button>
   </div>
 
-  <!-- AGENDA DE VISITAS -->
-  <div class="agenda-wrap">
-    <div class="agenda-header">
-      <h2>
-        🗓️ Agenda de Visitas
-        <span class="badge-total zero" id="agendaTotalBadge">0</span>
-      </h2>
-      <button class="btn btn-ghost btn-sm" onclick="carregarHomeAdmin()">🔄 Atualizar</button>
-    </div>
-    <div class="agenda-cards" id="agendaCards">
-      <div class="agenda-empty" style="grid-column: 1/-1;">
-        <span class="loader"></span> Carregando agenda...
+  <div class="admin-tab-content">
+    <!-- ABA CLIENTES -->
+    <div class="tab-pane active" id="pane-clientes">
+      <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:12px;">
+        <h3 style="font-size:.95rem; font-weight:700;">👥 Clientes</h3>
+        <button class="btn btn-primary btn-sm" onclick="abrirNovoCliente()">➕ Novo cliente</button>
+      </div>
+      <div class="sub-filtros" id="subFiltros">
+        <span class="label">Filtros:</span>
+      </div>
+      <div class="clientes-toolbar">
+        <input type="search" class="search" id="buscaCliente"
+               placeholder="🔍 Buscar por nome ou telefone..."
+               oninput="renderizarClientes()">
+        <select id="ordenacao" onchange="renderizarClientes()">
+          <option value="alfabetica">Ordenar: Nome (A-Z)</option>
+          <option value="data">Ordenar: Mais recentes</option>
+          <option value="data-antiga">Ordenar: Mais antigos</option>
+        </select>
+      </div>
+      <div class="clientes-list" id="clientesList"></div>
+      <div class="empty-state hidden" id="clientesEmpty">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                d="M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87m6-5.13a4 4 0 11-8 0 4 4 0 018 0zm6 0a3 3 0 11-6 0 3 3 0 016 0z"/>
+        </svg>
+        <h3>Nenhum cliente encontrado</h3>
+        <p>Cadastre um novo cliente ou ajuste os filtros.</p>
       </div>
     </div>
-  </div>
 
-  <!-- LISTA DE CLIENTES -->
-  <div class="admin-section-header" style="margin-top:20px;">
-    <h3>👥 Clientes</h3>
-    <button class="btn btn-primary btn-sm" onclick="abrirNovoCliente()">➕ Novo cliente</button>
-  </div>
+    <!-- ABA QUEREM VISITAR -->
+    <div class="tab-pane" id="pane-visitar">
+      <div class="quer-visitar-wrap">
+        <h2>
+          📅 Clientes querendo visitar
+          <span class="badge-total zero" id="querVisitarTotalBadge">0</span>
+        </h2>
+        <div class="quer-visitar-cards" id="querVisitarCards">
+          <div class="loading-inline" style="grid-column:1/-1;">
+            <span class="loader loader-lg"></span>
+            <p>Carregando...</p>
+          </div>
+        </div>
+      </div>
+    </div>
 
-  <div class="clientes-toolbar">
-    <input type="search" class="search" id="buscaCliente"
-           placeholder="🔍 Buscar por nome ou telefone..."
-           oninput="renderizarClientes()">
-    <select id="ordenacao" onchange="renderizarClientes()">
-      <option value="alfabetica">Ordenar: Nome (A-Z)</option>
-      <option value="data">Ordenar: Mais recentes</option>
-      <option value="data-antiga">Ordenar: Mais antigos</option>
-    </select>
-  </div>
-
-  <div class="clientes-list" id="clientesList"></div>
-  <div class="empty-state hidden" id="clientesEmpty">
-    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-            d="M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87m6-5.13a4 4 0 11-8 0 4 4 0 018 0zm6 0a3 3 0 11-6 0 3 3 0 016 0z"/>
-    </svg>
-    <h3>Nenhum cliente encontrado</h3>
-    <p>Cadastre um novo cliente ou ajuste os filtros.</p>
+    <!-- ABA AGENDA -->
+    <div class="tab-pane" id="pane-agenda">
+      <div class="agenda-wrap" style="background:#fff; border-radius:10px; padding:16px; border:1px solid var(--border-soft);">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;">
+          <h2 style="font-size:.95rem; font-weight:700; display:flex; align-items:center; gap:8px;">
+            🗓️ Agenda de Visitas
+            <span class="badge-total zero" id="agendaTotalBadge" style="background:var(--danger); color:#fff; font-size:.68rem; font-weight:700; padding:2px 10px; border-radius:999px;">0</span>
+          </h2>
+          <button class="btn btn-ghost btn-sm" onclick="recarregarAba('agenda')">🔄 Atualizar</button>
+        </div>
+        <div class="agenda-cards" id="agendaCards">
+          <div class="loading-inline" style="grid-column:1/-1;">
+            <span class="loader loader-lg"></span>
+            <p>Carregando agenda...</p>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -1179,7 +1209,7 @@ const TOKEN_KEY = 'vitrine_device_token';
 const TEL_KEY   = 'vitrine_telefone';
 const ADMIN_KEY = 'vitrine_admin';
 const BUSCAR_BASE = 'https://corretor.quintoandar.com.br/informacoes-de-entrada';
-const TIMEOUT_API = 60000; // 60s
+const TIMEOUT_API = 45000;
 
 const ZAP_CORRETORES = {
   'Hugo': '5531996070930',
@@ -1203,7 +1233,13 @@ const state = {
   agendamentos: [],
   corretorFiltro: null,
   salvando: 0,
-  querVisitarCache: { gostei: [], visita: [] }
+  querVisitarCache: [],
+  abaAtiva: 'clientes',
+  cache: {
+    clientesCarregados: false,
+    notificacoesCarregadas: false,
+    agendaCarregada: false
+  }
 };
 
 const $ = id => document.getElementById(id);
@@ -1224,7 +1260,7 @@ function mascaraTelefone(input){
 }
 
 /* =====================================================
-   OLHO SENHA
+   OLHO SENHA ADMIN
 ===================================================== */
 function toggleSenhaAdmin(btn){
   const input = $('inputAdminSenha');
@@ -1248,7 +1284,7 @@ function marcarSalvando(inicio){
 function estaSalvando(){ return state.salvando > 0; }
 
 /* =====================================================
-   API VIA FETCH GET (com retry automático)
+   API VIA FETCH GET (com retry)
 ===================================================== */
 async function apiOnce(action, params, timeoutMs){
   const qs = new URLSearchParams({
@@ -1273,18 +1309,17 @@ async function apiOnce(action, params, timeoutMs){
   }
 }
 
-async function api(action, params = {}, timeoutMs = TIMEOUT_API, retries = 2) {
+async function api(action, params = {}, timeoutMs = TIMEOUT_API, retries = 1) {
   let lastErr;
   for (let i = 0; i <= retries; i++) {
     try {
       return await apiOnce(action, params, timeoutMs);
     } catch (err) {
       lastErr = err;
-      console.warn('Tentativa ' + (i+1) + ' falhou para "' + action + '":', err.message);
-      if (i < retries) await new Promise(r => setTimeout(r, 1000 * (i + 1)));
+      if (i < retries) await new Promise(r => setTimeout(r, 600));
     }
   }
-  console.error('API falhou após retries:', lastErr, { action, params });
+  console.error('API falhou:', lastErr, { action, params });
   return { ok: false, error: 'Falha ao conectar: ' + lastErr.message };
 }
 
@@ -1469,7 +1504,7 @@ async function entrarCliente(){
 }
 
 /* =====================================================
-   LOGIN ADMIN - AUTO-LOGIN COM SENHA SALVA
+   LOGIN ADMIN - AUTO-LOGIN
 ===================================================== */
 function abrirLoginAdmin(){
   const senhaSalva = localStorage.getItem(ADMIN_KEY) || '';
@@ -1522,12 +1557,12 @@ async function entrarAdmin(){
   if(!res.ok){ toast(res.error || 'Senha incorreta', 'error'); return; }
   state.isAdmin = true;
   state.adminSenha = senha;
-  localStorage.setItem(ADMIN_KEY, senha); // Salva para auto-login
+  localStorage.setItem(ADMIN_KEY, senha);
   await carregarHomeAdmin();
 }
 
 /* =====================================================
-   HOME ADMIN - CARREGAMENTO EM ETAPAS
+   HOME ADMIN - LAZY LOADING EM ETAPAS
 ===================================================== */
 async function carregarHomeAdmin(){
   mostrarView('corretorView');
@@ -1535,30 +1570,149 @@ async function carregarHomeAdmin(){
   $('btnSair').classList.remove('hidden');
   $('userInfo').textContent = '👑 Painel';
 
-  // 1. Corretores
+  // Reset cache
+  state.cache.clientesCarregados = false;
+  state.cache.notificacoesCarregadas = false;
+  state.cache.agendaCarregada = false;
+  state.abaAtiva = 'clientes';
+  trocarAbaUI('clientes');
+
+  // ETAPA 1: Corretores (rápido) + Clientes (essencial)
+  $('clientesList').innerHTML = `<div class="loading-inline" style="grid-column:1/-1;"><span class="loader loader-lg"></span><p>Carregando clientes...</p></div>`;
+  $('clientesEmpty').classList.add('hidden');
+
   const resCor = await api('listarCorretores', { senha: state.adminSenha });
   state.corretores = (resCor.ok && resCor.data) ? resCor.data : ['Hugo', 'Carolina'];
 
-  // 2. Clientes
-  $('clientesList').innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:30px; color:var(--muted);"><span class="loader"></span> Carregando clientes...</div>`;
   const resCli = await api('listarClientes', { senha: state.adminSenha });
   state.clientes = (resCli.ok && resCli.data) ? resCli.data : [];
+  state.cache.clientesCarregados = true;
 
-  // Renderiza clientes imediatamente
   montarBarraCorretor();
+  montarSubFiltros();
   renderizarClientes();
 
-  // 3. Notificações (quero visitar)
-  const resNot = await api('listarNotificacoes', { senha: state.adminSenha });
-  state.querVisitarCache = (resNot.ok && resNot.data) ? resNot.data : { gostei: [], visita: [] };
-  renderizarQuerVisitar();
+  // Busca notificações em BACKGROUND (não bloqueia)
+  carregarNotificacoesBackground();
+}
 
-  // 4. Agenda
-  const resAge = await api('listarAgendamentos', { senha: state.adminSenha });
-  state.agendamentos = (resAge.ok && resAge.data) ? resAge.data : [];
+/* =====================================================
+   ABAS
+===================================================== */
+function trocarAbaUI(aba){
+  state.abaAtiva = aba;
+  document.querySelectorAll('.admin-tab').forEach(t => {
+    t.classList.toggle('active', t.dataset.tab === aba);
+  });
+  document.querySelectorAll('.tab-pane').forEach(p => {
+    p.classList.toggle('active', p.id === 'pane-' + aba);
+  });
+}
+
+async function trocarAba(aba, btn){
+  trocarAbaUI(aba);
+
+  if(aba === 'visitar' && !state.cache.notificacoesCarregadas){
+    await carregarNotificacoes(true);
+  } else if(aba === 'visitar'){
+    renderizarQuerVisitar();
+  }
+
+  if(aba === 'agenda' && !state.cache.agendaCarregada){
+    await carregarAgenda(true);
+  } else if(aba === 'agenda'){
+    renderizarAgenda();
+  }
+
+  if(aba === 'clientes' && !state.cache.clientesCarregados){
+    await carregarClientes();
+  } else if(aba === 'clientes'){
+    renderizarClientes();
+  }
+}
+
+async function recarregarAba(aba){
+  if(aba === 'agenda'){
+    state.cache.agendaCarregada = false;
+    await carregarAgenda(true);
+  } else if(aba === 'visitar'){
+    state.cache.notificacoesCarregadas = false;
+    await carregarNotificacoes(true);
+  } else if(aba === 'clientes'){
+    state.cache.clientesCarregados = false;
+    await carregarClientes();
+  }
+}
+
+/* =====================================================
+   CARREGAMENTO SOB DEMANDA
+===================================================== */
+async function carregarClientes(){
+  $('clientesList').innerHTML = `<div class="loading-inline" style="grid-column:1/-1;"><span class="loader loader-lg"></span><p>Carregando clientes...</p></div>`;
+  $('clientesEmpty').classList.add('hidden');
+
+  const res = await api('listarClientes', { senha: state.adminSenha });
+  state.clientes = (res.ok && res.data) ? res.data : [];
+  state.cache.clientesCarregados = true;
+
+  montarBarraCorretor();
+  montarSubFiltros();
+  renderizarClientes();
+}
+
+async function carregarNotificacoes(mostrarLoading){
+  if(mostrarLoading){
+    $('querVisitarCards').innerHTML = `<div class="loading-inline" style="grid-column:1/-1;"><span class="loader loader-lg"></span><p>Carregando...</p></div>`;
+  }
+
+  const res = await api('listarNotificacoes', { senha: state.adminSenha });
+  if(res.ok && res.data){
+    state.querVisitarCache = res.data.visita || [];
+    state.cache.notificacoesCarregadas = true;
+    renderizarQuerVisitar();
+    atualizarBadgeAbaVisitar();
+  } else if(mostrarLoading){
+    $('querVisitarCards').innerHTML = `<div class="quer-visitar-empty" style="grid-column:1/-1;">Erro ao carregar.</div>`;
+  }
+}
+
+async function carregarNotificacoesBackground(){
+  // Busca silenciosamente para o badge da aba
+  const res = await api('listarNotificacoes', { senha: state.adminSenha });
+  if(res.ok && res.data){
+    state.querVisitarCache = res.data.visita || [];
+    state.cache.notificacoesCarregadas = true;
+    atualizarBadgeAbaVisitar();
+    if(state.abaAtiva === 'visitar') renderizarQuerVisitar();
+  }
+}
+
+async function carregarAgenda(mostrarLoading){
+  if(mostrarLoading){
+    $('agendaCards').innerHTML = `<div class="loading-inline" style="grid-column:1/-1;"><span class="loader loader-lg"></span><p>Carregando agenda...</p></div>`;
+  }
+
+  const res = await api('listarAgendamentos', { senha: state.adminSenha });
+  state.agendamentos = (res.ok && res.data) ? res.data : [];
+  state.cache.agendaCarregada = true;
   renderizarAgenda();
 }
 
+function atualizarBadgeAbaVisitar(){
+  const badge = $('tabBadgeVisitar');
+  if(!badge) return;
+  const total = state.querVisitarCache.length || 0;
+  badge.textContent = total > 99 ? '99+' : total;
+  if(total > 0){
+    badge.classList.remove('zero');
+  } else {
+    badge.classList.add('zero');
+  }
+}
+
+/* =====================================================
+   BARRA CORRETOR NO HEADER
+===================================================== */
 function montarBarraCorretor(){
   const wrap = $('headerCorretorChips');
   if(!wrap) return;
@@ -1582,9 +1736,10 @@ function montarBarraCorretor(){
 function setCorretorFiltro(corretor){
   state.corretorFiltro = corretor;
   montarBarraCorretor();
+  montarSubFiltros();
   renderizarClientes();
-  renderizarQuerVisitar();
-  renderizarAgenda();
+  if(state.cache.notificacoesCarregadas) renderizarQuerVisitar();
+  if(state.cache.agendaCarregada) renderizarAgenda();
 }
 
 /* =====================================================
@@ -1594,7 +1749,7 @@ function renderizarQuerVisitar(){
   const cards = $('querVisitarCards');
   const badge = $('querVisitarTotalBadge');
 
-  const lista = state.querVisitarCache.visita || [];
+  const lista = state.querVisitarCache || [];
   const filtrada = state.corretorFiltro
     ? lista.filter(a => {
         const cli = state.clientes.find(c => normalizaTel(c.telefone) === normalizaTel(a.telefone));
@@ -1635,7 +1790,7 @@ function renderizarQuerVisitar(){
         </div>`;
     }
     const itens = lst.map(a => `
-      <div class="quer-visitar-item" onclick="abrirImovelDaAgenda('${esc(a.telefone)}', '${esc(a.id)}', true)">
+      <div class="quer-visitar-item" onclick="abrirImovelDaAgenda('${esc(a.telefone)}', '${esc(a.id)}', false)">
         <div class="quando-ico">📅</div>
         <div class="info">
           <div class="cliente">👤 ${esc(a.clienteNome)}</div>
@@ -1806,7 +1961,7 @@ async function abrirImovelDaAgenda(telefone, imovelId, fecharModalPrimeiro){
       destacarCard(imovelId);
     } else if(tentativas >= maxTentativas){
       clearInterval(aguardar);
-      toast('Aguarde o carregamento...', 'error');
+      toast('Imóvel não encontrado.', 'error');
     }
   }, 250);
 }
@@ -1841,6 +1996,54 @@ function destacarCard(imovelId){
 }
 
 /* =====================================================
+   SUB-FILTROS
+===================================================== */
+function montarSubFiltros(){
+  const wrap = $('subFiltros');
+  if(!wrap) return;
+
+  if(!state.corretorFiltro){
+    wrap.innerHTML = '<span class="label">Filtros:</span><span class="text-muted" style="font-size:.82rem;">Selecione um corretor específico para ver filtros de parceria.</span>';
+    return;
+  }
+  const doCorretor = state.clientes.filter(c => c.corretor === state.corretorFiltro);
+  const contagem = {};
+  let semParceria = 0;
+  doCorretor.forEach(c => {
+    const p = (c.parceria || '').trim();
+    if(p) contagem[p] = (contagem[p] || 0) + 1;
+    else semParceria++;
+  });
+  const total = doCorretor.length;
+  const parcerias = Object.keys(contagem).sort();
+  const chips = [];
+  chips.push(`
+    <button class="sub-chip active" onclick="setSubFiltro('todos', this)">
+      👤 Somente ${esc(state.corretorFiltro)} <span class="count">${total}</span>
+    </button>
+  `);
+  chips.push(`
+    <button class="sub-chip" onclick="setSubFiltro('sem-parceria', this)">
+      🚫 Sem parceria <span class="count">${semParceria}</span>
+    </button>
+  `);
+  parcerias.forEach(p => {
+    chips.push(`
+      <button class="sub-chip" onclick="setSubFiltro('${esc(p)}', this)">
+        🤝 ${esc(state.corretorFiltro)}/${esc(p)} <span class="count">${contagem[p]}</span>
+      </button>
+    `);
+  });
+  wrap.innerHTML = '<span class="label">Filtros:</span>' + chips.join('');
+}
+
+function setSubFiltro(valor, el){
+  document.querySelectorAll('#subFiltros .sub-chip').forEach(c => c.classList.remove('active'));
+  if(el) el.classList.add('active');
+  renderizarClientes();
+}
+
+/* =====================================================
    LISTA CLIENTES
 ===================================================== */
 function renderizarClientes(){
@@ -1848,7 +2051,9 @@ function renderizarClientes(){
   const ordem = $('ordenacao').value;
   let lista = [...state.clientes];
 
-  if(state.corretorFiltro) lista = lista.filter(c => c.corretor === state.corretorFiltro);
+  if(state.corretorFiltro){
+    lista = lista.filter(c => c.corretor === state.corretorFiltro);
+  }
   if(busca){
     lista = lista.filter(c =>
       (c.nome || '').toLowerCase().includes(busca) ||
@@ -1935,7 +2140,11 @@ async function salvarCliente(){
   if(!res.ok){ toast(res.error || 'Erro ao salvar', 'error'); return; }
   toast('Cliente salvo ✅', 'success');
   fecharClienteModal();
-  await carregarHomeAdmin();
+
+  // Recarrega clientes (invalida cache)
+  state.cache.clientesCarregados = false;
+  await carregarClientes();
+  if(state.cache.notificacoesCarregadas) carregarNotificacoesBackground();
 }
 
 /* =====================================================
@@ -1948,11 +2157,6 @@ async function abrirVitrineDoCliente(telefone){
 
 async function irParaVitrine(){
   if(state.isAdmin){
-    const res = await api('buscarCliente', { senha: state.adminSenha, telefone: state.telefone });
-    state.clienteInfo = (res.ok && res.data) ? res.data : null;
-  }
-
-  if(state.isAdmin){
     $('adminToolbar').classList.remove('hidden');
     $('infoClienteBar').classList.remove('hidden');
     $('userInfo').textContent = '';
@@ -1961,12 +2165,34 @@ async function irParaVitrine(){
     $('acessosSection').classList.add('hidden');
     $('headerCorretorChips').classList.add('hidden');
 
+    // Busca dados do cliente + imóveis em PARALELO
+    const [resCli, resIm] = await Promise.all([
+      api('buscarCliente', { senha: state.adminSenha, telefone: state.telefone }),
+      api('adminListar', { senha: state.adminSenha })
+    ]);
+
+    state.clienteInfo = (resCli.ok && resCli.data) ? resCli.data : null;
+
     const nome = state.clienteInfo?.nome || '(sem cadastro)';
     const corr = state.clienteInfo?.corretor ? ` · 👤 ${state.clienteInfo.corretor}` : '';
     const parc = state.clienteInfo?.parceria ? ` · 🤝 ${state.clienteInfo.parceria}` : '';
     $('infoClienteNome').textContent = nome;
     $('infoClienteExtra').textContent = ` — 📱 ${fmtTel(state.telefone)}${corr}${parc}`;
     $('adTelefone').value = fmtTel(state.telefone);
+
+    // Filtra imóveis do cliente e injeta corretor
+    const corretorCliente = state.clienteInfo?.corretor || '';
+    const todos = (resIm.ok && resIm.data) ? resIm.data : [];
+    state.imoveis = todos
+      .filter(i => normalizaTel(i.telefone) === state.telefone)
+      .map(im => { im._corretor = corretorCliente; return im; })
+      .sort((a,b) => {
+        const da = new Date(a.dataCadastro||0).getTime() || 0;
+        const db = new Date(b.dataCadastro||0).getTime() || 0;
+        return db - da;
+      });
+
+    // Carrega acessos em background (não bloqueia)
     carregarAcessos();
   } else {
     $('adminToolbar').classList.add('hidden');
@@ -1977,10 +2203,26 @@ async function irParaVitrine(){
     $('btnAdminDiscreto').classList.add('hidden');
     $('headerCorretorChips').classList.add('hidden');
     $('userInfo').textContent = '📱 ' + fmtTel(state.telefone);
+
+    const res = await api('listarImoveis', { telefone: state.telefone, deviceToken: state.deviceToken });
+    if(!res.ok){
+      toast(res.error || 'Erro ao carregar', 'error');
+      if((res.error || '').toLowerCase().includes('sess')){
+        localStorage.removeItem(TOKEN_KEY);
+        setTimeout(() => { mostrarView('loginView'); atualizarCamposLogin(); }, 1500);
+      }
+      return;
+    }
+    state.imoveis = (res.data || []).sort((a,b) => {
+      const da = new Date(a.dataCadastro||0).getTime() || 0;
+      const db = new Date(b.dataCadastro||0).getTime() || 0;
+      return db - da;
+    });
   }
 
   mostrarView('vitrineView');
-  await carregarImoveis();
+  atualizarContadores();
+  renderizarImoveis();
 }
 
 function voltarParaClientes(){
@@ -1988,7 +2230,12 @@ function voltarParaClientes(){
   state.imoveis = [];
   state.clienteInfo = null;
   if(state.isAdmin){
-    carregarHomeAdmin();
+    mostrarView('corretorView');
+    $('btnSair').classList.remove('hidden');
+    $('btnAdminDiscreto').classList.add('hidden');
+    $('headerCorretorChips').classList.remove('hidden');
+    $('userInfo').textContent = '👑 Painel';
+    montarBarraCorretor();
   } else {
     mostrarView('loginView');
     atualizarCamposLogin();
@@ -2176,49 +2423,8 @@ async function removerAcesso(acessoId){
 }
 
 /* =====================================================
-   IMÓVEIS
+   ATUALIZAR CONTADORES
 ===================================================== */
-async function carregarImoveis(){
-  const grid = $('gridImoveis');
-  grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:60px; color:var(--primary)">
-    <span class="loader loader-lg"></span><p class="mt-3 text-muted">Carregando imóveis...</p></div>`;
-
-  let res;
-  if(state.isAdmin){
-    res = await api('adminListar', { senha: state.adminSenha });
-    if(res.ok && state.telefone){
-      res.data = (res.data || []).filter(i => normalizaTel(i.telefone) === state.telefone);
-    }
-  } else {
-    res = await api('listarImoveis', { telefone: state.telefone, deviceToken: state.deviceToken });
-  }
-
-  if(!res.ok){
-    toast(res.error || 'Erro ao carregar', 'error');
-    grid.innerHTML = '';
-    $('emptyState').classList.remove('hidden');
-    if(!state.isAdmin && (res.error || '').toLowerCase().includes('sess')){
-      localStorage.removeItem(TOKEN_KEY);
-      setTimeout(() => { mostrarView('loginView'); atualizarCamposLogin(); }, 1500);
-    }
-    return;
-  }
-
-  // Injeta corretor em cada imóvel (para o botão Zap)
-  const corretorCliente = state.clienteInfo?.corretor || '';
-  state.imoveis = (res.data || []).map(im => {
-    im._corretor = corretorCliente;
-    return im;
-  }).sort((a,b) => {
-    const da = new Date(a.dataCadastro||0).getTime() || 0;
-    const db = new Date(b.dataCadastro||0).getTime() || 0;
-    return db - da;
-  });
-
-  atualizarContadores();
-  renderizarImoveis();
-}
-
 function atualizarContadores(){
   const counts = { todos: state.imoveis.length, gostei: 0, 'quero-visitar': 0, 'nao-gostei': 0, pendente: 0 };
   state.imoveis.forEach(im => {
@@ -2536,7 +2742,7 @@ async function salvarEdicaoObs(id, obsId){
 }
 
 /* =====================================================
-   MARCAR STATUS
+   MARCAR STATUS (com toggle)
 ===================================================== */
 async function marcar(id, acao){
   const im = state.imoveis.find(i => i.id === id);
@@ -2554,13 +2760,10 @@ async function marcar(id, acao){
   atualizarContadores();
   renderizarImoveis();
 
+  // Se é admin e marcou quero-visitar/gostei, invalida cache de notificações
   if(state.isAdmin && (novaAcao === 'quero-visitar' || novaAcao === 'gostei' || novaAcao === 'pendente')){
-    api('listarNotificacoes', { senha: state.adminSenha }).then(r => {
-      if(r.ok && r.data){
-        state.querVisitarCache = r.data;
-        renderizarQuerVisitar();
-      }
-    });
+    state.cache.notificacoesCarregadas = false;
+    carregarNotificacoesBackground();
   }
 
   marcarSalvando(true);
@@ -2610,7 +2813,7 @@ function fallbackCopy(texto, cb){
 }
 
 /* =====================================================
-   ADMIN FORM
+   ADMIN FORM IMÓVEL
 ===================================================== */
 function limparFormAdmin(){
   $('editingId').value = '';
@@ -2675,13 +2878,14 @@ async function salvarImovel(){
   });
 
   marcarSalvando(false);
-
   btn.disabled = false;
   btn.textContent = '💾 Salvar imóvel';
   if(!res.ok){ toast(res.error || 'Erro ao salvar', 'error'); return; }
   toast('Imóvel salvo ✅', 'success');
   fecharPainelImovel();
-  carregarImoveis();
+
+  // Recarrega a vitrine do cliente
+  await irParaVitrine();
 }
 
 function editarImovel(id){
@@ -2733,23 +2937,29 @@ async function verHistorico(id){
           </div>
         </div>
       `).join('');
-  if($('modalContent')){
-    $('modalContent').innerHTML = `
-      <button class="modal-close" onclick="fecharModal()">×</button>
-      <h2 style="margin-bottom:8px;">📜 Histórico</h2>
-      <p class="text-muted" style="margin-bottom:14px; font-size:.85rem;">${esc(im.titulo)}</p>
-      <div style="max-height:300px; overflow-y:auto; border:1px solid var(--border-soft); border-radius:8px; padding:10px; background:#fafbfc;">${html}</div>
-      <button class="btn btn-ghost btn-full mt-3" onclick="fecharModal()">Fechar</button>
-    `;
-    if(!document.getElementById('modalBackdrop')){
-      const bd = document.createElement('div');
-      bd.className = 'modal-backdrop';
-      bd.id = 'modalBackdrop';
-      bd.innerHTML = '<div class="modal" id="modalContentInner"></div>';
-      document.body.appendChild(bd);
-    }
-    document.getElementById('modalBackdrop').classList.add('show');
+  // Cria modal ad-hoc
+  let backdrop = document.getElementById('modalBackdropTemp');
+  if(!backdrop){
+    backdrop = document.createElement('div');
+    backdrop.className = 'modal-backdrop';
+    backdrop.id = 'modalBackdropTemp';
+    backdrop.innerHTML = '<div class="modal" id="modalContentTemp"></div>';
+    backdrop.onclick = (e) => { if(e.target === backdrop) fecharModalTemp(); };
+    document.body.appendChild(backdrop);
   }
+  document.getElementById('modalContentTemp').innerHTML = `
+    <button class="modal-close" onclick="fecharModalTemp()">×</button>
+    <h2 style="margin-bottom:8px;">📜 Histórico</h2>
+    <p class="text-muted" style="margin-bottom:14px; font-size:.85rem;">${esc(im.titulo)}</p>
+    <div style="max-height:300px; overflow-y:auto; border:1px solid var(--border-soft); border-radius:8px; padding:10px; background:#fafbfc;">${html}</div>
+    <button class="btn btn-ghost btn-full mt-3" onclick="fecharModalTemp()">Fechar</button>
+  `;
+  backdrop.classList.add('show');
+}
+
+function fecharModalTemp(){
+  const b = document.getElementById('modalBackdropTemp');
+  if(b) b.classList.remove('show');
 }
 
 /* =====================================================
@@ -2792,7 +3002,6 @@ async function salvarVisita(ev){
 
   const btn = ev?.target;
   if(btn) btn.disabled = true;
-
   marcarSalvando(true);
 
   const im = state.imoveis.find(i => i.id === id);
@@ -2813,7 +3022,6 @@ async function salvarVisita(ev){
 
   marcarSalvando(false);
   if(btn) btn.disabled = false;
-
   toast('Visita registrada ✅', 'success');
 
   if(im){
@@ -2825,11 +3033,10 @@ async function salvarVisita(ev){
 
   fecharVisitaModal();
   renderizarImoveis();
-  if(state.isAdmin){
-    api('listarAgendamentos', { senha: state.adminSenha }).then(r => {
-      if(r.ok && r.data){ state.agendamentos = r.data; renderizarAgenda(); }
-    });
-  }
+
+  // Invalida cache de agenda
+  state.cache.agendaCarregada = false;
+  if(state.abaAtiva === 'agenda') carregarAgenda(true);
 }
 
 async function limparVisita(){
@@ -2851,7 +3058,6 @@ async function limparVisita(){
   if(dataReagendar){
     await api('agendarVisita', { senha: state.adminSenha, id, dataAgendada: dataReagendar });
   }
-
   marcarSalvando(false);
 
   toast('Visita desfeita ✅', 'success');
@@ -2863,11 +3069,9 @@ async function limparVisita(){
   }
   fecharVisitaModal();
   renderizarImoveis();
-  if(state.isAdmin){
-    api('listarAgendamentos', { senha: state.adminSenha }).then(r => {
-      if(r.ok && r.data){ state.agendamentos = r.data; renderizarAgenda(); }
-    });
-  }
+
+  state.cache.agendaCarregada = false;
+  if(state.abaAtiva === 'agenda') carregarAgenda(true);
 }
 
 /* =====================================================
@@ -2906,11 +3110,9 @@ async function salvarAgendamento(ev){
   if(im) im.dataVisitaAgendada = iso;
   fecharAgendarModal();
   renderizarImoveis();
-  if(state.isAdmin){
-    api('listarAgendamentos', { senha: state.adminSenha }).then(r => {
-      if(r.ok && r.data){ state.agendamentos = r.data; renderizarAgenda(); }
-    });
-  }
+
+  state.cache.agendaCarregada = false;
+  if(state.abaAtiva === 'agenda') carregarAgenda(true);
 }
 
 async function cancelarAgendamento(){
@@ -2926,11 +3128,9 @@ async function cancelarAgendamento(){
   if(im) im.dataVisitaAgendada = '';
   fecharAgendarModal();
   renderizarImoveis();
-  if(state.isAdmin){
-    api('listarAgendamentos', { senha: state.adminSenha }).then(r => {
-      if(r.ok && r.data){ state.agendamentos = r.data; renderizarAgenda(); }
-    });
-  }
+
+  state.cache.agendaCarregada = false;
+  if(state.abaAtiva === 'agenda') carregarAgenda(true);
 }
 
 async function cancelarAgendamentoDireto(id){
@@ -2943,16 +3143,9 @@ async function cancelarAgendamentoDireto(id){
   const im = state.imoveis.find(i => i.id === id);
   if(im) im.dataVisitaAgendada = '';
   renderizarImoveis();
-  if(state.isAdmin){
-    api('listarAgendamentos', { senha: state.adminSenha }).then(r => {
-      if(r.ok && r.data){ state.agendamentos = r.data; renderizarAgenda(); }
-    });
-  }
-}
 
-function fecharModal(){
-  document.querySelectorAll('.modal-backdrop').forEach(el => el.classList.remove('show'));
-  document.body.style.overflow = '';
+  state.cache.agendaCarregada = false;
+  if(state.abaAtiva === 'agenda') carregarAgenda(true);
 }
 
 /* =====================================================
@@ -2966,7 +3159,6 @@ function sair(){
         clearInterval(check);
         localStorage.removeItem(TOKEN_KEY);
         localStorage.removeItem(TEL_KEY);
-        // NÃO limpa ADMIN_KEY (admin fica salvo para auto-login)
         location.reload();
       }
     }, 200);
@@ -2975,7 +3167,6 @@ function sair(){
 
   localStorage.removeItem(TOKEN_KEY);
   localStorage.removeItem(TEL_KEY);
-  // NÃO limpa ADMIN_KEY
   state.telefone = null;
   state.deviceToken = null;
   state.isAdmin = false;
@@ -2986,6 +3177,9 @@ function sair(){
   state.acessos = [];
   state.agendamentos = [];
   state.corretorFiltro = null;
+  state.cache.clientesCarregados = false;
+  state.cache.notificacoesCarregadas = false;
+  state.cache.agendaCarregada = false;
   $('btnSair').classList.add('hidden');
   $('userInfo').textContent = '';
   $('btnAdminDiscreto').classList.remove('hidden');
@@ -2997,7 +3191,7 @@ function sair(){
 }
 
 /* =====================================================
-   AVISO AO SAIR/FECHAR DURANTE SALVAMENTO
+   BEFORE UNLOAD
 ===================================================== */
 window.addEventListener('beforeunload', function(e){
   if(estaSalvando()){
@@ -3015,13 +3209,12 @@ window.addEventListener('beforeunload', function(e){
   const tokenSalvo = localStorage.getItem(TOKEN_KEY);
   const senhaAdminSalva = localStorage.getItem(ADMIN_KEY);
 
-  // Se tem senha admin salva, pré-preenche
   if(senhaAdminSalva){
     $('inputAdminSenha').value = senhaAdminSalva;
   }
 
-  // AUTO-LOGIN CLIENTE (sem pedir senha)
-  if(telSalvo && tokenSalvo){
+  // AUTO-LOGIN CLIENTE
+  if(telSalvo && tokenSalvo && !senhaAdminSalva){
     state.telefone = telSalvo;
     state.deviceToken = tokenSalvo;
     api('loginCliente', {
@@ -3042,7 +3235,6 @@ window.addEventListener('beforeunload', function(e){
     return;
   }
 
-  // Sem auto-login cliente
   mostrarView('loginView');
   atualizarCamposLogin();
   setTimeout(() => {
