@@ -470,7 +470,7 @@
 <div class="loading-screen hidden" id="loadingView">
   <div class="loading-logo">🏢</div>
   <h2>Carregando sua vitrine exclusiva</h2>
-  <p>Preparando tudo para você...</p>
+  <p>Veja os Imóveis que separei p/ Você...</p>
   <div class="spinner"></div>
   <div class="loading-msg" id="loadingMsg"></div>
 </div>
@@ -503,6 +503,35 @@
     </div>
     <div id="ajudaSenha" class="hidden" style="margin-top:10px; padding:12px; background:#eef2f7; border-radius:8px; font-size:.78rem; color:var(--primary); line-height:1.5;">
       💬 Sua senha é enviada pelo seu corretor no WhatsApp.
+    </div>
+  </div>
+</div>
+
+<!-- TELA DE DISPOSITIVO JÁ VINCULADO -->
+<div class="login-wrap hidden" id="deviceBlockView">
+  <div class="login-card" style="text-align:center;">
+    <div class="login-logo" style="background:#8b3a3a;">🔒</div>
+    <h2>Acesso vinculado a outro dispositivo</h2>
+    <p class="sub" style="margin-bottom:20px;">
+      Sua vitrine já está sendo usada em outro aparelho.<br>
+      Para liberar o acesso neste dispositivo, solicite ao seu corretor.
+    </p>
+
+    <div style="background:#eef2f7; padding:14px; border-radius:10px; font-size:.82rem; color:var(--primary); line-height:1.5; margin-bottom:18px; text-align:left;">
+      💬 <strong>Como liberar?</strong><br>
+      Fale com seu corretor pelo WhatsApp e peça para liberar o acesso neste novo dispositivo.
+    </div>
+
+    <button class="btn btn-primary btn-full" id="btnZapLiberar" onclick="pedirLiberacaoZap()" style="margin-bottom:10px;">
+      💬 Falar com meu corretor
+    </button>
+
+    <button class="btn btn-ghost btn-full" onclick="voltarParaLogin()">
+      ← Voltar para o login
+    </button>
+
+    <div style="margin-top:16px; font-size:.72rem; color:var(--muted);">
+      Você está em: <span id="deviceBlockInfo"></span>
     </div>
   </div>
 </div>
@@ -649,14 +678,10 @@ function detectarNavegador(){
 
 /* =====================================================
    Detectar corretor do imóvel
-   - Propriedades diretas (se existirem)
-   - Fallback: extrai do LINK do QuintoAndar
-     Ex: .../894625789/HugoFelipePereiraRibeiro-3M2K
 ===================================================== */
 function getCorretor(im){
   if(!im) return null;
 
-  // 1) Propriedades diretas
   const cands = [im._corretor, im.corretor, im.Corretor, im.corretores, im.responsavel];
   for(const c of cands){
     if(!c) continue;
@@ -666,7 +691,6 @@ function getCorretor(im){
     }
   }
 
-  // 2) Fallback: extrai do LINK (QuintoAndar)
   if(im.link && typeof im.link === 'string'){
     try {
       const partes = im.link.split('/').filter(Boolean);
@@ -690,6 +714,73 @@ function getCorretor(im){
   }
 
   return null;
+}
+
+/* =====================================================
+   DETECÇÃO DE BLOQUEIO POR DISPOSITIVO
+===================================================== */
+function erroEhDispositivoVinculado(msg){
+  if(!msg) return false;
+  const s = String(msg).toLowerCase();
+  const padroes = [
+    /dispositivo.*(outro|vincul|ativo|bloque|autoriz|permitid|usado)/,
+    /(outro|vincul|ativo|bloque|autoriz|permitid|usado).*dispositivo/,
+    /sess[ãa]o\s+ativa/,
+    /j[áa]\s+logad/,
+    /device\s*token\s+inv[áa]lid/,
+    /j[áa]\s+em\s+uso/,
+    /acesso\s+negado/,
+    /bloqueado/
+  ];
+  return padroes.some(re => re.test(s));
+}
+
+function mostrarBloqueioDispositivo(infoExtra){
+  ['loadingView','loginView','vitrineView'].forEach(v => {
+    const el = $(v);
+    if(el) el.classList.add('hidden');
+  });
+  $('deviceBlockView').classList.remove('hidden');
+  $('deviceBlockInfo').textContent = infoExtra || detectarNavegador();
+
+  if(state.telefone){
+    $('btnZapLiberar').dataset.telefone = state.telefone;
+  }
+}
+
+function pedirLiberacaoZap(){
+  const tel = state.telefone || $('btnZapLiberar').dataset.telefone || '';
+  const nomeCliente = state.clienteInfo?.nome || 'Cliente';
+
+  let corretor = 'Hugo';
+  try {
+    const pref = localStorage.getItem('vitrine_corretor_pref');
+    if(pref && ZAP_CORRETORES[pref]) corretor = pref;
+  } catch(e){}
+
+  const zap = ZAP_CORRETORES[corretor];
+  const navegador = detectarNavegador();
+
+  let msg = `Olá ${corretor}! 👋\n\n`;
+  msg += `Sou *${nomeCliente}* e estou tentando acessar minha vitrine de imóveis em um novo dispositivo.\n\n`;
+  msg += `📱 Aparelho: ${navegador}\n`;
+  if(tel) msg += `📞 Telefone cadastrado: ${fmtTel(tel)}\n`;
+  msg += `\n🔒 Aparece a mensagem: "Acesso vinculado a outro dispositivo".\n\n`;
+  msg += `Pode liberar o acesso neste dispositivo, por favor?`;
+
+  const url = `https://wa.me/${zap}?text=${encodeURIComponent(msg)}`;
+  window.open(url, '_blank');
+}
+
+function voltarParaLogin(){
+  mostrarView('loginView');
+  $('senhaGroup').style.display = 'block';
+  $('inputSenha').value = '';
+  if(state.telefone){
+    $('inputTelefone').value = fmtTel(state.telefone);
+  }
+  $('loginSub').textContent = 'Digite sua senha para entrar novamente.';
+  setTimeout(() => $('inputSenha').focus(), 200);
 }
 
 /* =====================================================
@@ -734,7 +825,7 @@ async function api(action, params = {}, timeoutMs = TIMEOUT_API, retries = 1) {
    NAVEGAÇÃO
 ===================================================== */
 function mostrarView(id){
-  ['loadingView','loginView','vitrineView'].forEach(v => {
+  ['loadingView','loginView','vitrineView','deviceBlockView'].forEach(v => {
     const el = $(v);
     if(el) el.classList.add('hidden');
   });
@@ -786,6 +877,13 @@ async function entrarCliente(){
   btn.textContent = 'Entrar na minha vitrine';
 
   if(!res.ok){
+    // Verifica se o erro é bloqueio de dispositivo
+    if(erroEhDispositivoVinculado(res.error)){
+      state.telefone = tel;
+      if(res.nome) state.clienteInfo = { nome: res.nome, apelido: res.apelido };
+      mostrarBloqueioDispositivo();
+      return;
+    }
     toast(res.error || 'Não foi possível entrar', 'error');
     return;
   }
@@ -831,7 +929,11 @@ async function carregarImoveis(){
   });
 
   if(!res.ok){
-    toast(res.error || 'Erro ao carregar', 'error');
+    // Verifica se é bloqueio de dispositivo
+    if(erroEhDispositivoVinculado(res.error)){
+      mostrarBloqueioDispositivo();
+      return;
+    }
     if((res.error || '').toLowerCase().includes('sess')){
       localStorage.removeItem(TOKEN_KEY);
       mostrarView('loginView');
@@ -839,6 +941,7 @@ async function carregarImoveis(){
       setTimeout(() => $('inputSenha').focus(), 200);
       return;
     }
+    toast(res.error || 'Erro ao carregar', 'error');
     grid.innerHTML = '';
     $('emptyState').classList.remove('hidden');
     $('emptyMsg').textContent = 'Erro ao carregar imóveis.';
@@ -850,6 +953,12 @@ async function carregarImoveis(){
     const db = new Date(b.dataCadastro||0).getTime() || 0;
     return db - da;
   });
+
+  // Guarda o corretor preferido baseado no 1º imóvel (pra usar na tela de bloqueio depois)
+  try {
+    const primeiroCorretor = state.imoveis.map(getCorretor).find(Boolean);
+    if(primeiroCorretor) localStorage.setItem('vitrine_corretor_pref', primeiroCorretor);
+  } catch(e){}
 
   atualizarContadores();
   renderizarImoveis();
@@ -947,7 +1056,6 @@ function cardHTML(im){
   const btnVisitar = (statusAtual === 'quero-visitar') ? 'ativo' : '';
   const btnNao = (statusAtual === 'nao-gostei') ? 'ativo' : '';
 
-  // Detecta corretor (link do QuintoAndar ou propriedade direta)
   const corretor = getCorretor(im);
   const zapInline = corretor
     ? `<button class="btn-zap-inline" onclick="abrirZap('${id}')" title="Falar com ${esc(corretor)} no WhatsApp">
@@ -1064,6 +1172,11 @@ async function marcar(id, acao){
   });
 
   if(!res.ok){
+    // Verifica bloqueio por dispositivo
+    if(erroEhDispositivoVinculado(res.error)){
+      mostrarBloqueioDispositivo();
+      return;
+    }
     toast(res.error || 'Erro ao salvar', 'error');
     im.status = statusAtual;
     atualizarContadores();
@@ -1130,9 +1243,13 @@ async function salvarEdicaoObs(id, obsId){
   renderizarImoveis();
   toast('Observação salva ✅', 'success');
 
-  await api('salvarObservacao', {
+  const res = await api('salvarObservacao', {
     id, observacao: novaObs, deviceToken: state.deviceToken
   });
+
+  if(!res.ok && erroEhDispositivoVinculado(res.error)){
+    mostrarBloqueioDispositivo();
+  }
 }
 
 /* =====================================================
@@ -1202,6 +1319,16 @@ function fallbackCopy(texto, cb){
     }
 
     limparUrl();
+
+    // Bloqueio por dispositivo?
+    if(erroEhDispositivoVinculado(res.error)){
+      state.telefone = telUrl;
+      state.clienteInfo = { nome: res.nome || null, apelido: res.apelido || null };
+      mostrarBloqueioDispositivo();
+      return;
+    }
+
+    // Erro comum (senha errada, link expirado, etc)
     mostrarView('loginView');
     $('inputTelefone').value = fmtTel(telUrl);
     $('inputSenha').value = senhaUrl;
@@ -1236,6 +1363,13 @@ function fallbackCopy(texto, cb){
       return;
     }
 
+    // Bloqueio por dispositivo? (token foi invalidado porque outro aparelho logou)
+    if(erroEhDispositivoVinculado(res.error)){
+      mostrarBloqueioDispositivo();
+      return;
+    }
+
+    // Token expirado / inválido comum → volta pro login
     localStorage.removeItem(TOKEN_KEY);
     mostrarView('loginView');
     $('inputTelefone').value = fmtTel(telSalvo);
