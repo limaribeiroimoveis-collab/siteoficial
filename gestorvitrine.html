@@ -1,0 +1,2999 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="google" content="notranslate">
+<meta name="robots" content="noindex, nofollow">
+<title>Painel Administrativo — Lima Ribeiro Imóveis</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👑</text></svg>">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root{
+    --primary:#1e3a5f; --primary-hover:#152a45;
+    --accent:#8b7355;
+    --success:#2f6b4f; --success-hover:#245540;
+    --danger:#8b3a3a; --danger-hover:#6f2d2d;
+    --warn:#8b6f3a; --warn-hover:#6f582d;
+    --purple:#4a3d6b;
+    --bg:#e2e6ea; --bg-alt:#d6dbe1;
+    --card:#ffffff;
+    --text:#1f2937; --text-soft:#4b5563; --muted:#6b7280;
+    --border:#d8dde3; --border-soft:#e6e9ee;
+    --radius:10px;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,.06);
+    --shadow-md: 0 2px 8px rgba(0,0,0,.09);
+    --shadow-lg: 0 8px 24px rgba(0,0,0,.12);
+  }
+  html, body { height: 100%; }
+  body{
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+    background: var(--bg); color: var(--text); min-height: 100vh;
+    -webkit-font-smoothing: antialiased; line-height: 1.45;
+    font-size: 14px;
+  }
+  .container{ max-width: 1280px; margin: 0 auto; padding: 16px; }
+
+  /* HEADER */
+  header.app-header{
+    background: linear-gradient(90deg, #16263e 0%, #1e3a5f 100%);
+    color: #fff; padding: 6px 12px;
+    box-shadow: 0 1px 4px rgba(0,0,0,.08);
+    position: sticky; top: 0; z-index: 100;
+    border-bottom: 1px solid rgba(255,255,255,.06);
+  }
+  .header-inner{
+    max-width: 1280px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 8px; flex-wrap: nowrap; min-height: 34px;
+  }
+  .brand{ display: flex; align-items: center; gap: 8px; min-width: 0; flex-shrink: 0; }
+  .brand-icon{
+    width: 26px; height: 26px; flex-shrink: 0;
+    background: var(--accent); border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: .8rem; color: #fff; font-weight: 800;
+  }
+  .brand-text{ display: flex; flex-direction: column; line-height: 1; min-width: 0; }
+  .brand-title{ font-size: .82rem; font-weight: 700; letter-spacing: .2px; }
+  .brand-sub{ font-size: .55rem; opacity: .7; letter-spacing: 1px; text-transform: uppercase; margin-top: 1px; }
+  .header-right{ display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+
+  .header-corretor-chips{
+    display: flex; align-items: center; gap: 4px; margin-right: 4px;
+  }
+  .chip-sm{
+    padding: 4px 10px; border-radius: 999px;
+    background: rgba(255,255,255,.08);
+    color: rgba(255,255,255,.8);
+    border: 1px solid rgba(255,255,255,.15);
+    font-size: .7rem; font-weight: 600;
+    cursor: pointer; transition: all .15s; font-family: inherit;
+    display: inline-flex; align-items: center; gap: 4px;
+    white-space: nowrap;
+  }
+  .chip-sm:hover{ background: rgba(255,255,255,.16); color: #fff; }
+  .chip-sm.active{ background: var(--accent); color: #fff; border-color: var(--accent); }
+  .chip-sm .cnt{
+    background: rgba(0,0,0,.2); padding: 0px 5px;
+    border-radius: 999px; font-size: .6rem; font-weight: 700;
+    min-width: 14px; text-align: center;
+  }
+  .chip-sm.active .cnt{ background: rgba(0,0,0,.25); }
+  @media(max-width:600px){
+    .chip-sm{ padding: 4px 7px; font-size: .65rem; }
+    .chip-sm .cnt{ display: none; }
+  }
+
+  .user-info{ font-size: .7rem; opacity: .8; display: flex; align-items: center; gap: 4px; }
+  @media(max-width:480px){ .user-info{ display: none; } }
+  .btn-header{
+    background: rgba(255,255,255,.08); color: #fff;
+    border: 1px solid rgba(255,255,255,.18);
+    padding: 5px 10px; border-radius: 6px; cursor: pointer;
+    font-size: .7rem; font-weight: 600;
+    transition: all .15s; font-family: inherit;
+  }
+  .btn-header:hover{ background: rgba(255,255,255,.16); }
+
+  /* LOGIN */
+  .login-wrap{
+    display: flex; justify-content: center; align-items: center;
+    min-height: 82vh; padding: 16px;
+  }
+  .login-card{
+    background: var(--card); padding: 36px 32px; border-radius: 14px;
+    box-shadow: var(--shadow-lg); width: 100%; max-width: 420px;
+    border: 1px solid var(--border-soft);
+  }
+  .login-logo{
+    width: 56px; height: 56px; margin: 0 auto 18px;
+    background: var(--accent); border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.6rem; color: #fff;
+  }
+  .login-card h2{ margin-bottom: 6px; color: var(--text); font-size: 1.25rem; text-align: center; font-weight: 700; }
+  .login-card .sub{ color: var(--muted); margin-bottom: 26px; font-size: .85rem; text-align: center; }
+
+  input, textarea, select{
+    width: 100%; padding: 11px 14px; border: 1px solid var(--border);
+    border-radius: 8px; font-size: .9rem; font-family: inherit;
+    transition: all .15s; background: #fff; color: var(--text);
+  }
+  input:focus, textarea:focus, select:focus{
+    outline: none; border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(30,58,95,.08);
+  }
+  textarea{ resize: vertical; min-height: 76px; line-height: 1.5; }
+  label{ display: block; font-size: .78rem; font-weight: 600; margin-bottom: 6px; color: var(--text-soft); text-transform: uppercase; letter-spacing: .3px; }
+  label .req{ color: var(--danger); }
+  .form-group{ margin-bottom: 14px; }
+  .input-pass-wrap{ position: relative; }
+  .input-pass-wrap input{ padding-right: 44px; }
+  .btn-eye{
+    position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+    background: transparent; border: none; cursor: pointer;
+    font-size: 1.1rem; padding: 6px 8px; border-radius: 6px;
+    color: var(--muted); line-height: 1;
+    transition: background .15s, color .15s;
+  }
+  .btn-eye:hover{ background: var(--bg-alt); color: var(--text); }
+
+  .btn{
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    padding: 11px 18px; border-radius: 8px; border: none; cursor: pointer;
+    font-size: .85rem; font-weight: 600; transition: all .15s;
+    text-decoration: none; font-family: inherit; white-space: nowrap;
+  }
+  .btn:disabled{ opacity: .5; cursor: not-allowed; }
+  .btn-primary{ background: var(--primary); color: #fff; }
+  .btn-primary:hover:not(:disabled){ background: var(--primary-hover); }
+  .btn-success{ background: var(--success); color: #fff; }
+  .btn-success:hover:not(:disabled){ background: var(--success-hover); }
+  .btn-danger{ background: var(--danger); color: #fff; }
+  .btn-danger:hover:not(:disabled){ background: var(--danger-hover); }
+  .btn-warn{ background: var(--warn); color: #fff; }
+  .btn-warn:hover:not(:disabled){ background: var(--warn-hover); }
+  .btn-ghost{ background: #fff; color: var(--text-soft); border: 1px solid var(--border); }
+  .btn-ghost:hover:not(:disabled){ background: var(--bg-alt); border-color: #c4cbd3; }
+  .btn-full{ width: 100%; }
+  .btn-sm{ padding: 7px 12px; font-size: .78rem; border-radius: 6px; }
+  .btn-xs{ padding: 5px 9px; font-size: .7rem; border-radius: 5px; }
+
+  /* ABAS ADMIN */
+  .admin-tabs{
+    display: flex; gap: 0; background: #fff;
+    border-radius: var(--radius) var(--radius) 0 0;
+    box-shadow: var(--shadow-sm);
+    margin-top: 14px; overflow-x: auto;
+    border: 1px solid var(--border-soft); border-bottom: none;
+  }
+  .admin-tab{
+    flex: 1; min-width: 110px; padding: 12px 16px;
+    background: transparent; border: none; cursor: pointer;
+    font-family: inherit; font-size: .85rem; font-weight: 700;
+    color: var(--muted); border-bottom: 3px solid transparent;
+    transition: all .15s; display: flex; align-items: center; justify-content: center; gap: 6px;
+    white-space: nowrap;
+  }
+  .admin-tab:hover{ color: var(--primary); background: #f8fafc; }
+  .admin-tab.active{ color: var(--primary); border-bottom-color: var(--primary); background: #f8fafc; }
+  .admin-tab .badge{
+    background: var(--danger); color: #fff;
+    font-size: .62rem; font-weight: 800;
+    padding: 1px 7px; border-radius: 999px;
+    min-width: 18px; text-align: center;
+  }
+  .admin-tab.active .badge{ background: var(--primary); }
+  .admin-tab .badge.zero{ background: var(--bg-alt); color: var(--muted); }
+
+  .admin-tab-content{
+    background: #fff; border-radius: 0 0 var(--radius) var(--radius);
+    box-shadow: var(--shadow-sm);
+    padding: 16px; min-height: 400px;
+    border: 1px solid var(--border-soft); border-top: none;
+  }
+
+  .tab-pane{ display: none; }
+  .tab-pane.active{ display: block; }
+
+  /* GRID / CARD */
+  .grid{
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px; margin-top: 16px;
+  }
+  .card{
+    background: var(--card); border-radius: var(--radius);
+    overflow: hidden; box-shadow: var(--shadow-sm);
+    display: flex; flex-direction: column;
+    transition: box-shadow .2s, transform .2s, border-color .4s, opacity .2s, filter .2s;
+    position: relative; border: 1px solid var(--border-soft);
+  }
+  .card:hover{ box-shadow: var(--shadow-md); transform: translateY(-2px); }
+  .card.destacado{
+    border-color: var(--accent);
+    box-shadow: 0 0 0 4px rgba(139,115,85,.18), 0 8px 24px rgba(0,0,0,.1);
+    animation: destacar 1.5s ease;
+  }
+  @keyframes destacar{
+    0%,100% { box-shadow: 0 0 0 4px rgba(139,115,85,.18), 0 8px 24px rgba(0,0,0,.1); }
+    50% { box-shadow: 0 0 0 8px rgba(139,115,85,.3), 0 8px 24px rgba(0,0,0,.1); }
+  }
+  .card.card-nao-gostei{
+    opacity: .55; filter: grayscale(65%); background: #f5f5f5;
+  }
+  .card.card-nao-gostei:hover{ opacity: .78; filter: grayscale(50%); }
+  .card.card-nao-gostei .card-img{ filter: grayscale(100%) brightness(0.95); }
+  .card.card-nao-gostei .btn{ opacity: .85; }
+  .card.card-nao-gostei .btn:hover{ opacity: 1; }
+
+  .card-img{
+    width: 100%; height: 190px; object-fit: cover;
+    background: var(--bg-alt); display: block;
+  }
+  .card-body{ padding: 16px; flex: 1; display: flex; flex-direction: column; gap: 10px; }
+  .card-top-meta{ display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .card-date{
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: .7rem; color: var(--muted);
+    background: var(--bg-alt); padding: 3px 9px; border-radius: 4px; font-weight: 600;
+  }
+  .card-code{
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: .7rem; color: var(--purple);
+    background: #f1eef7; padding: 3px 9px; border-radius: 4px;
+    font-weight: 600; cursor: pointer;
+    border: 1px solid #ddd4ec; transition: all .15s;
+  }
+  .card-code:hover{ background: #e6e0f2; }
+  .card-code.copiado{ background: var(--success); color: #fff; border-color: var(--success); }
+  .card-title{ font-size: 1rem; font-weight: 700; line-height: 1.3; color: var(--text); }
+  .card-desc{
+    font-size: .83rem; color: var(--text-soft); line-height: 1.5;
+    display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;
+    overflow: hidden; cursor: pointer; white-space: pre-wrap;
+    transition: all .15s;
+  }
+  .card-desc.expandido{ display: block; -webkit-line-clamp: unset; overflow: visible; }
+  .card-desc:hover{ color: var(--text); }
+  .card-desc-toggle{
+    display: inline-flex; align-items: center; gap: 4px;
+    background: transparent; border: none;
+    color: var(--primary); font-size: .72rem; font-weight: 600;
+    cursor: pointer; margin-top: 2px; padding: 2px 0; font-family: inherit;
+  }
+  .card-desc-toggle:hover{ text-decoration: underline; }
+  .status-badge{
+    position: absolute; top: 10px; right: 10px;
+    padding: 4px 10px; border-radius: 4px;
+    font-size: .65rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .4px;
+    color: #fff; z-index: 2;
+    box-shadow: 0 1px 4px rgba(0,0,0,.15);
+  }
+  .status-gostei{ background: rgba(47,107,79,.92); }
+  .status-nao-gostei{ background: rgba(139,58,58,.92); }
+  .status-quero-visitar{ background: rgba(139,111,58,.92); }
+  .status-pendente{ background: rgba(75,85,99,.85); }
+  .card-actions{
+    display: grid; grid-template-columns: 1fr 1fr 1fr;
+    gap: 6px; margin-top: 6px;
+  }
+  .card-actions .btn{
+    padding: 9px 6px; font-size: .72rem; border-radius: 7px;
+    flex-direction: column; gap: 3px; min-height: 52px; font-weight: 600;
+    border: 2px solid transparent;
+  }
+  .card-actions .btn .ico{ font-size: 1.05rem; line-height: 1; }
+  .card-actions .btn .lbl{ font-size: .68rem; letter-spacing: .2px; }
+  .card-actions .btn.ativo{
+    box-shadow: 0 0 0 3px rgba(0,0,0,.08) inset, 0 3px 10px rgba(0,0,0,.15);
+    border-color: rgba(0,0,0,.15);
+    transform: scale(.97);
+  }
+  .card-actions .btn-success.ativo{ background: #245540; }
+  .card-actions .btn-warn.ativo{ background: #6f582d; }
+  .card-actions .btn-danger.ativo{ background: #6f2d2d; }
+  .btn-ver-anuncio{
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    background: var(--primary); color: #fff; text-decoration: none;
+    padding: 11px 16px; border-radius: 8px;
+    font-size: .85rem; font-weight: 600;
+    margin-top: 6px; transition: all .15s;
+  }
+  .btn-ver-anuncio:hover{ background: var(--primary-hover); }
+  .btn-ver-anuncio .arrow{ margin-left: auto; opacity: .7; font-size: .95rem; }
+  .btn-buscar{
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    background: #fff; color: var(--text-soft);
+    text-decoration: none; border: 1px solid var(--border);
+    padding: 10px 16px; border-radius: 8px;
+    font-size: .82rem; font-weight: 600;
+    margin-top: 6px; transition: all .15s; font-family: inherit;
+    cursor: pointer;
+  }
+  .btn-buscar:hover{ background: var(--bg-alt); border-color: #c4cbd3; color: var(--primary); }
+  .obs-wrap{
+    margin-top: 6px; background: var(--bg-alt);
+    border: 1px solid var(--border-soft); border-radius: 8px;
+    padding: 10px 12px;
+  }
+  .obs-label{
+    font-size: .7rem; font-weight: 700;
+    color: var(--muted); text-transform: uppercase;
+    letter-spacing: .4px; margin-bottom: 6px;
+    display: flex; align-items: center; gap: 5px;
+  }
+  .obs-text{
+    font-size: .82rem; color: var(--text);
+    line-height: 1.5; white-space: pre-wrap;
+    overflow: hidden; display: -webkit-box;
+    -webkit-line-clamp: 3; -webkit-box-orient: vertical;
+  }
+  .obs-text.expandido{ display: block; -webkit-line-clamp: unset; overflow: visible; }
+  .obs-toggle{
+    display: inline-flex; align-items: center; gap: 4px;
+    background: transparent; border: none;
+    color: var(--primary); font-size: .75rem; font-weight: 600;
+    cursor: pointer; margin-top: 5px; padding: 2px 0; font-family: inherit;
+  }
+  .obs-toggle:hover{ text-decoration: underline; }
+  .obs-edit-btn{
+    display: inline-flex; align-items: center; gap: 4px;
+    background: transparent; border: none;
+    color: var(--muted); font-size: .7rem; font-weight: 600;
+    cursor: pointer; padding: 2px 6px; border-radius: 4px;
+    font-family: inherit; margin-left: auto;
+  }
+  .obs-edit-btn:hover{ background: #fff; color: var(--primary); }
+  .obs-textarea{ min-height: 76px; font-size: .82rem; display: none; }
+  .obs-edit-actions{ display: none; gap: 6px; margin-top: 8px; }
+  .obs-wrap.editing .obs-text{ display: none; }
+  .obs-wrap.editing .obs-toggle{ display: none; }
+  .obs-wrap.editing .obs-textarea{ display: block; }
+  .obs-wrap.editing .obs-edit-actions{ display: flex; }
+  .obs-empty{
+    color: var(--muted); font-style: italic; font-size: .8rem;
+    cursor: pointer; padding: 4px 0;
+  }
+  .obs-empty:hover{ color: var(--primary); }
+
+  .agendamento-box{
+    margin-top: 8px;
+    background: linear-gradient(135deg, #eef2f7, #e3eaf3);
+    border: 1px solid #c7d5e6;
+    border-radius: 8px; padding: 12px;
+  }
+  .agendamento-box .titulo{
+    font-size: .7rem; font-weight: 700;
+    color: var(--primary); text-transform: uppercase;
+    letter-spacing: .4px; margin-bottom: 8px;
+    display: flex; align-items: center; gap: 5px;
+  }
+  .agendamento-info{
+    font-size: .85rem; color: var(--text);
+    margin-bottom: 10px; line-height: 1.4;
+    padding: 8px 10px; background: #fff;
+    border-radius: 6px; border: 1px solid #d8e2ee;
+  }
+  .agendamento-info strong{ color: var(--primary); font-weight: 700; }
+  .agendamento-info .data-destaque{
+    font-size: .95rem; color: var(--primary); font-weight: 700;
+    display: block; margin-top: 2px;
+  }
+  .agendamento-actions{ display: flex; gap: 6px; flex-wrap: wrap; }
+  .agendamento-actions .btn{ padding: 8px 12px; font-size: .75rem; border-radius: 6px; }
+  .agendamento-actions .btn-principal{
+    flex: 1; min-width: 200px; padding: 10px 14px; font-size: .82rem;
+  }
+  .visita-box{
+    margin-top: 8px;
+    background: #f9f5ec; border: 1px solid #e6dcc4;
+    border-radius: 8px; padding: 12px;
+  }
+  .visita-box .titulo{
+    font-size: .7rem; font-weight: 700;
+    color: #7a6432; text-transform: uppercase;
+    letter-spacing: .4px; margin-bottom: 8px;
+    display: flex; align-items: center; gap: 5px;
+  }
+  .visita-info{ font-size: .8rem; color: #6b5a30; margin-bottom: 8px; line-height: 1.4; }
+  .visita-info strong{ color: #4a3d1e; }
+  .visita-actions{ display: flex; gap: 6px; flex-wrap: wrap; }
+  .visita-actions .btn{ padding: 6px 10px; font-size: .72rem; border-radius: 6px; }
+
+  /* FILTROS */
+  .filters{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+    margin: 16px 0 4px;
+  }
+  .filters .filter-btn{
+    padding: 9px 8px; border-radius: 6px;
+    border: 1px solid var(--border);
+    background: #fff; cursor: pointer;
+    font-size: .74rem; font-weight: 600; color: var(--text-soft);
+    transition: all .15s; font-family: inherit;
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    width: 100%;
+  }
+  .filters .filter-btn:nth-child(1){ grid-column: 1 / 2; }
+  .filters .filter-btn:nth-child(2){ grid-column: 2 / 3; }
+  .filters .filter-btn:nth-child(3){ grid-column: 3 / 4; }
+  .filters .filter-btn:nth-child(4){ grid-column: 1 / 2; }
+  .filters .filter-btn:nth-child(5){ grid-column: 2 / 3; }
+  .filters .filter-btn:nth-child(6){ grid-column: 3 / 4; }
+  .filters .filter-btn:hover{ border-color: var(--primary); color: var(--primary); }
+  .filters .filter-btn.active{ background: var(--primary); color: #fff; border-color: var(--primary); }
+  .filters .filter-btn.btn-recentes{
+    background: #fff; color: var(--purple); border-color: #ddd4ec;
+  }
+  .filters .filter-btn.btn-recentes:hover{ border-color: var(--purple); }
+  .filters .filter-btn.btn-recentes.active{ background: var(--purple); color: #fff; border-color: var(--purple); }
+  .filter-count{
+    background: rgba(255,255,255,.25); padding: 1px 7px;
+    border-radius: 4px; font-size: .68rem; min-width: 18px; text-align: center; font-weight: 700;
+  }
+  .filters .filter-btn:not(.active) .filter-count{ background: var(--bg-alt); color: var(--muted); }
+  @media(max-width:600px){ .filters .filter-btn{ font-size: .68rem; padding: 8px 4px; } }
+
+  .admin-toolbar{ display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+  .admin-toolbar .btn{ padding: 10px 16px; font-size: .82rem; }
+  .admin-panel{
+    background: #fff; border-radius: var(--radius); padding: 22px;
+    box-shadow: var(--shadow-md); margin-top: 14px;
+    border: 1px solid var(--border); position: relative;
+  }
+  .admin-panel h3{
+    margin-bottom: 16px; display: flex; align-items: center; gap: 8px;
+    font-size: .95rem; color: var(--text); font-weight: 700;
+    padding-right: 40px;
+  }
+  .admin-panel .close-x{
+    position: absolute; top: 14px; right: 14px;
+    width: 30px; height: 30px; border-radius: 6px;
+    background: transparent; border: none; cursor: pointer;
+    color: var(--muted); font-size: 1.2rem; line-height: 1;
+    display: flex; align-items: center; justify-content: center;
+    transition: all .15s;
+  }
+  .admin-panel .close-x:hover{ background: var(--bg-alt); color: var(--text); }
+  .form-row{ display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media(max-width:640px){ .form-row{ grid-template-columns: 1fr; } }
+  .preview-wrap{ display: flex; align-items: flex-start; gap: 12px; margin-top: 8px; }
+  .preview-img{
+    width: 120px; height: 80px; object-fit: cover;
+    border-radius: 6px; border: 1px solid var(--border);
+    display: none; background: var(--bg-alt);
+  }
+
+  .info-cliente-bar{
+    background: #eef2f7; border: 1px solid #d8e2ee; color: var(--primary);
+    padding: 10px 16px; border-radius: var(--radius);
+    display: flex; justify-content: space-between;
+    align-items: center; margin-top: 12px;
+    flex-wrap: wrap; gap: 10px; font-size: .85rem;
+  }
+  .info-cliente-bar strong{ font-weight: 700; }
+  .info-cliente-bar .actions{ display: flex; gap: 6px; flex-wrap: wrap; }
+
+  /* PAINEL QUERO VISITAR */
+  .quer-visitar-wrap{
+    background: #fff; border-radius: var(--radius);
+    padding: 16px 18px;
+    border: 1px solid var(--border-soft);
+    border-left: 4px solid var(--warn);
+  }
+  .quer-visitar-wrap h2{
+    font-size: .95rem; font-weight: 700; color: var(--text);
+    display: flex; align-items: center; gap: 8px; margin-bottom: 12px;
+  }
+  .quer-visitar-wrap h2 .badge-total{
+    background: var(--warn); color: #fff;
+    font-size: .68rem; font-weight: 700;
+    padding: 2px 10px; border-radius: 999px;
+  }
+  .quer-visitar-wrap h2 .badge-total.zero{ background: var(--bg-alt); color: var(--muted); }
+  .quer-visitar-cards{
+    display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+  }
+  @media(max-width:720px){ .quer-visitar-cards{ grid-template-columns: 1fr; } }
+  .quer-visitar-corretor{
+    background: #fafbfc; border: 1px solid var(--border);
+    border-radius: 10px; overflow: hidden;
+  }
+  .quer-visitar-corretor-header{
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 14px; background: #fef9ee;
+    border-bottom: 1px solid var(--border);
+  }
+  .quer-visitar-corretor-header .nome{
+    font-size: .88rem; font-weight: 700; color: var(--text);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .quer-visitar-corretor-header .nome .avatar-sm{
+    width: 24px; height: 24px; border-radius: 50%;
+    background: var(--warn); color: #fff;
+    font-size: .72rem; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .quer-visitar-corretor-header .count{
+    background: var(--warn); color: #fff;
+    font-size: .68rem; font-weight: 700;
+    padding: 2px 9px; border-radius: 999px;
+  }
+  .quer-visitar-corretor-header .count.zero{ background: var(--bg-alt); color: var(--muted); }
+  .quer-visitar-corretor-body{ padding: 8px 12px; }
+  .quer-visitar-item{
+    padding: 10px 8px;
+    border-bottom: 1px dashed var(--border-soft);
+    display: flex; align-items: flex-start; gap: 10px;
+    border-radius: 6px;
+    cursor: pointer; transition: all .15s;
+  }
+  .quer-visitar-item:hover{ background: #fef9ee; }
+  .quer-visitar-item:last-child{ border-bottom: none; }
+  .quer-visitar-item .quando-ico{
+    flex-shrink: 0; width: 34px; height: 34px; border-radius: 8px;
+    background: #fef3c7; color: #92400e;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem;
+  }
+  .quer-visitar-item .info{ flex: 1; min-width: 0; }
+  .quer-visitar-item .cliente{
+    font-size: .85rem; font-weight: 700; color: var(--text);
+    margin-bottom: 2px;
+  }
+  .quer-visitar-item .detalhe{
+    font-size: .72rem; color: var(--text-soft);
+    display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+  }
+  .quer-visitar-item .detalhe .codigo{
+    font-family: 'Courier New', monospace;
+    background: #f1eef7; color: var(--purple);
+    padding: 1px 6px; border-radius: 3px;
+    font-size: .66rem; font-weight: 700;
+  }
+  .quer-visitar-item .arrow-right{
+    flex-shrink: 0; color: var(--muted); font-size: 1rem;
+    opacity: .5; align-self: center;
+  }
+  .quer-visitar-item:hover .arrow-right{ opacity: 1; color: var(--warn); }
+  .quer-visitar-empty{
+    padding: 16px; text-align: center;
+    font-size: .8rem; color: var(--muted); font-style: italic;
+  }
+
+  /* AGENDA */
+  .agenda-cards{
+    display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+  }
+  @media(max-width:720px){ .agenda-cards{ grid-template-columns: 1fr; } }
+  .agenda-corretor{
+    background: #fafbfc; border: 1px solid var(--border);
+    border-radius: 10px; overflow: hidden;
+  }
+  .agenda-corretor-header{
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 16px; background: #f4f7fb;
+    border-bottom: 1px solid var(--border);
+  }
+  .agenda-corretor-header .nome{
+    font-size: .95rem; font-weight: 700; color: var(--text);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .agenda-corretor-header .nome .avatar-sm{
+    width: 26px; height: 26px; border-radius: 50%;
+    background: var(--primary); color: #fff;
+    font-size: .78rem; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .agenda-corretor-header .count{
+    background: var(--primary); color: #fff;
+    font-size: .7rem; font-weight: 700;
+    padding: 3px 10px; border-radius: 999px;
+  }
+  .agenda-corretor-header .count.zero{ background: var(--bg-alt); color: var(--muted); }
+  .agenda-corretor-body{ padding: 10px 14px; }
+  .agenda-item{
+    padding: 10px 8px;
+    border-bottom: 1px dashed var(--border-soft);
+    display: flex; align-items: flex-start; gap: 10px;
+    border-radius: 6px;
+    cursor: pointer; transition: all .15s;
+  }
+  .agenda-item:hover{ background: #eef2f7; }
+  .agenda-item:last-child{ border-bottom: none; }
+  .agenda-item .when{
+    flex-shrink: 0; font-size: .75rem; font-weight: 700;
+    padding: 3px 8px; border-radius: 5px;
+    min-width: 82px; text-align: center;
+  }
+  .agenda-item .when-hoje{ background: #e3edff; color: #1e40af; }
+  .agenda-item .when-amanha{ background: #fef3c7; color: #92400e; }
+  .agenda-item .when-semana{ background: #dcfce7; color: #166534; }
+  .agenda-item .when-distante{ background: var(--bg-alt); color: var(--muted); }
+  .agenda-item .info{ flex: 1; min-width: 0; }
+  .agenda-item .cliente{
+    font-size: .85rem; font-weight: 700; color: var(--text);
+    margin-bottom: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .agenda-item .detalhe{
+    font-size: .75rem; color: var(--text-soft);
+    display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+  }
+  .agenda-item .codigo{
+    font-family: 'Courier New', monospace;
+    background: #f1eef7; color: var(--purple);
+    padding: 1px 6px; border-radius: 3px;
+    font-size: .68rem; font-weight: 700;
+  }
+  .agenda-item .arrow-right{
+    flex-shrink: 0; color: var(--muted); font-size: 1rem;
+    opacity: .5; align-self: center;
+  }
+  .agenda-item:hover .arrow-right{ opacity: 1; color: var(--primary); }
+  .agenda-empty{
+    padding: 20px; text-align: center;
+    font-size: .82rem; color: var(--muted); font-style: italic;
+  }
+  .agenda-ver-todos{
+    display: block; width: 100%; padding: 10px;
+    background: #fff; border: none; border-top: 1px solid var(--border);
+    cursor: pointer; font-size: .8rem; font-weight: 600;
+    color: var(--primary); font-family: inherit; transition: all .15s;
+  }
+  .agenda-ver-todos:hover{ background: #f4f7fb; }
+
+  /* SUB-FILTROS */
+  .sub-filtros{
+    display: flex; gap: 6px; flex-wrap: wrap;
+    background: #fafbfc; padding: 12px 16px;
+    border-radius: var(--radius);
+    margin-bottom: 12px; align-items: center;
+    border: 1px solid var(--border-soft);
+  }
+  .sub-filtros .label{
+    font-size: .72rem; font-weight: 700;
+    color: var(--muted); text-transform: uppercase;
+    letter-spacing: .4px; margin-right: 4px;
+  }
+  .sub-chip{
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 12px; border-radius: 6px;
+    background: #fff; border: 1px solid var(--border);
+    font-size: .78rem; font-weight: 600; cursor: pointer;
+    transition: all .15s; font-family: inherit; color: var(--text-soft);
+  }
+  .sub-chip:hover{ border-color: var(--primary); color: var(--primary); }
+  .sub-chip.active{ background: var(--primary); color: #fff; border-color: var(--primary); }
+  .sub-chip .count{
+    background: rgba(255,255,255,.25); padding: 1px 6px;
+    border-radius: 4px; font-size: .66rem; min-width: 16px; text-align: center; font-weight: 700;
+  }
+  .sub-chip:not(.active) .count{ background: var(--bg-alt); color: var(--muted); }
+
+  .clientes-toolbar{
+    display: flex; gap: 10px; flex-wrap: wrap;
+    align-items: center; margin-bottom: 12px;
+  }
+  .clientes-toolbar .search{ flex: 1; min-width: 220px; }
+  .clientes-toolbar select{ width: auto; min-width: 200px; }
+  .clientes-list{
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 12px;
+  }
+  .cliente-item{
+    background: #fff; border: 1px solid var(--border-soft);
+    border-radius: var(--radius); padding: 14px;
+    cursor: pointer; transition: all .15s;
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .cliente-item:hover{
+    border-color: #b8c4d3;
+    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
+  }
+  .cliente-item .nome{
+    font-size: .95rem; font-weight: 700; color: var(--text);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .cliente-item .nome .initial{
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--primary); color: #fff;
+    font-size: .78rem; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .cliente-item .tel{ font-size: .78rem; color: var(--muted); display: flex; align-items: center; gap: 5px; }
+  .cliente-item .meta{ display: flex; gap: 5px; flex-wrap: wrap; margin-top: 4px; }
+  .tag{
+    font-size: .66rem; font-weight: 600;
+    padding: 3px 8px; border-radius: 4px;
+    text-transform: uppercase; letter-spacing: .3px;
+  }
+  .tag-corretor{ background: #e6edf5; color: var(--primary); }
+  .tag-parceria{ background: #f5efe2; color: #7a6432; }
+  .tag-data{ background: var(--bg-alt); color: var(--muted); }
+  .cliente-item .obs-preview{
+    font-size: .75rem; color: var(--muted);
+    font-style: italic; overflow: hidden; text-overflow: ellipsis;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+  }
+
+  .empty-state{
+    text-align: center; padding: 60px 20px; color: var(--muted);
+  }
+  .empty-state svg{ width: 56px; height: 56px; margin-bottom: 12px; opacity: .35; }
+  .empty-state h3{ font-size: .95rem; margin-bottom: 4px; color: var(--text-soft); }
+
+  .modal-backdrop{
+    position: fixed; inset: 0; background: rgba(15,23,42,.55); z-index: 1000;
+    display: none; align-items: center; justify-content: center; padding: 16px;
+    backdrop-filter: blur(2px);
+  }
+  .modal-backdrop.show{ display: flex; }
+  .modal{
+    background: #fff; border-radius: 14px; max-width: 700px; width: 100%;
+    max-height: 92vh; overflow: auto; padding: 24px; position: relative;
+    box-shadow: 0 20px 50px rgba(0,0,0,.25);
+  }
+  .modal-close{
+    position: absolute; top: 12px; right: 12px;
+    background: transparent; border: none;
+    font-size: 1.4rem; cursor: pointer; color: var(--muted); line-height: 1;
+    width: 32px; height: 32px; border-radius: 6px;
+    transition: background .15s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .modal-close:hover{ background: var(--bg-alt); color: var(--text); }
+
+  .toast{
+    position: fixed; bottom: 20px; left: 50%;
+    transform: translate(-50%, 30px);
+    background: var(--text); color: #fff;
+    padding: 12px 20px; border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0,0,0,.2);
+    opacity: 0; transition: all .3s; z-index: 2000;
+    font-size: .85rem; font-weight: 600;
+    max-width: 90vw; pointer-events: none; text-align: center;
+  }
+  .toast.show{ opacity: 1; transform: translate(-50%, 0); }
+  .toast.success{ background: var(--success); }
+  .toast.error{ background: var(--danger); }
+
+  .loader{
+    display: inline-block; width: 14px; height: 14px;
+    border: 2px solid currentColor; border-top-color: transparent;
+    border-radius: 50%; animation: spin .6s linear infinite;
+  }
+  .loader-lg{ width: 38px; height: 38px; border-width: 3px; }
+  @keyframes spin{ to{ transform: rotate(360deg); } }
+
+  .hidden{ display: none !important; }
+  .mt-2{ margin-top: 8px; }
+  .mt-3{ margin-top: 12px; }
+  .mt-4{ margin-top: 16px; }
+  .text-muted{ color: var(--muted); }
+  .text-center{ text-align: center; }
+
+  .saving-overlay{
+    position: fixed; inset: 0; background: rgba(15,23,42,.75);
+    z-index: 9999; display: none; align-items: center; justify-content: center;
+    flex-direction: column; gap: 14px; color: #fff; text-align: center; padding: 20px;
+  }
+  .saving-overlay.show{ display: flex; }
+  .saving-overlay .spinner{
+    width: 50px; height: 50px; border: 4px solid rgba(255,255,255,.2);
+    border-top-color: #fff; border-radius: 50%; animation: spin .8s linear infinite;
+  }
+  .saving-overlay .msg{ font-size: 1rem; font-weight: 600; }
+  .saving-overlay .sub{ font-size: .82rem; opacity: .7; }
+
+  .loading-inline{
+    text-align: center; padding: 40px 20px; color: var(--primary);
+  }
+  .loading-inline .loader-lg{ display: inline-block; margin-bottom: 10px; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="app-header">
+  <div class="header-inner">
+    <div class="brand">
+      <div class="brand-icon">👑</div>
+      <div class="brand-text">
+        <div class="brand-title">Lima Ribeiro</div>
+        <div class="brand-sub">Admin</div>
+      </div>
+    </div>
+
+    <div class="header-corretor-chips hidden" id="headerCorretorChips"></div>
+
+    <div class="header-right">
+      <span class="user-info" id="userInfo"></span>
+      <button class="btn-header hidden" id="btnSair" onclick="sair()">Sair</button>
+    </div>
+  </div>
+</header>
+
+<!-- LOGIN ADMIN -->
+<div class="login-wrap" id="adminLoginView">
+  <div class="login-card">
+    <div class="login-logo">🔐</div>
+    <h2>Painel Administrativo</h2>
+    <p class="sub" id="adminLoginSub">Acesso restrito à equipe Lima Ribeiro.</p>
+    <div class="form-group">
+      <label>Senha do administrador</label>
+      <div class="input-pass-wrap">
+        <input type="password" id="inputAdminSenha" placeholder="Digite a senha"
+               onkeydown="if(event.key==='Enter') entrarAdmin()">
+        <button type="button" class="btn-eye" onclick="toggleSenhaAdmin(this)" title="Ver senha">👁️</button>
+      </div>
+    </div>
+    <button class="btn btn-primary btn-full" id="btnEntrarAdmin" onclick="entrarAdmin()">Entrar no painel</button>
+  </div>
+</div>
+
+<!-- HOME ADMIN COM ABAS -->
+<div class="container hidden" id="corretorView">
+  <div class="admin-tabs" id="adminTabs">
+    <button class="admin-tab active" data-tab="agenda" onclick="trocarAba('agenda', this)">
+      🗓️ Agenda
+    </button>
+    <button class="admin-tab" data-tab="visitar" onclick="trocarAba('visitar', this)">
+      📅 Querem Visitar <span class="badge zero" id="tabBadgeVisitar">0</span>
+    </button>
+    <button class="admin-tab" data-tab="clientes" onclick="trocarAba('clientes', this)">
+      👥 Clientes
+    </button>
+  </div>
+
+  <div class="admin-tab-content">
+    <!-- ABA AGENDA (PADRÃO) -->
+    <div class="tab-pane active" id="pane-agenda">
+      <div class="agenda-wrap" style="background:#fff; border-radius:10px; padding:16px; border:1px solid var(--border-soft);">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;">
+          <h2 style="font-size:.95rem; font-weight:700; display:flex; align-items:center; gap:8px;">
+            🗓️ Agenda de Visitas
+            <span class="badge-total zero" id="agendaTotalBadge" style="background:var(--danger); color:#fff; font-size:.68rem; font-weight:700; padding:2px 10px; border-radius:999px;">0</span>
+          </h2>
+          <button class="btn btn-ghost btn-sm" onclick="recarregarAba('agenda')">🔄 Atualizar</button>
+        </div>
+        <div class="agenda-cards" id="agendaCards">
+          <div class="loading-inline" style="grid-column:1/-1;">
+            <span class="loader loader-lg"></span>
+            <p>Carregando agenda...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ABA QUEREM VISITAR -->
+    <div class="tab-pane" id="pane-visitar">
+      <div class="quer-visitar-wrap">
+        <h2>
+          📅 Clientes querendo visitar
+          <span class="badge-total zero" id="querVisitarTotalBadge">0</span>
+        </h2>
+        <div class="quer-visitar-cards" id="querVisitarCards">
+          <div class="loading-inline" style="grid-column:1/-1;">
+            <span class="loader loader-lg"></span>
+            <p>Carregando...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ABA CLIENTES -->
+    <div class="tab-pane" id="pane-clientes">
+      <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:12px;">
+        <h3 style="font-size:.95rem; font-weight:700;">👥 Clientes</h3>
+        <button class="btn btn-primary btn-sm" onclick="abrirNovoCliente()">➕ Novo cliente</button>
+      </div>
+      <div class="sub-filtros" id="subFiltros">
+        <span class="label">Filtros:</span>
+      </div>
+      <div class="clientes-toolbar">
+        <input type="search" class="search" id="buscaCliente"
+               placeholder="🔍 Buscar por nome ou telefone..."
+               oninput="renderizarClientes()">
+        <select id="ordenacao" onchange="renderizarClientes()">
+          <option value="alfabetica">Ordenar: Nome (A-Z)</option>
+          <option value="data">Ordenar: Mais recentes</option>
+          <option value="data-antiga">Ordenar: Mais antigos</option>
+        </select>
+      </div>
+      <div class="clientes-list" id="clientesList"></div>
+      <div class="empty-state hidden" id="clientesEmpty">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                d="M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87m6-5.13a4 4 0 11-8 0 4 4 0 018 0zm6 0a3 3 0 11-6 0 3 3 0 016 0z"/>
+        </svg>
+        <h3>Nenhum cliente encontrado</h3>
+        <p>Cadastre um novo cliente ou ajuste os filtros.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- VITRINE (visão do cliente pelo admin) -->
+<div class="container hidden" id="vitrineView">
+  <div class="info-cliente-bar" id="infoClienteBar">
+    <div>
+      👤 <strong id="infoClienteNome"></strong>
+      <span id="infoClienteExtra" style="font-size:.78rem; opacity:.8;"></span>
+    </div>
+    <div class="actions">
+      <button class="btn btn-ghost btn-xs" onclick="abrirEditarClienteAtual()">✏️ Editar cliente</button>
+      <button class="btn btn-ghost btn-xs" onclick="voltarParaClientes()">← Voltar</button>
+    </div>
+  </div>
+
+  <div class="admin-toolbar">
+    <button class="btn btn-primary" onclick="abrirPainelNovoImovel()">
+      ➕ Adicionar novo imóvel
+    </button>
+    <button class="btn btn-ghost" onclick="toggleAcessosSection()">
+      🔐 Gerenciar acessos <span id="acessosCountChip" style="background:rgba(0,0,0,.08); padding:1px 8px; border-radius:4px; font-size:.72rem; font-weight:700;">0</span>
+    </button>
+  </div>
+
+  <div class="admin-panel hidden" id="adminPanel">
+    <button class="close-x" onclick="fecharPainelImovel()">×</button>
+    <h3><span id="adminPanelTitle">Adicionar imóvel</span></h3>
+    <input type="hidden" id="editingId">
+    <div class="form-row">
+      <div class="form-group">
+        <label>Telefone do cliente <span class="req">*</span></label>
+        <input type="tel" id="adTelefone" inputmode="numeric" maxlength="16" oninput="mascaraTelefone(this)">
+      </div>
+      <div class="form-group">
+        <label>Rua/Endereço <span class="req">*</span></label>
+        <input type="text" id="adTitulo">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Descrição</label>
+      <textarea id="adDescricao"></textarea>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Link do anúncio</label>
+        <input type="url" id="adLink" onblur="buscarImagemPreview(false)">
+      </div>
+      <div class="form-group">
+        <label>URL da imagem (auto se vazio)</label>
+        <input type="url" id="adImagem" oninput="atualizarPreview(this.value)">
+      </div>
+    </div>
+    <div class="preview-wrap">
+      <img id="previewImg" class="preview-img" alt="Preview">
+    </div>
+    <div class="mt-3" style="display:flex; gap:8px; flex-wrap:wrap;">
+      <button class="btn btn-primary" id="btnSalvarImovel" style="flex:1; min-width:180px;" onclick="salvarImovel()">
+        💾 Salvar imóvel
+      </button>
+      <button class="btn btn-ghost" onclick="buscarImagemPreview(true)">🖼️ Buscar imagem</button>
+      <button class="btn btn-ghost" onclick="fecharPainelImovel()">Cancelar</button>
+    </div>
+  </div>
+
+  <div class="acessos-section hidden" id="acessosSection" style="background:#fff; border-radius:10px; padding:18px; margin-top:14px; box-shadow:0 2px 8px rgba(0,0,0,.06); border:1px solid var(--border-soft);">
+    <h3 style="display:flex; align-items:center; justify-content:space-between; gap:10px; font-size:.9rem; color:var(--text); margin-bottom:12px; font-weight:700;">
+      <span>🔐 Acessos do cliente</span>
+      <button class="btn btn-primary btn-xs" onclick="abrirNovoAcesso()">➕ Criar acesso</button>
+    </h3>
+    <div id="acessosList"></div>
+  </div>
+
+  <div class="mt-4">
+    <input type="search" id="buscaInput" placeholder="🔍 Buscar por rua/endereço ou descrição..." oninput="renderizarImoveis()">
+  </div>
+
+  <div class="filters" id="filters">
+    <button class="filter-btn active" data-filter="todos" onclick="setFiltro('todos', this)">
+      📋 Todos <span class="filter-count" id="cnt-todos">0</span>
+    </button>
+    <button class="filter-btn" data-filter="pendente" onclick="setFiltro('pendente', this)">
+      ⏳ Aguardando <span class="filter-count" id="cnt-pendente">0</span>
+    </button>
+    <button class="filter-btn" data-filter="quero-visitar" onclick="setFiltro('quero-visitar', this)">
+      📅 Quero visitar <span class="filter-count" id="cnt-quero-visitar">0</span>
+    </button>
+    <button class="filter-btn" data-filter="gostei" onclick="setFiltro('gostei', this)">
+      ❤️ Gostei <span class="filter-count" id="cnt-gostei">0</span>
+    </button>
+    <button class="filter-btn" data-filter="nao-gostei" onclick="setFiltro('nao-gostei', this)">
+      ❌ Não gostei <span class="filter-count" id="cnt-nao-gostei">0</span>
+    </button>
+    <button class="filter-btn btn-recentes" data-filter="recentes" onclick="setFiltro('recentes', this)">
+      🆕 Recentes
+    </button>
+  </div>
+
+  <div class="grid" id="gridImoveis"></div>
+  <div class="empty-state hidden" id="emptyState">
+    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+            d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+    </svg>
+    <h3 id="emptyTitulo">Nenhum imóvel aqui</h3>
+    <p id="emptyMsg">Nada para mostrar neste filtro.</p>
+  </div>
+</div>
+
+<!-- MODAIS -->
+<div class="modal-backdrop" id="agendaModalBackdrop" onclick="if(event.target===this) fecharAgendaModal()">
+  <div class="modal" id="agendaModalContent"></div>
+</div>
+
+<div class="modal-backdrop" id="clienteModalBackdrop" onclick="if(event.target===this) fecharClienteModal()">
+  <div class="modal" style="max-width:500px;">
+    <button class="modal-close" onclick="fecharClienteModal()">×</button>
+    <h2 id="clienteModalTitle" style="margin-bottom:16px;">👤 Cadastrar cliente</h2>
+    <div class="form-group">
+      <label>Telefone <span class="req">*</span></label>
+      <input type="tel" id="cliTelefone" inputmode="numeric" maxlength="16" oninput="mascaraTelefone(this)">
+    </div>
+    <div class="form-group">
+      <label>Nome completo <span class="req">*</span></label>
+      <input type="text" id="cliNome">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Corretor</label>
+        <select id="cliCorretor"></select>
+      </div>
+      <div class="form-group">
+        <label>Parceria</label>
+        <input type="text" id="cliParceria" placeholder="Ex: Iasmin">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Observações internas</label>
+      <textarea id="cliObservacao"></textarea>
+    </div>
+    <button class="btn btn-primary btn-full" id="btnSalvarCliente" onclick="salvarCliente()">💾 Salvar cliente</button>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="visitaModalBackdrop" onclick="if(event.target===this) fecharVisitaModal()">
+  <div class="modal" style="max-width:460px;">
+    <button class="modal-close" onclick="fecharVisitaModal()">×</button>
+    <h2 style="margin-bottom:16px;">✅ Registrar visita realizada</h2>
+    <input type="hidden" id="visitaImovelId">
+    <div class="form-group">
+      <label>Data da visita <span class="req">*</span></label>
+      <input type="date" id="visitaData">
+    </div>
+    <div class="form-group">
+      <label>O que o cliente achou?</label>
+      <textarea id="visitaAvaliacao"></textarea>
+    </div>
+    <div style="display:flex; gap:8px;">
+      <button class="btn btn-primary" style="flex:1" onclick="salvarVisita(event)">💾 Salvar</button>
+      <button class="btn btn-ghost" id="btnLimparVisita" onclick="limparVisita()">Limpar</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="agendarModalBackdrop" onclick="if(event.target===this) fecharAgendarModal()">
+  <div class="modal" style="max-width:460px;">
+    <button class="modal-close" onclick="fecharAgendarModal()">×</button>
+    <h2 style="margin-bottom:16px;">📅 Agendar visita</h2>
+    <input type="hidden" id="agendarImovelId">
+    <div class="form-group">
+      <label>Data e hora <span class="req">*</span></label>
+      <input type="datetime-local" id="agendarDataHora">
+    </div>
+    <div style="display:flex; gap:8px;">
+      <button class="btn btn-primary" style="flex:1" onclick="salvarAgendamento(event)">💾 Agendar</button>
+      <button class="btn btn-ghost" id="btnCancelarAgendamento" onclick="cancelarAgendamento()">🗑️ Cancelar agendamento</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="novoAcessoModal" onclick="if(event.target===this) fecharNovoAcesso()">
+  <div class="modal" style="max-width:460px;">
+    <button class="modal-close" onclick="fecharNovoAcesso()">×</button>
+    <h2 style="margin-bottom:16px;">🔐 Criar novo acesso</h2>
+    <div class="form-group">
+      <label>Apelido do dispositivo <span class="req">*</span></label>
+      <input type="text" id="novoAcessoApelido" maxlength="40">
+      <div class="text-muted mt-2" style="font-size:.75rem;">
+        💡 Ex: "Celular", "PC trabalho", "Tablet filha"
+      </div>
+    </div>
+    <div style="display:flex; gap:8px;">
+      <button class="btn btn-primary" style="flex:1" onclick="criarAcesso(event)">🔑 Gerar senha</button>
+      <button class="btn btn-ghost" onclick="fecharNovoAcesso()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="senhaGeradaModal" onclick="if(event.target===this) fecharSenhaGerada()">
+  <div class="modal" style="max-width:420px; text-align:center;">
+    <button class="modal-close" onclick="fecharSenhaGerada()">×</button>
+    <div style="font-size:2.5rem; margin-bottom:8px;">✅</div>
+    <h2 style="margin-bottom:8px;">Acesso criado!</h2>
+    <p class="text-muted" style="margin-bottom:16px; font-size:.82rem;">
+      Envie esta senha para o cliente no WhatsApp.
+    </p>
+    <div style="background:#f9f5ec; border:1px dashed #c9a86a; border-radius:10px; padding:16px; margin-bottom:14px;">
+      <div style="font-size:.68rem; color:#7a6432; font-weight:700; text-transform:uppercase; letter-spacing:.5px; margin-bottom:6px;">Apelido</div>
+      <div id="senhaGeradaApelido" style="font-size:.95rem; font-weight:700; margin-bottom:14px; color:var(--text);"></div>
+      <div style="font-size:.68rem; color:#7a6432; font-weight:700; text-transform:uppercase; letter-spacing:.5px; margin-bottom:6px;">Senha de acesso</div>
+      <div id="senhaGeradaValor" style="font-family:'Courier New', monospace; font-size:1.8rem; font-weight:700; letter-spacing:6px; color:var(--danger);"></div>
+    </div>
+    <button class="btn btn-primary btn-full" onclick="copiarSenhaGerada()">📋 Copiar senha</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<div class="saving-overlay" id="savingOverlay">
+  <div class="spinner"></div>
+  <div class="msg">Aguarde, estamos salvando as alterações feitas...</div>
+  <div class="sub">Em seguida o site será fechado.</div>
+</div>
+
+<script>
+/* =====================================================
+   CONFIG
+===================================================== */
+const API_URL = 'https://script.google.com/macros/s/AKfycbxixzI5uFmyC6TOzoXqTnwUaNK-iWMPxDaxCiY-dM4ZRSFIt1K4dco_ShW7D7hMIdMX/exec';
+const ADMIN_KEY = 'vitrine_admin';
+const BUSCAR_BASE = 'https://corretor.quintoandar.com.br/informacoes-de-entrada';
+const TIMEOUT_API = 45000;
+
+/* =====================================================
+   ESTADO
+===================================================== */
+const state = {
+  telefone: null,
+  clienteInfo: null,
+  imoveis: [],
+  filtro: 'todos',
+  isAdmin: false,
+  adminSenha: null,
+  corretores: [],
+  clientes: [],
+  acessos: [],
+  agendamentos: [],
+  corretorFiltro: null,
+  salvando: 0,
+  querVisitarCache: [],
+  abaAtiva: 'agenda',
+  cache: {
+    clientesCarregados: false,
+    notificacoesCarregadas: false,
+    agendaCarregada: false
+  }
+};
+
+const $ = id => document.getElementById(id);
+
+/* =====================================================
+   MÁSCARA TELEFONE
+===================================================== */
+function mascaraTelefone(input){
+  let v = input.value.replace(/\D/g, '');
+  if(v.length > 11) v = v.slice(0, 11);
+  let out = '';
+  if(v.length === 0) out = '';
+  else if(v.length <= 2) out = '(' + v;
+  else if(v.length <= 3) out = '(' + v.slice(0,2) + ') ' + v.slice(2);
+  else if(v.length <= 7) out = '(' + v.slice(0,2) + ') ' + v.slice(2,3) + ' ' + v.slice(3);
+  else out = '(' + v.slice(0,2) + ') ' + v.slice(2,3) + ' ' + v.slice(3,7) + '-' + v.slice(7);
+  input.value = out;
+}
+
+/* =====================================================
+   OLHO SENHA ADMIN
+===================================================== */
+function toggleSenhaAdmin(btn){
+  const input = $('inputAdminSenha');
+  if(!input) return;
+  if(input.type === 'password'){
+    input.type = 'text';
+    btn.textContent = '🙈';
+  } else {
+    input.type = 'password';
+    btn.textContent = '👁️';
+  }
+}
+
+/* =====================================================
+   SALVAMENTO
+===================================================== */
+function marcarSalvando(inicio){
+  if(inicio) state.salvando++;
+  else state.salvando = Math.max(0, state.salvando - 1);
+}
+function estaSalvando(){ return state.salvando > 0; }
+
+/* =====================================================
+   API VIA FETCH GET (com retry)
+===================================================== */
+async function apiOnce(action, params, timeoutMs){
+  const qs = new URLSearchParams({
+    action, ...params, _t: Date.now()
+  }).toString();
+  const url = API_URL + '?' + qs;
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const resp = await fetch(url, {
+      method: 'GET', mode: 'cors',
+      headers: { 'Accept': 'application/json' },
+      redirect: 'follow',
+      signal: controller.signal
+    });
+    clearTimeout(timer);
+    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+    return await resp.json();
+  } catch (err) {
+    clearTimeout(timer);
+    throw err;
+  }
+}
+
+async function api(action, params = {}, timeoutMs = TIMEOUT_API, retries = 1) {
+  let lastErr;
+  for (let i = 0; i <= retries; i++) {
+    try {
+      return await apiOnce(action, params, timeoutMs);
+    } catch (err) {
+      lastErr = err;
+      if (i < retries) await new Promise(r => setTimeout(r, 600));
+    }
+  }
+  console.error('API falhou:', lastErr, { action, params });
+  return { ok: false, error: 'Falha ao conectar: ' + lastErr.message };
+}
+
+/* =====================================================
+   HELPERS
+===================================================== */
+function toast(msg, type=''){
+  const t = $('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + type;
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.remove('show'), 3200);
+}
+
+function normalizaTel(t){ return String(t || '').replace(/\D/g, ''); }
+
+function esc(s){
+  return String(s || '')
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+function fmtData(d){
+  if(!d) return '';
+  let dt = new Date(d);
+  if(isNaN(dt.getTime())){
+    const m = String(d).match(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})/);
+    if(m){
+      const dia = m[1].padStart(2,'0');
+      const mes = m[2].padStart(2,'0');
+      let ano = m[3]; if(ano.length === 2) ano = '20' + ano;
+      return `${dia}/${mes}/${ano}`;
+    }
+    return '';
+  }
+  return String(dt.getDate()).padStart(2,'0') + '/' +
+         String(dt.getMonth()+1).padStart(2,'0') + '/' +
+         dt.getFullYear();
+}
+
+function fmtDataHora(d){
+  if(!d) return '';
+  let dt = new Date(d);
+  if(isNaN(dt.getTime())) return '';
+  return fmtData(dt) + ' às ' +
+         String(dt.getHours()).padStart(2,'0') + ':' +
+         String(dt.getMinutes()).padStart(2,'0');
+}
+
+function fmtTel(t){
+  const n = normalizaTel(t);
+  if(n.length === 11) return `(${n.slice(0,2)}) ${n.slice(2,3)} ${n.slice(3,7)}-${n.slice(7)}`;
+  if(n.length === 10) return `(${n.slice(0,2)}) ${n.slice(2,6)}-${n.slice(6)}`;
+  return t;
+}
+
+function primeiraLetra(nome){
+  return String(nome || '?').trim().charAt(0).toUpperCase() || '?';
+}
+
+function toInputDate(iso){
+  if(!iso) return '';
+  try {
+    const d = new Date(iso);
+    if(isNaN(d.getTime())) return '';
+    const off = d.getTimezoneOffset();
+    const local = new Date(d.getTime() - off * 60000);
+    return local.toISOString().slice(0,10);
+  } catch(e){ return ''; }
+}
+
+function toInputDateTime(iso){
+  if(!iso) return '';
+  try {
+    const d = new Date(iso);
+    if(isNaN(d.getTime())) return '';
+    const off = d.getTimezoneOffset();
+    const local = new Date(d.getTime() - off * 60000);
+    return local.toISOString().slice(0,16);
+  } catch(e){ return ''; }
+}
+
+function detectarNavegador(){
+  const ua = navigator.userAgent;
+  let nav = 'Navegador', os = '';
+  if(/iPhone|iPad|iPod/i.test(ua)) os = 'iPhone';
+  else if(/Android/i.test(ua)) os = 'Android';
+  else if(/Windows/i.test(ua)) os = 'Windows';
+  else if(/Mac OS X/i.test(ua)) os = 'Mac';
+  else if(/Linux/i.test(ua)) os = 'Linux';
+  if(/Edg\//i.test(ua)) nav = 'Edge';
+  else if(/Chrome/i.test(ua) && !/Edg\//i.test(ua)) nav = 'Chrome';
+  else if(/Safari/i.test(ua) && !/Chrome/i.test(ua)) nav = 'Safari';
+  else if(/Firefox/i.test(ua)) nav = 'Firefox';
+  return (nav + (os ? ' • ' + os : '')).trim();
+}
+
+function classificarAgendamento(iso){
+  if(!iso) return { label: '—', classe: 'when-distante' };
+  const d = new Date(iso);
+  const hoje = new Date();
+  const amanha = new Date();
+  amanha.setDate(hoje.getDate() + 1);
+  const diaD = d.toDateString();
+  const diaHoje = hoje.toDateString();
+  const diaAmanha = amanha.toDateString();
+  const hora = String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
+  if(diaD === diaHoje) return { label: 'Hoje ' + hora, classe: 'when-hoje' };
+  if(diaD === diaAmanha) return { label: 'Amanhã ' + hora, classe: 'when-amanha' };
+  const diff = Math.floor((d - hoje) / (1000 * 60 * 60 * 24));
+  if(diff >= 2 && diff <= 7){
+    return { label: `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')} ${hora}`, classe: 'when-semana' };
+  }
+  return { label: `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')} ${hora}`, classe: 'when-distante' };
+}
+
+/* =====================================================
+   NAVEGAÇÃO
+===================================================== */
+function mostrarView(id){
+  ['adminLoginView','corretorView','vitrineView']
+    .forEach(v => $(v).classList.add('hidden'));
+  if(id) $(id).classList.remove('hidden');
+}
+
+/* =====================================================
+   LOGIN ADMIN - AUTO-LOGIN
+===================================================== */
+function abrirLoginAdmin(){
+  const senhaSalva = localStorage.getItem(ADMIN_KEY) || '';
+  $('inputAdminSenha').value = senhaSalva;
+  $('inputAdminSenha').type = 'password';
+  const eyeBtn = document.querySelector('#adminLoginView .btn-eye');
+  if(eyeBtn) eyeBtn.textContent = '👁️';
+
+  if(senhaSalva){
+    $('adminLoginSub').textContent = 'Senha salva. Clique em "Entrar no painel" para acessar.';
+  } else {
+    $('adminLoginSub').textContent = 'Acesso restrito à equipe Lima Ribeiro.';
+  }
+
+  mostrarView('adminLoginView');
+  setTimeout(() => {
+    if(!senhaSalva) $('inputAdminSenha').focus();
+  }, 100);
+}
+
+async function entrarAdmin(){
+  const senha = $('inputAdminSenha').value.trim();
+  if(!senha){ toast('Digite a senha', 'error'); return; }
+  const btn = $('btnEntrarAdmin');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="loader"></span> Validando...';
+  marcarSalvando(true);
+  const res = await api('adminListar', { senha });
+  marcarSalvando(false);
+  btn.disabled = false;
+  btn.textContent = 'Entrar no painel';
+  if(!res.ok){ toast(res.error || 'Senha incorreta', 'error'); return; }
+  state.isAdmin = true;
+  state.adminSenha = senha;
+  localStorage.setItem(ADMIN_KEY, senha);
+  await carregarHomeAdmin();
+}
+
+/* =====================================================
+   HOME ADMIN - LAZY LOADING EM ETAPAS
+===================================================== */
+async function carregarHomeAdmin(){
+  mostrarView('corretorView');
+  $('btnSair').classList.remove('hidden');
+  $('userInfo').textContent = '👑 Painel';
+  $('headerCorretorChips').classList.remove('hidden');
+
+  // Reset cache
+  state.cache.clientesCarregados = false;
+  state.cache.notificacoesCarregadas = false;
+  state.cache.agendaCarregada = false;
+  state.abaAtiva = 'agenda';
+  trocarAbaUI('agenda');
+
+  // ETAPA 1: Corretores (rápido)
+  const resCor = await api('listarCorretores', { senha: state.adminSenha });
+  state.corretores = (resCor.ok && resCor.data) ? resCor.data : ['Hugo', 'Carolina'];
+
+  montarBarraCorretor();
+
+  // ETAPA 2: Carrega AGENDA (aba padrão) + Notificações em background
+  await carregarAgenda(true);
+  carregarNotificacoesBackground();
+}
+
+/* =====================================================
+   ABAS
+===================================================== */
+function trocarAbaUI(aba){
+  state.abaAtiva = aba;
+  document.querySelectorAll('.admin-tab').forEach(t => {
+    t.classList.toggle('active', t.dataset.tab === aba);
+  });
+  document.querySelectorAll('.tab-pane').forEach(p => {
+    p.classList.toggle('active', p.id === 'pane-' + aba);
+  });
+}
+
+async function trocarAba(aba, btn){
+  trocarAbaUI(aba);
+
+  if(aba === 'visitar' && !state.cache.notificacoesCarregadas){
+    await carregarNotificacoes(true);
+  } else if(aba === 'visitar'){
+    renderizarQuerVisitar();
+  }
+
+  if(aba === 'agenda' && !state.cache.agendaCarregada){
+    await carregarAgenda(true);
+  } else if(aba === 'agenda'){
+    renderizarAgenda();
+  }
+
+  if(aba === 'clientes' && !state.cache.clientesCarregados){
+    await carregarClientes();
+  } else if(aba === 'clientes'){
+    renderizarClientes();
+  }
+}
+
+async function recarregarAba(aba){
+  if(aba === 'agenda'){
+    state.cache.agendaCarregada = false;
+    await carregarAgenda(true);
+  } else if(aba === 'visitar'){
+    state.cache.notificacoesCarregadas = false;
+    await carregarNotificacoes(true);
+  } else if(aba === 'clientes'){
+    state.cache.clientesCarregados = false;
+    await carregarClientes();
+  }
+}
+
+/* =====================================================
+   CARREGAMENTO SOB DEMANDA
+===================================================== */
+async function carregarClientes(){
+  $('clientesList').innerHTML = `<div class="loading-inline" style="grid-column:1/-1;"><span class="loader loader-lg"></span><p>Carregando clientes...</p></div>`;
+  $('clientesEmpty').classList.add('hidden');
+
+  const res = await api('listarClientes', { senha: state.adminSenha });
+  state.clientes = (res.ok && res.data) ? res.data : [];
+  state.cache.clientesCarregados = true;
+
+  montarBarraCorretor();
+  montarSubFiltros();
+  renderizarClientes();
+}
+
+async function carregarNotificacoes(mostrarLoading){
+  if(mostrarLoading){
+    $('querVisitarCards').innerHTML = `<div class="loading-inline" style="grid-column:1/-1;"><span class="loader loader-lg"></span><p>Carregando...</p></div>`;
+  }
+
+  const res = await api('listarNotificacoes', { senha: state.adminSenha });
+  if(res.ok && res.data){
+    state.querVisitarCache = res.data.visita || [];
+    state.cache.notificacoesCarregadas = true;
+    renderizarQuerVisitar();
+    atualizarBadgeAbaVisitar();
+  } else if(mostrarLoading){
+    $('querVisitarCards').innerHTML = `<div class="quer-visitar-empty" style="grid-column:1/-1;">Erro ao carregar.</div>`;
+  }
+}
+
+async function carregarNotificacoesBackground(){
+  // Busca silenciosamente para o badge da aba
+  const res = await api('listarNotificacoes', { senha: state.adminSenha });
+  if(res.ok && res.data){
+    state.querVisitarCache = res.data.visita || [];
+    state.cache.notificacoesCarregadas = true;
+    atualizarBadgeAbaVisitar();
+    if(state.abaAtiva === 'visitar') renderizarQuerVisitar();
+  }
+}
+
+async function carregarAgenda(mostrarLoading){
+  if(mostrarLoading){
+    $('agendaCards').innerHTML = `<div class="loading-inline" style="grid-column:1/-1;"><span class="loader loader-lg"></span><p>Carregando agenda...</p></div>`;
+  }
+
+  const res = await api('listarAgendamentos', { senha: state.adminSenha });
+  state.agendamentos = (res.ok && res.data) ? res.data : [];
+  state.cache.agendaCarregada = true;
+  renderizarAgenda();
+}
+
+function atualizarBadgeAbaVisitar(){
+  const badge = $('tabBadgeVisitar');
+  if(!badge) return;
+  const total = state.querVisitarCache.length || 0;
+  badge.textContent = total > 99 ? '99+' : total;
+  if(total > 0){
+    badge.classList.remove('zero');
+  } else {
+    badge.classList.add('zero');
+  }
+}
+
+/* =====================================================
+   BARRA CORRETOR NO HEADER
+===================================================== */
+function montarBarraCorretor(){
+  const wrap = $('headerCorretorChips');
+  if(!wrap) return;
+  wrap.classList.remove('hidden');
+
+  const total = state.clientes.length;
+  const chips = [
+    `<button class="chip-sm ${!state.corretorFiltro ? 'active' : ''}" onclick="setCorretorFiltro(null)">
+       Todos ${total > 0 ? `<span class="cnt">${total}</span>` : ''}
+     </button>`,
+    ...state.corretores.map(c => {
+      const cnt = state.clientes.filter(cl => cl.corretor === c).length;
+      return `<button class="chip-sm ${state.corretorFiltro === c ? 'active' : ''}" onclick="setCorretorFiltro('${esc(c)}')">
+        ${esc(c)} ${cnt > 0 ? `<span class="cnt">${cnt}</span>` : ''}
+      </button>`;
+    })
+  ];
+  wrap.innerHTML = chips.join('');
+}
+
+function setCorretorFiltro(corretor){
+  state.corretorFiltro = corretor;
+  montarBarraCorretor();
+  if(state.cache.clientesCarregados) montarSubFiltros();
+  if(state.cache.clientesCarregados) renderizarClientes();
+  if(state.cache.notificacoesCarregadas) renderizarQuerVisitar();
+  if(state.cache.agendaCarregada) renderizarAgenda();
+}
+
+/* =====================================================
+   PAINEL QUERO VISITAR
+===================================================== */
+function renderizarQuerVisitar(){
+  const cards = $('querVisitarCards');
+  const badge = $('querVisitarTotalBadge');
+
+  const lista = state.querVisitarCache || [];
+  const filtrada = state.corretorFiltro
+    ? lista.filter(a => {
+        const cli = state.clientes.find(c => normalizaTel(c.telefone) === normalizaTel(a.telefone));
+        return cli && cli.corretor === state.corretorFiltro;
+      })
+    : lista;
+
+  if(filtrada.length === 0){
+    badge.textContent = '0';
+    badge.classList.add('zero');
+    cards.innerHTML = `<div class="quer-visitar-empty" style="grid-column:1/-1;">✅ Nenhum cliente aguardando agendamento.</div>`;
+    return;
+  }
+
+  badge.textContent = filtrada.length;
+  badge.classList.remove('zero');
+
+  const porCorretor = {};
+  state.corretores.forEach(c => { porCorretor[c] = []; });
+  filtrada.forEach(a => {
+    const cli = state.clientes.find(c => normalizaTel(c.telefone) === normalizaTel(a.telefone));
+    const corretor = (cli && cli.corretor) || '(sem corretor)';
+    if(!porCorretor[corretor]) porCorretor[corretor] = [];
+    porCorretor[corretor].push({ ...a, clienteNome: cli ? cli.nome : '(sem cadastro)' });
+  });
+
+  cards.innerHTML = Object.keys(porCorretor).map(corretor => {
+    const lst = porCorretor[corretor] || [];
+    const countClass = lst.length === 0 ? 'zero' : '';
+    if(lst.length === 0){
+      return `
+        <div class="quer-visitar-corretor">
+          <div class="quer-visitar-corretor-header">
+            <div class="nome"><div class="avatar-sm">${esc(corretor.charAt(0))}</div>${esc(corretor)}</div>
+            <span class="count ${countClass}">Sem solicitações</span>
+          </div>
+          <div class="quer-visitar-empty">Nada por aqui</div>
+        </div>`;
+    }
+    const itens = lst.map(a => `
+      <div class="quer-visitar-item" onclick="abrirImovelDaAgenda('${esc(a.telefone)}', '${esc(a.id)}', false)">
+        <div class="quando-ico">📅</div>
+        <div class="info">
+          <div class="cliente">👤 ${esc(a.clienteNome)}</div>
+          <div class="detalhe">
+            <span>📱 ${esc(fmtTel(a.telefone))}</span>
+            ${a.codigo ? `<span class="codigo">#${esc(a.codigo)}</span>` : ''}
+            <span>${esc((a.titulo || '').substring(0, 30))}${a.titulo && a.titulo.length > 30 ? '...' : ''}</span>
+          </div>
+        </div>
+        <span class="arrow-right">→</span>
+      </div>
+    `).join('');
+    return `
+      <div class="quer-visitar-corretor">
+        <div class="quer-visitar-corretor-header">
+          <div class="nome"><div class="avatar-sm">${esc(corretor.charAt(0))}</div>${esc(corretor)}</div>
+          <span class="count ${countClass}">${lst.length} solicitaç${lst.length === 1 ? 'ão' : 'ões'}</span>
+        </div>
+        <div class="quer-visitar-corretor-body">${itens}</div>
+      </div>`;
+  }).join('');
+}
+
+/* =====================================================
+   AGENDA
+===================================================== */
+function renderizarAgenda(){
+  const cards = $('agendaCards');
+  const badge = $('agendaTotalBadge');
+
+  const hoje = new Date(); hoje.setHours(0,0,0,0);
+  let futuras = state.agendamentos.filter(a => new Date(a.dataVisitaAgendada) >= hoje);
+  if(state.corretorFiltro){
+    futuras = futuras.filter(a => (a.corretor || '') === state.corretorFiltro);
+  }
+
+  if(futuras.length === 0){
+    badge.textContent = '0';
+    badge.classList.add('zero');
+  } else {
+    badge.textContent = futuras.length;
+    badge.classList.remove('zero');
+  }
+
+  const porCorretor = {};
+  state.corretores.forEach(c => { porCorretor[c] = []; });
+  futuras.forEach(a => {
+    const c = a.corretor || '(sem corretor)';
+    if(!porCorretor[c]) porCorretor[c] = [];
+    porCorretor[c].push(a);
+  });
+
+  if(futuras.length === 0){
+    cards.innerHTML = `<div class="agenda-empty" style="grid-column:1/-1;">📭 Nenhuma visita agendada no momento.</div>`;
+    return;
+  }
+
+  cards.innerHTML = state.corretores.map(corretor => {
+    const lista = porCorretor[corretor] || [];
+    const count = lista.length;
+    const countClass = count === 0 ? 'zero' : '';
+    if(count === 0){
+      return `
+        <div class="agenda-corretor">
+          <div class="agenda-corretor-header">
+            <div class="nome"><div class="avatar-sm">${esc(corretor.charAt(0))}</div>${esc(corretor)}</div>
+            <span class="count ${countClass}">Sem agendamentos</span>
+          </div>
+          <div class="agenda-empty">Nenhuma visita agendada</div>
+        </div>`;
+    }
+    const top3 = lista.slice(0, 3);
+    const itens = top3.map(a => agendaItemHTML(a)).join('');
+    const botaoVerTodos = lista.length > 3
+      ? `<button class="agenda-ver-todos" onclick="abrirAgendaCorretor('${esc(corretor)}')">📂 Ver todos os ${count} agendamentos →</button>`
+      : '';
+    return `
+      <div class="agenda-corretor">
+        <div class="agenda-corretor-header">
+          <div class="nome"><div class="avatar-sm">${esc(corretor.charAt(0))}</div>${esc(corretor)}</div>
+          <span class="count ${countClass}">${count} agendamento${count === 1 ? '' : 's'}</span>
+        </div>
+        <div class="agenda-corretor-body">${itens}</div>
+        ${botaoVerTodos}
+      </div>`;
+  }).join('');
+}
+
+function agendaItemHTML(a){
+  const quando = classificarAgendamento(a.dataVisitaAgendada);
+  return `
+    <div class="agenda-item" onclick="abrirImovelDaAgenda('${esc(a.telefone)}', '${esc(a.id)}')">
+      <div class="when ${quando.classe}">${esc(quando.label)}</div>
+      <div class="info">
+        <div class="cliente">👤 ${esc(a.clienteNome)}</div>
+        <div class="detalhe">
+          ${a.codigo ? `<span class="codigo">#${esc(a.codigo)}</span>` : ''}
+          <span>${esc((a.titulo || '').substring(0, 30))}${a.titulo && a.titulo.length > 30 ? '...' : ''}</span>
+        </div>
+      </div>
+      <span class="arrow-right">→</span>
+    </div>
+  `;
+}
+
+function abrirAgendaCorretor(corretor){
+  const hoje = new Date(); hoje.setHours(0,0,0,0);
+  const lista = state.agendamentos.filter(a =>
+    (a.corretor || '(sem corretor)') === corretor && new Date(a.dataVisitaAgendada) >= hoje
+  );
+  const itens = lista.map(a => {
+    const quando = classificarAgendamento(a.dataVisitaAgendada);
+    const codigoHtml = a.codigo ? `<span class="codigo">#${esc(a.codigo)}</span>` : '';
+    return `
+      <div class="agenda-item" style="padding:14px 8px;" onclick="abrirImovelDaAgenda('${esc(a.telefone)}', '${esc(a.id)}', true)">
+        <div class="when ${quando.classe}">${esc(quando.label)}</div>
+        <div class="info">
+          <div class="cliente">👤 ${esc(a.clienteNome)}</div>
+          <div class="detalhe" style="margin-top:4px;">
+            ${codigoHtml}
+            <span>${esc(a.titulo)}</span>
+          </div>
+        </div>
+        <span class="arrow-right">→</span>
+      </div>
+    `;
+  }).join('') || '<div class="agenda-empty">Nenhum agendamento futuro.</div>';
+
+  $('agendaModalContent').innerHTML = `
+    <button class="modal-close" onclick="fecharAgendaModal()">×</button>
+    <h2 style="margin-bottom:6px;">📅 Agenda — ${esc(corretor)}</h2>
+    <p class="text-muted" style="margin-bottom:16px; font-size:.82rem;">
+      ${lista.length} agendamento${lista.length === 1 ? '' : 's'} a partir de hoje
+    </p>
+    <div style="max-height:60vh; overflow-y:auto;">${itens}</div>
+  `;
+  $('agendaModalBackdrop').classList.add('show');
+}
+
+function fecharAgendaModal(){ $('agendaModalBackdrop').classList.remove('show'); }
+
+/* =====================================================
+   IR PARA IMÓVEL DA AGENDA
+===================================================== */
+async function abrirImovelDaAgenda(telefone, imovelId, fecharModalPrimeiro){
+  if(fecharModalPrimeiro) fecharAgendaModal();
+
+  if(state.telefone === normalizaTel(telefone) && state.imoveis.length > 0){
+    destacarCard(imovelId);
+    return;
+  }
+
+  state.telefone = normalizaTel(telefone);
+  await irParaVitrine();
+
+  let tentativas = 0;
+  const maxTentativas = 30;
+  const aguardar = setInterval(() => {
+    tentativas++;
+    const card = document.querySelector(`.card[data-id="${imovelId}"]`);
+    if(card){
+      clearInterval(aguardar);
+      destacarCard(imovelId);
+    } else if(tentativas >= maxTentativas){
+      clearInterval(aguardar);
+      toast('Imóvel não encontrado.', 'error');
+    }
+  }, 250);
+}
+
+function destacarCard(imovelId){
+  const card = document.querySelector(`.card[data-id="${imovelId}"]`);
+  if(!card){
+    if(state.filtro !== 'todos'){
+      state.filtro = 'todos';
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      const el = document.querySelector('.filter-btn[data-filter="todos"]');
+      if(el) el.classList.add('active');
+      renderizarImoveis();
+      setTimeout(() => destacarCard(imovelId), 150);
+    }
+    return;
+  }
+  if(state.filtro !== 'todos'){
+    state.filtro = 'todos';
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    const el = document.querySelector('.filter-btn[data-filter="todos"]');
+    if(el) el.classList.add('active');
+    renderizarImoveis();
+    setTimeout(() => destacarCard(imovelId), 150);
+    return;
+  }
+  card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  card.classList.remove('destacado');
+  void card.offsetWidth;
+  card.classList.add('destacado');
+  setTimeout(() => card.classList.remove('destacado'), 2500);
+}
+
+/* =====================================================
+   SUB-FILTROS
+===================================================== */
+function montarSubFiltros(){
+  const wrap = $('subFiltros');
+  if(!wrap) return;
+
+  if(!state.corretorFiltro){
+    wrap.innerHTML = '<span class="label">Filtros:</span><span class="text-muted" style="font-size:.82rem;">Selecione um corretor específico para ver filtros de parceria.</span>';
+    return;
+  }
+  const doCorretor = state.clientes.filter(c => c.corretor === state.corretorFiltro);
+  const contagem = {};
+  let semParceria = 0;
+  doCorretor.forEach(c => {
+    const p = (c.parceria || '').trim();
+    if(p) contagem[p] = (contagem[p] || 0) + 1;
+    else semParceria++;
+  });
+  const total = doCorretor.length;
+  const parcerias = Object.keys(contagem).sort();
+  const chips = [];
+  chips.push(`
+    <button class="sub-chip active" onclick="setSubFiltro('todos', this)">
+      👤 Somente ${esc(state.corretorFiltro)} <span class="count">${total}</span>
+    </button>
+  `);
+  chips.push(`
+    <button class="sub-chip" onclick="setSubFiltro('sem-parceria', this)">
+      🚫 Sem parceria <span class="count">${semParceria}</span>
+    </button>
+  `);
+  parcerias.forEach(p => {
+    chips.push(`
+      <button class="sub-chip" onclick="setSubFiltro('${esc(p)}', this)">
+        🤝 ${esc(state.corretorFiltro)}/${esc(p)} <span class="count">${contagem[p]}</span>
+      </button>
+    `);
+  });
+  wrap.innerHTML = '<span class="label">Filtros:</span>' + chips.join('');
+}
+
+function setSubFiltro(valor, el){
+  document.querySelectorAll('#subFiltros .sub-chip').forEach(c => c.classList.remove('active'));
+  if(el) el.classList.add('active');
+  renderizarClientes();
+}
+
+/* =====================================================
+   LISTA CLIENTES
+===================================================== */
+function renderizarClientes(){
+  const busca = ($('buscaCliente').value || '').toLowerCase().trim();
+  const ordem = $('ordenacao').value;
+  let lista = [...state.clientes];
+
+  if(state.corretorFiltro){
+    lista = lista.filter(c => c.corretor === state.corretorFiltro);
+  }
+  if(busca){
+    lista = lista.filter(c =>
+      (c.nome || '').toLowerCase().includes(busca) ||
+      normalizaTel(c.telefone).includes(normalizaTel(busca))
+    );
+  }
+  if(ordem === 'alfabetica'){
+    lista.sort((a,b) => (a.nome || '').localeCompare(b.nome || '', 'pt-BR', {sensitivity:'base'}));
+  } else if(ordem === 'data'){
+    lista.sort((a,b) => new Date(b.dataCadastro||0) - new Date(a.dataCadastro||0));
+  } else if(ordem === 'data-antiga'){
+    lista.sort((a,b) => new Date(a.dataCadastro||0) - new Date(b.dataCadastro||0));
+  }
+
+  const list = $('clientesList');
+  const empty = $('clientesEmpty');
+  if(lista.length === 0){
+    list.innerHTML = '';
+    empty.classList.remove('hidden');
+    return;
+  }
+  empty.classList.add('hidden');
+  list.innerHTML = lista.map(c => `
+    <div class="cliente-item" onclick="abrirVitrineDoCliente('${esc(c.telefone)}')">
+      <div class="nome">
+        <div class="initial">${esc(primeiraLetra(c.nome))}</div>
+        ${esc(c.nome || 'Sem nome')}
+      </div>
+      <div class="tel">📱 ${esc(fmtTel(c.telefone))}</div>
+      <div class="meta">
+        ${c.corretor ? `<span class="tag tag-corretor">👤 ${esc(c.corretor)}</span>` : ''}
+        ${c.parceria ? `<span class="tag tag-parceria">🤝 ${esc(c.parceria)}</span>` : ''}
+        ${c.dataCadastro ? `<span class="tag tag-data">📅 ${fmtData(c.dataCadastro)}</span>` : ''}
+      </div>
+      ${c.observacao ? `<div class="obs-preview">💬 ${esc(c.observacao)}</div>` : ''}
+    </div>
+  `).join('');
+}
+
+function abrirNovoCliente(){
+  $('clienteModalTitle').textContent = '👤 Cadastrar cliente';
+  $('cliTelefone').value = '';
+  $('cliNome').value = '';
+  $('cliParceria').value = '';
+  $('cliObservacao').value = '';
+  preencherSelectCorretores();
+  $('clienteModalBackdrop').classList.add('show');
+  setTimeout(()=> $('cliTelefone').focus(), 100);
+}
+
+function preencherSelectCorretores(valorAtual){
+  const sel = $('cliCorretor');
+  sel.innerHTML = '<option value="">— Selecione —</option>' +
+    state.corretores.map(c => `<option value="${esc(c)}">${esc(c)}</option>`).join('');
+  if(valorAtual) sel.value = valorAtual;
+  else if(state.corretorFiltro) sel.value = state.corretorFiltro;
+}
+
+function fecharClienteModal(){ $('clienteModalBackdrop').classList.remove('show'); }
+
+async function salvarCliente(){
+  const tel = normalizaTel($('cliTelefone').value);
+  const nome = $('cliNome').value.trim();
+  const corretor = $('cliCorretor').value;
+  const parceria = $('cliParceria').value.trim();
+  const observacao = $('cliObservacao').value.trim();
+
+  if(tel.length < 10){ toast('Telefone inválido (com DDD)', 'error'); return; }
+  if(!nome){ toast('Informe o nome do cliente', 'error'); return; }
+  if(!corretor){ toast('Selecione o corretor responsável', 'error'); return; }
+
+  const btn = $('btnSalvarCliente');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="loader"></span> Salvando...';
+
+  marcarSalvando(true);
+  const res = await api('salvarCliente', {
+    senha: state.adminSenha, telefone: tel, nome, corretor, parceria, observacao
+  });
+  marcarSalvando(false);
+
+  btn.disabled = false;
+  btn.textContent = '💾 Salvar cliente';
+  if(!res.ok){ toast(res.error || 'Erro ao salvar', 'error'); return; }
+  toast('Cliente salvo ✅', 'success');
+  fecharClienteModal();
+
+  // Recarrega clientes (invalida cache)
+  state.cache.clientesCarregados = false;
+  await carregarClientes();
+  if(state.cache.notificacoesCarregadas) carregarNotificacoesBackground();
+}
+
+/* =====================================================
+   VITRINE
+===================================================== */
+async function abrirVitrineDoCliente(telefone){
+  state.telefone = normalizaTel(telefone);
+  await irParaVitrine();
+}
+
+async function irParaVitrine(){
+  $('adminToolbar').classList.remove('hidden');
+  $('infoClienteBar').classList.remove('hidden');
+  $('userInfo').textContent = '';
+  $('btnSair').classList.remove('hidden');
+  $('adminPanel').classList.add('hidden');
+  $('acessosSection').classList.add('hidden');
+  $('headerCorretorChips').classList.add('hidden');
+
+  // Busca dados do cliente + imóveis em PARALELO
+  const [resCli, resIm] = await Promise.all([
+    api('buscarCliente', { senha: state.adminSenha, telefone: state.telefone }),
+    api('adminListar', { senha: state.adminSenha })
+  ]);
+
+  state.clienteInfo = (resCli.ok && resCli.data) ? resCli.data : null;
+
+  const nome = state.clienteInfo?.nome || '(sem cadastro)';
+  const corr = state.clienteInfo?.corretor ? ` • 👤 ${state.clienteInfo.corretor}` : '';
+  const parc = state.clienteInfo?.parceria ? ` • 🤝 ${state.clienteInfo.parceria}` : '';
+  $('infoClienteNome').textContent = nome;
+  $('infoClienteExtra').textContent = ` — 📱 ${fmtTel(state.telefone)}${corr}${parc}`;
+  $('adTelefone').value = fmtTel(state.telefone);
+
+  // Filtra imóveis do cliente
+  const todos = (resIm.ok && resIm.data) ? resIm.data : [];
+  state.imoveis = todos
+    .filter(i => normalizaTel(i.telefone) === state.telefone)
+    .sort((a,b) => {
+      const da = new Date(a.dataCadastro||0).getTime() || 0;
+      const db = new Date(b.dataCadastro||0).getTime() || 0;
+      return db - da;
+    });
+
+  // Carrega acessos em background (não bloqueia)
+  carregarAcessos();
+
+  mostrarView('vitrineView');
+  atualizarContadores();
+  renderizarImoveis();
+}
+
+function voltarParaClientes(){
+  state.telefone = null;
+  state.imoveis = [];
+  state.clienteInfo = null;
+  mostrarView('corretorView');
+  $('btnSair').classList.remove('hidden');
+  $('headerCorretorChips').classList.remove('hidden');
+  $('userInfo').textContent = '👑 Painel';
+  montarBarraCorretor();
+}
+
+function abrirEditarClienteAtual(){
+  if(!state.clienteInfo){
+    toast('Cliente ainda não cadastrado. Cadastre primeiro.', 'error');
+    abrirNovoCliente();
+    $('cliTelefone').value = fmtTel(state.telefone);
+    return;
+  }
+  $('clienteModalTitle').textContent = '✏️ Editar cliente';
+  $('cliTelefone').value = fmtTel(state.clienteInfo.telefone);
+  $('cliNome').value = state.clienteInfo.nome || '';
+  $('cliParceria').value = state.clienteInfo.parceria || '';
+  $('cliObservacao').value = state.clienteInfo.observacao || '';
+  preencherSelectCorretores(state.clienteInfo.corretor);
+  $('clienteModalBackdrop').classList.add('show');
+}
+
+/* =====================================================
+   PAINEL DE IMÓVEL
+===================================================== */
+function abrirPainelNovoImovel(){
+  limparFormAdmin();
+  $('adminPanel').classList.remove('hidden');
+  $('adminPanel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  setTimeout(() => $('adTitulo').focus(), 300);
+}
+
+function fecharPainelImovel(){
+  $('adminPanel').classList.add('hidden');
+  limparFormAdmin();
+}
+
+function toggleAcessosSection(){
+  const sec = $('acessosSection');
+  sec.classList.toggle('hidden');
+  if(!sec.classList.contains('hidden')) carregarAcessos();
+}
+
+/* =====================================================
+   ACESSOS
+===================================================== */
+async function carregarAcessos(){
+  if(!state.telefone) return;
+  const res = await api('listarAcessos', { senha: state.adminSenha, telefone: state.telefone });
+  state.acessos = (res.ok && res.data) ? res.data : [];
+  $('acessosCountChip').textContent = state.acessos.length;
+  renderizarAcessos();
+}
+
+function renderizarAcessos(){
+  const list = $('acessosList');
+  if(state.acessos.length === 0){
+    list.innerHTML = `<div style="text-align:center; padding:30px 20px; color:var(--muted); font-size:.85rem;">
+      Nenhum acesso criado ainda.<br>Clique em <strong>➕ Criar acesso</strong> para gerar a primeira senha.</div>`;
+    return;
+  }
+  list.innerHTML = state.acessos.map(a => {
+    const statusTag = a.status === 'Bloqueado'
+      ? 'background:#f0dede; color:var(--danger);'
+      : a.status === 'Pendente'
+        ? 'background:#f2ead5; color:var(--warn);'
+        : 'background:#e2ede7; color:var(--success);';
+    const navegadorTxt = a.navegador ? ` • ${esc(a.navegador)}` : '';
+    const ultimo = a.ultimoAcesso ? `Último acesso ${fmtDataHora(a.ultimoAcesso)}` : 'Nunca acessou';
+    const criado = `Criado em ${fmtDataHora(a.dataCriacao)}`;
+    return `
+      <div style="background:#fafbfc; border:1px solid var(--border-soft); border-radius:8px; padding:12px; margin-bottom:10px;">
+        <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:10px; margin-bottom:8px; flex-wrap:wrap;">
+          <div style="font-size:.88rem; font-weight:700; color:var(--text);">📱 ${esc(a.apelido || 'Sem apelido')}</div>
+          <span style="font-size:.64rem; font-weight:700; padding:2px 8px; border-radius:4px; text-transform:uppercase; letter-spacing:.3px; ${statusTag}">${esc(a.status)}</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px; background:#fff; border:1px solid var(--border); border-radius:6px; padding:8px 12px; margin-bottom:8px; font-family:'Courier New', monospace;">
+          <span style="font-size:.7rem; color:var(--muted); font-weight:700; text-transform:uppercase;">Senha</span>
+          <span style="font-size:1.05rem; font-weight:700; letter-spacing:2px; color:var(--danger); flex:1; user-select:all;">${esc(a.senha)}</span>
+          <button onclick="copiarSenha('${esc(a.senha)}')" title="Copiar" style="background:transparent; border:none; cursor:pointer; font-size:.95rem; padding:4px;">📋</button>
+        </div>
+        <div style="font-size:.72rem; color:var(--muted); line-height:1.5; margin-bottom:8px;">
+          <strong>Status:</strong> ${esc(a.status)}${navegadorTxt}<br>${criado}<br>${ultimo}
+        </div>
+        <div style="display:flex; gap:6px; flex-wrap:wrap;">
+          <button class="btn btn-ghost btn-xs" onclick="trocarSenhaAcesso('${esc(a.id)}')">🔄 Trocar senha</button>
+          <button class="btn btn-warn btn-xs" onclick="bloquearAcesso('${esc(a.id)}')">
+            ${a.status === 'Bloqueado' ? '🔓 Desbloquear' : '🚫 Bloquear'}
+          </button>
+          <button class="btn btn-danger btn-xs" onclick="removerAcesso('${esc(a.id)}')">🗑️ Remover</button>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function copiarSenha(senha){
+  if(navigator.clipboard && window.isSecureContext){
+    navigator.clipboard.writeText(senha).then(() => toast('Senha copiada 📋', 'success'))
+      .catch(() => fallbackCopySenha(senha));
+  } else {
+    fallbackCopySenha(senha);
+  }
+}
+
+function fallbackCopySenha(senha){
+  const ta = document.createElement('textarea');
+  ta.value = senha;
+  ta.style.position = 'fixed'; ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.select();
+  try { document.execCommand('copy'); toast('Senha copiada 📋', 'success'); }
+  catch(e){ toast('Não foi possível copiar', 'error'); }
+  document.body.removeChild(ta);
+}
+
+function abrirNovoAcesso(){
+  $('novoAcessoApelido').value = '';
+  $('novoAcessoModal').classList.add('show');
+  setTimeout(() => $('novoAcessoApelido').focus(), 100);
+}
+
+function fecharNovoAcesso(){ $('novoAcessoModal').classList.remove('show'); }
+
+async function criarAcesso(ev){
+  const apelido = $('novoAcessoApelido').value.trim();
+  if(!apelido){ toast('Digite um apelido para o dispositivo', 'error'); return; }
+  const btn = ev?.target;
+  if(btn){ btn.disabled = true; btn.innerHTML = '<span class="loader"></span> Gerando...'; }
+  marcarSalvando(true);
+  const res = await api('criarAcesso', {
+    senha: state.adminSenha, telefone: state.telefone, apelido: apelido
+  });
+  marcarSalvando(false);
+  if(btn){ btn.disabled = false; btn.textContent = '🔑 Gerar senha'; }
+  if(!res.ok){ toast(res.error || 'Erro ao criar acesso', 'error'); return; }
+  fecharNovoAcesso();
+  $('senhaGeradaApelido').textContent = apelido;
+  $('senhaGeradaValor').textContent = res.senha;
+  $('senhaGeradaModal').classList.add('show');
+  carregarAcessos();
+}
+
+function fecharSenhaGerada(){ $('senhaGeradaModal').classList.remove('show'); }
+
+function copiarSenhaGerada(){
+  const senha = $('senhaGeradaValor').textContent;
+  if(navigator.clipboard && window.isSecureContext){
+    navigator.clipboard.writeText(senha).then(() => toast('Senha copiada 📋', 'success'))
+      .catch(() => fallbackCopySenha(senha));
+  } else {
+    fallbackCopySenha(senha);
+  }
+}
+
+async function trocarSenhaAcesso(acessoId){
+  if(!confirm('Gerar uma nova senha? A atual deixará de funcionar.')) return;
+  marcarSalvando(true);
+  const res = await api('trocarSenhaAcesso', { senha: state.adminSenha, acessoId });
+  marcarSalvando(false);
+  if(!res.ok){ toast(res.error || 'Erro', 'error'); return; }
+  toast('Nova senha gerada ✅', 'success');
+  $('senhaGeradaApelido').textContent = 'Senha alterada';
+  $('senhaGeradaValor').textContent = res.senha;
+  $('senhaGeradaModal').classList.add('show');
+  carregarAcessos();
+}
+
+async function bloquearAcesso(acessoId){
+  marcarSalvando(true);
+  const res = await api('bloquearAcesso', { senha: state.adminSenha, acessoId });
+  marcarSalvando(false);
+  if(!res.ok){ toast(res.error || 'Erro', 'error'); return; }
+  toast('Status atualizado', 'success');
+  carregarAcessos();
+}
+
+async function removerAcesso(acessoId){
+  if(!confirm('Remover este acesso? O cliente não poderá mais entrar com essa senha.')) return;
+  marcarSalvando(true);
+  const res = await api('removerAcesso', { senha: state.adminSenha, acessoId });
+  marcarSalvando(false);
+  if(!res.ok){ toast(res.error || 'Erro', 'error'); return; }
+  toast('Acesso removido', 'success');
+  carregarAcessos();
+}
+
+/* =====================================================
+   ATUALIZAR CONTADORES
+===================================================== */
+function atualizarContadores(){
+  const counts = { todos: state.imoveis.length, gostei: 0, 'quero-visitar': 0, 'nao-gostei': 0, pendente: 0 };
+  state.imoveis.forEach(im => {
+    const s = im.status || 'pendente';
+    if(counts[s] !== undefined) counts[s]++;
+    else counts.pendente++;
+  });
+  Object.keys(counts).forEach(k => {
+    const el = $('cnt-' + k);
+    if(el) el.textContent = counts[k];
+  });
+}
+
+function setFiltro(f, el){
+  state.filtro = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  renderizarImoveis();
+}
+
+function renderizarImoveis(){
+  const grid = $('gridImoveis');
+  let lista = [...state.imoveis];
+
+  if(state.filtro === 'recentes'){
+    lista.sort((a,b) => {
+      const da = new Date(a.dataCadastro||0).getTime() || 0;
+      const db = new Date(b.dataCadastro||0).getTime() || 0;
+      return db - da;
+    });
+  } else if(state.filtro === 'todos'){
+    const ordem = { 'pendente': 0, 'quero-visitar': 1, 'gostei': 2, 'nao-gostei': 3 };
+    lista.sort((a,b) => {
+      const oa = ordem[(a.status || 'pendente')] ?? 99;
+      const ob = ordem[(b.status || 'pendente')] ?? 99;
+      if(oa !== ob) return oa - ob;
+      const da = new Date(a.dataCadastro||0).getTime() || 0;
+      const db = new Date(b.dataCadastro||0).getTime() || 0;
+      return db - da;
+    });
+  } else {
+    lista = lista.filter(i => (i.status || 'pendente') === state.filtro);
+  }
+
+  const busca = ($('buscaInput').value || '').toLowerCase().trim();
+  if(busca){
+    lista = lista.filter(i =>
+      (i.titulo || '').toLowerCase().includes(busca) ||
+      (i.descricao || '').toLowerCase().includes(busca) ||
+      (i.observacao || '').toLowerCase().includes(busca)
+    );
+  }
+
+  if(lista.length === 0){
+    grid.innerHTML = '';
+    $('emptyState').classList.remove('hidden');
+    $('emptyTitulo').textContent = busca ? 'Nada encontrado' : 'Nenhum imóvel aqui';
+    $('emptyMsg').textContent = busca ? 'Tente outra busca.' : 'Nada para mostrar neste filtro.';
+    return;
+  }
+  $('emptyState').classList.add('hidden');
+  grid.innerHTML = lista.map(cardHTML).join('');
+}
+
+function cardHTML(im){
+  const statusAtual = im.status || 'pendente';
+  const statusClass = {
+    'gostei':'status-gostei','nao-gostei':'status-nao-gostei',
+    'quero-visitar':'status-quero-visitar','pendente':'status-pendente'
+  }[statusAtual] || 'status-pendente';
+  const statusLabel = {
+    'gostei':'❤️ Gostei','nao-gostei':'❌ Não gostei',
+    'quero-visitar':'📅 Quero visitar','pendente':'⏳ Aguardando'
+  }[statusAtual];
+
+  const img = im.imagem || 'https://via.placeholder.com/400x250/e2e8f0/64748b?text=Sem+imagem';
+  const id = esc(im.id);
+  const dataFmt = fmtData(im.dataCadastro);
+  const obsTexto = (im.observacao || '').trim();
+  const obsLonga = obsTexto.length > 140;
+  const obsId = 'obs-' + id;
+  const descTexto = (im.descricao || '').trim();
+  const descId = 'desc-' + id;
+
+  const cardExtraClass = (statusAtual === 'nao-gostei') ? ' card-nao-gostei' : '';
+
+  const btnGostei = (statusAtual === 'gostei') ? 'ativo' : '';
+  const btnVisitar = (statusAtual === 'quero-visitar') ? 'ativo' : '';
+  const btnNao = (statusAtual === 'nao-gostei') ? 'ativo' : '';
+
+  let agendamentoHtml = '';
+  const temAgendamento = !!im.dataVisitaAgendada;
+  const agInfo = temAgendamento ? fmtDataHora(im.dataVisitaAgendada) : '';
+
+  if(temAgendamento){
+    agendamentoHtml = `
+      <div class="agendamento-box">
+        <div class="titulo">📅 Visita agendada</div>
+        <div class="agendamento-info">
+          <strong>Marcada para:</strong>
+          <span class="data-destaque">${agInfo}</span>
+        </div>
+        <div class="agendamento-actions">
+          <button class="btn btn-success btn-principal" onclick="registrarVisitaDoAgendamento('${id}')">
+            ✅ Registrar visita realizada
+          </button>
+        </div>
+        <div class="agendamento-actions" style="margin-top:6px;">
+          <button class="btn btn-ghost btn-xs" onclick="abrirAgendarModal('${id}')">✏️ Alterar data</button>
+          <button class="btn btn-ghost btn-xs" onclick="cancelarAgendamentoDireto('${id}')">🗑️ Cancelar</button>
+        </div>
+      </div>`;
+  } else {
+    agendamentoHtml = `
+      <div class="agendamento-box">
+        <div class="titulo">📅 Agendar visita</div>
+        <div class="agendamento-info"><em>Nenhuma visita agendada.</em></div>
+        <div class="agendamento-actions">
+          <button class="btn btn-primary btn-xs" onclick="abrirAgendarModal('${id}')">➕ Agendar visita</button>
+        </div>
+      </div>`;
+  }
+
+  let visitaHtml = '';
+  const temVisita = im.visitaFeita === 'Sim' && im.dataVisita;
+  if(temVisita){
+    const dataVisitaFmt = fmtData(im.dataVisita);
+    const aval = (im.avaliacaoVisita || '').trim();
+    visitaHtml = `
+      <div class="visita-box">
+        <div class="titulo">✅ Visita realizada</div>
+        <div class="visita-info">
+          <strong>Data:</strong> ${dataVisitaFmt}<br>
+          ${aval ? `<strong>O cliente achou:</strong> ${esc(aval)}` : '<em>Avaliação não registrada.</em>'}
+        </div>
+        <div class="visita-actions">
+          <button class="btn btn-ghost btn-xs" onclick="abrirVisitaModal('${id}')">✏️ Editar avaliação</button>
+        </div>
+      </div>`;
+  }
+
+  return `
+    <div class="card${cardExtraClass}" data-id="${id}">
+      <span class="status-badge ${statusClass}">${statusLabel}</span>
+      <img class="card-img" src="${esc(img)}" alt="${esc(im.titulo)}" loading="lazy"
+           onerror="this.src='https://via.placeholder.com/400x250/e2e8f0/64748b?text=Sem+imagem'">
+      <div class="card-body">
+        <div class="card-top-meta">
+          ${dataFmt ? `<span class="card-date">📅 ${dataFmt}</span>` : ''}
+          ${im.codigo ? `<span class="card-code" onclick="copiarCodigo('${esc(im.codigo)}', this)" title="Clique para copiar">#${esc(im.codigo)} 📋</span>` : ''}
+        </div>
+        <div class="card-title">${esc(im.titulo) || 'Sem endereço'}</div>
+        ${descTexto ? `
+          <div class="card-desc" id="${descId}" onclick="toggleDesc('${descId}')">${esc(descTexto)}</div>
+          ${descTexto.length > 180 ? `<button class="card-desc-toggle" onclick="toggleDesc('${descId}')" id="${descId}-toggle">▼ Ver mais</button>` : ''}
+        ` : ''}
+
+        <div class="card-actions">
+          <button class="btn btn-success ${btnGostei}" onclick="marcar('${id}','gostei')">
+            <span class="ico">❤️</span><span class="lbl">Gostei</span>
+          </button>
+          <button class="btn btn-warn ${btnVisitar}" onclick="marcar('${id}','quero-visitar')">
+            <span class="ico">📅</span><span class="lbl">Visitar</span>
+          </button>
+          <button class="btn btn-danger ${btnNao}" onclick="marcar('${id}','nao-gostei')">
+            <span class="ico">❌</span><span class="lbl">Não</span>
+          </button>
+        </div>
+
+        ${im.link ? `
+          <a class="btn-ver-anuncio" href="${esc(im.link)}" target="_blank" rel="noopener">
+            🔗 Ver anúncio completo
+            <span class="arrow">→</span>
+          </a>
+        ` : ''}
+
+        ${im.link ? `
+          <button class="btn-buscar" onclick="abrirBuscar('${esc(im.codigo)}')">
+            🔎 BUSCAR entrada
+          </button>
+        ` : ''}
+
+        <div class="obs-wrap" id="${obsId}">
+          <div class="obs-label">
+            💬 Observação
+            <button class="obs-edit-btn" onclick="abrirEdicaoObs('${obsId}')">✏️ Editar</button>
+          </div>
+          ${obsTexto ? `
+            <div class="obs-text ${obsLonga ? '' : 'expandido'}" id="${obsId}-text">${esc(obsTexto)}</div>
+            ${obsLonga ? `<button class="obs-toggle" onclick="toggleObs('${obsId}')" id="${obsId}-toggle">▼ Ver mais</button>` : ''}
+          ` : `<div class="obs-empty" onclick="abrirEdicaoObs('${obsId}')">— Clique para adicionar —</div>`}
+          <textarea class="obs-textarea" id="${obsId}-input" placeholder="Escreva uma observação...">${esc(obsTexto)}</textarea>
+          <div class="obs-edit-actions">
+            <button class="btn btn-primary btn-sm" style="flex:1" onclick="salvarEdicaoObs('${id}', '${obsId}')">💾 Salvar</button>
+            <button class="btn btn-ghost btn-sm" onclick="cancelarEdicaoObs('${obsId}')">Cancelar</button>
+          </div>
+        </div>
+
+        ${agendamentoHtml}
+        ${visitaHtml}
+
+        <div class="mt-2" style="display:flex; gap:6px;">
+          <button class="btn btn-ghost btn-sm" style="flex:1" onclick="verHistorico('${id}')">📜 Histórico</button>
+          <button class="btn btn-ghost btn-sm" style="flex:1" onclick="editarImovel('${id}')">✏️ Editar</button>
+          <button class="btn btn-danger btn-sm" style="flex:1" onclick="excluirImovel('${id}')">🗑️</button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function toggleDesc(descId){
+  const el = $(descId);
+  const toggle = $(descId + '-toggle');
+  if(!el) return;
+  const expandido = el.classList.contains('expandido');
+  if(expandido){
+    el.classList.remove('expandido');
+    if(toggle) toggle.innerHTML = '▼ Ver mais';
+  } else {
+    el.classList.add('expandido');
+    if(toggle) toggle.innerHTML = '▲ Ver menos';
+  }
+}
+
+function abrirBuscar(codigo){
+  const url = codigo ? `${BUSCAR_BASE}/${codigo}` : BUSCAR_BASE;
+  window.open(url, '_blank');
+}
+
+/* =====================================================
+   OBSERVAÇÃO
+===================================================== */
+function toggleObs(obsId){
+  const text = $(obsId + '-text');
+  const toggle = $(obsId + '-toggle');
+  if(!text) return;
+  const expandido = text.classList.contains('expandido');
+  if(expandido){
+    text.classList.remove('expandido');
+    if(toggle) toggle.innerHTML = '▼ Ver mais';
+  } else {
+    text.classList.add('expandido');
+    if(toggle) toggle.innerHTML = '▲ Ver menos';
+  }
+}
+
+function abrirEdicaoObs(obsId){
+  const wrap = $(obsId);
+  const input = $(obsId + '-input');
+  const text = $(obsId + '-text');
+  if(!wrap || !input) return;
+  if(text) input.value = text.textContent.trim();
+  else input.value = '';
+  wrap.classList.add('editing');
+  input.focus();
+}
+
+function cancelarEdicaoObs(obsId){
+  const wrap = $(obsId);
+  if(wrap) wrap.classList.remove('editing');
+}
+
+async function salvarEdicaoObs(id, obsId){
+  const input = $(obsId + '-input');
+  const novaObs = input.value.trim();
+  const im = state.imoveis.find(i => i.id === id);
+  if(im) im.observacao = novaObs;
+  const wrap = $(obsId);
+  if(wrap) wrap.classList.remove('editing');
+  toast('Observação salva ✅', 'success');
+  renderizarImoveis();
+
+  marcarSalvando(true);
+  await api('salvarObservacao', { id, observacao: novaObs });
+  marcarSalvando(false);
+}
+
+/* =====================================================
+   MARCAR STATUS (com toggle)
+===================================================== */
+async function marcar(id, acao){
+  const im = state.imoveis.find(i => i.id === id);
+  if(!im) return;
+
+  const statusAtual = im.status || 'pendente';
+  const novaAcao = (statusAtual === acao) ? 'pendente' : acao;
+
+  im.status = novaAcao;
+  atualizarContadores();
+  renderizarImoveis();
+
+  // Invalida cache de notificações
+  if(novaAcao === 'quero-visitar' || novaAcao === 'gostei' || novaAcao === 'pendente'){
+    state.cache.notificacoesCarregadas = false;
+    carregarNotificacoesBackground();
+  }
+
+  marcarSalvando(true);
+  const tel = state.telefone || (im ? im.telefone : '');
+  try {
+    await api('atualizarStatus', {
+      id, telefone: tel, acao: novaAcao
+    });
+  } catch(e){
+    console.error('Erro ao salvar status:', e);
+  } finally {
+    marcarSalvando(false);
+  }
+
+  if(novaAcao !== 'pendente'){
+    toast('Marcado como: ' + novaAcao, 'success');
+  } else {
+    toast('Voltou para aguardando', 'success');
+  }
+}
+
+function copiarCodigo(codigo, el){
+  if(!codigo) return;
+  const texto = String(codigo);
+  function feedback(){
+    const original = el.innerHTML;
+    el.classList.add('copiado');
+    el.innerHTML = '✅ Copiado!';
+    setTimeout(() => { el.classList.remove('copiado'); el.innerHTML = original; }, 1400);
+  }
+  if(navigator.clipboard && window.isSecureContext){
+    navigator.clipboard.writeText(texto).then(feedback).catch(() => fallbackCopy(texto, feedback));
+  } else {
+    fallbackCopy(texto, feedback);
+  }
+}
+
+function fallbackCopy(texto, cb){
+  const ta = document.createElement('textarea');
+  ta.value = texto;
+  ta.style.position = 'fixed'; ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.select();
+  try { document.execCommand('copy'); cb && cb(); }
+  catch(e){ toast('Não foi possível copiar', 'error'); }
+  document.body.removeChild(ta);
+}
+
+/* =====================================================
+   ADMIN FORM IMÓVEL
+===================================================== */
+function limparFormAdmin(){
+  $('editingId').value = '';
+  $('adTelefone').value = state.telefone ? fmtTel(state.telefone) : '';
+  $('adTitulo').value = '';
+  $('adDescricao').value = '';
+  $('adLink').value = '';
+  $('adImagem').value = '';
+  $('previewImg').style.display = 'none';
+  $('previewImg').src = '';
+  $('btnSalvarImovel').textContent = '💾 Salvar imóvel';
+  $('adminPanelTitle').textContent = 'Adicionar imóvel';
+}
+
+function atualizarPreview(url){
+  if(url && /^https?:\/\//.test(url)){
+    $('previewImg').src = url;
+    $('previewImg').style.display = 'block';
+  } else {
+    $('previewImg').style.display = 'none';
+  }
+}
+
+async function buscarImagemPreview(mostrarToast){
+  const url = $('adLink').value.trim();
+  if(!url){ if(mostrarToast) toast('Cole um link primeiro', 'error'); return; }
+  if(mostrarToast) toast('Buscando imagem...');
+  const res = await api('buscarImagem', { url });
+  if(res.ok && res.imagem){
+    $('adImagem').value = res.imagem;
+    atualizarPreview(res.imagem);
+    if(mostrarToast) toast('Imagem encontrada!', 'success');
+  } else {
+    if(mostrarToast) toast('Não foi possível: ' + (res.error || 'sem imagem'), 'error');
+  }
+}
+
+async function salvarImovel(){
+  const tel = normalizaTel($('adTelefone').value);
+  const titulo = $('adTitulo').value.trim();
+  const link = $('adLink').value.trim();
+  const imagem = $('adImagem').value.trim();
+  if(!tel || tel.length < 10){ toast('Telefone inválido', 'error'); return; }
+  if(!titulo){ toast('Informe a rua/endereço', 'error'); return; }
+
+  const btn = $('btnSalvarImovel');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="loader"></span> Salvando...';
+
+  marcarSalvando(true);
+
+  let imagemFinal = imagem;
+  if(link && !imagemFinal){
+    const r = await api('buscarImagem', { url: link });
+    if(r.ok && r.imagem) imagemFinal = r.imagem;
+  }
+
+  const res = await api('salvarImovel', {
+    senha: state.adminSenha, id: $('editingId').value || '',
+    telefone: tel, titulo, descricao: $('adDescricao').value.trim(),
+    link, imagem: imagemFinal, status: 'pendente'
+  });
+
+  marcarSalvando(false);
+  btn.disabled = false;
+  btn.textContent = '💾 Salvar imóvel';
+  if(!res.ok){ toast(res.error || 'Erro ao salvar', 'error'); return; }
+  toast('Imóvel salvo ✅', 'success');
+  fecharPainelImovel();
+
+  // Recarrega a vitrine do cliente
+  await irParaVitrine();
+}
+
+function editarImovel(id){
+  const im = state.imoveis.find(i => i.id === id);
+  if(!im) return;
+  $('editingId').value = im.id;
+  $('adTelefone').value = fmtTel(im.telefone);
+  $('adTitulo').value = im.titulo;
+  $('adDescricao').value = im.descricao;
+  $('adLink').value = im.link;
+  $('adImagem').value = im.imagem;
+  if(im.imagem) atualizarPreview(im.imagem);
+  $('btnSalvarImovel').textContent = '💾 Atualizar imóvel';
+  $('adminPanelTitle').textContent = 'Editar imóvel';
+  $('adminPanel').classList.remove('hidden');
+  $('adminPanel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  setTimeout(() => $('adTitulo').focus(), 400);
+}
+
+async function excluirImovel(id){
+  if(!confirm('Excluir este imóvel? Essa ação não pode ser desfeita.')) return;
+  marcarSalvando(true);
+  const res = await api('excluirImovel', { senha: state.adminSenha, id });
+  marcarSalvando(false);
+  if(!res.ok){ toast(res.error || 'Erro ao excluir', 'error'); return; }
+  toast('Imóvel excluído', 'success');
+  state.imoveis = state.imoveis.filter(i => i.id !== id);
+  atualizarContadores();
+  renderizarImoveis();
+}
+
+/* =====================================================
+   HISTÓRICO
+===================================================== */
+async function verHistorico(id){
+  const im = state.imoveis.find(i => i.id === id);
+  if(!im) return;
+  const res = await api('listarHistoricoImovel', { senha: state.adminSenha, imovelId: id });
+  const historico = (res.ok && res.data) ? res.data : [];
+  const icons = { 'gostei': '❤️', 'nao-gostei': '❌', 'quero-visitar': '📅', 'pendente': '⏳' };
+  const html = historico.length === 0
+    ? `<div style="text-align:center; padding:20px; color:var(--muted); font-size:.85rem;">Nenhuma ação registrada ainda.</div>`
+    : historico.map(h => `
+        <div style="display:flex; gap:10px; align-items:flex-start; padding:8px 6px; border-bottom:1px solid var(--border-soft); font-size:.8rem; line-height:1.4;">
+          <div style="font-size:1rem; flex-shrink:0;">${icons[h.acao] || '•'}</div>
+          <div style="flex:1;">
+            <span style="font-weight:700; color:var(--primary);">${esc(h.apelido || 'Sistema')}</span> marcou <strong>${esc(h.acao)}</strong>
+            <div style="font-size:.7rem; color:var(--muted); margin-top:2px;">${fmtDataHora(h.dataHora)}</div>
+          </div>
+        </div>
+      `).join('');
+  // Cria modal ad-hoc
+  let backdrop = document.getElementById('modalBackdropTemp');
+  if(!backdrop){
+    backdrop = document.createElement('div');
+    backdrop.className = 'modal-backdrop';
+    backdrop.id = 'modalBackdropTemp';
+    backdrop.innerHTML = '<div class="modal" id="modalContentTemp"></div>';
+    backdrop.onclick = (e) => { if(e.target === backdrop) fecharModalTemp(); };
+    document.body.appendChild(backdrop);
+  }
+  document.getElementById('modalContentTemp').innerHTML = `
+    <button class="modal-close" onclick="fecharModalTemp()">×</button>
+    <h2 style="margin-bottom:8px;">📜 Histórico</h2>
+    <p class="text-muted" style="margin-bottom:14px; font-size:.85rem;">${esc(im.titulo)}</p>
+    <div style="max-height:300px; overflow-y:auto; border:1px solid var(--border-soft); border-radius:8px; padding:10px; background:#fafbfc;">${html}</div>
+    <button class="btn btn-ghost btn-full mt-3" onclick="fecharModalTemp()">Fechar</button>
+  `;
+  backdrop.classList.add('show');
+}
+
+function fecharModalTemp(){
+  const b = document.getElementById('modalBackdropTemp');
+  if(b) b.classList.remove('show');
+}
+
+/* =====================================================
+   VISITA REALIZADA
+===================================================== */
+function abrirVisitaModal(id){
+  const im = state.imoveis.find(i => i.id === id);
+  if(!im) return;
+  $('visitaImovelId').value = id;
+  $('visitaData').value = toInputDate(im.dataVisita) || new Date().toISOString().slice(0,10);
+  $('visitaAvaliacao').value = im.avaliacaoVisita || '';
+  $('btnLimparVisita').style.display = im.visitaFeita === 'Sim' ? 'inline-flex' : 'none';
+  $('visitaModalBackdrop').classList.add('show');
+  setTimeout(() => $('visitaAvaliacao').focus(), 100);
+}
+
+function registrarVisitaDoAgendamento(id){
+  const im = state.imoveis.find(i => i.id === id);
+  if(!im) return;
+  if(!im.dataVisitaAgendada){
+    toast('Nenhum agendamento para este imóvel', 'error');
+    return;
+  }
+  $('visitaImovelId').value = id;
+  $('visitaData').value = toInputDate(im.dataVisitaAgendada);
+  $('visitaAvaliacao').value = im.avaliacaoVisita || '';
+  $('btnLimparVisita').style.display = 'none';
+  $('visitaModalBackdrop').classList.add('show');
+  setTimeout(() => $('visitaAvaliacao').focus(), 100);
+}
+
+function fecharVisitaModal(){ $('visitaModalBackdrop').classList.remove('show'); }
+
+async function salvarVisita(ev){
+  const id = $('visitaImovelId').value;
+  const data = $('visitaData').value;
+  const avaliacao = $('visitaAvaliacao').value.trim();
+  if(!id){ toast('Imóvel não identificado', 'error'); return; }
+  if(!data){ toast('Informe a data', 'error'); return; }
+
+  const btn = ev?.target;
+  if(btn) btn.disabled = true;
+  marcarSalvando(true);
+
+  const im = state.imoveis.find(i => i.id === id);
+  const dataAgendadaAntiga = im ? im.dataVisitaAgendada : '';
+
+  const res = await api('marcarVisita', { id, dataVisita: data, avaliacaoVisita: avaliacao });
+  if(!res.ok){
+    if(btn) btn.disabled = false;
+    marcarSalvando(false);
+    toast(res.error || 'Erro', 'error');
+    return;
+  }
+
+  if(im && im.dataVisitaAgendada){
+    await api('cancelarAgendamento', { senha: state.adminSenha, id });
+    im.dataVisitaAgendada = '';
+  }
+
+  marcarSalvando(false);
+  if(btn) btn.disabled = false;
+  toast('Visita registrada ✅', 'success');
+
+  if(im){
+    im.dataVisita = new Date(data + 'T12:00:00').toISOString();
+    im.avaliacaoVisita = avaliacao;
+    im.visitaFeita = 'Sim';
+    im._dataAgendadaAntes = dataAgendadaAntiga;
+  }
+
+  fecharVisitaModal();
+  renderizarImoveis();
+
+  // Invalida cache de agenda
+  state.cache.agendaCarregada = false;
+  if(state.abaAtiva === 'agenda') carregarAgenda(true);
+}
+
+async function limparVisita(){
+  const id = $('visitaImovelId').value;
+  if(!id) return;
+  if(!confirm('Desfazer esta visita? O agendamento voltará a aparecer na agenda.')) return;
+
+  const im = state.imoveis.find(i => i.id === id);
+  const dataReagendar = (im && im._dataAgendadaAntes) || (im && im.dataVisitaAgendada) || '';
+
+  marcarSalvando(true);
+  const res = await api('limparVisita', { id });
+  if(!res.ok){
+    marcarSalvando(false);
+    toast(res.error || 'Erro', 'error');
+    return;
+  }
+
+  if(dataReagendar){
+    await api('agendarVisita', { senha: state.adminSenha, id, dataAgendada: dataReagendar });
+  }
+  marcarSalvando(false);
+
+  toast('Visita desfeita ✅', 'success');
+  if(im){
+    im.dataVisita = '';
+    im.avaliacaoVisita = '';
+    im.visitaFeita = 'Não';
+    im.dataVisitaAgendada = dataReagendar || '';
+  }
+  fecharVisitaModal();
+  renderizarImoveis();
+
+  state.cache.agendaCarregada = false;
+  if(state.abaAtiva === 'agenda') carregarAgenda(true);
+}
+
+/* =====================================================
+   AGENDAMENTO
+===================================================== */
+function abrirAgendarModal(id){
+  const im = state.imoveis.find(i => i.id === id);
+  if(!im) return;
+  $('agendarImovelId').value = id;
+  $('agendarDataHora').value = toInputDateTime(im.dataVisitaAgendada) || '';
+  $('btnCancelarAgendamento').style.display = im.dataVisitaAgendada ? 'inline-flex' : 'none';
+  $('agendarModalBackdrop').classList.add('show');
+  setTimeout(() => $('agendarDataHora').focus(), 100);
+}
+
+function fecharAgendarModal(){ $('agendarModalBackdrop').classList.remove('show'); }
+
+async function salvarAgendamento(ev){
+  const id = $('agendarImovelId').value;
+  const dataHora = $('agendarDataHora').value;
+  if(!id){ toast('Imóvel não identificado', 'error'); return; }
+  if(!dataHora){ toast('Informe a data e hora', 'error'); return; }
+
+  const btn = ev?.target;
+  if(btn) btn.disabled = true;
+  marcarSalvando(true);
+  const iso = new Date(dataHora).toISOString();
+  const res = await api('agendarVisita', {
+    senha: state.adminSenha, id, dataAgendada: iso
+  });
+  marcarSalvando(false);
+  if(btn) btn.disabled = false;
+  if(!res.ok){ toast(res.error || 'Erro', 'error'); return; }
+  toast('Visita agendada ✅', 'success');
+  const im = state.imoveis.find(i => i.id === id);
+  if(im) im.dataVisitaAgendada = iso;
+  fecharAgendarModal();
+  renderizarImoveis();
+
+  state.cache.agendaCarregada = false;
+  if(state.abaAtiva === 'agenda') carregarAgenda(true);
+}
+
+async function cancelarAgendamento(){
+  const id = $('agendarImovelId').value;
+  if(!id) return;
+  if(!confirm('Cancelar o agendamento desta visita?')) return;
+  marcarSalvando(true);
+  const res = await api('cancelarAgendamento', { senha: state.adminSenha, id });
+  marcarSalvando(false);
+  if(!res.ok){ toast(res.error || 'Erro', 'error'); return; }
+  toast('Agendamento cancelado', 'success');
+  const im = state.imoveis.find(i => i.id === id);
+  if(im) im.dataVisitaAgendada = '';
+  fecharAgendarModal();
+  renderizarImoveis();
+
+  state.cache.agendaCarregada = false;
+  if(state.abaAtiva === 'agenda') carregarAgenda(true);
+}
+
+async function cancelarAgendamentoDireto(id){
+  if(!confirm('Cancelar o agendamento desta visita?')) return;
+  marcarSalvando(true);
+  const res = await api('cancelarAgendamento', { senha: state.adminSenha, id });
+  marcarSalvando(false);
+  if(!res.ok){ toast(res.error || 'Erro', 'error'); return; }
+  toast('Agendamento cancelado', 'success');
+  const im = state.imoveis.find(i => i.id === id);
+  if(im) im.dataVisitaAgendada = '';
+  renderizarImoveis();
+
+  state.cache.agendaCarregada = false;
+  if(state.abaAtiva === 'agenda') carregarAgenda(true);
+}
+
+/* =====================================================
+   SAIR
+===================================================== */
+function sair(){
+  if(estaSalvando()){
+    $('savingOverlay').classList.add('show');
+    const check = setInterval(() => {
+      if(!estaSalvando()){
+        clearInterval(check);
+        localStorage.removeItem(ADMIN_KEY);
+        location.reload();
+      }
+    }, 200);
+    return;
+  }
+
+  localStorage.removeItem(ADMIN_KEY);
+  state.isAdmin = false;
+  state.adminSenha = null;
+  state.clienteInfo = null;
+  state.imoveis = [];
+  state.clientes = [];
+  state.acessos = [];
+  state.agendamentos = [];
+  state.corretorFiltro = null;
+  state.telefone = null;
+  state.cache.clientesCarregados = false;
+  state.cache.notificacoesCarregadas = false;
+  state.cache.agendaCarregada = false;
+  $('btnSair').classList.add('hidden');
+  $('userInfo').textContent = '';
+  $('headerCorretorChips').classList.add('hidden');
+  $('inputAdminSenha').value = '';
+  mostrarView('adminLoginView');
+  $('adminLoginSub').textContent = 'Acesso restrito à equipe Lima Ribeiro.';
+  setTimeout(() => $('inputAdminSenha').focus(), 200);
+}
+
+/* =====================================================
+   BEFORE UNLOAD
+===================================================== */
+window.addEventListener('beforeunload', function(e){
+  if(estaSalvando()){
+    e.preventDefault();
+    e.returnValue = 'Aguarde, estamos salvando as alterações feitas...';
+    return e.returnValue;
+  }
+});
+
+/* =====================================================
+   INIT
+===================================================== */
+(function init(){
+  const senhaAdminSalva = localStorage.getItem(ADMIN_KEY);
+
+  if(senhaAdminSalva){
+    $('inputAdminSenha').value = senhaAdminSalva;
+    $('adminLoginSub').textContent = 'Senha salva. Clique em "Entrar no painel" para acessar.';
+    // Auto-login
+    (async () => {
+      marcarSalvando(true);
+      const res = await api('adminListar', { senha: senhaAdminSalva });
+      marcarSalvando(false);
+      if(res.ok){
+        state.isAdmin = true;
+        state.adminSenha = senhaAdminSalva;
+        await carregarHomeAdmin();
+      } else {
+        localStorage.removeItem(ADMIN_KEY);
+        mostrarView('adminLoginView');
+        $('adminLoginSub').textContent = 'Sessão expirada. Digite a senha novamente.';
+        setTimeout(() => $('inputAdminSenha').focus(), 200);
+      }
+    })();
+    return;
+  }
+
+  mostrarView('adminLoginView');
+  setTimeout(() => $('inputAdminSenha').focus(), 200);
+})();
+</script>
+</body>
+</html>
