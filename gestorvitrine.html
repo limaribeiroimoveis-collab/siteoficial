@@ -947,7 +947,7 @@
     </div>
   </div>
 
-  <div class="admin-toolbar">
+  <div class="admin-toolbar" id="adminToolbar">
     <button class="btn btn-primary" onclick="abrirPainelNovoImovel()">
       ➕ Adicionar novo imóvel
     </button>
@@ -1389,8 +1389,11 @@ function classificarAgendamento(iso){
 ===================================================== */
 function mostrarView(id){
   ['adminLoginView','corretorView','vitrineView']
-    .forEach(v => $(v).classList.add('hidden'));
-  if(id) $(id).classList.remove('hidden');
+    .forEach(v => {
+      const el = $(v);
+      if(el) el.classList.add('hidden');
+    });
+  if(id && $(id)) $(id).classList.remove('hidden');
 }
 
 /* =====================================================
@@ -1450,13 +1453,13 @@ async function carregarHomeAdmin(){
   state.abaAtiva = 'agenda';
   trocarAbaUI('agenda');
 
-  // Carrega corretores (com cache) em paralelo com clientes e agenda
+  // Corretores (com cache) + clientes em paralelo
   await Promise.all([
-    carregarCorretores(),       // rápido (cache)
-    carregarClientesSilencioso() // essencial para todos os cruzamentos
+    carregarCorretores(),
+    carregarClientesSilencioso()
   ]);
 
-  // Agora carrega agenda e notificações em paralelo
+  // Agenda + notificações em paralelo
   await Promise.all([
     carregarAgenda(true),
     carregarNotificacoes(false)
@@ -1529,9 +1532,7 @@ async function trocarAba(aba, btn){
     await carregarClientesSilencioso();
   }
 
-  // Agora trata cada aba
   if(aba === 'visitar'){
-    // Sempre recarrega notificações ao entrar na aba para garantir dados frescos
     await carregarNotificacoes(true);
   } else if(aba === 'agenda'){
     if(!state.cache.agendaCarregada){
@@ -1568,7 +1569,6 @@ async function carregarNotificacoes(mostrarLoading){
     $('querVisitarCards').innerHTML = `<div class="loading-inline" style="grid-column:1/-1;"><span class="loader loader-lg"></span><p>Carregando solicitações...</p></div>`;
   }
 
-  // Carrega clientes se ainda não estiverem
   if(!state.cache.clientesCarregados){
     await carregarClientesSilencioso();
   }
@@ -1861,7 +1861,6 @@ async function abrirImovelDaAgenda(telefone, imovelId, fecharModalPrimeiro){
 }
 
 function destacarCard(imovelId){
-  // Garante que estamos no filtro "todos" para achar o card
   if(state.filtro !== 'todos'){
     state.filtro = 'todos';
     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
@@ -2033,7 +2032,6 @@ async function salvarCliente(){
   toast('Cliente salvo ✅', 'success');
   fecharClienteModal();
 
-  // Recarrega clientes
   state.cache.clientesCarregados = false;
   await carregarClientesSilencioso();
   if(state.abaAtiva === 'clientes'){ montarSubFiltros(); renderizarClientes(); }
@@ -2062,6 +2060,18 @@ async function abrirVitrineDoCliente(telefone){
 }
 
 async function irParaVitrine(){
+  // Diagnóstico defensivo — avisa se algo faltar no HTML
+  const ids = ['vitrineView','adminToolbar','infoClienteBar','userInfo','btnSair',
+               'adminPanel','acessosSection','headerCorretorChips','infoClienteNome',
+               'infoClienteExtra','adTelefone','gridImoveis','buscaInput','emptyState',
+               'cnt-todos','cnt-pendente','cnt-quero-visitar','cnt-gostei','cnt-nao-gostei'];
+  const faltando = ids.filter(id => !document.getElementById(id));
+  if(faltando.length > 0){
+    console.error('❌ IDs faltando no HTML:', faltando);
+    toast('Erro: elementos faltando (' + faltando.join(', ') + ')', 'error');
+    throw new Error('IDs faltando: ' + faltando.join(', '));
+  }
+
   $('adminToolbar').classList.remove('hidden');
   $('infoClienteBar').classList.remove('hidden');
   $('userInfo').textContent = '';
@@ -2070,7 +2080,6 @@ async function irParaVitrine(){
   $('acessosSection').classList.add('hidden');
   $('headerCorretorChips').classList.add('hidden');
 
-  // Busca dados do cliente + imóveis em PARALELO
   const [resCli, resIm] = await Promise.all([
     api('buscarCliente', { senha: state.adminSenha, telefone: state.telefone }),
     api('adminListar', { senha: state.adminSenha })
@@ -2085,7 +2094,6 @@ async function irParaVitrine(){
   $('infoClienteExtra').textContent = ` — 📱 ${fmtTel(state.telefone)}${corr}${parc}`;
   $('adTelefone').value = fmtTel(state.telefone);
 
-  // Filtra imóveis do cliente
   const todos = (resIm.ok && resIm.data) ? resIm.data : [];
   state.imoveis = todos
     .filter(i => normalizaTel(i.telefone) === state.telefone)
@@ -2095,7 +2103,6 @@ async function irParaVitrine(){
       return db - da;
     });
 
-  // Reset filtro para "todos" (admin quer ver tudo)
   state.filtro = 'todos';
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
   const btnTodos = document.querySelector('.filter-btn[data-filter="todos"]');
@@ -2103,7 +2110,6 @@ async function irParaVitrine(){
   const buscaInput = $('buscaInput');
   if(buscaInput) buscaInput.value = '';
 
-  // Carrega acessos em background
   carregarAcessos();
 
   mostrarView('vitrineView');
@@ -2611,7 +2617,7 @@ async function salvarEdicaoObs(id, obsId){
 }
 
 /* =====================================================
-   MARCAR STATUS (com toggle)
+   MARCAR STATUS
 ===================================================== */
 async function marcar(id, acao){
   const im = state.imoveis.find(i => i.id === id);
@@ -2624,7 +2630,6 @@ async function marcar(id, acao){
   atualizarContadores();
   renderizarImoveis();
 
-  // Invalida cache de notificações
   state.cache.notificacoesCarregadas = false;
 
   marcarSalvando(true);
@@ -2745,7 +2750,6 @@ async function salvarImovel(){
   toast('Imóvel salvo ✅', 'success');
   fecharPainelImovel();
 
-  // Recarrega vitrine do cliente
   await irParaVitrine();
 }
 
