@@ -1,0 +1,1573 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="google" content="notranslate">
+<title>Lima Ribeiro Imóveis — Minha Vitrine</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏢</text></svg>">
+
+<!-- ============================================================
+     WARM-UP: acorda o Apps Script em paralelo com o load da página
+     (roda antes de qualquer coisa — não bloqueia nada)
+============================================================ -->
+<script>
+  window.__WARMUP_URL__ = 'https://script.google.com/macros/s/AKfycbyxBL057qqG5ZWVcqZ1fH8JBtcXKElJQTZ7c64847cdjga1jUDq_RoJ7sR3aDmb5UJc/exec';
+  (function warmup(){
+    try {
+      fetch(window.__WARMUP_URL__ + '?action=ping&_t=' + Date.now(), { mode: 'no-cors' })
+        .catch(function(){});
+    } catch(e){}
+  })();
+</script>
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root{
+    --primary:#1e3a5f; --primary-dark:#152a45;
+    --accent:#8b7355;
+    --success:#2f6b4f; --danger:#8b3a3a; --warn:#8b6f3a;
+    --purple:#4a3d6b;
+    --bg:#e2e6ea; --bg-alt:#d6dbe1;
+    --card:#ffffff;
+    --text:#1f2937; --text-soft:#4b5563; --muted:#6b7280;
+    --border:#d8dde3; --border-soft:#e6e9ee;
+    --radius:12px;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,.06);
+    --shadow-md: 0 2px 8px rgba(0,0,0,.09);
+    --shadow-lg: 0 8px 24px rgba(0,0,0,.12);
+  }
+  html, body { height: 100%; }
+  body{
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+    background: var(--bg); color: var(--text); min-height: 100vh;
+    -webkit-font-smoothing: antialiased; line-height: 1.45;
+    font-size: 14px;
+  }
+  .container{ max-width: 1100px; margin: 0 auto; padding: 14px; }
+
+  /* HEADER */
+  header.app-header{
+    background: linear-gradient(90deg, #16263e 0%, #1e3a5f 100%);
+    color: #fff; padding: 10px 14px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.1);
+    position: sticky; top: 0; z-index: 100;
+    border-bottom: 1px solid rgba(255,255,255,.06);
+  }
+  .header-inner{
+    max-width: 1100px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 10px; flex-wrap: nowrap; min-height: 36px;
+  }
+  .brand{ display: flex; align-items: center; gap: 8px; min-width: 0; }
+  .brand-icon{
+    width: 30px; height: 30px; flex-shrink: 0;
+    background: var(--accent); border-radius: 7px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: .9rem; color: #fff; font-weight: 800;
+  }
+  .brand-text{ display: flex; flex-direction: column; line-height: 1; min-width: 0; }
+  .brand-title{ font-size: .88rem; font-weight: 700; letter-spacing: .2px; }
+  .brand-sub{ font-size: .58rem; opacity: .7; letter-spacing: 1px; text-transform: uppercase; margin-top: 1px; }
+  .user-info{ font-size: .72rem; opacity: .85; display: flex; align-items: center; gap: 4px; }
+  @media(max-width:480px){ .user-info{ display: none; } }
+
+  /* TELA DE LOGIN */
+  .login-wrap{
+    display: flex; justify-content: center; align-items: center;
+    min-height: 82vh; padding: 16px;
+  }
+  .login-card{
+    background: var(--card); padding: 36px 28px; border-radius: 16px;
+    box-shadow: var(--shadow-lg); width: 100%; max-width: 420px;
+    border: 1px solid var(--border-soft);
+  }
+  .login-logo{
+    width: 64px; height: 64px; margin: 0 auto 18px;
+    background: var(--primary); border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.8rem; color: #fff;
+    box-shadow: 0 6px 20px rgba(30,58,95,.2);
+  }
+  .login-card h2{ margin-bottom: 6px; color: var(--text); font-size: 1.3rem; text-align: center; font-weight: 700; }
+  .login-card .sub{ color: var(--muted); margin-bottom: 26px; font-size: .88rem; text-align: center; }
+
+  input, textarea{
+    width: 100%; padding: 12px 14px; border: 1px solid var(--border);
+    border-radius: 10px; font-size: .95rem; font-family: inherit;
+    transition: all .15s; background: #fff; color: var(--text);
+  }
+  input:focus, textarea:focus{
+    outline: none; border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(30,58,95,.08);
+  }
+  label{ display: block; font-size: .78rem; font-weight: 600; margin-bottom: 6px; color: var(--text-soft); text-transform: uppercase; letter-spacing: .3px; }
+  .form-group{ margin-bottom: 14px; }
+  .code-input{
+    text-align: center; font-size: 1.5rem; font-weight: 700;
+    letter-spacing: .4rem; text-transform: uppercase;
+    font-family: 'Courier New', monospace; padding: 14px;
+  }
+
+  .btn{
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    padding: 12px 18px; border-radius: 10px; border: none; cursor: pointer;
+    font-size: .9rem; font-weight: 600; transition: all .15s;
+    text-decoration: none; font-family: inherit; white-space: nowrap;
+  }
+  .btn:disabled{ opacity: .5; cursor: not-allowed; }
+  .btn-primary{ background: var(--primary); color: #fff; }
+  .btn-primary:hover:not(:disabled){ background: var(--primary-dark); }
+  .btn-success{ background: var(--success); color: #fff; }
+  .btn-success:hover:not(:disabled){ filter: brightness(.93); }
+  .btn-warn{ background: var(--warn); color: #fff; }
+  .btn-warn:hover:not(:disabled){ filter: brightness(.93); }
+  .btn-danger{ background: var(--danger); color: #fff; }
+  .btn-danger:hover:not(:disabled){ filter: brightness(.93); }
+  .btn-ghost{ background: #fff; color: var(--text-soft); border: 1px solid var(--border); }
+  .btn-ghost:hover:not(:disabled){ background: var(--bg-alt); }
+  .btn-full{ width: 100%; }
+
+  /* TELA DE CARREGAMENTO */
+  .loading-screen{
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    min-height: 85vh; padding: 24px; text-align: center;
+  }
+  .loading-logo{
+    width: 72px; height: 72px; margin-bottom: 20px;
+    background: var(--primary); border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2rem; color: #fff;
+    box-shadow: 0 8px 24px rgba(30,58,95,.25);
+    animation: pulse 1.8s ease-in-out infinite;
+  }
+  @keyframes pulse{
+    0%,100%{ transform: scale(1); box-shadow: 0 8px 24px rgba(30,58,95,.25); }
+    50%{ transform: scale(1.05); box-shadow: 0 12px 32px rgba(30,58,95,.35); }
+  }
+  .loading-screen h2{
+    font-size: 1.15rem; font-weight: 700; color: var(--text);
+    margin-bottom: 8px;
+  }
+  .loading-screen p{
+    font-size: .9rem; color: var(--muted);
+    margin-bottom: 22px;
+  }
+  .spinner{
+    width: 40px; height: 40px;
+    border: 3px solid rgba(30,58,95,.15);
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: spin .7s linear infinite;
+  }
+  @keyframes spin{ to{ transform: rotate(360deg); } }
+  .loading-msg{
+    margin-top: 14px;
+    font-size: .82rem;
+    color: var(--muted);
+    min-height: 20px;
+  }
+
+  /* GRID */
+  .grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 26px;
+    margin-top: 44px;
+  }
+
+  /* CARD */
+  .card{
+    background: var(--card); border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    display: flex; flex-direction: column;
+    transition: box-shadow .2s, transform .2s, border-color .3s, opacity .2s, filter .2s;
+    position: relative;
+    border: 1px solid var(--border-soft);
+    margin-top: 22px;
+  }
+  .card:hover{ box-shadow: var(--shadow-md); transform: translateY(-2px); }
+  .card.card-nao-gostei{
+    opacity: .55; filter: grayscale(65%); background: #f5f5f5;
+  }
+  .card.card-nao-gostei:hover{ opacity: .78; filter: grayscale(50%); }
+  .card.card-nao-gostei .card-img{ filter: grayscale(100%) brightness(0.95); }
+  .card.card-nao-gostei .btn{ opacity: .85; }
+
+  .status-balloon{
+    position: absolute;
+    top: -22px; right: 14px;
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: .62rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .4px;
+    color: #fff; z-index: 5;
+    box-shadow: 0 2px 6px rgba(0,0,0,.18);
+    white-space: nowrap;
+    display: inline-flex; align-items: center; gap: 4px;
+  }
+  .status-balloon::after{
+    content: '';
+    position: absolute;
+    bottom: -8px; right: 20px;
+    width: 0; height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 8px solid currentColor;
+    filter: brightness(.85);
+  }
+  .status-gostei{ background: var(--success); color: var(--success); }
+  .status-gostei span{ color: #fff; }
+  .status-nao-gostei{ background: var(--danger); color: var(--danger); }
+  .status-nao-gostei span{ color: #fff; }
+  .status-quero-visitar{ background: var(--warn); color: var(--warn); }
+  .status-quero-visitar span{ color: #fff; }
+  .status-pendente{ background: #9aa3ad; color: #9aa3ad; }
+  .status-pendente span{ color: #fff; }
+
+  .card-main{
+    display: flex; gap: 12px; padding: 12px;
+  }
+  .card-img-wrap{
+    flex: 0 0 110px; width: 110px; height: 110px;
+    border-radius: 10px; overflow: hidden;
+    background: var(--bg-alt); flex-shrink: 0;
+  }
+  .card-img{
+    width: 100%; height: 100%; object-fit: cover; display: block;
+  }
+  .card-info{
+    flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px;
+    justify-content: flex-start;
+  }
+
+  .card-top-meta{
+    display: flex; align-items: center; gap: 5px; flex-wrap: nowrap;
+  }
+  .card-date{
+    display: inline-flex; align-items: center; gap: 3px;
+    font-size: .63rem; color: var(--muted);
+    background: var(--bg-alt); padding: 2px 7px; border-radius: 5px; font-weight: 600;
+    flex-shrink: 0;
+  }
+  .card-code{
+    display: inline-flex; align-items: center; gap: 3px;
+    font-size: .63rem; color: var(--purple);
+    background: #f1eef7; padding: 2px 7px; border-radius: 5px;
+    font-weight: 600; cursor: pointer;
+    border: 1px solid #ddd4ec; transition: all .15s;
+    flex-shrink: 0;
+  }
+  .card-code:hover{ background: #e6e0f2; }
+  .card-code.copiado{ background: var(--success); color: #fff; border-color: var(--success); }
+
+  .btn-zap-inline{
+    margin-left: auto;
+    display: inline-flex; align-items: center; justify-content: center; gap: 4px;
+    background: #25D366; color: #fff;
+    padding: 4px 10px; border-radius: 6px;
+    font-size: .68rem; font-weight: 700;
+    border: none; cursor: pointer;
+    transition: all .15s; font-family: inherit;
+    box-shadow: 0 1px 4px rgba(37,211,102,.25);
+    flex-shrink: 0;
+  }
+  .btn-zap-inline:hover{
+    background: #1da851;
+    transform: translateY(-1px);
+    box-shadow: 0 3px 8px rgba(37,211,102,.35);
+  }
+  .btn-zap-inline .ico{ font-size: .82rem; }
+
+  .card-title{
+    font-size: .9rem; font-weight: 700; line-height: 1.25; color: var(--text);
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  }
+
+  .card-desc{
+    font-size: .78rem; color: var(--text-soft); line-height: 1.45;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+    overflow: hidden; cursor: pointer; white-space: pre-wrap;
+    transition: all .15s;
+  }
+  .card-desc.expandido{ display: block; -webkit-line-clamp: unset; overflow: visible; }
+  .card-desc-toggle{
+    display: inline-flex; align-items: center; gap: 3px;
+    background: transparent; border: none;
+    color: var(--primary); font-size: .68rem; font-weight: 600;
+    cursor: pointer; margin-top: 1px; padding: 1px 0; font-family: inherit;
+  }
+  .card-desc-toggle:hover{ text-decoration: underline; }
+
+  .card-actions{
+    display: grid; grid-template-columns: 1fr 1fr 1fr;
+    gap: 5px; padding: 0 12px 10px;
+  }
+  .card-actions .btn{
+    padding: 7px 4px; font-size: .68rem; border-radius: 7px;
+    flex-direction: column; gap: 2px; min-height: 44px; font-weight: 600;
+    border: 1px solid transparent;
+    background: #f3f5f8; color: var(--text-soft);
+    transition: all .15s;
+  }
+  .card-actions .btn .ico{ font-size: .95rem; line-height: 1; }
+  .card-actions .btn .lbl{ font-size: .62rem; letter-spacing: .2px; }
+  .card-actions .btn:hover{ background: #e8ecf1; }
+
+  .card-actions .btn-success.ativo{
+    background: var(--success); color: #fff;
+    border-color: var(--success);
+    box-shadow: 0 2px 8px rgba(47,107,79,.25);
+  }
+  .card-actions .btn-warn.ativo{
+    background: var(--warn); color: #fff;
+    border-color: var(--warn);
+    box-shadow: 0 2px 8px rgba(139,111,58,.25);
+  }
+  .card-actions .btn-danger.ativo{
+    background: var(--danger); color: #fff;
+    border-color: var(--danger);
+    box-shadow: 0 2px 8px rgba(139,58,58,.25);
+  }
+
+  .btn-ver-anuncio{
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    background: var(--primary); color: #fff; text-decoration: none;
+    padding: 8px 12px; border-radius: 8px;
+    font-size: .78rem; font-weight: 600;
+    margin: 0 12px 8px; transition: all .15s;
+  }
+  .btn-ver-anuncio:hover{ background: var(--primary-dark); }
+  .btn-ver-anuncio .arrow{ margin-left: auto; opacity: .7; font-size: .85rem; }
+
+  .obs-wrap{
+    margin: 0 12px 10px; background: var(--bg-alt);
+    border: 1px solid var(--border-soft); border-radius: 8px;
+    padding: 8px 10px;
+  }
+  .obs-label{
+    font-size: .65rem; font-weight: 700;
+    color: var(--muted); text-transform: uppercase;
+    letter-spacing: .4px; margin-bottom: 4px;
+    display: flex; align-items: center; gap: 4px;
+  }
+  .obs-text{
+    font-size: .78rem; color: var(--text);
+    line-height: 1.4; white-space: pre-wrap;
+    overflow: hidden; display: -webkit-box;
+    -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+  }
+  .obs-text.expandido{ display: block; -webkit-line-clamp: unset; overflow: visible; }
+  .obs-toggle{
+    display: inline-flex; align-items: center; gap: 3px;
+    background: transparent; border: none;
+    color: var(--primary); font-size: .68rem; font-weight: 600;
+    cursor: pointer; margin-top: 3px; padding: 1px 0; font-family: inherit;
+  }
+  .obs-edit-btn{
+    display: inline-flex; align-items: center; gap: 3px;
+    background: transparent; border: none;
+    color: var(--muted); font-size: .65rem; font-weight: 600;
+    cursor: pointer; padding: 1px 5px; border-radius: 4px;
+    font-family: inherit; margin-left: auto;
+  }
+  .obs-edit-btn:hover{ background: #fff; color: var(--primary); }
+  .obs-textarea{ min-height: 60px; font-size: .78rem; display: none; }
+  .obs-edit-actions{ display: none; gap: 5px; margin-top: 6px; }
+  .obs-wrap.editing .obs-text{ display: none; }
+  .obs-wrap.editing .obs-toggle{ display: none; }
+  .obs-wrap.editing .obs-textarea{ display: block; }
+  .obs-wrap.editing .obs-edit-actions{ display: flex; }
+  .obs-empty{
+    color: var(--muted); font-style: italic; font-size: .75rem;
+    cursor: pointer; padding: 2px 0;
+  }
+  .obs-empty:hover{ color: var(--primary); }
+
+  .filters{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+    margin: 16px 0 6px;
+  }
+  .filters .filter-btn{
+    padding: 9px 8px; border-radius: 8px;
+    border: 1px solid var(--border);
+    background: #fff; cursor: pointer;
+    font-size: .74rem; font-weight: 600; color: var(--text-soft);
+    transition: all .15s; font-family: inherit;
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    width: 100%;
+  }
+  .filters .filter-btn:hover{ border-color: var(--primary); color: var(--primary); }
+  .filters .filter-btn.active{ background: var(--primary); color: #fff; border-color: var(--primary); }
+  .filters .filter-btn.btn-recentes{
+    background: #fff; color: var(--purple); border-color: #ddd4ec;
+  }
+  .filters .filter-btn.btn-recentes:hover{ border-color: var(--purple); }
+  .filters .filter-btn.btn-recentes.active{ background: var(--purple); color: #fff; border-color: var(--purple); }
+  .filter-count{
+    background: rgba(255,255,255,.25); padding: 1px 7px;
+    border-radius: 5px; font-size: .68rem; min-width: 18px; text-align: center; font-weight: 700;
+  }
+  .filters .filter-btn:not(.active) .filter-count{ background: var(--bg-alt); color: var(--muted); }
+  @media(max-width:600px){ .filters .filter-btn{ font-size: .68rem; padding: 8px 4px; } }
+
+  .search-wrap{ margin-top: 14px; }
+
+  .empty-state{
+    text-align: center; padding: 60px 20px; color: var(--muted);
+    background: #fff; border-radius: var(--radius); margin-top: 16px;
+    border: 1px solid var(--border-soft);
+  }
+  .empty-state svg{ width: 56px; height: 56px; margin-bottom: 12px; opacity: .35; }
+  .empty-state h3{ font-size: .95rem; margin-bottom: 4px; color: var(--text-soft); }
+
+  .toast{
+    position: fixed; bottom: 20px; left: 50%;
+    transform: translate(-50%, 30px);
+    background: var(--text); color: #fff;
+    padding: 12px 20px; border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(0,0,0,.2);
+    opacity: 0; transition: all .3s; z-index: 2000;
+    font-size: .88rem; font-weight: 600;
+    max-width: 90vw; pointer-events: none; text-align: center;
+  }
+  .toast.show{ opacity: 1; transform: translate(-50%, 0); }
+  .toast.success{ background: var(--success); }
+  .toast.error{ background: var(--danger); }
+
+  .hidden{ display: none !important; }
+  .text-muted{ color: var(--muted); }
+  .text-center{ text-align: center; }
+
+  @keyframes shimmer{
+    0%{ background-position: -400px 0; }
+    100%{ background-position: 400px 0; }
+  }
+  .skeleton-card{
+    background: var(--card); border-radius: var(--radius);
+    border: 1px solid var(--border-soft);
+    box-shadow: var(--shadow-sm);
+    padding: 12px;
+    display: flex; gap: 12px;
+    margin-top: 22px;
+    overflow: hidden;
+  }
+  .skeleton-img{
+    flex: 0 0 110px; width: 110px; height: 110px;
+    border-radius: 10px;
+    background: linear-gradient(90deg, #e8ecf1 0%, #f4f6f8 50%, #e8ecf1 100%);
+    background-size: 800px 100%;
+    animation: shimmer 1.4s infinite linear;
+    flex-shrink: 0;
+  }
+  .skeleton-info{
+    flex: 1; display: flex; flex-direction: column; gap: 8px;
+    padding-top: 4px;
+  }
+  .skeleton-line{
+    height: 12px; border-radius: 6px;
+    background: linear-gradient(90deg, #e8ecf1 0%, #f4f6f8 50%, #e8ecf1 100%);
+    background-size: 800px 100%;
+    animation: shimmer 1.4s infinite linear;
+  }
+  .skeleton-line.short{ width: 40%; }
+  .skeleton-line.medium{ width: 70%; }
+  .skeleton-line.long{ width: 90%; }
+
+  @media(max-width:480px){
+    .grid{ grid-template-columns: 1fr; }
+    .card-img-wrap{ flex: 0 0 90px; width: 90px; height: 90px; }
+    .card-title{ font-size: .85rem; }
+    .btn-zap-inline{ font-size: .62rem; padding: 3px 7px; }
+    .card-date, .card-code{ font-size: .6rem; padding: 2px 5px; }
+    .skeleton-img{ flex: 0 0 90px; width: 90px; height: 90px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="app-header">
+  <div class="header-inner">
+    <div class="brand">
+      <div class="brand-icon">LR</div>
+      <div class="brand-text">
+        <div class="brand-title">Lima Ribeiro</div>
+        <div class="brand-sub">Imóveis</div>
+      </div>
+    </div>
+    <div style="display:flex; align-items:center; gap:10px;">
+      <span class="user-info" id="userInfo"></span>
+    </div>
+  </div>
+</header>
+
+<!-- TELA DE CARREGAMENTO (só quando realmente precisa) -->
+<div class="loading-screen hidden" id="loadingView">
+  <div class="loading-logo">🏢</div>
+  <h2>Preparando sua vitrine</h2>
+  <p>Veja os imóveis que separei p/ você...</p>
+  <div class="spinner"></div>
+  <div class="loading-msg" id="loadingMsg"></div>
+</div>
+
+<!-- LOGIN CLIENTE -->
+<div class="login-wrap hidden" id="loginView">
+  <div class="login-card">
+    <div class="login-logo">🏢</div>
+    <h2>Bem-vindo!</h2>
+    <p class="sub" id="loginSub">Digite seu telefone e a senha de acesso.</p>
+    <div class="form-group">
+      <label>Telefone</label>
+      <input type="tel" id="inputTelefone" inputmode="numeric" maxlength="16"
+             autocomplete="tel" oninput="mascaraTelefone(this)">
+    </div>
+    <div class="form-group" id="senhaGroup">
+      <label>Senha de acesso</label>
+      <input type="text" id="inputSenha" class="code-input"
+             maxlength="6" autocapitalize="characters"
+             onkeydown="if(event.key==='Enter') entrarCliente()">
+    </div>
+    <button class="btn btn-primary btn-full" id="btnEntrar" onclick="entrarCliente()">
+      Entrar na minha vitrine
+    </button>
+    <div style="text-align:center; margin-top:16px;">
+      <a href="#" onclick="toggleAjudaSenha(); return false;"
+         style="color:var(--muted); font-size:.78rem; text-decoration:none;">
+        Não sei minha senha
+      </a>
+    </div>
+    <div id="ajudaSenha" class="hidden" style="margin-top:10px; padding:12px; background:#eef2f7; border-radius:8px; font-size:.78rem; color:var(--primary); line-height:1.5;">
+      💬 Sua senha é enviada pelo seu corretor no WhatsApp.
+    </div>
+  </div>
+</div>
+
+<!-- TELA DE DISPOSITIVO JÁ VINCULADO -->
+<div class="login-wrap hidden" id="deviceBlockView">
+  <div class="login-card" style="text-align:center;">
+    <div class="login-logo" style="background:#8b3a3a;">🔒</div>
+    <h2>Acesso vinculado a outro dispositivo</h2>
+    <p class="sub" style="margin-bottom:20px;">
+      Sua vitrine já está sendo usada em outro aparelho.<br>
+      Para liberar o acesso neste dispositivo, solicite ao seu corretor.
+    </p>
+
+    <div style="background:#eef2f7; padding:14px; border-radius:10px; font-size:.82rem; color:var(--primary); line-height:1.5; margin-bottom:18px; text-align:left;">
+      💬 <strong>Como liberar?</strong><br>
+      Fale com seu corretor pelo WhatsApp e peça para liberar o acesso neste novo dispositivo.
+    </div>
+
+    <button class="btn btn-primary btn-full" id="btnZapLiberar" onclick="pedirLiberacaoZap()" style="margin-bottom:10px;">
+      💬 Falar com meu corretor
+    </button>
+
+    <button class="btn btn-ghost btn-full" onclick="voltarParaLogin()">
+      ← Voltar para o login
+    </button>
+
+    <div style="margin-top:16px; font-size:.72rem; color:var(--muted);">
+      Você está em: <span id="deviceBlockInfo"></span>
+    </div>
+  </div>
+</div>
+
+<!-- VITRINE -->
+<div class="container hidden" id="vitrineView">
+  <div class="search-wrap">
+    <input type="search" id="buscaInput" placeholder="🔍 Buscar por rua/endereço ou descrição..." oninput="renderizarImoveis()">
+  </div>
+
+  <div class="filters" id="filters">
+    <button class="filter-btn btn-recentes active" data-filter="recentes" onclick="setFiltro('recentes', this)">
+      🆕 Recentes
+    </button>
+    <button class="filter-btn" data-filter="todos" onclick="setFiltro('todos', this)">
+      📋 Todos <span class="filter-count" id="cnt-todos">0</span>
+    </button>
+    <button class="filter-btn" data-filter="pendente" onclick="setFiltro('pendente', this)">
+      ⏳ Aguardando <span class="filter-count" id="cnt-pendente">0</span>
+    </button>
+    <button class="filter-btn" data-filter="quero-visitar" onclick="setFiltro('quero-visitar', this)">
+      📅 Quero visitar <span class="filter-count" id="cnt-quero-visitar">0</span>
+    </button>
+    <button class="filter-btn" data-filter="gostei" onclick="setFiltro('gostei', this)">
+      ❤️ Gostei <span class="filter-count" id="cnt-gostei">0</span>
+    </button>
+    <button class="filter-btn" data-filter="nao-gostei" onclick="setFiltro('nao-gostei', this)">
+      ❌ Não gostei <span class="filter-count" id="cnt-nao-gostei">0</span>
+    </button>
+  </div>
+
+  <div class="grid" id="gridImoveis"></div>
+  <div class="empty-state hidden" id="emptyState">
+    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+            d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+    </svg>
+    <h3 id="emptyTitulo">Nenhum imóvel aqui</h3>
+    <p id="emptyMsg">Nada para mostrar neste filtro.</p>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* =====================================================
+   CONFIG
+===================================================== */
+const API_URL = window.__WARMUP_URL__ || 'https://script.google.com/macros/s/AKfycbyxBL057qqG5ZWVcqZ1fH8JBtcXKElJQTZ7c64847cdjga1jUDq_RoJ7sR3aDmb5UJc/exec';
+const TEL_KEY   = 'vitrine_telefone';
+const TOKEN_KEY = 'vitrine_device_token';
+const NOME_KEY  = 'vitrine_nome';
+const CACHE_KEY = 'vitrine_imoveis_cache';   // cache local dos imóveis
+const CACHE_TTL = 5 * 60 * 1000;             // 5 minutos
+
+const TIMEOUT_API = 15000;   // antes era 45000 — timeout curto = erro rápido
+const TIMEOUT_LOGIN = 12000; // login tem timeout ainda menor
+
+const ZAP_CORRETORES = {
+  'Hugo': '5531996070930',
+  'Carolina': '5531996273985'
+};
+
+/* =====================================================
+   ESTADO
+===================================================== */
+const state = {
+  telefone: null,
+  deviceToken: null,
+  clienteInfo: null,
+  imoveis: [],
+  filtro: 'recentes',
+  salvando: 0
+};
+
+const $ = id => document.getElementById(id);
+
+/* =====================================================
+   HELPERS
+===================================================== */
+function mascaraTelefone(input){
+  let v = input.value.replace(/\D/g, '');
+  if(v.length > 11) v = v.slice(0, 11);
+  let out = '';
+  if(v.length === 0) out = '';
+  else if(v.length <= 2) out = '(' + v;
+  else if(v.length <= 3) out = '(' + v.slice(0,2) + ') ' + v.slice(2);
+  else if(v.length <= 7) out = '(' + v.slice(0,2) + ') ' + v.slice(2,3) + ' ' + v.slice(3);
+  else out = '(' + v.slice(0,2) + ') ' + v.slice(2,3) + ' ' + v.slice(3,7) + '-' + v.slice(7);
+  input.value = out;
+}
+
+function toast(msg, type=''){
+  const t = $('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + type;
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.remove('show'), 3200);
+}
+
+function normalizaTel(t){ return String(t || '').replace(/\D/g, ''); }
+
+function esc(s){
+  return String(s || '')
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+function fmtData(d){
+  if(!d) return '';
+  let dt = new Date(d);
+  if(isNaN(dt.getTime())){
+    const m = String(d).match(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})/);
+    if(m){
+      const dia = m[1].padStart(2,'0');
+      const mes = m[2].padStart(2,'0');
+      let ano = m[3]; if(ano.length === 2) ano = '20' + ano;
+      return `${dia}/${mes}/${ano}`;
+    }
+    return '';
+  }
+  return String(dt.getDate()).padStart(2,'0') + '/' +
+         String(dt.getMonth()+1).padStart(2,'0') + '/' +
+         dt.getFullYear();
+}
+
+function fmtTel(t){
+  const n = normalizaTel(t);
+  if(n.length === 11) return `(${n.slice(0,2)}) ${n.slice(2,3)} ${n.slice(3,7)}-${n.slice(7)}`;
+  if(n.length === 10) return `(${n.slice(0,2)}) ${n.slice(2,6)}-${n.slice(6)}`;
+  return t;
+}
+
+function detectarNavegador(){
+  const ua = navigator.userAgent;
+  let nav = 'Navegador', os = '';
+  if(/iPhone|iPad|iPod/i.test(ua)) os = 'iPhone';
+  else if(/Android/i.test(ua)) os = 'Android';
+  else if(/Windows/i.test(ua)) os = 'Windows';
+  else if(/Mac OS X/i.test(ua)) os = 'Mac';
+  else if(/Linux/i.test(ua)) os = 'Linux';
+  if(/Edg\//i.test(ua)) nav = 'Edge';
+  else if(/Chrome/i.test(ua) && !/Edg\//i.test(ua)) nav = 'Chrome';
+  else if(/Safari/i.test(ua) && !/Chrome/i.test(ua)) nav = 'Safari';
+  else if(/Firefox/i.test(ua)) nav = 'Firefox';
+  return (nav + (os ? ' · ' + os : '')).trim();
+}
+
+/* =====================================================
+   CACHE LOCAL (localStorage) — abre instantâneo na 2ª visita
+===================================================== */
+function lerCache(){
+  try {
+    const raw = localStorage.getItem(CACHE_KEY);
+    if(!raw) return null;
+    const obj = JSON.parse(raw);
+    if(!obj || !obj.ts || !obj.data) return null;
+    // Se passou do TTL, ainda retorna (para pintar rápido), mas sinaliza stale
+    return { data: obj.data, ts: obj.ts, fresh: (Date.now() - obj.ts) < CACHE_TTL };
+  } catch(e){ return null; }
+}
+
+function gravarCache(imoveis){
+  try {
+    localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), data: imoveis }));
+  } catch(e){}
+}
+
+function limparCache(){
+  try { localStorage.removeItem(CACHE_KEY); } catch(e){}
+}
+
+/* =====================================================
+   Corretor do imóvel
+===================================================== */
+function getCorretor(im){
+  if(!im) return null;
+  const cands = [im._corretor, im.corretor, im.Corretor, im.corretores, im.responsavel];
+  for(const c of cands){
+    if(!c) continue;
+    const s = String(c).trim().toLowerCase();
+    for(const nome of Object.keys(ZAP_CORRETORES)){
+      if(s === nome.toLowerCase() || s.includes(nome.toLowerCase())) return nome;
+    }
+  }
+  if(im.link && typeof im.link === 'string'){
+    try {
+      const partes = im.link.split('/').filter(Boolean);
+      const ultimo = partes[partes.length - 1] || '';
+      const semHash = ultimo.replace(/-[A-Za-z0-9]{3,6}$/, '');
+      const normalizado = semHash.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+      for(const nome of Object.keys(ZAP_CORRETORES)){
+        const nomeNorm = nome.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+        if(normalizado.includes(nomeNorm)) return nome;
+      }
+    } catch(e){}
+  }
+  return null;
+}
+
+/* =====================================================
+   Detecção de bloqueio por dispositivo
+===================================================== */
+function erroEhDispositivoVinculado(msg){
+  if(!msg) return false;
+  const s = String(msg).toLowerCase();
+  const padroes = [
+    /dispositivo.*(outro|vincul|ativo|bloque|autoriz|permitid|usado)/,
+    /(outro|vincul|ativo|bloque|autoriz|permitid|usado).*dispositivo/,
+    /sess[ãa]o\s+ativa/,
+    /j[áa]\s+logad/,
+    /device\s*token\s+inv[áa]lid/,
+    /j[áa]\s+em\s+uso/,
+    /acesso\s+negado/,
+    /bloqueado/
+  ];
+  return padroes.some(re => re.test(s));
+}
+
+function mostrarBloqueioDispositivo(infoExtra){
+  ['loadingView','loginView','vitrineView'].forEach(v => {
+    const el = $(v);
+    if(el) el.classList.add('hidden');
+  });
+  $('deviceBlockView').classList.remove('hidden');
+  $('deviceBlockInfo').textContent = infoExtra || detectarNavegador();
+
+  if(state.telefone){
+    $('btnZapLiberar').dataset.telefone = state.telefone;
+  }
+}
+
+function pedirLiberacaoZap(){
+  const tel = state.telefone || $('btnZapLiberar').dataset.telefone || '';
+  const nomeCliente = state.clienteInfo?.nome || 'Cliente';
+
+  let corretor = 'Hugo';
+  try {
+    const pref = localStorage.getItem('vitrine_corretor_pref');
+    if(pref && ZAP_CORRETORES[pref]) corretor = pref;
+  } catch(e){}
+
+  const zap = ZAP_CORRETORES[corretor];
+  const navegador = detectarNavegador();
+
+  let msg = `Olá ${corretor}! 👋\n\n`;
+  msg += `Sou *${nomeCliente}* e estou tentando acessar minha vitrine de imóveis em um novo dispositivo.\n\n`;
+  msg += `📱 Aparelho: ${navegador}\n`;
+  if(tel) msg += `📞 Telefone cadastrado: ${fmtTel(tel)}\n`;
+  msg += `\n🔒 Aparece a mensagem: "Acesso vinculado a outro dispositivo".\n\n`;
+  msg += `Pode liberar o acesso neste dispositivo, por favor?`;
+
+  const url = `https://wa.me/${zap}?text=${encodeURIComponent(msg)}`;
+  window.open(url, '_blank');
+}
+
+function voltarParaLogin(){
+  mostrarView('loginView');
+  $('senhaGroup').style.display = 'block';
+  $('inputSenha').value = '';
+  if(state.telefone){
+    $('inputTelefone').value = fmtTel(state.telefone);
+  }
+  $('loginSub').textContent = 'Digite sua senha para entrar novamente.';
+  setTimeout(() => $('inputSenha').focus(), 200);
+}
+
+/* =====================================================
+   API
+===================================================== */
+async function apiOnce(action, params, timeoutMs){
+  const qs = new URLSearchParams({ action, ...params, _t: Date.now() }).toString();
+  const url = API_URL + '?' + qs;
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const resp = await fetch(url, {
+      method: 'GET', mode: 'cors',
+      headers: { 'Accept': 'application/json' },
+      redirect: 'follow',
+      signal: controller.signal
+    });
+    clearTimeout(timer);
+    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+    return await resp.json();
+  } catch (err) {
+    clearTimeout(timer);
+    throw err;
+  }
+}
+
+async function api(action, params = {}, timeoutMs = TIMEOUT_API, retries = 1) {
+  let lastErr;
+  for (let i = 0; i <= retries; i++) {
+    try {
+      return await apiOnce(action, params, timeoutMs);
+    } catch (err) {
+      lastErr = err;
+      if (i < retries) await new Promise(r => setTimeout(r, 600));
+    }
+  }
+  console.error('API falhou:', lastErr, { action });
+  return { ok: false, error: 'Falha ao conectar: ' + lastErr.message };
+}
+
+/* =====================================================
+   NAVEGAÇÃO
+===================================================== */
+function mostrarView(id){
+  ['loadingView','loginView','vitrineView','deviceBlockView'].forEach(v => {
+    const el = $(v);
+    if(el) el.classList.add('hidden');
+  });
+  if(id) $(id).classList.remove('hidden');
+}
+
+/* =====================================================
+   Limpar URL
+===================================================== */
+function limparUrl(){
+  try {
+    const url = new URL(window.location.href);
+    if(url.searchParams.has('tel') || url.searchParams.has('senha')){
+      url.searchParams.delete('tel');
+      url.searchParams.delete('senha');
+      const novaUrl = url.pathname + (url.searchParams.toString() ? '?' + url.searchParams.toString() : '');
+      window.history.replaceState({}, document.title, novaUrl);
+    }
+  } catch(e){}
+}
+
+/* =====================================================
+   SKELETON
+===================================================== */
+function mostrarSkeleton(qtd = 4){
+  const grid = $('gridImoveis');
+  let html = '';
+  for(let i = 0; i < qtd; i++){
+    html += `
+      <div class="skeleton-card">
+        <div class="skeleton-img"></div>
+        <div class="skeleton-info">
+          <div class="skeleton-line short"></div>
+          <div class="skeleton-line long"></div>
+          <div class="skeleton-line medium"></div>
+          <div class="skeleton-line short"></div>
+        </div>
+      </div>
+    `;
+  }
+  grid.innerHTML = html;
+  $('emptyState').classList.add('hidden');
+}
+
+/* =====================================================
+   LOGIN CLIENTE (manual)
+===================================================== */
+function toggleAjudaSenha(){ $('ajudaSenha').classList.toggle('hidden'); }
+
+async function entrarCliente(){
+  const tel = normalizaTel($('inputTelefone').value);
+  const senhaDigitada = ($('inputSenha').value || '').toUpperCase().trim();
+  const navegador = detectarNavegador();
+
+  if(tel.length < 10){ toast('Digite um telefone válido (com DDD)', 'error'); return; }
+
+  if(!senhaDigitada){
+    toast('Digite a senha de acesso', 'error');
+    $('inputSenha').focus();
+    return;
+  }
+
+  const btn = $('btnEntrar');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner" style="width:16px;height:16px;border-width:2px;border-top-color:transparent;border-color:currentColor;display:inline-block;vertical-align:middle;margin-right:6px;"></span> Entrando...';
+
+  // ⚡ Login: timeout curto, SEM retry
+  const res = await api('loginCliente', {
+    telefone: tel, senha: senhaDigitada, deviceToken: '', navegador: navegador
+  }, TIMEOUT_LOGIN, 0);
+
+  btn.disabled = false;
+  btn.textContent = 'Entrar na minha vitrine';
+
+  if(!res.ok){
+    if(erroEhDispositivoVinculado(res.error)){
+      state.telefone = tel;
+      if(res.nome) state.clienteInfo = { nome: res.nome, apelido: res.apelido };
+      mostrarBloqueioDispositivo();
+      return;
+    }
+    toast(res.error || 'Não foi possível entrar', 'error');
+    return;
+  }
+
+  state.telefone = tel;
+  state.deviceToken = res.deviceToken || '';
+  state.clienteInfo = { nome: res.nome, apelido: res.apelido };
+
+  localStorage.setItem(TEL_KEY, tel);
+  localStorage.setItem(TOKEN_KEY, state.deviceToken);
+  if(res.nome) localStorage.setItem(NOME_KEY, res.nome);
+
+  limparCache(); // login novo = descarta cache antigo
+  toast('Bem-vindo, ' + (res.nome || 'cliente'), 'success');
+  limparUrl();
+  irParaVitrine();
+}
+
+/* =====================================================
+   IR PARA VITRINE — mostra cache primeiro, atualiza depois
+===================================================== */
+async function irParaVitrine(){
+  mostrarView('vitrineView');
+  $('userInfo').textContent = state.clienteInfo?.nome
+    ? '👤 ' + state.clienteInfo.nome
+    : '📱 ' + fmtTel(state.telefone);
+
+  // 1️⃣ Se tiver cache, pinta IMEDIATAMENTE
+  const cache = lerCache();
+  if(cache && cache.data && cache.data.length){
+    state.imoveis = cache.data;
+    atualizarContadores();
+    renderizarImoveis();
+
+    // 2️⃣ Se o cache ainda está "fresco", nem busca da API
+    if(cache.fresh){
+      console.log('[vitrine] usando cache fresco — sem request');
+      return;
+    }
+    console.log('[vitrine] cache stale — atualizando em background');
+  } else {
+    // Sem cache = mostra skeleton enquanto busca
+    mostrarSkeleton(4);
+  }
+
+  // 3️⃣ Busca dados frescos (em background se já tem conteúdo na tela)
+  await carregarImoveis();
+}
+
+/* =====================================================
+   CARREGAR IMÓVEIS
+===================================================== */
+async function carregarImoveis(){
+  const res = await api('listarImoveis', {
+    telefone: state.telefone,
+    deviceToken: state.deviceToken
+  }, TIMEOUT_API, 0);   // login já foi feito — 0 retry pra não acumular espera
+
+  if(!res.ok){
+    if(erroEhDispositivoVinculado(res.error)){
+      mostrarBloqueioDispositivo();
+      return;
+    }
+    if((res.error || '').toLowerCase().match(/sess|token|inv[áa]lid|expirad|autentic|unauthor/)){
+      localStorage.removeItem(TOKEN_KEY);
+      limparCache();
+      mostrarView('loginView');
+      $('inputTelefone').value = fmtTel(state.telefone);
+      $('senhaGroup').style.display = 'block';
+      $('loginSub').textContent = 'Digite sua senha para entrar novamente.';
+      setTimeout(() => $('inputSenha').focus(), 200);
+      return;
+    }
+    // Erro genérico — se já tem conteúdo na tela, não apaga; só avisa
+    if(!state.imoveis.length){
+      toast(res.error || 'Erro ao carregar', 'error');
+      $('gridImoveis').innerHTML = '';
+      $('emptyState').classList.remove('hidden');
+      $('emptyMsg').textContent = 'Erro ao carregar imóveis.';
+    }
+    return;
+  }
+
+  const novos = (res.data || []).sort((a,b) => {
+    const da = new Date(a.dataCadastro||0).getTime() || 0;
+    const db = new Date(b.dataCadastro||0).getTime() || 0;
+    return db - da;
+  });
+
+  state.imoveis = novos;
+  gravarCache(novos);
+
+  try {
+    const primeiroCorretor = state.imoveis.map(getCorretor).find(Boolean);
+    if(primeiroCorretor) localStorage.setItem('vitrine_corretor_pref', primeiroCorretor);
+  } catch(e){}
+
+  atualizarContadores();
+  renderizarImoveis();
+}
+
+/* =====================================================
+   CONTADORES
+===================================================== */
+function atualizarContadores(){
+  const counts = { todos: state.imoveis.length, gostei: 0, 'quero-visitar': 0, 'nao-gostei': 0, pendente: 0 };
+  state.imoveis.forEach(im => {
+    const s = im.status || 'pendente';
+    if(counts[s] !== undefined) counts[s]++;
+    else counts.pendente++;
+  });
+  Object.keys(counts).forEach(k => {
+    const el = $('cnt-' + k);
+    if(el) el.textContent = counts[k];
+  });
+}
+
+function setFiltro(f, el){
+  state.filtro = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  renderizarImoveis();
+}
+
+/* =====================================================
+   RENDERIZAR
+===================================================== */
+function renderizarImoveis(){
+  const grid = $('gridImoveis');
+  let lista = [...state.imoveis];
+
+  if(state.filtro === 'recentes'){
+    // mantém ordenação por data desc
+  } else if(state.filtro === 'todos'){
+    const ordem = { 'pendente': 0, 'quero-visitar': 1, 'gostei': 2, 'nao-gostei': 3 };
+    lista.sort((a,b) => {
+      const oa = ordem[(a.status || 'pendente')] ?? 99;
+      const ob = ordem[(b.status || 'pendente')] ?? 99;
+      if(oa !== ob) return oa - ob;
+      const da = new Date(a.dataCadastro||0).getTime() || 0;
+      const db = new Date(b.dataCadastro||0).getTime() || 0;
+      return db - da;
+    });
+  } else {
+    lista = lista.filter(i => (i.status || 'pendente') === state.filtro);
+  }
+
+  const busca = ($('buscaInput').value || '').toLowerCase().trim();
+  if(busca){
+    lista = lista.filter(i =>
+      (i.titulo || '').toLowerCase().includes(busca) ||
+      (i.descricao || '').toLowerCase().includes(busca) ||
+      (i.observacao || '').toLowerCase().includes(busca)
+    );
+  }
+
+  if(lista.length === 0){
+    grid.innerHTML = '';
+    $('emptyState').classList.remove('hidden');
+    $('emptyTitulo').textContent = busca ? 'Nada encontrado' : 'Nenhum imóvel aqui';
+    $('emptyMsg').textContent = busca ? 'Tente outra busca.' : 'Nada para mostrar neste filtro.';
+    return;
+  }
+  $('emptyState').classList.add('hidden');
+  grid.innerHTML = lista.map(cardHTML).join('');
+}
+
+function cardHTML(im){
+  const statusAtual = im.status || 'pendente';
+  const statusClass = {
+    'gostei':'status-gostei','nao-gostei':'status-nao-gostei',
+    'quero-visitar':'status-quero-visitar','pendente':'status-pendente'
+  }[statusAtual] || 'status-pendente';
+  const statusLabel = {
+    'gostei':'❤️ Gostei','nao-gostei':'❌ Não gostei',
+    'quero-visitar':'📅 Quero visitar','pendente':'⏳ Aguardando'
+  }[statusAtual];
+
+  const img = im.imagem || 'https://via.placeholder.com/400x250/e2e8f0/64748b?text=Sem+imagem';
+  const id = esc(im.id);
+  const dataFmt = fmtData(im.dataCadastro);
+  const obsTexto = (im.observacao || '').trim();
+  const obsLonga = obsTexto.length > 100;
+  const obsId = 'obs-' + id;
+  const descTexto = (im.descricao || '').trim();
+  const descId = 'desc-' + id;
+
+  const cardExtraClass = (statusAtual === 'nao-gostei') ? ' card-nao-gostei' : '';
+
+  const btnGostei = (statusAtual === 'gostei') ? 'ativo' : '';
+  const btnVisitar = (statusAtual === 'quero-visitar') ? 'ativo' : '';
+  const btnNao = (statusAtual === 'nao-gostei') ? 'ativo' : '';
+
+  const corretor = getCorretor(im);
+  const zapInline = corretor
+    ? `<button class="btn-zap-inline" onclick="abrirZap('${id}')" title="Falar com ${esc(corretor)} no WhatsApp">
+         <span class="ico">💬</span> Zap
+       </button>`
+    : '';
+
+  return `
+    <div class="card${cardExtraClass}" data-id="${id}">
+      <div class="status-balloon ${statusClass}">
+        <span>${statusLabel}</span>
+      </div>
+
+      <div class="card-main">
+        <div class="card-img-wrap">
+          <img class="card-img" src="${esc(img)}" alt="${esc(im.titulo)}" loading="lazy"
+               onerror="this.src='https://via.placeholder.com/400x250/e2e8f0/64748b?text=Sem+imagem'">
+        </div>
+        <div class="card-info">
+          <div class="card-top-meta">
+            ${dataFmt ? `<span class="card-date">📅 ${dataFmt}</span>` : ''}
+            ${im.codigo ? `<span class="card-code" onclick="copiarCodigo('${esc(im.codigo)}', this)">#${esc(im.codigo)} 📋</span>` : ''}
+            ${zapInline}
+          </div>
+          <div class="card-title">${esc(im.titulo) || 'Sem endereço'}</div>
+          ${descTexto ? `
+            <div class="card-desc" id="${descId}" onclick="toggleDesc('${descId}')">${esc(descTexto)}</div>
+            ${descTexto.length > 120 ? `<button class="card-desc-toggle" onclick="toggleDesc('${descId}')" id="${descId}-toggle">▼ Ver mais</button>` : ''}
+          ` : ''}
+        </div>
+      </div>
+
+      <div class="card-actions">
+        <button class="btn btn-success ${btnGostei}" onclick="marcar('${id}','gostei')">
+          <span class="ico">❤️</span><span class="lbl">Gostei</span>
+        </button>
+        <button class="btn btn-warn ${btnVisitar}" onclick="marcar('${id}','quero-visitar')">
+          <span class="ico">📅</span><span class="lbl">Visitar</span>
+        </button>
+        <button class="btn btn-danger ${btnNao}" onclick="marcar('${id}','nao-gostei')">
+          <span class="ico">❌</span><span class="lbl">Não</span>
+        </button>
+      </div>
+
+      ${im.link ? `
+        <a class="btn-ver-anuncio" href="${esc(im.link)}" target="_blank" rel="noopener">
+          🔗 Ver anúncio completo
+          <span class="arrow">→</span>
+        </a>
+      ` : ''}
+
+      <div class="obs-wrap" id="${obsId}">
+        <div class="obs-label">
+          💬 Observação
+          <button class="obs-edit-btn" onclick="abrirEdicaoObs('${obsId}')">✏️ Editar</button>
+        </div>
+        ${obsTexto ? `
+          <div class="obs-text ${obsLonga ? '' : 'expandido'}" id="${obsId}-text">${esc(obsTexto)}</div>
+          ${obsLonga ? `<button class="obs-toggle" onclick="toggleObs('${obsId}')" id="${obsId}-toggle">▼ Ver mais</button>` : ''}
+        ` : `<div class="obs-empty" onclick="abrirEdicaoObs('${obsId}')">— Clique para adicionar —</div>`}
+        <textarea class="obs-textarea" id="${obsId}-input" placeholder="Escreva uma observação...">${esc(obsTexto)}</textarea>
+        <div class="obs-edit-actions">
+          <button class="btn btn-primary btn-sm" style="flex:1" onclick="salvarEdicaoObs('${id}', '${obsId}')">💾 Salvar</button>
+          <button class="btn btn-ghost btn-sm" onclick="cancelarEdicaoObs('${obsId}')">Cancelar</button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+/* =====================================================
+   WHATSAPP
+===================================================== */
+function abrirZap(imovelId){
+  const im = state.imoveis.find(i => i.id === imovelId);
+  if(!im){ toast('Imóvel não encontrado', 'error'); return; }
+
+  const corretor = getCorretor(im);
+  const zap = corretor ? ZAP_CORRETORES[corretor] : null;
+  if(!zap){ toast('Corretor sem WhatsApp cadastrado', 'error'); return; }
+
+  const nomeCliente = state.clienteInfo?.nome || 'Cliente';
+  const endereco = im.titulo || 'imóvel';
+  const codigo = im.codigo || '';
+  const link = im.link || '';
+
+  let msg = `Olá ${corretor}! 👋\n\n`;
+  msg += `Sou *${nomeCliente}* e gostaria de informações sobre este imóvel:\n\n`;
+  msg += `🏠 *${endereco}*\n`;
+  if(codigo) msg += `🔖 Código: ${codigo}\n`;
+  if(link) msg += `🔗 ${link}\n`;
+  msg += `\nPode me ajudar?`;
+
+  const url = `https://wa.me/${zap}?text=${encodeURIComponent(msg)}`;
+  window.open(url, '_blank');
+}
+
+/* =====================================================
+   MARCAR STATUS
+===================================================== */
+async function marcar(id, acao){
+  const im = state.imoveis.find(i => i.id === id);
+  if(!im) return;
+
+  const statusAtual = im.status || 'pendente';
+  const novaAcao = (statusAtual === acao) ? 'pendente' : acao;
+
+  im.status = novaAcao;
+  atualizarContadores();
+  renderizarImoveis();
+  gravarCache(state.imoveis); // cache já reflete o novo status localmente
+
+  const res = await api('atualizarStatus', {
+    id, telefone: state.telefone, acao: novaAcao, deviceToken: state.deviceToken
+  });
+
+  if(!res.ok){
+    if(erroEhDispositivoVinculado(res.error)){
+      mostrarBloqueioDispositivo();
+      return;
+    }
+    toast(res.error || 'Erro ao salvar', 'error');
+    im.status = statusAtual;
+    atualizarContadores();
+    renderizarImoveis();
+    gravarCache(state.imoveis);
+  } else {
+    toast(novaAcao !== 'pendente' ? 'Marcado como: ' + novaAcao : 'Voltou para aguardando', 'success');
+  }
+}
+
+/* =====================================================
+   OBSERVAÇÃO
+===================================================== */
+function toggleDesc(descId){
+  const el = $(descId);
+  const toggle = $(descId + '-toggle');
+  if(!el) return;
+  const expandido = el.classList.contains('expandido');
+  if(expandido){
+    el.classList.remove('expandido');
+    if(toggle) toggle.innerHTML = '▼ Ver mais';
+  } else {
+    el.classList.add('expandido');
+    if(toggle) toggle.innerHTML = '▲ Ver menos';
+  }
+}
+
+function toggleObs(obsId){
+  const text = $(obsId + '-text');
+  const toggle = $(obsId + '-toggle');
+  if(!text) return;
+  const expandido = text.classList.contains('expandido');
+  if(expandido){
+    text.classList.remove('expandido');
+    if(toggle) toggle.innerHTML = '▼ Ver mais';
+  } else {
+    text.classList.add('expandido');
+    if(toggle) toggle.innerHTML = '▲ Ver menos';
+  }
+}
+
+function abrirEdicaoObs(obsId){
+  const wrap = $(obsId);
+  const input = $(obsId + '-input');
+  const text = $(obsId + '-text');
+  if(!wrap || !input) return;
+  if(text) input.value = text.textContent.trim();
+  else input.value = '';
+  wrap.classList.add('editing');
+  input.focus();
+}
+
+function cancelarEdicaoObs(obsId){
+  const wrap = $(obsId);
+  if(wrap) wrap.classList.remove('editing');
+}
+
+async function salvarEdicaoObs(id, obsId){
+  const input = $(obsId + '-input');
+  const novaObs = input.value.trim();
+  const im = state.imoveis.find(i => i.id === id);
+  if(im) im.observacao = novaObs;
+  const wrap = $(obsId);
+  if(wrap) wrap.classList.remove('editing');
+  renderizarImoveis();
+  gravarCache(state.imoveis);
+  toast('Observação salva ✅', 'success');
+
+  const res = await api('salvarObservacao', {
+    id, observacao: novaObs, deviceToken: state.deviceToken
+  });
+
+  if(!res.ok && erroEhDispositivoVinculado(res.error)){
+    mostrarBloqueioDispositivo();
+  }
+}
+
+/* =====================================================
+   COPIAR CÓDIGO
+===================================================== */
+function copiarCodigo(codigo, el){
+  if(!codigo) return;
+  const texto = String(codigo);
+  function feedback(){
+    const original = el.innerHTML;
+    el.classList.add('copiado');
+    el.innerHTML = '✅ Copiado!';
+    setTimeout(() => { el.classList.remove('copiado'); el.innerHTML = original; }, 1400);
+  }
+  if(navigator.clipboard && window.isSecureContext){
+    navigator.clipboard.writeText(texto).then(feedback).catch(() => fallbackCopy(texto, feedback));
+  } else {
+    fallbackCopy(texto, feedback);
+  }
+}
+
+function fallbackCopy(texto, cb){
+  const ta = document.createElement('textarea');
+  ta.value = texto;
+  ta.style.position = 'fixed'; ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.select();
+  try { document.execCommand('copy'); cb && cb(); }
+  catch(e){ toast('Não foi possível copiar', 'error'); }
+  document.body.removeChild(ta);
+}
+
+/* =====================================================
+   INIT — PRIORIDADE MÁXIMA: abrir a tela o quanto antes
+===================================================== */
+(async function init(){
+  const params = new URLSearchParams(window.location.search);
+  const telUrl = normalizaTel(params.get('tel'));
+  const senhaUrl = (params.get('senha') || '').toUpperCase().trim();
+
+  /* ===========================================================
+     CENÁRIO 0 — MELHOR CASO: já tem sessão salva
+     Abre a vitrine INSTANTANEAMENTE com cache.
+     Login/refresh só depois, em background.
+  =========================================================== */
+  const telSalvo = localStorage.getItem(TEL_KEY);
+  const tokenSalvo = localStorage.getItem(TOKEN_KEY);
+  const nomeSalvo = localStorage.getItem(NOME_KEY);
+
+  // Se não veio link novo e tem sessão salva → modo instantâneo
+  if((!telUrl || !senhaUrl) && telSalvo && tokenSalvo){
+    state.telefone = telSalvo;
+    state.deviceToken = tokenSalvo;
+    state.clienteInfo = { nome: nomeSalvo || null, apelido: null };
+
+    // 🚀 Abre JÁ, com o que tem em cache (zero espera)
+    mostrarView('vitrineView');
+    $('userInfo').textContent = nomeSalvo ? '👤 ' + nomeSalvo : '📱 ' + fmtTel(telSalvo);
+
+    const cache = lerCache();
+    if(cache && cache.data && cache.data.length){
+      state.imoveis = cache.data;
+      atualizarContadores();
+      renderizarImoveis();
+    } else {
+      mostrarSkeleton(4);
+    }
+
+    // Agora sim, checa em background se o token ainda vale
+    // (se cache está fresco, nem precisa)
+    if(!cache || !cache.fresh){
+      const res = await api('listarImoveis', {
+        telefone: telSalvo,
+        deviceToken: tokenSalvo
+      }, TIMEOUT_API, 0);
+
+      if(res.ok){
+        const novos = (res.data || []).sort((a,b) => {
+          const da = new Date(a.dataCadastro||0).getTime() || 0;
+          const db = new Date(b.dataCadastro||0).getTime() || 0;
+          return db - da;
+        });
+        state.imoveis = novos;
+        gravarCache(novos);
+        try {
+          const primeiroCorretor = state.imoveis.map(getCorretor).find(Boolean);
+          if(primeiroCorretor) localStorage.setItem('vitrine_corretor_pref', primeiroCorretor);
+        } catch(e){}
+        atualizarContadores();
+        renderizarImoveis();
+        return;
+      }
+
+      if(erroEhDispositivoVinculado(res.error)){
+        mostrarBloqueioDispositivo();
+        return;
+      }
+
+      // Token inválido / expirado → cai pro login SEM apagar cache
+      if((res.error || '').toLowerCase().match(/sess|token|inv[áa]lid|expirad|autentic|unauthor/)){
+        localStorage.removeItem(TOKEN_KEY);
+        mostrarView('loginView');
+        $('inputTelefone').value = fmtTel(telSalvo);
+        $('senhaGroup').style.display = 'block';
+        $('loginSub').textContent = 'Digite sua senha para entrar novamente.';
+        setTimeout(() => $('inputSenha').focus(), 200);
+        return;
+      }
+
+      // Falha de conexão → mantém na vitrine com cache (não chuta o usuário pra fora)
+      if(!state.imoveis.length){
+        mostrarView('loginView');
+        $('inputTelefone').value = fmtTel(telSalvo);
+        $('senhaGroup').style.display = 'block';
+        $('loginSub').textContent = 'Sem conexão. Entre novamente.';
+        setTimeout(() => $('inputSenha').focus(), 200);
+      }
+    }
+    return;
+  }
+
+  /* ===========================================================
+     CENÁRIO 1 — veio de link com tel+senha
+     Mostra vitrine IMEDIATAMENTE (com cache ou skeleton)
+     e faz login em background.
+  =========================================================== */
+  if(telUrl.length >= 10 && senhaUrl.length > 0){
+    // 🚀 Já mostra a vitrine com o que tem em cache / skeleton
+    mostrarView('vitrineView');
+    $('userInfo').textContent = '📱 ' + fmtTel(telUrl);
+
+    const cache = lerCache();
+    if(cache && cache.data && cache.data.length){
+      state.imoveis = cache.data;
+      atualizarContadores();
+      renderizarImoveis();
+    } else {
+      mostrarSkeleton(4);
+    }
+
+    // Warm-up extra (caso o do <head> tenha falhado)
+    fetch(API_URL + '?action=ping&_t=' + Date.now(), { mode: 'no-cors' }).catch(()=>{});
+
+    const navegador = detectarNavegador();
+
+    // ⚡ LOGIN em background — sem retry, timeout curto
+    const res = await api('loginCliente', {
+      telefone: telUrl,
+      senha: senhaUrl,
+      deviceToken: '',
+      navegador: navegador
+    }, TIMEOUT_LOGIN, 0);
+
+    if(res.ok){
+      state.telefone = telUrl;
+      state.deviceToken = res.deviceToken || '';
+      state.clienteInfo = { nome: res.nome, apelido: res.apelido };
+      localStorage.setItem(TEL_KEY, telUrl);
+      localStorage.setItem(TOKEN_KEY, state.deviceToken);
+      if(res.nome) localStorage.setItem(NOME_KEY, res.nome);
+
+      limparUrl();
+      $('userInfo').textContent = res.nome ? '👤 ' + res.nome : '📱 ' + fmtTel(telUrl);
+
+      // Se a API já devolveu imóveis no login, usa direto
+      if(res.imoveis && res.imoveis.length){
+        const novos = res.imoveis.sort((a,b) => {
+          const da = new Date(a.dataCadastro||0).getTime() || 0;
+          const db = new Date(b.dataCadastro||0).getTime() || 0;
+          return db - da;
+        });
+        state.imoveis = novos;
+        gravarCache(novos);
+        try {
+          const primeiroCorretor = state.imoveis.map(getCorretor).find(Boolean);
+          if(primeiroCorretor) localStorage.setItem('vitrine_corretor_pref', primeiroCorretor);
+        } catch(e){}
+        atualizarContadores();
+        renderizarImoveis();
+        return;
+      }
+
+      // Senão, chama listarImoveis em seguida
+      await carregarImoveis();
+      return;
+    }
+
+    limparUrl();
+
+    if(erroEhDispositivoVinculado(res.error)){
+      state.telefone = telUrl;
+      state.clienteInfo = { nome: res.nome || null, apelido: res.apelido || null };
+      mostrarBloqueioDispositivo();
+      return;
+    }
+
+    // Falhou login: se tinha cache, mantém a vitrine (senão volta pro login)
+    if(!state.imoveis.length){
+      mostrarView('loginView');
+      $('inputTelefone').value = fmtTel(telUrl);
+      $('inputSenha').value = senhaUrl;
+      $('senhaGroup').style.display = 'block';
+      $('loginSub').textContent = 'Confira seus dados e clique em Entrar.';
+      if(res.error) toast(res.error, 'error');
+    } else {
+      toast('Não conseguimos validar seu acesso agora, mas estamos mostrando os últimos imóveis salvos.', 'error');
+    }
+    return;
+  }
+
+  /* ===========================================================
+     CENÁRIO 3 — nada salvo → mostra login
+  =========================================================== */
+  mostrarView('loginView');
+  $('senhaGroup').style.display = 'block';
+  setTimeout(() => $('inputTelefone').focus(), 200);
+})();
+</script>
+</body>
+</html>
