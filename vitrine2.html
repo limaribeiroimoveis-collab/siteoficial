@@ -6,6 +6,17 @@
 <meta name="google" content="notranslate">
 <title>Lima Ribeiro Imóveis — Minha Vitrine</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏢</text></svg>">
+
+<script>
+  window.__WARMUP_URL__ = 'https://script.google.com/macros/s/AKfycbyxBL057qqG5ZWVcqZ1fH8JBtcXKElJQTZ7c64847cdjga1jUDq_RoJ7sR3aDmb5UJc/exec';
+  (function warmup(){
+    try {
+      fetch(window.__WARMUP_URL__ + '?action=ping&_t=' + Date.now(), { mode: 'no-cors' })
+        .catch(function(){});
+    } catch(e){}
+  })();
+</script>
+
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   :root{
@@ -154,12 +165,100 @@
     min-height: 20px;
   }
 
+  /* ============================================
+     CARD DE VISITA CONFIRMADA (topo da vitrine)
+  ============================================ */
+  .visitas-wrap{
+    display: flex; flex-direction: column; gap: 10px;
+    margin-top: 8px;
+  }
+  .visita-card{
+    position: relative;
+    background: linear-gradient(135deg, #fff5f5 0%, #ffe8e8 100%);
+    border: 2px solid #d9534f;
+    border-radius: 12px;
+    padding: 14px 16px 12px;
+    box-shadow: 0 4px 14px rgba(217,83,79,.15);
+  }
+  .visita-card::before{
+    content: '📌';
+    position: absolute;
+    top: -12px; left: 14px;
+    font-size: 1.4rem;
+    filter: drop-shadow(0 2px 3px rgba(0,0,0,.25));
+    transform: rotate(-18deg);
+  }
+  .visita-card-header{
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 8px; margin-bottom: 8px; flex-wrap: wrap;
+  }
+  .visita-card-titulo{
+    font-size: .82rem; font-weight: 800;
+    color: #b91c1c; text-transform: uppercase;
+    letter-spacing: .8px;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .visita-card-titulo .dot{
+    width: 8px; height: 8px; border-radius: 50%;
+    background: #d9534f;
+    box-shadow: 0 0 0 3px rgba(217,83,79,.25);
+    animation: pulseDot 1.6s ease-in-out infinite;
+  }
+  @keyframes pulseDot{
+    0%,100%{ box-shadow: 0 0 0 3px rgba(217,83,79,.25); }
+    50%{ box-shadow: 0 0 0 6px rgba(217,83,79,.12); }
+  }
+  .visita-card-copiar{
+    display: inline-flex; align-items: center; gap: 4px;
+    background: #d9534f; color: #fff;
+    border: none; cursor: pointer; font-family: inherit;
+    padding: 5px 10px; border-radius: 6px;
+    font-size: .7rem; font-weight: 700;
+    transition: all .15s;
+    box-shadow: 0 2px 6px rgba(217,83,79,.25);
+  }
+  .visita-card-copiar:hover{ background: #b91c1c; transform: translateY(-1px); }
+  .visita-card-copiar.copiado{ background: var(--success); }
+
+  .visita-card-linhas{
+    display: flex; flex-direction: column; gap: 4px;
+    font-size: .84rem; color: #7f1d1d;
+    line-height: 1.45;
+  }
+  .visita-card-linhas .linha{
+    display: flex; align-items: center; gap: 6px;
+  }
+  .visita-card-linhas .linha .ico{
+    font-size: .95rem; flex-shrink: 0;
+  }
+  .visita-card-linhas .linha .txt{
+    font-weight: 600;
+  }
+  .visita-card-linhas .endereco{
+    font-weight: 700; color: #7f1d1d;
+  }
+  .visita-card-linhas .quando{
+    background: #fff; border: 1px solid #fca5a5;
+    padding: 2px 8px; border-radius: 5px;
+    font-weight: 700; color: #b91c1c;
+    display: inline-block;
+  }
+  .visita-card-codigo{
+    display: inline-flex; align-items: center; gap: 3px;
+    font-family: 'Courier New', monospace;
+    font-size: .72rem; font-weight: 700;
+    color: var(--purple); background: #f1eef7;
+    padding: 2px 7px; border-radius: 4px;
+    border: 1px solid #ddd4ec;
+    margin-left: 4px;
+  }
+
   /* GRID */
   .grid{
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
     gap: 26px;
-    margin-top: 44px;
+    margin-top: 26px;
   }
 
   /* CARD */
@@ -180,7 +279,6 @@
   .card.card-nao-gostei .card-img{ filter: grayscale(100%) brightness(0.95); }
   .card.card-nao-gostei .btn{ opacity: .85; }
 
-  /* BALÃO DE STATUS — mais afastado do card, alinhado à direita */
   .status-balloon{
     position: absolute;
     top: -22px; right: 14px;
@@ -212,7 +310,6 @@
   .status-pendente{ background: #9aa3ad; color: #9aa3ad; }
   .status-pendente span{ color: #fff; }
 
-  /* Layout compacto: imagem esquerda + dados direita */
   .card-main{
     display: flex; gap: 12px; padding: 12px;
   }
@@ -229,7 +326,6 @@
     justify-content: flex-start;
   }
 
-  /* Primeira linha: data + código + WhatsApp */
   .card-top-meta{
     display: flex; align-items: center; gap: 5px; flex-wrap: nowrap;
   }
@@ -250,7 +346,6 @@
   .card-code:hover{ background: #e6e0f2; }
   .card-code.copiado{ background: var(--success); color: #fff; border-color: var(--success); }
 
-  /* Botão WhatsApp na primeira linha (à direita) */
   .btn-zap-inline{
     margin-left: auto;
     display: inline-flex; align-items: center; justify-content: center; gap: 4px;
@@ -289,7 +384,6 @@
   }
   .card-desc-toggle:hover{ text-decoration: underline; }
 
-  /* Ações compactas */
   .card-actions{
     display: grid; grid-template-columns: 1fr 1fr 1fr;
     gap: 5px; padding: 0 12px 10px;
@@ -331,7 +425,6 @@
   .btn-ver-anuncio:hover{ background: var(--primary-dark); }
   .btn-ver-anuncio .arrow{ margin-left: auto; opacity: .7; font-size: .85rem; }
 
-  /* OBSERVAÇÃO */
   .obs-wrap{
     margin: 0 12px 10px; background: var(--bg-alt);
     border: 1px solid var(--border-soft); border-radius: 8px;
@@ -376,7 +469,6 @@
   }
   .obs-empty:hover{ color: var(--primary); }
 
-  /* FILTROS */
   .filters{
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
@@ -406,10 +498,8 @@
   .filters .filter-btn:not(.active) .filter-count{ background: var(--bg-alt); color: var(--muted); }
   @media(max-width:600px){ .filters .filter-btn{ font-size: .68rem; padding: 8px 4px; } }
 
-  /* SEARCH */
   .search-wrap{ margin-top: 14px; }
 
-  /* EMPTY */
   .empty-state{
     text-align: center; padding: 60px 20px; color: var(--muted);
     background: #fff; border-radius: var(--radius); margin-top: 16px;
@@ -418,7 +508,45 @@
   .empty-state svg{ width: 56px; height: 56px; margin-bottom: 12px; opacity: .35; }
   .empty-state h3{ font-size: .95rem; margin-bottom: 4px; color: var(--text-soft); }
 
-  /* TOAST */
+  /* ============================================
+     ERRO DE CONEXÃO — botão recarregar
+  ============================================ */
+  .erro-conexao{
+    background: #fff; border-radius: var(--radius);
+    border: 1px solid #f0c8c8;
+    border-left: 4px solid var(--danger);
+    padding: 30px 22px; margin-top: 20px;
+    text-align: center;
+    box-shadow: var(--shadow-sm);
+  }
+  .erro-conexao .icone{
+    font-size: 2.8rem; margin-bottom: 12px;
+    animation: pulse 2s ease-in-out infinite;
+  }
+  .erro-conexao h3{
+    font-size: 1.05rem; font-weight: 700; color: var(--text);
+    margin-bottom: 6px;
+  }
+  .erro-conexao p{
+    font-size: .85rem; color: var(--muted);
+    margin-bottom: 18px; line-height: 1.5;
+  }
+  .erro-conexao .btn-recarregar{
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    background: var(--primary); color: #fff;
+    border: none; cursor: pointer; font-family: inherit;
+    padding: 12px 24px; border-radius: 10px;
+    font-size: .95rem; font-weight: 700;
+    transition: all .15s;
+    box-shadow: 0 3px 10px rgba(30,58,95,.2);
+  }
+  .erro-conexao .btn-recarregar:hover{
+    background: var(--primary-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 5px 14px rgba(30,58,95,.3);
+  }
+  .erro-conexao .btn-recarregar .ico{ font-size: 1.1rem; }
+
   .toast{
     position: fixed; bottom: 20px; left: 50%;
     transform: translate(-50%, 30px);
@@ -433,12 +561,10 @@
   .toast.success{ background: var(--success); }
   .toast.error{ background: var(--danger); }
 
-  /* HELPERS */
   .hidden{ display: none !important; }
   .text-muted{ color: var(--muted); }
   .text-center{ text-align: center; }
 
-  /* SKELETON (carregamento rápido dos cards) */
   @keyframes shimmer{
     0%{ background-position: -400px 0; }
     100%{ background-position: 400px 0; }
@@ -474,7 +600,6 @@
   .skeleton-line.medium{ width: 70%; }
   .skeleton-line.long{ width: 90%; }
 
-  /* RESPONSIVO */
   @media(max-width:480px){
     .grid{ grid-template-columns: 1fr; }
     .card-img-wrap{ flex: 0 0 90px; width: 90px; height: 90px; }
@@ -482,6 +607,8 @@
     .btn-zap-inline{ font-size: .62rem; padding: 3px 7px; }
     .card-date, .card-code{ font-size: .6rem; padding: 2px 5px; }
     .skeleton-img{ flex: 0 0 90px; width: 90px; height: 90px; }
+    .visita-card{ padding: 12px 13px 10px; }
+    .visita-card-linhas{ font-size: .8rem; }
   }
 </style>
 </head>
@@ -506,8 +633,8 @@
 <!-- TELA DE CARREGAMENTO -->
 <div class="loading-screen hidden" id="loadingView">
   <div class="loading-logo">🏢</div>
-  <h2>Carregando sua vitrine exclusiva</h2>
-  <p>Veja os Imóveis que separei p/ Você...</p>
+  <h2>Preparando sua vitrine</h2>
+  <p>Veja os imóveis que separei p/ você...</p>
   <div class="spinner"></div>
   <div class="loading-msg" id="loadingMsg"></div>
 </div>
@@ -544,7 +671,7 @@
   </div>
 </div>
 
-<!-- TELA DE DISPOSITIVO JÁ VINCULADO -->
+<!-- DISPOSITIVO BLOQUEADO -->
 <div class="login-wrap hidden" id="deviceBlockView">
   <div class="login-card" style="text-align:center;">
     <div class="login-logo" style="background:#8b3a3a;">🔒</div>
@@ -575,6 +702,8 @@
 
 <!-- VITRINE -->
 <div class="container hidden" id="vitrineView">
+  <!-- Cards de visita confirmada -->
+  <div class="visitas-wrap" id="visitasWrap"></div>
 
   <div class="search-wrap">
     <input type="search" id="buscaInput" placeholder="🔍 Buscar por rua/endereço ou descrição..." oninput="renderizarImoveis()">
@@ -618,11 +747,15 @@
 /* =====================================================
    CONFIG
 ===================================================== */
-const API_URL = 'https://script.google.com/macros/s/AKfycbyxBL057qqG5ZWVcqZ1fH8JBtcXKElJQTZ7c64847cdjga1jUDq_RoJ7sR3aDmb5UJc/exec';
+const API_URL = window.__WARMUP_URL__ || 'https://script.google.com/macros/s/AKfycbyxBL057qqG5ZWVcqZ1fH8JBtcXKElJQTZ7c64847cdjga1jUDq_RoJ7sR3aDmb5UJc/exec';
 const TEL_KEY   = 'vitrine_telefone';
 const TOKEN_KEY = 'vitrine_device_token';
 const NOME_KEY  = 'vitrine_nome';
-const TIMEOUT_API = 45000;
+const CACHE_KEY = 'vitrine_imoveis_cache';
+const CACHE_TTL = 5 * 60 * 1000;
+
+const TIMEOUT_API = 15000;
+const TIMEOUT_LOGIN = 12000;
 
 const ZAP_CORRETORES = {
   'Hugo': '5531996070930',
@@ -699,6 +832,24 @@ function fmtTel(t){
   return t;
 }
 
+const DIAS_SEMANA = ['domingo','segunda-feira','terça-feira','quarta-feira','quinta-feira','sexta-feira','sábado'];
+
+function fmtDataHoraVisita(iso){
+  if(!iso) return { dataCurta: '', hora: '', diaSemana: '' };
+  const d = new Date(iso);
+  if(isNaN(d.getTime())) return { dataCurta: '', hora: '', diaSemana: '' };
+  const dia = String(d.getDate()).padStart(2,'0');
+  const mes = String(d.getMonth()+1).padStart(2,'0');
+  const ano = d.getFullYear();
+  const hora = String(d.getHours()).padStart(2,'0');
+  const min = String(d.getMinutes()).padStart(2,'0');
+  return {
+    dataCurta: `${dia}/${mes}/${ano}`,
+    hora: `${hora}:${min}`,
+    diaSemana: DIAS_SEMANA[d.getDay()] || ''
+  };
+}
+
 function detectarNavegador(){
   const ua = navigator.userAgent;
   let nav = 'Navegador', os = '';
@@ -715,11 +866,46 @@ function detectarNavegador(){
 }
 
 /* =====================================================
-   Detectar corretor do imóvel
+   CACHE LOCAL
+===================================================== */
+function lerCache(){
+  try {
+    const raw = localStorage.getItem(CACHE_KEY);
+    if(!raw) return null;
+    const obj = JSON.parse(raw);
+    if(!obj || !obj.ts || !obj.data) return null;
+    return { data: obj.data, ts: obj.ts, fresh: (Date.now() - obj.ts) < CACHE_TTL };
+  } catch(e){ return null; }
+}
+
+function gravarCache(imoveis){
+  try {
+    localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), data: imoveis }));
+  } catch(e){}
+}
+
+function limparCache(){
+  try { localStorage.removeItem(CACHE_KEY); } catch(e){}
+}
+
+function limparSessaoCompleta(){
+  try {
+    localStorage.removeItem(TEL_KEY);
+    localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem(NOME_KEY);
+    localStorage.removeItem(CACHE_KEY);
+  } catch(e){}
+  state.telefone = null;
+  state.deviceToken = null;
+  state.clienteInfo = null;
+  state.imoveis = [];
+}
+
+/* =====================================================
+   Corretor do imóvel
 ===================================================== */
 function getCorretor(im){
   if(!im) return null;
-
   const cands = [im._corretor, im.corretor, im.Corretor, im.corretores, im.responsavel];
   for(const c of cands){
     if(!c) continue;
@@ -728,34 +914,23 @@ function getCorretor(im){
       if(s === nome.toLowerCase() || s.includes(nome.toLowerCase())) return nome;
     }
   }
-
   if(im.link && typeof im.link === 'string'){
     try {
       const partes = im.link.split('/').filter(Boolean);
       const ultimo = partes[partes.length - 1] || '';
       const semHash = ultimo.replace(/-[A-Za-z0-9]{3,6}$/, '');
-      const normalizado = semHash
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '')
-        .toLowerCase();
-
+      const normalizado = semHash.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
       for(const nome of Object.keys(ZAP_CORRETORES)){
-        const nomeNorm = nome
-          .normalize('NFD')
-          .replace(/[\u0300-\u036f]/g, '')
-          .toLowerCase();
+        const nomeNorm = nome.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
         if(normalizado.includes(nomeNorm)) return nome;
       }
-    } catch(e){
-      console.warn('Erro ao extrair corretor do link:', e);
-    }
+    } catch(e){}
   }
-
   return null;
 }
 
 /* =====================================================
-   DETECÇÃO DE BLOQUEIO POR DISPOSITIVO
+   Detecção bloqueio dispositivo
 ===================================================== */
 function erroEhDispositivoVinculado(msg){
   if(!msg) return false;
@@ -771,6 +946,19 @@ function erroEhDispositivoVinculado(msg){
     /bloqueado/
   ];
   return padroes.some(re => re.test(s));
+}
+
+function erroEhConexao(msg){
+  if(!msg) return false;
+  const s = String(msg).toLowerCase();
+  return s.includes('falha ao conectar') ||
+         s.includes('failed to fetch') ||
+         s.includes('networkerror') ||
+         s.includes('timeout') ||
+         s.includes('aborted') ||
+         s.includes('http 5') ||
+         s.includes('http 4') ||
+         s.includes('load failed');
 }
 
 function mostrarBloqueioDispositivo(infoExtra){
@@ -871,7 +1059,7 @@ function mostrarView(id){
 }
 
 /* =====================================================
-   LIMPAR URL (remove ?tel= e ?senha=)
+   Limpar URL
 ===================================================== */
 function limparUrl(){
   try {
@@ -886,7 +1074,7 @@ function limparUrl(){
 }
 
 /* =====================================================
-   SKELETON — mostra cards falsos enquanto carrega
+   SKELETON
 ===================================================== */
 function mostrarSkeleton(qtd = 4){
   const grid = $('gridImoveis');
@@ -909,7 +1097,48 @@ function mostrarSkeleton(qtd = 4){
 }
 
 /* =====================================================
-   LOGIN CLIENTE
+   TELA DE ERRO DE CONEXÃO (com botão recarregar)
+===================================================== */
+function mostrarErroConexao(mensagemDetalhe){
+  const grid = $('gridImoveis');
+  grid.innerHTML = `
+    <div class="erro-conexao" style="grid-column: 1 / -1;">
+      <div class="icone">📡</div>
+      <h3>Não conseguimos carregar seus imóveis</h3>
+      <p>
+        Parece que sua conexão está instável ou o servidor demorou para responder.<br>
+        Toque no botão abaixo para tentar novamente.
+      </p>
+      <button class="btn-recarregar" onclick="recarregarTudo()">
+        <span class="ico">🔄</span> Recarregar imóveis
+      </button>
+    </div>
+  `;
+  $('emptyState').classList.add('hidden');
+}
+
+async function recarregarTudo(){
+  const grid = $('gridImoveis');
+  grid.innerHTML = '';
+  mostrarSkeleton(4);
+
+  // Se tem sessão salva, tenta relogar com ela
+  if(state.telefone && state.deviceToken){
+    await carregarImoveis();
+    if(state.imoveis.length > 0) return;
+  }
+
+  // Se não tem sessão, volta pro login
+  mostrarView('loginView');
+  $('senhaGroup').style.display = 'block';
+  if(state.telefone){
+    $('inputTelefone').value = fmtTel(state.telefone);
+  }
+  setTimeout(() => $('inputSenha')?.focus(), 200);
+}
+
+/* =====================================================
+   LOGIN CLIENTE (manual)
 ===================================================== */
 function toggleAjudaSenha(){ $('ajudaSenha').classList.toggle('hidden'); }
 
@@ -930,9 +1159,12 @@ async function entrarCliente(){
   btn.disabled = true;
   btn.innerHTML = '<span class="spinner" style="width:16px;height:16px;border-width:2px;border-top-color:transparent;border-color:currentColor;display:inline-block;vertical-align:middle;margin-right:6px;"></span> Entrando...';
 
+  // ⚡ Antes de logar, limpa sessão antiga (evita mistura)
+  limparSessaoCompleta();
+
   const res = await api('loginCliente', {
     telefone: tel, senha: senhaDigitada, deviceToken: '', navegador: navegador
-  });
+  }, TIMEOUT_LOGIN, 0);
 
   btn.disabled = false;
   btn.textContent = 'Entrar na minha vitrine';
@@ -942,6 +1174,11 @@ async function entrarCliente(){
       state.telefone = tel;
       if(res.nome) state.clienteInfo = { nome: res.nome, apelido: res.apelido };
       mostrarBloqueioDispositivo();
+      return;
+    }
+    if(erroEhConexao(res.error)){
+      mostrarView('vitrineView');
+      mostrarErroConexao();
       return;
     }
     toast(res.error || 'Não foi possível entrar', 'error');
@@ -962,7 +1199,7 @@ async function entrarCliente(){
 }
 
 /* =====================================================
-   IR PARA VITRINE (mostra na hora + skeleton)
+   IR PARA VITRINE
 ===================================================== */
 async function irParaVitrine(){
   mostrarView('vitrineView');
@@ -970,10 +1207,22 @@ async function irParaVitrine(){
     ? '👤 ' + state.clienteInfo.nome
     : '📱 ' + fmtTel(state.telefone);
 
-  // Mostra skeleton imediatamente — o usuário já vê a tela na hora
-  mostrarSkeleton(4);
+  const cache = lerCache();
+  if(cache && cache.data && cache.data.length){
+    state.imoveis = cache.data;
+    atualizarContadores();
+    renderizarVisitas();
+    renderizarImoveis();
 
-  // Carrega em paralelo/em seguida
+    if(cache.fresh){
+      console.log('[vitrine] usando cache fresco — sem request');
+      return;
+    }
+    console.log('[vitrine] cache stale — atualizando em background');
+  } else {
+    mostrarSkeleton(4);
+  }
+
   await carregarImoveis();
 }
 
@@ -984,16 +1233,16 @@ async function carregarImoveis(){
   const res = await api('listarImoveis', {
     telefone: state.telefone,
     deviceToken: state.deviceToken
-  });
+  }, TIMEOUT_API, 0);
 
   if(!res.ok){
     if(erroEhDispositivoVinculado(res.error)){
       mostrarBloqueioDispositivo();
       return;
     }
-    // Se a API rejeitar o token (sessão expirada / inválida)
     if((res.error || '').toLowerCase().match(/sess|token|inv[áa]lid|expirad|autentic|unauthor/)){
       localStorage.removeItem(TOKEN_KEY);
+      limparCache();
       mostrarView('loginView');
       $('inputTelefone').value = fmtTel(state.telefone);
       $('senhaGroup').style.display = 'block';
@@ -1001,19 +1250,22 @@ async function carregarImoveis(){
       setTimeout(() => $('inputSenha').focus(), 200);
       return;
     }
-    // Erro genérico
-    toast(res.error || 'Erro ao carregar', 'error');
-    $('gridImoveis').innerHTML = '';
-    $('emptyState').classList.remove('hidden');
-    $('emptyMsg').textContent = 'Erro ao carregar imóveis.';
+
+    // Erro de conexão → mostra tela com botão recarregar
+    if(erroEhConexao(res.error) || !state.imoveis.length){
+      mostrarErroConexao(res.error);
+    }
     return;
   }
 
-  state.imoveis = (res.data || []).sort((a,b) => {
+  const novos = (res.data || []).sort((a,b) => {
     const da = new Date(a.dataCadastro||0).getTime() || 0;
     const db = new Date(b.dataCadastro||0).getTime() || 0;
     return db - da;
   });
+
+  state.imoveis = novos;
+  gravarCache(novos);
 
   try {
     const primeiroCorretor = state.imoveis.map(getCorretor).find(Boolean);
@@ -1021,7 +1273,112 @@ async function carregarImoveis(){
   } catch(e){}
 
   atualizarContadores();
+  renderizarVisitas();
   renderizarImoveis();
+}
+
+/* =====================================================
+   RENDERIZAR VISITAS CONFIRMADAS (topo)
+===================================================== */
+function renderizarVisitas(){
+  const wrap = $('visitasWrap');
+  if(!wrap) return;
+
+  const visitas = (state.imoveis || []).filter(im => {
+    const iso = im.dataVisitaAgendada;
+    if(!iso) return false;
+    const d = new Date(iso);
+    if(isNaN(d.getTime())) return false;
+    // só mostra visitas futuras ou de hoje
+    const hoje = new Date(); hoje.setHours(0,0,0,0);
+    return d >= hoje;
+  });
+
+  if(visitas.length === 0){
+    wrap.innerHTML = '';
+    return;
+  }
+
+  visitas.sort((a,b) => new Date(a.dataVisitaAgendada) - new Date(b.dataVisitaAgendada));
+
+  wrap.innerHTML = visitas.map(im => visitaCardHTML(im)).join('');
+}
+
+function visitaCardHTML(im){
+  const info = fmtDataHoraVisita(im.dataVisitaAgendada);
+  const id = esc(im.id);
+  const endereco = esc(im.titulo || 'Endereço não informado');
+  const codigo = im.codigo ? esc(im.codigo) : '';
+
+  return `
+    <div class="visita-card" data-visita-id="${id}">
+      <div class="visita-card-header">
+        <div class="visita-card-titulo">
+          <span class="dot"></span>
+          Visita confirmada
+        </div>
+        <button class="visita-card-copiar" onclick="copiarTextoVisita('${id}', this)">
+          📋 Copiar
+        </button>
+      </div>
+      <div class="visita-card-linhas">
+        <div class="linha">
+          <span class="ico">🏠</span>
+          <span class="txt endereco">${endereco}</span>
+          ${codigo ? `<span class="visita-card-codigo">#${codigo}</span>` : ''}
+        </div>
+        <div class="linha">
+          <span class="ico">📅</span>
+          <span class="quando">${info.diaSemana ? info.diaSemana + ', ' : ''}${info.dataCurta} às ${info.hora}</span>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function copiarTextoVisita(id, btn){
+  const im = state.imoveis.find(i => i.id === id);
+  if(!im){ toast('Imóvel não encontrado', 'error'); return; }
+
+  const info = fmtDataHoraVisita(im.dataVisitaAgendada);
+  const linhas = [];
+  linhas.push('📌 VISITA CONFIRMADA');
+  linhas.push('');
+  linhas.push('🏠 ' + (im.titulo || 'Endereço não informado'));
+  if(im.codigo) linhas.push('🔖 Código: ' + im.codigo);
+  linhas.push('📅 ' + (info.diaSemana ? info.diaSemana.charAt(0).toUpperCase() + info.diaSemana.slice(1) + ', ' : '') + info.dataCurta);
+  linhas.push('🕐 ' + info.hora);
+
+  const texto = linhas.join('\n');
+
+  function feedback(){
+    if(!btn) return;
+    const original = btn.innerHTML;
+    btn.classList.add('copiado');
+    btn.innerHTML = '✅ Copiado!';
+    setTimeout(() => {
+      btn.classList.remove('copiado');
+      btn.innerHTML = original;
+    }, 1600);
+    toast('Texto copiado! Cole no WhatsApp 📋', 'success');
+  }
+
+  if(navigator.clipboard && window.isSecureContext){
+    navigator.clipboard.writeText(texto).then(feedback).catch(() => fallbackCopy(texto, feedback));
+  } else {
+    fallbackCopy(texto, feedback);
+  }
+}
+
+function fallbackCopy(texto, cb){
+  const ta = document.createElement('textarea');
+  ta.value = texto;
+  ta.style.position = 'fixed'; ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.select();
+  try { document.execCommand('copy'); cb && cb(); }
+  catch(e){ toast('Não foi possível copiar', 'error'); }
+  document.body.removeChild(ta);
 }
 
 /* =====================================================
@@ -1048,14 +1405,14 @@ function setFiltro(f, el){
 }
 
 /* =====================================================
-   RENDERIZAR
+   RENDERIZAR IMÓVEIS
 ===================================================== */
 function renderizarImoveis(){
   const grid = $('gridImoveis');
   let lista = [...state.imoveis];
 
   if(state.filtro === 'recentes'){
-    // mantém ordenação por data desc
+    // ordenado por data desc já
   } else if(state.filtro === 'todos'){
     const ordem = { 'pendente': 0, 'quero-visitar': 1, 'gostei': 2, 'nao-gostei': 3 };
     lista.sort((a,b) => {
@@ -1187,7 +1544,7 @@ function cardHTML(im){
 }
 
 /* =====================================================
-   WHATSAPP — direciona para o corretor correto
+   WHATSAPP
 ===================================================== */
 function abrirZap(imovelId){
   const im = state.imoveis.find(i => i.id === imovelId);
@@ -1226,6 +1583,7 @@ async function marcar(id, acao){
   im.status = novaAcao;
   atualizarContadores();
   renderizarImoveis();
+  gravarCache(state.imoveis);
 
   const res = await api('atualizarStatus', {
     id, telefone: state.telefone, acao: novaAcao, deviceToken: state.deviceToken
@@ -1240,6 +1598,7 @@ async function marcar(id, acao){
     im.status = statusAtual;
     atualizarContadores();
     renderizarImoveis();
+    gravarCache(state.imoveis);
   } else {
     toast(novaAcao !== 'pendente' ? 'Marcado como: ' + novaAcao : 'Voltou para aguardando', 'success');
   }
@@ -1300,6 +1659,7 @@ async function salvarEdicaoObs(id, obsId){
   const wrap = $(obsId);
   if(wrap) wrap.classList.remove('editing');
   renderizarImoveis();
+  gravarCache(state.imoveis);
   toast('Observação salva ✅', 'success');
 
   const res = await api('salvarObservacao', {
@@ -1330,42 +1690,41 @@ function copiarCodigo(codigo, el){
   }
 }
 
-function fallbackCopy(texto, cb){
-  const ta = document.createElement('textarea');
-  ta.value = texto;
-  ta.style.position = 'fixed'; ta.style.opacity = '0';
-  document.body.appendChild(ta);
-  ta.select();
-  try { document.execCommand('copy'); cb && cb(); }
-  catch(e){ toast('Não foi possível copiar', 'error'); }
-  document.body.removeChild(ta);
-}
-
 /* =====================================================
-   INIT — Login ULTRA-RÁPIDO a partir da 2ª vez
-   - Cenário 1: link com ?tel=&senha= → login automático (aguarda API)
-   - Cenário 2: já tem tel+token salvos → MOSTRA VITRINE NA HORA + skeleton
-                (uma única chamada de API: listarImoveis)
-   - Cenário 3: nada salvo → login
+   INIT — PRIORIDADE MÁXIMA: abrir rápido
+   ⚠️ IMPORTANTE: se vier ?tel= na URL, SEMPRE limpa sessão antiga
 ===================================================== */
 (async function init(){
   const params = new URLSearchParams(window.location.search);
   const telUrl = normalizaTel(params.get('tel'));
   const senhaUrl = (params.get('senha') || '').toUpperCase().trim();
 
-  // ── CENÁRIO 1: veio de link com tel+senha ──
+  /* ===========================================================
+     CENÁRIO 1 — veio link com tel+senha
+     🔥 CORREÇÃO DO BUG: sempre limpa sessão/cache antigos ANTES
+     de qualquer coisa. Garante que nunca mistura dois clientes.
+  =========================================================== */
   if(telUrl.length >= 10 && senhaUrl.length > 0){
-    mostrarView('loadingView');
-    $('loadingMsg').textContent = 'Preparando sua vitrine exclusiva...';
+    // 🔥 LIMPA TUDO do cliente anterior
+    limparSessaoCompleta();
+
+    // Já mostra a vitrine (vazia) enquanto faz login
+    mostrarView('vitrineView');
+    $('userInfo').textContent = '📱 ' + fmtTel(telUrl);
+    $('visitasWrap').innerHTML = '';
+    mostrarSkeleton(4);
+
+    fetch(API_URL + '?action=ping&_t=' + Date.now(), { mode: 'no-cors' }).catch(()=>{});
 
     const navegador = detectarNavegador();
 
+    // Login direto (sem usar cache antigo)
     const res = await api('loginCliente', {
       telefone: telUrl,
       senha: senhaUrl,
       deviceToken: '',
       navegador: navegador
-    });
+    }, TIMEOUT_LOGIN, 0);
 
     if(res.ok){
       state.telefone = telUrl;
@@ -1376,9 +1735,27 @@ function fallbackCopy(texto, cb){
       if(res.nome) localStorage.setItem(NOME_KEY, res.nome);
 
       limparUrl();
+      $('userInfo').textContent = res.nome ? '👤 ' + res.nome : '📱 ' + fmtTel(telUrl);
 
-      $('loadingMsg').textContent = 'Buscando seus imóveis...';
-      await irParaVitrine();
+      if(res.imoveis && res.imoveis.length){
+        const novos = res.imoveis.sort((a,b) => {
+          const da = new Date(a.dataCadastro||0).getTime() || 0;
+          const db = new Date(b.dataCadastro||0).getTime() || 0;
+          return db - da;
+        });
+        state.imoveis = novos;
+        gravarCache(novos);
+        try {
+          const primeiroCorretor = state.imoveis.map(getCorretor).find(Boolean);
+          if(primeiroCorretor) localStorage.setItem('vitrine_corretor_pref', primeiroCorretor);
+        } catch(e){}
+        atualizarContadores();
+        renderizarVisitas();
+        renderizarImoveis();
+        return;
+      }
+
+      await carregarImoveis();
       return;
     }
 
@@ -1391,6 +1768,12 @@ function fallbackCopy(texto, cb){
       return;
     }
 
+    if(erroEhConexao(res.error)){
+      mostrarErroConexao();
+      return;
+    }
+
+    // Falhou login: volta pro login
     mostrarView('loginView');
     $('inputTelefone').value = fmtTel(telUrl);
     $('inputSenha').value = senhaUrl;
@@ -1400,7 +1783,9 @@ function fallbackCopy(texto, cb){
     return;
   }
 
-  // ── CENÁRIO 2: já tem tel+token salvos → ENTRA DIRETO ──
+  /* ===========================================================
+     CENÁRIO 2 — já tem sessão salva (sem link novo)
+  =========================================================== */
   const telSalvo = localStorage.getItem(TEL_KEY);
   const tokenSalvo = localStorage.getItem(TOKEN_KEY);
   const nomeSalvo = localStorage.getItem(NOME_KEY);
@@ -1410,65 +1795,69 @@ function fallbackCopy(texto, cb){
     state.deviceToken = tokenSalvo;
     state.clienteInfo = { nome: nomeSalvo || null, apelido: null };
 
-    // 🚀 Mostra a vitrine NA HORA com skeleton — sem esperar API de login
     mostrarView('vitrineView');
-    $('userInfo').textContent = nomeSalvo
-      ? '👤 ' + nomeSalvo
-      : '📱 ' + fmtTel(telSalvo);
+    $('userInfo').textContent = nomeSalvo ? '👤 ' + nomeSalvo : '📱 ' + fmtTel(telSalvo);
 
-    mostrarSkeleton(4);
-
-    // Uma única chamada: listarImoveis
-    const res = await api('listarImoveis', {
-      telefone: telSalvo,
-      deviceToken: tokenSalvo
-    });
-
-    if(res.ok){
-      state.imoveis = (res.data || []).sort((a,b) => {
-        const da = new Date(a.dataCadastro||0).getTime() || 0;
-        const db = new Date(b.dataCadastro||0).getTime() || 0;
-        return db - da;
-      });
-
-      try {
-        const primeiroCorretor = state.imoveis.map(getCorretor).find(Boolean);
-        if(primeiroCorretor) localStorage.setItem('vitrine_corretor_pref', primeiroCorretor);
-      } catch(e){}
-
+    const cache = lerCache();
+    if(cache && cache.data && cache.data.length){
+      state.imoveis = cache.data;
       atualizarContadores();
+      renderizarVisitas();
       renderizarImoveis();
-      return;
+    } else {
+      mostrarSkeleton(4);
     }
 
-    // Algo deu errado → trata o erro
-    if(erroEhDispositivoVinculado(res.error)){
-      mostrarBloqueioDispositivo();
-      return;
-    }
+    if(!cache || !cache.fresh){
+      const res = await api('listarImoveis', {
+        telefone: telSalvo,
+        deviceToken: tokenSalvo
+      }, TIMEOUT_API, 0);
 
-    // Token inválido / sessão expirada → volta pro login
-    if((res.error || '').toLowerCase().match(/sess|token|inv[áa]lid|expirad|autentic|unauthor/)){
-      localStorage.removeItem(TOKEN_KEY);
-      mostrarView('loginView');
-      $('inputTelefone').value = fmtTel(telSalvo);
-      $('senhaGroup').style.display = 'block';
-      $('loginSub').textContent = 'Digite sua senha para entrar novamente.';
-      setTimeout(() => $('inputSenha').focus(), 200);
-      return;
-    }
+      if(res.ok){
+        const novos = (res.data || []).sort((a,b) => {
+          const da = new Date(a.dataCadastro||0).getTime() || 0;
+          const db = new Date(b.dataCadastro||0).getTime() || 0;
+          return db - da;
+        });
+        state.imoveis = novos;
+        gravarCache(novos);
+        try {
+          const primeiroCorretor = state.imoveis.map(getCorretor).find(Boolean);
+          if(primeiroCorretor) localStorage.setItem('vitrine_corretor_pref', primeiroCorretor);
+        } catch(e){}
+        atualizarContadores();
+        renderizarVisitas();
+        renderizarImoveis();
+        return;
+      }
 
-    // Falha de conexão → também volta pro login
-    localStorage.removeItem(TOKEN_KEY);
-    mostrarView('loginView');
-    $('inputTelefone').value = fmtTel(telSalvo);
-    $('senhaGroup').style.display = 'block';
-    $('loginSub').textContent = 'Não conseguimos conectar. Entre novamente.';
-    setTimeout(() => $('inputSenha').focus(), 200);
+      if(erroEhDispositivoVinculado(res.error)){
+        mostrarBloqueioDispositivo();
+        return;
+      }
+
+      if((res.error || '').toLowerCase().match(/sess|token|inv[áa]lid|expirad|autentic|unauthor/)){
+        localStorage.removeItem(TOKEN_KEY);
+        mostrarView('loginView');
+        $('inputTelefone').value = fmtTel(telSalvo);
+        $('senhaGroup').style.display = 'block';
+        $('loginSub').textContent = 'Digite sua senha para entrar novamente.';
+        setTimeout(() => $('inputSenha').focus(), 200);
+        return;
+      }
+
+      // Erro conexão → mostra tela com recarregar (ou login se sem cache)
+      if(!state.imoveis.length){
+        mostrarErroConexao();
+      }
+    }
     return;
   }
 
-  // ── CENÁRIO 3: nada salvo → mostra login ──
+  /* ===========================================================
+     CENÁRIO 3 — nada salvo → login
+  =========================================================== */
   mostrarView('loginView');
   $('senhaGroup').style.display = 'block';
   setTimeout(() => $('inputTelefone').focus(), 200);
