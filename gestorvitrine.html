@@ -24,9 +24,6 @@
     --shadow-sm: 0 1px 2px rgba(0,0,0,.06);
     --shadow-md: 0 2px 8px rgba(0,0,0,.09);
     --shadow-lg: 0 8px 24px rgba(0,0,0,.12);
-    --temp-quente:#dc2626;
-    --temp-morno:#ea580c;
-    --temp-frio:#0284c7;
   }
   html, body { height: 100%; }
   body{
@@ -56,12 +53,13 @@
     width: 28px; height: 28px; flex-shrink: 0;
     background: var(--accent); border-radius: 6px;
     display: flex; align-items: center; justify-content: center;
-    font-size: .85rem; color: #fff; font-weight: 800;
+    font-size: .78rem; color: #fff; font-weight: 800;
+    letter-spacing: .5px;
   }
   .brand-text{ display: flex; flex-direction: column; line-height: 1; min-width: 0; }
   .brand-title{ font-size: .84rem; font-weight: 700; letter-spacing: .2px; }
   .brand-sub{ font-size: .56rem; opacity: .7; letter-spacing: 1px; text-transform: uppercase; margin-top: 1px; }
-  .header-right{ display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+  .header-right{ display: flex; align-items: center; gap: 6px; flex-shrink: 0; flex-wrap: nowrap; }
 
   .btn-header{
     background: rgba(255,255,255,.08); color: #fff;
@@ -70,7 +68,7 @@
     font-size: .72rem; font-weight: 600;
     transition: all .15s; font-family: inherit;
     display: inline-flex; align-items: center; gap: 6px;
-    position: relative;
+    position: relative; white-space: nowrap;
   }
   .btn-header:hover{ background: rgba(255,255,255,.16); }
   .btn-header.correcoes{ background: rgba(220,38,38,.25); border-color: rgba(220,38,38,.4); }
@@ -81,11 +79,12 @@
     font-size: .62rem; font-weight: 800;
     min-width: 18px; text-align: center;
   }
-  .user-info{ font-size: .72rem; opacity: .85; display: flex; align-items: center; gap: 4px; }
-  @media(max-width:600px){
-    .user-info{ display: none; }
-    .brand-sub{ display: none; }
+  @media(max-width:820px){
     .btn-header{ padding: 5px 8px; font-size: .65rem; }
+    .brand-sub{ display: none; }
+  }
+  @media(max-width:560px){
+    .btn-header span.lbl-txt{ display: none; }
   }
 
   /* ============ LOGIN ============ */
@@ -102,7 +101,7 @@
     width: 56px; height: 56px; margin: 0 auto 18px;
     background: var(--accent); border-radius: 12px;
     display: flex; align-items: center; justify-content: center;
-    font-size: 1.6rem; color: #fff;
+    font-size: 1.4rem; color: #fff; font-weight: 800;
   }
   .login-card h2{ margin-bottom: 6px; color: var(--text); font-size: 1.25rem; text-align: center; font-weight: 700; }
   .login-card .sub{ color: var(--muted); margin-bottom: 26px; font-size: .85rem; text-align: center; }
@@ -239,17 +238,9 @@
   }
   .chip:hover{ border-color: var(--primary); color: var(--primary); }
   .chip.active{ background: var(--primary); color: #fff; border-color: var(--primary); }
-  .chip.chip-corretor{
-    color: #fff;
-    border-width: 2px;
-  }
-  .chip.chip-corretor:not(.active){
-    background: #fff !important;
-    color: var(--text-soft) !important;
-  }
-  .chip.chip-corretor.active{
-    box-shadow: 0 2px 6px rgba(0,0,0,.15);
-  }
+  .chip.chip-corretor{ color: #fff; border-width: 2px; }
+  .chip.chip-corretor:not(.active){ background: #fff !important; color: var(--text-soft) !important; }
+  .chip.chip-corretor.active{ box-shadow: 0 2px 6px rgba(0,0,0,.15); }
   .chip .cnt{
     background: rgba(0,0,0,.12); padding: 0px 6px;
     border-radius: 999px; font-size: .62rem; font-weight: 700;
@@ -272,10 +263,7 @@
     border: 1px solid var(--border-soft);
     border-left-width: 4px;
   }
-  .agenda-row:hover{
-    transform: translateX(2px);
-    box-shadow: var(--shadow-sm);
-  }
+  .agenda-row:hover{ transform: translateX(2px); box-shadow: var(--shadow-sm); }
   .agenda-row .quando{
     font-size: .74rem; font-weight: 700;
     padding: 3px 8px; border-radius: 5px;
@@ -313,43 +301,33 @@
   .clientes-lista{ display: flex; flex-direction: column; gap: 4px; }
   .cliente-row{
     display: grid;
-    grid-template-columns: 40px 1fr 160px;
+    grid-template-columns: 40px 1fr auto;
     gap: 12px; align-items: center;
     padding: 10px 14px;
     border-radius: 8px;
     background: #fff;
     border: 1px solid var(--border-soft);
-    cursor: pointer;
     transition: all .12s;
   }
-  .cliente-row:hover{
-    border-color: var(--primary);
-    background: #fafbfc;
-  }
+  .cliente-row:hover{ border-color: var(--primary); background: #fafbfc; }
   .cliente-row.inativo{
-    opacity: .55;
-    background: #f8f9fa;
+    opacity: .55; background: #f8f9fa;
     border-left: 3px solid var(--danger);
   }
-  .cliente-row .temp{
-    font-size: 1.5rem; text-align: center;
-    line-height: 1;
-  }
-  .cliente-row .info{ min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+  .cliente-row .temp{ font-size: 1.5rem; text-align: center; line-height: 1; }
+  .cliente-row .info{ min-width: 0; display: flex; flex-direction: column; gap: 4px; }
   .cliente-row .nome{
     font-size: .88rem; font-weight: 700; color: var(--text);
-    display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
   }
   .cliente-row .linha2{
     font-size: .72rem; color: var(--text-soft);
     display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
   }
-  .cliente-row .linha2 .item{
-    display: inline-flex; align-items: center; gap: 4px;
-  }
+  .cliente-row .linha2 .item{ display: inline-flex; align-items: center; gap: 4px; }
   .cliente-row .linha2 .muted{ color: var(--muted); }
   .cliente-row .tags{
-    display: flex; align-items: center; gap: 4px; flex-wrap: wrap;
+    display: flex; align-items: center; gap: 4px;
     justify-content: flex-end;
   }
   .tag{
@@ -363,7 +341,7 @@
   .tag-ativo{ background: #e2ede7; color: var(--success); }
   .tag-inativo{ background: #f0dede; color: var(--danger); }
 
-  /* ============ BARRA DO CLIENTE (ABAIXO DO HEADER) ============ */
+  /* ============ BARRA DO CLIENTE ============ */
   .cliente-bar{
     background: #fff;
     border-bottom: 2px solid var(--border-soft);
@@ -388,6 +366,69 @@
     flex-wrap: wrap;
   }
   .cliente-bar .acoes{ display: flex; gap: 8px; flex-wrap: wrap; }
+
+  /* ============ CARTÕES PNG DE VISITA ============ */
+  .cartoes-visita-wrap{
+    margin-top: 14px;
+    padding: 14px 16px;
+    background: #fff;
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+  }
+  .cartoes-visita-titulo{
+    font-size: .78rem;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: .4px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .cartoes-visita-titulo .hint{
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: 0;
+    color: var(--text-soft);
+    font-size: .72rem;
+    margin-left: auto;
+  }
+  .cartoes-visita{
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+  }
+  @media(max-width: 1024px){
+    .cartoes-visita{ grid-template-columns: repeat(3, 1fr); }
+  }
+  @media(max-width: 560px){
+    .cartoes-visita{ grid-template-columns: repeat(2, 1fr); }
+  }
+  .cartao-visita-img{
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    box-shadow: 0 1px 3px rgba(0,0,0,.06);
+    cursor: pointer;
+    transition: all .15s;
+    background: #fafbfc;
+  }
+  .cartao-visita-img:hover{
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,.12);
+    border-color: var(--primary);
+  }
+  .cartoes-visita-vazio{
+    text-align: center;
+    padding: 24px 12px;
+    color: var(--muted);
+    font-size: .82rem;
+    font-style: italic;
+  }
 
   /* ============ VITRINE ============ */
   .admin-toolbar{
@@ -618,7 +659,7 @@
   }
   .visita-info{ font-size: .72rem; color: #6b5a30; margin-bottom: 5px; line-height: 1.35; }
 
-  /* FILTROS DE IMÓVEIS (dentro da vitrine) */
+  /* FILTROS DE IMÓVEIS */
   .filters{
     display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
     gap: 8px; margin: 16px 0 4px;
@@ -691,7 +732,7 @@
     font-size: .75rem; color: var(--muted);
   }
 
-  /* CONFIRMAÇÃO UNIVERSAL */
+  /* CONFIRMAÇÃO */
   .confirm-backdrop{
     position: fixed; inset: 0; background: rgba(15,23,42,.6); z-index: 2000;
     display: none; align-items: center; justify-content: center; padding: 16px;
@@ -788,13 +829,11 @@
     border-top-color: #fff; border-radius: 50%; animation: spin .8s linear infinite;
   }
 
-  /* ACESSOS */
   .acesso-card{
     background: #fafbfc; border: 1px solid var(--border-soft);
     border-radius: 8px; padding: 12px; margin-bottom: 10px;
   }
 
-  /* HISTÓRICO CLIENTE */
   .hist-item{
     display: flex; gap: 10px; align-items: flex-start;
     padding: 10px 8px; border-bottom: 1px solid var(--border-soft);
@@ -821,7 +860,7 @@
 <header class="app-header">
   <div class="header-inner">
     <div class="brand" onclick="irParaHomeAdmin()" title="Ir para o início">
-      <div class="brand-icon">👑</div>
+      <div class="brand-icon">LR</div>
       <div class="brand-text">
         <div class="brand-title">Lima Ribeiro</div>
         <div class="brand-sub">Admin</div>
@@ -829,9 +868,17 @@
     </div>
 
     <div class="header-right">
-      <span class="user-info" id="userInfo"></span>
-      <button class="btn-header correcoes hidden" id="btnCorrecoes" onclick="abrirCorrecoes()">
-        🔧 Correções <span class="badge-num" id="correcoesBadgeNum">0</span>
+      <button class="btn-header" onclick="abrirLinkTQC()" title="Traga seu cliente (QuintoAndar)">
+        🔗 <span class="lbl-txt">LINK TQC</span>
+      </button>
+      <button class="btn-header" onclick="copiarLinkHugo()" title="Copiar link do Hugo">
+        🔗 <span class="lbl-txt">LINK HUGO</span>
+      </button>
+      <button class="btn-header" onclick="copiarLinkCarol()" title="Copiar link da Carol">
+        🔗 <span class="lbl-txt">LINK CAROL</span>
+      </button>
+      <button class="btn-header correcoes" id="btnCorrecoes" onclick="abrirCorrecoes()">
+        🔧 <span class="lbl-txt">Correções</span> <span class="badge-num" id="correcoesBadgeNum">0</span>
       </button>
       <button class="btn-header hidden" id="btnSair" onclick="sair()">Sair</button>
     </div>
@@ -841,7 +888,7 @@
 <!-- LOGIN -->
 <div class="login-wrap" id="adminLoginView">
   <div class="login-card">
-    <div class="login-logo">🔐</div>
+    <div class="login-logo">LR</div>
     <h2>Painel Administrativo</h2>
     <p class="sub" id="adminLoginSub">Acesso restrito à equipe Lima Ribeiro.</p>
     <div class="form-group">
@@ -856,7 +903,7 @@
   </div>
 </div>
 
-<!-- HOME (3 cards) -->
+<!-- HOME -->
 <div class="container hidden" id="homeView">
   <div class="big-cards">
     <div class="big-card active" id="cardAgenda" onclick="abrirPainel('agenda')">
@@ -879,7 +926,6 @@
     </div>
   </div>
 
-  <!-- Painel Agenda -->
   <div class="panel hidden" id="panelAgenda">
     <div class="panel-head">
       <h2>🗓️ Agenda de Visitas</h2>
@@ -893,7 +939,6 @@
     </div>
   </div>
 
-  <!-- Painel Visitar/Gostei -->
   <div class="panel hidden" id="panelVisitar">
     <div class="panel-head">
       <h2>📅 Querem Visitar / Gostei</h2>
@@ -916,7 +961,6 @@
     </div>
   </div>
 
-  <!-- Painel Clientes -->
   <div class="panel hidden" id="panelClientes">
     <div class="panel-head">
       <h2>👥 Clientes</h2>
@@ -945,7 +989,7 @@
   </div>
 </div>
 
-<!-- VITRINE DE UM CLIENTE -->
+<!-- VITRINE -->
 <div class="container hidden" id="vitrineView">
   <div class="cliente-bar" id="clienteBar">
     <div class="info">
@@ -958,6 +1002,15 @@
       <button class="btn btn-ghost btn-sm" onclick="toggleAcessosSection()">🔐 Acessos <span id="acessosCountChip" style="background:rgba(0,0,0,.08); padding:1px 8px; border-radius:4px; font-size:.7rem; font-weight:700; margin-left:4px;">0</span></button>
       <button class="btn btn-success btn-sm" onclick="gerarLinkVitrine()">🔗 Link Vitrine</button>
     </div>
+  </div>
+
+  <!-- CARTÕES PNG DE VISITAS AGENDADAS -->
+  <div class="cartoes-visita-wrap hidden" id="cartoesVisitaWrap">
+    <div class="cartoes-visita-titulo">
+      📸 Cartões de visita (clique com botão direito → Copiar imagem)
+      <span class="hint" id="cartoesVisitaCount"></span>
+    </div>
+    <div class="cartoes-visita" id="cartoesVisita"></div>
   </div>
 
   <div class="admin-toolbar">
@@ -984,16 +1037,11 @@
       <label>Descrição</label>
       <textarea id="adDescricao"></textarea>
     </div>
-    <div class="form-row">
-      <div class="form-group">
-        <label>Link do anúncio</label>
-        <input type="url" id="adLink" onblur="buscarImagemPreview(false)">
-      </div>
-      <div class="form-group">
-        <label>URL da imagem (auto se vazio)</label>
-        <input type="url" id="adImagem" oninput="atualizarPreview(this.value)">
-      </div>
+    <div class="form-group">
+      <label>Link do anúncio</label>
+      <input type="url" id="adLink" onblur="buscarImagemPreview(false)" oninput="onLinkImovelChanged()">
     </div>
+    <input type="hidden" id="adImagem">
     <div class="preview-wrap">
       <img id="previewImg" class="preview-img" alt="Preview">
     </div>
@@ -1019,6 +1067,9 @@
   </div>
 
   <div class="filters" id="filters">
+    <button class="filter-btn" data-filter="recentes" onclick="setFiltro('recentes', this)">
+      🆕 Recentes
+    </button>
     <button class="filter-btn active" data-filter="todos" onclick="setFiltro('todos', this)">
       📋 Todos <span class="filter-count" id="cnt-todos">0</span>
     </button>
@@ -1036,9 +1087,6 @@
     </button>
     <button class="filter-btn btn-desativados" data-filter="desativados" onclick="setFiltro('desativados', this)">
       🚫 Desativados <span class="filter-count" id="cnt-desativados">0</span>
-    </button>
-    <button class="filter-btn" data-filter="recentes" onclick="setFiltro('recentes', this)">
-      🆕 Recentes
     </button>
   </div>
 
@@ -1075,7 +1123,7 @@
         </select>
       </div>
       <div class="form-group">
-        <label>CAR</label>
+        <label>INVESTIDOR</label>
         <select id="cliCAR">
           <option value="">Não</option>
           <option value="Sim">Sim</option>
@@ -1110,7 +1158,6 @@
   </div>
 </div>
 
-<!-- MODAL GRANDE DE OBSERVAÇÕES -->
 <div class="modal-backdrop" id="obsModalBackdrop" onclick="if(event.target===this) fecharModalObs()">
   <div class="modal-obs">
     <button class="modal-close" onclick="fecharModalObs()">×</button>
@@ -1126,7 +1173,6 @@
   </div>
 </div>
 
-<!-- MODAL HISTÓRICO CLIENTE -->
 <div class="modal-backdrop" id="histCliBackdrop" onclick="if(event.target===this) fecharHistoricoCliente()">
   <div class="modal" style="max-width:620px;">
     <button class="modal-close" onclick="fecharHistoricoCliente()">×</button>
@@ -1136,7 +1182,6 @@
   </div>
 </div>
 
-<!-- MODAL HISTÓRICO IMÓVEL -->
 <div class="modal-backdrop" id="histImovelBackdrop" onclick="if(event.target===this) fecharHistoricoImovel()">
   <div class="modal" style="max-width:520px;">
     <button class="modal-close" onclick="fecharHistoricoImovel()">×</button>
@@ -1146,19 +1191,17 @@
   </div>
 </div>
 
-<!-- MODAL CORREÇÕES -->
 <div class="modal-backdrop" id="correcoesBackdrop" onclick="if(event.target===this) fecharCorrecoes()">
   <div class="modal" style="max-width:680px;">
     <button class="modal-close" onclick="fecharCorrecoes()">×</button>
     <h2 style="margin-bottom:8px;">🔧 Correções pendentes</h2>
     <p class="text-muted" style="margin-bottom:16px; font-size:.82rem;">
-      Estas são falhas detectadas automaticamente. Resolva manualmente nos registros indicados.
+      Falhas detectadas automaticamente. Resolva manualmente nos registros indicados.
     </p>
     <div id="correcoesLista" style="max-height:65vh; overflow-y:auto;"></div>
   </div>
 </div>
 
-<!-- MODAL SENHA GERADA -->
 <div class="modal-backdrop" id="senhaGeradaBackdrop" onclick="if(event.target===this) fecharSenhaGerada()">
   <div class="modal" style="max-width:440px; text-align:center;">
     <button class="modal-close" onclick="fecharSenhaGerada()">×</button>
@@ -1178,7 +1221,6 @@
   </div>
 </div>
 
-<!-- MODAL NOVO ACESSO -->
 <div class="modal-backdrop" id="novoAcessoBackdrop" onclick="if(event.target===this) fecharNovoAcesso()">
   <div class="modal" style="max-width:460px;">
     <button class="modal-close" onclick="fecharNovoAcesso()">×</button>
@@ -1197,7 +1239,6 @@
   </div>
 </div>
 
-<!-- MODAL VISITA REALIZADA -->
 <div class="modal-backdrop" id="visitaBackdrop" onclick="if(event.target===this) fecharVisitaModal()">
   <div class="modal" style="max-width:460px;">
     <button class="modal-close" onclick="fecharVisitaModal()">×</button>
@@ -1218,7 +1259,6 @@
   </div>
 </div>
 
-<!-- MODAL AGENDAR -->
 <div class="modal-backdrop" id="agendarBackdrop" onclick="if(event.target===this) fecharAgendarModal()">
   <div class="modal" style="max-width:460px;">
     <button class="modal-close" onclick="fecharAgendarModal()">×</button>
@@ -1230,12 +1270,11 @@
     </div>
     <div style="display:flex; gap:8px;">
       <button class="btn btn-primary" style="flex:1" onclick="salvarAgendamento(event)">💾 Agendar</button>
-      <button class="btn btn-ghost" id="btnCancelarAgendamento" onclick="cancelarAgendamento()">🗑️ Cancelar agendamento</button>
+      <button class="btn btn-ghost" id="btnCancelarAgendamento" onclick="cancelarAgendamento()">🗑️ Cancelar</button>
     </div>
   </div>
 </div>
 
-<!-- CONFIRMAÇÃO UNIVERSAL -->
 <div class="confirm-backdrop" id="confirmBackdrop">
   <div class="confirm-box">
     <div class="icon" id="confirmIcon">⚠️</div>
@@ -1262,13 +1301,16 @@
 /* =====================================================
    CONFIG
 ===================================================== */
-const API_URL = 'https://script.google.com/macros/s/AKfycbwN_4fxIP3Npv-pNOM8eAEuo25mx4ID_e250S94GdXixD-m4nYuwR-R6fg3QDbdwG9V/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbxbzYcL_YEAb-TxveF6e-XUCH555KG6GFusNRAtGUxRwPtWVN37rfzaDcU0Hpu4kwIp/exec';
 const ADMIN_KEY = 'vitrine_admin_v9';
-const ESTADO_KEY = 'vitrine_admin_v9_estado';
 const CORRETORES_CACHE_KEY = 'vitrine_corretores_v9';
 const BUSCAR_BASE = 'https://corretor.quintoandar.com.br/informacoes-de-entrada';
 const VITRINE_URL_BASE = 'https://limaribeiroimoveis.com.br/vitrine';
 const TIMEOUT_API = 45000;
+
+const LINK_TQC = 'https://corretor.quintoandar.com.br/traz-quem-compra/?origin=home';
+const LINK_HUGO = 'https://www.quintoandar.com.br/corretor/atendimento/HugoFelipePereiraRibeiro-3M2K';
+const LINK_CAROL = '';
 
 /* =====================================================
    ESTADO
@@ -1282,23 +1324,20 @@ const state = {
   agendamentos: [],
   notificacoes: { gostei: [], visita: [] },
   correcoes: [],
-  corretores: [], // [{nome, cor}]
+  corretores: [],
   acessos: [],
-  // Filtros
-  filtrosAgenda: new Set(),        // vazio = todos
+  filtrosAgenda: new Set(),
   filtrosVisitarCorretores: new Set(),
   filtrosClientes: {
     corretores: new Set(),
-    temperaturas: new Set(),       // vazio = todos
-    status: new Set(),             // vazio = todos
-    tipos: new Set()               // vazio = todos
+    temperaturas: new Set(),
+    status: new Set(),
+    tipos: new Set()
   },
-  tipoSolicitacao: 'visita',       // 'visita' | 'gostei'
-  // Cliente atual (vitrine aberta)
+  tipoSolicitacao: 'visita',
   telefoneAtual: null,
   clienteAtual: null,
   filtro: 'todos',
-  // Cache
   carregado: {
     agenda: false,
     visitar: false,
@@ -1369,8 +1408,6 @@ function fmtDataHora(d){
          String(dt.getHours()).padStart(2,'0') + ':' +
          String(dt.getMinutes()).padStart(2,'0');
 }
-function primeiraLetra(nome){ return String(nome || '?').trim().charAt(0).toUpperCase() || '?'; }
-
 function toInputDate(iso){
   if(!iso) return '';
   try {
@@ -1468,7 +1505,6 @@ function confirmarAcao(opts){
     $('confirmIcon').textContent   = opts.icone  || '⚠️';
     $('confirmTitulo').textContent = opts.titulo || 'Confirmar ação';
     $('confirmTexto').textContent  = opts.texto  || 'Tem certeza?';
-
     const btnSim = $('confirmBtnSim');
     const btnNao = $('confirmBtnNao');
     btnSim.textContent = opts.btnSim || 'Confirmar';
@@ -1479,16 +1515,13 @@ function confirmarAcao(opts){
       opts.tipo === 'warn'    ? 'btn-warn'    :
                                 'btn-primary'
     );
-
     const novoSim = btnSim.cloneNode(true);
     const novoNao = btnNao.cloneNode(true);
     btnSim.parentNode.replaceChild(novoSim, btnSim);
     btnNao.parentNode.replaceChild(novoNao, btnNao);
-
     function fechar(){ backdrop.classList.remove('show'); }
     novoSim.addEventListener('click', () => { fechar(); resolve(true); });
     novoNao.addEventListener('click', () => { fechar(); resolve(false); });
-
     const onClickBackdrop = (e) => {
       if(e.target === backdrop){
         fechar();
@@ -1530,22 +1563,23 @@ function irParaHomeAdmin(){
     voltarParaHome();
     return;
   }
-  // fecha todos os painéis, mantém só o ativo
   ['agenda','visitar','clientes'].forEach(p => {
-    $('panel' + p.charAt(0).toUpperCase() + p.slice(1)).classList.add('hidden');
-    $('card' + p.charAt(0).toUpperCase() + p.slice(1)).classList.remove('active');
+    const cap = p.charAt(0).toUpperCase() + p.slice(1);
+    $('panel' + cap).classList.add('hidden');
+    $('card' + cap).classList.remove('active');
   });
-  $('panel' + state.painelAtivo.charAt(0).toUpperCase() + state.painelAtivo.slice(1)).classList.remove('hidden');
-  $('card' + state.painelAtivo.charAt(0).toUpperCase() + state.painelAtivo.slice(1)).classList.add('active');
+  const cap = state.painelAtivo.charAt(0).toUpperCase() + state.painelAtivo.slice(1);
+  $('panel' + cap).classList.remove('hidden');
+  $('card' + cap).classList.add('active');
 }
 
 function abrirPainel(painel){
   state.painelAtivo = painel;
   ['agenda','visitar','clientes'].forEach(p => {
-    $('panel' + p.charAt(0).toUpperCase() + p.slice(1)).classList.toggle('hidden', p !== painel);
-    $('card' + p.charAt(0).toUpperCase() + p.slice(1)).classList.toggle('active', p === painel);
+    const cap = p.charAt(0).toUpperCase() + p.slice(1);
+    $('panel' + cap).classList.toggle('hidden', p !== painel);
+    $('card' + cap).classList.toggle('active', p === painel);
   });
-
   if(painel === 'agenda' && !state.carregado.agenda) carregarAgenda(true);
   if(painel === 'visitar' && !state.carregado.visitar) carregarNotificacoes(true);
   if(painel === 'clientes' && !state.carregado.clientes) carregarClientes(true);
@@ -1555,6 +1589,23 @@ async function recarregarPainel(painel){
   if(painel === 'agenda'){ state.carregado.agenda = false; await carregarAgenda(true); }
   if(painel === 'visitar'){ state.carregado.visitar = false; await carregarNotificacoes(true); }
   if(painel === 'clientes'){ state.carregado.clientes = false; await carregarClientes(true); }
+}
+
+/* =====================================================
+   BOTÕES DE LINK DO HEADER
+===================================================== */
+function abrirLinkTQC(){
+  window.open(LINK_TQC, '_blank', 'noopener');
+}
+function copiarLinkHugo(){
+  copiarTexto(LINK_HUGO);
+}
+function copiarLinkCarol(){
+  if(!LINK_CAROL){
+    toast('Link da Carol ainda não configurado', 'error');
+    return;
+  }
+  copiarTexto(LINK_CAROL);
 }
 
 /* =====================================================
@@ -1581,26 +1632,18 @@ async function entrarAdmin(){
 async function carregarHomeAdmin(){
   mostrarView('homeView');
   $('btnSair').classList.remove('hidden');
-  $('userInfo').textContent = '👑 Painel';
-
   state.carregado = { agenda: false, visitar: false, clientes: false };
-
-  // Carrega corretores primeiro (essencial pras cores)
   await carregarCorretores();
-
-  // Abre Agenda por padrão
   state.painelAtivo = 'agenda';
   ['agenda','visitar','clientes'].forEach(p => {
-    $('panel' + p.charAt(0).toUpperCase() + p.slice(1)).classList.toggle('hidden', p !== 'agenda');
-    $('card' + p.charAt(0).toUpperCase() + p.slice(1)).classList.toggle('active', p === 'agenda');
+    const cap = p.charAt(0).toUpperCase() + p.slice(1);
+    $('panel' + cap).classList.toggle('hidden', p !== 'agenda');
+    $('card' + cap).classList.toggle('active', p === 'agenda');
   });
-
-  // Carrega clientes + correções em paralelo (essenciais)
   await Promise.all([
     carregarClientes(false),
     carregarCorrecoes(false)
   ]);
-  // Carrega os outros dois painéis
   await Promise.all([
     carregarAgenda(false),
     carregarNotificacoes(false)
@@ -1630,8 +1673,6 @@ function sair(){
   state.notificacoes = { gostei: [], visita: [] };
   state.correcoes = [];
   $('btnSair').classList.add('hidden');
-  $('btnCorrecoes').classList.add('hidden');
-  $('userInfo').textContent = '';
   $('inputAdminSenha').value = '';
   mostrarView('adminLoginView');
   setTimeout(() => $('inputAdminSenha').focus(), 200);
@@ -1641,14 +1682,12 @@ function sair(){
    CORRETORES
 ===================================================== */
 async function carregarCorretores(){
-  // Cache local
   try {
     const cache = JSON.parse(localStorage.getItem(CORRETORES_CACHE_KEY) || 'null');
     if(cache && Array.isArray(cache.data) && cache.data.length > 0){
       state.corretores = cache.data;
     }
   } catch(e){}
-
   const res = await api('listarCorretores', { senha: state.adminSenha });
   if(res.ok && res.data){
     state.corretores = res.data;
@@ -1676,7 +1715,6 @@ async function carregarClientes(mostrarLoading){
   const res = await api('listarClientes', { senha: state.adminSenha });
   state.clientes = (res.ok && res.data) ? res.data : [];
   state.carregado.clientes = true;
-
   atualizarBalClientes();
   renderizarFiltrosClientes();
   renderizarClientes();
@@ -1690,8 +1728,6 @@ function atualizarBalClientes(){
 function renderizarFiltrosClientes(){
   const wrap = $('filtrosClientes');
   if(!wrap) return;
-
-  // Corretores
   const corretoresChips = state.corretores.map(c => {
     const cnt = state.clientes.filter(cl => cl.corretor === c.nome).length;
     const ativo = state.filtrosClientes.corretores.has(c.nome);
@@ -1701,11 +1737,9 @@ function renderizarFiltrosClientes(){
               ${esc(c.nome)} <span class="cnt">${cnt}</span>
             </button>`;
   }).join('');
-
   const t = state.filtrosClientes.temperaturas;
   const s = state.filtrosClientes.status;
   const tp = state.filtrosClientes.tipos;
-
   const cntTemp = { quente: 0, morno: 0, frio: 0 };
   const cntStatus = { ativo: 0, inativo: 0 };
   const cntTipo = { tqc: 0, car: 0 };
@@ -1717,7 +1751,6 @@ function renderizarFiltrosClientes(){
     if(String(c.tqc||'').toLowerCase() === 'sim') cntTipo.tqc++;
     if(String(c.car||'').toLowerCase() === 'sim') cntTipo.car++;
   });
-
   wrap.innerHTML = `
     <div class="filtro-grupo">
       <span class="lbl">Corretor:</span>
@@ -1737,8 +1770,8 @@ function renderizarFiltrosClientes(){
     </div>
     <div class="filtro-grupo">
       <span class="lbl">Tipo:</span>
-      <button class="chip ${tp.has('tqc') ? 'active' : ''}" onclick="toggleFiltroClienteTipo('tqc')">TQC <span class="cnt">${cntTipo.tqc}</span></button>
-      <button class="chip ${tp.has('car') ? 'active' : ''}" onclick="toggleFiltroClienteTipo('car')">CAR <span class="cnt">${cntTipo.car}</span></button>
+      <button class="chip ${tp.has('tqc') ? 'active' : ''}" onclick="toggleFiltroClienteTipo('tqc')"><strong>TQC</strong> <span class="cnt">${cntTipo.tqc}</span></button>
+      <button class="chip ${tp.has('car') ? 'active' : ''}" onclick="toggleFiltroClienteTipo('car')">💼 <strong>INVESTIDOR</strong> <span class="cnt">${cntTipo.car}</span></button>
     </div>
   `;
 }
@@ -1779,8 +1812,6 @@ function renderizarClientes(){
   const busca = ($('buscaCliente').value || '').toLowerCase().trim();
   const ordem = $('ordenacaoCliente').value;
   let arr = [...state.clientes];
-
-  // Filtros
   if(state.filtrosClientes.corretores.size > 0){
     arr = arr.filter(c => state.filtrosClientes.corretores.has(c.corretor));
   }
@@ -1811,18 +1842,12 @@ function renderizarClientes(){
       normalizaTel(c.telefone).includes(normalizaTel(busca))
     );
   }
-
-  // Ordenação (inativos sempre no fim)
   arr.sort((a, b) => {
     const ia = String(a.inativo||'').toLowerCase() === 'sim' ? 1 : 0;
     const ib = String(b.inativo||'').toLowerCase() === 'sim' ? 1 : 0;
     if(ia !== ib) return ia - ib;
-    if(ordem === 'alfabetica'){
-      return (a.nome||'').localeCompare(b.nome||'', 'pt-BR', {sensitivity:'base'});
-    }
-    if(ordem === 'data'){
-      return new Date(b.dataCadastro||0) - new Date(a.dataCadastro||0);
-    }
+    if(ordem === 'alfabetica') return (a.nome||'').localeCompare(b.nome||'', 'pt-BR', {sensitivity:'base'});
+    if(ordem === 'data') return new Date(b.dataCadastro||0) - new Date(a.dataCadastro||0);
     if(ordem === 'acao-cliente'){
       const da = a.dataUltimaAcaoCliente ? new Date(a.dataUltimaAcaoCliente).getTime() : 0;
       const db = b.dataUltimaAcaoCliente ? new Date(b.dataUltimaAcaoCliente).getTime() : 0;
@@ -1835,49 +1860,65 @@ function renderizarClientes(){
     }
     return 0;
   });
-
   if(arr.length === 0){
     lista.innerHTML = '';
     empty.classList.remove('hidden');
     return;
   }
   empty.classList.add('hidden');
-
   lista.innerHTML = arr.map(c => clienteRowHTML(c)).join('');
 }
 
 function clienteRowHTML(c){
   const inativo = String(c.inativo||'').toLowerCase() === 'sim';
   const tqc = String(c.tqc||'').toLowerCase() === 'sim';
-  const car = String(c.car||'').toLowerCase() === 'sim';
+  const investidor = String(c.car||'').toLowerCase() === 'sim';
   const temp = c.temperatura || 'frio';
   const emoji = emojiTemperatura(temp);
   const corCorr = c.corretor ? corDoCorretor(c.corretor) : '#6b7280';
-
+  const totalIm = c.totalImoveis || 0;
+  const totalVi = c.totalVisitasConcluidas || 0;
   return `
-    <div class="cliente-row ${inativo ? 'inativo' : ''}" onclick="abrirVitrineDoCliente('${esc(c.telefone)}')">
+    <div class="cliente-row ${inativo ? 'inativo' : ''}">
       <div class="temp" title="${temp}">${emoji}</div>
       <div class="info">
         <div class="nome">
           ${esc(c.nome || 'Sem nome')}
+          <span class="item" style="font-size:.78rem; color:var(--muted); font-weight:400;">📱 ${esc(fmtTel(c.telefone))}</span>
+          ${c.dataCadastro ? `<span class="item" style="font-size:.72rem; color:var(--muted); font-weight:400;">📅 ${fmtData(c.dataCadastro)}</span>` : ''}
           ${inativo ? '<span class="tag tag-inativo">💤 Inativo</span>' : '<span class="tag tag-ativo">✅ Ativo</span>'}
+          ${tqc ? '<span class="tag tag-tqc"><strong>TQC</strong></span>' : ''}
+          ${investidor ? '<span class="tag tag-car">💼 <strong>INVESTIDOR</strong></span>' : ''}
         </div>
         <div class="linha2">
-          <span class="item">📱 ${esc(fmtTel(c.telefone))}</span>
           ${c.corretor ? `<span class="item"><span class="corretor-badge" style="background:${corCorr}">👤 ${esc(c.corretor)}</span></span>` : '<span class="item muted">👤 (sem corretor)</span>'}
-          ${c.dataUltimaAcaoCliente ? `<span class="item">🎯 Cliente: ${fmtData(c.dataUltimaAcaoCliente)}</span>` : ''}
           ${c.dataUltimaAcaoAdmin ? `<span class="item">👑 Admin: ${fmtData(c.dataUltimaAcaoAdmin)}</span>` : ''}
-          ${c.dataCadastro ? `<span class="item muted">📅 Cadastro: ${fmtData(c.dataCadastro)}</span>` : ''}
+          ${c.dataUltimaAcaoCliente ? `<span class="item">🎯 Últ. ação: ${fmtData(c.dataUltimaAcaoCliente)}</span>` : ''}
+          <span class="item">🏠 ${totalIm} imóve${totalIm === 1 ? 'l' : 'is'}</span>
+          <span class="item">✅ ${totalVi} visita${totalVi === 1 ? '' : 's'}</span>
         </div>
       </div>
       <div class="tags">
-        ${tqc ? '<span class="tag tag-tqc">TQC</span>' : ''}
-        ${car ? '<span class="tag tag-car">CAR</span>' : ''}
+        <button class="btn btn-ghost btn-xs" title="Copiar link da vitrine" onclick="copiarLinkCliente('${esc(c.telefone)}')">🔗</button>
+        <button class="btn btn-ghost btn-xs" title="Editar cliente" onclick="abrirEditarClientePorTel('${esc(c.telefone)}')">✏️</button>
+        <button class="btn btn-primary btn-xs" title="Abrir vitrine" onclick="abrirVitrineDoCliente('${esc(c.telefone)}')">🏠</button>
       </div>
     </div>
   `;
 }
 
+async function copiarLinkCliente(telefone){
+  const tel = normalizaTel(telefone);
+  if(!tel){ toast('Telefone inválido', 'error'); return; }
+  marcarSalvando(true);
+  const res = await api('obterLinkVitrine', { senha: state.adminSenha, telefone: tel });
+  marcarSalvando(false);
+  if(!res.ok){ toast(res.error || 'Erro', 'error'); return; }
+  copiarTexto(res.link);
+}
+
+
+ 
 /* =====================================================
    AGENDA
 ===================================================== */
@@ -1885,13 +1926,10 @@ async function carregarAgenda(mostrarLoading){
   if(mostrarLoading){
     $('agendaLista').innerHTML = '<div class="loading-inline"><span class="loader loader-lg"></span><p>Carregando agenda...</p></div>';
   }
-  // Garante que clientes estejam carregados para o nome
   if(!state.carregado.clientes) await carregarClientes(false);
-
   const res = await api('listarAgendamentos', { senha: state.adminSenha });
   state.agendamentos = (res.ok && res.data) ? res.data : [];
   state.carregado.agenda = true;
-
   atualizarBalAgenda();
   renderizarFiltrosAgenda();
   renderizarAgenda();
@@ -1908,7 +1946,6 @@ function atualizarBalAgenda(){
 function renderizarFiltrosAgenda(){
   const wrap = $('filtrosAgenda');
   if(!wrap) return;
-
   const chips = state.corretores.map(c => {
     const cnt = state.agendamentos.filter(a => a.corretor === c.nome).length;
     const ativo = state.filtrosAgenda.has(c.nome);
@@ -1918,7 +1955,6 @@ function renderizarFiltrosAgenda(){
               ${esc(c.nome)} <span class="cnt">${cnt}</span>
             </button>`;
   }).join('');
-
   const todosAtivo = state.filtrosAgenda.size === 0 ? 'active' : '';
   wrap.innerHTML = `
     <div class="filtro-grupo">
@@ -1944,17 +1980,14 @@ function limparFiltroAgenda(){
 function renderizarAgenda(){
   const lista = $('agendaLista');
   let arr = [...state.agendamentos];
-
   if(state.filtrosAgenda.size > 0){
     arr = arr.filter(a => state.filtrosAgenda.has(a.corretor));
   }
   arr.sort((a, b) => new Date(a.dataVisitaAgendada) - new Date(b.dataVisitaAgendada));
-
   if(arr.length === 0){
     lista.innerHTML = '<div class="empty-state"><h3>Nenhuma visita agendada</h3><p>Sem agendamentos no momento.</p></div>';
     return;
   }
-
   lista.innerHTML = arr.map(a => agendaRowHTML(a)).join('');
 }
 
@@ -1963,7 +1996,6 @@ function agendaRowHTML(a){
   const cor = a.corretor ? corDoCorretor(a.corretor) : '#6b7280';
   const id = esc(a.id);
   const tel = esc(a.telefone);
-
   return `
     <div class="agenda-row"
          style="border-left-color:${cor}; background:${cor}0d;"
@@ -1993,11 +2025,9 @@ async function carregarNotificacoes(mostrarLoading){
     $('visitarLista').innerHTML = '<div class="loading-inline"><span class="loader loader-lg"></span><p>Carregando...</p></div>';
   }
   if(!state.carregado.clientes) await carregarClientes(false);
-
   const res = await api('listarNotificacoes', { senha: state.adminSenha });
   state.notificacoes = (res.ok && res.data) ? res.data : { gostei: [], visita: [] };
   state.carregado.visitar = true;
-
   atualizarBalVisitar();
   renderizarFiltrosVisitar();
   renderizarNotificacoes();
@@ -2015,6 +2045,7 @@ function setTipoSolicitacao(t){
   state.tipoSolicitacao = t;
   $('tipoVisitar').classList.toggle('active', t === 'visita');
   $('tipoGostei').classList.toggle('active', t === 'gostei');
+  renderizarFiltrosVisitar();
   renderizarNotificacoes();
 }
 
@@ -2057,8 +2088,6 @@ function renderizarNotificacoes(){
   const lista = $('visitarLista');
   const base = state.tipoSolicitacao === 'visita' ? state.notificacoes.visita : state.notificacoes.gostei;
   let arr = [...(base || [])];
-
-  // Enriquecer com dados do cliente
   arr = arr.map(item => {
     const cli = state.clientes.find(x => normalizaTel(x.telefone) === normalizaTel(item.telefone));
     return {
@@ -2067,12 +2096,10 @@ function renderizarNotificacoes(){
       corretor: cli ? cli.corretor : '(sem corretor)'
     };
   });
-
   if(state.filtrosVisitarCorretores.size > 0){
     arr = arr.filter(a => state.filtrosVisitarCorretores.has(a.corretor));
   }
   arr.sort((a, b) => new Date(b.dataCadastro||0) - new Date(a.dataCadastro||0));
-
   if(arr.length === 0){
     const msg = state.tipoSolicitacao === 'visita'
       ? 'Nenhum cliente querendo visitar.'
@@ -2080,7 +2107,6 @@ function renderizarNotificacoes(){
     lista.innerHTML = `<div class="empty-state"><h3>${msg}</h3></div>`;
     return;
   }
-
   lista.innerHTML = arr.map(a => notificacaoRowHTML(a)).join('');
 }
 
@@ -2089,7 +2115,6 @@ function notificacaoRowHTML(a){
   const icone = state.tipoSolicitacao === 'visita' ? '📅' : '❤️';
   const id = esc(a.id);
   const tel = esc(a.telefone);
-
   return `
     <div class="agenda-row"
          style="border-left-color:${cor}; background:${cor}0d;"
@@ -2133,19 +2158,13 @@ async function abrirVitrineDoCliente(telefone){
 async function irParaVitrine(){
   const tel = state.telefoneAtual;
   if(!tel) return;
-
-  // Sempre fecha os painéis
   $('adminPanel').classList.add('hidden');
   $('acessosSection').classList.add('hidden');
-
   const [resCli, resIm] = await Promise.all([
     api('buscarCliente', { senha: state.adminSenha, telefone: tel }),
     api('adminListar', { senha: state.adminSenha })
   ]);
-
   state.clienteAtual = (resCli.ok && resCli.data) ? resCli.data : null;
-
-  // Barra do cliente
   const nome = state.clienteAtual?.nome || '(sem cadastro)';
   const corr = state.clienteAtual?.corretor || '';
   const temp = state.clienteAtual?.temperatura || 'frio';
@@ -2155,30 +2174,24 @@ async function irParaVitrine(){
     ${corr ? `<span>👤 ${esc(corr)}</span>` : ''}
     <span title="${temp}">${emojiTemperatura(temp)} ${temp}</span>
     ${state.clienteAtual?.tqc === 'Sim' ? '<span class="tag tag-tqc">TQC</span>' : ''}
-    ${state.clienteAtual?.car === 'Sim' ? '<span class="tag tag-car">CAR</span>' : ''}
+    ${state.clienteAtual?.car === 'Sim' ? '<span class="tag tag-car">💼 INVESTIDOR</span>' : ''}
     ${state.clienteAtual?.inativo === 'Sim' ? '<span class="tag tag-inativo">💤 Inativo</span>' : ''}
   `;
-
-  // Imóveis do cliente
   const todos = (resIm.ok && resIm.data) ? resIm.data : [];
   state.imoveis = todos
     .filter(i => normalizaTel(i.telefone) === tel)
     .sort((a,b) => new Date(b.dataCadastro||0) - new Date(a.dataCadastro||0));
-
-  // Reset filtros da vitrine
   state.filtro = 'todos';
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
   const btnTodos = document.querySelector('.filter-btn[data-filter="todos"]');
   if(btnTodos) btnTodos.classList.add('active');
   if($('buscaInput')) $('buscaInput').value = '';
-
-  // Carrega acessos
   carregarAcessos();
-
   mostrarView('vitrineView');
   window.scrollTo({ top: 0, behavior: 'smooth' });
   atualizarContadoresImoveis();
   renderizarImoveis();
+  renderizarCartoesVisita();
 }
 
 function voltarParaHome(){
@@ -2187,9 +2200,128 @@ function voltarParaHome(){
   state.imoveis = [];
   mostrarView('homeView');
   $('btnSair').classList.remove('hidden');
-  $('userInfo').textContent = '👑 Painel';
-  // Reabre o painel ativo
   irParaHomeAdmin();
+}
+
+/* =====================================================
+   CARTÕES PNG DE VISITAS AGENDADAS
+===================================================== */
+function renderizarCartoesVisita(){
+  const wrap = $('cartoesVisitaWrap');
+  const container = $('cartoesVisita');
+  const countEl = $('cartoesVisitaCount');
+  if(!wrap || !container) return;
+
+  const visitas = (state.imoveis || []).filter(im =>
+    im.dataVisitaAgendada && !isDesativado(im)
+  );
+
+  if(visitas.length === 0){
+    wrap.classList.add('hidden');
+    container.innerHTML = '';
+    return;
+  }
+
+  wrap.classList.remove('hidden');
+  if(countEl) countEl.textContent = visitas.length === 1
+    ? '1 cartão'
+    : `${visitas.length} cartões`;
+
+  container.innerHTML = visitas.map(im => {
+    const dataUrl = gerarCartaoVisitaDataURL(im);
+    const titulo = (im.titulo || '') + (im.codigo ? ' #' + im.codigo : '');
+    return `<img class="cartao-visita-img"
+                 src="${dataUrl}"
+                 alt="${esc(titulo)}"
+                 title="${esc(titulo)} — clique com botão direito para copiar">`;
+  }).join('');
+}
+
+function gerarCartaoVisitaDataURL(im){
+  const W = 1200, H = 630;
+  const canvas = document.createElement('canvas');
+  canvas.width = W;
+  canvas.height = H;
+  const ctx = canvas.getContext('2d');
+
+  // Fundo com gradiente suave
+  const grad = ctx.createLinearGradient(0, 0, W, H);
+  grad.addColorStop(0, '#fef2f2');
+  grad.addColorStop(1, '#fde8e8');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, W, H);
+
+  // Borda externa vermelha
+  ctx.strokeStyle = '#d9534f';
+  ctx.lineWidth = 8;
+  ctx.strokeRect(4, 4, W - 8, H - 8);
+
+  // Faixa lateral vermelha
+  ctx.fillStyle = '#d9534f';
+  ctx.fillRect(0, 0, 16, H);
+
+  // Título "VISITA CONFIRMADA"
+  ctx.fillStyle = '#b91c1c';
+  ctx.font = 'bold 44px -apple-system, "Segoe UI", Roboto, sans-serif';
+  ctx.textBaseline = 'top';
+  ctx.fillText('📍 VISITA CONFIRMADA', 70, 60);
+
+  // Linha decorativa
+  ctx.strokeStyle = '#fca5a5';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(70, 130);
+  ctx.lineTo(W - 70, 130);
+  ctx.stroke();
+
+  // Endereço
+  ctx.fillStyle = '#7f1d1d';
+  ctx.font = 'bold 54px -apple-system, "Segoe UI", Roboto, sans-serif';
+  const endereco = im.titulo || 'Endereço não informado';
+  desenharTextoMultilinha(ctx, '🏠 ' + endereco, 70, 180, W - 140, 66, 2);
+
+  // Código (se houver)
+  let yCodigo = 400;
+  if(im.codigo){
+    ctx.fillStyle = '#4a3d6b';
+    ctx.font = 'bold 42px "Courier New", monospace';
+    ctx.fillText('#' + im.codigo, 70, yCodigo);
+    yCodigo += 70;
+  }
+
+  // Data e hora
+  const dt = new Date(im.dataVisitaAgendada);
+  const dia = String(dt.getDate()).padStart(2,'0');
+  const mes = String(dt.getMonth()+1).padStart(2,'0');
+  const ano = dt.getFullYear();
+  const hora = String(dt.getHours()).padStart(2,'0');
+  const min = String(dt.getMinutes()).padStart(2,'0');
+  const dataTxt = `📅 ${dia}/${mes}/${ano} · ${hora}:${min}`;
+
+  ctx.fillStyle = '#b91c1c';
+  ctx.font = 'bold 48px -apple-system, "Segoe UI", Roboto, sans-serif';
+  ctx.fillText(dataTxt, 70, H - 130);
+
+  return canvas.toDataURL('image/png');
+}
+
+function desenharTextoMultilinha(ctx, texto, x, y, maxWidth, lineHeight, maxLinhas){
+  const palavras = String(texto).split(' ');
+  let linha = '';
+  let linhas = 0;
+  for(let i = 0; i < palavras.length; i++){
+    const teste = linha ? linha + ' ' + palavras[i] : palavras[i];
+    const largura = ctx.measureText(teste).width;
+    if(largura > maxWidth && linha){
+      ctx.fillText(linha, x, y + linhas * lineHeight);
+      linhas++;
+      if(maxLinhas && linhas >= maxLinhas) return;
+      linha = palavras[i];
+    } else {
+      linha = teste;
+    }
+  }
+  if(linha) ctx.fillText(linha, x, y + linhas * lineHeight);
 }
 
 /* =====================================================
@@ -2352,7 +2484,7 @@ function gerarTextoWhatsAppSenhaGerada(){
 }
 
 /* =====================================================
-   LINK VITRINE (BOTÃO DO HEADER DA VITRINE)
+   LINK VITRINE (BOTÃO DA BARRA DO CLIENTE)
 ===================================================== */
 async function gerarLinkVitrine(){
   if(!state.telefoneAtual){ toast('Abra a vitrine de um cliente primeiro', 'error'); return; }
@@ -2360,18 +2492,7 @@ async function gerarLinkVitrine(){
   const res = await api('obterLinkVitrine', { senha: state.adminSenha, telefone: state.telefoneAtual });
   marcarSalvando(false);
   if(!res.ok){ toast(res.error || 'Erro', 'error'); return; }
-
-  const primeiroNome = (res.nome || '').split(' ')[0] || 'Cliente';
-  const texto =
-`Vitrine exclusiva para ${primeiroNome},
-
-🔗 ${res.link}
-
-Se por acaso falhar ao abrir, comunique ao seu corretor!`;
-
-  copiarTexto(texto);
-  if(res.criouNovo) toast('Link gerado (novo acesso criado) ✅', 'success');
-  else toast('Link copiado! Cole no WhatsApp 📋', 'success');
+  copiarTexto(res.link);
 }
 
 /* =====================================================
@@ -2414,7 +2535,7 @@ async function abrirEditarClientePorTel(telefone){
   abrirModalClienteEdit(cli);
 }
 
-function abrirModalClienteEdit(cli){
+async function abrirModalClienteEdit(cli){
   $('clienteModalTitle').textContent = '✏️ Editar cliente';
   $('cliTelefone').value = fmtTel(cli.telefone);
   $('cliNome').value = cli.nome || '';
@@ -2422,10 +2543,20 @@ function abrirModalClienteEdit(cli){
   $('cliTQC').value = cli.tqc || '';
   $('cliCAR').value = cli.car || '';
   $('cliInativo').value = cli.inativo || '';
-  $('cliLinkVitrine').value = cli.linkVitrine || '';
+  $('cliLinkVitrine').value = cli.linkVitrine || 'Carregando link...';
   $('cliObservacao').value = cli.observacao || '';
   $('btnHistoricoCliente').style.display = 'inline-flex';
   $('clienteModalBackdrop').classList.add('show');
+  try {
+    const res = await api('obterLinkVitrine', { senha: state.adminSenha, telefone: normalizaTel(cli.telefone) });
+    if(res.ok && res.link){
+      $('cliLinkVitrine').value = res.link;
+    } else {
+      $('cliLinkVitrine').value = cli.linkVitrine || '';
+    }
+  } catch(e){
+    $('cliLinkVitrine').value = cli.linkVitrine || '';
+  }
 }
 
 function preencherSelectCorretores(valorAtual){
@@ -2451,7 +2582,6 @@ async function salvarCliente(){
   if(!nome){ toast('Informe o nome', 'error'); return; }
   if(!corretor){ toast('Selecione o corretor', 'error'); return; }
 
-  // Bloquear se o telefone já existe (novo cadastro)
   const jaExiste = state.clientes.find(c => normalizaTel(c.telefone) === tel);
   const editando = $('clienteModalTitle').textContent.includes('Editar');
   if(jaExiste && !editando){
@@ -2478,7 +2608,6 @@ async function salvarCliente(){
   fecharClienteModal();
   toast('Cliente salvo ✅', 'success');
 
-  // Se criou novo com acesso automático → mostra modal de senha
   if(res.criado && res.senha){
     state.telefoneAtual = tel;
     $('senhaGeradaTitulo').textContent = 'Cliente cadastrado!';
@@ -2488,13 +2617,9 @@ async function salvarCliente(){
     $('senhaGeradaBackdrop').classList.add('show');
   }
 
-  // Recarrega clientes
   state.carregado.clientes = false;
   await carregarClientes(false);
-  renderizarFiltrosClientes();
-  renderizarClientes();
 
-  // Se estiver com vitrine aberta, atualiza
   if(state.telefoneAtual && normalizaTel(state.telefoneAtual) === tel){
     await irParaVitrine();
   }
@@ -2534,11 +2659,9 @@ async function abrirHistoricoCliente(){
   $('histCliSub').textContent = state.clienteAtual.nome || fmtTel(tel);
   $('histCliLista').innerHTML = '<div class="loading-inline"><span class="loader loader-lg"></span></div>';
   $('histCliBackdrop').classList.add('show');
-
   marcarSalvando(true);
   const res = await api('listarHistoricoCliente', { senha: state.adminSenha, telefone: tel });
   marcarSalvando(false);
-
   if(!res.ok){
     $('histCliLista').innerHTML = '<div class="empty-state"><p>Erro ao carregar</p></div>';
     return;
@@ -2570,11 +2693,9 @@ async function abrirHistoricoImovel(id){
   $('histImovelSub').textContent = im.titulo || '';
   $('histImovelLista').innerHTML = '<div class="loading-inline"><span class="loader loader-lg"></span></div>';
   $('histImovelBackdrop').classList.add('show');
-
   marcarSalvando(true);
   const res = await api('listarHistoricoImovel', { senha: state.adminSenha, imovelId: id });
   marcarSalvando(false);
-
   if(!res.ok){
     $('histImovelLista').innerHTML = '<div class="empty-state"><p>Erro</p></div>';
     return;
@@ -2607,15 +2728,9 @@ async function carregarCorrecoes(mostrarLoading){
 }
 
 function atualizarBadgeCorrecoes(){
-  const btn = $('btnCorrecoes');
   const num = $('correcoesBadgeNum');
   const total = state.correcoes.length;
-  if(total > 0){
-    btn.classList.remove('hidden');
-    num.textContent = total > 99 ? '99+' : total;
-  } else {
-    btn.classList.add('hidden');
-  }
+  num.textContent = total > 99 ? '99+' : total;
 }
 
 function abrirCorrecoes(){
@@ -2666,7 +2781,6 @@ function setFiltro(f, el){
 function renderizarImoveis(){
   const grid = $('gridImoveis');
   let lista = [...state.imoveis];
-
   if(state.filtro === 'desativados'){
     lista = lista.filter(im => isDesativado(im));
   } else {
@@ -2685,7 +2799,6 @@ function renderizarImoveis(){
       lista = lista.filter(i => (i.status || 'pendente') === state.filtro);
     }
   }
-
   const busca = ($('buscaInput').value || '').toLowerCase().trim();
   if(busca){
     lista = lista.filter(i =>
@@ -2694,7 +2807,6 @@ function renderizarImoveis(){
       (i.observacao || '').toLowerCase().includes(busca)
     );
   }
-
   if(lista.length === 0){
     grid.innerHTML = '';
     $('emptyState').classList.remove('hidden');
@@ -2717,7 +2829,6 @@ function cardImovelHTML(im){
     'gostei':'status-gostei','nao-gostei':'status-nao-gostei',
     'quero-visitar':'status-quero-visitar','pendente':'status-pendente'
   }[statusAtual] || 'status-pendente');
-
   const img = im.imagem || 'https://via.placeholder.com/200x200/e2e8f0/64748b?text=Sem+imagem';
   const id = esc(im.id);
   const dataFmt = fmtData(im.dataCadastro);
@@ -2726,12 +2837,10 @@ function cardImovelHTML(im){
   const obsId = 'obs-' + id;
   const descTexto = (im.descricao || '').trim();
   const cardExtraClass = desativado ? ' card-desativado' : (statusAtual === 'nao-gostei' ? ' card-nao-gostei' : '');
-
   const btnGostei = (statusAtual === 'gostei' && !desativado) ? 'ativo' : '';
   const btnVisitar = (statusAtual === 'quero-visitar' && !desativado) ? 'ativo' : '';
   const btnNao = (statusAtual === 'nao-gostei' && !desativado) ? 'ativo' : '';
   const btnDesativar = desativado ? 'ativo' : '';
-
   let agHtml = '';
   const temAgendamento = !!im.dataVisitaAgendada && !desativado;
   if(!desativado){
@@ -2758,7 +2867,6 @@ function cardImovelHTML(im){
         </div>`;
     }
   }
-
   let visHtml = '';
   if(im.visitaFeita === 'Sim' && im.dataVisita && !desativado){
     const aval = (im.avaliacaoVisita || '').trim();
@@ -2769,7 +2877,6 @@ function cardImovelHTML(im){
         <div class="agendamento-actions"><button class="btn btn-ghost btn-xs" onclick="abrirVisitaModal('${id}')">✏️ Editar</button></div>
       </div>`;
   }
-
   return `
     <div class="card${cardExtraClass}" data-id="${id}">
       <div class="card-topbar">
@@ -2783,7 +2890,6 @@ function cardImovelHTML(im){
         </div>
         <span class="card-status-badge ${statusClass}">${statusLabel}</span>
       </div>
-
       <div class="card-row">
         <img class="card-img" src="${esc(img)}" onerror="this.src='https://via.placeholder.com/200x200/e2e8f0/64748b?text=Sem+imagem'">
         <div class="card-info">
@@ -2795,11 +2901,9 @@ function cardImovelHTML(im){
           ${descTexto ? `<div class="card-desc" onclick="this.classList.toggle('expandido')">${esc(descTexto)}</div>` : ''}
         </div>
       </div>
-
       <div class="card-bottom">
         ${im.link ? `<a class="btn-ver-anuncio" href="${esc(im.link)}" target="_blank" rel="noopener">🔗 Ver anúncio →</a>` : ''}
         ${im.link ? `<button class="btn btn-ghost btn-sm" onclick="abrirBuscar('${esc(im.codigo)}')">🔎 BUSCAR entrada</button>` : ''}
-
         <div class="obs-wrap" id="${obsId}">
           <div class="obs-label">💬 Observação <button class="obs-edit-btn" onclick="abrirEdicaoObsImovel('${obsId}')">✏️ Editar</button></div>
           ${obsTexto ? `
@@ -2812,10 +2916,8 @@ function cardImovelHTML(im){
             <button class="btn btn-ghost btn-sm" onclick="cancelarEdicaoObsImovel('${obsId}')">Cancelar</button>
           </div>
         </div>
-
         ${agHtml}
         ${visHtml}
-
         <div class="card-bottom-actions">
           <button class="btn btn-ghost btn-sm" onclick="abrirHistoricoImovel('${id}')">📜 Histórico</button>
           <button class="btn btn-ghost btn-sm" onclick="editarImovel('${id}')">✏️ Editar</button>
@@ -2872,7 +2974,6 @@ async function marcarStatus(id, acao){
   const statusAtual = im.status || 'pendente';
   const vaiDesmarcar = (statusAtual === acao);
   const novaAcao = vaiDesmarcar ? 'pendente' : acao;
-
   const configs = {
     'gostei': { icone:'❤️', titulo:'Marcar "Gostei"?', texto:'O imóvel será marcado como GOSTEI.', tipo:'success' },
     'quero-visitar': { icone:'📅', titulo:'Marcar "Quero Visitar"?', texto:'O imóvel aparecerá em "Querem Visitar".', tipo:'warn' },
@@ -2881,15 +2982,12 @@ async function marcarStatus(id, acao){
   const cfg = vaiDesmarcar
     ? { icone:'↩️', titulo:'Desmarcar?', texto:'Voltará para "Aguardando".', tipo:'primary' }
     : configs[acao];
-
   const ok = await confirmarAcao(cfg);
   if(!ok) return;
-
   im.status = novaAcao;
   atualizarContadoresImoveis();
   renderizarImoveis();
   state.carregado.visitar = false;
-
   marcarSalvando(true);
   await api('atualizarStatus', { id, telefone: state.telefoneAtual, acao: novaAcao });
   marcarSalvando(false);
@@ -2905,15 +3003,14 @@ async function toggleDesativar(id){
     : { icone:'🚫', titulo:'Desativar imóvel?', texto:'Ficará oculto para o cliente.', btnSim:'Desativar', tipo:'danger' };
   const ok = await confirmarAcao(cfg);
   if(!ok) return;
-
   marcarSalvando(true);
   const res = await api(desativado ? 'reativarImovel' : 'desativarImovel', { senha: state.adminSenha, id });
   marcarSalvando(false);
   if(!res.ok){ toast(res.error || 'Erro', 'error'); return; }
-
   im.desativado = desativado ? '' : 'Sim';
   atualizarContadoresImoveis();
   renderizarImoveis();
+  renderizarCartoesVisita();
   toast(desativado ? 'Reativado ✅' : 'Desativado 🚫', 'success');
 }
 
@@ -2992,6 +3089,19 @@ async function buscarImagemPreview(mostrarToast){
     if(mostrarToast) toast('Não encontrada', 'error');
   }
 }
+let _linkImovelTimer = null;
+function onLinkImovelChanged(){
+  clearTimeout(_linkImovelTimer);
+  const url = $('adLink').value.trim();
+  if(!url || !/^https?:\/\//.test(url)) return;
+  _linkImovelTimer = setTimeout(async () => {
+    const res = await api('buscarImagem', { url });
+    if(res.ok && res.imagem){
+      $('adImagem').value = res.imagem;
+      atualizarPreview(res.imagem);
+    }
+  }, 800);
+}
 async function salvarImovel(){
   const tel = normalizaTel($('adTelefone').value);
   const titulo = $('adTitulo').value.trim();
@@ -2999,17 +3109,14 @@ async function salvarImovel(){
   let imagem = $('adImagem').value.trim();
   if(!tel || tel.length < 10){ toast('Telefone inválido', 'error'); return; }
   if(!titulo){ toast('Informe o endereço', 'error'); return; }
-
   const btn = $('btnSalvarImovel');
   btn.disabled = true;
   btn.innerHTML = '<span class="loader"></span> Salvando...';
   marcarSalvando(true);
-
   if(link && !imagem){
     const r = await api('buscarImagem', { url: link });
     if(r.ok && r.imagem) imagem = r.imagem;
   }
-
   const res = await api('salvarImovel', {
     senha: state.adminSenha,
     id: $('editingId').value || '',
@@ -3017,11 +3124,9 @@ async function salvarImovel(){
     descricao: $('adDescricao').value.trim(),
     link, imagem, status: 'pendente'
   });
-
   marcarSalvando(false);
   btn.disabled = false;
   btn.textContent = '💾 Salvar imóvel';
-
   if(!res.ok){ toast(res.error || 'Erro', 'error'); return; }
   toast('Imóvel salvo ✅', 'success');
   fecharPainelImovel();
@@ -3057,6 +3162,7 @@ async function excluirImovel(id){
   state.imoveis = state.imoveis.filter(i => i.id !== id);
   atualizarContadoresImoveis();
   renderizarImoveis();
+  renderizarCartoesVisita();
 }
 
 /* =====================================================
@@ -3089,7 +3195,6 @@ async function salvarVisita(ev){
   if(!id || !data){ toast('Preencha a data', 'error'); return; }
   const btn = ev?.target; if(btn) btn.disabled = true;
   marcarSalvando(true);
-
   const res = await api('marcarVisita', { id, dataVisita: data, avaliacaoVisita: avaliacao });
   if(res.ok){
     const im = state.imoveis.find(i => i.id === id);
@@ -3112,6 +3217,7 @@ async function salvarVisita(ev){
   if(btn) btn.disabled = false;
   fecharVisitaModal();
   renderizarImoveis();
+  renderizarCartoesVisita();
 }
 
 async function limparVisita(){
@@ -3162,6 +3268,7 @@ async function salvarAgendamento(ev){
   state.carregado.visitar = false;
   fecharAgendarModal();
   renderizarImoveis();
+  renderizarCartoesVisita();
 }
 
 async function cancelarAgendamento(){
@@ -3180,6 +3287,7 @@ async function cancelarAgendamento(){
   state.carregado.visitar = false;
   fecharAgendarModal();
   renderizarImoveis();
+  renderizarCartoesVisita();
 }
 
 async function cancelarAgendamentoDireto(id){
@@ -3195,10 +3303,11 @@ async function cancelarAgendamentoDireto(id){
   state.carregado.agenda = false;
   state.carregado.visitar = false;
   renderizarImoveis();
+  renderizarCartoesVisita();
 }
 
 /* =====================================================
-   AGENDA / NOTIFICACOES: ABRIR IMÓVEL
+   AGENDA / NOTIFICAÇÕES: ABRIR IMÓVEL
 ===================================================== */
 async function abrirImovelDaAgenda(telefone, imovelId){
   const tel = normalizaTel(telefone);
@@ -3263,5 +3372,3 @@ window.addEventListener('beforeunload', function(e){
 </script>
 </body>
 </html>
-
-  
