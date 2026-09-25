@@ -1488,16 +1488,14 @@ function corDoCorretor(nome){
    Estas helpers leem a "chave real" e reconstroem os campos.
 ===================================================== */
 function imovelCamposReais_(im){
-  // Ordem real dos dados no retorno:
-  //   im.chaveTexto → contém a RUA
-  //   im.rua        → contém o NÚMERO
-  //   im.numero     → contém o BAIRRO
-  //   im.bairro     → contém a CHAVE
+  // Sem correção de deslocamento — o Apps Script v10.1 já grava certo.
+  // Agendamentos antigos (feitos antes do v10.1) podem ter campos errados,
+  // mas devem ser raros e você pode re-agendar.
   return {
-    rua:    String((im && im.chaveTexto) || '').trim(),
-    numero: String((im && im.rua)        || '').trim(),
-    bairro: String((im && im.numero)     || '').trim(),
-    chave:  String((im && im.bairro)     || '').trim()
+    rua:    String((im && im.rua)        || '').trim(),
+    numero: String((im && im.numero)     || '').trim(),
+    bairro: String((im && im.bairro)     || '').trim(),
+    chave:  String((im && im.chaveTexto) || '').trim()
   };
 }
 
