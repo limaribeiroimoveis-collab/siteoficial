@@ -763,7 +763,7 @@ const state = {
   clienteInfo: null,
   imoveis: [],
   filtro: 'recentes',
-  salvandoIds: {}  // id -> true enquanto salva, pra travar duplo clique
+  salvandoIds: {}
 };
 
 const $ = id => document.getElementById(id);
@@ -908,17 +908,27 @@ function lerLinkOriginal(){
   } catch(e){ return null; }
 }
 
-function limparSessaoCompleta(){
+/**
+ * 🧹 LIMPA TUDO relacionado ao site atual.
+ * Remove todas as chaves de localStorage usadas por esta vitrine.
+ * Garante que ao entrar com link de outro cliente, nada do anterior fica.
+ */
+function limparTudo(){
   try {
+    // Remove chaves específicas da vitrine
     localStorage.removeItem(TEL_KEY);
     localStorage.removeItem(TOKEN_KEY);
     localStorage.removeItem(NOME_KEY);
     localStorage.removeItem(CACHE_KEY);
+    localStorage.removeItem(LINK_KEY);
+    localStorage.removeItem('vitrine_corretor_pref');
   } catch(e){}
+  // Reseta estado em memória
   state.telefone = null;
   state.deviceToken = null;
   state.clienteInfo = null;
   state.imoveis = [];
+  state.salvandoIds = {};
 }
 
 /* =====================================================
@@ -1155,7 +1165,7 @@ async function entrarCliente(){
   btn.disabled = true;
   btn.innerHTML = '<span class="spinner" style="width:16px;height:16px;border-width:2px;border-top-color:transparent;border-color:currentColor;display:inline-block;vertical-align:middle;margin-right:6px;"></span> Entrando...';
 
-  limparSessaoCompleta();
+  limparTudo();
 
   const res = await api('loginCliente', {
     telefone: tel, senha: senhaDigitada, deviceToken: '', navegador: navegador
@@ -1274,8 +1284,7 @@ async function carregarImoveis(){
     return db - da;
   });
 
-  // 🛡️ Proteção: se veio vazio mas tinha cache com dados,
-  // provavelmente é cold start do Apps Script devolvendo vazio por engano.
+  // 🛡️ Cold start: se veio vazio mas tinha cache, mantém
   if(novos.length === 0 && state.imoveis.length > 0){
     console.warn('[vitrine] API retornou vazio, mantendo cache anterior');
     toast('Não conseguimos atualizar agora. Mostrando os últimos dados.', 'error');
@@ -1373,7 +1382,7 @@ function setFiltro(f, el){
    RENDERIZAR IMÓVEIS
 ===================================================== */
 function renderizarImoveis(){
-  // 🛡️ Se algum card está com observação sendo editada, preserva o estado
+  // 🛡️ Preserva observações sendo editadas
   const emEdicao = {};
   document.querySelectorAll('.obs-wrap.editing').forEach(w => {
     const obsId = w.id;
@@ -1562,7 +1571,6 @@ function abrirZap(imovelId){
    MARCAR STATUS — com trava de duplo clique
 ===================================================== */
 async function marcar(id, acao){
-  // 🛡️ Trava duplo clique
   if(state.salvandoIds[id]) return;
 
   const im = state.imoveis.find(i => i.id === id);
@@ -1571,7 +1579,6 @@ async function marcar(id, acao){
   const statusAtual = im.status || 'pendente';
   const novaAcao = (statusAtual === acao) ? 'pendente' : acao;
 
-  // Aplica otimisticamente
   const statusAnterior = im.status;
   im.status = novaAcao;
   state.salvandoIds[id] = true;
@@ -1590,7 +1597,6 @@ async function marcar(id, acao){
       mostrarBloqueioDispositivo();
       return;
     }
-    // Reverte
     im.status = statusAnterior;
     atualizarContadores();
     renderizarImoveis();
@@ -1601,7 +1607,7 @@ async function marcar(id, acao){
       toast(res.error || 'Erro ao salvar', 'error');
     }
   } else {
-    renderizarImoveis(); // libera botões
+    renderizarImoveis();
     toast(novaAcao !== 'pendente' ? 'Marcado como: ' + novaAcao : 'Voltou para aguardando', 'success');
   }
 }
@@ -1703,9 +1709,9 @@ function fallbackCopy(texto, cb){
 }
 
 /* =====================================================
-   INIT — abre rápido, valida em background
-   🛡️ Blindado contra vazamento entre clientes
-   🛡️ Não manda pro login em falha de conexão
+   INIT
+   🧹 Se vem link novo com tel DIFERENTE → LIMPA TUDO
+   ⚡ Se é o MESMO cliente → abre rápido com cache
 ===================================================== */
 (async function init(){
   const params = new URLSearchParams(window.location.search);
@@ -1714,58 +1720,52 @@ function fallbackCopy(texto, cb){
 
   const temLinkNovo = telUrl.length >= 10 && senhaUrl.length > 0;
 
+  // ═══════════════════════════════════════════════════════
+  // CASO 1 — VEIO LINK NOVO
+  // ═══════════════════════════════════════════════════════
   if(temLinkNovo){
-    gravarLinkOriginal(telUrl, senhaUrl);
-  }
+    const telSalvo = localStorage.getItem(TEL_KEY);
+    const mesmoCliente = telSalvo && normalizaTel(telSalvo) === telUrl;
 
-  /* PASSO 1 — ABRE RÁPIDO */
-  const cache = lerCache();
-  const telSalvo = localStorage.getItem(TEL_KEY);
-  const tokenSalvo = localStorage.getItem(TOKEN_KEY);
-  const nomeSalvo = localStorage.getItem(NOME_KEY);
-
-  const telConhecido = cache?.telefone || telSalvo || telUrl || null;
-  const nomeConhecido = cache?.nome || nomeSalvo || null;
-  const tokenConhecido = tokenSalvo || null;
-
-  // 🛡️ ANTI-VAZAMENTO: só mostra cache se for do MESMO cliente do link atual
-  // (ou se não veio link novo)
-  const cacheEhDoMesmoCliente = !temLinkNovo ||
-    (cache && cache.telefone && normalizaTel(cache.telefone) === telUrl);
-
-  if(cache && cache.data && cache.data.length && cacheEhDoMesmoCliente){
-    state.telefone = telConhecido;
-    state.deviceToken = tokenConhecido;
-    state.clienteInfo = { nome: nomeConhecido, apelido: null };
-    state.imoveis = cache.data;
-
-    mostrarView('vitrineView');
-    $('userInfo').textContent = nomeConhecido
-      ? '👤 ' + nomeConhecido
-      : '📱 ' + fmtTel(telConhecido);
-
-    atualizarContadores();
-    renderizarVisitas();
-    renderizarImoveis();
-    limparUrl();
-  } else {
-    mostrarView('vitrineView');
-    if(telUrl.length >= 10) $('userInfo').textContent = '📱 ' + fmtTel(telUrl);
-    mostrarSkeleton(4);
-  }
-
-  /* PASSO 2 — VALIDA EM BACKGROUND */
-
-  // CASO A — veio link novo (tel+senha)
-  if(temLinkNovo){
-    const mesmoCliente = cache && cache.telefone &&
-                         normalizaTel(cache.telefone) === telUrl;
-
-    if(!mesmoCliente && cache && cache.data && cache.data.length){
-      state.imoveis = [];
-      mostrarSkeleton(4);
+    // 🧹 Se é OUTRO cliente → limpa TUDO antes de qualquer coisa
+    if(!mesmoCliente){
+      console.log('[vitrine] Link de outro cliente. Limpando localStorage...');
+      limparTudo();
     }
 
+    // Guarda o link novo (pra reusar se precisar)
+    gravarLinkOriginal(telUrl, senhaUrl);
+
+    // Passa a ter esse tel como "conhecido"
+    state.telefone = telUrl;
+
+    // Mostra já (com cache se for o mesmo cliente, ou skeleton se limpou)
+    const cache = lerCache();
+
+    if(mesmoCliente && cache && cache.data && cache.data.length){
+      // ⚡ MESMO cliente: abre rápido com cache
+      state.deviceToken = localStorage.getItem(TOKEN_KEY) || null;
+      state.clienteInfo = { nome: localStorage.getItem(NOME_KEY) || null, apelido: null };
+      state.imoveis = cache.data;
+
+      mostrarView('vitrineView');
+      $('userInfo').textContent = state.clienteInfo.nome
+        ? '👤 ' + state.clienteInfo.nome
+        : '📱 ' + fmtTel(telUrl);
+
+      atualizarContadores();
+      renderizarVisitas();
+      renderizarImoveis();
+      limparUrl();
+    } else {
+      // 🧹 Cliente diferente ou sem cache: skeleton até o login
+      mostrarView('vitrineView');
+      $('userInfo').textContent = '📱 ' + fmtTel(telUrl);
+      mostrarSkeleton(4);
+      limparUrl();
+    }
+
+    // Faz login em background
     const navegador = detectarNavegador();
     const res = await api('loginCliente', {
       telefone: telUrl,
@@ -1782,13 +1782,14 @@ function fallbackCopy(texto, cb){
       localStorage.setItem(TOKEN_KEY, state.deviceToken);
       if(res.nome) localStorage.setItem(NOME_KEY, res.nome);
 
-      limparUrl();
       $('userInfo').textContent = res.nome ? '👤 ' + res.nome : '📱 ' + fmtTel(telUrl);
 
+      // Se era o mesmo cliente e cache estava fresco, já está tudo na tela
       if(mesmoCliente && cache && cache.fresh){
         return;
       }
 
+      // Se API já devolveu imóveis no login, usa
       if(res.imoveis && res.imoveis.length){
         const novos = res.imoveis.sort((a,b) => {
           const da = new Date(a.dataCadastro||0).getTime() || 0;
@@ -1811,8 +1812,6 @@ function fallbackCopy(texto, cb){
       return;
     }
 
-    limparUrl();
-
     if(erroEhDispositivoVinculado(res.error)){
       state.telefone = telUrl;
       state.clienteInfo = { nome: res.nome || null, apelido: res.apelido || null };
@@ -1820,14 +1819,12 @@ function fallbackCopy(texto, cb){
       return;
     }
 
-    // ⚠️ Falha de conexão: NÃO manda pro login.
     if(erroEhConexao(res.error)){
       if(!state.imoveis.length) mostrarErroConexao();
       else toast('Não conseguimos validar agora. Mostrando os últimos dados.', 'error');
       return;
     }
 
-    // Outros erros (senha inválida, etc):
     if(!state.imoveis.length){
       mostrarErroConexao();
     } else {
@@ -1836,12 +1833,41 @@ function fallbackCopy(texto, cb){
     return;
   }
 
-  // CASO B — sem link novo, tem sessão salva
-  if(telSalvo && tokenSalvo){
-    if(cache && cache.fresh && cache.telefone === telSalvo){
-      return;
-    }
+  // ═══════════════════════════════════════════════════════
+  // CASO 2 — SEM LINK NOVO
+  // ═══════════════════════════════════════════════════════
+  const cache = lerCache();
+  const telSalvo = localStorage.getItem(TEL_KEY);
+  const tokenSalvo = localStorage.getItem(TOKEN_KEY);
+  const nomeSalvo = localStorage.getItem(NOME_KEY);
 
+  // ⚡ Abre rápido com cache se tiver
+  if(cache && cache.data && cache.data.length && telSalvo){
+    state.telefone = telSalvo;
+    state.deviceToken = tokenSalvo;
+    state.clienteInfo = { nome: nomeSalvo || cache.nome || null, apelido: null };
+    state.imoveis = cache.data;
+
+    mostrarView('vitrineView');
+    $('userInfo').textContent = state.clienteInfo.nome
+      ? '👤 ' + state.clienteInfo.nome
+      : '📱 ' + fmtTel(telSalvo);
+
+    atualizarContadores();
+    renderizarVisitas();
+    renderizarImoveis();
+  } else {
+    mostrarView('vitrineView');
+    mostrarSkeleton(4);
+  }
+
+  // Se cache está fresco, não precisa revalidar
+  if(cache && cache.fresh && telSalvo){
+    return;
+  }
+
+  // Revalida em background
+  if(telSalvo && tokenSalvo){
     const res = await api('listarImoveis', {
       telefone: telSalvo,
       deviceToken: tokenSalvo
@@ -1854,9 +1880,8 @@ function fallbackCopy(texto, cb){
         return db - da;
       });
 
-      // 🛡️ Se veio vazio mas tinha cache, mantém
       if(novos.length === 0 && state.imoveis.length > 0){
-        console.warn('[vitrine] API retornou vazio (cold start?), mantendo cache');
+        console.warn('[vitrine] API retornou vazio, mantendo cache anterior');
         return;
       }
 
@@ -1918,7 +1943,7 @@ function fallbackCopy(texto, cb){
     return;
   }
 
-  // CASO C — sem sessão, mas tem link salvo
+  // Sem sessão — tenta revalidar com link salvo
   const linkSalvo = lerLinkOriginal();
   if(linkSalvo){
     const navegador = detectarNavegador();
@@ -1963,7 +1988,7 @@ function fallbackCopy(texto, cb){
     return;
   }
 
-  // CASO D — nada salvo → login
+  // Nada salvo → login
   if(!state.imoveis.length){
     mostrarView('loginView');
     $('senhaGroup').style.display = 'block';
@@ -1972,8 +1997,7 @@ function fallbackCopy(texto, cb){
 })();
 
 /* =====================================================
-   Re-renderiza visitas a cada minuto pra remover as
-   que passaram de 2h automaticamente (sem recarregar)
+   Atualiza visitas a cada minuto (remove as que passaram 2h)
 ===================================================== */
 setInterval(() => {
   if(state.imoveis.length > 0){
