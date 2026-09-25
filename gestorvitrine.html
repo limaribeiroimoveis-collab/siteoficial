@@ -34,7 +34,7 @@
   }
   .container{ max-width: 1280px; margin: 0 auto; padding: 16px; }
 
-  /* ============ HEADER ============ */
+  /* HEADER */
   header.app-header{
     background: linear-gradient(90deg, #16263e 0%, #1e3a5f 100%);
     color: #fff; padding: 8px 12px;
@@ -47,8 +47,7 @@
     display: flex; align-items: center; justify-content: space-between;
     gap: 8px; flex-wrap: nowrap; min-height: 38px;
   }
-  .brand{ display: flex; align-items: center; gap: 8px; min-width: 0; flex-shrink: 0; cursor: pointer; transition: opacity .15s; }
-  .brand:hover{ opacity: .85; }
+  .brand{ display: flex; align-items: center; gap: 8px; min-width: 0; flex-shrink: 0; cursor: pointer; }
   .brand-icon{
     width: 28px; height: 28px; flex-shrink: 0;
     background: var(--accent); border-radius: 6px;
@@ -68,11 +67,10 @@
     font-size: .72rem; font-weight: 600;
     transition: all .15s; font-family: inherit;
     display: inline-flex; align-items: center; gap: 6px;
-    position: relative; white-space: nowrap;
+    white-space: nowrap;
   }
   .btn-header:hover{ background: rgba(255,255,255,.16); }
   .btn-header.correcoes{ background: rgba(220,38,38,.25); border-color: rgba(220,38,38,.4); }
-  .btn-header.correcoes:hover{ background: rgba(220,38,38,.4); }
   .btn-header .badge-num{
     background: #dc2626; color: #fff;
     padding: 1px 7px; border-radius: 999px;
@@ -87,7 +85,7 @@
     .btn-header span.lbl-txt{ display: none; }
   }
 
-  /* ============ LOGIN ============ */
+  /* LOGIN */
   .login-wrap{
     display: flex; justify-content: center; align-items: center;
     min-height: 82vh; padding: 16px;
@@ -126,7 +124,6 @@
     background: transparent; border: none; cursor: pointer;
     font-size: 1.1rem; padding: 6px 8px; border-radius: 6px;
     color: var(--muted); line-height: 1;
-    transition: background .15s, color .15s;
   }
   .btn-eye:hover{ background: var(--bg-alt); color: var(--text); }
 
@@ -151,20 +148,20 @@
   .btn-sm{ padding: 7px 12px; font-size: .78rem; border-radius: 6px; }
   .btn-xs{ padding: 5px 9px; font-size: .7rem; border-radius: 5px; }
 
-  /* ============ BIG CARDS HOME ============ */
+  /* BIG CARDS - sempre 3 lado a lado, mesmo em mobile */
   .big-cards{
-    display: grid; grid-template-columns: repeat(3, 1fr);
-    gap: 14px; margin-top: 16px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px; margin-top: 16px;
   }
-  @media(max-width:780px){ .big-cards{ grid-template-columns: 1fr; } }
   .big-card{
-    background: #fff; border-radius: 14px;
-    padding: 24px 18px; cursor: pointer;
+    background: #fff; border-radius: 12px;
+    padding: 14px 8px; cursor: pointer;
     border: 2px solid var(--border-soft);
     transition: all .15s;
     position: relative;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
-    gap: 8px; min-height: 130px;
+    gap: 4px; min-height: 90px;
     text-align: center;
     box-shadow: var(--shadow-sm);
   }
@@ -176,22 +173,28 @@
   .big-card.active{
     border-color: var(--primary);
     background: linear-gradient(135deg, #fff 0%, #eef2f7 100%);
-    box-shadow: var(--shadow-md);
   }
-  .big-card .ico{ font-size: 2rem; line-height: 1; }
-  .big-card .titulo{ font-size: 1rem; font-weight: 700; color: var(--text); }
-  .big-card .sub{ font-size: .72rem; color: var(--muted); }
+  .big-card .ico{ font-size: 1.5rem; line-height: 1; }
+  .big-card .titulo{ font-size: .78rem; font-weight: 700; color: var(--text); line-height: 1.2; }
+  .big-card .sub{ font-size: .62rem; color: var(--muted); display: none; }
   .big-card .bal{
-    position: absolute; top: 12px; right: 12px;
+    position: absolute; top: 6px; right: 6px;
     background: var(--danger); color: #fff;
-    font-size: .68rem; font-weight: 800;
-    padding: 3px 10px; border-radius: 999px;
-    min-width: 26px; text-align: center;
+    font-size: .6rem; font-weight: 800;
+    padding: 1px 6px; border-radius: 999px;
+    min-width: 18px; text-align: center;
   }
   .big-card .bal.zero{ background: var(--bg-alt); color: var(--muted); }
   .big-card .bal.blue{ background: var(--primary); }
+  @media(min-width:781px){
+    .big-card{ padding: 24px 18px; min-height: 130px; gap: 8px; }
+    .big-card .ico{ font-size: 2rem; }
+    .big-card .titulo{ font-size: 1rem; }
+    .big-card .sub{ font-size: .72rem; display: block; }
+    .big-card .bal{ top: 12px; right: 12px; font-size: .68rem; padding: 3px 10px; min-width: 26px; }
+  }
 
-  /* ============ PANEL ============ */
+  /* PANEL */
   .panel{
     background: #fff; border-radius: var(--radius);
     box-shadow: var(--shadow-sm); margin-top: 16px;
@@ -199,40 +202,40 @@
     overflow: hidden;
   }
   .panel-head{
-    padding: 14px 18px;
+    padding: 12px 14px;
     background: #f8fafc;
     border-bottom: 1px solid var(--border-soft);
     display: flex; align-items: center; justify-content: space-between;
-    gap: 12px; flex-wrap: wrap;
+    gap: 8px; flex-wrap: wrap;
   }
   .panel-head h2{
-    font-size: 1rem; font-weight: 700; color: var(--text);
+    font-size: .92rem; font-weight: 700; color: var(--text);
     display: flex; align-items: center; gap: 8px;
   }
-  .panel-body{ padding: 16px 18px; }
+  .panel-body{ padding: 14px; }
 
-  /* ============ FILTROS ============ */
+  /* FILTROS - mobile organizado */
   .filtros-wrap{
-    display: flex; flex-wrap: wrap; gap: 10px;
-    align-items: center; margin-bottom: 14px;
-    padding: 12px 14px;
+    display: flex; flex-wrap: wrap; gap: 8px;
+    align-items: center; margin-bottom: 12px;
+    padding: 10px 12px;
     background: #fafbfc; border-radius: 8px;
     border: 1px solid var(--border-soft);
   }
   .filtro-grupo{
-    display: flex; align-items: center; gap: 6px;
+    display: flex; align-items: center; gap: 5px;
     flex-wrap: wrap;
   }
   .filtro-grupo .lbl{
-    font-size: .68rem; font-weight: 700;
+    font-size: .62rem; font-weight: 700;
     color: var(--muted); text-transform: uppercase;
-    letter-spacing: .3px; margin-right: 4px;
+    letter-spacing: .3px; margin-right: 2px;
   }
   .chip{
-    display: inline-flex; align-items: center; gap: 5px;
-    padding: 5px 11px; border-radius: 999px;
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 4px 9px; border-radius: 999px;
     background: #fff; border: 1px solid var(--border);
-    font-size: .74rem; font-weight: 600; cursor: pointer;
+    font-size: .7rem; font-weight: 600; cursor: pointer;
     transition: all .15s; font-family: inherit; color: var(--text-soft);
     white-space: nowrap;
   }
@@ -240,21 +243,25 @@
   .chip.active{ background: var(--primary); color: #fff; border-color: var(--primary); }
   .chip.chip-corretor{ color: #fff; border-width: 2px; }
   .chip.chip-corretor:not(.active){ background: #fff !important; color: var(--text-soft) !important; }
-  .chip.chip-corretor.active{ box-shadow: 0 2px 6px rgba(0,0,0,.15); }
   .chip .cnt{
-    background: rgba(0,0,0,.12); padding: 0px 6px;
-    border-radius: 999px; font-size: .62rem; font-weight: 700;
-    min-width: 15px; text-align: center;
+    background: rgba(0,0,0,.12); padding: 0px 5px;
+    border-radius: 999px; font-size: .58rem; font-weight: 700;
+    min-width: 14px; text-align: center;
   }
   .chip.active .cnt{ background: rgba(255,255,255,.3); }
+  @media(max-width:640px){
+    .filtros-wrap{ padding: 8px 10px; gap: 6px; }
+    .filtro-grupo{ gap: 4px; }
+    .chip{ padding: 3px 7px; font-size: .66rem; }
+  }
 
-  /* ============ LISTA AGENDA ============ */
-  .agenda-lista{ display: flex; flex-direction: column; gap: 6px; }
+  /* LISTA AGENDA */
+  .agenda-lista{ display: flex; flex-direction: column; gap: 5px; }
   .agenda-row{
     display: grid;
-    grid-template-columns: 110px 1fr auto;
-    gap: 12px; align-items: center;
-    padding: 10px 12px;
+    grid-template-columns: 90px 1fr auto;
+    gap: 10px; align-items: center;
+    padding: 9px 11px;
     border-radius: 8px;
     background: #fafbfc;
     border-left: 4px solid var(--border);
@@ -265,74 +272,89 @@
   }
   .agenda-row:hover{ transform: translateX(2px); box-shadow: var(--shadow-sm); }
   .agenda-row .quando{
-    font-size: .74rem; font-weight: 700;
-    padding: 3px 8px; border-radius: 5px;
+    font-size: .72rem; font-weight: 700;
+    padding: 3px 7px; border-radius: 5px;
     text-align: center; white-space: nowrap;
   }
   .agenda-row .quando.hoje{ background: #e3edff; color: #1e40af; }
   .agenda-row .quando.amanha{ background: #fef3c7; color: #92400e; }
   .agenda-row .quando.semana{ background: #dcfce7; color: #166534; }
   .agenda-row .quando.distante{ background: var(--bg-alt); color: var(--muted); }
-  .agenda-row .info{ min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+  .agenda-row .info{ min-width: 0; display: flex; flex-direction: column; gap: 2px; }
   .agenda-row .cliente{
-    font-size: .85rem; font-weight: 700; color: var(--text);
+    font-size: .82rem; font-weight: 700; color: var(--text);
     display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
   }
   .agenda-row .detalhe{
-    font-size: .72rem; color: var(--text-soft);
-    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+    font-size: .7rem; color: var(--text-soft);
+    display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
   }
   .agenda-row .codigo{
     font-family: 'Courier New', monospace;
     background: #f1eef7; color: var(--purple);
     padding: 1px 6px; border-radius: 3px;
-    font-size: .66rem; font-weight: 700;
+    font-size: .64rem; font-weight: 700;
   }
-  .agenda-row .arrow{ color: var(--muted); font-size: 1.1rem; opacity: .5; }
-  .agenda-row:hover .arrow{ opacity: 1; color: var(--primary); }
+  .agenda-row .arrow{ color: var(--muted); font-size: 1rem; opacity: .5; }
+  @media(max-width:640px){
+    .agenda-row{ grid-template-columns: 78px 1fr auto; gap: 8px; padding: 8px 10px; }
+    .agenda-row .quando{ font-size: .66rem; padding: 2px 6px; }
+    .agenda-row .cliente{ font-size: .78rem; }
+    .agenda-row .detalhe{ font-size: .66rem; gap: 4px; }
+  }
   .corretor-badge{
     display: inline-flex; align-items: center; gap: 4px;
-    font-size: .66rem; font-weight: 700;
-    padding: 2px 8px; border-radius: 999px;
+    font-size: .62rem; font-weight: 700;
+    padding: 2px 7px; border-radius: 999px;
     color: #fff;
   }
 
-  /* ============ LISTA CLIENTES ============ */
+  /* LISTA CLIENTES - mobile compacta */
   .clientes-lista{ display: flex; flex-direction: column; gap: 4px; }
   .cliente-row{
     display: grid;
-    grid-template-columns: 40px 1fr auto;
-    gap: 12px; align-items: center;
-    padding: 10px 14px;
+    grid-template-columns: 32px 1fr auto;
+    gap: 10px; align-items: center;
+    padding: 8px 12px;
     border-radius: 8px;
     background: #fff;
     border: 1px solid var(--border-soft);
     transition: all .12s;
   }
   .cliente-row:hover{ border-color: var(--primary); background: #fafbfc; }
-  .cliente-row.inativo{
-    opacity: .55; background: #f8f9fa;
-    border-left: 3px solid var(--danger);
-  }
-  .cliente-row .temp{ font-size: 1.5rem; text-align: center; line-height: 1; }
-  .cliente-row .info{ min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+  .cliente-row.inativo{ opacity: .55; background: #f8f9fa; border-left: 3px solid var(--danger); }
+  .cliente-row .temp{ font-size: 1.3rem; text-align: center; line-height: 1; }
+  .cliente-row .info{ min-width: 0; display: flex; flex-direction: column; gap: 2px; }
   .cliente-row .nome{
-    font-size: .88rem; font-weight: 700; color: var(--text);
-    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+    font-size: .85rem; font-weight: 700; color: var(--text);
+    display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
   }
   .cliente-row .linha2{
-    font-size: .72rem; color: var(--text-soft);
-    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    font-size: .68rem; color: var(--text-soft);
+    display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
   }
-  .cliente-row .linha2 .item{ display: inline-flex; align-items: center; gap: 4px; }
+  .cliente-row .linha2 .item{ display: inline-flex; align-items: center; gap: 3px; }
   .cliente-row .linha2 .muted{ color: var(--muted); }
   .cliente-row .tags{
-    display: flex; align-items: center; gap: 4px;
+    display: flex; align-items: center; gap: 3px;
     justify-content: flex-end;
   }
+  @media(max-width:640px){
+    .cliente-row{ grid-template-columns: 26px 1fr auto; gap: 8px; padding: 7px 10px; }
+    .cliente-row .temp{ font-size: 1.1rem; }
+    .cliente-row .nome{ font-size: .8rem; gap: 4px; }
+    .cliente-row .nome .item.extra{ display: none; }
+    .cliente-row .linha2{ font-size: .64rem; gap: 4px; }
+    .cliente-row .linha2 .item.tel{ display: inline-flex; }
+    .cliente-row .linha2 .item.data-cad{ display: none; }
+    .cliente-row .linha2 .item.ult-admin{ display: none; }
+    .cliente-row .linha2 .item.ult-acao{ display: none; }
+    .cliente-row .tags .btn{ padding: 4px 6px; font-size: .7rem; }
+    .tag{ font-size: .56rem; padding: 1px 6px; }
+  }
   .tag{
-    font-size: .62rem; font-weight: 700;
-    padding: 2px 8px; border-radius: 4px;
+    font-size: .6rem; font-weight: 700;
+    padding: 2px 7px; border-radius: 4px;
     text-transform: uppercase; letter-spacing: .3px;
     white-space: nowrap;
   }
@@ -341,119 +363,88 @@
   .tag-ativo{ background: #e2ede7; color: var(--success); }
   .tag-inativo{ background: #f0dede; color: var(--danger); }
 
-  /* ============ BARRA DO CLIENTE ============ */
+  /* BARRA DO CLIENTE */
   .cliente-bar{
     background: #fff;
     border-bottom: 2px solid var(--border-soft);
-    padding: 12px 16px;
+    padding: 10px 14px;
     display: flex; align-items: center; justify-content: space-between;
-    gap: 12px; flex-wrap: wrap;
+    gap: 10px; flex-wrap: wrap;
     position: sticky; top: 54px; z-index: 90;
     box-shadow: var(--shadow-sm);
   }
   .cliente-bar .info{
-    display: flex; align-items: center; gap: 12px;
-    flex-wrap: wrap; min-width: 0;
-    font-size: .88rem;
-  }
-  .cliente-bar .nome-cli{
-    font-weight: 700; color: var(--text);
-    font-size: .95rem;
-  }
-  .cliente-bar .meta{
     display: flex; align-items: center; gap: 10px;
-    font-size: .75rem; color: var(--muted);
+    flex-wrap: wrap; min-width: 0;
+    font-size: .85rem;
+  }
+  .cliente-bar .nome-cli{ font-weight: 700; color: var(--text); font-size: .92rem; }
+  .cliente-bar .meta{
+    display: flex; align-items: center; gap: 8px;
+    font-size: .72rem; color: var(--muted);
     flex-wrap: wrap;
   }
-  .cliente-bar .acoes{ display: flex; gap: 8px; flex-wrap: wrap; }
+  .cliente-bar .acoes{ display: flex; gap: 6px; flex-wrap: wrap; }
+  @media(max-width:640px){
+    .cliente-bar{ padding: 8px 10px; gap: 8px; }
+    .cliente-bar .nome-cli{ font-size: .88rem; }
+    .cliente-bar .meta{ font-size: .68rem; gap: 6px; }
+    .cliente-bar .acoes .btn{ padding: 5px 8px; font-size: .68rem; }
+  }
 
-  /* ============ CARTÕES PNG DE VISITA ============ */
+  /* CARTÕES PNG */
   .cartoes-visita-wrap{
-    margin-top: 14px;
-    padding: 14px 16px;
-    background: #fff;
-    border: 1px solid var(--border-soft);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow-sm);
+    margin-top: 12px; padding: 12px 14px;
+    background: #fff; border: 1px solid var(--border-soft);
+    border-radius: var(--radius); box-shadow: var(--shadow-sm);
   }
   .cartoes-visita-titulo{
-    font-size: .78rem;
-    font-weight: 700;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: .4px;
-    margin-bottom: 12px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    font-size: .72rem; font-weight: 700;
+    color: var(--muted); text-transform: uppercase;
+    letter-spacing: .4px; margin-bottom: 10px;
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
   }
   .cartoes-visita-titulo .hint{
-    font-weight: 400;
-    text-transform: none;
-    letter-spacing: 0;
-    color: var(--text-soft);
-    font-size: .72rem;
-    margin-left: auto;
+    font-weight: 400; text-transform: none;
+    letter-spacing: 0; color: var(--text-soft);
+    font-size: .68rem; margin-left: auto;
   }
   .cartoes-visita{
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 10px;
+    display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px;
   }
-  @media(max-width: 1024px){
-    .cartoes-visita{ grid-template-columns: repeat(3, 1fr); }
-  }
-  @media(max-width: 560px){
-    .cartoes-visita{ grid-template-columns: repeat(2, 1fr); }
-  }
+  @media(max-width: 1024px){ .cartoes-visita{ grid-template-columns: repeat(3, 1fr); } }
+  @media(max-width: 560px){ .cartoes-visita{ grid-template-columns: repeat(2, 1fr); } }
   .cartao-visita-img{
-    width: 100%;
-    height: auto;
-    display: block;
-    border-radius: 8px;
-    border: 1px solid var(--border);
+    width: 100%; height: auto; display: block;
+    border-radius: 6px; border: 1px solid var(--border);
     box-shadow: 0 1px 3px rgba(0,0,0,.06);
-    cursor: pointer;
-    transition: all .15s;
-    background: #fafbfc;
+    cursor: pointer; transition: all .15s; background: #fafbfc;
   }
   .cartao-visita-img:hover{
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0,0,0,.12);
     border-color: var(--primary);
   }
-  .cartoes-visita-vazio{
-    text-align: center;
-    padding: 24px 12px;
-    color: var(--muted);
-    font-size: .82rem;
-    font-style: italic;
-  }
 
-  /* ============ VITRINE ============ */
-  .admin-toolbar{
-    display: flex; gap: 8px; flex-wrap: wrap;
-    margin-top: 14px; margin-bottom: 6px;
-  }
+  /* VITRINE */
+  .admin-toolbar{ display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; margin-bottom: 6px; }
 
   .admin-panel{
-    background: #fff; border-radius: var(--radius); padding: 22px;
-    box-shadow: var(--shadow-md); margin-top: 14px;
-    border: 1px solid var(--border);
-    position: relative;
+    background: #fff; border-radius: var(--radius); padding: 20px;
+    box-shadow: var(--shadow-md); margin-top: 12px;
+    border: 1px solid var(--border); position: relative;
   }
   .admin-panel h3{
-    margin-bottom: 16px; display: flex; align-items: center; gap: 8px;
-    font-size: .95rem; color: var(--text); font-weight: 700;
+    margin-bottom: 14px; display: flex; align-items: center; gap: 8px;
+    font-size: .92rem; color: var(--text); font-weight: 700;
     padding-right: 40px;
   }
   .admin-panel .close-x{
-    position: absolute; top: 14px; right: 14px;
+    position: absolute; top: 12px; right: 12px;
     width: 30px; height: 30px; border-radius: 6px;
     background: transparent; border: none; cursor: pointer;
     color: var(--muted); font-size: 1.2rem; line-height: 1;
     display: flex; align-items: center; justify-content: center;
-    transition: all .15s;
   }
   .admin-panel .close-x:hover{ background: var(--bg-alt); color: var(--text); }
   .form-row{ display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
@@ -465,16 +456,16 @@
     display: none; background: var(--bg-alt);
   }
 
-  /* GRID / CARDS DE IMÓVEIS */
+  /* GRID IMÓVEIS */
   .grid{
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-    gap: 10px; margin-top: 16px;
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 10px; margin-top: 14px;
   }
   .card{
     background: var(--card); border-radius: var(--radius);
     overflow: hidden; box-shadow: var(--shadow-sm);
     display: flex; flex-direction: column;
-    transition: box-shadow .2s, transform .2s, border-color .4s, opacity .2s, filter .2s;
+    transition: box-shadow .2s, border-color .4s, opacity .2s, filter .2s;
     position: relative; border: 1px solid var(--border-soft);
   }
   .card:hover{ box-shadow: var(--shadow-md); }
@@ -489,13 +480,11 @@
   }
   .card.card-nao-gostei{ opacity: .55; filter: grayscale(65%); background: #f5f5f5; }
   .card.card-nao-gostei:hover{ opacity: .78; filter: grayscale(50%); }
-  .card.card-nao-gostei .card-img{ filter: grayscale(100%) brightness(0.95); }
   .card.card-desativado{
     opacity: .5; filter: grayscale(85%); background: #f0f0f0;
     border-left: 4px solid var(--danger);
   }
   .card.card-desativado:hover{ opacity: .75; filter: grayscale(70%); }
-
   .card-topbar{
     display: flex; align-items: center; justify-content: space-between;
     gap: 4px; padding: 6px 8px; background: #f8fafc;
@@ -508,18 +497,17 @@
     min-width: 40px; padding: 3px 5px; border-radius: 5px;
     background: #fff; border: 1px solid var(--border);
     cursor: pointer; font-family: inherit;
-    font-size: .6rem; font-weight: 700; color: var(--text-soft);
+    font-size: .58rem; font-weight: 700; color: var(--text-soft);
     transition: all .15s; gap: 1px; line-height: 1;
   }
-  .card-actions-mini .act .ico{ font-size: .9rem; line-height: 1; }
+  .card-actions-mini .act .ico{ font-size: .88rem; line-height: 1; }
   .card-actions-mini .act:hover{ background: var(--bg-alt); }
   .card-actions-mini .act.act-gostei.ativo{ background: var(--success); color: #fff; border-color: var(--success); }
   .card-actions-mini .act.act-visitar.ativo{ background: var(--warn); color: #fff; border-color: var(--warn); }
   .card-actions-mini .act.act-nao.ativo{ background: var(--danger); color: #fff; border-color: var(--danger); }
   .card-actions-mini .act.act-desativar.ativo{ background: #2c2c2c; color: #fff; border-color: #2c2c2c; }
-
   .card-status-badge{
-    font-size: .58rem; font-weight: 800;
+    font-size: .56rem; font-weight: 800;
     text-transform: uppercase; letter-spacing: .4px;
     padding: 2px 7px; border-radius: 3px; color: #fff;
   }
@@ -528,7 +516,6 @@
   .card-status-badge.status-quero-visitar{ background: var(--warn); }
   .card-status-badge.status-pendente{ background: #6b7280; }
   .card-status-badge.status-desativado{ background: #2c2c2c; }
-
   .card-row{ display: flex; gap: 10px; padding: 10px 12px; align-items: flex-start; }
   .card-img{
     width: 72px; height: 72px; object-fit: cover;
@@ -538,13 +525,11 @@
   .card-info{ flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
   .card-top-meta{ display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
   .card-date{
-    display: inline-flex; align-items: center; gap: 3px;
-    font-size: .6rem; color: var(--muted);
+    font-size: .58rem; color: var(--muted);
     background: var(--bg-alt); padding: 2px 6px; border-radius: 3px; font-weight: 600;
   }
   .card-code{
-    display: inline-flex; align-items: center; gap: 3px;
-    font-size: .6rem; color: var(--purple);
+    font-size: .58rem; color: var(--purple);
     background: #f1eef7; padding: 2px 6px; border-radius: 3px;
     font-weight: 600; cursor: pointer;
     border: 1px solid #ddd4ec; transition: all .15s;
@@ -552,133 +537,111 @@
   .card-code:hover{ background: #e6e0f2; }
   .card-code.copiado{ background: var(--success); color: #fff; border-color: var(--success); }
   .card-title{
-    font-size: .85rem; font-weight: 700; line-height: 1.25;
+    font-size: .84rem; font-weight: 700; line-height: 1.25;
     color: var(--text);
     display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical;
     overflow: hidden;
   }
   .card-desc{
-    font-size: .72rem; color: var(--text-soft); line-height: 1.4;
+    font-size: .7rem; color: var(--text-soft); line-height: 1.4;
     display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
     overflow: hidden; cursor: pointer; white-space: pre-wrap;
-    transition: all .15s;
   }
   .card-desc.expandido{ display: block; -webkit-line-clamp: unset; overflow: visible; }
-
-  .card-bottom{
-    padding: 0 10px 10px;
-    display: flex; flex-direction: column; gap: 6px;
-  }
+  .card-bottom{ padding: 0 10px 10px; display: flex; flex-direction: column; gap: 6px; }
   .card-bottom-actions{ display: flex; gap: 4px; flex-wrap: wrap; }
-  .card-bottom-actions .btn{ flex: 1; min-width: 0; padding: 6px 8px; font-size: .7rem; }
-
+  .card-bottom-actions .btn{ flex: 1; min-width: 0; padding: 6px 8px; font-size: .68rem; }
   .btn-ver-anuncio{
     display: flex; align-items: center; justify-content: center; gap: 6px;
     background: var(--primary); color: #fff; text-decoration: none;
     padding: 7px 12px; border-radius: 6px;
-    font-size: .74rem; font-weight: 600;
-    transition: all .15s;
+    font-size: .72rem; font-weight: 600;
   }
   .btn-ver-anuncio:hover{ background: var(--primary-hover); }
-
   .obs-wrap{
     background: var(--bg-alt);
     border: 1px solid var(--border-soft); border-radius: 6px;
     padding: 7px 9px;
   }
   .obs-label{
-    font-size: .62rem; font-weight: 700;
+    font-size: .6rem; font-weight: 700;
     color: var(--muted); text-transform: uppercase;
     letter-spacing: .3px; margin-bottom: 4px;
     display: flex; align-items: center; gap: 4px;
   }
   .obs-text{
-    font-size: .74rem; color: var(--text);
+    font-size: .72rem; color: var(--text);
     line-height: 1.4; white-space: pre-wrap;
     overflow: hidden; display: -webkit-box;
     -webkit-line-clamp: 2; -webkit-box-orient: vertical;
   }
   .obs-text.expandido{ display: block; -webkit-line-clamp: unset; overflow: visible; }
-  .obs-toggle{
-    display: inline-flex; align-items: center; gap: 3px;
-    background: transparent; border: none;
-    color: var(--primary); font-size: .66rem; font-weight: 600;
-    cursor: pointer; margin-top: 3px; padding: 1px 0; font-family: inherit;
-  }
   .obs-edit-btn{
-    display: inline-flex; align-items: center; gap: 3px;
     background: transparent; border: none;
-    color: var(--muted); font-size: .62rem; font-weight: 600;
+    color: var(--muted); font-size: .6rem; font-weight: 600;
     cursor: pointer; padding: 1px 5px; border-radius: 3px;
     font-family: inherit; margin-left: auto;
   }
   .obs-edit-btn:hover{ background: #fff; color: var(--primary); }
-  .obs-textarea{ min-height: 60px; font-size: .76rem; display: none; }
+  .obs-textarea{ min-height: 60px; font-size: .74rem; display: none; }
   .obs-edit-actions{ display: none; gap: 4px; margin-top: 6px; }
   .obs-wrap.editing .obs-text{ display: none; }
   .obs-wrap.editing .obs-toggle{ display: none; }
   .obs-wrap.editing .obs-textarea{ display: block; }
   .obs-wrap.editing .obs-edit-actions{ display: flex; }
   .obs-empty{
-    color: var(--muted); font-style: italic; font-size: .72rem;
+    color: var(--muted); font-style: italic; font-size: .7rem;
     cursor: pointer; padding: 2px 0;
   }
-  .obs-empty:hover{ color: var(--primary); }
-
   .agendamento-box{
     background: linear-gradient(135deg, #eef2f7, #e3eaf3);
     border: 1px solid #c7d5e6;
     border-radius: 6px; padding: 8px 10px;
-    font-size: .72rem;
   }
   .agendamento-box .titulo{
-    font-size: .62rem; font-weight: 700;
+    font-size: .6rem; font-weight: 700;
     color: var(--primary); text-transform: uppercase;
     letter-spacing: .3px; margin-bottom: 5px;
-    display: flex; align-items: center; gap: 4px;
   }
   .agendamento-info{
-    font-size: .76rem; color: var(--text);
+    font-size: .74rem; color: var(--text);
     margin-bottom: 6px; line-height: 1.35;
     padding: 5px 8px; background: #fff;
     border-radius: 4px; border: 1px solid #d8e2ee;
   }
-  .agendamento-info strong{ color: var(--primary); font-weight: 700; }
   .agendamento-actions{ display: flex; gap: 4px; flex-wrap: wrap; }
-  .agendamento-actions .btn{ padding: 4px 8px; font-size: .68rem; border-radius: 4px; }
-
+  .agendamento-actions .btn{ padding: 4px 8px; font-size: .66rem; border-radius: 4px; }
   .visita-box{
     background: #f9f5ec; border: 1px solid #e6dcc4;
     border-radius: 6px; padding: 8px 10px;
   }
   .visita-box .titulo{
-    font-size: .62rem; font-weight: 700;
+    font-size: .6rem; font-weight: 700;
     color: #7a6432; text-transform: uppercase;
     letter-spacing: .3px; margin-bottom: 5px;
-    display: flex; align-items: center; gap: 4px;
   }
-  .visita-info{ font-size: .72rem; color: #6b5a30; margin-bottom: 5px; line-height: 1.35; }
+  .visita-info{ font-size: .7rem; color: #6b5a30; margin-bottom: 5px; line-height: 1.35; }
 
-  /* FILTROS DE IMÓVEIS */
+  /* FILTROS IMÓVEIS */
   .filters{
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 8px; margin: 16px 0 4px;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 6px; margin: 12px 0 4px;
   }
   .filters .filter-btn{
-    padding: 9px 8px; border-radius: 6px;
+    padding: 7px 6px; border-radius: 6px;
     border: 1px solid var(--border);
     background: #fff; cursor: pointer;
-    font-size: .74rem; font-weight: 600; color: var(--text-soft);
+    font-size: .7rem; font-weight: 600; color: var(--text-soft);
     transition: all .15s; font-family: inherit;
-    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    display: inline-flex; align-items: center; justify-content: center; gap: 4px;
     width: 100%;
   }
   .filters .filter-btn:hover{ border-color: var(--primary); color: var(--primary); }
   .filters .filter-btn.active{ background: var(--primary); color: #fff; border-color: var(--primary); }
   .filters .filter-btn.btn-desativados.active{ background: #2c2c2c; border-color: #2c2c2c; }
   .filter-count{
-    background: rgba(255,255,255,.25); padding: 1px 7px;
-    border-radius: 4px; font-size: .68rem; min-width: 18px; text-align: center; font-weight: 700;
+    background: rgba(255,255,255,.25); padding: 1px 6px;
+    border-radius: 4px; font-size: .62rem; min-width: 16px; text-align: center; font-weight: 700;
   }
   .filters .filter-btn:not(.active) .filter-count{ background: var(--bg-alt); color: var(--muted); }
 
@@ -691,7 +654,7 @@
   .modal-backdrop.show{ display: flex; }
   .modal{
     background: #fff; border-radius: 14px; max-width: 700px; width: 100%;
-    max-height: 92vh; overflow: auto; padding: 24px; position: relative;
+    max-height: 92vh; overflow: auto; padding: 22px; position: relative;
     box-shadow: 0 20px 50px rgba(0,0,0,.25);
   }
   .modal-close{
@@ -699,40 +662,32 @@
     background: transparent; border: none;
     font-size: 1.4rem; cursor: pointer; color: var(--muted); line-height: 1;
     width: 32px; height: 32px; border-radius: 6px;
-    transition: background .15s;
     display: flex; align-items: center; justify-content: center;
   }
   .modal-close:hover{ background: var(--bg-alt); color: var(--text); }
 
-  /* MODAL GRANDE DE OBSERVAÇÕES */
   .modal-obs{
     background: #fff; border-radius: 14px;
     width: 92vw; height: 88vh;
     max-width: none; max-height: none;
-    padding: 24px 24px 20px; position: relative;
+    padding: 22px 22px 18px; position: relative;
     box-shadow: 0 20px 50px rgba(0,0,0,.35);
     display: flex; flex-direction: column;
-    resize: both;
-    overflow: hidden;
+    resize: both; overflow: hidden;
     min-width: 400px; min-height: 300px;
   }
   .modal-obs textarea{
     flex: 1; min-height: 0;
-    font-size: .95rem; line-height: 1.6;
-    font-family: inherit;
-    resize: none;
-    padding: 16px;
-    border-radius: 8px;
+    font-size: .92rem; line-height: 1.6;
+    font-family: inherit; resize: none;
+    padding: 14px; border-radius: 8px;
   }
   .modal-obs .foot{
     display: flex; justify-content: space-between; align-items: center;
-    gap: 12px; margin-top: 14px;
+    gap: 12px; margin-top: 12px;
   }
-  .modal-obs .contador{
-    font-size: .75rem; color: var(--muted);
-  }
+  .modal-obs .contador{ font-size: .72rem; color: var(--muted); }
 
-  /* CONFIRMAÇÃO */
   .confirm-backdrop{
     position: fixed; inset: 0; background: rgba(15,23,42,.6); z-index: 2000;
     display: none; align-items: center; justify-content: center; padding: 16px;
@@ -740,36 +695,30 @@
   }
   .confirm-backdrop.show{ display: flex; }
   .confirm-box{
-    background: #fff; border-radius: 12px; padding: 24px;
+    background: #fff; border-radius: 12px; padding: 22px;
     max-width: 380px; width: 100%;
     box-shadow: 0 20px 50px rgba(0,0,0,.3);
-    text-align: center; animation: confirmIn .18s ease;
+    text-align: center;
   }
-  @keyframes confirmIn{
-    from { transform: scale(.94); opacity: 0; }
-    to   { transform: scale(1);   opacity: 1; }
-  }
-  .confirm-box .icon{ font-size: 2.4rem; margin-bottom: 8px; }
-  .confirm-box h3{ font-size: 1.05rem; font-weight: 700; margin-bottom: 6px; color: var(--text); }
-  .confirm-box p{ font-size: .85rem; color: var(--text-soft); margin-bottom: 18px; line-height: 1.5; }
+  .confirm-box .icon{ font-size: 2.2rem; margin-bottom: 8px; }
+  .confirm-box h3{ font-size: 1rem; font-weight: 700; margin-bottom: 6px; }
+  .confirm-box p{ font-size: .82rem; color: var(--text-soft); margin-bottom: 16px; line-height: 1.5; }
   .confirm-box .confirm-actions{ display: flex; gap: 8px; }
   .confirm-box .confirm-actions .btn{ flex: 1; }
 
-  /* CORREÇÕES */
   .correcao-item{
-    padding: 12px 14px; border-radius: 8px;
-    background: #fafbfc; margin-bottom: 8px;
+    padding: 10px 12px; border-radius: 8px;
+    background: #fafbfc; margin-bottom: 6px;
     border-left: 4px solid var(--border);
     display: flex; gap: 10px; align-items: flex-start;
-    font-size: .82rem; line-height: 1.5;
+    font-size: .8rem; line-height: 1.5;
   }
   .correcao-item.alta{ border-left-color: #dc2626; background: #fef2f2; }
   .correcao-item.media{ border-left-color: #ea580c; background: #fff7ed; }
   .correcao-item.baixa{ border-left-color: #0891b2; background: #ecfeff; }
-  .correcao-item .ico{ font-size: 1.1rem; flex-shrink: 0; }
+  .correcao-item .ico{ font-size: 1rem; flex-shrink: 0; }
   .correcao-item .txt{ flex: 1; min-width: 0; }
 
-  /* TOAST */
   .toast{
     position: fixed; bottom: 20px; left: 50%;
     transform: translate(-50%, 30px);
@@ -777,7 +726,7 @@
     padding: 12px 20px; border-radius: 8px;
     box-shadow: 0 8px 24px rgba(0,0,0,.2);
     opacity: 0; transition: all .3s; z-index: 2001;
-    font-size: .85rem; font-weight: 600;
+    font-size: .82rem; font-weight: 600;
     max-width: 90vw; pointer-events: none; text-align: center;
   }
   .toast.show{ opacity: 1; transform: translate(-50%, 0); }
@@ -792,13 +741,9 @@
   .loader-lg{ width: 38px; height: 38px; border-width: 3px; }
   @keyframes spin{ to{ transform: rotate(360deg); } }
 
-  .loading-inline{
-    text-align: center; padding: 40px 20px; color: var(--primary);
-  }
-  .empty-state{
-    text-align: center; padding: 60px 20px; color: var(--muted);
-  }
-  .empty-state h3{ font-size: .95rem; margin-bottom: 4px; color: var(--text-soft); }
+  .loading-inline{ text-align: center; padding: 40px 20px; color: var(--primary); }
+  .empty-state{ text-align: center; padding: 50px 20px; color: var(--muted); }
+  .empty-state h3{ font-size: .92rem; margin-bottom: 4px; color: var(--text-soft); }
 
   .hidden{ display: none !important; }
   .mt-2{ margin-top: 8px; }
@@ -837,11 +782,11 @@
   .hist-item{
     display: flex; gap: 10px; align-items: flex-start;
     padding: 10px 8px; border-bottom: 1px solid var(--border-soft);
-    font-size: .82rem; line-height: 1.45;
+    font-size: .8rem; line-height: 1.45;
   }
   .hist-item:last-child{ border-bottom: none; }
   .hist-item .origem{
-    font-size: .62rem; font-weight: 800;
+    font-size: .6rem; font-weight: 800;
     padding: 2px 7px; border-radius: 4px;
     text-transform: uppercase; letter-spacing: .3px;
     flex-shrink: 0; margin-top: 2px;
@@ -850,13 +795,12 @@
   .hist-item .origem.cliente{ background: #dcfce7; color: #166534; }
   .hist-item .txt{ flex: 1; min-width: 0; }
   .hist-item .txt .acao{ font-weight: 700; color: var(--text); }
-  .hist-item .txt .det{ color: var(--text-soft); font-size: .78rem; margin-top: 2px; }
-  .hist-item .txt .quando{ color: var(--muted); font-size: .7rem; margin-top: 3px; }
+  .hist-item .txt .det{ color: var(--text-soft); font-size: .76rem; margin-top: 2px; }
+  .hist-item .txt .quando{ color: var(--muted); font-size: .68rem; margin-top: 3px; }
 </style>
 </head>
 <body>
 
-<!-- HEADER -->
 <header class="app-header">
   <div class="header-inner">
     <div class="brand" onclick="irParaHomeAdmin()" title="Ir para o início">
@@ -866,9 +810,8 @@
         <div class="brand-sub">Admin</div>
       </div>
     </div>
-
     <div class="header-right">
-      <button class="btn-header" onclick="abrirLinkTQC()" title="Traga seu cliente (QuintoAndar)">
+      <button class="btn-header" onclick="abrirLinkTQC()" title="Traga seu cliente">
         🔗 <span class="lbl-txt">LINK TQC</span>
       </button>
       <button class="btn-header" onclick="copiarLinkHugo()" title="Copiar link do Hugo">
@@ -885,7 +828,6 @@
   </div>
 </header>
 
-<!-- LOGIN -->
 <div class="login-wrap" id="adminLoginView">
   <div class="login-card">
     <div class="login-logo">LR</div>
@@ -903,7 +845,6 @@
   </div>
 </div>
 
-<!-- HOME -->
 <div class="container hidden" id="homeView">
   <div class="big-cards">
     <div class="big-card active" id="cardAgenda" onclick="abrirPainel('agenda')">
@@ -915,7 +856,7 @@
     <div class="big-card" id="cardVisitar" onclick="abrirPainel('visitar')">
       <span class="bal zero" id="balVisitar">0</span>
       <div class="ico">📅</div>
-      <div class="titulo">Querem Visitar / Gostei</div>
+      <div class="titulo">Querem Visitar</div>
       <div class="sub">Solicitações dos clientes</div>
     </div>
     <div class="big-card" id="cardClientes" onclick="abrirPainel('clientes')">
@@ -948,7 +889,7 @@
       <div class="filtros-wrap">
         <div class="filtro-grupo">
           <span class="lbl">Tipo:</span>
-          <button class="chip active" id="tipoVisitar" onclick="setTipoSolicitacao('visita')">📅 Querem Visitar</button>
+          <button class="chip active" id="tipoVisitar" onclick="setTipoSolicitacao('visita')">📅 Visitar</button>
           <button class="chip" id="tipoGostei" onclick="setTipoSolicitacao('gostei')">❤️ Gostei</button>
         </div>
         <div class="filtro-grupo" id="filtrosVisitarCorretores">
@@ -966,30 +907,29 @@
       <h2>👥 Clientes</h2>
       <div style="display:flex; gap:8px; flex-wrap:wrap;">
         <button class="btn btn-ghost btn-sm" onclick="recarregarPainel('clientes')">🔄 Atualizar</button>
-        <button class="btn btn-primary btn-sm" onclick="abrirNovoCliente()">➕ Novo cliente</button>
+        <button class="btn btn-primary btn-sm" onclick="abrirNovoCliente()">➕ Novo</button>
       </div>
     </div>
     <div class="panel-body">
       <div class="filtros-wrap" id="filtrosClientes"></div>
-      <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:14px;">
-        <input type="search" id="buscaCliente" placeholder="🔍 Buscar por nome ou telefone..." oninput="renderizarClientes()" style="flex:1; min-width:220px;">
-        <select id="ordenacaoCliente" onchange="renderizarClientes()" style="width:auto; min-width:220px;">
-          <option value="alfabetica">Ordenar: Nome (A-Z)</option>
-          <option value="data">Ordenar: Cadastro (mais recente)</option>
-          <option value="acao-cliente">Ordenar: Última ação do cliente</option>
-          <option value="acao-admin">Ordenar: Última ação do admin</option>
+      <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px;">
+        <input type="search" id="buscaCliente" placeholder="🔍 Buscar nome ou telefone..." oninput="renderizarClientes()" style="flex:1; min-width:180px;">
+        <select id="ordenacaoCliente" onchange="renderizarClientes()" style="width:auto; min-width:180px;">
+          <option value="alfabetica">Nome (A-Z)</option>
+          <option value="data">Cadastro ↓</option>
+          <option value="acao-cliente">Últ. ação cliente</option>
+          <option value="acao-admin">Últ. ação admin</option>
         </select>
       </div>
       <div class="clientes-lista" id="clientesLista"></div>
       <div class="empty-state hidden" id="clientesEmpty">
         <h3>Nenhum cliente encontrado</h3>
-        <p>Cadastre um novo cliente ou ajuste os filtros.</p>
+        <p>Ajuste os filtros ou cadastre um novo.</p>
       </div>
     </div>
   </div>
 </div>
 
-<!-- VITRINE -->
 <div class="container hidden" id="vitrineView">
   <div class="cliente-bar" id="clienteBar">
     <div class="info">
@@ -998,25 +938,22 @@
     </div>
     <div class="acoes">
       <button class="btn btn-ghost btn-sm" onclick="voltarParaHome()">← Voltar</button>
-      <button class="btn btn-ghost btn-sm" onclick="abrirEditarClienteAtual()">✏️ Editar cliente</button>
-      <button class="btn btn-ghost btn-sm" onclick="toggleAcessosSection()">🔐 Acessos <span id="acessosCountChip" style="background:rgba(0,0,0,.08); padding:1px 8px; border-radius:4px; font-size:.7rem; font-weight:700; margin-left:4px;">0</span></button>
+      <button class="btn btn-ghost btn-sm" onclick="abrirEditarClienteAtual()">✏️ Editar</button>
+      <button class="btn btn-ghost btn-sm" onclick="toggleAcessosSection()">🔐 Acessos <span id="acessosCountChip" style="background:rgba(0,0,0,.08); padding:1px 7px; border-radius:4px; font-size:.68rem; font-weight:700; margin-left:4px;">0</span></button>
       <button class="btn btn-success btn-sm" onclick="gerarLinkVitrine()">🔗 Link Vitrine</button>
     </div>
   </div>
 
-  <!-- CARTÕES PNG DE VISITAS AGENDADAS -->
   <div class="cartoes-visita-wrap hidden" id="cartoesVisitaWrap">
     <div class="cartoes-visita-titulo">
-      📸 Cartões de visita (clique com botão direito → Copiar imagem)
+      📸 Cartões de visita (botão direito → Copiar imagem)
       <span class="hint" id="cartoesVisitaCount"></span>
     </div>
     <div class="cartoes-visita" id="cartoesVisita"></div>
   </div>
 
   <div class="admin-toolbar">
-    <button class="btn btn-primary" onclick="abrirPainelNovoImovel()">
-      ➕ Adicionar novo imóvel
-    </button>
+    <button class="btn btn-primary" onclick="abrirPainelNovoImovel()">➕ Adicionar novo imóvel</button>
   </div>
 
   <div class="admin-panel hidden" id="adminPanel">
@@ -1046,9 +983,7 @@
       <img id="previewImg" class="preview-img" alt="Preview">
     </div>
     <div class="mt-3" style="display:flex; gap:8px; flex-wrap:wrap;">
-      <button class="btn btn-primary" id="btnSalvarImovel" style="flex:1; min-width:180px;" onclick="salvarImovel()">
-        💾 Salvar imóvel
-      </button>
+      <button class="btn btn-primary" id="btnSalvarImovel" style="flex:1; min-width:160px;" onclick="salvarImovel()">💾 Salvar imóvel</button>
       <button class="btn btn-ghost" onclick="buscarImagemPreview(true)">🖼️ Buscar imagem</button>
       <button class="btn btn-ghost" onclick="fecharPainelImovel()">Cancelar</button>
     </div>
@@ -1063,31 +998,17 @@
   </div>
 
   <div class="mt-4">
-    <input type="search" id="buscaInput" placeholder="🔍 Buscar por rua/endereço ou descrição..." oninput="renderizarImoveis()">
+    <input type="search" id="buscaInput" placeholder="🔍 Buscar endereço ou descrição..." oninput="renderizarImoveis()">
   </div>
 
   <div class="filters" id="filters">
-    <button class="filter-btn" data-filter="recentes" onclick="setFiltro('recentes', this)">
-      🆕 Recentes
-    </button>
-    <button class="filter-btn active" data-filter="todos" onclick="setFiltro('todos', this)">
-      📋 Todos <span class="filter-count" id="cnt-todos">0</span>
-    </button>
-    <button class="filter-btn" data-filter="pendente" onclick="setFiltro('pendente', this)">
-      ⏳ Aguardando <span class="filter-count" id="cnt-pendente">0</span>
-    </button>
-    <button class="filter-btn" data-filter="quero-visitar" onclick="setFiltro('quero-visitar', this)">
-      📅 Quero visitar <span class="filter-count" id="cnt-quero-visitar">0</span>
-    </button>
-    <button class="filter-btn" data-filter="gostei" onclick="setFiltro('gostei', this)">
-      ❤️ Gostei <span class="filter-count" id="cnt-gostei">0</span>
-    </button>
-    <button class="filter-btn" data-filter="nao-gostei" onclick="setFiltro('nao-gostei', this)">
-      ❌ Não gostei <span class="filter-count" id="cnt-nao-gostei">0</span>
-    </button>
-    <button class="filter-btn btn-desativados" data-filter="desativados" onclick="setFiltro('desativados', this)">
-      🚫 Desativados <span class="filter-count" id="cnt-desativados">0</span>
-    </button>
+    <button class="filter-btn" data-filter="recentes" onclick="setFiltro('recentes', this)">🆕 Recentes</button>
+    <button class="filter-btn active" data-filter="todos" onclick="setFiltro('todos', this)">📋 Todos <span class="filter-count" id="cnt-todos">0</span></button>
+    <button class="filter-btn" data-filter="pendente" onclick="setFiltro('pendente', this)">⏳ Aguardando <span class="filter-count" id="cnt-pendente">0</span></button>
+    <button class="filter-btn" data-filter="quero-visitar" onclick="setFiltro('quero-visitar', this)">📅 Visitar <span class="filter-count" id="cnt-quero-visitar">0</span></button>
+    <button class="filter-btn" data-filter="gostei" onclick="setFiltro('gostei', this)">❤️ Gostei <span class="filter-count" id="cnt-gostei">0</span></button>
+    <button class="filter-btn" data-filter="nao-gostei" onclick="setFiltro('nao-gostei', this)">❌ Não <span class="filter-count" id="cnt-nao-gostei">0</span></button>
+    <button class="filter-btn btn-desativados" data-filter="desativados" onclick="setFiltro('desativados', this)">🚫 Desativados <span class="filter-count" id="cnt-desativados">0</span></button>
   </div>
 
   <div class="grid" id="gridImoveis"></div>
@@ -1097,7 +1018,6 @@
   </div>
 </div>
 
-<!-- MODAIS -->
 <div class="modal-backdrop" id="clienteModalBackdrop" onclick="if(event.target===this) fecharClienteModal()">
   <div class="modal" style="max-width:540px;">
     <button class="modal-close" onclick="fecharClienteModal()">×</button>
@@ -1117,29 +1037,20 @@
     <div class="form-row" style="grid-template-columns: 1fr 1fr 1fr; gap:10px;">
       <div class="form-group">
         <label>TQC</label>
-        <select id="cliTQC">
-          <option value="">Não</option>
-          <option value="Sim">Sim</option>
-        </select>
+        <select id="cliTQC"><option value="">Não</option><option value="Sim">Sim</option></select>
       </div>
       <div class="form-group">
         <label>INVESTIDOR</label>
-        <select id="cliCAR">
-          <option value="">Não</option>
-          <option value="Sim">Sim</option>
-        </select>
+        <select id="cliCAR"><option value="">Não</option><option value="Sim">Sim</option></select>
       </div>
       <div class="form-group">
         <label>Inativo</label>
-        <select id="cliInativo">
-          <option value="">Não</option>
-          <option value="Sim">Sim</option>
-        </select>
+        <select id="cliInativo"><option value="">Não</option><option value="Sim">Sim</option></select>
       </div>
     </div>
     <div class="form-group">
       <label>Link da vitrine</label>
-      <input type="text" id="cliLinkVitrine" readonly style="background:#f8fafc; color:var(--muted); font-size:.8rem;">
+      <input type="text" id="cliLinkVitrine" readonly style="background:#f8fafc; color:var(--muted); font-size:.78rem;">
     </div>
     <div class="form-group">
       <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px;">
@@ -1161,7 +1072,7 @@
 <div class="modal-backdrop" id="obsModalBackdrop" onclick="if(event.target===this) fecharModalObs()">
   <div class="modal-obs">
     <button class="modal-close" onclick="fecharModalObs()">×</button>
-    <h2 style="margin-bottom:14px;">📝 Observações internas</h2>
+    <h2 style="margin-bottom:12px;">📝 Observações internas</h2>
     <textarea id="obsGrande" placeholder="Escreva tudo que quiser sobre esse cliente..."></textarea>
     <div class="foot">
       <span class="contador" id="obsContador">0 caracteres</span>
@@ -1177,7 +1088,7 @@
   <div class="modal" style="max-width:620px;">
     <button class="modal-close" onclick="fecharHistoricoCliente()">×</button>
     <h2 style="margin-bottom:8px;">📜 Histórico do cliente</h2>
-    <p class="text-muted" style="margin-bottom:14px; font-size:.82rem;" id="histCliSub">—</p>
+    <p class="text-muted" style="margin-bottom:14px; font-size:.8rem;" id="histCliSub">—</p>
     <div id="histCliLista" style="max-height:60vh; overflow-y:auto; border:1px solid var(--border-soft); border-radius:8px; background:#fafbfc;"></div>
   </div>
 </div>
@@ -1186,7 +1097,7 @@
   <div class="modal" style="max-width:520px;">
     <button class="modal-close" onclick="fecharHistoricoImovel()">×</button>
     <h2 style="margin-bottom:8px;">📜 Histórico do imóvel</h2>
-    <p class="text-muted" style="margin-bottom:14px; font-size:.82rem;" id="histImovelSub">—</p>
+    <p class="text-muted" style="margin-bottom:14px; font-size:.8rem;" id="histImovelSub">—</p>
     <div id="histImovelLista" style="max-height:60vh; overflow-y:auto; border:1px solid var(--border-soft); border-radius:8px; background:#fafbfc;"></div>
   </div>
 </div>
@@ -1195,9 +1106,7 @@
   <div class="modal" style="max-width:680px;">
     <button class="modal-close" onclick="fecharCorrecoes()">×</button>
     <h2 style="margin-bottom:8px;">🔧 Correções pendentes</h2>
-    <p class="text-muted" style="margin-bottom:16px; font-size:.82rem;">
-      Falhas detectadas automaticamente. Resolva manualmente nos registros indicados.
-    </p>
+    <p class="text-muted" style="margin-bottom:14px; font-size:.8rem;">Falhas detectadas automaticamente. Resolva manualmente.</p>
     <div id="correcoesLista" style="max-height:65vh; overflow-y:auto;"></div>
   </div>
 </div>
@@ -1207,16 +1116,14 @@
     <button class="modal-close" onclick="fecharSenhaGerada()">×</button>
     <div style="font-size:2.5rem; margin-bottom:8px;">✅</div>
     <h2 style="margin-bottom:8px;" id="senhaGeradaTitulo">Acesso criado!</h2>
-    <p class="text-muted" style="margin-bottom:16px; font-size:.82rem;" id="senhaGeradaSub">
-      Use o botão abaixo para gerar o texto e enviar ao cliente.
-    </p>
-    <div style="background:#f9f5ec; border:1px dashed #c9a86a; border-radius:10px; padding:16px; margin-bottom:14px; text-align:center;">
-      <div style="font-size:.68rem; color:#7a6432; font-weight:700; text-transform:uppercase; letter-spacing:.5px; margin-bottom:6px;">Apelido</div>
-      <div id="senhaGeradaApelido" style="font-size:.95rem; font-weight:700; margin-bottom:14px; color:var(--text);"></div>
-      <div style="font-size:.68rem; color:#7a6432; font-weight:700; text-transform:uppercase; letter-spacing:.5px; margin-bottom:6px;">Senha</div>
-      <div id="senhaGeradaValor" style="font-family:'Courier New', monospace; font-size:1.8rem; font-weight:700; letter-spacing:6px; color:var(--danger);"></div>
+    <p class="text-muted" style="margin-bottom:16px; font-size:.8rem;" id="senhaGeradaSub">Use o botão abaixo para gerar o texto e enviar ao cliente.</p>
+    <div style="background:#f9f5ec; border:1px dashed #c9a86a; border-radius:10px; padding:16px; margin-bottom:14px;">
+      <div style="font-size:.66rem; color:#7a6432; font-weight:700; text-transform:uppercase; letter-spacing:.5px; margin-bottom:6px;">Apelido</div>
+      <div id="senhaGeradaApelido" style="font-size:.92rem; font-weight:700; margin-bottom:14px; color:var(--text);"></div>
+      <div style="font-size:.66rem; color:#7a6432; font-weight:700; text-transform:uppercase; letter-spacing:.5px; margin-bottom:6px;">Senha</div>
+      <div id="senhaGeradaValor" style="font-family:'Courier New', monospace; font-size:1.7rem; font-weight:700; letter-spacing:6px; color:var(--danger);"></div>
     </div>
-    <button class="btn btn-primary btn-full" onclick="gerarTextoWhatsAppSenhaGerada()">💬 Gerar texto para WhatsApp</button>
+    <button class="btn btn-primary btn-full" onclick="gerarTextoWhatsAppSenhaGerada()">💬 Texto para WhatsApp</button>
     <button class="btn btn-ghost btn-full mt-2" onclick="fecharSenhaGerada()">Fechar</button>
   </div>
 </div>
@@ -1228,9 +1135,7 @@
     <div class="form-group">
       <label>Apelido do dispositivo <span class="req">*</span></label>
       <input type="text" id="novoAcessoApelido" maxlength="40">
-      <div class="text-muted mt-2" style="font-size:.75rem;">
-        💡 Ex: "Celular", "PC trabalho", "Tablet filha"
-      </div>
+      <div class="text-muted mt-2" style="font-size:.72rem;">💡 Ex: "Celular", "PC trabalho"</div>
     </div>
     <div style="display:flex; gap:8px;">
       <button class="btn btn-primary" style="flex:1" onclick="criarAcesso(event)">🔑 Gerar senha</button>
@@ -1306,7 +1211,8 @@ const ADMIN_KEY = 'vitrine_admin_v9';
 const CORRETORES_CACHE_KEY = 'vitrine_corretores_v9';
 const BUSCAR_BASE = 'https://corretor.quintoandar.com.br/informacoes-de-entrada';
 const VITRINE_URL_BASE = 'https://limaribeiroimoveis.com.br/vitrine';
-const TIMEOUT_API = 45000;
+const TIMEOUT_API = 90000;
+const TIMEOUT_LOGIN = 60000;
 
 const LINK_TQC = 'https://corretor.quintoandar.com.br/traz-quem-compra/?origin=home';
 const LINK_HUGO = 'https://www.quintoandar.com.br/corretor/atendimento/HugoFelipePereiraRibeiro-3M2K';
@@ -1338,11 +1244,7 @@ const state = {
   telefoneAtual: null,
   clienteAtual: null,
   filtro: 'todos',
-  carregado: {
-    agenda: false,
-    visitar: false,
-    clientes: false
-  },
+  carregado: { agenda: false, visitar: false, clientes: false },
   salvando: 0
 };
 
@@ -1483,13 +1385,13 @@ async function apiOnce(action, params, timeoutMs){
     throw err;
   }
 }
-async function api(action, params = {}, timeoutMs = TIMEOUT_API, retries = 1) {
+async function api(action, params = {}, timeoutMs = TIMEOUT_API, retries = 2) {
   let lastErr;
   for (let i = 0; i <= retries; i++) {
     try { return await apiOnce(action, params, timeoutMs); }
     catch (err) {
       lastErr = err;
-      if (i < retries) await new Promise(r => setTimeout(r, 600));
+      if (i < retries) await new Promise(r => setTimeout(r, 800 * (i + 1)));
     }
   }
   console.error('API falhou:', lastErr, { action, params });
@@ -1497,7 +1399,7 @@ async function api(action, params = {}, timeoutMs = TIMEOUT_API, retries = 1) {
 }
 
 /* =====================================================
-   CONFIRMAÇÃO UNIVERSAL
+   CONFIRMAÇÃO
 ===================================================== */
 function confirmarAcao(opts){
   return new Promise((resolve) => {
@@ -1592,19 +1494,12 @@ async function recarregarPainel(painel){
 }
 
 /* =====================================================
-   BOTÕES DE LINK DO HEADER
+   BOTÕES DE LINK
 ===================================================== */
-function abrirLinkTQC(){
-  window.open(LINK_TQC, '_blank', 'noopener');
-}
-function copiarLinkHugo(){
-  copiarTexto(LINK_HUGO);
-}
+function abrirLinkTQC(){ window.open(LINK_TQC, '_blank', 'noopener'); }
+function copiarLinkHugo(){ copiarTexto(LINK_HUGO); }
 function copiarLinkCarol(){
-  if(!LINK_CAROL){
-    toast('Link da Carol ainda não configurado', 'error');
-    return;
-  }
+  if(!LINK_CAROL){ toast('Link da Carol não configurado', 'error'); return; }
   copiarTexto(LINK_CAROL);
 }
 
@@ -1618,7 +1513,7 @@ async function entrarAdmin(){
   btn.disabled = true;
   btn.innerHTML = '<span class="loader"></span> Validando...';
   marcarSalvando(true);
-  const res = await api('adminListar', { senha });
+  const res = await api('adminListar', { senha }, TIMEOUT_LOGIN, 2);
   marcarSalvando(false);
   btn.disabled = false;
   btn.textContent = 'Entrar no painel';
@@ -1633,21 +1528,26 @@ async function carregarHomeAdmin(){
   mostrarView('homeView');
   $('btnSair').classList.remove('hidden');
   state.carregado = { agenda: false, visitar: false, clientes: false };
-  await carregarCorretores();
   state.painelAtivo = 'agenda';
   ['agenda','visitar','clientes'].forEach(p => {
     const cap = p.charAt(0).toUpperCase() + p.slice(1);
     $('panel' + cap).classList.toggle('hidden', p !== 'agenda');
     $('card' + cap).classList.toggle('active', p === 'agenda');
   });
+
+  await carregarCorretores();
+
+  // 1) Agenda PRIMEIRO (mais urgente)
   await Promise.all([
-    carregarClientes(false),
+    carregarAgenda(true),
+    carregarClientes(false)
+  ]);
+
+  // 2) O resto em background
+  Promise.all([
+    carregarNotificacoes(false),
     carregarCorrecoes(false)
-  ]);
-  await Promise.all([
-    carregarAgenda(false),
-    carregarNotificacoes(false)
-  ]);
+  ]).catch(()=>{});
 }
 
 function sair(){
@@ -1692,9 +1592,7 @@ async function carregarCorretores(){
   if(res.ok && res.data){
     state.corretores = res.data;
     try {
-      localStorage.setItem(CORRETORES_CACHE_KEY, JSON.stringify({
-        data: res.data, ts: Date.now()
-      }));
+      localStorage.setItem(CORRETORES_CACHE_KEY, JSON.stringify({ data: res.data, ts: Date.now() }));
     } catch(e){}
   }
   if(!state.corretores.length){
@@ -1759,14 +1657,14 @@ function renderizarFiltrosClientes(){
     </div>
     <div class="filtro-grupo">
       <span class="lbl">🌡️ Temp:</span>
-      <button class="chip ${t.has('quente') ? 'active' : ''}" onclick="toggleFiltroClienteTemp('quente')">🔥 Quente <span class="cnt">${cntTemp.quente}</span></button>
-      <button class="chip ${t.has('morno') ? 'active' : ''}" onclick="toggleFiltroClienteTemp('morno')">🌡️ Morno <span class="cnt">${cntTemp.morno}</span></button>
-      <button class="chip ${t.has('frio') ? 'active' : ''}" onclick="toggleFiltroClienteTemp('frio')">❄️ Frio <span class="cnt">${cntTemp.frio}</span></button>
+      <button class="chip ${t.has('quente') ? 'active' : ''}" onclick="toggleFiltroClienteTemp('quente')">🔥 <span class="cnt">${cntTemp.quente}</span></button>
+      <button class="chip ${t.has('morno') ? 'active' : ''}" onclick="toggleFiltroClienteTemp('morno')">🌡️ <span class="cnt">${cntTemp.morno}</span></button>
+      <button class="chip ${t.has('frio') ? 'active' : ''}" onclick="toggleFiltroClienteTemp('frio')">❄️ <span class="cnt">${cntTemp.frio}</span></button>
     </div>
     <div class="filtro-grupo">
       <span class="lbl">Status:</span>
-      <button class="chip ${s.has('ativo') ? 'active' : ''}" onclick="toggleFiltroClienteStatus('ativo')">✅ Ativo <span class="cnt">${cntStatus.ativo}</span></button>
-      <button class="chip ${s.has('inativo') ? 'active' : ''}" onclick="toggleFiltroClienteStatus('inativo')">💤 Inativo <span class="cnt">${cntStatus.inativo}</span></button>
+      <button class="chip ${s.has('ativo') ? 'active' : ''}" onclick="toggleFiltroClienteStatus('ativo')">✅ <span class="cnt">${cntStatus.ativo}</span></button>
+      <button class="chip ${s.has('inativo') ? 'active' : ''}" onclick="toggleFiltroClienteStatus('inativo')">💤 <span class="cnt">${cntStatus.inativo}</span></button>
     </div>
     <div class="filtro-grupo">
       <span class="lbl">Tipo:</span>
@@ -1884,23 +1782,23 @@ function clienteRowHTML(c){
       <div class="info">
         <div class="nome">
           ${esc(c.nome || 'Sem nome')}
-          <span class="item" style="font-size:.78rem; color:var(--muted); font-weight:400;">📱 ${esc(fmtTel(c.telefone))}</span>
-          ${c.dataCadastro ? `<span class="item" style="font-size:.72rem; color:var(--muted); font-weight:400;">📅 ${fmtData(c.dataCadastro)}</span>` : ''}
+          <span class="item" style="font-size:.75rem; color:var(--muted); font-weight:400;">📱 ${esc(fmtTel(c.telefone))}</span>
           ${inativo ? '<span class="tag tag-inativo">💤 Inativo</span>' : '<span class="tag tag-ativo">✅ Ativo</span>'}
           ${tqc ? '<span class="tag tag-tqc"><strong>TQC</strong></span>' : ''}
           ${investidor ? '<span class="tag tag-car">💼 <strong>INVESTIDOR</strong></span>' : ''}
         </div>
         <div class="linha2">
           ${c.corretor ? `<span class="item"><span class="corretor-badge" style="background:${corCorr}">👤 ${esc(c.corretor)}</span></span>` : '<span class="item muted">👤 (sem corretor)</span>'}
-          ${c.dataUltimaAcaoAdmin ? `<span class="item">👑 Admin: ${fmtData(c.dataUltimaAcaoAdmin)}</span>` : ''}
-          ${c.dataUltimaAcaoCliente ? `<span class="item">🎯 Últ. ação: ${fmtData(c.dataUltimaAcaoCliente)}</span>` : ''}
-          <span class="item">🏠 ${totalIm} imóve${totalIm === 1 ? 'l' : 'is'}</span>
-          <span class="item">✅ ${totalVi} visita${totalVi === 1 ? '' : 's'}</span>
+          <span class="item ult-admin">👑 ${c.dataUltimaAcaoAdmin ? fmtData(c.dataUltimaAcaoAdmin) : '—'}</span>
+          <span class="item ult-acao">🎯 ${c.dataUltimaAcaoCliente ? fmtData(c.dataUltimaAcaoCliente) : '—'}</span>
+          <span class="item data-cad">📅 ${c.dataCadastro ? fmtData(c.dataCadastro) : '—'}</span>
+          <span class="item">🏠 ${totalIm}</span>
+          <span class="item">✅ ${totalVi}</span>
         </div>
       </div>
       <div class="tags">
-        <button class="btn btn-ghost btn-xs" title="Copiar link da vitrine" onclick="copiarLinkCliente('${esc(c.telefone)}')">🔗</button>
-        <button class="btn btn-ghost btn-xs" title="Editar cliente" onclick="abrirEditarClientePorTel('${esc(c.telefone)}')">✏️</button>
+        <button class="btn btn-ghost btn-xs" title="Copiar link" onclick="copiarLinkCliente('${esc(c.telefone)}')">🔗</button>
+        <button class="btn btn-ghost btn-xs" title="Editar" onclick="abrirEditarClientePorTel('${esc(c.telefone)}')">✏️</button>
         <button class="btn btn-primary btn-xs" title="Abrir vitrine" onclick="abrirVitrineDoCliente('${esc(c.telefone)}')">🏠</button>
       </div>
     </div>
@@ -1918,7 +1816,6 @@ async function copiarLinkCliente(telefone){
 }
 
 
- 
 /* =====================================================
    AGENDA
 ===================================================== */
@@ -2129,7 +2026,7 @@ function notificacaoRowHTML(a){
         <div class="detalhe">
           ${a.codigo ? `<span class="codigo">#${esc(a.codigo)}</span>` : ''}
           <span>${esc(a.titulo || '')}</span>
-          <span class="text-muted" style="font-size:.68rem;">${fmtData(a.dataCadastro)}</span>
+          <span class="text-muted" style="font-size:.66rem;">${fmtData(a.dataCadastro)}</span>
         </div>
       </div>
       <span class="arrow">→</span>
@@ -2244,29 +2141,24 @@ function gerarCartaoVisitaDataURL(im){
   canvas.height = H;
   const ctx = canvas.getContext('2d');
 
-  // Fundo com gradiente suave
   const grad = ctx.createLinearGradient(0, 0, W, H);
   grad.addColorStop(0, '#fef2f2');
   grad.addColorStop(1, '#fde8e8');
   ctx.fillStyle = grad;
   ctx.fillRect(0, 0, W, H);
 
-  // Borda externa vermelha
   ctx.strokeStyle = '#d9534f';
   ctx.lineWidth = 8;
   ctx.strokeRect(4, 4, W - 8, H - 8);
 
-  // Faixa lateral vermelha
   ctx.fillStyle = '#d9534f';
   ctx.fillRect(0, 0, 16, H);
 
-  // Título "VISITA CONFIRMADA"
   ctx.fillStyle = '#b91c1c';
   ctx.font = 'bold 44px -apple-system, "Segoe UI", Roboto, sans-serif';
   ctx.textBaseline = 'top';
   ctx.fillText('📍 VISITA CONFIRMADA', 70, 60);
 
-  // Linha decorativa
   ctx.strokeStyle = '#fca5a5';
   ctx.lineWidth = 2;
   ctx.beginPath();
@@ -2274,13 +2166,11 @@ function gerarCartaoVisitaDataURL(im){
   ctx.lineTo(W - 70, 130);
   ctx.stroke();
 
-  // Endereço
   ctx.fillStyle = '#7f1d1d';
   ctx.font = 'bold 54px -apple-system, "Segoe UI", Roboto, sans-serif';
   const endereco = im.titulo || 'Endereço não informado';
   desenharTextoMultilinha(ctx, '🏠 ' + endereco, 70, 180, W - 140, 66, 2);
 
-  // Código (se houver)
   let yCodigo = 400;
   if(im.codigo){
     ctx.fillStyle = '#4a3d6b';
@@ -2289,7 +2179,6 @@ function gerarCartaoVisitaDataURL(im){
     yCodigo += 70;
   }
 
-  // Data e hora
   const dt = new Date(im.dataVisitaAgendada);
   const dia = String(dt.getDate()).padStart(2,'0');
   const mes = String(dt.getMonth()+1).padStart(2,'0');
@@ -3347,7 +3236,7 @@ function destacarCard(imovelId){
     $('inputAdminSenha').value = senhaSalva;
     $('adminLoginSub').textContent = 'Restaurando sessão...';
     marcarSalvando(true);
-    const res = await api('adminListar', { senha: senhaSalva });
+    const res = await api('adminListar', { senha: senhaSalva }, TIMEOUT_LOGIN, 2);
     marcarSalvando(false);
     if(res.ok){
       state.isAdmin = true;
@@ -3372,3 +3261,4 @@ window.addEventListener('beforeunload', function(e){
 </script>
 </body>
 </html>
+ 
