@@ -1488,16 +1488,16 @@ function corDoCorretor(nome){
    Estas helpers leem a "chave real" e reconstroem os campos.
 ===================================================== */
 function imovelCamposReais_(im){
-  // Correção do deslocamento:
-  // O valor real da Rua está no campo `numero`
-  // O valor real do Número está no campo `bairro`
-  // O valor real do Bairro está no campo `chaveTexto`
-  // O valor real da Chave está no campo `rua`
+  // Ordem real dos dados no retorno:
+  //   im.chaveTexto → contém a RUA
+  //   im.rua        → contém o NÚMERO
+  //   im.numero     → contém o BAIRRO
+  //   im.bairro     → contém a CHAVE
   return {
-    rua:    String((im && im.numero)    || '').trim(),
-    numero: String((im && im.bairro)    || '').trim(),
-    bairro: String((im && im.chaveTexto)|| '').trim(),
-    chave:  String((im && im.rua)       || '').trim()
+    rua:    String((im && im.chaveTexto) || '').trim(),
+    numero: String((im && im.rua)        || '').trim(),
+    bairro: String((im && im.numero)     || '').trim(),
+    chave:  String((im && im.bairro)     || '').trim()
   };
 }
 
