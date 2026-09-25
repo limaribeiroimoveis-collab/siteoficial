@@ -744,6 +744,7 @@ const TOKEN_KEY = 'vitrine_device_token';
 const NOME_KEY  = 'vitrine_nome';
 const CACHE_KEY = 'vitrine_imoveis_cache';
 const LINK_KEY  = 'vitrine_link_original';
+const ORIGINAL_URL_KEY = 'vitrine_url_original';
 const CACHE_TTL = 5 * 60 * 1000;
 
 const TIMEOUT_API = 30000;
@@ -858,7 +859,7 @@ function detectarNavegador(){
 }
 
 /* =====================================================
-   CACHE
+   CACHE (localStorage)
 ===================================================== */
 function lerCache(){
   try {
@@ -908,14 +909,35 @@ function lerLinkOriginal(){
   } catch(e){ return null; }
 }
 
-/**
- * 🧹 LIMPA TUDO relacionado ao site atual.
- * Remove todas as chaves de localStorage usadas por esta vitrine.
- * Garante que ao entrar com link de outro cliente, nada do anterior fica.
- */
+/* =====================================================
+   URL original em sessionStorage (sobrevive ao reload)
+===================================================== */
+function gravarOriginalUrl(tel, senha){
+  try {
+    sessionStorage.setItem(ORIGINAL_URL_KEY, JSON.stringify({ tel, senha, ts: Date.now() }));
+  } catch(e){}
+}
+
+function lerOriginalUrlSalva(){
+  try {
+    const raw = sessionStorage.getItem(ORIGINAL_URL_KEY);
+    if(!raw) return null;
+    const obj = JSON.parse(raw);
+    if(!obj || !obj.tel || !obj.senha) return null;
+    if(Date.now() - obj.ts > 60 * 60 * 1000) return null;
+    return obj;
+  } catch(e){ return null; }
+}
+
+function limparOriginalUrl(){
+  try { sessionStorage.removeItem(ORIGINAL_URL_KEY); } catch(e){}
+}
+
+/* =====================================================
+   Limpeza total
+===================================================== */
 function limparTudo(){
   try {
-    // Remove chaves específicas da vitrine
     localStorage.removeItem(TEL_KEY);
     localStorage.removeItem(TOKEN_KEY);
     localStorage.removeItem(NOME_KEY);
@@ -923,7 +945,6 @@ function limparTudo(){
     localStorage.removeItem(LINK_KEY);
     localStorage.removeItem('vitrine_corretor_pref');
   } catch(e){}
-  // Reseta estado em memória
   state.telefone = null;
   state.deviceToken = null;
   state.clienteInfo = null;
@@ -1120,9 +1141,11 @@ function mostrarSkeleton(qtd = 4){
 }
 
 /* =====================================================
-   TELA DE ERRO DE CONEXÃO — Atualizar página
+   TELA DE ERRO DE CONEXÃO — 2 versões:
+   - com link (botão "Tentar novamente" que refaz login)
+   - sem link (botão "Atualizar página" que faz reload)
 ===================================================== */
-function mostrarErroConexao(){
+function mostrarErroConexaoSemLink(){
   const grid = $('gridImoveis');
   const offline = (typeof navigator.onLine === 'boolean') && !navigator.onLine;
   const titulo = offline ? 'Você está sem internet' : 'Não conseguimos carregar seus imóveis';
@@ -1144,6 +1167,136 @@ function mostrarErroConexao(){
   $('emptyState').classList.add('hidden');
 }
 
+function mostrarErroConexaoComLink(){
+  const grid = $('gridImoveis');
+  const offline = (typeof navigator.onLine === 'boolean') && !navigator.onLine;
+  const titulo = offline ? 'Você está sem internet' : 'Estamos preparando sua vitrine';
+  const texto = offline
+    ? 'Verifique sua conexão e toque em <b>Tentar novamente</b>.'
+    : 'O servidor está demorando um pouquinho para responder.<br>Toque em <b>Tentar novamente</b> para continuar.';
+  const icone = offline ? '📶' : '⏳';
+
+  grid.innerHTML = `
+    <div class="erro-conexao" style="grid-column: 1 / -1;">
+      <div class="icone">${icone}</div>
+      <h3>${titulo}</h3>
+      <p>${texto}</p>
+      <button class="btn-recarregar" onclick="tentarDeNovo()">
+        <span class="ico">🔄</span> Tentar novamente
+      </button>
+    </div>
+  `;
+  $('emptyState').classList.add('hidden');
+}
+
+function mostrarErroConexao(){
+  const temLink = lerOriginalUrlSalva();
+  if(temLink) mostrarErroConexaoComLink();
+  else mostrarErroConexaoSemLink();
+}
+
+function tentarDeNovo(){
+  const linkSalvo = lerOriginalUrlSalva() || lerLinkOriginal();
+  if(linkSalvo && linkSalvo.tel && linkSalvo.senha){
+    mostrarSkeleton(4);
+    reprocessarComLink(linkSalvo.tel, linkSalvo.senha);
+  } else {
+    location.reload();
+  }
+}
+
+/* =====================================================
+   LOGIN COM RETRY FORTE (aguenta cold start do Apps Script)
+===================================================== */
+async function loginComRetryForte(tel, senha){
+  const navegador = detectarNavegador();
+  const esperas = [0, 1500, 3000, 5000]; // ms
+  let ultimoRes = null;
+
+  for(let i = 0; i < esperas.length; i++){
+    if(esperas[i] > 0){
+      console.log(`[vitrine] retry login ${i+1}/${esperas.length} em ${esperas[i]}ms`);
+      await new Promise(r => setTimeout(r, esperas[i]));
+    }
+
+    const res = await api('loginCliente', {
+      telefone: tel,
+      senha: senha,
+      deviceToken: '',
+      navegador: navegador
+    }, TIMEOUT_LOGIN, 0);
+
+    if(res.ok) return res;
+
+    if(!erroEhConexao(res.error)) return res;
+
+    ultimoRes = res;
+    console.warn(`[vitrine] tentativa ${i+1} falhou:`, res.error);
+  }
+
+  return ultimoRes;
+}
+
+/* =====================================================
+   REPROCESSAR com link (botão "Tentar novamente")
+===================================================== */
+async function reprocessarComLink(tel, senha){
+  state.telefone = tel;
+  state.deviceToken = null;
+  state.clienteInfo = null;
+  state.imoveis = [];
+
+  mostrarView('vitrineView');
+  $('userInfo').textContent = '📱 ' + fmtTel(tel);
+  mostrarSkeleton(4);
+
+  const res = await loginComRetryForte(tel, senha);
+
+  if(res.ok){
+    state.deviceToken = res.deviceToken || '';
+    state.clienteInfo = { nome: res.nome, apelido: res.apelido };
+    localStorage.setItem(TEL_KEY, tel);
+    localStorage.setItem(TOKEN_KEY, state.deviceToken);
+    if(res.nome) localStorage.setItem(NOME_KEY, res.nome);
+    gravarLinkOriginal(tel, senha);
+
+    $('userInfo').textContent = res.nome ? '👤 ' + res.nome : '📱 ' + fmtTel(tel);
+
+    if(res.imoveis && res.imoveis.length){
+      const novos = res.imoveis.sort((a,b) => {
+        const da = new Date(a.dataCadastro||0).getTime() || 0;
+        const db = new Date(b.dataCadastro||0).getTime() || 0;
+        return db - da;
+      });
+      state.imoveis = novos;
+      gravarCache(novos, tel, res.nome);
+      try {
+        const primeiroCorretor = state.imoveis.map(getCorretor).find(Boolean);
+        if(primeiroCorretor) localStorage.setItem('vitrine_corretor_pref', primeiroCorretor);
+      } catch(e){}
+      atualizarContadores();
+      renderizarVisitas();
+      renderizarImoveis();
+      limparUrl();
+      limparOriginalUrl();
+      return;
+    }
+
+    await carregarImoveis();
+    limparUrl();
+    limparOriginalUrl();
+    return;
+  }
+
+  if(erroEhDispositivoVinculado(res.error)){
+    state.clienteInfo = { nome: res.nome || null, apelido: res.apelido || null };
+    mostrarBloqueioDispositivo();
+    return;
+  }
+
+  mostrarErroConexaoComLink();
+}
+
 /* =====================================================
    LOGIN CLIENTE manual
 ===================================================== */
@@ -1152,7 +1305,6 @@ function toggleAjudaSenha(){ $('ajudaSenha').classList.toggle('hidden'); }
 async function entrarCliente(){
   const tel = normalizaTel($('inputTelefone').value);
   const senhaDigitada = ($('inputSenha').value || '').toUpperCase().trim();
-  const navegador = detectarNavegador();
 
   if(tel.length < 10){ toast('Digite um telefone válido (com DDD)', 'error'); return; }
   if(!senhaDigitada){
@@ -1167,9 +1319,7 @@ async function entrarCliente(){
 
   limparTudo();
 
-  const res = await api('loginCliente', {
-    telefone: tel, senha: senhaDigitada, deviceToken: '', navegador: navegador
-  }, TIMEOUT_LOGIN, 1);
+  const res = await loginComRetryForte(tel, senhaDigitada);
 
   btn.disabled = false;
   btn.textContent = 'Entrar na minha vitrine';
@@ -1182,8 +1332,11 @@ async function entrarCliente(){
       return;
     }
     if(erroEhConexao(res.error)){
+      // Guarda URL "virtual" pra poder reprocessar
+      gravarOriginalUrl(tel, senhaDigitada);
       mostrarView('vitrineView');
-      mostrarErroConexao();
+      $('userInfo').textContent = '📱 ' + fmtTel(tel);
+      mostrarErroConexaoComLink();
       return;
     }
     toast(res.error || 'Não foi possível entrar', 'error');
@@ -1200,7 +1353,7 @@ async function entrarCliente(){
   gravarLinkOriginal(tel, senhaDigitada);
 
   toast('Bem-vindo, ' + (res.nome || 'cliente'), 'success');
-  limparUrl();
+  limparOriginalUrl();
   irParaVitrine();
 }
 
@@ -1248,15 +1401,12 @@ async function carregarImoveis(){
       localStorage.removeItem(TOKEN_KEY);
       const linkSalvo = lerLinkOriginal();
       if(linkSalvo){
-        const r2 = await api('loginCliente', {
-          telefone: linkSalvo.tel,
-          senha: linkSalvo.senha,
-          deviceToken: '',
-          navegador: detectarNavegador()
-        }, TIMEOUT_LOGIN, 1);
+        const r2 = await loginComRetryForte(linkSalvo.tel, linkSalvo.senha);
         if(r2.ok){
+          state.telefone = linkSalvo.tel;
           state.deviceToken = r2.deviceToken || '';
           state.clienteInfo = { nome: r2.nome, apelido: r2.apelido };
+          localStorage.setItem(TEL_KEY, linkSalvo.tel);
           localStorage.setItem(TOKEN_KEY, state.deviceToken);
           if(r2.nome) localStorage.setItem(NOME_KEY, r2.nome);
           return carregarImoveis();
@@ -1306,7 +1456,7 @@ async function carregarImoveis(){
 
 /* =====================================================
    VISITAS CONFIRMADAS
-   Regra: mostra se a visita ainda não começou OU
+   Regra: mostra se ainda não começou OU
    se começou há menos de 2 horas.
 ===================================================== */
 function visitaAindaVisivel(iso){
@@ -1382,7 +1532,6 @@ function setFiltro(f, el){
    RENDERIZAR IMÓVEIS
 ===================================================== */
 function renderizarImoveis(){
-  // 🛡️ Preserva observações sendo editadas
   const emEdicao = {};
   document.querySelectorAll('.obs-wrap.editing').forEach(w => {
     const obsId = w.id;
@@ -1430,7 +1579,6 @@ function renderizarImoveis(){
   $('emptyState').classList.add('hidden');
   grid.innerHTML = lista.map(cardHTML).join('');
 
-  // 🛡️ Restaura observações em edição
   Object.keys(emEdicao).forEach(obsId => {
     const wrap = $(obsId);
     const input = $(obsId + '-input');
@@ -1710,8 +1858,6 @@ function fallbackCopy(texto, cb){
 
 /* =====================================================
    INIT
-   🧹 Se vem link novo com tel DIFERENTE → LIMPA TUDO
-   ⚡ Se é o MESMO cliente → abre rápido com cache
 ===================================================== */
 (async function init(){
   const params = new URLSearchParams(window.location.search);
@@ -1727,6 +1873,9 @@ function fallbackCopy(texto, cb){
     const telSalvo = localStorage.getItem(TEL_KEY);
     const mesmoCliente = telSalvo && normalizaTel(telSalvo) === telUrl;
 
+    // 💾 Guarda a URL original ANTES de qualquer coisa (pra poder refazer se falhar)
+    gravarOriginalUrl(telUrl, senhaUrl);
+
     // 🧹 Se é OUTRO cliente → limpa TUDO antes de qualquer coisa
     if(!mesmoCliente){
       console.log('[vitrine] Link de outro cliente. Limpando localStorage...');
@@ -1736,14 +1885,12 @@ function fallbackCopy(texto, cb){
     // Guarda o link novo (pra reusar se precisar)
     gravarLinkOriginal(telUrl, senhaUrl);
 
-    // Passa a ter esse tel como "conhecido"
     state.telefone = telUrl;
 
     // Mostra já (com cache se for o mesmo cliente, ou skeleton se limpou)
     const cache = lerCache();
 
     if(mesmoCliente && cache && cache.data && cache.data.length){
-      // ⚡ MESMO cliente: abre rápido com cache
       state.deviceToken = localStorage.getItem(TOKEN_KEY) || null;
       state.clienteInfo = { nome: localStorage.getItem(NOME_KEY) || null, apelido: null };
       state.imoveis = cache.data;
@@ -1756,23 +1903,15 @@ function fallbackCopy(texto, cb){
       atualizarContadores();
       renderizarVisitas();
       renderizarImoveis();
-      limparUrl();
+      // ⚠️ NÃO limpa a URL ainda — só limpa após login OK
     } else {
-      // 🧹 Cliente diferente ou sem cache: skeleton até o login
       mostrarView('vitrineView');
       $('userInfo').textContent = '📱 ' + fmtTel(telUrl);
       mostrarSkeleton(4);
-      limparUrl();
     }
 
-    // Faz login em background
-    const navegador = detectarNavegador();
-    const res = await api('loginCliente', {
-      telefone: telUrl,
-      senha: senhaUrl,
-      deviceToken: '',
-      navegador: navegador
-    }, TIMEOUT_LOGIN, 1);
+    // Faz login com retry forte (aguenta cold start)
+    const res = await loginComRetryForte(telUrl, senhaUrl);
 
     if(res.ok){
       state.telefone = telUrl;
@@ -1784,12 +1923,14 @@ function fallbackCopy(texto, cb){
 
       $('userInfo').textContent = res.nome ? '👤 ' + res.nome : '📱 ' + fmtTel(telUrl);
 
-      // Se era o mesmo cliente e cache estava fresco, já está tudo na tela
+      // ✅ Login OK → agora pode limpar a URL bonitinha
+      limparUrl();
+      limparOriginalUrl();
+
       if(mesmoCliente && cache && cache.fresh){
         return;
       }
 
-      // Se API já devolveu imóveis no login, usa
       if(res.imoveis && res.imoveis.length){
         const novos = res.imoveis.sort((a,b) => {
           const da = new Date(a.dataCadastro||0).getTime() || 0;
@@ -1819,16 +1960,13 @@ function fallbackCopy(texto, cb){
       return;
     }
 
-    if(erroEhConexao(res.error)){
-      if(!state.imoveis.length) mostrarErroConexao();
-      else toast('Não conseguimos validar agora. Mostrando os últimos dados.', 'error');
-      return;
-    }
-
+    // ❌ Falhou mesmo com retry forte → mostra tela com botão "Tentar novamente"
+    // ⚠️ NÃO limpa a URL original — o botão vai reusar o link
     if(!state.imoveis.length){
-      mostrarErroConexao();
+      mostrarErroConexaoComLink();
     } else {
-      toast(res.error || 'Não conseguimos validar agora.', 'error');
+      toast('Não conseguimos atualizar agora. Toque em "Tentar novamente".', 'error');
+      mostrarErroConexaoComLink();
     }
     return;
   }
@@ -1841,7 +1979,6 @@ function fallbackCopy(texto, cb){
   const tokenSalvo = localStorage.getItem(TOKEN_KEY);
   const nomeSalvo = localStorage.getItem(NOME_KEY);
 
-  // ⚡ Abre rápido com cache se tiver
   if(cache && cache.data && cache.data.length && telSalvo){
     state.telefone = telSalvo;
     state.deviceToken = tokenSalvo;
@@ -1861,12 +1998,10 @@ function fallbackCopy(texto, cb){
     mostrarSkeleton(4);
   }
 
-  // Se cache está fresco, não precisa revalidar
   if(cache && cache.fresh && telSalvo){
     return;
   }
 
-  // Revalida em background
   if(telSalvo && tokenSalvo){
     const res = await api('listarImoveis', {
       telefone: telSalvo,
@@ -1908,12 +2043,7 @@ function fallbackCopy(texto, cb){
     if((res.error || '').toLowerCase().match(/sess|token|inv[áa]lid|expirad|autentic|unauthor/)){
       const linkSalvo = lerLinkOriginal();
       if(linkSalvo){
-        const r2 = await api('loginCliente', {
-          telefone: linkSalvo.tel,
-          senha: linkSalvo.senha,
-          deviceToken: '',
-          navegador: detectarNavegador()
-        }, TIMEOUT_LOGIN, 1);
+        const r2 = await loginComRetryForte(linkSalvo.tel, linkSalvo.senha);
         if(r2.ok){
           state.telefone = linkSalvo.tel;
           state.deviceToken = r2.deviceToken || '';
@@ -1943,16 +2073,9 @@ function fallbackCopy(texto, cb){
     return;
   }
 
-  // Sem sessão — tenta revalidar com link salvo
   const linkSalvo = lerLinkOriginal();
   if(linkSalvo){
-    const navegador = detectarNavegador();
-    const res = await api('loginCliente', {
-      telefone: linkSalvo.tel,
-      senha: linkSalvo.senha,
-      deviceToken: '',
-      navegador: navegador
-    }, TIMEOUT_LOGIN, 1);
+    const res = await loginComRetryForte(linkSalvo.tel, linkSalvo.senha);
 
     if(res.ok){
       state.telefone = linkSalvo.tel;
@@ -1988,7 +2111,6 @@ function fallbackCopy(texto, cb){
     return;
   }
 
-  // Nada salvo → login
   if(!state.imoveis.length){
     mostrarView('loginView');
     $('senhaGroup').style.display = 'block';
@@ -1997,7 +2119,7 @@ function fallbackCopy(texto, cb){
 })();
 
 /* =====================================================
-   Atualiza visitas a cada minuto (remove as que passaram 2h)
+   Atualiza visitas a cada minuto
 ===================================================== */
 setInterval(() => {
   if(state.imoveis.length > 0){
