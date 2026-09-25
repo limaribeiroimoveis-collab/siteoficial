@@ -63,7 +63,7 @@
   .btn-header{
     background: rgba(255,255,255,.08); color: #fff;
     border: 1px solid rgba(255,255,255,.18);
-    padding: 6px 12px; border-radius: 6px; cursor: pointer;
+    padding: 6px 10px; border-radius: 6px; cursor: pointer;
     font-size: .72rem; font-weight: 600;
     transition: all .15s; font-family: inherit;
     display: inline-flex; align-items: center; gap: 6px;
@@ -78,7 +78,7 @@
     min-width: 18px; text-align: center;
   }
   @media(max-width:820px){
-    .btn-header{ padding: 5px 8px; font-size: .65rem; }
+    .btn-header{ padding: 5px 7px; font-size: .65rem; }
     .brand-sub{ display: none; }
   }
   @media(max-width:560px){
@@ -148,10 +148,9 @@
   .btn-sm{ padding: 7px 12px; font-size: .78rem; border-radius: 6px; }
   .btn-xs{ padding: 5px 9px; font-size: .7rem; border-radius: 5px; }
 
-  /* BIG CARDS - sempre 3 lado a lado, mesmo em mobile */
+  /* BIG CARDS */
   .big-cards{
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    display: grid; grid-template-columns: repeat(3, 1fr);
     gap: 10px; margin-top: 16px;
   }
   .big-card{
@@ -165,15 +164,8 @@
     text-align: center;
     box-shadow: var(--shadow-sm);
   }
-  .big-card:hover{
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-lg);
-    border-color: var(--primary);
-  }
-  .big-card.active{
-    border-color: var(--primary);
-    background: linear-gradient(135deg, #fff 0%, #eef2f7 100%);
-  }
+  .big-card:hover{ transform: translateY(-2px); box-shadow: var(--shadow-lg); border-color: var(--primary); }
+  .big-card.active{ border-color: var(--primary); background: linear-gradient(135deg, #fff 0%, #eef2f7 100%); }
   .big-card .ico{ font-size: 1.5rem; line-height: 1; }
   .big-card .titulo{ font-size: .78rem; font-weight: 700; color: var(--text); line-height: 1.2; }
   .big-card .sub{ font-size: .62rem; color: var(--muted); display: none; }
@@ -214,7 +206,7 @@
   }
   .panel-body{ padding: 14px; }
 
-  /* FILTROS - mobile organizado */
+  /* FILTROS */
   .filtros-wrap{
     display: flex; flex-wrap: wrap; gap: 8px;
     align-items: center; margin-bottom: 12px;
@@ -222,10 +214,7 @@
     background: #fafbfc; border-radius: 8px;
     border: 1px solid var(--border-soft);
   }
-  .filtro-grupo{
-    display: flex; align-items: center; gap: 5px;
-    flex-wrap: wrap;
-  }
+  .filtro-grupo{ display: flex; align-items: center; gap: 5px; flex-wrap: wrap; }
   .filtro-grupo .lbl{
     font-size: .62rem; font-weight: 700;
     color: var(--muted); text-transform: uppercase;
@@ -255,7 +244,7 @@
     .chip{ padding: 3px 7px; font-size: .66rem; }
   }
 
-  /* LISTA AGENDA */
+  /* AGENDA */
   .agenda-lista{ display: flex; flex-direction: column; gap: 5px; }
   .agenda-row{
     display: grid;
@@ -296,6 +285,13 @@
     font-size: .64rem; font-weight: 700;
   }
   .agenda-row .arrow{ color: var(--muted); font-size: 1rem; opacity: .5; }
+  .agenda-row .btn-chave{
+    background: #fff7ed; border: 1px solid #fed7aa;
+    border-radius: 6px; cursor: pointer;
+    font-size: .8rem; padding: 3px 7px; line-height: 1;
+    margin-left: 4px;
+  }
+  .agenda-row .btn-chave:hover{ background: #ffedd5; }
   @media(max-width:640px){
     .agenda-row{ grid-template-columns: 78px 1fr auto; gap: 8px; padding: 8px 10px; }
     .agenda-row .quando{ font-size: .66rem; padding: 2px 6px; }
@@ -309,7 +305,7 @@
     color: #fff;
   }
 
-  /* LISTA CLIENTES - mobile compacta */
+  /* LISTA CLIENTES */
   .clientes-lista{ display: flex; flex-direction: column; gap: 4px; }
   .cliente-row{
     display: grid;
@@ -323,7 +319,16 @@
   }
   .cliente-row:hover{ border-color: var(--primary); background: #fafbfc; }
   .cliente-row.inativo{ opacity: .55; background: #f8f9fa; border-left: 3px solid var(--danger); }
-  .cliente-row .temp{ font-size: 1.3rem; text-align: center; line-height: 1; }
+  .cliente-row .temp{
+    font-size: 1.3rem; text-align: center; line-height: 1;
+    cursor: pointer; border-radius: 8px; padding: 2px;
+    transition: all .12s;
+  }
+  .cliente-row .temp:hover{ background: var(--bg-alt); transform: scale(1.1); }
+  .cliente-row .temp.manual::after{
+    content: '●'; color: var(--danger);
+    font-size: .5rem; vertical-align: top; margin-left: 1px;
+  }
   .cliente-row .info{ min-width: 0; display: flex; flex-direction: column; gap: 2px; }
   .cliente-row .nome{
     font-size: .85rem; font-weight: 700; color: var(--text);
@@ -335,20 +340,15 @@
   }
   .cliente-row .linha2 .item{ display: inline-flex; align-items: center; gap: 3px; }
   .cliente-row .linha2 .muted{ color: var(--muted); }
-  .cliente-row .tags{
-    display: flex; align-items: center; gap: 3px;
-    justify-content: flex-end;
-  }
+  .cliente-row .tags{ display: flex; align-items: center; gap: 3px; justify-content: flex-end; }
   @media(max-width:640px){
     .cliente-row{ grid-template-columns: 26px 1fr auto; gap: 8px; padding: 7px 10px; }
     .cliente-row .temp{ font-size: 1.1rem; }
     .cliente-row .nome{ font-size: .8rem; gap: 4px; }
-    .cliente-row .nome .item.extra{ display: none; }
     .cliente-row .linha2{ font-size: .64rem; gap: 4px; }
-    .cliente-row .linha2 .item.tel{ display: inline-flex; }
-    .cliente-row .linha2 .item.data-cad{ display: none; }
     .cliente-row .linha2 .item.ult-admin{ display: none; }
     .cliente-row .linha2 .item.ult-acao{ display: none; }
+    .cliente-row .linha2 .item.data-cad{ display: none; }
     .cliente-row .tags .btn{ padding: 4px 6px; font-size: .7rem; }
     .tag{ font-size: .56rem; padding: 1px 6px; }
   }
@@ -409,9 +409,7 @@
     letter-spacing: 0; color: var(--text-soft);
     font-size: .68rem; margin-left: auto;
   }
-  .cartoes-visita{
-    display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px;
-  }
+  .cartoes-visita{ display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
   @media(max-width: 1024px){ .cartoes-visita{ grid-template-columns: repeat(3, 1fr); } }
   @media(max-width: 560px){ .cartoes-visita{ grid-template-columns: repeat(2, 1fr); } }
   .cartao-visita-img{
@@ -428,7 +426,6 @@
 
   /* VITRINE */
   .admin-toolbar{ display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; margin-bottom: 6px; }
-
   .admin-panel{
     background: #fff; border-radius: var(--radius); padding: 20px;
     box-shadow: var(--shadow-md); margin-top: 12px;
@@ -448,7 +445,11 @@
   }
   .admin-panel .close-x:hover{ background: var(--bg-alt); color: var(--text); }
   .form-row{ display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-  @media(max-width:640px){ .form-row{ grid-template-columns: 1fr; } }
+  .form-row-3{ display: grid; grid-template-columns: 2fr 1fr 2fr; gap: 12px; }
+  .form-row-3-preco{ display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+  @media(max-width:640px){
+    .form-row, .form-row-3, .form-row-3-preco{ grid-template-columns: 1fr; }
+  }
   .preview-wrap{ display: flex; align-items: flex-start; gap: 12px; margin-top: 8px; }
   .preview-img{
     width: 120px; height: 80px; object-fit: cover;
@@ -480,10 +481,7 @@
   }
   .card.card-nao-gostei{ opacity: .55; filter: grayscale(65%); background: #f5f5f5; }
   .card.card-nao-gostei:hover{ opacity: .78; filter: grayscale(50%); }
-  .card.card-desativado{
-    opacity: .5; filter: grayscale(85%); background: #f0f0f0;
-    border-left: 4px solid var(--danger);
-  }
+  .card.card-desativado{ opacity: .5; filter: grayscale(85%); background: #f0f0f0; border-left: 4px solid var(--danger); }
   .card.card-desativado:hover{ opacity: .75; filter: grayscale(70%); }
   .card-topbar{
     display: flex; align-items: center; justify-content: space-between;
@@ -718,6 +716,7 @@
   .correcao-item.baixa{ border-left-color: #0891b2; background: #ecfeff; }
   .correcao-item .ico{ font-size: 1rem; flex-shrink: 0; }
   .correcao-item .txt{ flex: 1; min-width: 0; }
+  .correcao-item .acoes{ display: flex; gap: 4px; margin-top: 8px; flex-wrap: wrap; }
 
   .toast{
     position: fixed; bottom: 20px; left: 50%;
@@ -797,10 +796,38 @@
   .hist-item .txt .acao{ font-weight: 700; color: var(--text); }
   .hist-item .txt .det{ color: var(--text-soft); font-size: .76rem; margin-top: 2px; }
   .hist-item .txt .quando{ color: var(--muted); font-size: .68rem; margin-top: 3px; }
+
+  /* LISTA GERAL IMÓVEIS (modal 🏢) */
+  .lista-imoveis-geral{ display: flex; flex-direction: column; gap: 5px; }
+  .imovel-linha{
+    display: grid;
+    grid-template-columns: 30px 1fr auto;
+    gap: 10px; align-items: center;
+    padding: 9px 11px; border-radius: 8px;
+    background: #fff; border: 1px solid var(--border-soft);
+    transition: all .12s;
+  }
+  .imovel-linha:hover{ border-color: var(--primary); background: #fafbfc; }
+  .imovel-linha .info{ min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+  .imovel-linha .end{
+    font-size: .82rem; font-weight: 700; color: var(--text);
+    display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+  }
+  .imovel-linha .meta{
+    font-size: .68rem; color: var(--text-soft);
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  }
+  .imovel-linha .meta .preco{
+    background: #dcfce7; color: #166534;
+    padding: 1px 6px; border-radius: 3px;
+    font-weight: 700; font-size: .66rem;
+  }
+  .imovel-linha .acoes{ display: flex; gap: 4px; }
 </style>
 </head>
 <body>
 
+<!-- HEADER -->
 <header class="app-header">
   <div class="header-inner">
     <div class="brand" onclick="irParaHomeAdmin()" title="Ir para o início">
@@ -811,14 +838,17 @@
       </div>
     </div>
     <div class="header-right">
+      <button class="btn-header" onclick="abrirListaGeralImoveis()" title="Todos os imóveis cadastrados">
+        🏢 <span class="lbl-txt">Imóveis</span>
+      </button>
       <button class="btn-header" onclick="abrirLinkTQC()" title="Traga seu cliente">
-        Ⓣ <span class="lbl-txt">LINK TQC</span>
+        🔗 <span class="lbl-txt">LINK TQC</span>
       </button>
       <button class="btn-header" onclick="copiarLinkHugo()" title="Copiar link do Hugo">
-        Ⓗ <span class="lbl-txt">LINK HUGO</span>
+        🔗 <span class="lbl-txt">LINK HUGO</span>
       </button>
       <button class="btn-header" onclick="copiarLinkCarol()" title="Copiar link da Carol">
-        Ⓒ <span class="lbl-txt">LINK CAROL</span>
+        🔗 <span class="lbl-txt">LINK CAROL</span>
       </button>
       <button class="btn-header correcoes" id="btnCorrecoes" onclick="abrirCorrecoes()">
         🔧 <span class="lbl-txt">Correções</span> <span class="badge-num" id="correcoesBadgeNum">0</span>
@@ -828,6 +858,7 @@
   </div>
 </header>
 
+<!-- LOGIN -->
 <div class="login-wrap" id="adminLoginView">
   <div class="login-card">
     <div class="login-logo">LR</div>
@@ -845,6 +876,7 @@
   </div>
 </div>
 
+<!-- HOME -->
 <div class="container hidden" id="homeView">
   <div class="big-cards">
     <div class="big-card active" id="cardAgenda" onclick="abrirPainel('agenda')">
@@ -913,9 +945,10 @@
     <div class="panel-body">
       <div class="filtros-wrap" id="filtrosClientes"></div>
       <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px;">
-        <input type="search" id="buscaCliente" placeholder="🔍 Buscar nome ou telefone..." oninput="renderizarClientes()" style="flex:1; min-width:180px;">
+        <input type="search" id="buscaCliente" placeholder="🔍 Buscar nome ou telefone..." oninput="onBuscaClienteChanged()" style="flex:1; min-width:180px;">
         <select id="ordenacaoCliente" onchange="renderizarClientes()" style="width:auto; min-width:180px;">
           <option value="alfabetica">Nome (A-Z)</option>
+          <option value="recentes">🆕 Recentes (edição admin)</option>
           <option value="data">Cadastro ↓</option>
           <option value="acao-cliente">Últ. ação cliente</option>
           <option value="acao-admin">Últ. ação admin</option>
@@ -930,6 +963,7 @@
   </div>
 </div>
 
+<!-- VITRINE -->
 <div class="container hidden" id="vitrineView">
   <div class="cliente-bar" id="clienteBar">
     <div class="info">
@@ -966,8 +1000,36 @@
         <input type="tel" id="adTelefone" inputmode="numeric" maxlength="16" oninput="mascaraTelefone(this)">
       </div>
       <div class="form-group">
-        <label>Rua/Endereço <span class="req">*</span></label>
-        <input type="text" id="adTitulo">
+        <label>Link do anúncio</label>
+        <input type="url" id="adLink" onblur="buscarImagemPreview(false)" oninput="onLinkImovelChanged()">
+      </div>
+    </div>
+    <div class="form-row-3">
+      <div class="form-group">
+        <label>Rua <span class="req">*</span></label>
+        <input type="text" id="adRua">
+      </div>
+      <div class="form-group">
+        <label>Número</label>
+        <input type="text" id="adNumero">
+      </div>
+      <div class="form-group">
+        <label>Bairro</label>
+        <input type="text" id="adBairro">
+      </div>
+    </div>
+    <div class="form-row-3-preco">
+      <div class="form-group">
+        <label>Preço</label>
+        <input type="text" id="adPreco" placeholder="Ex: 450.000">
+      </div>
+      <div class="form-group">
+        <label>Condomínio</label>
+        <input type="text" id="adCondominio" placeholder="Ex: 800">
+      </div>
+      <div class="form-group">
+        <label>IPTU</label>
+        <input type="text" id="adIPTU" placeholder="Ex: 1200/ano">
       </div>
     </div>
     <div class="form-group">
@@ -975,8 +1037,8 @@
       <textarea id="adDescricao"></textarea>
     </div>
     <div class="form-group">
-      <label>Link do anúncio</label>
-      <input type="url" id="adLink" onblur="buscarImagemPreview(false)" oninput="onLinkImovelChanged()">
+      <label>Chave (onde pegar)</label>
+      <textarea id="adChaveTexto" placeholder="Ex: Chave na portaria com o Sr. José, ligar antes"></textarea>
     </div>
     <input type="hidden" id="adImagem">
     <div class="preview-wrap">
@@ -1018,6 +1080,7 @@
   </div>
 </div>
 
+<!-- MODAL CLIENTE -->
 <div class="modal-backdrop" id="clienteModalBackdrop" onclick="if(event.target===this) fecharClienteModal()">
   <div class="modal" style="max-width:540px;">
     <button class="modal-close" onclick="fecharClienteModal()">×</button>
@@ -1069,6 +1132,7 @@
   </div>
 </div>
 
+<!-- MODAL OBSERVAÇÃO GRANDE -->
 <div class="modal-backdrop" id="obsModalBackdrop" onclick="if(event.target===this) fecharModalObs()">
   <div class="modal-obs">
     <button class="modal-close" onclick="fecharModalObs()">×</button>
@@ -1084,6 +1148,71 @@
   </div>
 </div>
 
+<!-- MODAL TEMPERATURA -->
+<div class="modal-backdrop" id="tempModalBackdrop" onclick="if(event.target===this) fecharTempModal()">
+  <div class="modal" style="max-width:420px;">
+    <button class="modal-close" onclick="fecharTempModal()">×</button>
+    <h2 style="margin-bottom:8px;">🌡️ Temperatura do cliente</h2>
+    <p class="text-muted" style="margin-bottom:16px; font-size:.82rem;" id="tempModalSub">—</p>
+    <div style="display:flex; flex-direction:column; gap:10px;">
+      <button class="btn btn-ghost" style="justify-content:flex-start; padding:14px 18px;" onclick="escolherTemperatura('quente')">
+        <span style="font-size:1.5rem;">🔥</span>
+        <span style="font-weight:700;">Quente</span>
+        <span style="font-size:.7rem; color:var(--muted); margin-left:auto;">Cliente prioritário</span>
+      </button>
+      <button class="btn btn-ghost" style="justify-content:flex-start; padding:14px 18px;" onclick="escolherTemperatura('morno')">
+        <span style="font-size:1.5rem;">🌡️</span>
+        <span style="font-weight:700;">Morno</span>
+        <span style="font-size:.7rem; color:var(--muted); margin-left:auto;">Em atenção</span>
+      </button>
+      <button class="btn btn-ghost" style="justify-content:flex-start; padding:14px 18px;" onclick="escolherTemperatura('frio')">
+        <span style="font-size:1.5rem;">❄️</span>
+        <span style="font-weight:700;">Frio</span>
+        <span style="font-size:.7rem; color:var(--muted); margin-left:auto;">Sem interesse recente</span>
+      </button>
+      <button class="btn btn-ghost" style="justify-content:flex-start; padding:14px 18px; border-style:dashed;" onclick="escolherTemperatura('automatico')">
+        <span style="font-size:1.5rem;">🔄</span>
+        <span style="font-weight:700;">Voltar ao automático</span>
+        <span style="font-size:.7rem; color:var(--muted); margin-left:auto;">Regra dos 10 dias</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL CHAVE -->
+<div class="modal-backdrop" id="chaveModalBackdrop" onclick="if(event.target===this) fecharChaveModal()">
+  <div class="modal" style="max-width:520px;">
+    <button class="modal-close" onclick="fecharChaveModal()">×</button>
+    <h2 style="margin-bottom:8px;">🔑 Onde pegar a chave</h2>
+    <p class="text-muted" style="margin-bottom:16px; font-size:.82rem;" id="chaveModalSub">—</p>
+    <div id="chaveModalTexto" style="background:#fff7ed; border:1px solid #fed7aa; border-radius:8px; padding:16px; font-size:.9rem; line-height:1.6; white-space:pre-wrap;"></div>
+  </div>
+</div>
+
+<!-- MODAL LISTA GERAL IMÓVEIS -->
+<div class="modal-backdrop" id="listaGeralBackdrop" onclick="if(event.target===this) fecharListaGeral()">
+  <div class="modal" style="max-width:820px;">
+    <button class="modal-close" onclick="fecharListaGeral()">×</button>
+    <h2 style="margin-bottom:8px;">🏢 Todos os imóveis</h2>
+    <p class="text-muted" style="margin-bottom:14px; font-size:.8rem;" id="listaGeralSub">Carregando...</p>
+
+    <div class="filtros-wrap" style="margin-bottom:12px;">
+      <input type="search" id="buscaGeral" placeholder="🔍 Buscar endereço, número, bairro ou código..." oninput="onBuscaGeralChanged()" style="flex:1; min-width:180px;">
+      <select id="ordenacaoGeral" onchange="renderizarListaGeral()" style="width:auto; min-width:180px;">
+        <option value="recentes">🆕 Recentes</option>
+        <option value="alfabetica">Endereço A-Z</option>
+        <option value="preco">Preço</option>
+        <option value="cliente">Cliente A-Z</option>
+      </select>
+    </div>
+
+    <div id="filtrosGeralStatus" class="filtros-wrap" style="margin-bottom:12px;"></div>
+
+    <div class="lista-imoveis-geral" id="listaGeralImoveis" style="max-height:60vh; overflow-y:auto;"></div>
+  </div>
+</div>
+
+<!-- MODAL HISTÓRICOS / CORREÇÕES / SENHA / ACESSO / VISITA / AGENDAR (iguais aos anteriores) -->
 <div class="modal-backdrop" id="histCliBackdrop" onclick="if(event.target===this) fecharHistoricoCliente()">
   <div class="modal" style="max-width:620px;">
     <button class="modal-close" onclick="fecharHistoricoCliente()">×</button>
@@ -1106,7 +1235,7 @@
   <div class="modal" style="max-width:680px;">
     <button class="modal-close" onclick="fecharCorrecoes()">×</button>
     <h2 style="margin-bottom:8px;">🔧 Correções pendentes</h2>
-    <p class="text-muted" style="margin-bottom:14px; font-size:.8rem;">Falhas detectadas automaticamente. Resolva manualmente.</p>
+    <p class="text-muted" style="margin-bottom:14px; font-size:.8rem;">Resolva manualmente nos registros indicados.</p>
     <div id="correcoesLista" style="max-height:65vh; overflow-y:auto;"></div>
   </div>
 </div>
@@ -1165,13 +1294,31 @@
 </div>
 
 <div class="modal-backdrop" id="agendarBackdrop" onclick="if(event.target===this) fecharAgendarModal()">
-  <div class="modal" style="max-width:460px;">
+  <div class="modal" style="max-width:520px;">
     <button class="modal-close" onclick="fecharAgendarModal()">×</button>
     <h2 style="margin-bottom:16px;">📅 Agendar visita</h2>
     <input type="hidden" id="agendarImovelId">
     <div class="form-group">
       <label>Data e hora <span class="req">*</span></label>
       <input type="datetime-local" id="agendarDataHora">
+    </div>
+    <div class="form-row-3">
+      <div class="form-group">
+        <label>Rua <span class="req">*</span></label>
+        <input type="text" id="agendarRua">
+      </div>
+      <div class="form-group">
+        <label>Número <span class="req">*</span></label>
+        <input type="text" id="agendarNumero">
+      </div>
+      <div class="form-group">
+        <label>Bairro</label>
+        <input type="text" id="agendarBairro">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>🔑 Onde pegar a chave <span class="req">*</span></label>
+      <textarea id="agendarChave" placeholder="Ex: Chave na portaria com o Sr. José, ligar antes"></textarea>
     </div>
     <div style="display:flex; gap:8px;">
       <button class="btn btn-primary" style="flex:1" onclick="salvarAgendamento(event)">💾 Agendar</button>
@@ -1206,9 +1353,9 @@
 /* =====================================================
    CONFIG
 ===================================================== */
-const API_URL = 'https://script.google.com/macros/s/AKfycbxbzYcL_YEAb-TxveF6e-XUCH555KG6GFusNRAtGUxRwPtWVN37rfzaDcU0Hpu4kwIp/exec';
-const ADMIN_KEY = 'vitrine_admin_v9';
-const CORRETORES_CACHE_KEY = 'vitrine_corretores_v9';
+const API_URL = 'https://script.google.com/macros/s/AKfycbx7K3HJ6hFhkljA7ejfX7vu80WF1YhBNo-6mPHyRjBy9CRAXibxIoVasYqejeKeloaE/exec';
+const ADMIN_KEY = 'vitrine_admin_v10';
+const CORRETORES_CACHE_KEY = 'vitrine_corretores_v10';
 const BUSCAR_BASE = 'https://corretor.quintoandar.com.br/informacoes-de-entrada';
 const VITRINE_URL_BASE = 'https://limaribeiroimoveis.com.br/vitrine';
 const TIMEOUT_API = 90000;
@@ -1232,6 +1379,7 @@ const state = {
   correcoes: [],
   corretores: [],
   acessos: [],
+  todosImoveis: [],
   filtrosAgenda: new Set(),
   filtrosVisitarCorretores: new Set(),
   filtrosClientes: {
@@ -1240,11 +1388,12 @@ const state = {
     status: new Set(),
     tipos: new Set()
   },
+  filtrosGeralStatus: new Set(),
   tipoSolicitacao: 'visita',
   telefoneAtual: null,
   clienteAtual: null,
   filtro: 'todos',
-  carregado: { agenda: false, visitar: false, clientes: false },
+  carregado: { agenda: false, visitar: false, clientes: false, geral: false },
   salvando: 0
 };
 
@@ -1527,23 +1676,18 @@ async function entrarAdmin(){
 async function carregarHomeAdmin(){
   mostrarView('homeView');
   $('btnSair').classList.remove('hidden');
-  state.carregado = { agenda: false, visitar: false, clientes: false };
+  state.carregado = { agenda: false, visitar: false, clientes: false, geral: false };
   state.painelAtivo = 'agenda';
   ['agenda','visitar','clientes'].forEach(p => {
     const cap = p.charAt(0).toUpperCase() + p.slice(1);
     $('panel' + cap).classList.toggle('hidden', p !== 'agenda');
     $('card' + cap).classList.toggle('active', p === 'agenda');
   });
-
   await carregarCorretores();
-
-  // 1) Agenda PRIMEIRO (mais urgente)
   await Promise.all([
     carregarAgenda(true),
     carregarClientes(false)
   ]);
-
-  // 2) O resto em background
   Promise.all([
     carregarNotificacoes(false),
     carregarCorrecoes(false)
@@ -1704,6 +1848,12 @@ function toggleFiltroClienteTipo(t){
   renderizarClientes();
 }
 
+let _buscaClienteTimer = null;
+function onBuscaClienteChanged(){
+  clearTimeout(_buscaClienteTimer);
+  _buscaClienteTimer = setTimeout(() => renderizarClientes(), 250);
+}
+
 function renderizarClientes(){
   const lista = $('clientesLista');
   const empty = $('clientesEmpty');
@@ -1735,9 +1885,11 @@ function renderizarClientes(){
     });
   }
   if(busca){
+    const b = busca;
+    const bTel = normalizaTel(busca);
     arr = arr.filter(c =>
-      (c.nome || '').toLowerCase().includes(busca) ||
-      normalizaTel(c.telefone).includes(normalizaTel(busca))
+      (c.nome || '').toLowerCase().includes(b) ||
+      (bTel && normalizaTel(c.telefone).includes(bTel))
     );
   }
   arr.sort((a, b) => {
@@ -1746,6 +1898,11 @@ function renderizarClientes(){
     if(ia !== ib) return ia - ib;
     if(ordem === 'alfabetica') return (a.nome||'').localeCompare(b.nome||'', 'pt-BR', {sensitivity:'base'});
     if(ordem === 'data') return new Date(b.dataCadastro||0) - new Date(a.dataCadastro||0);
+    if(ordem === 'recentes'){
+      const da = a.dataUltimaAcaoAdmin ? new Date(a.dataUltimaAcaoAdmin).getTime() : 0;
+      const db = b.dataUltimaAcaoAdmin ? new Date(b.dataUltimaAcaoAdmin).getTime() : 0;
+      return db - da;
+    }
     if(ordem === 'acao-cliente'){
       const da = a.dataUltimaAcaoCliente ? new Date(a.dataUltimaAcaoCliente).getTime() : 0;
       const db = b.dataUltimaAcaoCliente ? new Date(b.dataUltimaAcaoCliente).getTime() : 0;
@@ -1773,12 +1930,13 @@ function clienteRowHTML(c){
   const investidor = String(c.car||'').toLowerCase() === 'sim';
   const temp = c.temperatura || 'frio';
   const emoji = emojiTemperatura(temp);
+  const manual = c.temperaturaManual ? 'manual' : '';
   const corCorr = c.corretor ? corDoCorretor(c.corretor) : '#6b7280';
   const totalIm = c.totalImoveis || 0;
   const totalVi = c.totalVisitasConcluidas || 0;
   return `
     <div class="cliente-row ${inativo ? 'inativo' : ''}">
-      <div class="temp" title="${temp}">${emoji}</div>
+      <div class="temp ${manual}" title="${temp}${c.temperaturaManual ? ' (manual)' : ''} - clique para alterar" onclick="abrirTempModal('${esc(c.telefone)}')">${emoji}</div>
       <div class="info">
         <div class="nome">
           ${esc(c.nome || 'Sem nome')}
@@ -1814,7 +1972,6 @@ async function copiarLinkCliente(telefone){
   if(!res.ok){ toast(res.error || 'Erro', 'error'); return; }
   copiarTexto(res.link);
 }
-
 
 /* =====================================================
    AGENDA
@@ -1893,6 +2050,8 @@ function agendaRowHTML(a){
   const cor = a.corretor ? corDoCorretor(a.corretor) : '#6b7280';
   const id = esc(a.id);
   const tel = esc(a.telefone);
+  const temChave = !!String(a.chaveTexto || '').trim();
+  const btnChave = temChave ? `<button class="btn-chave" title="Ver chave" data-chave="${esc(a.chaveTexto)}" data-end="${esc((a.titulo||'') + (a.codigo ? ' #' + a.codigo : ''))}" onclick="event.stopPropagation(); abrirChaveModal(this.dataset.chave, this.dataset.end)">🔑</button>` : '';
   return `
     <div class="agenda-row"
          style="border-left-color:${cor}; background:${cor}0d;"
@@ -1903,6 +2062,7 @@ function agendaRowHTML(a){
         <div class="cliente">
           👤 ${esc(a.clienteNome)}
           ${a.corretor ? `<span class="corretor-badge" style="background:${cor}">${esc(a.corretor)}</span>` : ''}
+          ${btnChave}
         </div>
         <div class="detalhe">
           ${a.codigo ? `<span class="codigo">#${esc(a.codigo)}</span>` : ''}
@@ -2035,7 +2195,7 @@ function notificacaoRowHTML(a){
 }
 
 /* =====================================================
-   VITRINE DE UM CLIENTE
+   VITRINE DO CLIENTE
 ===================================================== */
 async function abrirVitrineDoCliente(telefone){
   const tel = normalizaTel(telefone);
@@ -2065,11 +2225,12 @@ async function irParaVitrine(){
   const nome = state.clienteAtual?.nome || '(sem cadastro)';
   const corr = state.clienteAtual?.corretor || '';
   const temp = state.clienteAtual?.temperatura || 'frio';
+  const tempManual = state.clienteAtual?.temperaturaManual;
   $('cbNome').textContent = nome;
   $('cbMeta').innerHTML = `
     <span>📱 ${fmtTel(tel)}</span>
     ${corr ? `<span>👤 ${esc(corr)}</span>` : ''}
-    <span title="${temp}">${emojiTemperatura(temp)} ${temp}</span>
+    <span class="temp-cli" style="cursor:pointer;" onclick="abrirTempModal('${tel}')" title="Alterar temperatura">${emojiTemperatura(temp)} ${temp}${tempManual ? ' ●' : ''}</span>
     ${state.clienteAtual?.tqc === 'Sim' ? '<span class="tag tag-tqc">TQC</span>' : ''}
     ${state.clienteAtual?.car === 'Sim' ? '<span class="tag tag-car">💼 INVESTIDOR</span>' : ''}
     ${state.clienteAtual?.inativo === 'Sim' ? '<span class="tag tag-inativo">💤 Inativo</span>' : ''}
@@ -2101,36 +2262,27 @@ function voltarParaHome(){
 }
 
 /* =====================================================
-   CARTÕES PNG DE VISITAS AGENDADAS
+   CARTÕES PNG
 ===================================================== */
 function renderizarCartoesVisita(){
   const wrap = $('cartoesVisitaWrap');
   const container = $('cartoesVisita');
   const countEl = $('cartoesVisitaCount');
   if(!wrap || !container) return;
-
   const visitas = (state.imoveis || []).filter(im =>
     im.dataVisitaAgendada && !isDesativado(im)
   );
-
   if(visitas.length === 0){
     wrap.classList.add('hidden');
     container.innerHTML = '';
     return;
   }
-
   wrap.classList.remove('hidden');
-  if(countEl) countEl.textContent = visitas.length === 1
-    ? '1 cartão'
-    : `${visitas.length} cartões`;
-
+  if(countEl) countEl.textContent = visitas.length === 1 ? '1 cartão' : `${visitas.length} cartões`;
   container.innerHTML = visitas.map(im => {
     const dataUrl = gerarCartaoVisitaDataURL(im);
     const titulo = (im.titulo || '') + (im.codigo ? ' #' + im.codigo : '');
-    return `<img class="cartao-visita-img"
-                 src="${dataUrl}"
-                 alt="${esc(titulo)}"
-                 title="${esc(titulo)} — clique com botão direito para copiar">`;
+    return `<img class="cartao-visita-img" src="${dataUrl}" alt="${esc(titulo)}" title="${esc(titulo)} — clique com botão direito para copiar">`;
   }).join('');
 }
 
@@ -2140,37 +2292,30 @@ function gerarCartaoVisitaDataURL(im){
   canvas.width = W;
   canvas.height = H;
   const ctx = canvas.getContext('2d');
-
   const grad = ctx.createLinearGradient(0, 0, W, H);
   grad.addColorStop(0, '#fef2f2');
   grad.addColorStop(1, '#fde8e8');
   ctx.fillStyle = grad;
   ctx.fillRect(0, 0, W, H);
-
   ctx.strokeStyle = '#d9534f';
   ctx.lineWidth = 8;
   ctx.strokeRect(4, 4, W - 8, H - 8);
-
   ctx.fillStyle = '#d9534f';
   ctx.fillRect(0, 0, 16, H);
-
   ctx.fillStyle = '#b91c1c';
   ctx.font = 'bold 44px -apple-system, "Segoe UI", Roboto, sans-serif';
   ctx.textBaseline = 'top';
   ctx.fillText('📍 VISITA CONFIRMADA', 70, 60);
-
   ctx.strokeStyle = '#fca5a5';
   ctx.lineWidth = 2;
   ctx.beginPath();
   ctx.moveTo(70, 130);
   ctx.lineTo(W - 70, 130);
   ctx.stroke();
-
   ctx.fillStyle = '#7f1d1d';
   ctx.font = 'bold 54px -apple-system, "Segoe UI", Roboto, sans-serif';
   const endereco = im.titulo || 'Endereço não informado';
   desenharTextoMultilinha(ctx, '🏠 ' + endereco, 70, 180, W - 140, 66, 2);
-
   let yCodigo = 400;
   if(im.codigo){
     ctx.fillStyle = '#4a3d6b';
@@ -2178,7 +2323,6 @@ function gerarCartaoVisitaDataURL(im){
     ctx.fillText('#' + im.codigo, 70, yCodigo);
     yCodigo += 70;
   }
-
   const dt = new Date(im.dataVisitaAgendada);
   const dia = String(dt.getDate()).padStart(2,'0');
   const mes = String(dt.getMonth()+1).padStart(2,'0');
@@ -2186,11 +2330,9 @@ function gerarCartaoVisitaDataURL(im){
   const hora = String(dt.getHours()).padStart(2,'0');
   const min = String(dt.getMinutes()).padStart(2,'0');
   const dataTxt = `📅 ${dia}/${mes}/${ano} · ${hora}:${min}`;
-
   ctx.fillStyle = '#b91c1c';
   ctx.font = 'bold 48px -apple-system, "Segoe UI", Roboto, sans-serif';
   ctx.fillText(dataTxt, 70, H - 130);
-
   return canvas.toDataURL('image/png');
 }
 
@@ -2373,7 +2515,7 @@ function gerarTextoWhatsAppSenhaGerada(){
 }
 
 /* =====================================================
-   LINK VITRINE (BOTÃO DA BARRA DO CLIENTE)
+   LINK VITRINE (BARRA DO CLIENTE)
 ===================================================== */
 async function gerarLinkVitrine(){
   if(!state.telefoneAtual){ toast('Abra a vitrine de um cliente primeiro', 'error'); return; }
@@ -2540,6 +2682,48 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* =====================================================
+   MODAL TEMPERATURA
+===================================================== */
+let _tempClienteTel = null;
+function abrirTempModal(telefone){
+  const tel = normalizaTel(telefone);
+  if(!tel) return;
+  _tempClienteTel = tel;
+  const cli = state.clientes.find(c => normalizaTel(c.telefone) === tel);
+  const nome = cli ? (cli.nome || '') : (state.clienteAtual?.nome || '');
+  const tempAtual = cli ? (cli.temperatura || 'frio') : (state.clienteAtual?.temperatura || 'frio');
+  const manual = cli ? cli.temperaturaManual : state.clienteAtual?.temperaturaManual;
+  $('tempModalSub').textContent = (nome || fmtTel(tel)) + ' — atual: ' + emojiTemperatura(tempAtual) + ' ' + tempAtual + (manual ? ' (manual)' : ' (automático)');
+  $('tempModalBackdrop').classList.add('show');
+}
+function fecharTempModal(){ $('tempModalBackdrop').classList.remove('show'); }
+
+async function escolherTemperatura(valor){
+  if(!_tempClienteTel){ fecharTempModal(); return; }
+  const tel = _tempClienteTel;
+  fecharTempModal();
+  marcarSalvando(true);
+  const res = await api('definirTemperatura', { senha: state.adminSenha, telefone: tel, valor });
+  marcarSalvando(false);
+  if(!res.ok){ toast(res.error || 'Erro', 'error'); return; }
+  toast('Temperatura atualizada ✅', 'success');
+  state.carregado.clientes = false;
+  await carregarClientes(false);
+  state.carregado.agenda = false;
+  if(state.telefoneAtual === tel) await irParaVitrine();
+}
+
+/* =====================================================
+   MODAL CHAVE
+===================================================== */
+function abrirChaveModal(texto, contexto){
+  $('chaveModalSub').textContent = contexto || '—';
+  $('chaveModalTexto').textContent = texto || '(sem texto)';
+  $('chaveModalBackdrop').classList.add('show');
+}
+function fecharChaveModal(){ $('chaveModalBackdrop').classList.remove('show'); }
+
+/* =====================================================
    HISTÓRICO CLIENTE
 ===================================================== */
 async function abrirHistoricoCliente(){
@@ -2627,18 +2811,63 @@ function abrirCorrecoes(){
   if(state.correcoes.length === 0){
     lista.innerHTML = '<div class="empty-state"><h3>🎉 Nada para corrigir!</h3></div>';
   } else {
-    lista.innerHTML = state.correcoes.map(c => {
+    lista.innerHTML = state.correcoes.map((c, i) => {
       const ico = c.severidade === 'alta' ? '🔴' : c.severidade === 'media' ? '🟡' : '🟠';
+      let acoes = '';
+      if(c.tipo === 'CLIENTE_QUENTE_SEM_VISITA' && c.acoes && c.acoes.length){
+        acoes = `
+          <div class="acoes">
+            <button class="btn btn-warn btn-xs" onclick="aceitarMorno('${esc(c.telefone)}')">Aceitar como morno</button>
+            <button class="btn btn-ghost btn-xs" onclick="prorrogarQuente('${esc(c.telefone)}')">Prorrogar 10 dias</button>
+          </div>`;
+      }
       return `
         <div class="correcao-item ${c.severidade}">
           <div class="ico">${ico}</div>
-          <div class="txt">${esc(c.mensagem)}</div>
+          <div class="txt">
+            ${esc(c.mensagem)}
+            ${acoes}
+          </div>
         </div>`;
     }).join('');
   }
   $('correcoesBackdrop').classList.add('show');
 }
 function fecharCorrecoes(){ $('correcoesBackdrop').classList.remove('show'); }
+
+async function aceitarMorno(telefone){
+  const ok = await confirmarAcao({
+    icone: '🌡️', titulo: 'Aceitar como morno?',
+    texto: 'O cliente passará para morno e entrará no fluxo automático.',
+    btnSim: 'Aceitar', tipo: 'warn'
+  });
+  if(!ok) return;
+  marcarSalvando(true);
+  const res = await api('aceitarMorno', { senha: state.adminSenha, telefone });
+  marcarSalvando(false);
+  if(!res.ok){ toast(res.error || 'Erro', 'error'); return; }
+  toast('Cliente agora é morno ✅', 'success');
+  state.carregado.clientes = false;
+  await carregarClientes(false);
+  await carregarCorrecoes(false);
+}
+
+async function prorrogarQuente(telefone){
+  const ok = await confirmarAcao({
+    icone: '⏱️', titulo: 'Prorrogar por 10 dias?',
+    texto: 'O cliente continua como quente por mais 10 dias.',
+    btnSim: 'Prorrogar', tipo: 'warn'
+  });
+  if(!ok) return;
+  marcarSalvando(true);
+  const res = await api('prorrogarQuente', { senha: state.adminSenha, telefone });
+  marcarSalvando(false);
+  if(!res.ok){ toast(res.error || 'Erro', 'error'); return; }
+  toast('Prorrogado por 10 dias ✅', 'success');
+  state.carregado.clientes = false;
+  await carregarClientes(false);
+  await carregarCorrecoes(false);
+}
 
 /* =====================================================
    IMÓVEIS
@@ -2732,8 +2961,10 @@ function cardImovelHTML(im){
   const btnDesativar = desativado ? 'ativo' : '';
   let agHtml = '';
   const temAgendamento = !!im.dataVisitaAgendada && !desativado;
+  const temChave = !!String(im.chaveTexto || '').trim();
   if(!desativado){
     if(temAgendamento){
+      const btnChave = temChave ? `<button class="btn btn-ghost btn-xs" data-chave="${esc(im.chaveTexto)}" data-end="${esc(im.titulo || '')}" onclick="abrirChaveModal(this.dataset.chave, this.dataset.end)">🔑 Chave</button>` : '';
       agHtml = `
         <div class="agendamento-box">
           <div class="titulo">📅 Visita agendada</div>
@@ -2744,6 +2975,7 @@ function cardImovelHTML(im){
           <div class="agendamento-actions" style="margin-top:4px;">
             <button class="btn btn-ghost btn-xs" onclick="abrirAgendarModal('${id}')">✏️ Alterar</button>
             <button class="btn btn-ghost btn-xs" onclick="cancelarAgendamentoDireto('${id}')">🗑️ Cancelar</button>
+            ${btnChave}
           </div>
         </div>`;
     } else {
@@ -2785,6 +3017,7 @@ function cardImovelHTML(im){
           <div class="card-top-meta">
             ${dataFmt ? `<span class="card-date">📅 ${dataFmt}</span>` : ''}
             ${im.codigo ? `<span class="card-code" onclick="copiarCodigo('${esc(im.codigo)}', this)">#${esc(im.codigo)} 📋</span>` : ''}
+            ${im.preco ? `<span class="card-date" style="background:#dcfce7; color:#166534;">💰 ${esc(im.preco)}</span>` : ''}
           </div>
           <div class="card-title">${esc(im.titulo) || 'Sem endereço'}</div>
           ${descTexto ? `<div class="card-desc" onclick="this.classList.toggle('expandido')">${esc(descTexto)}</div>` : ''}
@@ -2939,7 +3172,7 @@ function abrirPainelNovoImovel(){
   limparFormAdmin();
   $('adminPanel').classList.remove('hidden');
   $('adminPanel').scrollIntoView({ behavior: 'smooth', block: 'start' });
-  setTimeout(() => $('adTitulo').focus(), 300);
+  setTimeout(() => $('adRua').focus(), 300);
 }
 function fecharPainelImovel(){
   $('adminPanel').classList.add('hidden');
@@ -2948,9 +3181,15 @@ function fecharPainelImovel(){
 function limparFormAdmin(){
   $('editingId').value = '';
   $('adTelefone').value = state.telefoneAtual ? fmtTel(state.telefoneAtual) : '';
-  $('adTitulo').value = '';
-  $('adDescricao').value = '';
   $('adLink').value = '';
+  $('adRua').value = '';
+  $('adNumero').value = '';
+  $('adBairro').value = '';
+  $('adPreco').value = '';
+  $('adCondominio').value = '';
+  $('adIPTU').value = '';
+  $('adDescricao').value = '';
+  $('adChaveTexto').value = '';
   $('adImagem').value = '';
   $('previewImg').style.display = 'none';
   $('previewImg').src = '';
@@ -2993,11 +3232,11 @@ function onLinkImovelChanged(){
 }
 async function salvarImovel(){
   const tel = normalizaTel($('adTelefone').value);
-  const titulo = $('adTitulo').value.trim();
+  const rua = $('adRua').value.trim();
   const link = $('adLink').value.trim();
   let imagem = $('adImagem').value.trim();
   if(!tel || tel.length < 10){ toast('Telefone inválido', 'error'); return; }
-  if(!titulo){ toast('Informe o endereço', 'error'); return; }
+  if(!rua){ toast('Informe a rua', 'error'); return; }
   const btn = $('btnSalvarImovel');
   btn.disabled = true;
   btn.innerHTML = '<span class="loader"></span> Salvando...';
@@ -3009,9 +3248,17 @@ async function salvarImovel(){
   const res = await api('salvarImovel', {
     senha: state.adminSenha,
     id: $('editingId').value || '',
-    telefone: tel, titulo,
+    telefone: tel,
+    rua: rua,
+    numero: $('adNumero').value.trim(),
+    bairro: $('adBairro').value.trim(),
+    preco: $('adPreco').value.trim(),
+    condominio: $('adCondominio').value.trim(),
+    iptu: $('adIPTU').value.trim(),
     descricao: $('adDescricao').value.trim(),
-    link, imagem, status: 'pendente'
+    link, imagem,
+    chaveTexto: $('adChaveTexto').value.trim(),
+    status: 'pendente'
   });
   marcarSalvando(false);
   btn.disabled = false;
@@ -3026,10 +3273,16 @@ function editarImovel(id){
   if(!im) return;
   $('editingId').value = im.id;
   $('adTelefone').value = fmtTel(im.telefone);
-  $('adTitulo').value = im.titulo;
-  $('adDescricao').value = im.descricao;
   $('adLink').value = im.link;
-  $('adImagem').value = im.imagem;
+  $('adRua').value = im.rua || '';
+  $('adNumero').value = im.numero || '';
+  $('adBairro').value = im.bairro || '';
+  $('adPreco').value = im.preco || '';
+  $('adCondominio').value = im.condominio || '';
+  $('adIPTU').value = im.iptu || '';
+  $('adDescricao').value = im.descricao || '';
+  $('adChaveTexto').value = im.chaveTexto || '';
+  $('adImagem').value = im.imagem || '';
   if(im.imagem) atualizarPreview(im.imagem);
   $('btnSalvarImovel').textContent = '💾 Atualizar';
   $('adminPanelTitle').textContent = 'Editar imóvel';
@@ -3134,6 +3387,10 @@ function abrirAgendarModal(id){
   if(!im) return;
   $('agendarImovelId').value = id;
   $('agendarDataHora').value = toInputDateTime(im.dataVisitaAgendada) || '';
+  $('agendarRua').value = im.rua || (im.titulo || '').split(',')[0] || '';
+  $('agendarNumero').value = im.numero || '';
+  $('agendarBairro').value = im.bairro || '';
+  $('agendarChave').value = im.chaveTexto || '';
   $('btnCancelarAgendamento').style.display = im.dataVisitaAgendada ? 'inline-flex' : 'none';
   $('agendarBackdrop').classList.add('show');
 }
@@ -3142,17 +3399,34 @@ function fecharAgendarModal(){ $('agendarBackdrop').classList.remove('show'); }
 async function salvarAgendamento(ev){
   const id = $('agendarImovelId').value;
   const dataHora = $('agendarDataHora').value;
+  const rua = $('agendarRua').value.trim();
+  const numero = $('agendarNumero').value.trim();
+  const bairro = $('agendarBairro').value.trim();
+  const chaveTexto = $('agendarChave').value.trim();
   if(!id || !dataHora){ toast('Informe data e hora', 'error'); return; }
+  if(!rua){ toast('Informe a rua', 'error'); return; }
+  if(!numero){ toast('Informe o número', 'error'); return; }
+  if(!chaveTexto){ toast('Informe onde pegar a chave', 'error'); return; }
+
   const btn = ev?.target; if(btn) btn.disabled = true;
   marcarSalvando(true);
   const iso = new Date(dataHora).toISOString();
-  const res = await api('agendarVisita', { senha: state.adminSenha, id, dataAgendada: iso });
+  const res = await api('agendarVisita', {
+    senha: state.adminSenha, id, dataAgendada: iso,
+    rua, numero, bairro, chaveTexto
+  });
   marcarSalvando(false);
   if(btn) btn.disabled = false;
   if(!res.ok){ toast(res.error || 'Erro', 'error'); return; }
-  toast('Agendado ✅', 'success');
+  toast('Visita agendada ✅', 'success');
   const im = state.imoveis.find(i => i.id === id);
-  if(im) im.dataVisitaAgendada = iso;
+  if(im){
+    im.dataVisitaAgendada = iso;
+    im.chaveTexto = chaveTexto;
+    const t = [rua, numero, bairro].filter(Boolean).join(', ').replace(/, ([^,]+)$/, ' - $1');
+    im.titulo = rua + (numero ? ', ' + numero : '') + (bairro ? ' - ' + bairro : '');
+    im.rua = rua; im.numero = numero; im.bairro = bairro;
+  }
   state.carregado.agenda = false;
   state.carregado.visitar = false;
   fecharAgendarModal();
@@ -3196,7 +3470,7 @@ async function cancelarAgendamentoDireto(id){
 }
 
 /* =====================================================
-   AGENDA / NOTIFICAÇÕES: ABRIR IMÓVEL
+   AGENDA: ABRIR IMÓVEL
 ===================================================== */
 async function abrirImovelDaAgenda(telefone, imovelId){
   const tel = normalizaTel(telefone);
@@ -3225,6 +3499,155 @@ function destacarCard(imovelId){
     card.classList.add('destacado');
     setTimeout(() => card.classList.remove('destacado'), 3000);
   }, 200);
+}
+
+/* =====================================================
+   LISTA GERAL DE IMÓVEIS (BOTÃO 🏢)
+===================================================== */
+async function abrirListaGeralImoveis(){
+  $('listaGeralSub').textContent = 'Carregando...';
+  $('listaGeralImoveis').innerHTML = '<div class="loading-inline"><span class="loader loader-lg"></span></div>';
+  $('listaGeralBackdrop').classList.add('show');
+  marcarSalvando(true);
+  const res = await api('listarTodosImoveis', { senha: state.adminSenha });
+  marcarSalvando(false);
+  if(!res.ok){
+    $('listaGeralSub').textContent = 'Erro ao carregar';
+    $('listaGeralImoveis').innerHTML = '<div class="empty-state"><p>' + esc(res.error || 'Erro') + '</p></div>';
+    return;
+  }
+  state.todosImoveis = res.data || [];
+  state.carregado.geral = true;
+  $('listaGeralSub').textContent = state.todosImoveis.length + ' imóveis cadastrados';
+  renderizarFiltrosGeralStatus();
+  renderizarListaGeral();
+}
+function fecharListaGeral(){ $('listaGeralBackdrop').classList.remove('show'); }
+
+let _buscaGeralTimer = null;
+function onBuscaGeralChanged(){
+  clearTimeout(_buscaGeralTimer);
+  _buscaGeralTimer = setTimeout(() => renderizarListaGeral(), 250);
+}
+
+function renderizarFiltrosGeralStatus(){
+  const wrap = $('filtrosGeralStatus');
+  if(!wrap) return;
+  const cnt = { todos: 0, pendente: 0, gostei: 0, 'quero-visitar': 0, 'nao-gostei': 0, desativados: 0 };
+  state.todosImoveis.forEach(im => {
+    if(isDesativado(im)){ cnt.desativados++; return; }
+    cnt.todos++;
+    const s = im.status || 'pendente';
+    if(cnt[s] !== undefined) cnt[s]++;
+    else cnt.pendente++;
+  });
+  const opts = [
+    ['todos', '📋 Todos', cnt.todos],
+    ['pendente', '⏳ Aguardando', cnt.pendente],
+    ['quero-visitar', '📅 Visitar', cnt['quero-visitar']],
+    ['gostei', '❤️ Gostei', cnt.gostei],
+    ['nao-gostei', '❌ Não', cnt['nao-gostei']],
+    ['desativados', '🚫 Desativados', cnt.desativados]
+  ];
+  wrap.innerHTML = `
+    <div class="filtro-grupo">
+      <span class="lbl">Status:</span>
+      ${opts.map(([v, l, n]) => `
+        <button class="chip ${state.filtrosGeralStatus.has(v) || (v === 'todos' && state.filtrosGeralStatus.size === 0) ? 'active' : ''}"
+                onclick="toggleFiltroGeralStatus('${v}')">${l} <span class="cnt">${n}</span></button>
+      `).join('')}
+    </div>
+  `;
+}
+
+function toggleFiltroGeralStatus(v){
+  if(v === 'todos'){
+    state.filtrosGeralStatus.clear();
+  } else {
+    if(state.filtrosGeralStatus.has(v)) state.filtrosGeralStatus.delete(v);
+    else state.filtrosGeralStatus.add(v);
+  }
+  renderizarFiltrosGeralStatus();
+  renderizarListaGeral();
+}
+
+function renderizarListaGeral(){
+  const wrap = $('listaGeralImoveis');
+  if(!wrap) return;
+  const busca = ($('buscaGeral').value || '').toLowerCase().trim();
+  const ordem = $('ordenacaoGeral').value;
+  let arr = [...state.todosImoveis];
+
+  if(state.filtrosGeralStatus.size > 0){
+    arr = arr.filter(im => {
+      const desativado = isDesativado(im);
+      if(state.filtrosGeralStatus.has('desativados') && !desativado) return false;
+      if(state.filtrosGeralStatus.has('desativados')) return true;
+      if(desativado) return false;
+      const s = im.status || 'pendente';
+      return state.filtrosGeralStatus.has(s);
+    });
+  }
+
+  if(busca){
+    const b = busca;
+    const bNum = normalizaTel(busca);
+    arr = arr.filter(im =>
+      (im.titulo || '').toLowerCase().includes(b) ||
+      (im.rua || '').toLowerCase().includes(b) ||
+      (im.bairro || '').toLowerCase().includes(b) ||
+      (im.numero || '').toLowerCase().includes(b) ||
+      (im.codigo || '').toLowerCase().includes(b) ||
+      (im.clienteNome || '').toLowerCase().includes(b) ||
+      (bNum && normalizaTel(im.telefone).includes(bNum))
+    );
+  }
+
+  arr.sort((a, b) => {
+    if(ordem === 'alfabetica') return (a.titulo||'').localeCompare(b.titulo||'', 'pt-BR', {sensitivity:'base'});
+    if(ordem === 'preco'){
+      const pa = parseFloat(String(a.preco||'0').replace(/\D/g,'')) || 0;
+      const pb = parseFloat(String(b.preco||'0').replace(/\D/g,'')) || 0;
+      return pa - pb;
+    }
+    if(ordem === 'cliente') return (a.clienteNome||'').localeCompare(b.clienteNome||'', 'pt-BR', {sensitivity:'base'});
+    return new Date(b.dataCadastro||0) - new Date(a.dataCadastro||0);
+  });
+
+  if(arr.length === 0){
+    wrap.innerHTML = '<div class="empty-state"><h3>Nenhum imóvel encontrado</h3></div>';
+    return;
+  }
+
+  wrap.innerHTML = arr.map(im => {
+    const emoji = emojiTemperatura('frio');
+    const corCorr = im.corretor ? corDoCorretor(im.corretor) : '#6b7280';
+    const desativado = isDesativado(im);
+    const chave = String(im.chaveTexto || '').trim();
+    return `
+      <div class="imovel-linha">
+        <div style="font-size:1.1rem; text-align:center;">🏠</div>
+        <div class="info">
+          <div class="end">
+            ${esc(im.titulo || 'Sem endereço')}
+            ${im.codigo ? `<span class="codigo" style="font-family:'Courier New'; background:#f1eef7; color:#4a3d6b; padding:1px 6px; border-radius:3px; font-size:.66rem; font-weight:700;">#${esc(im.codigo)}</span>` : ''}
+            ${desativado ? '<span class="tag tag-inativo">🚫 Desativado</span>' : ''}
+          </div>
+          <div class="meta">
+            ${im.clienteNome ? `<span>👤 ${esc(im.clienteNome)}</span>` : ''}
+            ${im.corretor ? `<span class="corretor-badge" style="background:${corCorr}">${esc(im.corretor)}</span>` : ''}
+            ${im.preco ? `<span class="preco">💰 ${esc(im.preco)}</span>` : ''}
+            ${chave ? `<span>🔑 <span style="color:#7a6432;">tem chave</span></span>` : ''}
+          </div>
+        </div>
+        <div class="acoes">
+          ${im.link ? `<button class="btn btn-ghost btn-xs" title="Copiar link" onclick="copiarTexto('${esc(im.link)}')">🔗</button>` : ''}
+          ${chave ? `<button class="btn btn-ghost btn-xs" title="Ver chave" data-chave="${esc(chave)}" data-end="${esc(im.titulo || '')}" onclick="abrirChaveModal(this.dataset.chave, this.dataset.end)">🔑</button>` : ''}
+          <button class="btn btn-primary btn-xs" title="Abrir vitrine" onclick="fecharListaGeral(); abrirVitrineDoCliente('${esc(im.telefone)}')">🏠</button>
+        </div>
+      </div>
+    `;
+  }).join('');
 }
 
 /* =====================================================
