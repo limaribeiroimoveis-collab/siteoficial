@@ -73,6 +73,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    min-width: 0;
   }
   @media(max-width:600px){
     .user-info{
@@ -165,20 +166,19 @@
   @keyframes spin{ to{ transform: rotate(360deg); } }
 
   /* ============================================
-     CARDS DE VISITA CONFIRMADA
-     Mobile: 1 por linha (largura da tela)
-     Desktop: 2 por linha
+     CARDS DE VISITA CONFIRMADA — COMPACTOS
+     Mobile: 2 por linha | Desktop: 4 por linha
   ============================================ */
   .visitas-wrap{
     display: grid;
-    grid-template-columns: 1fr;
-    gap: 12px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
     margin-top: 8px;
   }
-  @media(min-width:600px){
+  @media(min-width:768px){
     .visitas-wrap{
-      grid-template-columns: repeat(2, 1fr);
-      gap: 14px;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
     }
   }
 
@@ -186,30 +186,28 @@
     position: relative;
     background: linear-gradient(135deg, #fff5f5 0%, #ffe8e8 100%);
     border: 2px solid #d9534f;
-    border-radius: 12px;
-    padding: 26px 14px 12px;
-    box-shadow: 0 4px 14px rgba(217,83,79,.18);
-    display: flex; flex-direction: column; gap: 10px;
+    border-radius: 10px;
+    padding: 20px 10px 10px;
+    box-shadow: 0 3px 10px rgba(217,83,79,.15);
+    display: flex; flex-direction: column; gap: 7px;
+    min-height: 118px;
   }
   .visita-card::before{
     content: '📍';
     position: absolute;
-    top: -12px; left: 14px;
-    font-size: 1.35rem;
+    top: -10px; left: 10px;
+    font-size: 1.15rem;
     filter: drop-shadow(0 2px 3px rgba(0,0,0,.25));
   }
 
-  .visita-card-header{
-    display: flex; flex-direction: column; gap: 4px;
-  }
   .visita-card-titulo{
-    font-size: .7rem; font-weight: 800;
+    font-size: .62rem; font-weight: 800;
     color: #b91c1c; text-transform: uppercase;
-    letter-spacing: .8px;
-    display: inline-flex; align-items: center; gap: 6px;
+    letter-spacing: .6px;
+    display: inline-flex; align-items: center; gap: 5px;
   }
   .visita-card-titulo .dot{
-    width: 7px; height: 7px; border-radius: 50%;
+    width: 6px; height: 6px; border-radius: 50%;
     background: #d9534f;
     box-shadow: 0 0 0 3px rgba(217,83,79,.25);
     animation: pulseDot 1.6s ease-in-out infinite;
@@ -221,147 +219,46 @@
   }
 
   .visita-card-linhas{
-    display: flex; flex-direction: column; gap: 8px;
+    display: flex; flex-direction: column; gap: 5px;
     color: #7f1d1d;
-    line-height: 1.4;
+    line-height: 1.3;
+    flex: 1;
   }
   .visita-card-linhas .endereco{
     font-weight: 700; color: #7f1d1d;
-    font-size: 1rem;
-    line-height: 1.3;
+    font-size: .78rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    line-height: 1.25;
   }
-  .visita-card-linhas .quando-box{
+  .visita-card-linhas .quando{
     background: #fff;
     border: 1px solid #fca5a5;
-    padding: 8px 10px;
-    border-radius: 8px;
+    padding: 3px 7px;
+    border-radius: 5px;
     font-weight: 700; color: #b91c1c;
-    display: inline-flex; align-items: center; gap: 6px;
-    font-size: .85rem;
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: .7rem;
     align-self: flex-start;
-    box-shadow: 0 1px 3px rgba(217,83,79,.1);
+    white-space: nowrap;
   }
   .visita-card-codigo{
     display: inline-flex; align-items: center;
     font-family: 'Courier New', monospace;
-    font-size: .72rem; font-weight: 700;
+    font-size: .62rem; font-weight: 700;
     color: var(--purple); background: #f1eef7;
-    padding: 3px 8px; border-radius: 5px;
+    padding: 2px 6px; border-radius: 4px;
     border: 1px solid #ddd4ec;
     align-self: flex-start;
   }
 
-  /* Botões de ação do card (copiar texto/imagem) */
-  .visita-card-acoes{
-    display: flex; gap: 6px; margin-top: 4px;
-  }
-  .visita-card-acoes .acao{
-    flex: 1;
-    display: inline-flex; align-items: center; justify-content: center; gap: 5px;
-    background: rgba(255,255,255,.7);
-    color: #b91c1c;
-    border: 1px solid #fca5a5;
-    cursor: pointer; font-family: inherit;
-    padding: 7px 8px; border-radius: 7px;
-    font-size: .74rem; font-weight: 700;
-    transition: all .15s;
-    opacity: .85;
-  }
-  .visita-card-acoes .acao:hover{
-    background: #fff;
-    opacity: 1;
-    box-shadow: 0 2px 6px rgba(217,83,79,.15);
-  }
-  .visita-card-acoes .acao.copiado{
-    background: var(--success);
-    color: #fff;
-    border-color: var(--success);
-  }
-  .visita-card-acoes .acao .ico{ font-size: .95rem; line-height: 1; }
-
-  /* ============================================
-     ÁREA PARA EXPORTAR COMO IMAGEM
-  ============================================ */
-  .visita-snapshot{
-    position: fixed;
-    left: -9999px; top: 0;
-    width: 420px;
-    background: linear-gradient(135deg, #fff5f5 0%, #ffe8e8 100%);
-    border: 3px solid #d9534f;
-    border-radius: 16px;
-    padding: 34px 22px 24px;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    color: #7f1d1d;
-  }
-  .visita-snapshot::before{
-    content: '📍';
-    position: absolute;
-    top: -16px; left: 20px;
-    font-size: 2rem;
-    filter: drop-shadow(0 2px 4px rgba(0,0,0,.25));
-  }
-  .visita-snapshot .snap-titulo{
-    font-size: .78rem; font-weight: 800;
-    color: #b91c1c; text-transform: uppercase;
-    letter-spacing: 1px;
-    display: flex; align-items: center; gap: 8px;
-    margin-bottom: 16px;
-  }
-  .visita-snapshot .snap-titulo .dot{
-    width: 10px; height: 10px; border-radius: 50%;
-    background: #d9534f;
-    box-shadow: 0 0 0 4px rgba(217,83,79,.25);
-  }
-  .visita-snapshot .snap-endereco{
-    font-size: 1.35rem; font-weight: 800;
-    color: #7f1d1d;
-    line-height: 1.25;
-    margin-bottom: 16px;
-    padding-bottom: 14px;
-    border-bottom: 2px dashed #fca5a5;
-  }
-  .visita-snapshot .snap-data{
-    background: #fff;
-    border: 2px solid #fca5a5;
-    border-radius: 10px;
-    padding: 12px 14px;
-    display: flex; align-items: center; gap: 10px;
-    margin-bottom: 12px;
-  }
-  .visita-snapshot .snap-data .ico{
-    font-size: 1.5rem;
-  }
-  .visita-snapshot .snap-data .txt{
-    display: flex; flex-direction: column;
-  }
-  .visita-snapshot .snap-data .txt .dia{
-    font-size: .78rem; color: #b91c1c;
-    font-weight: 600;
-    text-transform: capitalize;
-  }
-  .visita-snapshot .snap-data .txt .hora{
-    font-size: 1.15rem; font-weight: 800;
-    color: #7f1d1d;
-  }
-  .visita-snapshot .snap-codigo{
-    display: inline-block;
-    font-family: 'Courier New', monospace;
-    font-size: .82rem; font-weight: 700;
-    color: #4a3d6b; background: #f1eef7;
-    padding: 5px 12px; border-radius: 6px;
-    border: 1px solid #ddd4ec;
-  }
-  .visita-snapshot .snap-rodape{
-    margin-top: 18px;
-    padding-top: 14px;
-    border-top: 1px solid rgba(217,83,79,.25);
-    font-size: .7rem;
-    color: #b91c1c;
-    font-weight: 700;
-    text-align: center;
-    letter-spacing: .5px;
-    text-transform: uppercase;
-    opacity: .7;
+  @media(max-width:380px){
+    .visita-card-linhas{ font-size: .72rem; }
+    .visita-card-linhas .endereco{ font-size: .74rem; }
+    .visita-card-linhas .quando{ font-size: .66rem; }
+    .visita-card-codigo{ font-size: .58rem; }
   }
 
   /* GRID IMÓVEIS */
@@ -501,6 +398,7 @@
   .card-actions .btn .ico{ font-size: .95rem; line-height: 1; }
   .card-actions .btn .lbl{ font-size: .62rem; letter-spacing: .2px; }
   .card-actions .btn:hover{ background: #e8ecf1; }
+  .card-actions .btn:disabled{ opacity: .5; cursor: not-allowed; }
 
   .card-actions .btn-success.ativo{
     background: var(--success); color: #fff;
@@ -612,7 +510,7 @@
   .empty-state svg{ width: 56px; height: 56px; margin-bottom: 12px; opacity: .35; }
   .empty-state h3{ font-size: .95rem; margin-bottom: 4px; color: var(--text-soft); }
 
-  /* ERRO DE CONEXÃO — botão atualizar página */
+  /* ERRO DE CONEXÃO */
   .erro-conexao{
     background: #fff; border-radius: var(--radius);
     border: 1px solid #f0c8c8;
@@ -851,6 +749,9 @@ const CACHE_TTL = 5 * 60 * 1000;
 const TIMEOUT_API = 30000;
 const TIMEOUT_LOGIN = 25000;
 
+// Visita continua aparecendo por X ms depois do horário agendado
+const VISITA_TOLERANCIA_MS = 2 * 60 * 60 * 1000; // 2 horas
+
 const ZAP_CORRETORES = {
   'Hugo': '5531996070930',
   'Carolina': '5531996273985'
@@ -861,7 +762,8 @@ const state = {
   deviceToken: null,
   clienteInfo: null,
   imoveis: [],
-  filtro: 'recentes'
+  filtro: 'recentes',
+  salvandoIds: {}  // id -> true enquanto salva, pra travar duplo clique
 };
 
 const $ = id => document.getElementById(id);
@@ -989,7 +891,6 @@ function limparCache(){
   try { localStorage.removeItem(CACHE_KEY); } catch(e){}
 }
 
-// Guarda o link original (tel+senha) para reusar em caso de falha
 function gravarLinkOriginal(tel, senha){
   try {
     localStorage.setItem(LINK_KEY, JSON.stringify({ tel, senha, ts: Date.now() }));
@@ -1002,14 +903,9 @@ function lerLinkOriginal(){
     if(!raw) return null;
     const obj = JSON.parse(raw);
     if(!obj || !obj.tel || !obj.senha) return null;
-    // Expira em 7 dias
     if(Date.now() - obj.ts > 7 * 24 * 60 * 60 * 1000) return null;
     return obj;
   } catch(e){ return null; }
-}
-
-function limparLinkOriginal(){
-  try { localStorage.removeItem(LINK_KEY); } catch(e){}
 }
 
 function limparSessaoCompleta(){
@@ -1218,14 +1114,18 @@ function mostrarSkeleton(qtd = 4){
 ===================================================== */
 function mostrarErroConexao(){
   const grid = $('gridImoveis');
+  const offline = (typeof navigator.onLine === 'boolean') && !navigator.onLine;
+  const titulo = offline ? 'Você está sem internet' : 'Não conseguimos carregar seus imóveis';
+  const texto = offline
+    ? 'Verifique sua conexão e toque no botão para tentar novamente.'
+    : 'Parece que sua conexão está instável ou o servidor demorou para responder.<br>Toque no botão abaixo para atualizar a página.';
+  const icone = offline ? '📶' : '📡';
+
   grid.innerHTML = `
     <div class="erro-conexao" style="grid-column: 1 / -1;">
-      <div class="icone">📡</div>
-      <h3>Não conseguimos carregar seus imóveis</h3>
-      <p>
-        Parece que sua conexão está instável ou o servidor demorou para responder.<br>
-        Toque no botão abaixo para atualizar a página.
-      </p>
+      <div class="icone">${icone}</div>
+      <h3>${titulo}</h3>
+      <p>${texto}</p>
       <button class="btn-recarregar" onclick="location.reload()">
         <span class="ico">🔄</span> Atualizar página
       </button>
@@ -1259,7 +1159,7 @@ async function entrarCliente(){
 
   const res = await api('loginCliente', {
     telefone: tel, senha: senhaDigitada, deviceToken: '', navegador: navegador
-  }, TIMEOUT_LOGIN, 0);
+  }, TIMEOUT_LOGIN, 1);
 
   btn.disabled = false;
   btn.textContent = 'Entrar na minha vitrine';
@@ -1327,7 +1227,7 @@ async function carregarImoveis(){
   const res = await api('listarImoveis', {
     telefone: state.telefone,
     deviceToken: state.deviceToken
-  }, TIMEOUT_API, 0);
+  }, TIMEOUT_API, 1);
 
   if(!res.ok){
     if(erroEhDispositivoVinculado(res.error)){
@@ -1336,7 +1236,6 @@ async function carregarImoveis(){
     }
     if((res.error || '').toLowerCase().match(/sess|token|inv[áa]lid|expirad|autentic|unauthor/)){
       localStorage.removeItem(TOKEN_KEY);
-      // Tenta revalidar com o link salvo se tiver
       const linkSalvo = lerLinkOriginal();
       if(linkSalvo){
         const r2 = await api('loginCliente', {
@@ -1344,7 +1243,7 @@ async function carregarImoveis(){
           senha: linkSalvo.senha,
           deviceToken: '',
           navegador: detectarNavegador()
-        }, TIMEOUT_LOGIN, 0);
+        }, TIMEOUT_LOGIN, 1);
         if(r2.ok){
           state.deviceToken = r2.deviceToken || '';
           state.clienteInfo = { nome: r2.nome, apelido: r2.apelido };
@@ -1361,7 +1260,6 @@ async function carregarImoveis(){
       setTimeout(() => $('inputSenha').focus(), 200);
       return;
     }
-    // Erro de conexão — mantém cache se tiver, senão mostra erro
     if(!state.imoveis.length){
       mostrarErroConexao();
     } else {
@@ -1375,6 +1273,14 @@ async function carregarImoveis(){
     const db = new Date(b.dataCadastro||0).getTime() || 0;
     return db - da;
   });
+
+  // 🛡️ Proteção: se veio vazio mas tinha cache com dados,
+  // provavelmente é cold start do Apps Script devolvendo vazio por engano.
+  if(novos.length === 0 && state.imoveis.length > 0){
+    console.warn('[vitrine] API retornou vazio, mantendo cache anterior');
+    toast('Não conseguimos atualizar agora. Mostrando os últimos dados.', 'error');
+    return;
+  }
 
   state.imoveis = novos;
   gravarCache(novos, state.telefone, state.clienteInfo?.nome);
@@ -1391,19 +1297,24 @@ async function carregarImoveis(){
 
 /* =====================================================
    VISITAS CONFIRMADAS
+   Regra: mostra se a visita ainda não começou OU
+   se começou há menos de 2 horas.
 ===================================================== */
+function visitaAindaVisivel(iso){
+  if(!iso) return false;
+  const d = new Date(iso);
+  if(isNaN(d.getTime())) return false;
+  const agora = Date.now();
+  const inicio = d.getTime();
+  const fim = inicio + VISITA_TOLERANCIA_MS;
+  return agora <= fim;
+}
+
 function renderizarVisitas(){
   const wrap = $('visitasWrap');
   if(!wrap) return;
 
-  const visitas = (state.imoveis || []).filter(im => {
-    const iso = im.dataVisitaAgendada;
-    if(!iso) return false;
-    const d = new Date(iso);
-    if(isNaN(d.getTime())) return false;
-    const hoje = new Date(); hoje.setHours(0,0,0,0);
-    return d >= hoje;
-  });
+  const visitas = (state.imoveis || []).filter(im => visitaAindaVisivel(im.dataVisitaAgendada));
 
   if(visitas.length === 0){
     wrap.innerHTML = '';
@@ -1422,175 +1333,17 @@ function visitaCardHTML(im){
 
   return `
     <div class="visita-card" data-visita-id="${id}">
-      <div class="visita-card-header">
-        <div class="visita-card-titulo">
-          <span class="dot"></span>
-          Visita confirmada
-        </div>
+      <div class="visita-card-titulo">
+        <span class="dot"></span>
+        Visita confirmada
       </div>
       <div class="visita-card-linhas">
         <div class="endereco">🏠 ${endereco}</div>
         ${codigo ? `<span class="visita-card-codigo">#${codigo}</span>` : ''}
-        <span class="quando-box">📅 ${info.diaSemana ? info.diaSemana.charAt(0).toUpperCase() + info.diaSemana.slice(1) + ', ' : ''}${info.dataCurta} · ${info.hora}</span>
-      </div>
-      <div class="visita-card-acoes">
-        <button class="acao" onclick="copiarTextoVisita('${id}', this)">
-          <span class="ico">📝</span> Texto
-        </button>
-        <button class="acao" onclick="copiarImagemVisita('${id}', this)">
-          <span class="ico">🖼️</span> Imagem
-        </button>
+        <span class="quando">📅 ${info.dataCurta} · ${info.hora}</span>
       </div>
     </div>
   `;
-}
-
-function copiarTextoVisita(id, btn){
-  const im = state.imoveis.find(i => i.id === id);
-  if(!im){ toast('Imóvel não encontrado', 'error'); return; }
-
-  const info = fmtDataHoraVisita(im.dataVisitaAgendada);
-  const linhas = [];
-  linhas.push('📍 VISITA CONFIRMADA');
-  linhas.push('');
-  linhas.push('🏠 *' + (im.titulo || 'Endereço não informado') + '*');
-  linhas.push('📅 ' + (info.diaSemana ? info.diaSemana.charAt(0).toUpperCase() + info.diaSemana.slice(1) + ', ' : '') + info.dataCurta);
-  linhas.push('🕐 ' + info.hora);
-
-  const texto = linhas.join('\n');
-
-  function feedback(){
-    if(!btn) return;
-    const original = btn.innerHTML;
-    btn.classList.add('copiado');
-    btn.innerHTML = '<span class="ico">✓</span> Copiado';
-    setTimeout(() => {
-      btn.classList.remove('copiado');
-      btn.innerHTML = original;
-    }, 1600);
-    toast('Texto copiado! 📋', 'success');
-  }
-
-  if(navigator.clipboard && window.isSecureContext){
-    navigator.clipboard.writeText(texto).then(feedback).catch(() => fallbackCopy(texto, feedback));
-  } else {
-    fallbackCopy(texto, feedback);
-  }
-}
-
-/* =====================================================
-   COPIAR IMAGEM (usa html2canvas via CDN)
-===================================================== */
-function carregarHtml2Canvas(){
-  return new Promise((resolve, reject) => {
-    if(window.html2canvas) return resolve(window.html2canvas);
-    const s = document.createElement('script');
-    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
-    s.onload = () => resolve(window.html2canvas);
-    s.onerror = () => reject(new Error('Falha ao carregar html2canvas'));
-    document.head.appendChild(s);
-  });
-}
-
-async function copiarImagemVisita(id, btn){
-  const im = state.imoveis.find(i => i.id === id);
-  if(!im){ toast('Imóvel não encontrado', 'error'); return; }
-
-  const original = btn ? btn.innerHTML : '';
-  if(btn){
-    btn.disabled = true;
-    btn.innerHTML = '<span class="ico">⏳</span> Gerando...';
-  }
-
-  try {
-    const html2canvas = await carregarHtml2Canvas();
-    const info = fmtDataHoraVisita(im.dataVisitaAgendada);
-    const snap = document.createElement('div');
-    snap.className = 'visita-snapshot';
-    snap.innerHTML = `
-      <div class="snap-titulo">
-        <span class="dot"></span>
-        Visita confirmada
-      </div>
-      <div class="snap-endereco">${esc(im.titulo || 'Endereço não informado')}</div>
-      <div class="snap-data">
-        <span class="ico">📅</span>
-        <div class="txt">
-          <span class="dia">${info.diaSemana ? info.diaSemana.charAt(0).toUpperCase() + info.diaSemana.slice(1) + ', ' : ''}${info.dataCurta}</span>
-          <span class="hora">🕐 ${info.hora}</span>
-        </div>
-      </div>
-      ${im.codigo ? `<div class="snap-codigo">#${esc(im.codigo)}</div>` : ''}
-      <div class="snap-rodape">Lima Ribeiro Imóveis</div>
-    `;
-    document.body.appendChild(snap);
-
-    const canvas = await html2canvas(snap, {
-      backgroundColor: null,
-      scale: 2,
-      logging: false,
-      useCORS: true
-    });
-    document.body.removeChild(snap);
-
-    // Tenta copiar para a área de transferência como imagem
-    try {
-      const blob = await new Promise(res => canvas.toBlob(res, 'image/png'));
-      if(blob && navigator.clipboard && window.ClipboardItem){
-        await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
-        if(btn){
-          btn.classList.add('copiado');
-          btn.innerHTML = '<span class="ico">✓</span> Copiado';
-          setTimeout(() => {
-            btn.classList.remove('copiado');
-            btn.disabled = false;
-            btn.innerHTML = original;
-          }, 1600);
-        }
-        toast('Imagem copiada! Cole no WhatsApp 🖼️', 'success');
-        return;
-      }
-    } catch(clipErr){
-      console.warn('Clipboard API falhou, fazendo download', clipErr);
-    }
-
-    // Fallback: baixa o arquivo
-    canvas.toBlob((blob) => {
-      if(!blob){ toast('Não foi possível gerar a imagem', 'error'); return; }
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'visita-' + (im.codigo || im.id) + '.png';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      setTimeout(() => URL.revokeObjectURL(url), 1000);
-      toast('Imagem baixada! Anexe no WhatsApp 🖼️', 'success');
-    }, 'image/png');
-
-    if(btn){
-      btn.disabled = false;
-      btn.innerHTML = original;
-    }
-  } catch(err){
-    console.error(err);
-    if(btn){
-      btn.disabled = false;
-      btn.innerHTML = original;
-    }
-    toast('Não foi possível copiar a imagem', 'error');
-  }
-}
-
-function fallbackCopy(texto, cb){
-  const ta = document.createElement('textarea');
-  ta.value = texto;
-  ta.style.position = 'fixed'; ta.style.opacity = '0';
-  document.body.appendChild(ta);
-  ta.select();
-  try { document.execCommand('copy'); cb && cb(); }
-  catch(e){ toast('Não foi possível copiar', 'error'); }
-  document.body.removeChild(ta);
 }
 
 /* =====================================================
@@ -1620,6 +1373,16 @@ function setFiltro(f, el){
    RENDERIZAR IMÓVEIS
 ===================================================== */
 function renderizarImoveis(){
+  // 🛡️ Se algum card está com observação sendo editada, preserva o estado
+  const emEdicao = {};
+  document.querySelectorAll('.obs-wrap.editing').forEach(w => {
+    const obsId = w.id;
+    if(obsId){
+      const input = $(obsId + '-input');
+      emEdicao[obsId] = input ? input.value : '';
+    }
+  });
+
   const grid = $('gridImoveis');
   let lista = [...state.imoveis];
 
@@ -1657,6 +1420,16 @@ function renderizarImoveis(){
   }
   $('emptyState').classList.add('hidden');
   grid.innerHTML = lista.map(cardHTML).join('');
+
+  // 🛡️ Restaura observações em edição
+  Object.keys(emEdicao).forEach(obsId => {
+    const wrap = $(obsId);
+    const input = $(obsId + '-input');
+    if(wrap && input){
+      wrap.classList.add('editing');
+      input.value = emEdicao[obsId];
+    }
+  });
 }
 
 function cardHTML(im){
@@ -1680,6 +1453,9 @@ function cardHTML(im){
   const descId = 'desc-' + id;
 
   const cardExtraClass = (statusAtual === 'nao-gostei') ? ' card-nao-gostei' : '';
+
+  const salvando = !!state.salvandoIds[im.id];
+  const disabledAttr = salvando ? 'disabled' : '';
 
   const btnGostei = (statusAtual === 'gostei') ? 'ativo' : '';
   const btnVisitar = (statusAtual === 'quero-visitar') ? 'ativo' : '';
@@ -1718,13 +1494,13 @@ function cardHTML(im){
       </div>
 
       <div class="card-actions">
-        <button class="btn btn-success ${btnGostei}" onclick="marcar('${id}','gostei')">
+        <button class="btn btn-success ${btnGostei}" ${disabledAttr} onclick="marcar('${id}','gostei')">
           <span class="ico">❤️</span><span class="lbl">Gostei</span>
         </button>
-        <button class="btn btn-warn ${btnVisitar}" onclick="marcar('${id}','quero-visitar')">
+        <button class="btn btn-warn ${btnVisitar}" ${disabledAttr} onclick="marcar('${id}','quero-visitar')">
           <span class="ico">📅</span><span class="lbl">Visitar</span>
         </button>
-        <button class="btn btn-danger ${btnNao}" onclick="marcar('${id}','nao-gostei')">
+        <button class="btn btn-danger ${btnNao}" ${disabledAttr} onclick="marcar('${id}','nao-gostei')">
           <span class="ico">❌</span><span class="lbl">Não</span>
         </button>
       </div>
@@ -1783,35 +1559,49 @@ function abrirZap(imovelId){
 }
 
 /* =====================================================
-   MARCAR STATUS
+   MARCAR STATUS — com trava de duplo clique
 ===================================================== */
 async function marcar(id, acao){
+  // 🛡️ Trava duplo clique
+  if(state.salvandoIds[id]) return;
+
   const im = state.imoveis.find(i => i.id === id);
   if(!im) return;
 
   const statusAtual = im.status || 'pendente';
   const novaAcao = (statusAtual === acao) ? 'pendente' : acao;
 
+  // Aplica otimisticamente
+  const statusAnterior = im.status;
   im.status = novaAcao;
+  state.salvandoIds[id] = true;
   atualizarContadores();
   renderizarImoveis();
   gravarCache(state.imoveis, state.telefone, state.clienteInfo?.nome);
 
   const res = await api('atualizarStatus', {
     id, telefone: state.telefone, acao: novaAcao, deviceToken: state.deviceToken
-  });
+  }, TIMEOUT_API, 1);
+
+  delete state.salvandoIds[id];
 
   if(!res.ok){
     if(erroEhDispositivoVinculado(res.error)){
       mostrarBloqueioDispositivo();
       return;
     }
-    toast(res.error || 'Erro ao salvar', 'error');
-    im.status = statusAtual;
+    // Reverte
+    im.status = statusAnterior;
     atualizarContadores();
     renderizarImoveis();
     gravarCache(state.imoveis, state.telefone, state.clienteInfo?.nome);
+    if(erroEhConexao(res.error)){
+      toast('Sem conexão. Tente novamente.', 'error');
+    } else {
+      toast(res.error || 'Erro ao salvar', 'error');
+    }
   } else {
+    renderizarImoveis(); // libera botões
     toast(novaAcao !== 'pendente' ? 'Marcado como: ' + novaAcao : 'Voltou para aguardando', 'success');
   }
 }
@@ -1876,10 +1666,12 @@ async function salvarEdicaoObs(id, obsId){
 
   const res = await api('salvarObservacao', {
     id, observacao: novaObs, deviceToken: state.deviceToken
-  });
+  }, TIMEOUT_API, 1);
 
   if(!res.ok && erroEhDispositivoVinculado(res.error)){
     mostrarBloqueioDispositivo();
+  } else if(!res.ok && erroEhConexao(res.error)){
+    toast('Salvo localmente, mas não sincronizou. Tente novamente.', 'error');
   }
 }
 
@@ -1899,9 +1691,21 @@ function copiarCodigo(codigo, el){
   }
 }
 
+function fallbackCopy(texto, cb){
+  const ta = document.createElement('textarea');
+  ta.value = texto;
+  ta.style.position = 'fixed'; ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.select();
+  try { document.execCommand('copy'); cb && cb(); }
+  catch(e){ toast('Não foi possível copiar', 'error'); }
+  document.body.removeChild(ta);
+}
+
 /* =====================================================
-   INIT — abre rápido com cache, valida em background
-   ⚠️ Não manda mais pro login em falha de conexão
+   INIT — abre rápido, valida em background
+   🛡️ Blindado contra vazamento entre clientes
+   🛡️ Não manda pro login em falha de conexão
 ===================================================== */
 (async function init(){
   const params = new URLSearchParams(window.location.search);
@@ -1910,7 +1714,6 @@ function copiarCodigo(codigo, el){
 
   const temLinkNovo = telUrl.length >= 10 && senhaUrl.length > 0;
 
-  // Guarda o link novo se veio (para reusar em falhas futuras)
   if(temLinkNovo){
     gravarLinkOriginal(telUrl, senhaUrl);
   }
@@ -1925,7 +1728,12 @@ function copiarCodigo(codigo, el){
   const nomeConhecido = cache?.nome || nomeSalvo || null;
   const tokenConhecido = tokenSalvo || null;
 
-  if(cache && cache.data && cache.data.length && telConhecido){
+  // 🛡️ ANTI-VAZAMENTO: só mostra cache se for do MESMO cliente do link atual
+  // (ou se não veio link novo)
+  const cacheEhDoMesmoCliente = !temLinkNovo ||
+    (cache && cache.telefone && normalizaTel(cache.telefone) === telUrl);
+
+  if(cache && cache.data && cache.data.length && cacheEhDoMesmoCliente){
     state.telefone = telConhecido;
     state.deviceToken = tokenConhecido;
     state.clienteInfo = { nome: nomeConhecido, apelido: null };
@@ -1950,7 +1758,8 @@ function copiarCodigo(codigo, el){
 
   // CASO A — veio link novo (tel+senha)
   if(temLinkNovo){
-    const mesmoCliente = telConhecido && normalizaTel(telConhecido) === telUrl;
+    const mesmoCliente = cache && cache.telefone &&
+                         normalizaTel(cache.telefone) === telUrl;
 
     if(!mesmoCliente && cache && cache.data && cache.data.length){
       state.imoveis = [];
@@ -1963,7 +1772,7 @@ function copiarCodigo(codigo, el){
       senha: senhaUrl,
       deviceToken: '',
       navegador: navegador
-    }, TIMEOUT_LOGIN, 1); // 1 retry
+    }, TIMEOUT_LOGIN, 1);
 
     if(res.ok){
       state.telefone = telUrl;
@@ -2011,15 +1820,14 @@ function copiarCodigo(codigo, el){
       return;
     }
 
-    // ⚠️ Falha de conexão: NÃO manda pro login. Mostra erro com atualizar.
+    // ⚠️ Falha de conexão: NÃO manda pro login.
     if(erroEhConexao(res.error)){
       if(!state.imoveis.length) mostrarErroConexao();
       else toast('Não conseguimos validar agora. Mostrando os últimos dados.', 'error');
       return;
     }
 
-    // Outros erros (senha inválida, etc): mostra erro de conexão se tinha cache
-    // senão manda pro login
+    // Outros erros (senha inválida, etc):
     if(!state.imoveis.length){
       mostrarErroConexao();
     } else {
@@ -2028,7 +1836,7 @@ function copiarCodigo(codigo, el){
     return;
   }
 
-  // CASO B — NÃO veio link novo, tem sessão ou link salvo
+  // CASO B — sem link novo, tem sessão salva
   if(telSalvo && tokenSalvo){
     if(cache && cache.fresh && cache.telefone === telSalvo){
       return;
@@ -2045,6 +1853,13 @@ function copiarCodigo(codigo, el){
         const db = new Date(b.dataCadastro||0).getTime() || 0;
         return db - da;
       });
+
+      // 🛡️ Se veio vazio mas tinha cache, mantém
+      if(novos.length === 0 && state.imoveis.length > 0){
+        console.warn('[vitrine] API retornou vazio (cold start?), mantendo cache');
+        return;
+      }
+
       state.imoveis = novos;
       state.telefone = telSalvo;
       state.deviceToken = tokenSalvo;
@@ -2066,7 +1881,6 @@ function copiarCodigo(codigo, el){
     }
 
     if((res.error || '').toLowerCase().match(/sess|token|inv[áa]lid|expirad|autentic|unauthor/)){
-      // Tenta revalidar com link salvo
       const linkSalvo = lerLinkOriginal();
       if(linkSalvo){
         const r2 = await api('loginCliente', {
@@ -2076,8 +1890,10 @@ function copiarCodigo(codigo, el){
           navegador: detectarNavegador()
         }, TIMEOUT_LOGIN, 1);
         if(r2.ok){
+          state.telefone = linkSalvo.tel;
           state.deviceToken = r2.deviceToken || '';
           state.clienteInfo = { nome: r2.nome, apelido: r2.apelido };
+          localStorage.setItem(TEL_KEY, linkSalvo.tel);
           localStorage.setItem(TOKEN_KEY, state.deviceToken);
           if(r2.nome) localStorage.setItem(NOME_KEY, r2.nome);
           return carregarImoveis();
@@ -2094,7 +1910,6 @@ function copiarCodigo(codigo, el){
       return;
     }
 
-    // Erro de conexão — mantém cache se tiver, senão mostra erro
     if(!state.imoveis.length){
       mostrarErroConexao();
     } else {
@@ -2142,7 +1957,6 @@ function copiarCodigo(codigo, el){
       return;
     }
 
-    // Falhou e não tem cache — mostra erro com botão atualizar
     if(!state.imoveis.length){
       mostrarErroConexao();
     }
@@ -2156,6 +1970,16 @@ function copiarCodigo(codigo, el){
     setTimeout(() => $('inputTelefone').focus(), 200);
   }
 })();
+
+/* =====================================================
+   Re-renderiza visitas a cada minuto pra remover as
+   que passaram de 2h automaticamente (sem recarregar)
+===================================================== */
+setInterval(() => {
+  if(state.imoveis.length > 0){
+    renderizarVisitas();
+  }
+}, 60 * 1000);
 </script>
 </body>
 </html>
