@@ -3759,38 +3759,21 @@ function atualizarBadgeCorrecoes(){
   num.textContent = total > 99 ? '99+' : total;
 }
 
-function abrirCorrecoes(){
-  const lista = $('correcoesLista');
-  if(state.correcoes.length === 0){
-    lista.innerHTML = `
-      <div class="empty-state">
-        <svg class="empty-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-          <polyline points="20 6 9 17 4 12"/>
-        </svg>
-        <h3>Nada para corrigir</h3>
-        <p>Tudo em ordem.</p>
-      </div>`;
-  } else {
-    lista.innerHTML = state.correcoes.map((c, i) => {
-      const ico = c.severidade === 'alta' ? 'alta' : c.severidade === 'media' ? 'media' : 'baixa';
-      const tipoLegivel = String(c.tipo || '').replace(/_/g, ' ').toLowerCase();
-      let acoes = '';
-      if(c.tipo === 'CLIENTE_QUENTE_SEM_VISITA' && c.acoes && c.acoes.length){
-        acoes = `
-          <div class="acoes">
-            <button class="btn btn-warn btn-xs" onclick="aceitarMorno('${esc(c.telefone)}')">Aceitar como morno</button>
-            <button class="btn btn-ghost btn-xs" onclick="prorrogarQuente('${esc(c.telefone)}')">Prorrogar 10 dias</button>
-            <button class="btn btn-ghost btn-xs" onclick="marcarCorrecaoResolvida(${i})">Ação concluída</button>
-          </div>`;
-      } else {
-        acoes = `
-          <div class="acoes">
-            <button class="btn btn-soft btn-xs" onclick="marcarCorrecaoResolvida(${i})">
-              <svg class="ico ico-sm" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-              Ação concluída
-            </button>
-          </div>`;
-      }
+if(c.tipo === 'CLIENTE_QUENTE_SEM_VISITA' && c.acoes && c.acoes.length){
+  acoes = `
+    <div class="acoes">
+      <button class="btn btn-warn btn-xs" onclick="aceitarMorno('${esc(c.telefone)}')">Aceitar como morno</button>
+      <button class="btn btn-ghost btn-xs" onclick="prorrogarQuente('${esc(c.telefone)}')">Prorrogar 10 dias</button>
+    </div>`;
+} else {
+  acoes = `
+    <div class="acoes">
+      <button class="btn btn-soft btn-xs" onclick="marcarCorrecaoResolvida(${i})">
+        <svg class="ico ico-sm" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+        Ação concluída
+      </button>
+    </div>`;
+}
       return `
         <div class="correcao-item ${ico}">
           <div class="ico-wrap">
