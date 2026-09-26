@@ -2637,10 +2637,10 @@ function agendaRowHTML(a, conflito){
       </button>`
     : '';
 
-  const btnAnuncio = a.link
-    ? `<button class="acao-btn btn-anuncio" onclick="abrirAnuncioAgenda('${id}')" title="Abrir anúncio">
+  const btnAnuncio = a.codigo
+    ? `<button class="acao-btn btn-anuncio" onclick="abrirAnuncioAgenda('${id}')" title="Buscar entrada">
         <svg class="ico" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-        <span class="lbl-btn">Anúncio</span>
+        <span class="lbl-btn">Entrada</span>
       </button>`
     : '';
 
@@ -2694,8 +2694,8 @@ function agendaRowHTML(a, conflito){
 
 function abrirAnuncioAgenda(id){
   const a = state.agendamentos.find(x => x.id === id);
-  if(!a || !a.link){ toast('Anúncio não disponível', 'error'); return; }
-  window.open(a.link, '_blank', 'noopener');
+  if(!a || !a.codigo){ toast('Código do imóvel não disponível', 'error'); return; }
+  window.open(`${BUSCAR_BASE}/${a.codigo}`, '_blank', 'noopener');
 }
 
 /* =====================================================
