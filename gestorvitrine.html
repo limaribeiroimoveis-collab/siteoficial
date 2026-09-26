@@ -1590,10 +1590,7 @@
       <div class="form-group"><label>Número <span class="req">*</span></label><input type="text" id="agendarNumero"></div>
       <div class="form-group"><label>Bairro</label><input type="text" id="agendarBairro"></div>
     </div>
-    <div class="form-group">
-      <label>Onde pegar a chave <span class="req">*</span></label>
-      <textarea id="agendarChave" placeholder="Ex: Chave na portaria com o Sr. José, ligar antes"></textarea>
-    </div>
+    
     <div style="display:flex; gap:8px;">
       <button class="btn btn-primary" style="flex:1" onclick="salvarAgendamento(event)">Agendar</button>
       <button class="btn btn-ghost" id="btnCancelarAgendamento" onclick="cancelarAgendamento()">Cancelar agendamento</button>
@@ -4414,7 +4411,6 @@ function abrirAgendarModal(id){
   $('agendarRua').value = campos.rua;
   $('agendarNumero').value = campos.numero;
   $('agendarBairro').value = campos.bairro;
-  $('agendarChave').value = campos.chave;
   $('btnCancelarAgendamento').style.display = im.dataVisitaAgendada ? 'inline-flex' : 'none';
   $('agendarBackdrop').classList.add('show');
 }
@@ -4426,18 +4422,16 @@ async function salvarAgendamento(ev){
   const rua = $('agendarRua').value.trim();
   const numero = $('agendarNumero').value.trim();
   const bairro = $('agendarBairro').value.trim();
-  const chaveTexto = $('agendarChave').value.trim();
   if(!id || !dataHora){ toast('Informe data e hora', 'error'); return; }
   if(!rua){ toast('Informe a rua', 'error'); return; }
   if(!numero){ toast('Informe o número', 'error'); return; }
-  if(!chaveTexto){ toast('Informe onde pegar a chave', 'error'); return; }
 
   const btn = ev?.target; if(btn) btn.disabled = true;
   marcarSalvando(true);
   const iso = new Date(dataHora).toISOString();
   const res = await api('agendarVisita', {
     senha: state.adminSenha, id, dataAgendada: iso,
-    rua, numero, bairro, chaveTexto
+    rua, numero, bairro
   });
   marcarSalvando(false);
   if(btn) btn.disabled = false;
@@ -4448,7 +4442,6 @@ async function salvarAgendamento(ev){
     im.dataVisitaAgendada = iso;
     im.titulo = rua + (numero ? ', ' + numero : '') + (bairro ? ' - ' + bairro : '');
     im.rua = rua; im.numero = numero; im.bairro = bairro;
-    im.chaveTexto = chaveTexto;
   }
   state.carregado.agenda = false;
   state.carregado.visitar = false;
