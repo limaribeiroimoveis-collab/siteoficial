@@ -53,7 +53,6 @@
     -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
     line-height: 1.5;
     font-size: 14px;
-    font-feature-settings: "cv02","cv03","cv04","cv11";
   }
   .container{ max-width: 1320px; margin: 0 auto; padding: 20px; }
   @media(max-width:640px){ .container{ padding: 12px; } }
@@ -74,7 +73,6 @@
   }
   .ico-sm{ width: 14px; height: 14px; vertical-align: -3px; }
   .ico-lg{ width: 20px; height: 20px; }
-  .ico-xl{ width: 24px; height: 24px; }
 
   /* =====================================================
      HEADER
@@ -168,7 +166,7 @@
   .login-card .sub{ color: var(--text-soft); margin-bottom: 28px; font-size: .85rem; text-align: center; }
 
   /* =====================================================
-     INPUTS / SELECTS / TEXTAREAS
+     INPUTS
   ===================================================== */
   input, textarea, select{
     width: 100%; padding: 10px 12px; border: 1px solid var(--border-strong);
@@ -230,7 +228,7 @@
   .btn-xs{ padding: 5px 9px; font-size: .72rem; gap: 4px; }
 
   /* =====================================================
-     BIG CARDS (HOME)
+     BIG CARDS
   ===================================================== */
   .big-cards{
     display: grid; grid-template-columns: repeat(3, 1fr);
@@ -367,103 +365,138 @@
   }
 
   /* =====================================================
-     LISTA AGENDA
+     AGENDA V2 (card com topo + barra)
   ===================================================== */
-  .agenda-lista{ display: flex; flex-direction: column; gap: 6px; }
-  .agenda-row{
-    display: grid;
-    grid-template-columns: 100px 1fr auto;
-    gap: 14px; align-items: center;
-    padding: 12px 14px;
+  .agenda-lista{ display: flex; flex-direction: column; gap: 10px; }
+  .agenda-row-v2{
+    display: flex; flex-direction: column;
+    gap: 10px;
+    padding: 14px 16px;
     border-radius: var(--radius);
     background: #fff;
-    cursor: pointer;
-    transition: all .12s;
     border: 1px solid var(--border);
     border-left-width: 3px;
     position: relative;
+    transition: all .15s;
   }
-  .agenda-row:hover{
+  .agenda-row-v2:hover{
     border-color: var(--border-strong);
     box-shadow: var(--shadow-sm);
   }
-  .agenda-row .quando{
-    font-size: .74rem; font-weight: 700;
-    padding: 4px 8px; border-radius: var(--radius-sm);
-    text-align: center; white-space: nowrap;
-    letter-spacing: -.005em;
+  .agenda-row-v2 .cabecalho{
+    display: flex; align-items: flex-start; gap: 12px;
+    flex-wrap: wrap;
   }
-  .agenda-row .quando.hoje{ background: var(--info-soft); color: var(--info); }
-  .agenda-row .quando.amanha{ background: var(--warn-soft); color: var(--warn); }
-  .agenda-row .quando.semana{ background: var(--success-soft); color: var(--success); }
-  .agenda-row .quando.distante{ background: var(--bg-alt); color: var(--text-soft); }
-  .agenda-row .info{ min-width: 0; display: flex; flex-direction: column; gap: 4px; }
-  .agenda-row .cliente{
-    font-size: .85rem; font-weight: 700; color: var(--text);
+  .agenda-row-v2 .quando{
+    font-size: .76rem; font-weight: 700;
+    padding: 5px 10px; border-radius: var(--radius-sm);
+    white-space: nowrap; flex-shrink: 0;
+  }
+  .agenda-row-v2 .quando.hoje{ background: var(--info-soft); color: var(--info); }
+  .agenda-row-v2 .quando.amanha{ background: var(--warn-soft); color: var(--warn); }
+  .agenda-row-v2 .quando.semana{ background: var(--success-soft); color: var(--success); }
+  .agenda-row-v2 .quando.distante{ background: var(--bg-alt); color: var(--text-soft); }
+
+  .agenda-row-v2 .info{ flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+  .agenda-row-v2 .cliente{
+    font-size: .88rem; font-weight: 700; color: var(--text);
     display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
     letter-spacing: -.005em;
   }
-  .agenda-row .cliente .tel{
-    font-size: .74rem; color: var(--text-soft); font-weight: 500;
-    display: inline-flex; align-items: center; gap: 4px;
-  }
-  .agenda-row .detalhe{
-    font-size: .72rem; color: var(--text-soft);
+  .agenda-row-v2 .detalhe{
+    font-size: .74rem; color: var(--text-soft);
     display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
   }
-  .agenda-row .codigo{
+  .agenda-row-v2 .detalhe .codigo{
     font-family: var(--mono);
     background: var(--bg-alt); color: var(--text-soft);
     padding: 1px 7px; border-radius: 4px;
-    font-size: .66rem; font-weight: 700;
+    font-size: .68rem; font-weight: 700;
   }
-  .agenda-row .acoes{
-    display: flex; gap: 4px; align-items: center;
-  }
-  .agenda-row .btn-acao{
-    width: 30px; height: 30px;
-    border-radius: var(--radius-sm);
-    border: 1px solid var(--border);
-    background: #fff; cursor: pointer;
-    display: inline-flex; align-items: center; justify-content: center;
-    color: var(--text-soft);
-    transition: all .15s;
-    padding: 0;
-  }
-  .agenda-row .btn-acao:hover{ background: var(--bg-alt); color: var(--text); border-color: var(--border-strong); }
-  .agenda-row .btn-acao.btn-zap:hover{ background: #e7f6ed; color: var(--success); border-color: #b8dfc7; }
-  .agenda-row .btn-acao.btn-rel:hover{ background: var(--primary-soft); color: var(--primary); border-color: #c9d6e4; }
-  .agenda-row .btn-acao.btn-visita:hover{ background: var(--info-soft); color: var(--info); border-color: #b8cde3; }
-
-  /* Badge de conflito no card */
-  .agenda-row .conflito-badge{
-    position: absolute; top: 8px; right: 12px;
-    padding: 2px 8px; border-radius: 4px;
-    font-size: .64rem; font-weight: 700;
+  .agenda-row-v2 .detalhe .tel{
     display: inline-flex; align-items: center; gap: 4px;
-    letter-spacing: .2px;
+    font-weight: 600; color: var(--text);
   }
-  .agenda-row .conflito-badge.alto{
+
+  .agenda-row-v2 .conflito-badge{
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 3px 8px; border-radius: 4px;
+    font-size: .68rem; font-weight: 700;
+    letter-spacing: .2px;
+    align-self: flex-start;
+  }
+  .agenda-row-v2 .conflito-badge.alto{
     background: var(--danger-soft); color: var(--danger);
     border: 1px solid #e0c4c4;
   }
-  .agenda-row .conflito-badge.medio{
+  .agenda-row-v2 .conflito-badge.medio{
     background: var(--warn-soft); color: var(--warn);
     border: 1px solid #e2d3a8;
   }
 
+  .agenda-row-v2 .btn-finalizar{
+    margin-left: auto;
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 14px; border-radius: var(--radius-sm);
+    background: var(--primary); color: #fff;
+    border: none; cursor: pointer; font-family: inherit;
+    font-size: .76rem; font-weight: 700;
+    transition: all .15s;
+    flex-shrink: 0;
+  }
+  .agenda-row-v2 .btn-finalizar:hover{ background: var(--primary-hover); }
+  .agenda-row-v2 .btn-finalizar .ico{ width: 14px; height: 14px; }
+
+  .agenda-row-v2 .barra-acoes{
+    display: flex; gap: 6px; flex-wrap: wrap;
+    padding-top: 10px;
+    border-top: 1px dashed var(--border);
+  }
+  .agenda-row-v2 .barra-acoes .acao-btn{
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 6px 12px; border-radius: var(--radius-sm);
+    background: #fff; border: 1px solid var(--border);
+    cursor: pointer; font-family: inherit;
+    font-size: .74rem; font-weight: 600; color: var(--text-soft);
+    transition: all .15s;
+    white-space: nowrap;
+  }
+  .agenda-row-v2 .barra-acoes .acao-btn:hover{
+    background: var(--bg);
+    border-color: var(--border-strong);
+    color: var(--text);
+  }
+  .agenda-row-v2 .barra-acoes .acao-btn .ico{ width: 14px; height: 14px; }
+
+  .agenda-row-v2 .barra-acoes .acao-btn.btn-zap:hover{
+    background: #e7f6ed; border-color: #b8dfc7; color: #1e7a3f;
+  }
+  .agenda-row-v2 .barra-acoes .acao-btn.btn-vitrine:hover{
+    background: var(--primary-soft); border-color: #c9d6e4; color: var(--primary);
+  }
+  .agenda-row-v2 .barra-acoes .acao-btn.btn-anuncio:hover{
+    background: var(--info-soft); border-color: #c9d6e4; color: var(--info);
+  }
+  .agenda-row-v2 .barra-acoes .acao-btn.btn-chave:hover{
+    background: var(--warn-soft); border-color: #e2d3a8; color: var(--warn);
+  }
+  .agenda-row-v2 .barra-acoes .acao-btn.btn-share:hover{
+    background: #ede9fe; border-color: #c9bfe8; color: #5b21b6;
+  }
+
   @media(max-width:640px){
-    .agenda-row{
-      grid-template-columns: 1fr;
-      gap: 8px;
-      padding: 12px;
+    .agenda-row-v2{ padding: 12px 12px; gap: 8px; }
+    .agenda-row-v2 .cabecalho{ gap: 8px; }
+    .agenda-row-v2 .quando{ font-size: .7rem; padding: 4px 8px; }
+    .agenda-row-v2 .cliente{ font-size: .82rem; }
+    .agenda-row-v2 .detalhe{ font-size: .7rem; gap: 6px; }
+    .agenda-row-v2 .btn-finalizar{ padding: 5px 10px; font-size: .72rem; }
+    .agenda-row-v2 .barra-acoes{ gap: 5px; }
+    .agenda-row-v2 .barra-acoes .acao-btn{
+      padding: 7px 10px; font-size: .72rem;
+      flex: 1 1 calc(50% - 3px); justify-content: center;
+      min-width: 0;
     }
-    .agenda-row .quando{
-      justify-self: flex-start;
-      font-size: .7rem;
-    }
-    .agenda-row .acoes{ justify-content: flex-start; }
-    .agenda-row .conflito-badge{ position: static; align-self: flex-start; }
   }
 
   .corretor-badge{
@@ -574,7 +607,7 @@
   }
 
   /* =====================================================
-     CARTÕES DE VISITA (PNG)
+     CARTÕES DE VISITA
   ===================================================== */
   .cartoes-visita-wrap{
     margin-top: 14px; padding: 14px 16px;
@@ -861,19 +894,12 @@
     position: fixed; inset: 0; background: rgba(15,23,42,.6); z-index: 1000;
     display: none; align-items: center; justify-content: center; padding: 20px;
     backdrop-filter: blur(3px);
-    animation: fadeIn .15s ease;
   }
-  @keyframes fadeIn{ from{ opacity: 0; } to{ opacity: 1; } }
   .modal-backdrop.show{ display: flex; }
   .modal{
     background: #fff; border-radius: var(--radius-lg); max-width: 720px; width: 100%;
     max-height: 92vh; overflow: auto; padding: 24px; position: relative;
     box-shadow: var(--shadow-lg);
-    animation: modalIn .18s ease;
-  }
-  @keyframes modalIn{
-    from{ transform: scale(.97); opacity: 0; }
-    to{ transform: scale(1); opacity: 1; }
   }
   .modal-close{
     position: absolute; top: 14px; right: 14px;
@@ -884,7 +910,6 @@
     display: flex; align-items: center; justify-content: center;
   }
   .modal-close:hover{ background: var(--bg-alt); color: var(--text); }
-
   .modal h2{
     font-size: 1.05rem; font-weight: 700;
     letter-spacing: -.01em;
@@ -892,7 +917,6 @@
     display: flex; align-items: center; gap: 9px;
   }
 
-  /* Modal Obs grande */
   .modal-obs{
     background: #fff; border-radius: var(--radius-lg);
     width: 92vw; height: 88vh;
@@ -915,7 +939,6 @@
   }
   .modal-obs .contador{ font-size: .74rem; color: var(--muted); }
 
-  /* Confirmação */
   .confirm-backdrop{
     position: fixed; inset: 0; background: rgba(15,23,42,.65); z-index: 2000;
     display: none; align-items: center; justify-content: center; padding: 20px;
@@ -927,7 +950,6 @@
     max-width: 400px; width: 100%;
     box-shadow: var(--shadow-lg);
     text-align: center;
-    animation: modalIn .18s ease;
   }
   .confirm-box .icon-wrap{
     width: 52px; height: 52px; border-radius: 50%;
@@ -942,7 +964,6 @@
   .confirm-box .confirm-actions{ display: flex; gap: 8px; }
   .confirm-box .confirm-actions .btn{ flex: 1; }
 
-  /* Correções */
   .correcao-item{
     padding: 14px 16px; border-radius: var(--radius);
     background: #fff; margin-bottom: 8px;
@@ -973,7 +994,6 @@
     display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap;
   }
 
-  /* Toast */
   .toast{
     position: fixed; bottom: 24px; left: 50%;
     transform: translate(-50%, 30px);
@@ -988,7 +1008,6 @@
   .toast.success{ background: var(--success); }
   .toast.error{ background: var(--danger); }
 
-  /* Loader */
   .loader{
     display: inline-block; width: 14px; height: 14px;
     border: 2px solid currentColor; border-top-color: transparent;
@@ -1014,7 +1033,6 @@
   .text-muted{ color: var(--muted); }
   .text-center{ text-align: center; }
 
-  /* Overlays */
   .saving-overlay{
     position: fixed; inset: 0; background: rgba(15,23,42,.7);
     z-index: 9999; display: none; align-items: center; justify-content: center;
@@ -1041,13 +1059,11 @@
     border-top-color: #fff; border-radius: 50%; animation: spin .8s linear infinite;
   }
 
-  /* Acessos */
   .acesso-card{
     background: var(--bg); border: 1px solid var(--border);
     border-radius: var(--radius); padding: 14px; margin-bottom: 10px;
   }
 
-  /* Histórico */
   .hist-item{
     display: flex; gap: 12px; align-items: flex-start;
     padding: 12px 10px; border-bottom: 1px solid var(--border);
@@ -1067,7 +1083,6 @@
   .hist-item .txt .det{ color: var(--text-soft); font-size: .76rem; margin-top: 3px; }
   .hist-item .txt .quando{ color: var(--muted); font-size: .7rem; margin-top: 4px; }
 
-  /* Lista geral imóveis */
   .lista-imoveis-geral{ display: flex; flex-direction: column; gap: 6px; }
   .imovel-linha{
     display: grid;
@@ -1107,7 +1122,6 @@
   .imovel-linha .acoes{ display: flex; gap: 5px; }
   .imovel-linha .acoes .btn{ padding: 6px 8px; }
 
-  /* Tela de erro */
   .erro-conexao{
     background: #fff; border-radius: var(--radius-lg);
     border: 1px solid #f0c8c8;
@@ -1115,12 +1129,6 @@
     padding: 36px 24px; margin-top: 20px;
     text-align: center;
     box-shadow: var(--shadow-xs);
-  }
-  .erro-conexao .icone{
-    width: 56px; height: 56px; margin: 0 auto 14px;
-    border-radius: 50%;
-    background: var(--danger-soft); color: var(--danger);
-    display: flex; align-items: center; justify-content: center;
   }
   .erro-conexao h3{
     font-size: 1.05rem; font-weight: 700; color: var(--text);
@@ -1146,7 +1154,6 @@
         <div class="brand-sub">Admin</div>
       </div>
     </div>
-
     <div class="header-right">
       <button class="btn-header" onclick="abrirListaGeralImoveis()" title="Todos os imóveis">
         <svg class="ico" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
@@ -1180,7 +1187,7 @@
 <!-- =====================================================
      LOGIN
 ===================================================== -->
-<div class="login-wrap" id="adminLoginView">
+<div class="login-wrap hidden" id="adminLoginView">
   <div class="login-card">
     <div class="login-logo">LR</div>
     <h2>Painel Administrativo</h2>
@@ -1236,7 +1243,6 @@
     </div>
   </div>
 
-  <!-- Painel Agenda -->
   <div class="panel hidden" id="panelAgenda">
     <div class="panel-head">
       <h2>
@@ -1256,7 +1262,6 @@
     </div>
   </div>
 
-  <!-- Painel Visitar -->
   <div class="panel hidden" id="panelVisitar">
     <div class="panel-head">
       <h2>
@@ -1285,7 +1290,6 @@
     </div>
   </div>
 
-  <!-- Painel Clientes -->
   <div class="panel hidden" id="panelClientes">
     <div class="panel-head">
       <h2>
@@ -1325,7 +1329,7 @@
 </div>
 
 <!-- =====================================================
-     VITRINE DO CLIENTE (admin)
+     VITRINE DO CLIENTE
 ===================================================== -->
 <div class="container hidden" id="vitrineView">
   <div class="cliente-bar" id="clienteBar">
@@ -1474,7 +1478,7 @@
 </div>
 
 <!-- =====================================================
-     MODAL CLIENTE
+     MODAIS
 ===================================================== -->
 <div class="modal-backdrop" id="clienteModalBackdrop" onclick="if(event.target===this) fecharClienteModal()">
   <div class="modal" style="max-width:560px;">
@@ -1538,9 +1542,6 @@
   </div>
 </div>
 
-<!-- =====================================================
-     MODAL OBSERVAÇÕES (GRANDE)
-===================================================== -->
 <div class="modal-backdrop" id="obsModalBackdrop" onclick="if(event.target===this) fecharModalObs()">
   <div class="modal-obs">
     <button class="modal-close" onclick="fecharModalObs()">
@@ -1564,9 +1565,6 @@
   </div>
 </div>
 
-<!-- =====================================================
-     MODAL TEMPERATURA
-===================================================== -->
 <div class="modal-backdrop" id="tempModalBackdrop" onclick="if(event.target===this) fecharTempModal()">
   <div class="modal" style="max-width:440px;">
     <button class="modal-close" onclick="fecharTempModal()">
@@ -1599,9 +1597,6 @@
   </div>
 </div>
 
-<!-- =====================================================
-     MODAL CHAVE
-===================================================== -->
 <div class="modal-backdrop" id="chaveModalBackdrop" onclick="if(event.target===this) fecharChaveModal()">
   <div class="modal" style="max-width:520px;">
     <button class="modal-close" onclick="fecharChaveModal()">
@@ -1616,9 +1611,56 @@
   </div>
 </div>
 
-<!-- =====================================================
-     MODAL LISTA GERAL IMÓVEIS
-===================================================== -->
+<div class="modal-backdrop" id="zapModalBackdrop" onclick="if(event.target===this) fecharModalWhatsAppAgenda()">
+  <div class="modal" style="max-width:440px;">
+    <button class="modal-close" onclick="fecharModalWhatsAppAgenda()">
+      <svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <h2>
+      <svg class="ico" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+      Enviar WhatsApp
+    </h2>
+    <p class="text-muted" style="margin-bottom:18px; font-size:.82rem;" id="zapModalSub">—</p>
+    <div style="display:flex; flex-direction:column; gap:10px;">
+      <button class="btn btn-success" style="justify-content:flex-start; padding:14px 18px;" onclick="zapConfirmarVisita()">
+        <svg class="ico ico-lg" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        <span style="font-weight:700;">Confirmar visita</span>
+        <span style="font-size:.7rem; color:rgba(255,255,255,.8); margin-left:auto;">Texto pronto</span>
+      </button>
+      <button class="btn btn-ghost" style="justify-content:flex-start; padding:14px 18px;" onclick="zapConversaEmBranco()">
+        <svg class="ico ico-lg" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <span style="font-weight:700;">Conversa em branco</span>
+        <span style="font-size:.7rem; color:var(--muted); margin-left:auto;">Sem texto pronto</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="finalizarBackdrop" onclick="if(event.target===this) fecharModalFinalizar()">
+  <div class="modal" style="max-width:420px;">
+    <button class="modal-close" onclick="fecharModalFinalizar()">
+      <svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <h2>
+      <svg class="ico" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      Finalizar visita
+    </h2>
+    <p class="text-muted" style="margin-bottom:18px; font-size:.82rem;" id="finalizarModalSub">—</p>
+    <div style="display:flex; flex-direction:column; gap:10px;">
+      <button class="btn btn-success" style="justify-content:flex-start; padding:14px 18px;" onclick="finalizarRegistrar()">
+        <svg class="ico ico-lg" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+        <span style="font-weight:700;">Registrar visita</span>
+        <span style="font-size:.7rem; color:rgba(255,255,255,.8); margin-left:auto;">Visita aconteceu</span>
+      </button>
+      <button class="btn btn-danger" style="justify-content:flex-start; padding:14px 18px;" onclick="finalizarCancelar()">
+        <svg class="ico ico-lg" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+        <span style="font-weight:700;">Cancelar visita</span>
+        <span style="font-size:.7rem; color:rgba(255,255,255,.8); margin-left:auto;">Não vai acontecer</span>
+      </button>
+    </div>
+  </div>
+</div>
+
 <div class="modal-backdrop" id="listaGeralBackdrop" onclick="if(event.target===this) fecharListaGeral()">
   <div class="modal" style="max-width:860px;">
     <button class="modal-close" onclick="fecharListaGeral()">
@@ -1629,7 +1671,6 @@
       Todos os imóveis
     </h2>
     <p class="text-muted" style="margin-bottom:16px; font-size:.8rem;" id="listaGeralSub">Carregando...</p>
-
     <div class="filtros-wrap" style="margin-bottom:14px;">
       <input type="search" id="buscaGeral" placeholder="Buscar endereço, número, bairro ou código..." oninput="onBuscaGeralChanged()" style="flex:1; min-width:200px;">
       <select id="ordenacaoGeral" onchange="renderizarListaGeral()" style="width:auto; min-width:200px;">
@@ -1639,16 +1680,11 @@
         <option value="cliente">Cliente A-Z</option>
       </select>
     </div>
-
     <div id="filtrosGeralStatus" class="filtros-wrap" style="margin-bottom:14px;"></div>
-
     <div class="lista-imoveis-geral" id="listaGeralImoveis" style="max-height:60vh; overflow-y:auto;"></div>
   </div>
 </div>
 
-<!-- =====================================================
-     MODAL HISTÓRICO CLIENTE
-===================================================== -->
 <div class="modal-backdrop" id="histCliBackdrop" onclick="if(event.target===this) fecharHistoricoCliente()">
   <div class="modal" style="max-width:640px;">
     <button class="modal-close" onclick="fecharHistoricoCliente()">
@@ -1663,9 +1699,6 @@
   </div>
 </div>
 
-<!-- =====================================================
-     MODAL HISTÓRICO IMÓVEL
-===================================================== -->
 <div class="modal-backdrop" id="histImovelBackdrop" onclick="if(event.target===this) fecharHistoricoImovel()">
   <div class="modal" style="max-width:540px;">
     <button class="modal-close" onclick="fecharHistoricoImovel()">
@@ -1680,9 +1713,6 @@
   </div>
 </div>
 
-<!-- =====================================================
-     MODAL CORREÇÕES
-===================================================== -->
 <div class="modal-backdrop" id="correcoesBackdrop" onclick="if(event.target===this) fecharCorrecoes()">
   <div class="modal" style="max-width:720px;">
     <button class="modal-close" onclick="fecharCorrecoes()">
@@ -1697,9 +1727,6 @@
   </div>
 </div>
 
-<!-- =====================================================
-     MODAL SENHA GERADA
-===================================================== -->
 <div class="modal-backdrop" id="senhaGeradaBackdrop" onclick="if(event.target===this) fecharSenhaGerada()">
   <div class="modal" style="max-width:460px; text-align:center;">
     <button class="modal-close" onclick="fecharSenhaGerada()">
@@ -1724,9 +1751,6 @@
   </div>
 </div>
 
-<!-- =====================================================
-     MODAL NOVO ACESSO
-===================================================== -->
 <div class="modal-backdrop" id="novoAcessoBackdrop" onclick="if(event.target===this) fecharNovoAcesso()">
   <div class="modal" style="max-width:480px;">
     <button class="modal-close" onclick="fecharNovoAcesso()">
@@ -1748,9 +1772,6 @@
   </div>
 </div>
 
-<!-- =====================================================
-     MODAL VISITA REALIZADA
-===================================================== -->
 <div class="modal-backdrop" id="visitaBackdrop" onclick="if(event.target===this) fecharVisitaModal()">
   <div class="modal" style="max-width:480px;">
     <button class="modal-close" onclick="fecharVisitaModal()">
@@ -1776,9 +1797,6 @@
   </div>
 </div>
 
-<!-- =====================================================
-     MODAL AGENDAR
-===================================================== -->
 <div class="modal-backdrop" id="agendarBackdrop" onclick="if(event.target===this) fecharAgendarModal()">
   <div class="modal" style="max-width:560px;">
     <button class="modal-close" onclick="fecharAgendarModal()">
@@ -1818,13 +1836,10 @@
   </div>
 </div>
 
-<!-- =====================================================
-     MODAL CONFIRMAÇÃO UNIVERSAL
-===================================================== -->
 <div class="confirm-backdrop" id="confirmBackdrop">
   <div class="confirm-box">
     <div class="icon-wrap" id="confirmIconWrap">
-      <svg class="ico ico-lg" id="confirmIconSvg" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      <svg class="ico ico-lg" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
     </div>
     <h3 id="confirmTitulo">Confirmar ação</h3>
     <p id="confirmTexto">Tem certeza?</p>
@@ -1835,9 +1850,6 @@
   </div>
 </div>
 
-<!-- =====================================================
-     OVERLAYS
-===================================================== -->
 <div class="toast" id="toast"></div>
 <div class="saving-overlay" id="savingOverlay">
   <div class="spinner"></div>
@@ -1850,7 +1862,7 @@
 
 <script>
 
- /* =====================================================
+  /* =====================================================
    CONFIG
 ===================================================== */
 const API_URL = 'https://script.google.com/macros/s/AKfycbzuCjg_5ZJDMWWKmjYp1ThW34iWS0YouviWFdiMGx8W3yApv0F1fdUcjeZdjm0s6Mg/exec';
@@ -1866,7 +1878,7 @@ const LINK_TQC = 'https://corretor.quintoandar.com.br/traz-quem-compra/?origin=h
 const LINK_HUGO = 'https://www.quintoandar.com.br/corretor/atendimento/HugoFelipePereiraRibeiro-3M2K';
 const LINK_CAROL = '';
 
-const INTERVALO_INATIVIDADE = 15 * 60 * 1000; // 15 minutos
+const INTERVALO_INATIVIDADE = 15 * 60 * 1000;
 
 /* =====================================================
    ESTADO
@@ -2012,7 +2024,7 @@ function corDoCorretor(nome){
   return c ? c.cor : '#64748b';
 }
 
-/* Nome do cliente com 4 últimos dígitos do telefone (regra global) */
+/* Nome do cliente com 4 últimos dígitos */
 function nomeCompletoCliente_(nome, telefone){
   const n = String(nome || '').trim() || 'Sem nome';
   const tel = normalizaTel(telefone);
@@ -2022,7 +2034,12 @@ function nomeCompletoCliente_(nome, telefone){
   return n;
 }
 
-/* Chave normalizada do corretor (remove sufixo depois de /) */
+/* Primeiro nome apenas (para WhatsApp) */
+function primeiroNome_(nome){
+  return String(nome || '').trim().split(/\s+/)[0] || 'Cliente';
+}
+
+/* Chave normalizada do corretor */
 function chaveCorretor_(nome){
   const s = String(nome || '').trim();
   if(!s) return '';
@@ -2032,7 +2049,7 @@ function chaveCorretor_(nome){
 }
 
 /* =====================================================
-   CAMPOS DE ENDEREÇO (1:1 com Admin)
+   CAMPOS DE ENDEREÇO
 ===================================================== */
 function camposEndereco_(im){
   if(!im) return { rua: '', numero: '', bairro: '', chave: '' };
@@ -2045,14 +2062,12 @@ function camposEndereco_(im){
 }
 
 /* =====================================================
-   DETECÇÃO DE CONFLITOS NA AGENDA
+   CONFLITOS NA AGENDA
 ===================================================== */
 function calcularConflitos_(agendamentos){
-  // Retorna um mapa: id do agendamento -> { nivel: 'alto'|'medio', motivo: '...' }
   const conflitos = {};
   const lista = (agendamentos || []).filter(a => a.dataVisitaAgendada);
 
-  // Agrupa por corretor normalizado
   const porCorretor = {};
   lista.forEach(a => {
     const chave = chaveCorretor_(a.corretor) || '(sem corretor)';
@@ -2070,13 +2085,11 @@ function calcularConflitos_(agendamentos){
       for(let j = i + 1; j < arr.length; j++){
         const diff = Math.abs(arr[j].quando - arr[i].quando);
         if(diff === 0){
-          // Mesmo horário
-          conflitos[arr[i].id] = { nivel: 'alto', motivo: 'Conflito: mesmo horário de outro agendamento' };
-          conflitos[arr[j].id] = { nivel: 'alto', motivo: 'Conflito: mesmo horário de outro agendamento' };
+          conflitos[arr[i].id] = { nivel: 'alto', motivo: 'Mesmo horário de outro agendamento' };
+          conflitos[arr[j].id] = { nivel: 'alto', motivo: 'Mesmo horário de outro agendamento' };
         } else if(diff < 30 * 60 * 1000){
-          // Menos de 30 min
-          if(!conflitos[arr[i].id]) conflitos[arr[i].id] = { nivel: 'medio', motivo: 'Intervalo < 30min do próximo agendamento' };
-          if(!conflitos[arr[j].id]) conflitos[arr[j].id] = { nivel: 'medio', motivo: 'Intervalo < 30min do agendamento anterior' };
+          if(!conflitos[arr[i].id]) conflitos[arr[i].id] = { nivel: 'medio', motivo: 'Intervalo < 30min do próximo' };
+          if(!conflitos[arr[j].id]) conflitos[arr[j].id] = { nivel: 'medio', motivo: 'Intervalo < 30min do anterior' };
         }
       }
     }
@@ -2236,7 +2249,7 @@ async function recarregarPainel(painel){
 }
 
 /* =====================================================
-   ESTADO PERSISTENTE (recarregar mantém posição)
+   ESTADO PERSISTENTE
 ===================================================== */
 function salvarEstado(){
   if(!state.isAdmin) return;
@@ -2255,52 +2268,62 @@ function limparEstado(){
   try { localStorage.removeItem(ESTADO_KEY); } catch(e){}
 }
 
-async function restaurarEstado(){
+function lerEstado(){
   try {
     const raw = localStorage.getItem(ESTADO_KEY);
-    if(!raw) return false;
-    const estado = JSON.parse(raw);
-    if(!estado || !estado.tela) return false;
+    if(!raw) return null;
+    const obj = JSON.parse(raw);
+    if(!obj || !obj.tela) return null;
+    return obj;
+  } catch(e){ return null; }
+}
 
-    await carregarCorretores();
+async function restaurarEstado(){
+  const estado = lerEstado();
+  if(!estado) return false;
 
-    if(estado.tela === 'vitrine' && estado.telefoneAtual){
-      state.painelAtivo = estado.painelAtivo || 'agenda';
-      await Promise.all([
-        carregarClientes(false),
-        carregarCorrecoes(false)
-      ]);
-      await Promise.all([
-        carregarAgenda(false),
-        carregarNotificacoes(false)
-      ]);
-      state.telefoneAtual = normalizaTel(estado.telefoneAtual);
-      await irParaVitrine();
-      return true;
-    }
+  await carregarCorretores();
 
+  if(estado.tela === 'vitrine' && estado.telefoneAtual){
     state.painelAtivo = estado.painelAtivo || 'agenda';
+    // Não carrega mais nada — abre a vitrine direto
+    state.telefoneAtual = normalizaTel(estado.telefoneAtual);
+    await irParaVitrine(true);
+    return true;
+  }
 
+  state.painelAtivo = estado.painelAtivo || 'agenda';
+
+  // Carrega só a agenda
+  await carregarAgenda(true);
+
+  // Abre o painel correto
+  ['agenda','visitar','clientes'].forEach(p => {
+    const cap = p.charAt(0).toUpperCase() + p.slice(1);
+    $('panel' + cap).classList.toggle('hidden', p !== state.painelAtivo);
+    $('card' + cap).classList.toggle('active', p === state.painelAtivo);
+  });
+
+  // Depois carrega o resto em background
+  carregarResto_();
+
+  return true;
+}
+
+/* Carrega clientes, notificações e correções em background */
+async function carregarResto_(){
+  try {
+    await carregarClientes(false);
     await Promise.all([
-      carregarClientes(false),
+      carregarNotificacoes(false),
       carregarCorrecoes(false)
     ]);
-
-    await Promise.all([
-      carregarAgenda(false),
-      carregarNotificacoes(false)
-    ]);
-
-    ['agenda','visitar','clientes'].forEach(p => {
-      const cap = p.charAt(0).toUpperCase() + p.slice(1);
-      $('panel' + cap).classList.toggle('hidden', p !== state.painelAtivo);
-      $('card' + cap).classList.toggle('active', p === state.painelAtivo);
-    });
-    return true;
+    // Re-render dos painéis dependentes
+    if(state.painelAtivo === 'agenda') renderizarAgenda();
+    if(state.painelAtivo === 'visitar') renderizarNotificacoes();
   } catch(e){
-    console.error('Erro ao restaurar estado:', e);
+    console.warn('[carregarResto_] erro:', e);
   }
-  return false;
 }
 
 /* =====================================================
@@ -2346,6 +2369,7 @@ async function carregarHomeAdmin(){
     return;
   }
 
+  // Fluxo normal (primeira vez após login)
   state.painelAtivo = 'agenda';
   ['agenda','visitar','clientes'].forEach(p => {
     const cap = p.charAt(0).toUpperCase() + p.slice(1);
@@ -2355,14 +2379,11 @@ async function carregarHomeAdmin(){
 
   await carregarCorretores();
 
-  await Promise.all([
-    carregarAgenda(true),
-    carregarClientes(false)
-  ]);
-  Promise.all([
-    carregarNotificacoes(false),
-    carregarCorrecoes(false)
-  ]).catch(()=>{});
+  // Agenda primeiro
+  await carregarAgenda(true);
+
+  // Resto em background
+  carregarResto_();
 
   iniciarRefreshSilencioso();
 }
@@ -2447,7 +2468,7 @@ function renderizarFiltrosClientes(){
   const wrap = $('filtrosClientes');
   if(!wrap) return;
   const corretoresChips = state.corretores.map(c => {
-    const cnt = state.clientes.filter(cl => cl.corretor === c.nome).length;
+    const cnt = state.clientes.filter(cl => chaveCorretor_(cl.corretor) === c.nome).length;
     const ativo = state.filtrosClientes.corretores.has(c.nome);
     return `<button class="chip chip-corretor ${ativo ? 'active' : ''}"
               style="background:${ativo ? c.cor : '#fff'}; color:${ativo ? '#fff' : c.cor}; border-color:${c.cor}"
@@ -2538,7 +2559,7 @@ function renderizarClientes(){
   let arr = [...state.clientes];
 
   if(state.filtrosClientes.corretores.size > 0){
-    arr = arr.filter(c => state.filtrosClientes.corretores.has(c.corretor));
+    arr = arr.filter(c => state.filtrosClientes.corretores.has(chaveCorretor_(c.corretor)));
   }
   if(state.filtrosClientes.temperaturas.size > 0){
     arr = arr.filter(c => state.filtrosClientes.temperaturas.has(c.temperatura || 'frio'));
@@ -2608,7 +2629,7 @@ function clienteRowHTML(c){
   const temp = c.temperatura || 'frio';
   const emoji = emojiTemperatura(temp);
   const manual = c.temperaturaManual ? 'manual' : '';
-  const corCorr = c.corretor ? corDoCorretor(c.corretor) : '#64748b';
+  const corCorr = c.corretor ? corDoCorretor(chaveCorretor_(c.corretor)) : '#64748b';
   const totalIm = c.totalImoveis || 0;
   const totalVi = c.totalVisitasConcluidas || 0;
   const nomeCompleto = esc(nomeCompletoCliente_(c.nome, c.telefone));
@@ -2668,7 +2689,6 @@ async function carregarAgenda(mostrarLoading){
   if(mostrarLoading){
     $('agendaLista').innerHTML = '<div class="loading-inline"><span class="loader loader-lg"></span><p>Carregando agenda...</p></div>';
   }
-  if(!state.carregado.clientes) await carregarClientes(false);
   const res = await api('listarAgendamentos', { senha: state.adminSenha });
   state.agendamentos = (res.ok && res.data) ? res.data : [];
   state.carregado.agenda = true;
@@ -2727,7 +2747,6 @@ function renderizarAgenda(){
   }
   arr.sort((a, b) => new Date(a.dataVisitaAgendada) - new Date(b.dataVisitaAgendada));
 
-  // Conflitos
   const conflitos = calcularConflitos_(arr);
 
   if(arr.length === 0){
@@ -2753,6 +2772,7 @@ function agendaRowHTML(a, conflito){
   const telFmt = fmtTel(a.telefone);
   const nomeCliente = esc(nomeCompletoCliente_(a.clienteNome, a.telefone));
   const campos = camposEndereco_(a);
+  const temChave = !!campos.chave;
 
   let conflitoBadge = '';
   if(conflito){
@@ -2760,50 +2780,126 @@ function agendaRowHTML(a, conflito){
     conflitoBadge = `<span class="conflito-badge ${cls}">⚠️ ${esc(conflito.motivo)}</span>`;
   }
 
+  // Botão finalizar (só se tiver data)
+  const temData = !!a.dataVisitaAgendada;
+  const btnFinalizar = temData
+    ? `<button class="btn-finalizar" onclick="abrirModalFinalizar('${id}')">
+        <svg class="ico" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+        Finalizar
+      </button>`
+    : '';
+
+  // Botão anúncio (só se tiver link)
+  const btnAnuncio = a.link
+    ? `<button class="acao-btn btn-anuncio" onclick="abrirAnuncioAgenda('${id}')">
+        <svg class="ico" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        <span class="lbl-btn">Anúncio</span>
+      </button>`
+    : '';
+
+  // Botão chave (só se tiver)
+  const btnChave = temChave
+    ? `<button class="acao-btn btn-chave" data-chave="${esc(campos.chave)}" data-end="${esc(a.titulo || '')}" onclick="abrirChaveModal(this.dataset.chave, this.dataset.end)">
+        <svg class="ico" viewBox="0 0 24 24"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+        <span class="lbl-btn">Chave</span>
+      </button>`
+    : '';
+
   return `
-    <div class="agenda-row"
-         style="border-left-color:${cor};"
-         data-tel="${tel}" data-id="${id}">
-      ${conflitoBadge}
-      <div class="quando ${quando.classe}">${esc(quando.label)}</div>
-      <div class="info" onclick="abrirImovelDaAgenda('${tel}', '${id}')">
-        <div class="cliente">
-          ${nomeCliente}
-          ${a.corretor ? `<span class="corretor-badge" style="background:${cor}">${esc(a.corretor)}</span>` : ''}
-          <span class="tel">
-            <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-            ${esc(telFmt)}
-          </span>
+    <div class="agenda-row-v2" data-id="${id}" style="border-left-color:${cor};">
+      <div class="cabecalho">
+        <div class="quando ${quando.classe}">${esc(quando.label)}</div>
+        <div class="info">
+          <div class="cliente">
+            ${nomeCliente}
+            ${a.corretor ? `<span class="corretor-badge" style="background:${cor}">${esc(a.corretor)}</span>` : ''}
+          </div>
+          <div class="detalhe">
+            ${a.codigo ? `<span class="codigo">#${esc(a.codigo)}</span>` : ''}
+            <span>${esc(a.titulo || '')}</span>
+          </div>
+          <div class="detalhe">
+            <span class="tel">
+              <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              ${esc(telFmt)}
+            </span>
+          </div>
+          ${conflitoBadge}
         </div>
-        <div class="detalhe">
-          ${a.codigo ? `<span class="codigo">#${esc(a.codigo)}</span>` : ''}
-          <span>${esc(a.titulo || '')}</span>
-        </div>
+        ${btnFinalizar}
       </div>
-      <div class="acoes">
-        <button class="btn-acao btn-zap" title="Confirmar por WhatsApp" onclick="event.stopPropagation(); confirmarVisitaWhatsApp('${id}')">
-          <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+      <div class="barra-acoes">
+        ${btnAnuncio}
+        <button class="acao-btn btn-vitrine" onclick="abrirImovelDaAgenda('${tel}', '${id}')">
+          <svg class="ico" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          <span class="lbl-btn">Vitrine</span>
         </button>
-        <button class="btn-acao btn-rel" title="Abrir relatório (observações internas)" onclick="event.stopPropagation(); abrirRelatorioCliente('${tel}')">
-          <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        ${btnChave}
+        <button class="acao-btn btn-zap" onclick="abrirModalWhatsAppAgenda('${id}')">
+          <svg class="ico" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+          <span class="lbl-btn">WhatsApp</span>
         </button>
-        <button class="btn-acao btn-visita" title="Registrar visita" onclick="event.stopPropagation(); abrirRegistrarVisitaAgenda('${id}')">
-          <svg class="ico ico-sm" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+        <button class="acao-btn btn-share" onclick="compartilharImagemAgendamento('${id}')">
+          <svg class="ico" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+          <span class="lbl-btn">Compartilhar</span>
         </button>
       </div>
     </div>
   `;
 }
 
-/* Botão WhatsApp de confirmação no card da agenda */
-function confirmarVisitaWhatsApp(id){
+/* Botão anúncio */
+function abrirAnuncioAgenda(id){
+  const a = state.agendamentos.find(x => x.id === id);
+  if(!a || !a.link){ toast('Anúncio não disponível', 'error'); return; }
+  window.open(a.link, '_blank', 'noopener');
+}
+
+/* =====================================================
+   MODAL WHATSAPP AGENDA
+===================================================== */
+function abrirModalWhatsAppAgenda(id){
   const a = state.agendamentos.find(x => x.id === id);
   if(!a){ toast('Agendamento não encontrado', 'error'); return; }
 
-  // Encontra o cliente pra pegar o nome
+  window._zapAgendamentoId = id;
+
   const cli = state.clientes.find(c => normalizaTel(c.telefone) === normalizaTel(a.telefone));
-  const nomeCliente = (cli && cli.nome) ? cli.nome.trim() : (a.clienteNome || '').trim();
-  const nomeSemSufixo = nomeCliente || 'cliente';
+  const nomeCliente = (cli && cli.nome) || a.clienteNome || '';
+  const pNome = primeiroNome_(nomeCliente);
+
+  const telFmt = fmtTel(a.telefone);
+  $('zapModalSub').textContent = `${pNome} · ${telFmt}`;
+
+  $('zapModalBackdrop').classList.add('show');
+}
+
+function fecharModalWhatsAppAgenda(){
+  $('zapModalBackdrop').classList.remove('show');
+  window._zapAgendamentoId = null;
+}
+
+function zapConversaEmBranco(){
+  const id = window._zapAgendamentoId;
+  if(!id){ fecharModalWhatsAppAgenda(); return; }
+  const a = state.agendamentos.find(x => x.id === id);
+  if(!a){ fecharModalWhatsAppAgenda(); return; }
+
+  const tel = normalizaTel(a.telefone);
+  const telZap = tel.startsWith('55') ? tel : '55' + tel;
+  window.open(`https://wa.me/${telZap}`, '_blank');
+  fecharModalWhatsAppAgenda();
+}
+
+function zapConfirmarVisita(){
+  const id = window._zapAgendamentoId;
+  if(!id){ fecharModalWhatsAppAgenda(); return; }
+  const a = state.agendamentos.find(x => x.id === id);
+  if(!a){ fecharModalWhatsAppAgenda(); return; }
+
+  const cli = state.clientes.find(c => normalizaTel(c.telefone) === normalizaTel(a.telefone));
+  const nomeCliente = (cli && cli.nome) || a.clienteNome || '';
+  const pNome = primeiroNome_(nomeCliente);
 
   const dt = new Date(a.dataVisitaAgendada);
   const dia = String(dt.getDate()).padStart(2,'0');
@@ -2812,13 +2908,12 @@ function confirmarVisitaWhatsApp(id){
   const hora = String(dt.getHours()).padStart(2,'0');
   const min = String(dt.getMinutes()).padStart(2,'0');
 
-  // Monta endereço
   const campos = camposEndereco_(a);
   const endereco = campos.rua || (a.titulo || '').split(',')[0] || '';
   const numero = campos.numero || '';
   const bairro = campos.bairro || '';
 
-  let msg = `Ei ${nomeSemSufixo}, estou passando para confirmar nossa visita `;
+  let msg = `Ei ${pNome}, estou passando para confirmar nossa visita `;
   msg += `dia ${dia}/${mes}/${ano} às ${hora}:${min}hs`;
   if(endereco) msg += ` na rua ${endereco}`;
   if(numero) msg += `, número ${numero}`;
@@ -2827,33 +2922,52 @@ function confirmarVisitaWhatsApp(id){
 
   const tel = normalizaTel(a.telefone);
   const telZap = tel.startsWith('55') ? tel : '55' + tel;
-  const url = `https://wa.me/${telZap}?text=${encodeURIComponent(msg)}`;
-  window.open(url, '_blank');
+  window.open(`https://wa.me/${telZap}?text=${encodeURIComponent(msg)}`, '_blank');
+  fecharModalWhatsAppAgenda();
 }
 
-/* Atalho: abrir relatório (obs internas) direto da agenda */
-async function abrirRelatorioCliente(telefone){
-  const tel = normalizaTel(telefone);
-  if(!tel){ toast('Telefone inválido', 'error'); return; }
-
-  let cli = state.clientes.find(c => normalizaTel(c.telefone) === tel);
-  if(!cli){
-    marcarSalvando(true);
-    const res = await api('buscarCliente', { senha: state.adminSenha, telefone: tel });
-    marcarSalvando(false);
-    if(res.ok && res.data) cli = res.data;
-  }
-  if(!cli){ toast('Cliente não encontrado', 'error'); return; }
-
-  // Abre modal grande de observações
-  window._relatorioClienteTel = tel;
-  $('obsGrande').value = cli.observacao || '';
-  atualizarContadorObs();
-  $('obsModalBackdrop').classList.add('show');
-  setTimeout(() => $('obsGrande').focus(), 100);
+/* Compat */
+function confirmarVisitaWhatsApp(id){
+  abrirModalWhatsAppAgenda(id);
 }
 
-/* Atalho: abrir modal de registrar visita direto da agenda */
+/* =====================================================
+   MODAL FINALIZAR
+===================================================== */
+function abrirModalFinalizar(id){
+  const a = state.agendamentos.find(x => x.id === id);
+  if(!a){ toast('Agendamento não encontrado', 'error'); return; }
+
+  window._finalizarAgendamentoId = id;
+
+  const cli = state.clientes.find(c => normalizaTel(c.telefone) === normalizaTel(a.telefone));
+  const nomeCliente = (cli && cli.nome) || a.clienteNome || '';
+  const nomeCompleto = nomeCompletoCliente_(nomeCliente, a.telefone);
+
+  $('finalizarModalSub').textContent = nomeCompleto;
+  $('finalizarBackdrop').classList.add('show');
+}
+
+function fecharModalFinalizar(){
+  $('finalizarBackdrop').classList.remove('show');
+  window._finalizarAgendamentoId = null;
+}
+
+function finalizarRegistrar(){
+  const id = window._finalizarAgendamentoId;
+  fecharModalFinalizar();
+  if(!id) return;
+  abrirRegistrarVisitaAgenda(id);
+}
+
+function finalizarCancelar(){
+  const id = window._finalizarAgendamentoId;
+  fecharModalFinalizar();
+  if(!id) return;
+  cancelarAgendamentoDireto(id);
+}
+
+/* Atalho: registrar visita */
 function abrirRegistrarVisitaAgenda(id){
   const a = state.agendamentos.find(x => x.id === id);
   if(!a){ toast('Agendamento não encontrado', 'error'); return; }
@@ -2866,7 +2980,144 @@ function abrirRegistrarVisitaAgenda(id){
 }
 
 /* =====================================================
-   NOTIFICAÇÕES (QUEREM VISITAR / GOSTEI)
+   COMPARTILHAR IMAGEM
+===================================================== */
+async function compartilharImagemAgendamento(id){
+  const a = state.agendamentos.find(x => x.id === id);
+  if(!a){ toast('Agendamento não encontrado', 'error'); return; }
+
+  let blob = null;
+  try {
+    blob = await gerarBlobCartaoVisita(a);
+  } catch(e){
+    console.error('Erro ao gerar imagem:', e);
+    toast('Erro ao gerar imagem', 'error');
+    return;
+  }
+
+  if(!blob){ toast('Erro ao gerar imagem', 'error'); return; }
+
+  const nomeArquivo = 'visita' + (a.codigo ? '-' + a.codigo : '') + '.png';
+  const file = new File([blob], nomeArquivo, { type: 'image/png' });
+
+  // Tenta Web Share API
+  if(navigator.canShare && navigator.canShare({ files: [file] })){
+    try {
+      await navigator.share({ files: [file] });
+      return;
+    } catch(e){
+      if(e && e.name === 'AbortError') return;
+      console.warn('Share falhou, usando fallback:', e);
+    }
+  }
+
+  // Fallback: baixa
+  try {
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = nomeArquivo;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    setTimeout(() => URL.revokeObjectURL(url), 2000);
+    toast('Imagem baixada. Anexe no WhatsApp manualmente.', 'success');
+  } catch(e){
+    console.error('Erro no fallback:', e);
+    toast('Não foi possível gerar o arquivo', 'error');
+  }
+}
+
+/* Gera Blob do cartão */
+function gerarBlobCartaoVisita(im){
+  return new Promise((resolve, reject) => {
+    try {
+      const W = 1200, H = 630;
+      const canvas = document.createElement('canvas');
+      canvas.width = W; canvas.height = H;
+      const ctx = canvas.getContext('2d');
+
+      const grad = ctx.createLinearGradient(0, 0, W, H);
+      grad.addColorStop(0, '#fef2f2');
+      grad.addColorStop(1, '#fde8e8');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, W, H);
+
+      ctx.strokeStyle = '#d9534f';
+      ctx.lineWidth = 8;
+      ctx.strokeRect(4, 4, W - 8, H - 8);
+
+      ctx.fillStyle = '#d9534f';
+      ctx.fillRect(0, 0, 16, H);
+
+      ctx.fillStyle = '#b91c1c';
+      ctx.font = 'bold 44px -apple-system, "Segoe UI", Roboto, sans-serif';
+      ctx.textBaseline = 'top';
+      ctx.fillText('VISITA CONFIRMADA', 70, 60);
+
+      ctx.strokeStyle = '#fca5a5';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(70, 130);
+      ctx.lineTo(W - 70, 130);
+      ctx.stroke();
+
+      ctx.fillStyle = '#7f1d1d';
+      ctx.font = 'bold 54px -apple-system, "Segoe UI", Roboto, sans-serif';
+      const endereco = im.titulo || 'Endereço não informado';
+      desenharTextoMultilinha(ctx, endereco, 70, 180, W - 140, 66, 2);
+
+      let yCodigo = 400;
+      if(im.codigo){
+        ctx.fillStyle = '#4a3d6b';
+        ctx.font = 'bold 42px "Courier New", monospace';
+        ctx.fillText('#' + im.codigo, 70, yCodigo);
+        yCodigo += 70;
+      }
+
+      const dt = new Date(im.dataVisitaAgendada);
+      const dia = String(dt.getDate()).padStart(2,'0');
+      const mes = String(dt.getMonth()+1).padStart(2,'0');
+      const ano = dt.getFullYear();
+      const hora = String(dt.getHours()).padStart(2,'0');
+      const min = String(dt.getMinutes()).padStart(2,'0');
+      const dataTxt = `${dia}/${mes}/${ano} · ${hora}:${min}`;
+
+      ctx.fillStyle = '#b91c1c';
+      ctx.font = 'bold 48px -apple-system, "Segoe UI", Roboto, sans-serif';
+      ctx.fillText(dataTxt, 70, H - 130);
+
+      canvas.toBlob(blob => {
+        if(blob) resolve(blob);
+        else reject(new Error('Blob nulo'));
+      }, 'image/png', 0.95);
+    } catch(e){
+      reject(e);
+    }
+  });
+}
+
+function desenharTextoMultilinha(ctx, texto, x, y, maxWidth, lineHeight, maxLinhas){
+  const palavras = String(texto).split(' ');
+  let linha = '';
+  let linhas = 0;
+  for(let i = 0; i < palavras.length; i++){
+    const teste = linha ? linha + ' ' + palavras[i] : palavras[i];
+    const largura = ctx.measureText(teste).width;
+    if(largura > maxWidth && linha){
+      ctx.fillText(linha, x, y + linhas * lineHeight);
+      linhas++;
+      if(maxLinhas && linhas >= maxLinhas) return;
+      linha = palavras[i];
+    } else {
+      linha = teste;
+    }
+  }
+  if(linha) ctx.fillText(linha, x, y + linhas * lineHeight);
+}
+
+/* =====================================================
+   NOTIFICAÇÕES
 ===================================================== */
 async function carregarNotificacoes(mostrarLoading){
   if(mostrarLoading){
@@ -2966,10 +3217,7 @@ function notificacaoRowHTML(a){
   const icone = state.tipoSolicitacao === 'visita' ? '📅' : '❤️';
 
   return `
-    <div class="agenda-row"
-         style="border-left-color:${cor};"
-         data-tel="${tel}" data-id="${id}"
-         onclick="abrirImovelDaAgenda(this.dataset.tel, this.dataset.id)">
+    <div class="agenda-row" style="border-left-color:${cor};" data-tel="${tel}" data-id="${id}" onclick="abrirImovelDaAgenda(this.dataset.tel, this.dataset.id)">
       <div class="quando distante">${icone} ${state.tipoSolicitacao === 'visita' ? 'Visitar' : 'Gostei'}</div>
       <div class="info">
         <div class="cliente">
@@ -2982,13 +3230,12 @@ function notificacaoRowHTML(a){
           <span class="text-muted" style="font-size:.68rem;">${fmtData(a.dataCadastro)}</span>
         </div>
       </div>
-      <span class="arrow" style="color:var(--muted);">›</span>
     </div>
   `;
 }
 
 /* =====================================================
-   REFRESH SILENCIOSO (15 min de inatividade)
+   REFRESH SILENCIOSO
 ===================================================== */
 function iniciarRefreshSilencioso(){
   pararRefreshSilencioso();
@@ -3039,12 +3286,10 @@ async function executarRefreshSilencioso(){
     if(resNot.ok && resNot.data) state.notificacoes = resNot.data;
     if(resCor.ok && resCor.data) state.correcoes = resCor.data;
 
-    // Re-renderiza só se o usuário NÃO está em modal / vitrine
     const emModal = document.querySelector('.modal-backdrop.show, .modal-obs');
     const emVitrine = !$('vitrineView').classList.contains('hidden');
 
     if(!emModal && !emVitrine){
-      // Atualiza contadores e re-render
       atualizarBalClientes();
       atualizarBalVisitar();
       atualizarBalAgenda();
@@ -3061,7 +3306,7 @@ async function executarRefreshSilencioso(){
   }
 }
 
- 
+  
 /* =====================================================
    VITRINE DO CLIENTE
 ===================================================== */
@@ -3071,7 +3316,7 @@ async function abrirVitrineDoCliente(telefone){
   state.telefoneAtual = tel;
   mostrarOverlayVitrine('Carregando vitrine do cliente...');
   try {
-    await irParaVitrine();
+    await irParaVitrine(false);
     salvarEstado();
   } catch(err){
     console.error(err);
@@ -3081,7 +3326,7 @@ async function abrirVitrineDoCliente(telefone){
   }
 }
 
-async function irParaVitrine(){
+async function irParaVitrine(silencioso){
   const tel = state.telefoneAtual;
   if(!tel) return;
   $('adminPanel').classList.add('hidden');
@@ -3119,7 +3364,7 @@ async function irParaVitrine(){
   if($('buscaInput')) $('buscaInput').value = '';
   carregarAcessos();
   mostrarView('vitrineView');
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  if(!silencioso) window.scrollTo({ top: 0, behavior: 'smooth' });
   atualizarContadoresImoveis();
   renderizarImoveis();
   renderizarCartoesVisita();
@@ -3206,25 +3451,6 @@ function gerarCartaoVisitaDataURL(im){
   ctx.font = 'bold 48px -apple-system, "Segoe UI", Roboto, sans-serif';
   ctx.fillText(dataTxt, 70, H - 130);
   return canvas.toDataURL('image/png');
-}
-
-function desenharTextoMultilinha(ctx, texto, x, y, maxWidth, lineHeight, maxLinhas){
-  const palavras = String(texto).split(' ');
-  let linha = '';
-  let linhas = 0;
-  for(let i = 0; i < palavras.length; i++){
-    const teste = linha ? linha + ' ' + palavras[i] : palavras[i];
-    const largura = ctx.measureText(teste).width;
-    if(largura > maxWidth && linha){
-      ctx.fillText(linha, x, y + linhas * lineHeight);
-      linhas++;
-      if(maxLinhas && linhas >= maxLinhas) return;
-      linha = palavras[i];
-    } else {
-      linha = teste;
-    }
-  }
-  if(linha) ctx.fillText(linha, x, y + linhas * lineHeight);
 }
 
 /* =====================================================
@@ -3376,7 +3602,7 @@ function gerarTextoWhatsApp(senha){
   if(!tel || !senha){ toast('Dados incompletos', 'error'); return; }
   const url = `${VITRINE_URL_BASE}?tel=${tel}&senha=${senha}`;
   const texto =
-`Olá! 👋
+`Olá!
 
 Essa é a sua vitrine exclusiva de imóveis. Clique no link abaixo para acessar:
 
@@ -3420,6 +3646,7 @@ function abrirNovoCliente(){
   $('cliLinkVitrine').value = '';
   $('cliObservacao').value = '';
   $('btnHistoricoCliente').style.display = 'none';
+  window._relatorioClienteTel = null;
   preencherSelectCorretores();
   $('clienteModalBackdrop').classList.add('show');
   setTimeout(() => $('cliTelefone').focus(), 100);
@@ -3533,7 +3760,7 @@ async function salvarCliente(){
   await carregarClientes(false);
 
   if(state.telefoneAtual && normalizaTel(state.telefoneAtual) === tel){
-    await irParaVitrine();
+    await irParaVitrine(false);
   }
 }
 
@@ -3552,7 +3779,6 @@ function fecharModalObs(){ $('obsModalBackdrop').classList.remove('show'); }
 async function salvarModalObs(){
   const txt = $('obsGrande').value;
 
-  // Se está no contexto de edição de cliente (modal cliente aberto)
   const emEdicaoCliente = $('clienteModalBackdrop').classList.contains('show');
   if(emEdicaoCliente){
     $('cliObservacao').value = txt;
@@ -3561,7 +3787,6 @@ async function salvarModalObs(){
     return;
   }
 
-  // Senão, salva direto (atalho da agenda)
   const tel = window._relatorioClienteTel;
   if(!tel){ fecharModalObs(); return; }
 
@@ -3627,7 +3852,7 @@ async function escolherTemperatura(valor){
   state.carregado.clientes = false;
   await carregarClientes(false);
   state.carregado.agenda = false;
-  if(state.telefoneAtual === tel) await irParaVitrine();
+  if(state.telefoneAtual === tel) await irParaVitrine(true);
 }
 
 /* =====================================================
@@ -3829,7 +4054,6 @@ async function marcarCorrecaoResolvida(idx){
 
   if(!res.ok){ toast(res.error || 'Erro', 'error'); return; }
 
-  // Remove da lista local
   state.correcoes.splice(idx, 1);
   atualizarBadgeCorrecoes();
   toast('Pendência removida', 'success');
@@ -4255,7 +4479,7 @@ async function salvarImovel(){
   if(!res.ok){ toast(res.error || 'Erro', 'error'); return; }
   toast('Imóvel salvo', 'success');
   fecharPainelImovel();
-  await irParaVitrine();
+  await irParaVitrine(true);
 }
 function editarImovel(id){
   const im = state.imoveis.find(i => i.id === id);
@@ -4349,6 +4573,8 @@ async function salvarVisita(ev){
 
   if(state.telefoneAtual){
     await carregarAgenda(false);
+  } else {
+    await carregarAgenda(false);
   }
 }
 
@@ -4415,6 +4641,7 @@ async function salvarAgendamento(ev){
     im.dataVisitaAgendada = iso;
     im.titulo = rua + (numero ? ', ' + numero : '') + (bairro ? ' - ' + bairro : '');
     im.rua = rua; im.numero = numero; im.bairro = bairro;
+    im.chaveTexto = chaveTexto;
   }
   state.carregado.agenda = false;
   state.carregado.visitar = false;
@@ -4458,6 +4685,7 @@ async function cancelarAgendamentoDireto(id){
   state.carregado.visitar = false;
   renderizarImoveis();
   renderizarCartoesVisita();
+  await carregarAgenda(false);
 }
 
 /* =====================================================
@@ -4493,7 +4721,7 @@ function destacarCard(imovelId){
 }
 
 /* =====================================================
-   LISTA GERAL DE IMÓVEIS (BOTÃO HEADER)
+   LISTA GERAL DE IMÓVEIS
 ===================================================== */
 async function abrirListaGeralImoveis(){
   $('listaGeralSub').textContent = 'Carregando...';
@@ -4659,20 +4887,42 @@ function renderizarListaGeral(){
   const senhaSalva = localStorage.getItem(ADMIN_KEY);
   if(senhaSalva){
     $('inputAdminSenha').value = senhaSalva;
-    $('adminLoginSub').textContent = 'Restaurando sessão...';
-    marcarSalvando(true);
-    const res = await api('adminListar', { senha: senhaSalva }, TIMEOUT_LOGIN, 2);
-    marcarSalvando(false);
-    if(res.ok){
-      state.isAdmin = true;
-      state.adminSenha = senhaSalva;
+    // NÃO MOSTRA TELA DE LOGIN — vai direto pra home
+    // Valida em background
+    state.isAdmin = true;
+    state.adminSenha = senhaSalva;
+    mostrarView('homeView');
+    $('btnSair').classList.remove('hidden');
+    $('headerCorretorChips') && $('headerCorretorChips').classList.add('hidden');
+
+    // Carrega tudo (agenda primeiro)
+    try {
+      marcarSalvando(true);
+      const res = await api('adminListar', { senha: senhaSalva }, TIMEOUT_LOGIN, 1);
+      marcarSalvando(false);
+      if(!res.ok){
+        // Senha inválida — desloga
+        localStorage.removeItem(ADMIN_KEY);
+        limparEstado();
+        state.isAdmin = false;
+        state.adminSenha = null;
+        $('btnSair').classList.add('hidden');
+        mostrarView('adminLoginView');
+        $('adminLoginSub').textContent = 'Acesso restrito à equipe Lima Ribeiro.';
+        setTimeout(() => $('inputAdminSenha').focus(), 200);
+        return;
+      }
       await carregarHomeAdmin();
-      return;
-    } else {
-      localStorage.removeItem(ADMIN_KEY);
-      limparEstado();
+    } catch(e){
+      console.error(e);
+      marcarSalvando(false);
+      // Fallback: abre login
+      mostrarView('adminLoginView');
+      setTimeout(() => $('inputAdminSenha').focus(), 200);
     }
+    return;
   }
+
   mostrarView('adminLoginView');
   setTimeout(() => $('inputAdminSenha').focus(), 200);
 })();
