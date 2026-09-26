@@ -159,7 +159,6 @@
   }
   @keyframes spin{ to{ transform: rotate(360deg); } }
 
-  /* CARDS DE VISITA CONFIRMADA */
   .visitas-wrap{
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -252,7 +251,6 @@
     .visita-card-codigo{ font-size: .58rem; }
   }
 
-  /* GRID IMÓVEIS */
   .grid{
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
@@ -260,7 +258,6 @@
     margin-top: 26px;
   }
 
-  /* CARD IMÓVEL */
   .card{
     background: var(--card); border-radius: var(--radius);
     box-shadow: var(--shadow-sm);
@@ -362,32 +359,36 @@
     display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
   }
 
+  /* Linha de preços: preço destacado + condomínio/IPTU discretos */
   .card-precos{
-    display: flex; flex-wrap: wrap; align-items: center; gap: 4px;
-    font-size: .76rem; font-weight: 700;
-    color: #166534;
+    display: flex; flex-wrap: wrap; align-items: center; gap: 6px;
     margin-top: 2px;
   }
-  .card-precos .pc-item{
+  .card-precos .preco-principal{
     display: inline-flex; align-items: center; gap: 3px;
-    background: #dcfce7; padding: 2px 8px; border-radius: 5px;
+    background: #dcfce7; color: #166534;
+    padding: 3px 10px; border-radius: 6px;
     border: 1px solid #bbf7d0;
-    font-size: .72rem;
+    font-size: .82rem; font-weight: 800;
     white-space: nowrap;
   }
-  .card-precos .pc-item.cond{
-    background: #e0f2fe; color: #075985;
-    border-color: #bae6fd;
+  .card-precos .preco-sec{
+    display: inline-flex; align-items: center; gap: 2px;
+    font-size: .62rem; color: var(--muted);
+    font-weight: 500;
+    white-space: nowrap;
   }
-  .card-precos .pc-item.iptu{
-    background: #fef3c7; color: #92400e;
-    border-color: #fde68a;
+  .card-precos .preco-sep{
+    color: #cbd5e1; font-size: .6rem;
   }
-  .card-precos .pc-sep{ color: var(--muted); font-weight: 400; }
 
+  /* Descrição full-width abaixo da linha imagem+info */
+  .card-desc-wrap{
+    padding: 0 12px 10px;
+  }
   .card-desc{
     font-size: .78rem; color: var(--text-soft); line-height: 1.45;
-    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+    display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;
     overflow: hidden; cursor: pointer; white-space: pre-wrap;
   }
   .card-desc.expandido{ display: block; -webkit-line-clamp: unset; overflow: visible; }
@@ -395,7 +396,7 @@
     display: inline-flex; align-items: center; gap: 3px;
     background: transparent; border: none;
     color: var(--primary); font-size: .68rem; font-weight: 600;
-    cursor: pointer; margin-top: 1px; padding: 1px 0; font-family: inherit;
+    cursor: pointer; margin-top: 3px; padding: 1px 0; font-family: inherit;
   }
   .card-desc-toggle:hover{ text-decoration: underline; }
 
@@ -867,34 +868,38 @@ function detectarNavegador(){
 }
 
 /* =====================================================
-   REMAPEAMENTO DE CAMPOS (endereço do imóvel)
-   A API retorna os campos com deslocamento:
-     chaveTexto → contém a Rua
-     rua        → contém o Número
-     numero     → contém o Bairro
-     bairro     → contém a Chave
+   CAMPOS DE ENDEREÇO
+   A API retorna os campos 1:1 (igual ao Admin):
+     im.rua        → Rua
+     im.numero     → Número
+     im.bairro     → Bairro
+     im.chaveTexto → Chave
 ===================================================== */
 function camposEndereco_(im){
   if(!im) return { rua: '', numero: '', bairro: '', chave: '' };
   return {
-    rua:    String(im.chaveTexto || '').trim(),
-    numero: String(im.rua        || '').trim(),
-    bairro: String(im.numero     || '').trim(),
-    chave:  String(im.bairro     || '').trim()
+    rua:    String(im.rua        || '').trim(),
+    numero: String(im.numero     || '').trim(),
+    bairro: String(im.bairro     || '').trim(),
+    chave:  String(im.chaveTexto || '').trim()
   };
 }
 
 /* Endereço para o cliente SEM número (rua + bairro)
-   Fallback: usa o título original se algum campo faltar. */
+   Fallback: tenta limpar número do título se algum campo faltar. */
 function enderecoSemNumero_(im){
   const c = camposEndereco_(im);
   const partes = [c.rua, c.bairro].filter(Boolean);
   if(partes.length > 0){
     return partes.join(' - ');
   }
-  // fallback: remove número do título se possível, senão mostra título cru
+  // Fallback: tenta limpar número do título (ex: "Rua X, 575 - Bairro" → "Rua X - Bairro")
   const tit = String(im && im.titulo || '').trim();
-  return tit || 'Endereço não informado';
+  if(!tit) return 'Endereço não informado';
+  return tit
+    .replace(/\s*,\s*\d+[A-Za-z]?\s*/, ' - ')  // remove ", 575"
+    .replace(/\s*-\s*/, ' - ')                  // normaliza separador
+    .trim();
 }
 
 /* Endereço completo COM número (rua, numero - bairro)
@@ -907,22 +912,29 @@ function enderecoCompleto_(im){
   return t || String(im && im.titulo || '').trim() || 'Endereço não informado';
 }
 
-/* Linha de preços/condomínio/IPTU — só os que estiverem preenchidos */
+/* Linha de preços: preço destacado + condomínio/IPTU discretos */
 function linhaPrecos_(im){
   if(!im) return '';
-  const itens = [];
   const preco = String(im.preco || '').trim();
   const cond  = String(im.condominio || '').trim();
   const iptu  = String(im.iptu || '').trim();
-  if(preco) itens.push(`<span class="pc-item">💰 ${esc(preco)}</span>`);
-  if(cond)  itens.push(`<span class="pc-item cond">🏢 Cond. ${esc(cond)}</span>`);
-  if(iptu)  itens.push(`<span class="pc-item iptu">📋 IPTU ${esc(iptu)}</span>`);
-  if(itens.length === 0) return '';
-  return `<div class="card-precos">${itens.join('<span class="pc-sep">·</span>')}</div>`;
+  if(!preco && !cond && !iptu) return '';
+
+  const partes = [];
+  if(preco){
+    partes.push(`<span class="preco-principal">💰 ${esc(preco)}</span>`);
+  }
+  const secs = [];
+  if(cond) secs.push(`🏢 Cond. ${esc(cond)}`);
+  if(iptu) secs.push(`📋 IPTU ${esc(iptu)}`);
+  if(secs.length > 0){
+    partes.push(`<span class="preco-sec">${secs.join(' <span class="preco-sep">·</span> ')}</span>`);
+  }
+  return `<div class="card-precos">${partes.join(' <span class="preco-sep">·</span> ')}</div>`;
 }
 
 /* =====================================================
-   CACHE (localStorage)
+   CACHE
 ===================================================== */
 function lerCache(){
   try {
@@ -1502,11 +1514,8 @@ async function carregarImoveis(){
   renderizarImoveis();
 }
 
-  
 /* =====================================================
    VISITAS CONFIRMADAS
-   Regra: mostra se ainda não começou OU
-   se começou há menos de 2 horas.
 ===================================================== */
 function visitaAindaVisivel(iso){
   if(!iso) return false;
@@ -1676,7 +1685,7 @@ function cardHTML(im){
        </button>`
     : '';
 
-  // Endereço SEM número (privacidade) + linha de preços (só preenchidos)
+  // Endereço SEM número (privacidade) + linha de preços
   const enderecoCliente = esc(enderecoSemNumero_(im));
   const precosHtml = linhaPrecos_(im);
 
@@ -1699,12 +1708,15 @@ function cardHTML(im){
           </div>
           <div class="card-title">${enderecoCliente}</div>
           ${precosHtml}
-          ${descTexto ? `
-            <div class="card-desc" id="${descId}" onclick="toggleDesc('${descId}')">${esc(descTexto)}</div>
-            ${descTexto.length > 120 ? `<button class="card-desc-toggle" onclick="toggleDesc('${descId}')" id="${descId}-toggle">▼ Ver mais</button>` : ''}
-          ` : ''}
         </div>
       </div>
+
+      ${descTexto ? `
+        <div class="card-desc-wrap">
+          <div class="card-desc" id="${descId}" onclick="toggleDesc('${descId}')">${esc(descTexto)}</div>
+          ${descTexto.length > 200 ? `<button class="card-desc-toggle" onclick="toggleDesc('${descId}')" id="${descId}-toggle">▼ Ver mais</button>` : ''}
+        </div>
+      ` : ''}
 
       <div class="card-actions">
         <button class="btn btn-success ${btnGostei}" ${disabledAttr} onclick="marcar('${id}','gostei')">
@@ -1756,7 +1768,6 @@ function abrirZap(imovelId){
   if(!zap){ toast('Corretor sem WhatsApp cadastrado', 'error'); return; }
 
   const nomeCliente = state.clienteInfo?.nome || 'Cliente';
-  // Para o Zap, usa endereço completo (só corretor vê)
   const endereco = enderecoCompleto_(im);
   const codigo = im.codigo || '';
   const link = im.link || '';
@@ -2162,9 +2173,6 @@ function fallbackCopy(texto, cb){
   }
 })();
 
-/* =====================================================
-   Atualiza visitas a cada minuto
-===================================================== */
 setInterval(() => {
   if(state.imoveis.length > 0){
     renderizarVisitas();
