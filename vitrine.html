@@ -8,7 +8,7 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏢</text></svg>">
 
 <script>
-  window.__WARMUP_URL__ = 'https://script.google.com/macros/s/AKfycbxbzYcL_YEAb-TxveF6e-XUCH555KG6GFusNRAtGUxRwPtWVN37rfzaDcU0Hpu4kwIp/exec';
+  window.__WARMUP_URL__ = 'https://script.google.com/macros/s/AKfycbzuCjg_5ZJDMWWKmjYp1ThW34iWS0YouviWFdiMGx8W3yApv0F1fdUcjeZdjm0s6Mg/exec';
   (function warmup(){
     try {
       fetch(window.__WARMUP_URL__ + '?action=ping&_t=' + Date.now(), { mode: 'no-cors' })
@@ -42,7 +42,6 @@
   }
   .container{ max-width: 1100px; margin: 0 auto; padding: 14px; }
 
-  /* HEADER */
   header.app-header{
     background: linear-gradient(90deg, #16263e 0%, #1e3a5f 100%);
     color: #fff; padding: 10px 14px;
@@ -76,13 +75,9 @@
     min-width: 0;
   }
   @media(max-width:600px){
-    .user-info{
-      font-size: .68rem;
-      max-width: 50vw;
-    }
+    .user-info{ font-size: .68rem; max-width: 50vw; }
   }
 
-  /* LOGIN */
   .login-wrap{
     display: flex; justify-content: center; align-items: center;
     min-height: 82vh; padding: 16px;
@@ -138,7 +133,6 @@
   .btn-ghost:hover:not(:disabled){ background: var(--bg-alt); }
   .btn-full{ width: 100%; }
 
-  /* LOADING */
   .loading-screen{
     display: flex; flex-direction: column;
     align-items: center; justify-content: center;
@@ -165,10 +159,7 @@
   }
   @keyframes spin{ to{ transform: rotate(360deg); } }
 
-  /* ============================================
-     CARDS DE VISITA CONFIRMADA — COMPACTOS
-     Mobile: 2 por linha | Desktop: 4 por linha
-  ============================================ */
+  /* CARDS DE VISITA CONFIRMADA */
   .visitas-wrap{
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -371,6 +362,29 @@
     display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
   }
 
+  .card-precos{
+    display: flex; flex-wrap: wrap; align-items: center; gap: 4px;
+    font-size: .76rem; font-weight: 700;
+    color: #166534;
+    margin-top: 2px;
+  }
+  .card-precos .pc-item{
+    display: inline-flex; align-items: center; gap: 3px;
+    background: #dcfce7; padding: 2px 8px; border-radius: 5px;
+    border: 1px solid #bbf7d0;
+    font-size: .72rem;
+    white-space: nowrap;
+  }
+  .card-precos .pc-item.cond{
+    background: #e0f2fe; color: #075985;
+    border-color: #bae6fd;
+  }
+  .card-precos .pc-item.iptu{
+    background: #fef3c7; color: #92400e;
+    border-color: #fde68a;
+  }
+  .card-precos .pc-sep{ color: var(--muted); font-weight: 400; }
+
   .card-desc{
     font-size: .78rem; color: var(--text-soft); line-height: 1.45;
     display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
@@ -510,7 +524,6 @@
   .empty-state svg{ width: 56px; height: 56px; margin-bottom: 12px; opacity: .35; }
   .empty-state h3{ font-size: .95rem; margin-bottom: 4px; color: var(--text-soft); }
 
-  /* ERRO DE CONEXÃO */
   .erro-conexao{
     background: #fff; border-radius: var(--radius);
     border: 1px solid #f0c8c8;
@@ -673,20 +686,16 @@
       Sua vitrine já está sendo usada em outro aparelho.<br>
       Para liberar o acesso neste dispositivo, solicite ao seu corretor.
     </p>
-
     <div style="background:#eef2f7; padding:14px; border-radius:10px; font-size:.82rem; color:var(--primary); line-height:1.5; margin-bottom:18px; text-align:left;">
       💬 <strong>Como liberar?</strong><br>
       Fale com seu corretor pelo WhatsApp e peça para liberar o acesso neste novo dispositivo.
     </div>
-
     <button class="btn btn-primary btn-full" id="btnZapLiberar" onclick="pedirLiberacaoZap()" style="margin-bottom:10px;">
       💬 Falar com meu corretor
     </button>
-
     <button class="btn btn-ghost btn-full" onclick="voltarParaLogin()">
       ← Voltar para o login
     </button>
-
     <div style="margin-top:16px; font-size:.72rem; color:var(--muted);">
       Você está em: <span id="deviceBlockInfo"></span>
     </div>
@@ -738,7 +747,7 @@
 /* =====================================================
    CONFIG
 ===================================================== */
-const API_URL = window.__WARMUP_URL__ || 'https://script.google.com/macros/s/AKfycbyxBL057qqG5ZWVcqZ1fH8JBtcXKElJQTZ7c64847cdjga1jUDq_RoJ7sR3aDmb5UJc/exec';
+const API_URL = window.__WARMUP_URL__ || 'https://script.google.com/macros/s/AKfycbzuCjg_5ZJDMWWKmjYp1ThW34iWS0YouviWFdiMGx8W3yApv0F1fdUcjeZdjm0s6Mg/exec';
 const TEL_KEY   = 'vitrine_telefone';
 const TOKEN_KEY = 'vitrine_device_token';
 const NOME_KEY  = 'vitrine_nome';
@@ -750,8 +759,7 @@ const CACHE_TTL = 5 * 60 * 1000;
 const TIMEOUT_API = 30000;
 const TIMEOUT_LOGIN = 25000;
 
-// Visita continua aparecendo por X ms depois do horário agendado
-const VISITA_TOLERANCIA_MS = 2 * 60 * 60 * 1000; // 2 horas
+const VISITA_TOLERANCIA_MS = 2 * 60 * 60 * 1000;
 
 const ZAP_CORRETORES = {
   'Hugo': '5531996070930',
@@ -859,6 +867,61 @@ function detectarNavegador(){
 }
 
 /* =====================================================
+   REMAPEAMENTO DE CAMPOS (endereço do imóvel)
+   A API retorna os campos com deslocamento:
+     chaveTexto → contém a Rua
+     rua        → contém o Número
+     numero     → contém o Bairro
+     bairro     → contém a Chave
+===================================================== */
+function camposEndereco_(im){
+  if(!im) return { rua: '', numero: '', bairro: '', chave: '' };
+  return {
+    rua:    String(im.chaveTexto || '').trim(),
+    numero: String(im.rua        || '').trim(),
+    bairro: String(im.numero     || '').trim(),
+    chave:  String(im.bairro     || '').trim()
+  };
+}
+
+/* Endereço para o cliente SEM número (rua + bairro)
+   Fallback: usa o título original se algum campo faltar. */
+function enderecoSemNumero_(im){
+  const c = camposEndereco_(im);
+  const partes = [c.rua, c.bairro].filter(Boolean);
+  if(partes.length > 0){
+    return partes.join(' - ');
+  }
+  // fallback: remove número do título se possível, senão mostra título cru
+  const tit = String(im && im.titulo || '').trim();
+  return tit || 'Endereço não informado';
+}
+
+/* Endereço completo COM número (rua, numero - bairro)
+   Usado no card de visita agendada. */
+function enderecoCompleto_(im){
+  const c = camposEndereco_(im);
+  let t = c.rua;
+  if(c.numero) t += (t ? ', ' : '') + c.numero;
+  if(c.bairro) t += (t ? ' - ' : '') + c.bairro;
+  return t || String(im && im.titulo || '').trim() || 'Endereço não informado';
+}
+
+/* Linha de preços/condomínio/IPTU — só os que estiverem preenchidos */
+function linhaPrecos_(im){
+  if(!im) return '';
+  const itens = [];
+  const preco = String(im.preco || '').trim();
+  const cond  = String(im.condominio || '').trim();
+  const iptu  = String(im.iptu || '').trim();
+  if(preco) itens.push(`<span class="pc-item">💰 ${esc(preco)}</span>`);
+  if(cond)  itens.push(`<span class="pc-item cond">🏢 Cond. ${esc(cond)}</span>`);
+  if(iptu)  itens.push(`<span class="pc-item iptu">📋 IPTU ${esc(iptu)}</span>`);
+  if(itens.length === 0) return '';
+  return `<div class="card-precos">${itens.join('<span class="pc-sep">·</span>')}</div>`;
+}
+
+/* =====================================================
    CACHE (localStorage)
 ===================================================== */
 function lerCache(){
@@ -909,9 +972,6 @@ function lerLinkOriginal(){
   } catch(e){ return null; }
 }
 
-/* =====================================================
-   URL original em sessionStorage (sobrevive ao reload)
-===================================================== */
 function gravarOriginalUrl(tel, senha){
   try {
     sessionStorage.setItem(ORIGINAL_URL_KEY, JSON.stringify({ tel, senha, ts: Date.now() }));
@@ -933,9 +993,6 @@ function limparOriginalUrl(){
   try { sessionStorage.removeItem(ORIGINAL_URL_KEY); } catch(e){}
 }
 
-/* =====================================================
-   Limpeza total
-===================================================== */
 function limparTudo(){
   try {
     localStorage.removeItem(TEL_KEY);
@@ -980,9 +1037,6 @@ function getCorretor(im){
   return null;
 }
 
-/* =====================================================
-   Detecção de erros
-===================================================== */
 function erroEhDispositivoVinculado(msg){
   if(!msg) return false;
   const s = String(msg).toLowerCase();
@@ -1141,9 +1195,7 @@ function mostrarSkeleton(qtd = 4){
 }
 
 /* =====================================================
-   TELA DE ERRO DE CONEXÃO — 2 versões:
-   - com link (botão "Tentar novamente" que refaz login)
-   - sem link (botão "Atualizar página" que faz reload)
+   ERRO DE CONEXÃO
 ===================================================== */
 function mostrarErroConexaoSemLink(){
   const grid = $('gridImoveis');
@@ -1206,11 +1258,11 @@ function tentarDeNovo(){
 }
 
 /* =====================================================
-   LOGIN COM RETRY FORTE (aguenta cold start do Apps Script)
+   LOGIN COM RETRY FORTE
 ===================================================== */
 async function loginComRetryForte(tel, senha){
   const navegador = detectarNavegador();
-  const esperas = [0, 1500, 3000, 5000]; // ms
+  const esperas = [0, 1500, 3000, 5000];
   let ultimoRes = null;
 
   for(let i = 0; i < esperas.length; i++){
@@ -1238,7 +1290,7 @@ async function loginComRetryForte(tel, senha){
 }
 
 /* =====================================================
-   REPROCESSAR com link (botão "Tentar novamente")
+   REPROCESSAR com link
 ===================================================== */
 async function reprocessarComLink(tel, senha){
   state.telefone = tel;
@@ -1332,7 +1384,6 @@ async function entrarCliente(){
       return;
     }
     if(erroEhConexao(res.error)){
-      // Guarda URL "virtual" pra poder reprocessar
       gravarOriginalUrl(tel, senhaDigitada);
       mostrarView('vitrineView');
       $('userInfo').textContent = '📱 ' + fmtTel(tel);
@@ -1373,9 +1424,7 @@ async function irParaVitrine(){
     renderizarVisitas();
     renderizarImoveis();
 
-    if(cache.fresh){
-      return;
-    }
+    if(cache.fresh) return;
   } else {
     mostrarSkeleton(4);
   }
@@ -1434,7 +1483,6 @@ async function carregarImoveis(){
     return db - da;
   });
 
-  // 🛡️ Cold start: se veio vazio mas tinha cache, mantém
   if(novos.length === 0 && state.imoveis.length > 0){
     console.warn('[vitrine] API retornou vazio, mantendo cache anterior');
     toast('Não conseguimos atualizar agora. Mostrando os últimos dados.', 'error');
@@ -1454,6 +1502,7 @@ async function carregarImoveis(){
   renderizarImoveis();
 }
 
+  
 /* =====================================================
    VISITAS CONFIRMADAS
    Regra: mostra se ainda não começou OU
@@ -1487,7 +1536,8 @@ function renderizarVisitas(){
 function visitaCardHTML(im){
   const info = fmtDataHoraVisita(im.dataVisitaAgendada);
   const id = esc(im.id);
-  const endereco = esc(im.titulo || 'Endereço não informado');
+  // Card de visita agendada → endereço COMPLETO (com número)
+  const endereco = esc(enderecoCompleto_(im));
   const codigo = im.codigo ? esc(im.codigo) : '';
 
   return `
@@ -1565,7 +1615,8 @@ function renderizarImoveis(){
     lista = lista.filter(i =>
       (i.titulo || '').toLowerCase().includes(busca) ||
       (i.descricao || '').toLowerCase().includes(busca) ||
-      (i.observacao || '').toLowerCase().includes(busca)
+      (i.observacao || '').toLowerCase().includes(busca) ||
+      (enderecoSemNumero_(i) || '').toLowerCase().includes(busca)
     );
   }
 
@@ -1625,6 +1676,10 @@ function cardHTML(im){
        </button>`
     : '';
 
+  // Endereço SEM número (privacidade) + linha de preços (só preenchidos)
+  const enderecoCliente = esc(enderecoSemNumero_(im));
+  const precosHtml = linhaPrecos_(im);
+
   return `
     <div class="card${cardExtraClass}" data-id="${id}">
       <div class="status-balloon ${statusClass}">
@@ -1633,7 +1688,7 @@ function cardHTML(im){
 
       <div class="card-main">
         <div class="card-img-wrap">
-          <img class="card-img" src="${esc(img)}" alt="${esc(im.titulo)}" loading="lazy"
+          <img class="card-img" src="${esc(img)}" alt="${enderecoCliente}" loading="lazy"
                onerror="this.src='https://via.placeholder.com/400x250/e2e8f0/64748b?text=Sem+imagem'">
         </div>
         <div class="card-info">
@@ -1642,7 +1697,8 @@ function cardHTML(im){
             ${im.codigo ? `<span class="card-code" onclick="copiarCodigo('${esc(im.codigo)}', this)">#${esc(im.codigo)} 📋</span>` : ''}
             ${zapInline}
           </div>
-          <div class="card-title">${esc(im.titulo) || 'Sem endereço'}</div>
+          <div class="card-title">${enderecoCliente}</div>
+          ${precosHtml}
           ${descTexto ? `
             <div class="card-desc" id="${descId}" onclick="toggleDesc('${descId}')">${esc(descTexto)}</div>
             ${descTexto.length > 120 ? `<button class="card-desc-toggle" onclick="toggleDesc('${descId}')" id="${descId}-toggle">▼ Ver mais</button>` : ''}
@@ -1700,7 +1756,8 @@ function abrirZap(imovelId){
   if(!zap){ toast('Corretor sem WhatsApp cadastrado', 'error'); return; }
 
   const nomeCliente = state.clienteInfo?.nome || 'Cliente';
-  const endereco = im.titulo || 'imóvel';
+  // Para o Zap, usa endereço completo (só corretor vê)
+  const endereco = enderecoCompleto_(im);
   const codigo = im.codigo || '';
   const link = im.link || '';
 
@@ -1716,7 +1773,7 @@ function abrirZap(imovelId){
 }
 
 /* =====================================================
-   MARCAR STATUS — com trava de duplo clique
+   MARCAR STATUS
 ===================================================== */
 async function marcar(id, acao){
   if(state.salvandoIds[id]) return;
@@ -1866,28 +1923,22 @@ function fallbackCopy(texto, cb){
 
   const temLinkNovo = telUrl.length >= 10 && senhaUrl.length > 0;
 
-  // ═══════════════════════════════════════════════════════
   // CASO 1 — VEIO LINK NOVO
-  // ═══════════════════════════════════════════════════════
   if(temLinkNovo){
     const telSalvo = localStorage.getItem(TEL_KEY);
     const mesmoCliente = telSalvo && normalizaTel(telSalvo) === telUrl;
 
-    // 💾 Guarda a URL original ANTES de qualquer coisa (pra poder refazer se falhar)
     gravarOriginalUrl(telUrl, senhaUrl);
 
-    // 🧹 Se é OUTRO cliente → limpa TUDO antes de qualquer coisa
     if(!mesmoCliente){
       console.log('[vitrine] Link de outro cliente. Limpando localStorage...');
       limparTudo();
     }
 
-    // Guarda o link novo (pra reusar se precisar)
     gravarLinkOriginal(telUrl, senhaUrl);
 
     state.telefone = telUrl;
 
-    // Mostra já (com cache se for o mesmo cliente, ou skeleton se limpou)
     const cache = lerCache();
 
     if(mesmoCliente && cache && cache.data && cache.data.length){
@@ -1903,14 +1954,12 @@ function fallbackCopy(texto, cb){
       atualizarContadores();
       renderizarVisitas();
       renderizarImoveis();
-      // ⚠️ NÃO limpa a URL ainda — só limpa após login OK
     } else {
       mostrarView('vitrineView');
       $('userInfo').textContent = '📱 ' + fmtTel(telUrl);
       mostrarSkeleton(4);
     }
 
-    // Faz login com retry forte (aguenta cold start)
     const res = await loginComRetryForte(telUrl, senhaUrl);
 
     if(res.ok){
@@ -1923,7 +1972,6 @@ function fallbackCopy(texto, cb){
 
       $('userInfo').textContent = res.nome ? '👤 ' + res.nome : '📱 ' + fmtTel(telUrl);
 
-      // ✅ Login OK → agora pode limpar a URL bonitinha
       limparUrl();
       limparOriginalUrl();
 
@@ -1960,8 +2008,6 @@ function fallbackCopy(texto, cb){
       return;
     }
 
-    // ❌ Falhou mesmo com retry forte → mostra tela com botão "Tentar novamente"
-    // ⚠️ NÃO limpa a URL original — o botão vai reusar o link
     if(!state.imoveis.length){
       mostrarErroConexaoComLink();
     } else {
@@ -1971,9 +2017,7 @@ function fallbackCopy(texto, cb){
     return;
   }
 
-  // ═══════════════════════════════════════════════════════
   // CASO 2 — SEM LINK NOVO
-  // ═══════════════════════════════════════════════════════
   const cache = lerCache();
   const telSalvo = localStorage.getItem(TEL_KEY);
   const tokenSalvo = localStorage.getItem(TOKEN_KEY);
