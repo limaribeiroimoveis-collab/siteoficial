@@ -7,7 +7,7 @@
 <title>LR Imóveis - Quinto Andar</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏢</text></svg>">
 
-<!-- ============ OPEN GRAPH / COMPARTILHAMENTO ============ -->
+<!-- ============ OPEN GRAPH ============ -->
 <!-- ⚠️ TROQUE A URL DA IMAGEM ABAIXO PELA SUA (ideal: 1200×1200) -->
 <meta property="og:image" content="https://picsum.photos/1200/1200">
 <meta property="og:image:secure_url" content="https://picsum.photos/1200/1200">
@@ -77,7 +77,7 @@
   /* ============ HEADER ============ */
   header.app-header{
     background: linear-gradient(90deg, #16263e 0%, #1e3a5f 100%);
-    color: #fff; padding: 12px 16px;
+    color: #fff;
     box-shadow: 0 2px 8px rgba(0,0,0,.12);
     position: sticky; top: 0; z-index: 100;
     border-bottom: 1px solid rgba(255,255,255,.06);
@@ -86,6 +86,7 @@
     max-width: 1400px; margin: 0 auto;
     display: flex; align-items: center; justify-content: space-between;
     gap: 12px; flex-wrap: nowrap; min-height: 38px;
+    padding: 12px 16px;
   }
   .brand{ display: flex; align-items: center; gap: 10px; min-width: 0; }
   .brand-icon{
@@ -100,13 +101,47 @@
   .user-info{
     font-size: .78rem; opacity: .95;
     display: flex; align-items: center; gap: 5px;
-    max-width: 55vw; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    max-width: 40vw; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
     background: rgba(255,255,255,.08);
     padding: 6px 12px; border-radius: 999px;
     border: 1px solid rgba(255,255,255,.1);
   }
   @media(max-width:600px){
-    .user-info{ font-size: .7rem; max-width: 48vw; padding: 5px 10px; }
+    .user-info{ font-size: .7rem; max-width: 36vw; padding: 5px 10px; }
+  }
+
+  /* Lupa no header */
+  .btn-lupa{
+    background: rgba(255,255,255,.08);
+    border: 1px solid rgba(255,255,255,.1);
+    color: #fff;
+    width: 36px; height: 36px;
+    border-radius: 999px;
+    display: inline-flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all .15s;
+    flex-shrink: 0;
+  }
+  .btn-lupa:hover{ background: rgba(255,255,255,.16); }
+
+  /* Barra de busca expansível */
+  .busca-expansivel{
+    display: none;
+    padding: 0 16px 12px;
+    background: transparent;
+  }
+  .busca-expansivel.show{ display: block; }
+  .busca-expansivel input{
+    background: #fff;
+    border: none;
+    font-size: .92rem;
+    padding: 10px 14px;
+    border-radius: 10px;
+    max-width: 1400px;
+    margin: 0 auto;
+    display: block;
+    width: 100%;
   }
 
   /* ============ LOGIN ============ */
@@ -275,12 +310,44 @@
   }
   .novo-card-preco{ font-size: .9rem; font-weight: 800; color: var(--success-bright); }
 
-  /* ============ BUSCA ============ */
-  .search-wrap{ margin-top: 16px; }
-  .search-wrap input{
-    background: #fff; border: 1px solid var(--border-strong);
-    font-size: .92rem; padding: 14px 16px; box-shadow: var(--shadow-xs);
+  /* ============ FILTRO DE BAIRROS ============ */
+  .bairros-bar{
+    display: flex;
+    gap: 8px;
+    margin: 12px 0 6px;
+    overflow-x: auto;
+    padding: 4px 4px 8px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
   }
+  .bairros-bar::-webkit-scrollbar{ height: 6px; }
+  .bairros-bar::-webkit-scrollbar-thumb{ background: var(--border-strong); border-radius: 3px; }
+  .bairro-chip{
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: #fff;
+    border: 1px solid var(--border-strong);
+    font-size: .76rem; font-weight: 700;
+    color: var(--text-soft);
+    cursor: pointer;
+    transition: all .15s;
+    font-family: inherit;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .bairro-chip:hover{ border-color: var(--primary); color: var(--primary); }
+  .bairro-chip.active{
+    background: var(--primary); color: #fff; border-color: var(--primary);
+    box-shadow: 0 2px 8px rgba(30,58,95,.25);
+  }
+  .bairro-chip .cnt{
+    background: rgba(15,23,42,.08);
+    padding: 0 7px; border-radius: 999px;
+    font-size: .64rem; font-weight: 800;
+    min-width: 18px; text-align: center;
+  }
+  .bairro-chip.active .cnt{ background: rgba(255,255,255,.25); }
 
   /* ============ GRID ============ */
   .grid{
@@ -404,16 +471,23 @@
     box-shadow: 0 2px 8px rgba(139,58,58,.25);
   }
 
-  /* Link Ver anúncio */
+  /* Botão Ver Todas as Fotos — destacado */
   .btn-ver-anuncio{
-    display: flex; align-items: center; justify-content: center; gap: 6px;
-    background: var(--primary-soft); color: var(--primary); text-decoration: none;
-    padding: 8px 10px; margin: 0 10px 8px;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    background: var(--primary); color: #fff; text-decoration: none;
+    padding: 12px 14px; margin: 0 10px 10px;
     border-radius: var(--radius-sm);
-    font-size: .72rem; font-weight: 700;
-    transition: all .15s; border: 1px solid transparent;
+    font-size: .82rem; font-weight: 700;
+    transition: all .15s; border: 1px solid var(--primary);
+    box-shadow: 0 3px 10px rgba(30,58,95,.22);
+    letter-spacing: .2px;
   }
-  .btn-ver-anuncio:hover{ background: #dde6ee; border-color: var(--primary); }
+  .btn-ver-anuncio:hover{
+    background: var(--primary-dark);
+    box-shadow: 0 5px 14px rgba(30,58,95,.32);
+    transform: translateY(-1px);
+  }
+  .btn-ver-anuncio .ico-foto{ font-size: 1.05rem; }
 
   /* Observação */
   .obs-wrap{
@@ -457,16 +531,28 @@
   }
   .obs-empty:hover{ color: var(--primary); }
 
-  /* Descrição */
+  /* Descrição com Ver mais/Ver menos */
   .card-desc{
     font-size: .72rem; color: var(--text-soft); line-height: 1.4;
-    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
-    overflow: hidden; cursor: pointer; white-space: pre-wrap;
-    padding: 0 10px 8px; margin-top: -4px;
+    padding: 0 10px 4px; margin-top: -4px;
   }
-  .card-desc.expandido{ display: block; -webkit-line-clamp: unset; overflow: visible; }
+  .card-desc-texto{
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+    overflow: hidden; white-space: pre-wrap;
+  }
+  .card-desc.expandido .card-desc-texto{
+    display: block; -webkit-line-clamp: unset; overflow: visible;
+  }
+  .card-desc-toggle{
+    display: inline-flex; align-items: center; gap: 3px;
+    background: transparent; border: none;
+    color: var(--primary); font-size: .7rem; font-weight: 700;
+    cursor: pointer; margin-top: 4px; padding: 2px 0; font-family: inherit;
+    transition: opacity .15s;
+  }
+  .card-desc-toggle:hover{ opacity: .75; text-decoration: underline; }
 
-  /* Rodapé meta dentro da descrição — só visível quando expandida */
+  /* Rodapé meta dentro da descrição */
   .card-desc-meta{
     display: none;
     margin-top: 8px;
@@ -708,7 +794,11 @@
     </div>
     <div style="display:flex; align-items:center; gap:10px; min-width:0;">
       <span class="user-info" id="userInfo"></span>
+      <button class="btn-lupa" id="btnLupa" onclick="toggleBusca()" title="Buscar">🔍</button>
     </div>
+  </div>
+  <div class="busca-expansivel" id="buscaExpansivel">
+    <input type="search" id="buscaInput" placeholder="🔍 Buscar por rua, bairro ou descrição..." oninput="renderizarImoveis()">
   </div>
 </header>
 
@@ -795,9 +885,8 @@
     <div class="carrossel-scroll" id="novidadesWrap"></div>
   </div>
 
-  <div class="search-wrap">
-    <input type="search" id="buscaInput" placeholder="🔍 Buscar por rua, bairro ou descrição..." oninput="renderizarImoveis()">
-  </div>
+  <!-- Filtro de bairros (substitui a busca antiga) -->
+  <div class="bairros-bar" id="bairrosBar"></div>
 
   <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; padding: 10px 4px 0;">
     <div style="font-size:.78rem; color:var(--muted); font-weight:700;" id="contadorImoveis"></div>
@@ -919,6 +1008,7 @@ const state = {
   clienteInfo: null,
   imoveis: [],
   filtroNav: null,
+  bairrosSelecionados: new Set(),
   salvandoIds: {},
   vistos: new Set(),
   ultimoAcesso: 0
@@ -1013,6 +1103,22 @@ function detectarNavegador(){
   else if(/Safari/i.test(ua) && !/Chrome/i.test(ua)) nav = 'Safari';
   else if(/Firefox/i.test(ua)) nav = 'Firefox';
   return (nav + (os ? ' · ' + os : '')).trim();
+}
+
+/* =====================================================
+   NORMALIZAÇÃO DE BAIRRO
+   Ignora maiúscula/minúscula e acentos
+===================================================== */
+function normalizarBairro(s){
+  return String(s || '')
+    .trim()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase();
+}
+
+function bairroOriginal_(im){
+  return String(im && im.bairro || '').trim();
 }
 
 /* =====================================================
@@ -1157,6 +1263,7 @@ function limparTudo(){
   state.imoveis = [];
   state.salvandoIds = {};
   state.filtroNav = null;
+  state.bairrosSelecionados = new Set();
 }
 
 /* =====================================================
@@ -1447,6 +1554,7 @@ async function reprocessarComLink(tel, senha){
         if(primeiroCorretor) localStorage.setItem('vitrine_corretor_pref', primeiroCorretor);
       } catch(e){}
       atualizarContadores();
+      renderizarFiltroBairros();
       renderizarVisitas();
       renderizarNovidades();
       renderizarImoveis();
@@ -1539,6 +1647,7 @@ async function irParaVitrine(){
   if(cache && cache.data && cache.data.length){
     state.imoveis = cache.data;
     atualizarContadores();
+    renderizarFiltroBairros();
     renderizarVisitas();
     renderizarNovidades();
     renderizarImoveis();
@@ -1613,6 +1722,7 @@ async function carregarImoveis(){
   } catch(e){}
 
   atualizarContadores();
+  renderizarFiltroBairros();
   renderizarVisitas();
   renderizarNovidades();
   renderizarImoveis();
@@ -1736,6 +1846,75 @@ function atualizarContadores(){
 function atualizarBadgesNav(){ atualizarContadores(); }
 
 /* =====================================================
+   FILTRO DE BAIRROS
+===================================================== */
+function extrairBairros_(){
+  const mapa = new Map();
+  (state.imoveis || []).forEach(im => {
+    const nomeOriginal = bairroOriginal_(im);
+    if(!nomeOriginal) return;
+    const chave = normalizarBairro(nomeOriginal);
+    if(!chave) return;
+    if(!mapa.has(chave)){
+      mapa.set(chave, { nome: nomeOriginal, count: 0 });
+    }
+    mapa.get(chave).count++;
+  });
+  return [...mapa.entries()]
+    .map(([chave, obj]) => ({ chave, nome: obj.nome, count: obj.count }))
+    .sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR', { sensitivity: 'base' }));
+}
+
+function renderizarFiltroBairros(){
+  const wrap = $('bairrosBar');
+  if(!wrap) return;
+
+  const bairros = extrairBairros_();
+  if(bairros.length === 0){
+    wrap.innerHTML = '';
+    return;
+  }
+
+  const todosAtivo = state.bairrosSelecionados.size === 0;
+
+  let html = `<button class="bairro-chip ${todosAtivo ? 'active' : ''}" onclick="limparFiltroBairros()">Todos os bairros</button>`;
+
+  html += bairros.map(b => {
+    const ativo = state.bairrosSelecionados.has(b.chave);
+    return `
+      <button class="bairro-chip ${ativo ? 'active' : ''}"
+              onclick="toggleBairro('${esc(b.chave)}')"
+              title="${esc(b.nome)}">
+        ${esc(b.nome)}
+        <span class="cnt">${b.count}</span>
+      </button>
+    `;
+  }).join('');
+
+  wrap.innerHTML = html;
+}
+
+function toggleBairro(chave){
+  const k = String(chave || '').toLowerCase();
+  if(state.bairrosSelecionados.has(k)) state.bairrosSelecionados.delete(k);
+  else state.bairrosSelecionados.add(k);
+  renderizarFiltroBairros();
+  renderizarImoveis();
+}
+
+function limparFiltroBairros(){
+  state.bairrosSelecionados.clear();
+  renderizarFiltroBairros();
+  renderizarImoveis();
+}
+
+function imovelPassaFiltroBairro_(im){
+  if(state.bairrosSelecionados.size === 0) return true;
+  const chave = normalizarBairro(bairroOriginal_(im));
+  return state.bairrosSelecionados.has(chave);
+}
+
+/* =====================================================
    MENU INFERIOR
 ===================================================== */
 function navIr(destino){
@@ -1746,7 +1925,8 @@ function navIr(destino){
   if(destino === 'inicio'){
     state.filtroNav = null;
     $('navInicio').classList.add('active');
-    $('buscaInput').value = '';
+    const buscaEl = $('buscaInput');
+    if(buscaEl) buscaEl.value = '';
     if($('filtroAtivoTag')) $('filtroAtivoTag').style.display = 'none';
     renderizarImoveis();
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1840,6 +2020,22 @@ function talvezMostrarAjudaPrimeiraVez(){
 }
 
 /* =====================================================
+   BUSCA EXPANSÍVEL
+===================================================== */
+function toggleBusca(){
+  const barra = $('buscaExpansivel');
+  if(!barra) return;
+  barra.classList.toggle('show');
+  if(barra.classList.contains('show')){
+    setTimeout(() => $('buscaInput').focus(), 100);
+  } else {
+    const el = $('buscaInput');
+    if(el) el.value = '';
+    renderizarImoveis();
+  }
+}
+
+/* =====================================================
    RENDERIZAR IMÓVEIS
 ===================================================== */
 function renderizarImoveis(){
@@ -1850,6 +2046,12 @@ function renderizarImoveis(){
       const input = $(obsId + '-input');
       emEdicao[obsId] = input ? input.value : '';
     }
+  });
+
+  // Preserva descrições expandidas
+  const descExpandidas = {};
+  document.querySelectorAll('.card-desc.expandido').forEach(el => {
+    descExpandidas[el.id] = true;
   });
 
   const grid = $('gridImoveis');
@@ -1874,7 +2076,12 @@ function renderizarImoveis(){
     });
   }
 
-  const busca = ($('buscaInput').value || '').toLowerCase().trim();
+  // Filtro de bairros
+  lista = lista.filter(imovelPassaFiltroBairro_);
+
+  // Busca textual (lupa)
+  const buscaEl = $('buscaInput');
+  const busca = buscaEl ? (buscaEl.value || '').toLowerCase().trim() : '';
   if(busca){
     lista = lista.filter(i =>
       (i.titulo || '').toLowerCase().includes(busca) ||
@@ -1896,6 +2103,7 @@ function renderizarImoveis(){
     $('emptyMsg').textContent = busca ? 'Tente outra busca.'
       : state.filtroNav === 'favoritos' ? 'Você ainda não marcou nenhum como ❤️ Gostei.'
       : state.filtroNav === 'visitar' ? 'Você ainda não marcou nenhum como 📅 Visitar.'
+      : state.bairrosSelecionados.size > 0 ? 'Nenhum imóvel nos bairros selecionados.'
       : 'Nada para mostrar.';
     return;
   }
@@ -1909,6 +2117,14 @@ function renderizarImoveis(){
       wrap.classList.add('editing');
       input.value = emEdicao[obsId];
     }
+  });
+
+  // Reaplica descrições expandidas
+  Object.keys(descExpandidas).forEach(descId => {
+    const el = $(descId);
+    const btn = $(descId + '-toggle');
+    if(el) el.classList.add('expandido');
+    if(btn) btn.innerHTML = 'Ver menos ▲';
   });
 }
 
@@ -1974,8 +2190,14 @@ function cardHTML(im, idx){
       </div>
 
       ${temDescricao ? `
-        <div class="card-desc" id="${descId}" onclick="event.stopPropagation(); toggleDesc('${descId}')">
-          ${descTexto ? esc(descTexto) : '<em>Clique para ver detalhes</em>'}
+        <div class="card-desc" id="${descId}">
+          <div class="card-desc-texto" id="${descId}-texto">
+            ${descTexto ? esc(descTexto) : 'Sem descrição adicional.'}
+          </div>
+          <button class="card-desc-toggle" id="${descId}-toggle"
+                  onclick="event.stopPropagation(); toggleDesc('${descId}')">
+            Ver mais ▼
+          </button>
           <div class="card-desc-meta">
             ${im.codigo ? `<span class="meta-codigo" onclick="event.stopPropagation(); copiarCodigo('${esc(im.codigo)}', this)">#${esc(im.codigo)}</span>` : ''}
             ${dataFmt ? `<span class="meta-data">📅 ${dataFmt}</span>` : ''}
@@ -2000,7 +2222,8 @@ function cardHTML(im, idx){
 
       ${im.link ? `
         <a class="btn-ver-anuncio" href="${esc(im.link)}" target="_blank" rel="noopener" onclick="event.stopPropagation(); clicarAnuncio('${id}');">
-          🔗 Ver todas as fotos
+          <span class="ico-foto">📸</span>
+          <span>Ver Todas as Fotos</span>
         </a>
       ` : ''}
 
@@ -2086,11 +2309,16 @@ async function marcar(id, acao){
 }
 
 /* =====================================================
-   OBSERVAÇÕES
+   OBSERVAÇÕES E DESCRIÇÃO
 ===================================================== */
 function toggleDesc(descId){
   const el = $(descId);
-  if(el) el.classList.toggle('expandido');
+  const btn = $(descId + '-toggle');
+  if(!el) return;
+  const expandido = el.classList.toggle('expandido');
+  if(btn){
+    btn.innerHTML = expandido ? 'Ver menos ▲' : 'Ver mais ▼';
+  }
 }
 
 function toggleObs(obsId){
@@ -2202,6 +2430,7 @@ function fallbackCopy(texto, cb){
         ? '👤 ' + state.clienteInfo.nome
         : '📱 ' + fmtTel(telUrl);
       atualizarContadores();
+      renderizarFiltroBairros();
       renderizarVisitas();
       renderizarNovidades();
       renderizarImoveis();
@@ -2242,6 +2471,7 @@ function fallbackCopy(texto, cb){
           if(primeiroCorretor) localStorage.setItem('vitrine_corretor_pref', primeiroCorretor);
         } catch(e){}
         atualizarContadores();
+        renderizarFiltroBairros();
         renderizarVisitas();
         renderizarNovidades();
         renderizarImoveis();
@@ -2280,6 +2510,7 @@ function fallbackCopy(texto, cb){
       ? '👤 ' + state.clienteInfo.nome
       : '📱 ' + fmtTel(telSalvo);
     atualizarContadores();
+    renderizarFiltroBairros();
     renderizarVisitas();
     renderizarNovidades();
     renderizarImoveis();
@@ -2316,6 +2547,7 @@ function fallbackCopy(texto, cb){
         if(primeiroCorretor) localStorage.setItem('vitrine_corretor_pref', primeiroCorretor);
       } catch(e){}
       atualizarContadores();
+      renderizarFiltroBairros();
       renderizarVisitas();
       renderizarNovidades();
       renderizarImoveis();
@@ -2370,6 +2602,7 @@ function fallbackCopy(texto, cb){
         state.imoveis = res.imoveis;
         gravarCache(res.imoveis, linkSalvo.tel, res.nome);
         atualizarContadores();
+        renderizarFiltroBairros();
         renderizarVisitas();
         renderizarNovidades();
         renderizarImoveis();
