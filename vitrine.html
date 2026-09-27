@@ -2,12 +2,12 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="google" content="notranslate">
 <title>Lima Ribeiro Imóveis — Minha Vitrine</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏢</text></svg>">
 
-<!-- ============ OPEN GRAPH / COMPARTILHAMENTO ============ -->
+<!-- ============ OPEN GRAPH ============ -->
 <!-- ⚠️ TROQUE A URL DA IMAGEM ABAIXO PELA SUA (1200×630px) -->
 <meta property="og:image" content="https://picsum.photos/1200/630">
 <meta property="og:image:secure_url" content="https://picsum.photos/1200/630">
@@ -29,8 +29,7 @@
   window.__WARMUP_URL__ = 'https://script.google.com/macros/s/AKfycbzuCjg_5ZJDMWWKmjYp1ThW34iWS0YouviWFdiMGx8W3yApv0F1fdUcjeZdjm0s6Mg/exec';
   (function warmup(){
     try {
-      fetch(window.__WARMUP_URL__ + '?action=ping&_t=' + Date.now(), { mode: 'no-cors' })
-        .catch(function(){});
+      fetch(window.__WARMUP_URL__ + '?action=ping&_t=' + Date.now(), { mode: 'no-cors' }).catch(function(){});
     } catch(e){}
   })();
 </script>
@@ -54,6 +53,7 @@
     --shadow-lg: 0 12px 32px rgba(15,23,42,.12), 0 2px 6px rgba(15,23,42,.06);
     --font: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
     --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    --navbar-h: 64px;
   }
   html, body { height: 100%; }
   body{
@@ -61,6 +61,7 @@
     background: var(--bg); color: var(--text); min-height: 100vh;
     -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
     line-height: 1.5; font-size: 14px;
+    padding-bottom: calc(var(--navbar-h) + env(safe-area-inset-bottom));
   }
   .container{ max-width: 1400px; margin: 0 auto; padding: 16px; }
   @media(max-width:640px){ .container{ padding: 10px; } }
@@ -83,8 +84,7 @@
     width: 34px; height: 34px; flex-shrink: 0;
     background: var(--accent); border-radius: 8px;
     display: flex; align-items: center; justify-content: center;
-    font-size: .9rem; color: #fff; font-weight: 800;
-    letter-spacing: .5px;
+    font-size: .9rem; color: #fff; font-weight: 800; letter-spacing: .5px;
   }
   .brand-text{ display: flex; flex-direction: column; line-height: 1.05; min-width: 0; }
   .brand-title{ font-size: .92rem; font-weight: 700; letter-spacing: .2px; }
@@ -92,14 +92,9 @@
   .user-info{
     font-size: .78rem; opacity: .95;
     display: flex; align-items: center; gap: 5px;
-    max-width: 55vw;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    min-width: 0;
+    max-width: 55vw; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
     background: rgba(255,255,255,.08);
-    padding: 6px 12px;
-    border-radius: 999px;
+    padding: 6px 12px; border-radius: 999px;
     border: 1px solid rgba(255,255,255,.1);
   }
   @media(max-width:600px){
@@ -107,10 +102,7 @@
   }
 
   /* ============ LOGIN ============ */
-  .login-wrap{
-    display: flex; justify-content: center; align-items: center;
-    min-height: 82vh; padding: 16px;
-  }
+  .login-wrap{ display: flex; justify-content: center; align-items: center; min-height: 82vh; padding: 16px; }
   .login-card{
     background: var(--card); padding: 36px 28px; border-radius: 16px;
     box-shadow: var(--shadow-lg); width: 100%; max-width: 420px;
@@ -131,17 +123,10 @@
     border-radius: 10px; font-size: .95rem; font-family: inherit;
     transition: all .15s; background: #fff; color: var(--text);
   }
-  input:focus, textarea:focus{
-    outline: none; border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(30,58,95,.08);
-  }
+  input:focus, textarea:focus{ outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(30,58,95,.08); }
   label{ display: block; font-size: .78rem; font-weight: 600; margin-bottom: 6px; color: var(--text-soft); text-transform: uppercase; letter-spacing: .3px; }
   .form-group{ margin-bottom: 14px; }
-  .code-input{
-    text-align: center; font-size: 1.5rem; font-weight: 700;
-    letter-spacing: .4rem; text-transform: uppercase;
-    font-family: var(--mono); padding: 14px;
-  }
+  .code-input{ text-align: center; font-size: 1.5rem; font-weight: 700; letter-spacing: .4rem; text-transform: uppercase; font-family: var(--mono); padding: 14px; }
 
   /* ============ BOTÕES ============ */
   .btn{
@@ -153,17 +138,12 @@
   .btn:disabled{ opacity: .5; cursor: not-allowed; }
   .btn-primary{ background: var(--primary); color: #fff; }
   .btn-primary:hover:not(:disabled){ background: var(--primary-dark); }
-  .btn-success{ background: var(--success); color: #fff; }
   .btn-ghost{ background: #fff; color: var(--text-soft); border: 1px solid var(--border); }
   .btn-ghost:hover:not(:disabled){ background: var(--bg-alt); }
   .btn-full{ width: 100%; }
 
   /* ============ LOADING ============ */
-  .loading-screen{
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    min-height: 85vh; padding: 24px; text-align: center;
-  }
+  .loading-screen{ display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 85vh; padding: 24px; text-align: center; }
   .loading-logo{
     width: 72px; height: 72px; margin-bottom: 20px;
     background: var(--primary); border-radius: 16px;
@@ -178,46 +158,32 @@
   }
   .spinner{
     width: 40px; height: 40px;
-    border: 3px solid rgba(30,58,95,.15);
-    border-top-color: var(--primary);
-    border-radius: 50%;
-    animation: spin .7s linear infinite;
+    border: 3px solid rgba(30,58,95,.15); border-top-color: var(--primary);
+    border-radius: 50%; animation: spin .7s linear infinite;
   }
   @keyframes spin{ to{ transform: rotate(360deg); } }
 
   /* ============ SEÇÕES ============ */
-  .section{
-    margin-top: 18px;
-    animation: fadeInUp .35s ease-out both;
-  }
+  .section{ margin-top: 18px; animation: fadeInUp .35s ease-out both; }
   @keyframes fadeInUp{
     from{ opacity: 0; transform: translateY(8px); }
     to{ opacity: 1; transform: translateY(0); }
   }
-  .section-header{
-    display: flex; align-items: center; gap: 10px;
-    margin-bottom: 10px;
-    padding: 0 4px;
-  }
+  .section-header{ display: flex; align-items: center; gap: 10px; margin-bottom: 10px; padding: 0 4px; }
   .section-title{
-    font-size: .95rem; font-weight: 800;
-    color: var(--text);
-    display: inline-flex; align-items: center; gap: 7px;
-    letter-spacing: -.01em;
+    font-size: .95rem; font-weight: 800; color: var(--text);
+    display: inline-flex; align-items: center; gap: 7px; letter-spacing: -.01em;
   }
   .section-title .emoji{ font-size: 1.1rem; }
   .section-count{
     font-size: .72rem; color: var(--muted);
     background: #fff; padding: 3px 10px; border-radius: 999px;
-    border: 1px solid var(--border);
-    font-weight: 700;
+    border: 1px solid var(--border); font-weight: 700;
   }
 
   /* ============ CARROSSEL ============ */
   .carrossel-scroll{
-    display: flex;
-    gap: 10px;
-    overflow-x: auto;
+    display: flex; gap: 10px; overflow-x: auto;
     padding: 4px 4px 10px;
     scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
@@ -226,236 +192,136 @@
   .carrossel-scroll::-webkit-scrollbar{ height: 6px; }
   .carrossel-scroll::-webkit-scrollbar-track{ background: transparent; }
   .carrossel-scroll::-webkit-scrollbar-thumb{ background: var(--border-strong); border-radius: 3px; }
-  .carrossel-scroll > *{
-    scroll-snap-align: start;
-    flex: 0 0 auto;
-    width: 240px;
-  }
-  @media(min-width:768px){
-    .carrossel-scroll > *{ width: 280px; }
-  }
+  .carrossel-scroll > *{ scroll-snap-align: start; flex: 0 0 auto; width: 240px; }
+  @media(min-width:768px){ .carrossel-scroll > *{ width: 280px; } }
 
   /* ============ VISITA CONFIRMADA ============ */
   .visita-card{
     position: relative;
     background: linear-gradient(135deg, #fff5f5 0%, #ffe8e8 100%);
-    border: 2px solid #d9534f;
-    border-radius: var(--radius);
+    border: 2px solid #d9534f; border-radius: var(--radius);
     padding: 18px 12px 12px;
     box-shadow: 0 3px 10px rgba(217,83,79,.15);
     display: flex; flex-direction: column; gap: 8px;
     min-height: 128px;
   }
   .visita-card::before{
-    content: '📍';
-    position: absolute;
-    top: -10px; left: 10px;
-    font-size: 1.15rem;
+    content: '📍'; position: absolute;
+    top: -10px; left: 10px; font-size: 1.15rem;
     filter: drop-shadow(0 2px 3px rgba(0,0,0,.25));
   }
   .visita-card-titulo{
-    font-size: .62rem; font-weight: 800;
-    color: #b91c1c; text-transform: uppercase;
-    letter-spacing: .6px;
+    font-size: .62rem; font-weight: 800; color: #b91c1c;
+    text-transform: uppercase; letter-spacing: .6px;
     display: inline-flex; align-items: center; gap: 5px;
   }
   .visita-card-titulo .dot{
     width: 6px; height: 6px; border-radius: 50%;
     background: #d9534f;
     box-shadow: 0 0 0 3px rgba(217,83,79,.25);
-    animation: pulseDot 1.6s ease-in-out infinite;
-    flex-shrink: 0;
+    animation: pulseDot 1.6s ease-in-out infinite; flex-shrink: 0;
   }
   @keyframes pulseDot{
     0%,100%{ box-shadow: 0 0 0 3px rgba(217,83,79,.25); }
     50%{ box-shadow: 0 0 0 6px rgba(217,83,79,.12); }
   }
-  .visita-card-linhas{
-    display: flex; flex-direction: column; gap: 5px;
-    color: #7f1d1d; line-height: 1.3; flex: 1;
-  }
+  .visita-card-linhas{ display: flex; flex-direction: column; gap: 5px; color: #7f1d1d; line-height: 1.3; flex: 1; }
   .visita-card-linhas .endereco{
-    font-weight: 700; color: #7f1d1d;
-    font-size: .8rem;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    line-height: 1.25;
+    font-weight: 700; color: #7f1d1d; font-size: .8rem;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+    overflow: hidden; line-height: 1.25;
   }
   .visita-card-linhas .quando{
-    background: #fff;
-    border: 1px solid #fca5a5;
-    padding: 3px 8px;
-    border-radius: 6px;
+    background: #fff; border: 1px solid #fca5a5;
+    padding: 3px 8px; border-radius: 6px;
     font-weight: 700; color: #b91c1c;
     display: inline-flex; align-items: center; gap: 4px;
-    font-size: .72rem;
-    align-self: flex-start;
-    white-space: nowrap;
+    font-size: .72rem; align-self: flex-start; white-space: nowrap;
   }
   .visita-card-codigo{
     display: inline-flex; align-items: center;
-    font-family: var(--mono);
-    font-size: .62rem; font-weight: 700;
+    font-family: var(--mono); font-size: .62rem; font-weight: 700;
     color: var(--purple); background: #f1eef7;
     padding: 2px 7px; border-radius: 4px;
-    border: 1px solid #ddd4ec;
-    align-self: flex-start;
+    border: 1px solid #ddd4ec; align-self: flex-start;
   }
 
   /* ============ CARD NOVO (carrossel) ============ */
   .novo-card{
-    background: #fff;
-    border-radius: var(--radius);
-    border: 2px solid #bbf7d0;
-    overflow: hidden;
+    background: #fff; border-radius: var(--radius);
+    border: 2px solid #bbf7d0; overflow: hidden;
     box-shadow: 0 3px 10px rgba(22,163,74,.12);
     display: flex; flex-direction: column;
-    cursor: pointer;
-    transition: all .18s;
+    cursor: pointer; transition: all .18s;
   }
   .novo-card:hover{ transform: translateY(-2px); box-shadow: 0 8px 20px rgba(22,163,74,.18); }
-  .novo-card-img{
-    width: 100%; height: 130px; object-fit: cover;
-    background: var(--bg-alt); display: block;
-  }
+  .novo-card-img{ width: 100%; height: 130px; object-fit: cover; background: var(--bg-alt); display: block; }
   .novo-card-body{ padding: 10px 12px 12px; display: flex; flex-direction: column; gap: 6px; }
   .novo-card-endereco{
-    font-size: .78rem; font-weight: 700; color: var(--text);
-    line-height: 1.3;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
+    font-size: .78rem; font-weight: 700; color: var(--text); line-height: 1.3;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
   }
-  .novo-card-preco{
-    font-size: .9rem; font-weight: 800; color: var(--success-bright);
-  }
+  .novo-card-preco{ font-size: .9rem; font-weight: 800; color: var(--success-bright); }
 
   /* ============ BUSCA ============ */
   .search-wrap{ margin-top: 16px; }
   .search-wrap input{
-    background: #fff;
-    border: 1px solid var(--border-strong);
-    font-size: .92rem;
-    padding: 14px 16px;
-    box-shadow: var(--shadow-xs);
+    background: #fff; border: 1px solid var(--border-strong);
+    font-size: .92rem; padding: 14px 16px; box-shadow: var(--shadow-xs);
   }
-
-  /* ============ FILTROS ============ */
-  .filters-bar{
-    display: flex;
-    gap: 8px;
-    margin: 12px 0 6px;
-    overflow-x: auto;
-    padding: 4px;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-  }
-  .filters-bar::-webkit-scrollbar{ display: none; }
-  .chip{
-    display: inline-flex; align-items: center; gap: 6px;
-    padding: 9px 14px;
-    border-radius: 999px;
-    background: #fff;
-    border: 1px solid var(--border-strong);
-    font-size: .78rem; font-weight: 700;
-    color: var(--text-soft);
-    cursor: pointer;
-    transition: all .15s;
-    font-family: inherit;
-    white-space: nowrap;
-    flex-shrink: 0;
-  }
-  .chip:hover{ border-color: var(--primary); color: var(--primary); }
-  .chip.active{
-    background: var(--primary); color: #fff; border-color: var(--primary);
-    box-shadow: 0 2px 8px rgba(30,58,95,.25);
-  }
-  .chip .cnt{
-    background: rgba(15,23,42,.08);
-    padding: 0 7px; border-radius: 999px;
-    font-size: .66rem; font-weight: 800;
-    min-width: 18px; text-align: center;
-  }
-  .chip.active .cnt{ background: rgba(255,255,255,.25); }
 
   /* ============ GRID ============ */
   .grid{
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-    margin-top: 14px;
+    gap: 10px; margin-top: 14px;
   }
   @media(min-width:640px){ .grid{ grid-template-columns: repeat(3, 1fr); gap: 12px; } }
   @media(min-width:900px){ .grid{ grid-template-columns: repeat(4, 1fr); gap: 14px; } }
   @media(min-width:1200px){ .grid{ grid-template-columns: repeat(5, 1fr); } }
   @media(max-width:380px){ .grid{ gap: 8px; } }
 
-  /* ============ CARD ============ */
+  /* ============ CARD DE IMÓVEL ============ */
   .card{
-    background: var(--card);
-    border-radius: var(--radius);
+    background: var(--card); border-radius: var(--radius);
     box-shadow: var(--shadow-xs);
     display: flex; flex-direction: column;
-    transition: all .2s;
-    position: relative;
-    border: 1px solid var(--border);
-    overflow: hidden;
+    transition: all .2s; position: relative;
+    border: 1px solid var(--border); overflow: hidden;
     animation: cardIn .35s ease-out both;
   }
   @keyframes cardIn{
     from{ opacity: 0; transform: translateY(6px); }
     to{ opacity: 1; transform: translateY(0); }
   }
-  .card:hover{
-    box-shadow: var(--shadow-md);
-    transform: translateY(-2px);
-    border-color: var(--border-strong);
-  }
-  .card.card-nao-gostei{
-    opacity: .55; filter: grayscale(60%);
-  }
+  .card:hover{ box-shadow: var(--shadow-md); transform: translateY(-2px); border-color: var(--border-strong); }
+  .card.card-nao-gostei{ opacity: .55; filter: grayscale(60%); }
   .card.card-nao-gostei:hover{ opacity: .8; filter: grayscale(40%); }
 
-  /* Badge NOVO */
   .badge-novo{
-    position: absolute;
-    top: 8px; left: 8px;
+    position: absolute; top: 8px; left: 8px;
     background: linear-gradient(135deg, #16a34a 0%, #22c55e 100%);
-    color: #fff;
-    font-size: .6rem; font-weight: 800;
-    letter-spacing: .6px;
-    padding: 4px 9px;
-    border-radius: 999px;
-    z-index: 4;
-    box-shadow: 0 2px 8px rgba(22,163,74,.4);
+    color: #fff; font-size: .6rem; font-weight: 800;
+    letter-spacing: .6px; padding: 4px 9px; border-radius: 999px;
+    z-index: 4; box-shadow: 0 2px 8px rgba(22,163,74,.4);
     display: inline-flex; align-items: center; gap: 4px;
     animation: badgePulse 2s ease-in-out infinite;
   }
   .badge-novo::before{
-    content: '';
-    width: 5px; height: 5px;
-    border-radius: 50%;
-    background: #fff;
-    box-shadow: 0 0 0 2px rgba(255,255,255,.4);
+    content: ''; width: 5px; height: 5px; border-radius: 50%;
+    background: #fff; box-shadow: 0 0 0 2px rgba(255,255,255,.4);
   }
   @keyframes badgePulse{
     0%,100%{ box-shadow: 0 2px 8px rgba(22,163,74,.4); }
     50%{ box-shadow: 0 2px 14px rgba(22,163,74,.7); }
   }
 
-  /* Faixa de status */
   .card-status-strip{
-    position: absolute;
-    top: 8px; right: 8px;
-    padding: 4px 9px;
-    border-radius: 999px;
+    position: absolute; top: 8px; right: 8px;
+    padding: 4px 9px; border-radius: 999px;
     font-size: .58rem; font-weight: 800;
     text-transform: uppercase; letter-spacing: .4px;
-    color: #fff;
-    z-index: 4;
+    color: #fff; z-index: 4;
     box-shadow: 0 2px 6px rgba(0,0,0,.18);
     display: inline-flex; align-items: center; gap: 3px;
   }
@@ -464,36 +330,21 @@
   .status-quero-visitar{ background: var(--warn); }
   .status-pendente{ display: none; }
 
-  /* Imagem */
   .card-img-wrap{
-    width: 100%;
-    aspect-ratio: 4 / 3;
-    overflow: hidden;
-    background: var(--bg-alt);
-    position: relative;
+    width: 100%; aspect-ratio: 4 / 3; overflow: hidden;
+    background: var(--bg-alt); position: relative;
   }
   .card-img{
     width: 100%; height: 100%; object-fit: cover;
-    display: block;
-    transition: transform .3s ease;
+    display: block; transition: transform .3s ease;
   }
   .card:hover .card-img{ transform: scale(1.04); }
 
-  /* Corpo */
-  .card-body{
-    padding: 10px 10px 12px;
-    display: flex; flex-direction: column; gap: 6px;
-    flex: 1;
-  }
+  .card-body{ padding: 10px 10px 8px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
   .card-title{
-    font-size: .78rem; font-weight: 700; line-height: 1.3;
-    color: var(--text);
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    min-height: 2.1em;
-    letter-spacing: -.005em;
+    font-size: .78rem; font-weight: 700; line-height: 1.3; color: var(--text);
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+    overflow: hidden; min-height: 2.1em; letter-spacing: -.005em;
   }
   .card-preco{
     font-size: .92rem; font-weight: 800;
@@ -505,113 +356,73 @@
     display: flex; flex-wrap: wrap; gap: 6px;
   }
   .card-preco-sec .sep{ color: var(--border-strong); }
-  .card-meta{
-    display: flex; align-items: center; gap: 5px; flex-wrap: wrap;
-    font-size: .62rem; color: var(--muted);
-    margin-top: 2px;
-  }
-  .card-meta .codigo{
-    font-family: var(--mono);
-    background: #f1eef7; color: var(--purple);
-    padding: 2px 7px; border-radius: 4px;
-    font-weight: 700;
-    cursor: pointer;
-    border: 1px solid #ddd4ec;
-    transition: all .15s;
-  }
-  .card-meta .codigo:hover{ background: #e6e0f2; }
-  .card-meta .codigo.copiado{ background: var(--success); color: #fff; border-color: var(--success); }
-  .card-meta .data{ display: inline-flex; align-items: center; gap: 3px; }
 
-  /* Ações */
+  /* Botões de ação do card com texto */
   .card-actions{
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 4px;
-    padding: 0 10px 10px;
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 4px; padding: 0 10px 10px;
   }
   .card-actions .btn-action{
-    padding: 8px 2px;
+    padding: 8px 4px;
     border-radius: var(--radius-sm);
     border: 1px solid var(--border);
     background: #f8fafc;
-    cursor: pointer;
-    font-family: inherit;
-    font-size: 1rem;
-    line-height: 1;
+    cursor: pointer; font-family: inherit;
+    font-size: .7rem; font-weight: 700;
     transition: all .15s;
-    display: flex; align-items: center; justify-content: center;
-    min-height: 34px;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 2px;
+    min-height: 44px;
+    color: var(--text-soft);
+    line-height: 1.15;
   }
+  .card-actions .btn-action .icone{ font-size: .95rem; line-height: 1; }
   .card-actions .btn-action:hover{ background: var(--bg-alt); }
   .card-actions .btn-action.act-gostei.ativo{
-    background: var(--success); border-color: var(--success);
+    background: var(--success); border-color: var(--success); color: #fff;
     box-shadow: 0 2px 8px rgba(47,107,79,.25);
   }
   .card-actions .btn-action.act-visitar.ativo{
-    background: var(--warn); border-color: var(--warn);
+    background: var(--warn); border-color: var(--warn); color: #fff;
     box-shadow: 0 2px 8px rgba(139,111,58,.25);
   }
   .card-actions .btn-action.act-nao.ativo{
-    background: var(--danger); border-color: var(--danger);
+    background: var(--danger); border-color: var(--danger); color: #fff;
     box-shadow: 0 2px 8px rgba(139,58,58,.25);
   }
-  .card-actions .btn-action.ativo{ color: #fff; }
 
-  /* WhatsApp inline */
-  .card-zap{
-    position: absolute;
-    bottom: 82px; right: 8px;
-    background: #25D366; color: #fff;
-    width: 34px; height: 34px;
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1rem;
-    box-shadow: 0 2px 8px rgba(37,211,102,.4);
-    border: 2px solid #fff;
-    cursor: pointer;
-    z-index: 3;
-    transition: all .15s;
-  }
-  .card-zap:hover{ transform: scale(1.1); }
-
-  /* Ver anúncio */
+  /* Link Ver anúncio */
   .btn-ver-anuncio{
     display: flex; align-items: center; justify-content: center; gap: 6px;
     background: var(--primary-soft); color: var(--primary); text-decoration: none;
-    padding: 8px 10px;
-    margin: 0 10px 10px;
+    padding: 8px 10px; margin: 0 10px 8px;
     border-radius: var(--radius-sm);
     font-size: .72rem; font-weight: 700;
-    transition: all .15s;
-    border: 1px solid transparent;
+    transition: all .15s; border: 1px solid transparent;
   }
   .btn-ver-anuncio:hover{ background: #dde6ee; border-color: var(--primary); }
 
   /* Observação */
   .obs-wrap{
-    margin: 0 10px 10px;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
+    margin: 0 10px 8px; background: var(--bg);
+    border: 1px solid var(--border); border-radius: var(--radius-sm);
     padding: 8px 10px;
   }
   .obs-label{
-    font-size: .6rem; font-weight: 800;
-    color: var(--muted); text-transform: uppercase;
-    letter-spacing: .4px; margin-bottom: 4px;
+    font-size: .6rem; font-weight: 800; color: var(--muted);
+    text-transform: uppercase; letter-spacing: .4px; margin-bottom: 4px;
     display: flex; align-items: center; gap: 4px;
   }
   .obs-edit-btn{
-    background: transparent; border: none;
-    color: var(--muted); font-size: .62rem; font-weight: 700;
-    cursor: pointer; padding: 1px 5px; border-radius: 4px;
+    background: transparent; border: none; color: var(--muted);
+    font-size: .62rem; font-weight: 700; cursor: pointer;
+    padding: 1px 5px; border-radius: 4px;
     font-family: inherit; margin-left: auto;
   }
   .obs-edit-btn:hover{ background: #fff; color: var(--primary); }
   .obs-text{
-    font-size: .72rem; color: var(--text);
-    line-height: 1.4; white-space: pre-wrap;
+    font-size: .72rem; color: var(--text); line-height: 1.4; white-space: pre-wrap;
     overflow: hidden; display: -webkit-box;
     -webkit-line-clamp: 2; -webkit-box-orient: vertical;
   }
@@ -636,37 +447,46 @@
 
   /* Descrição */
   .card-desc{
-    font-size: .72rem; color: var(--text-soft);
-    line-height: 1.4;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    cursor: pointer;
-    white-space: pre-wrap;
-    padding: 0 10px 8px;
-    margin-top: -4px;
+    font-size: .72rem; color: var(--text-soft); line-height: 1.4;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+    overflow: hidden; cursor: pointer; white-space: pre-wrap;
+    padding: 0 10px 8px; margin-top: -4px;
   }
   .card-desc.expandido{ display: block; -webkit-line-clamp: unset; overflow: visible; }
+
+  /* Rodapé discreto com código e data */
+  .card-footer-meta{
+    display: flex; align-items: center; gap: 8px;
+    padding: 0 10px 10px;
+    font-size: .6rem; color: var(--muted);
+    flex-wrap: wrap;
+  }
+  .card-footer-meta .codigo{
+    font-family: var(--mono);
+    background: #f8fafc; color: var(--muted);
+    padding: 2px 6px; border-radius: 4px;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .card-footer-meta .codigo:hover{ background: var(--bg-alt); color: var(--primary); }
+  .card-footer-meta .codigo.copiado{ background: var(--success); color: #fff; border-color: var(--success); }
+  .card-footer-meta .data{ display: inline-flex; align-items: center; gap: 3px; }
 
   /* ============ EMPTY / ERRO ============ */
   .empty-state{
     text-align: center; padding: 60px 20px; color: var(--muted);
     background: #fff; border-radius: var(--radius); margin-top: 16px;
-    border: 1px solid var(--border);
-    grid-column: 1 / -1;
+    border: 1px solid var(--border); grid-column: 1 / -1;
   }
   .empty-state svg{ width: 56px; height: 56px; margin-bottom: 12px; opacity: .35; }
   .empty-state h3{ font-size: .95rem; margin-bottom: 4px; color: var(--text-soft); }
 
   .erro-conexao{
     background: #fff; border-radius: var(--radius);
-    border: 1px solid #f0c8c8;
-    border-left: 4px solid var(--danger);
-    padding: 34px 22px; margin-top: 20px;
-    text-align: center;
-    box-shadow: var(--shadow-sm);
-    grid-column: 1 / -1;
+    border: 1px solid #f0c8c8; border-left: 4px solid var(--danger);
+    padding: 34px 22px; margin-top: 20px; text-align: center;
+    box-shadow: var(--shadow-sm); grid-column: 1 / -1;
   }
   .erro-conexao .icone{ font-size: 3rem; margin-bottom: 14px; animation: pulse 2s ease-in-out infinite; }
   .erro-conexao h3{ font-size: 1.1rem; font-weight: 700; color: var(--text); margin-bottom: 8px; }
@@ -677,18 +497,13 @@
     border: none; cursor: pointer; font-family: inherit;
     padding: 14px 28px; border-radius: 10px;
     font-size: 1rem; font-weight: 700;
-    transition: all .15s;
-    box-shadow: 0 3px 10px rgba(30,58,95,.2);
+    transition: all .15s; box-shadow: 0 3px 10px rgba(30,58,95,.2);
   }
-  .erro-conexao .btn-recarregar:hover{
-    background: var(--primary-dark);
-    transform: translateY(-1px);
-    box-shadow: 0 5px 14px rgba(30,58,95,.3);
-  }
+  .erro-conexao .btn-recarregar:hover{ background: var(--primary-dark); transform: translateY(-1px); }
 
   /* ============ TOAST ============ */
   .toast{
-    position: fixed; bottom: 20px; left: 50%;
+    position: fixed; bottom: calc(var(--navbar-h) + 20px); left: 50%;
     transform: translate(-50%, 30px);
     background: var(--text); color: #fff;
     padding: 12px 20px; border-radius: 10px;
@@ -712,27 +527,151 @@
   }
   .skeleton-card{
     background: var(--card); border-radius: var(--radius);
-    border: 1px solid var(--border);
-    box-shadow: var(--shadow-xs);
-    overflow: hidden;
+    border: 1px solid var(--border); box-shadow: var(--shadow-xs); overflow: hidden;
   }
   .skeleton-img{
-    width: 100%;
-    aspect-ratio: 4 / 3;
+    width: 100%; aspect-ratio: 4 / 3;
     background: linear-gradient(90deg, #e8ecf1 0%, #f4f6f8 50%, #e8ecf1 100%);
-    background-size: 800px 100%;
-    animation: shimmer 1.4s infinite linear;
+    background-size: 800px 100%; animation: shimmer 1.4s infinite linear;
   }
   .skeleton-body{ padding: 10px; display: flex; flex-direction: column; gap: 8px; }
   .skeleton-line{
     height: 12px; border-radius: 6px;
     background: linear-gradient(90deg, #e8ecf1 0%, #f4f6f8 50%, #e8ecf1 100%);
-    background-size: 800px 100%;
-    animation: shimmer 1.4s infinite linear;
+    background-size: 800px 100%; animation: shimmer 1.4s infinite linear;
   }
   .skeleton-line.short{ width: 40%; }
   .skeleton-line.medium{ width: 70%; }
   .skeleton-line.long{ width: 90%; }
+
+  /* ============ MENU INFERIOR FIXO ============ */
+  .bottom-nav{
+    position: fixed; bottom: 0; left: 0; right: 0;
+    height: calc(var(--navbar-h) + env(safe-area-inset-bottom));
+    padding-bottom: env(safe-area-inset-bottom);
+    background: #fff;
+    border-top: 1px solid var(--border);
+    box-shadow: 0 -2px 12px rgba(15,23,42,.08);
+    display: none;
+    z-index: 900;
+    justify-content: space-around;
+    align-items: center;
+  }
+  .bottom-nav.show{ display: flex; }
+  .nav-btn{
+    flex: 1;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 3px;
+    background: transparent; border: none;
+    cursor: pointer; font-family: inherit;
+    color: var(--muted);
+    padding: 8px 2px;
+    transition: all .15s;
+    height: 100%;
+    position: relative;
+    max-width: 90px;
+  }
+  .nav-btn:hover{ color: var(--primary); }
+  .nav-btn.active{ color: var(--primary); }
+  .nav-btn.active .nav-ico{ transform: translateY(-1px); }
+  .nav-ico{
+    font-size: 1.35rem; line-height: 1;
+    transition: transform .15s;
+    position: relative;
+  }
+  .nav-lbl{
+    font-size: .62rem; font-weight: 700;
+    letter-spacing: .2px;
+  }
+  .nav-badge{
+    position: absolute;
+    top: -4px; right: -10px;
+    background: var(--primary);
+    color: #fff;
+    font-size: .58rem; font-weight: 800;
+    padding: 1px 5px;
+    border-radius: 999px;
+    min-width: 16px; text-align: center;
+    line-height: 1.4;
+    border: 2px solid #fff;
+    box-sizing: content-box;
+  }
+  .nav-btn.nav-corretor{ color: #25D366; }
+  .nav-btn.nav-corretor:hover{ color: #1da851; }
+
+  /* ============ MODAL COMO USAR ============ */
+  .modal-backdrop{
+    position: fixed; inset: 0;
+    background: rgba(15,23,42,.6);
+    z-index: 1500;
+    display: none;
+    align-items: center; justify-content: center;
+    padding: 20px;
+    backdrop-filter: blur(3px);
+  }
+  .modal-backdrop.show{ display: flex; }
+  .modal{
+    background: #fff; border-radius: var(--radius-lg);
+    max-width: 480px; width: 100%;
+    max-height: 90vh; overflow: auto;
+    padding: 26px 22px 22px;
+    position: relative;
+    box-shadow: var(--shadow-lg);
+    animation: modalIn .25s ease-out both;
+  }
+  @keyframes modalIn{
+    from{ opacity: 0; transform: translateY(20px) scale(.95); }
+    to{ opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .modal-close{
+    position: absolute; top: 12px; right: 12px;
+    background: transparent; border: none; cursor: pointer;
+    color: var(--muted);
+    width: 32px; height: 32px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem; line-height: 1;
+    transition: all .15s;
+  }
+  .modal-close:hover{ background: var(--bg-alt); color: var(--text); }
+  .modal h2{
+    font-size: 1.15rem; font-weight: 800;
+    margin-bottom: 6px; letter-spacing: -.01em;
+    text-align: center;
+  }
+  .modal .sub{
+    font-size: .82rem; color: var(--muted);
+    text-align: center; margin-bottom: 20px;
+  }
+
+  .como-item{
+    display: flex; gap: 14px; align-items: flex-start;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .como-item:last-of-type{ border-bottom: none; }
+  .como-ico{
+    width: 44px; height: 44px; flex-shrink: 0;
+    background: var(--primary-soft);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem;
+  }
+  .como-txt{ flex: 1; min-width: 0; }
+  .como-titulo{
+    font-size: .88rem; font-weight: 800;
+    color: var(--text);
+    margin-bottom: 3px;
+  }
+  .como-desc{
+    font-size: .78rem; color: var(--text-soft);
+    line-height: 1.45;
+  }
+
+  .como-cta{
+    margin-top: 20px;
+    display: flex; flex-direction: column; gap: 8px;
+  }
 </style>
 </head>
 <body>
@@ -815,7 +754,6 @@
 </div>
 
 <div class="container hidden" id="vitrineView">
-  <!-- Seção: Visitas Confirmadas -->
   <div class="section hidden" id="sectionVisitas">
     <div class="section-header">
       <div class="section-title">
@@ -826,7 +764,6 @@
     <div class="carrossel-scroll" id="visitasWrap"></div>
   </div>
 
-  <!-- Seção: Novidades -->
   <div class="section hidden" id="sectionNovidades">
     <div class="section-header">
       <div class="section-title">
@@ -837,40 +774,15 @@
     <div class="carrossel-scroll" id="novidadesWrap"></div>
   </div>
 
-  <!-- Busca -->
   <div class="search-wrap">
     <input type="search" id="buscaInput" placeholder="🔍 Buscar por rua, bairro ou descrição..." oninput="renderizarImoveis()">
   </div>
 
-  <!-- Filtros -->
-  <div class="filters-bar" id="filters">
-    <button class="chip active" data-filter="relevancia" onclick="setFiltro('relevancia', this)">
-      🎯 Relevância
-    </button>
-    <button class="chip" data-filter="novos" onclick="setFiltro('novos', this)">
-      ✨ Novos <span class="cnt" id="cnt-novos">0</span>
-    </button>
-    <button class="chip" data-filter="todos" onclick="setFiltro('todos', this)">
-      📋 Todos <span class="cnt" id="cnt-todos">0</span>
-    </button>
-    <button class="chip" data-filter="pendente" onclick="setFiltro('pendente', this)">
-      ⏳ Aguardando <span class="cnt" id="cnt-pendente">0</span>
-    </button>
-    <button class="chip" data-filter="quero-visitar" onclick="setFiltro('quero-visitar', this)">
-      📅 Visitar <span class="cnt" id="cnt-quero-visitar">0</span>
-    </button>
-    <button class="chip" data-filter="gostei" onclick="setFiltro('gostei', this)">
-      ❤️ Gostei <span class="cnt" id="cnt-gostei">0</span>
-    </button>
-    <button class="chip" data-filter="nao-gostei" onclick="setFiltro('nao-gostei', this)">
-      ❌ Não gostei <span class="cnt" id="cnt-nao-gostei">0</span>
-    </button>
+  <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; padding: 10px 4px 0;">
+    <div style="font-size:.78rem; color:var(--muted); font-weight:700;" id="contadorImoveis"></div>
+    <div style="font-size:.74rem; color:var(--primary); font-weight:700; cursor:pointer; display:none;" id="filtroAtivoTag" onclick="limparFiltro()"></div>
   </div>
 
-  <!-- Contador -->
-  <div style="padding: 8px 4px; font-size:.78rem; color:var(--muted); font-weight:700;" id="contadorImoveis"></div>
-
-  <!-- Grid -->
   <div class="grid" id="gridImoveis"></div>
   <div class="empty-state hidden" id="emptyState">
     <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -879,6 +791,75 @@
     </svg>
     <h3 id="emptyTitulo">Nenhum imóvel aqui</h3>
     <p id="emptyMsg">Nada para mostrar neste filtro.</p>
+  </div>
+</div>
+
+<!-- ============ MENU INFERIOR FIXO ============ -->
+<nav class="bottom-nav" id="bottomNav">
+  <button class="nav-btn active" id="navInicio" onclick="navIr('inicio')">
+    <span class="nav-ico">🏠</span>
+    <span class="nav-lbl">Início</span>
+  </button>
+  <button class="nav-btn" id="navFavoritos" onclick="navIr('favoritos')">
+    <span class="nav-ico">❤️<span class="nav-badge hidden" id="badgeFavoritos">0</span></span>
+    <span class="nav-lbl">Gostei</span>
+  </button>
+  <button class="nav-btn" id="navVisitar" onclick="navIr('visitar')">
+    <span class="nav-ico">📅<span class="nav-badge hidden" id="badgeVisitar">0</span></span>
+    <span class="nav-lbl">Visitar</span>
+  </button>
+  <button class="nav-btn nav-corretor" id="navCorretor" onclick="navIr('corretor')">
+    <span class="nav-ico">💬</span>
+    <span class="nav-lbl">Corretor</span>
+  </button>
+  <button class="nav-btn" id="navAjuda" onclick="navIr('ajuda')">
+    <span class="nav-ico">❓</span>
+    <span class="nav-lbl">Ajuda</span>
+  </button>
+</nav>
+
+<!-- ============ MODAL COMO USAR ============ -->
+<div class="modal-backdrop" id="ajudaBackdrop" onclick="if(event.target===this) fecharAjuda()">
+  <div class="modal">
+    <button class="modal-close" onclick="fecharAjuda()">×</button>
+    <h2>Como usar sua vitrine</h2>
+    <p class="sub">Em 4 passos simples, você organiza tudo.</p>
+
+    <div class="como-item">
+      <div class="como-ico">👀</div>
+      <div class="como-txt">
+        <div class="como-titulo">1. Veja os imóveis</div>
+        <div class="como-desc">Role a tela para ver todos os imóveis que seu corretor separou.</div>
+      </div>
+    </div>
+
+    <div class="como-item">
+      <div class="como-ico">❤️</div>
+      <div class="como-txt">
+        <div class="como-titulo">2. Marque o que gostou</div>
+        <div class="como-desc">Toque no <b>❤️ Gostei</b> nos imóveis que te agradaram. Assim ficam salvos em "Gostei".</div>
+      </div>
+    </div>
+
+    <div class="como-item">
+      <div class="como-ico">📅</div>
+      <div class="como-txt">
+        <div class="como-titulo">3. Peça uma visita</div>
+        <div class="como-desc">Toque no <b>📅 Visitar</b> nos que quiser conhecer pessoalmente.</div>
+      </div>
+    </div>
+
+    <div class="como-item">
+      <div class="como-ico">💬</div>
+      <div class="como-txt">
+        <div class="como-titulo">4. Fale com o corretor</div>
+        <div class="como-desc">Toque em <b>💬 Corretor</b> no menu abaixo para tirar dúvidas no WhatsApp.</div>
+      </div>
+    </div>
+
+    <div class="como-cta">
+      <button class="btn btn-primary btn-full" onclick="fecharAjuda()">Entendi, vamos lá! 🚀</button>
+    </div>
   </div>
 </div>
 
@@ -895,15 +876,16 @@ const NOME_KEY  = 'vitrine_nome';
 const CACHE_KEY = 'vitrine_imoveis_cache';
 const LINK_KEY  = 'vitrine_link_original';
 const ORIGINAL_URL_KEY = 'vitrine_url_original';
-const VISTOS_KEY = 'vitrine_imoveis_vistos';      // IDs já clicados
-const ULTIMO_ACESSO_KEY = 'vitrine_ultimo_acesso'; // timestamp
+const VISTOS_KEY = 'vitrine_imoveis_vistos';
+const ULTIMO_ACESSO_KEY = 'vitrine_ultimo_acesso';
+const AJUDA_VISTA_KEY = 'vitrine_ajuda_vista';
 const CACHE_TTL = 5 * 60 * 1000;
 
 const TIMEOUT_API = 30000;
 const TIMEOUT_LOGIN = 25000;
 
 const VISITA_TOLERANCIA_MS = 2 * 60 * 60 * 1000;
-const NOVO_DIAS = 3; // imóvel é "novo" por até 3 dias
+const NOVO_DIAS = 3;
 
 const ZAP_CORRETORES = {
   'Hugo': '5531996070930',
@@ -915,7 +897,7 @@ const state = {
   deviceToken: null,
   clienteInfo: null,
   imoveis: [],
-  filtro: 'relevancia',
+  filtroNav: null, // 'favoritos' | 'visitar' | null
   salvandoIds: {},
   vistos: new Set(),
   ultimoAcesso: 0
@@ -979,12 +961,12 @@ function fmtTel(t){
   return t;
 }
 
-const DIAS_SEMANA = ['domingo','segunda-feira','terça-feira','quarta-feira','quinta-feira','sexta-feira','sábado'];
+const DIAS_SEMANA = ['dom','seg','ter','qua','qui','sex','sáb'];
 
 function fmtDataHoraVisita(iso){
-  if(!iso) return { dataCurta: '', hora: '', diaSemana: '' };
+  if(!iso) return { dataCurta: '', hora: '' };
   const d = new Date(iso);
-  if(isNaN(d.getTime())) return { dataCurta: '', hora: '', diaSemana: '' };
+  if(isNaN(d.getTime())) return { dataCurta: '', hora: '' };
   const dia = String(d.getDate()).padStart(2,'0');
   const mes = String(d.getMonth()+1).padStart(2,'0');
   const ano = d.getFullYear();
@@ -1028,15 +1010,10 @@ function camposEndereco_(im){
 function enderecoSemNumero_(im){
   const c = camposEndereco_(im);
   const partes = [c.rua, c.bairro].filter(Boolean);
-  if(partes.length > 0){
-    return partes.join(' - ');
-  }
+  if(partes.length > 0) return partes.join(' - ');
   const tit = String(im && im.titulo || '').trim();
   if(!tit) return 'Endereço não informado';
-  return tit
-    .replace(/\s*,\s*\d+[A-Za-z]?\s*/, ' - ')
-    .replace(/\s*-\s*/, ' - ')
-    .trim();
+  return tit.replace(/\s*,\s*\d+[A-Za-z]?\s*/, ' - ').replace(/\s*-\s*/, ' - ').trim();
 }
 
 function enderecoCompleto_(im){
@@ -1055,8 +1032,7 @@ function carregarVistos(){
     const raw = localStorage.getItem(VISTOS_KEY);
     if(!raw){ state.vistos = new Set(); return; }
     const arr = JSON.parse(raw);
-    if(Array.isArray(arr)) state.vistos = new Set(arr);
-    else state.vistos = new Set();
+    state.vistos = Array.isArray(arr) ? new Set(arr) : new Set();
   } catch(e){ state.vistos = new Set(); }
 }
 function marcarVisto(id){
@@ -1080,20 +1056,11 @@ function carregarUltimoAcesso(){
 function imovelEhNovo(im){
   if(!im || !im.id) return false;
   if(state.vistos.has(String(im.id))) return false;
-
-  // Se o cliente nunca acessou antes, considera tudo novo exceto o que foi criado há mais de 3 dias
   const cadastro = new Date(im.dataCadastro || 0).getTime();
   if(!cadastro || isNaN(cadastro)) return false;
-
-  const agora = Date.now();
-  const diasDesdeCadastro = (agora - cadastro) / 86400000;
+  const diasDesdeCadastro = (Date.now() - cadastro) / 86400000;
   if(diasDesdeCadastro > NOVO_DIAS) return false;
-
-  // Se ele já acessou antes, só é novo o que veio depois do último acesso
-  if(state.ultimoAcesso > 0){
-    return cadastro > state.ultimoAcesso;
-  }
-  // Primeira visita: mostra como novo (faz sentido, ele nunca viu nada)
+  if(state.ultimoAcesso > 0) return cadastro > state.ultimoAcesso;
   return true;
 }
 
@@ -1107,8 +1074,7 @@ function lerCache(){
     const obj = JSON.parse(raw);
     if(!obj || !obj.ts || !obj.data) return null;
     return {
-      data: obj.data,
-      ts: obj.ts,
+      data: obj.data, ts: obj.ts,
       telefone: obj.telefone || null,
       nome: obj.nome || null,
       fresh: (Date.now() - obj.ts) < CACHE_TTL
@@ -1119,24 +1085,17 @@ function lerCache(){
 function gravarCache(imoveis, telefone, nome){
   try {
     localStorage.setItem(CACHE_KEY, JSON.stringify({
-      ts: Date.now(),
-      data: imoveis,
+      ts: Date.now(), data: imoveis,
       telefone: telefone || state.telefone || null,
       nome: nome || state.clienteInfo?.nome || null
     }));
   } catch(e){}
 }
-
-function limparCache(){
-  try { localStorage.removeItem(CACHE_KEY); } catch(e){}
-}
+function limparCache(){ try { localStorage.removeItem(CACHE_KEY); } catch(e){} }
 
 function gravarLinkOriginal(tel, senha){
-  try {
-    localStorage.setItem(LINK_KEY, JSON.stringify({ tel, senha, ts: Date.now() }));
-  } catch(e){}
+  try { localStorage.setItem(LINK_KEY, JSON.stringify({ tel, senha, ts: Date.now() })); } catch(e){}
 }
-
 function lerLinkOriginal(){
   try {
     const raw = localStorage.getItem(LINK_KEY);
@@ -1147,13 +1106,9 @@ function lerLinkOriginal(){
     return obj;
   } catch(e){ return null; }
 }
-
 function gravarOriginalUrl(tel, senha){
-  try {
-    sessionStorage.setItem(ORIGINAL_URL_KEY, JSON.stringify({ tel, senha, ts: Date.now() }));
-  } catch(e){}
+  try { sessionStorage.setItem(ORIGINAL_URL_KEY, JSON.stringify({ tel, senha, ts: Date.now() })); } catch(e){}
 }
-
 function lerOriginalUrlSalva(){
   try {
     const raw = sessionStorage.getItem(ORIGINAL_URL_KEY);
@@ -1164,10 +1119,7 @@ function lerOriginalUrlSalva(){
     return obj;
   } catch(e){ return null; }
 }
-
-function limparOriginalUrl(){
-  try { sessionStorage.removeItem(ORIGINAL_URL_KEY); } catch(e){}
-}
+function limparOriginalUrl(){ try { sessionStorage.removeItem(ORIGINAL_URL_KEY); } catch(e){} }
 
 function limparTudo(){
   try {
@@ -1183,6 +1135,7 @@ function limparTudo(){
   state.clienteInfo = null;
   state.imoveis = [];
   state.salvandoIds = {};
+  state.filtroNav = null;
 }
 
 /* =====================================================
@@ -1213,10 +1166,23 @@ function getCorretor(im){
   return null;
 }
 
+function corretorDoCliente(){
+  try {
+    const pref = localStorage.getItem('vitrine_corretor_pref');
+    if(pref && ZAP_CORRETORES[pref]) return pref;
+  } catch(e){}
+  // fallback: pega o corretor do primeiro imóvel
+  for(const im of state.imoveis){
+    const c = getCorretor(im);
+    if(c) return c;
+  }
+  return 'Hugo';
+}
+
 function erroEhDispositivoVinculado(msg){
   if(!msg) return false;
   const s = String(msg).toLowerCase();
-  const padroes = [
+  return [
     /dispositivo.*(outro|vincul|ativo|bloque|autoriz|permitid|usado)/,
     /(outro|vincul|ativo|bloque|autoriz|permitid|usado).*dispositivo/,
     /sess[ãa]o\s+ativa/,
@@ -1225,45 +1191,32 @@ function erroEhDispositivoVinculado(msg){
     /j[áa]\s+em\s+uso/,
     /acesso\s+negado/,
     /bloqueado/
-  ];
-  return padroes.some(re => re.test(s));
+  ].some(re => re.test(s));
 }
 
 function erroEhConexao(msg){
   if(!msg) return false;
   const s = String(msg).toLowerCase();
-  return s.includes('falha ao conectar') ||
-         s.includes('failed to fetch') ||
-         s.includes('networkerror') ||
-         s.includes('timeout') ||
-         s.includes('aborted') ||
-         s.includes('http 5') ||
-         s.includes('http 4') ||
-         s.includes('load failed');
+  return s.includes('falha ao conectar') || s.includes('failed to fetch') ||
+         s.includes('networkerror') || s.includes('timeout') ||
+         s.includes('aborted') || s.includes('http 5') ||
+         s.includes('http 4') || s.includes('load failed');
 }
 
 function mostrarBloqueioDispositivo(infoExtra){
   ['loadingView','loginView','vitrineView'].forEach(v => {
-    const el = $(v);
-    if(el) el.classList.add('hidden');
+    const el = $(v); if(el) el.classList.add('hidden');
   });
   $('deviceBlockView').classList.remove('hidden');
   $('deviceBlockInfo').textContent = infoExtra || detectarNavegador();
-  if(state.telefone){
-    $('btnZapLiberar').dataset.telefone = state.telefone;
-  }
+  if(state.telefone) $('btnZapLiberar').dataset.telefone = state.telefone;
+  $('bottomNav').classList.remove('show');
 }
 
 function pedirLiberacaoZap(){
   const tel = state.telefone || $('btnZapLiberar').dataset.telefone || '';
   const nomeCliente = state.clienteInfo?.nome || 'Cliente';
-
-  let corretor = 'Hugo';
-  try {
-    const pref = localStorage.getItem('vitrine_corretor_pref');
-    if(pref && ZAP_CORRETORES[pref]) corretor = pref;
-  } catch(e){}
-
+  const corretor = corretorDoCliente();
   const zap = ZAP_CORRETORES[corretor];
   const navegador = detectarNavegador();
 
@@ -1274,19 +1227,17 @@ function pedirLiberacaoZap(){
   msg += `\n🔒 Aparece a mensagem: "Acesso vinculado a outro dispositivo".\n\n`;
   msg += `Pode liberar o acesso neste dispositivo, por favor?`;
 
-  const url = `https://wa.me/${zap}?text=${encodeURIComponent(msg)}`;
-  window.open(url, '_blank');
+  window.open(`https://wa.me/${zap}?text=${encodeURIComponent(msg)}`, '_blank');
 }
 
 function voltarParaLogin(){
   mostrarView('loginView');
   $('senhaGroup').style.display = 'block';
   $('inputSenha').value = '';
-  if(state.telefone){
-    $('inputTelefone').value = fmtTel(state.telefone);
-  }
+  if(state.telefone) $('inputTelefone').value = fmtTel(state.telefone);
   $('loginSub').textContent = 'Digite sua senha para entrar novamente.';
   setTimeout(() => $('inputSenha').focus(), 200);
+  $('bottomNav').classList.remove('show');
 }
 
 /* =====================================================
@@ -1301,24 +1252,19 @@ async function apiOnce(action, params, timeoutMs){
     const resp = await fetch(url, {
       method: 'GET', mode: 'cors',
       headers: { 'Accept': 'application/json' },
-      redirect: 'follow',
-      signal: controller.signal
+      redirect: 'follow', signal: controller.signal
     });
     clearTimeout(timer);
     if (!resp.ok) throw new Error('HTTP ' + resp.status);
     return await resp.json();
-  } catch (err) {
-    clearTimeout(timer);
-    throw err;
-  }
+  } catch (err) { clearTimeout(timer); throw err; }
 }
 
 async function api(action, params = {}, timeoutMs = TIMEOUT_API, retries = 1) {
   let lastErr;
   for (let i = 0; i <= retries; i++) {
-    try {
-      return await apiOnce(action, params, timeoutMs);
-    } catch (err) {
+    try { return await apiOnce(action, params, timeoutMs); }
+    catch (err) {
       lastErr = err;
       if (i < retries) await new Promise(r => setTimeout(r, 800));
     }
@@ -1329,10 +1275,12 @@ async function api(action, params = {}, timeoutMs = TIMEOUT_API, retries = 1) {
 
 function mostrarView(id){
   ['loadingView','loginView','vitrineView','deviceBlockView'].forEach(v => {
-    const el = $(v);
-    if(el) el.classList.add('hidden');
+    const el = $(v); if(el) el.classList.add('hidden');
   });
   if(id) $(id).classList.remove('hidden');
+  const nav = $('bottomNav');
+  if(id === 'vitrineView') nav.classList.add('show');
+  else nav.classList.remove('show');
 }
 
 function limparUrl(){
@@ -1380,17 +1328,13 @@ function mostrarErroConexaoSemLink(){
     ? 'Verifique sua conexão e toque no botão para tentar novamente.'
     : 'Parece que sua conexão está instável ou o servidor demorou para responder.<br>Toque no botão abaixo para atualizar a página.';
   const icone = offline ? '📶' : '📡';
-
   grid.innerHTML = `
     <div class="erro-conexao">
       <div class="icone">${icone}</div>
       <h3>${titulo}</h3>
       <p>${texto}</p>
-      <button class="btn-recarregar" onclick="location.reload()">
-        <span class="ico">🔄</span> Atualizar página
-      </button>
-    </div>
-  `;
+      <button class="btn-recarregar" onclick="location.reload()"><span class="ico">🔄</span> Atualizar página</button>
+    </div>`;
   $('emptyState').classList.add('hidden');
 }
 
@@ -1402,17 +1346,13 @@ function mostrarErroConexaoComLink(){
     ? 'Verifique sua conexão e toque em <b>Tentar novamente</b>.'
     : 'O servidor está demorando um pouquinho para responder.<br>Toque em <b>Tentar novamente</b> para continuar.';
   const icone = offline ? '📶' : '⏳';
-
   grid.innerHTML = `
     <div class="erro-conexao">
       <div class="icone">${icone}</div>
       <h3>${titulo}</h3>
       <p>${texto}</p>
-      <button class="btn-recarregar" onclick="tentarDeNovo()">
-        <span class="ico">🔄</span> Tentar novamente
-      </button>
-    </div>
-  `;
+      <button class="btn-recarregar" onclick="tentarDeNovo()"><span class="ico">🔄</span> Tentar novamente</button>
+    </div>`;
   $('emptyState').classList.add('hidden');
 }
 
@@ -1427,9 +1367,7 @@ function tentarDeNovo(){
   if(linkSalvo && linkSalvo.tel && linkSalvo.senha){
     mostrarSkeleton(10);
     reprocessarComLink(linkSalvo.tel, linkSalvo.senha);
-  } else {
-    location.reload();
-  }
+  } else location.reload();
 }
 
 /* =====================================================
@@ -1439,24 +1377,15 @@ async function loginComRetryForte(tel, senha){
   const navegador = detectarNavegador();
   const esperas = [0, 1500, 3000, 5000];
   let ultimoRes = null;
-
   for(let i = 0; i < esperas.length; i++){
-    if(esperas[i] > 0){
-      await new Promise(r => setTimeout(r, esperas[i]));
-    }
-
+    if(esperas[i] > 0) await new Promise(r => setTimeout(r, esperas[i]));
     const res = await api('loginCliente', {
-      telefone: tel,
-      senha: senha,
-      deviceToken: '',
-      navegador: navegador
+      telefone: tel, senha: senha, deviceToken: '', navegador: navegador
     }, TIMEOUT_LOGIN, 0);
-
     if(res.ok) return res;
     if(!erroEhConexao(res.error)) return res;
     ultimoRes = res;
   }
-
   return ultimoRes;
 }
 
@@ -1501,14 +1430,12 @@ async function reprocessarComLink(tel, senha){
       renderizarVisitas();
       renderizarNovidades();
       renderizarImoveis();
-      limparUrl();
-      limparOriginalUrl();
+      atualizarBadgesNav();
+      limparUrl(); limparOriginalUrl();
       return;
     }
-
     await carregarImoveis();
-    limparUrl();
-    limparOriginalUrl();
+    limparUrl(); limparOriginalUrl();
     return;
   }
 
@@ -1517,7 +1444,6 @@ async function reprocessarComLink(tel, senha){
     mostrarBloqueioDispositivo();
     return;
   }
-
   mostrarErroConexaoComLink();
 }
 
@@ -1596,13 +1522,17 @@ async function irParaVitrine(){
     renderizarVisitas();
     renderizarNovidades();
     renderizarImoveis();
-
-    if(cache.fresh) return;
+    atualizarBadgesNav();
+    if(cache.fresh){
+      talvezMostrarAjudaPrimeiraVez();
+      return;
+    }
   } else {
     mostrarSkeleton(10);
   }
 
   await carregarImoveis();
+  talvezMostrarAjudaPrimeiraVez();
 }
 
 /* =====================================================
@@ -1610,15 +1540,11 @@ async function irParaVitrine(){
 ===================================================== */
 async function carregarImoveis(){
   const res = await api('listarImoveis', {
-    telefone: state.telefone,
-    deviceToken: state.deviceToken
+    telefone: state.telefone, deviceToken: state.deviceToken
   }, TIMEOUT_API, 1);
 
   if(!res.ok){
-    if(erroEhDispositivoVinculado(res.error)){
-      mostrarBloqueioDispositivo();
-      return;
-    }
+    if(erroEhDispositivoVinculado(res.error)){ mostrarBloqueioDispositivo(); return; }
     if((res.error || '').toLowerCase().match(/sess|token|inv[áa]lid|expirad|autentic|unauthor/)){
       localStorage.removeItem(TOKEN_KEY);
       const linkSalvo = lerLinkOriginal();
@@ -1642,11 +1568,8 @@ async function carregarImoveis(){
       setTimeout(() => $('inputSenha').focus(), 200);
       return;
     }
-    if(!state.imoveis.length){
-      mostrarErroConexao();
-    } else {
-      toast('Não conseguimos atualizar agora. Mostrando os últimos dados.', 'error');
-    }
+    if(!state.imoveis.length) mostrarErroConexao();
+    else toast('Não conseguimos atualizar agora. Mostrando os últimos dados.', 'error');
     return;
   }
 
@@ -1673,6 +1596,7 @@ async function carregarImoveis(){
   renderizarVisitas();
   renderizarNovidades();
   renderizarImoveis();
+  atualizarBadgesNav();
 }
 
 /* =====================================================
@@ -1682,10 +1606,7 @@ function visitaAindaVisivel(iso){
   if(!iso) return false;
   const d = new Date(iso);
   if(isNaN(d.getTime())) return false;
-  const agora = Date.now();
-  const inicio = d.getTime();
-  const fim = inicio + VISITA_TOLERANCIA_MS;
-  return agora <= fim;
+  return Date.now() <= (d.getTime() + VISITA_TOLERANCIA_MS);
 }
 
 function renderizarVisitas(){
@@ -1695,13 +1616,9 @@ function renderizarVisitas(){
   if(!wrap) return;
 
   const visitas = (state.imoveis || []).filter(im => visitaAindaVisivel(im.dataVisitaAgendada));
-
   if(visitas.length === 0){
-    section.classList.add('hidden');
-    wrap.innerHTML = '';
-    return;
+    section.classList.add('hidden'); wrap.innerHTML = ''; return;
   }
-
   section.classList.remove('hidden');
   if(count) count.textContent = visitas.length;
   visitas.sort((a,b) => new Date(a.dataVisitaAgendada) - new Date(b.dataVisitaAgendada));
@@ -1713,43 +1630,32 @@ function visitaCardHTML(im){
   const id = esc(im.id);
   const endereco = esc(enderecoCompleto_(im));
   const codigo = im.codigo ? esc(im.codigo) : '';
-
   return `
     <div class="visita-card" data-visita-id="${id}">
-      <div class="visita-card-titulo">
-        <span class="dot"></span>
-        Visita confirmada
-      </div>
+      <div class="visita-card-titulo"><span class="dot"></span> Visita confirmada</div>
       <div class="visita-card-linhas">
         <div class="endereco">🏠 ${endereco}</div>
         ${codigo ? `<span class="visita-card-codigo">#${codigo}</span>` : ''}
         <span class="quando">📅 ${info.dataCurta} · ${info.hora}</span>
       </div>
-    </div>
-  `;
+    </div>`;
 }
 
 /* =====================================================
-   NOVIDADES (carrossel)
+   NOVIDADES
 ===================================================== */
 function renderizarNovidades(){
   const section = $('sectionNovidades');
   const wrap = $('novidadesWrap');
   const count = $('novidadesCount');
   if(!wrap) return;
-
   const novos = (state.imoveis || []).filter(imovelEhNovo);
-
   if(novos.length === 0){
-    section.classList.add('hidden');
-    wrap.innerHTML = '';
-    return;
+    section.classList.add('hidden'); wrap.innerHTML = ''; return;
   }
-
   section.classList.remove('hidden');
   if(count) count.textContent = novos.length;
   novos.sort((a,b) => new Date(b.dataCadastro||0) - new Date(a.dataCadastro||0));
-
   wrap.innerHTML = novos.map(im => novoCardHTML(im)).join('');
 }
 
@@ -1758,7 +1664,6 @@ function novoCardHTML(im){
   const endereco = esc(enderecoSemNumero_(im));
   const img = esc(im.imagem || 'https://via.placeholder.com/400x300/e2e8f0/64748b?text=Sem+imagem');
   const preco = String(im.preco || '').trim();
-
   return `
     <div class="novo-card" onclick="clicarNovoCard('${id}')">
       <img class="novo-card-img" src="${img}" loading="lazy"
@@ -1767,52 +1672,155 @@ function novoCardHTML(im){
         <div class="novo-card-endereco">🏠 ${endereco}</div>
         ${preco ? `<div class="novo-card-preco">${esc(preco)}</div>` : ''}
       </div>
-    </div>
-  `;
+    </div>`;
 }
 
 function clicarNovoCard(id){
   marcarVisto(id);
   renderizarNovidades();
   renderizarImoveis();
-
-  // Rola até o card na grid
   const card = document.querySelector(`.card[data-id="${id}"]`);
   if(card){
     card.scrollIntoView({ behavior: 'smooth', block: 'center' });
     card.style.transition = 'all .3s';
     card.style.boxShadow = '0 0 0 3px var(--primary), 0 8px 24px rgba(30,58,95,.25)';
-    setTimeout(() => {
-      card.style.boxShadow = '';
-    }, 2500);
+    setTimeout(() => { card.style.boxShadow = ''; }, 2500);
   }
 }
 
 /* =====================================================
-   CONTADORES / FILTRO
+   CONTADORES
 ===================================================== */
 function atualizarContadores(){
   const counts = { todos: state.imoveis.length, gostei: 0, 'quero-visitar': 0, 'nao-gostei': 0, pendente: 0 };
-  let novosCount = 0;
   state.imoveis.forEach(im => {
     const s = im.status || 'pendente';
     if(counts[s] !== undefined) counts[s]++;
     else counts.pendente++;
-    if(imovelEhNovo(im)) novosCount++;
   });
-  Object.keys(counts).forEach(k => {
-    const el = $('cnt-' + k);
-    if(el) el.textContent = counts[k];
-  });
-  const el = $('cnt-novos');
-  if(el) el.textContent = novosCount;
+  const gostei = counts.gostei;
+  const vis = counts['quero-visitar'];
+
+  // badges no menu inferior
+  const bf = $('badgeFavoritos');
+  const bv = $('badgeVisitar');
+  if(bf){
+    bf.textContent = gostei;
+    bf.classList.toggle('hidden', gostei === 0);
+  }
+  if(bv){
+    bv.textContent = vis;
+    bv.classList.toggle('hidden', vis === 0);
+  }
 }
 
-function setFiltro(f, el){
-  state.filtro = f;
-  document.querySelectorAll('.chip').forEach(b => b.classList.remove('active'));
-  el.classList.add('active');
+function atualizarBadgesNav(){ atualizarContadores(); }
+
+/* =====================================================
+   MENU INFERIOR
+===================================================== */
+function navIr(destino){
+  // Limpa ativos
+  ['navInicio','navFavoritos','navVisitar','navCorretor','navAjuda'].forEach(id => {
+    const el = $(id); if(el) el.classList.remove('active');
+  });
+
+  if(destino === 'inicio'){
+    state.filtroNav = null;
+    $('navInicio').classList.add('active');
+    $('buscaInput').value = '';
+    if($('filtroAtivoTag')) $('filtroAtivoTag').style.display = 'none';
+    renderizarImoveis();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    return;
+  }
+
+  if(destino === 'favoritos'){
+    state.filtroNav = 'favoritos';
+    $('navFavoritos').classList.add('active');
+    if($('filtroAtivoTag')){
+      $('filtroAtivoTag').textContent = '❤️ Mostrando: Gostei';
+      $('filtroAtivoTag').style.display = 'block';
+    }
+    renderizarImoveis();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    return;
+  }
+
+  if(destino === 'visitar'){
+    state.filtroNav = 'visitar';
+    $('navVisitar').classList.add('active');
+    if($('filtroAtivoTag')){
+      $('filtroAtivoTag').textContent = '📅 Mostrando: Quero visitar';
+      $('filtroAtivoTag').style.display = 'block';
+    }
+    renderizarImoveis();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    return;
+  }
+
+  if(destino === 'corretor'){
+    const corretor = corretorDoCliente();
+    const zap = ZAP_CORRETORES[corretor];
+    const nomeCliente = state.clienteInfo?.nome || 'Cliente';
+    let msg = `Olá ${corretor}! 👋\n\n`;
+    msg += `Sou *${nomeCliente}* e estou usando minha vitrine de imóveis.\n\n`;
+    msg += `Gostaria de tirar algumas dúvidas. Pode me ajudar?`;
+    window.open(`https://wa.me/${zap}?text=${encodeURIComponent(msg)}`, '_blank');
+    // reativa "inicio" como visual ativo
+    setTimeout(() => {
+      ['navInicio','navFavoritos','navVisitar','navCorretor','navAjuda'].forEach(id => {
+        const el = $(id); if(el) el.classList.remove('active');
+      });
+      if(state.filtroNav === 'favoritos') $('navFavoritos').classList.add('active');
+      else if(state.filtroNav === 'visitar') $('navVisitar').classList.add('active');
+      else $('navInicio').classList.add('active');
+    }, 100);
+    return;
+  }
+
+  if(destino === 'ajuda'){
+    abrirAjuda();
+    // reativa estado anterior
+    setTimeout(() => {
+      ['navInicio','navFavoritos','navVisitar','navCorretor','navAjuda'].forEach(id => {
+        const el = $(id); if(el) el.classList.remove('active');
+      });
+      if(state.filtroNav === 'favoritos') $('navFavoritos').classList.add('active');
+      else if(state.filtroNav === 'visitar') $('navVisitar').classList.add('active');
+      else $('navInicio').classList.add('active');
+    }, 100);
+    return;
+  }
+}
+
+function limparFiltro(){
+  state.filtroNav = null;
+  if($('filtroAtivoTag')) $('filtroAtivoTag').style.display = 'none';
+  ['navInicio','navFavoritos','navVisitar','navCorretor','navAjuda'].forEach(id => {
+    const el = $(id); if(el) el.classList.remove('active');
+  });
+  $('navInicio').classList.add('active');
   renderizarImoveis();
+}
+
+/* =====================================================
+   MODAL AJUDA
+===================================================== */
+function abrirAjuda(){
+  $('ajudaBackdrop').classList.add('show');
+  try { localStorage.setItem(AJUDA_VISTA_KEY, '1'); } catch(e){}
+}
+function fecharAjuda(){
+  $('ajudaBackdrop').classList.remove('show');
+}
+function talvezMostrarAjudaPrimeiraVez(){
+  try {
+    const visto = localStorage.getItem(AJUDA_VISTA_KEY);
+    if(!visto){
+      setTimeout(() => abrirAjuda(), 800);
+    }
+  } catch(e){}
 }
 
 /* =====================================================
@@ -1831,7 +1839,12 @@ function renderizarImoveis(){
   const grid = $('gridImoveis');
   let lista = [...state.imoveis];
 
-  if(state.filtro === 'relevancia'){
+  // filtro do menu inferior
+  if(state.filtroNav === 'favoritos'){
+    lista = lista.filter(i => (i.status || 'pendente') === 'gostei');
+  } else if(state.filtroNav === 'visitar'){
+    lista = lista.filter(i => (i.status || 'pendente') === 'quero-visitar');
+  } else {
     // ordem: novos -> pendente -> quero-visitar -> gostei -> nao-gostei
     const ordemStatus = { 'pendente': 1, 'quero-visitar': 2, 'gostei': 3, 'nao-gostei': 4 };
     lista.sort((a,b) => {
@@ -1845,21 +1858,6 @@ function renderizarImoveis(){
       const db = new Date(b.dataCadastro||0).getTime() || 0;
       return db - da;
     });
-  } else if(state.filtro === 'novos'){
-    lista = lista.filter(imovelEhNovo);
-    lista.sort((a,b) => new Date(b.dataCadastro||0) - new Date(a.dataCadastro||0));
-  } else if(state.filtro === 'todos'){
-    const ordem = { 'pendente': 0, 'quero-visitar': 1, 'gostei': 2, 'nao-gostei': 3 };
-    lista.sort((a,b) => {
-      const oa = ordem[(a.status || 'pendente')] ?? 99;
-      const ob = ordem[(b.status || 'pendente')] ?? 99;
-      if(oa !== ob) return oa - ob;
-      const da = new Date(a.dataCadastro||0).getTime() || 0;
-      const db = new Date(b.dataCadastro||0).getTime() || 0;
-      return db - da;
-    });
-  } else {
-    lista = lista.filter(i => (i.status || 'pendente') === state.filtro);
   }
 
   const busca = ($('buscaInput').value || '').toLowerCase().trim();
@@ -1874,16 +1872,17 @@ function renderizarImoveis(){
 
   const contador = $('contadorImoveis');
   if(contador){
-    contador.textContent = lista.length === 1
-      ? '1 imóvel'
-      : `${lista.length} imóveis`;
+    contador.textContent = lista.length === 1 ? '1 imóvel' : `${lista.length} imóveis`;
   }
 
   if(lista.length === 0){
     grid.innerHTML = '';
     $('emptyState').classList.remove('hidden');
     $('emptyTitulo').textContent = busca ? 'Nada encontrado' : 'Nenhum imóvel aqui';
-    $('emptyMsg').textContent = busca ? 'Tente outra busca.' : 'Nada para mostrar neste filtro.';
+    $('emptyMsg').textContent = busca ? 'Tente outra busca.'
+      : state.filtroNav === 'favoritos' ? 'Você ainda não marcou nenhum como ❤️ Gostei.'
+      : state.filtroNav === 'visitar' ? 'Você ainda não marcou nenhum como 📅 Visitar.'
+      : 'Nada para mostrar.';
     return;
   }
   $('emptyState').classList.add('hidden');
@@ -1906,8 +1905,7 @@ function cardHTML(im, idx){
     'quero-visitar':'status-quero-visitar','pendente':'status-pendente'
   }[statusAtual] || 'status-pendente';
   const statusLabel = {
-    'gostei':'❤️ Gostei','nao-gostei':'❌ Não gostei',
-    'quero-visitar':'📅 Visitar','pendente':''
+    'gostei':'❤️ Gostei','nao-gostei':'❌ Não','quero-visitar':'📅 Visitar','pendente':''
   }[statusAtual] || '';
 
   const img = im.imagem || 'https://via.placeholder.com/400x300/e2e8f0/64748b?text=Sem+imagem';
@@ -1920,20 +1918,12 @@ function cardHTML(im, idx){
   const descId = 'desc-' + id;
 
   const cardExtraClass = (statusAtual === 'nao-gostei') ? ' card-nao-gostei' : '';
-
   const salvando = !!state.salvandoIds[im.id];
   const disabledAttr = salvando ? 'disabled' : '';
 
   const btnGostei = (statusAtual === 'gostei') ? 'ativo' : '';
   const btnVisitar = (statusAtual === 'quero-visitar') ? 'ativo' : '';
   const btnNao = (statusAtual === 'nao-gostei') ? 'ativo' : '';
-
-  const corretor = getCorretor(im);
-  const zapInline = corretor
-    ? `<button class="card-zap" onclick="event.stopPropagation(); abrirZap('${id}')" title="Falar com ${esc(corretor)}">
-         💬
-       </button>`
-    : '';
 
   const enderecoCliente = esc(enderecoSemNumero_(im));
   const preco = String(im.preco || '').trim();
@@ -1943,7 +1933,6 @@ function cardHTML(im, idx){
 
   const ehNovo = imovelEhNovo(im);
   const badgeNovoHtml = ehNovo ? `<div class="badge-novo">NOVO</div>` : '';
-
   const animDelay = Math.min(idx * 30, 400);
 
   return `
@@ -1956,8 +1945,6 @@ function cardHTML(im, idx){
              onerror="this.src='https://via.placeholder.com/400x300/e2e8f0/64748b?text=Sem+imagem'">
       </div>
 
-      ${zapInline}
-
       <div class="card-body">
         <div class="card-title">${enderecoCliente}</div>
         ${preco ? `<div class="card-preco">${esc(preco)}</div>` : ''}
@@ -1968,10 +1955,6 @@ function cardHTML(im, idx){
             ${iptu ? `IPTU ${esc(iptu)}` : ''}
           </div>
         ` : ''}
-        <div class="card-meta">
-          ${im.codigo ? `<span class="codigo" onclick="event.stopPropagation(); copiarCodigo('${esc(im.codigo)}', this)">#${esc(im.codigo)}</span>` : ''}
-          ${dataFmt ? `<span class="data">📅 ${dataFmt}</span>` : ''}
-        </div>
       </div>
 
       ${descTexto ? `
@@ -1979,9 +1962,18 @@ function cardHTML(im, idx){
       ` : ''}
 
       <div class="card-actions" onclick="event.stopPropagation();">
-        <button class="btn-action act-gostei ${btnGostei}" ${disabledAttr} onclick="marcar('${id}','gostei')" title="Gostei">❤️</button>
-        <button class="btn-action act-visitar ${btnVisitar}" ${disabledAttr} onclick="marcar('${id}','quero-visitar')" title="Quero visitar">📅</button>
-        <button class="btn-action act-nao ${btnNao}" ${disabledAttr} onclick="marcar('${id}','nao-gostei')" title="Não gostei">❌</button>
+        <button class="btn-action act-gostei ${btnGostei}" ${disabledAttr} onclick="marcar('${id}','gostei')" title="Gostei">
+          <span class="icone">❤️</span>
+          <span>Gostei</span>
+        </button>
+        <button class="btn-action act-visitar ${btnVisitar}" ${disabledAttr} onclick="marcar('${id}','quero-visitar')" title="Quero visitar">
+          <span class="icone">📅</span>
+          <span>Visitar</span>
+        </button>
+        <button class="btn-action act-nao ${btnNao}" ${disabledAttr} onclick="marcar('${id}','nao-gostei')" title="Não gostei">
+          <span class="icone">❌</span>
+          <span>Não</span>
+        </button>
       </div>
 
       ${im.link ? `
@@ -2005,13 +1997,17 @@ function cardHTML(im, idx){
           <button class="btn btn-ghost btn-sm" style="padding:8px; border-radius:6px; font-size:.75rem;" onclick="cancelarEdicaoObs('${obsId}')">Cancelar</button>
         </div>
       </div>
+
+      <div class="card-footer-meta" onclick="event.stopPropagation();">
+        ${im.codigo ? `<span class="codigo" onclick="copiarCodigo('${esc(im.codigo)}', this)">#${esc(im.codigo)}</span>` : ''}
+        ${dataFmt ? `<span class="data">📅 ${dataFmt}</span>` : ''}
+      </div>
     </div>
   `;
 }
 
 function clicarCard(id){
   marcarVisto(id);
-  // pequena animação de feedback
   const card = document.querySelector(`.card[data-id="${id}"]`);
   if(card){
     card.style.transform = 'scale(0.98)';
@@ -2028,38 +2024,10 @@ function clicarAnuncio(id){
 }
 
 /* =====================================================
-   WHATSAPP
-===================================================== */
-function abrirZap(imovelId){
-  const im = state.imoveis.find(i => i.id === imovelId);
-  if(!im){ toast('Imóvel não encontrado', 'error'); return; }
-
-  const corretor = getCorretor(im);
-  const zap = corretor ? ZAP_CORRETORES[corretor] : null;
-  if(!zap){ toast('Corretor sem WhatsApp cadastrado', 'error'); return; }
-
-  const nomeCliente = state.clienteInfo?.nome || 'Cliente';
-  const endereco = enderecoCompleto_(im);
-  const codigo = im.codigo || '';
-  const link = im.link || '';
-
-  let msg = `Olá ${corretor}! 👋\n\n`;
-  msg += `Sou *${nomeCliente}* e gostaria de informações sobre este imóvel:\n\n`;
-  msg += `🏠 *${endereco}*\n`;
-  if(codigo) msg += `🔖 Código: ${codigo}\n`;
-  if(link) msg += `🔗 ${link}\n`;
-  msg += `\nPode me ajudar?`;
-
-  const url = `https://wa.me/${zap}?text=${encodeURIComponent(msg)}`;
-  window.open(url, '_blank');
-}
-
-/* =====================================================
    MARCAR STATUS
 ===================================================== */
 async function marcar(id, acao){
   if(state.salvandoIds[id]) return;
-
   const im = state.imoveis.find(i => i.id === id);
   if(!im) return;
 
@@ -2082,21 +2050,16 @@ async function marcar(id, acao){
   delete state.salvandoIds[id];
 
   if(!res.ok){
-    if(erroEhDispositivoVinculado(res.error)){
-      mostrarBloqueioDispositivo();
-      return;
-    }
+    if(erroEhDispositivoVinculado(res.error)){ mostrarBloqueioDispositivo(); return; }
     im.status = statusAnterior;
     atualizarContadores();
     renderizarImoveis();
     gravarCache(state.imoveis, state.telefone, state.clienteInfo?.nome);
-    if(erroEhConexao(res.error)){
-      toast('Sem conexão. Tente novamente.', 'error');
-    } else {
-      toast(res.error || 'Erro ao salvar', 'error');
-    }
+    if(erroEhConexao(res.error)) toast('Sem conexão. Tente novamente.', 'error');
+    else toast(res.error || 'Erro ao salvar', 'error');
   } else {
     renderizarImoveis();
+    atualizarContadores();
     const msg = novaAcao === 'pendente' ? 'Voltou para aguardando'
               : novaAcao === 'gostei' ? '❤️ Gostei!'
               : novaAcao === 'quero-visitar' ? '📅 Vou querer visitar!'
@@ -2110,8 +2073,7 @@ async function marcar(id, acao){
 ===================================================== */
 function toggleDesc(descId){
   const el = $(descId);
-  if(!el) return;
-  el.classList.toggle('expandido');
+  if(el) el.classList.toggle('expandido');
 }
 
 function toggleObs(obsId){
@@ -2160,11 +2122,8 @@ async function salvarEdicaoObs(id, obsId){
     id, observacao: novaObs, deviceToken: state.deviceToken
   }, TIMEOUT_API, 1);
 
-  if(!res.ok && erroEhDispositivoVinculado(res.error)){
-    mostrarBloqueioDispositivo();
-  } else if(!res.ok && erroEhConexao(res.error)){
-    toast('Salvo localmente, mas não sincronizou.', 'error');
-  }
+  if(!res.ok && erroEhDispositivoVinculado(res.error)) mostrarBloqueioDispositivo();
+  else if(!res.ok && erroEhConexao(res.error)) toast('Salvo localmente, mas não sincronizou.', 'error');
 }
 
 function copiarCodigo(codigo, el){
@@ -2204,21 +2163,14 @@ function fallbackCopy(texto, cb){
   const params = new URLSearchParams(window.location.search);
   const telUrl = normalizaTel(params.get('tel'));
   const senhaUrl = (params.get('senha') || '').toUpperCase().trim();
-
   const temLinkNovo = telUrl.length >= 10 && senhaUrl.length > 0;
 
-  // CASO 1 — VEIO LINK NOVO
   if(temLinkNovo){
     const telSalvo = localStorage.getItem(TEL_KEY);
     const mesmoCliente = telSalvo && normalizaTel(telSalvo) === telUrl;
 
     gravarOriginalUrl(telUrl, senhaUrl);
-
-    if(!mesmoCliente){
-      limparTudo();
-      carregarVistos();
-    }
-
+    if(!mesmoCliente){ limparTudo(); carregarVistos(); }
     gravarLinkOriginal(telUrl, senhaUrl);
     state.telefone = telUrl;
 
@@ -2228,12 +2180,10 @@ function fallbackCopy(texto, cb){
       state.deviceToken = localStorage.getItem(TOKEN_KEY) || null;
       state.clienteInfo = { nome: localStorage.getItem(NOME_KEY) || null, apelido: null };
       state.imoveis = cache.data;
-
       mostrarView('vitrineView');
       $('userInfo').textContent = state.clienteInfo.nome
         ? '👤 ' + state.clienteInfo.nome
         : '📱 ' + fmtTel(telUrl);
-
       atualizarContadores();
       renderizarVisitas();
       renderizarNovidades();
@@ -2253,14 +2203,12 @@ function fallbackCopy(texto, cb){
       localStorage.setItem(TEL_KEY, telUrl);
       localStorage.setItem(TOKEN_KEY, state.deviceToken);
       if(res.nome) localStorage.setItem(NOME_KEY, res.nome);
-
       $('userInfo').textContent = res.nome ? '👤 ' + res.nome : '📱 ' + fmtTel(telUrl);
       salvarUltimoAcesso();
-
-      limparUrl();
-      limparOriginalUrl();
+      limparUrl(); limparOriginalUrl();
 
       if(mesmoCliente && cache && cache.fresh){
+        talvezMostrarAjudaPrimeiraVez();
         return;
       }
 
@@ -2280,10 +2228,11 @@ function fallbackCopy(texto, cb){
         renderizarVisitas();
         renderizarNovidades();
         renderizarImoveis();
+        talvezMostrarAjudaPrimeiraVez();
         return;
       }
-
       await carregarImoveis();
+      talvezMostrarAjudaPrimeiraVez();
       return;
     }
 
@@ -2293,16 +2242,12 @@ function fallbackCopy(texto, cb){
       mostrarBloqueioDispositivo();
       return;
     }
-
-    if(!state.imoveis.length){
-      mostrarErroConexaoComLink();
-    } else {
-      mostrarErroConexaoComLink();
-    }
+    if(!state.imoveis.length) mostrarErroConexaoComLink();
+    else mostrarErroConexaoComLink();
     return;
   }
 
-  // CASO 2 — SEM LINK NOVO
+  // sem link novo
   const cache = lerCache();
   const telSalvo = localStorage.getItem(TEL_KEY);
   const tokenSalvo = localStorage.getItem(TOKEN_KEY);
@@ -2313,12 +2258,10 @@ function fallbackCopy(texto, cb){
     state.deviceToken = tokenSalvo;
     state.clienteInfo = { nome: nomeSalvo || cache.nome || null, apelido: null };
     state.imoveis = cache.data;
-
     mostrarView('vitrineView');
     $('userInfo').textContent = state.clienteInfo.nome
       ? '👤 ' + state.clienteInfo.nome
       : '📱 ' + fmtTel(telSalvo);
-
     atualizarContadores();
     renderizarVisitas();
     renderizarNovidades();
@@ -2329,15 +2272,13 @@ function fallbackCopy(texto, cb){
   }
 
   salvarUltimoAcesso();
+  talvezMostrarAjudaPrimeiraVez();
 
-  if(cache && cache.fresh && telSalvo){
-    return;
-  }
+  if(cache && cache.fresh && telSalvo) return;
 
   if(telSalvo && tokenSalvo){
     const res = await api('listarImoveis', {
-      telefone: telSalvo,
-      deviceToken: tokenSalvo
+      telefone: telSalvo, deviceToken: tokenSalvo
     }, TIMEOUT_API, 1);
 
     if(res.ok){
@@ -2346,10 +2287,7 @@ function fallbackCopy(texto, cb){
         const db = new Date(b.dataCadastro||0).getTime() || 0;
         return db - da;
       });
-
-      if(novos.length === 0 && state.imoveis.length > 0){
-        return;
-      }
+      if(novos.length === 0 && state.imoveis.length > 0) return;
 
       state.imoveis = novos;
       state.telefone = telSalvo;
@@ -2367,10 +2305,7 @@ function fallbackCopy(texto, cb){
       return;
     }
 
-    if(erroEhDispositivoVinculado(res.error)){
-      mostrarBloqueioDispositivo();
-      return;
-    }
+    if(erroEhDispositivoVinculado(res.error)){ mostrarBloqueioDispositivo(); return; }
 
     if((res.error || '').toLowerCase().match(/sess|token|inv[áa]lid|expirad|autentic|unauthor/)){
       const linkSalvo = lerLinkOriginal();
@@ -2397,18 +2332,14 @@ function fallbackCopy(texto, cb){
       return;
     }
 
-    if(!state.imoveis.length){
-      mostrarErroConexao();
-    } else {
-      toast('Não conseguimos atualizar agora. Mostrando os últimos dados.', 'error');
-    }
+    if(!state.imoveis.length) mostrarErroConexao();
+    else toast('Não conseguimos atualizar agora. Mostrando os últimos dados.', 'error');
     return;
   }
 
   const linkSalvo = lerLinkOriginal();
   if(linkSalvo){
     const res = await loginComRetryForte(linkSalvo.tel, linkSalvo.senha);
-
     if(res.ok){
       state.telefone = linkSalvo.tel;
       state.deviceToken = res.deviceToken || '';
@@ -2416,10 +2347,8 @@ function fallbackCopy(texto, cb){
       localStorage.setItem(TEL_KEY, linkSalvo.tel);
       localStorage.setItem(TOKEN_KEY, state.deviceToken);
       if(res.nome) localStorage.setItem(NOME_KEY, res.nome);
-
       $('userInfo').textContent = res.nome ? '👤 ' + res.nome : '📱 ' + fmtTel(linkSalvo.tel);
       salvarUltimoAcesso();
-
       if(res.imoveis && res.imoveis.length){
         state.imoveis = res.imoveis;
         gravarCache(res.imoveis, linkSalvo.tel, res.nome);
@@ -2427,21 +2356,19 @@ function fallbackCopy(texto, cb){
         renderizarVisitas();
         renderizarNovidades();
         renderizarImoveis();
+        talvezMostrarAjudaPrimeiraVez();
         return;
       }
       await carregarImoveis();
+      talvezMostrarAjudaPrimeiraVez();
       return;
     }
-
     if(erroEhDispositivoVinculado(res.error)){
       state.telefone = linkSalvo.tel;
       mostrarBloqueioDispositivo();
       return;
     }
-
-    if(!state.imoveis.length){
-      mostrarErroConexao();
-    }
+    if(!state.imoveis.length) mostrarErroConexao();
     return;
   }
 
@@ -2453,9 +2380,7 @@ function fallbackCopy(texto, cb){
 })();
 
 setInterval(() => {
-  if(state.imoveis.length > 0){
-    renderizarVisitas();
-  }
+  if(state.imoveis.length > 0) renderizarVisitas();
 }, 60 * 1000);
 </script>
 </body>
