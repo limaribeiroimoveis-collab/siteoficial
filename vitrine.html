@@ -4,26 +4,26 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="google" content="notranslate">
-<title>Lima Ribeiro Imóveis — Minha Vitrine</title>
+<title>LR Imóveis - Quinto Andar</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏢</text></svg>">
 
-<!-- ============ OPEN GRAPH ============ -->
-<!-- ⚠️ TROQUE A URL DA IMAGEM ABAIXO PELA SUA (1200×630px) -->
-<meta property="og:image" content="https://picsum.photos/1200/630">
-<meta property="og:image:secure_url" content="https://picsum.photos/1200/630">
+<!-- ============ OPEN GRAPH / COMPARTILHAMENTO ============ -->
+<!-- ⚠️ TROQUE A URL DA IMAGEM ABAIXO PELA SUA (ideal: 1200×1200) -->
+<meta property="og:image" content="https://picsum.photos/1200/1200">
+<meta property="og:image:secure_url" content="https://picsum.photos/1200/1200">
 <meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
+<meta property="og:image:height" content="1200">
 <meta property="og:image:type" content="image/jpeg">
-<meta property="og:image:alt" content="Lima Ribeiro Imóveis — Minha Vitrine">
-<meta property="og:title" content="Lima Ribeiro Imóveis — Minha Vitrine">
-<meta property="og:description" content="Veja os imóveis que separei especialmente para você.">
+<meta property="og:image:alt" content="LR Imóveis - Quinto Andar">
+<meta property="og:title" content="LR Imóveis - Quinto Andar">
+<meta property="og:description" content="Vitrine Exclusiva - Veja os imóveis que separei para você.">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="pt_BR">
-<meta property="og:site_name" content="Lima Ribeiro Imóveis">
+<meta property="og:site_name" content="LR Imóveis - Quinto Andar">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Lima Ribeiro Imóveis — Minha Vitrine">
-<meta name="twitter:description" content="Veja os imóveis que separei especialmente para você.">
-<meta name="twitter:image" content="https://picsum.photos/1200/630">
+<meta name="twitter:title" content="LR Imóveis - Quinto Andar">
+<meta name="twitter:description" content="Vitrine Exclusiva - Veja os imóveis que separei para você.">
+<meta name="twitter:image" content="https://picsum.photos/1200/1200">
 
 <script>
   window.__WARMUP_URL__ = 'https://script.google.com/macros/s/AKfycbzuCjg_5ZJDMWWKmjYp1ThW34iWS0YouviWFdiMGx8W3yApv0F1fdUcjeZdjm0s6Mg/exec';
@@ -61,10 +61,18 @@
     background: var(--bg); color: var(--text); min-height: 100vh;
     -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
     line-height: 1.5; font-size: 14px;
-    padding-bottom: calc(var(--navbar-h) + env(safe-area-inset-bottom));
   }
-  .container{ max-width: 1400px; margin: 0 auto; padding: 16px; }
-  @media(max-width:640px){ .container{ padding: 10px; } }
+  .container{
+    max-width: 1400px; margin: 0 auto;
+    padding: 16px;
+    padding-bottom: calc(var(--navbar-h) + 60px + env(safe-area-inset-bottom));
+  }
+  @media(max-width:640px){
+    .container{
+      padding: 10px;
+      padding-bottom: calc(var(--navbar-h) + 50px + env(safe-area-inset-bottom));
+    }
+  }
 
   /* ============ HEADER ============ */
   header.app-header{
@@ -143,7 +151,11 @@
   .btn-full{ width: 100%; }
 
   /* ============ LOADING ============ */
-  .loading-screen{ display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 85vh; padding: 24px; text-align: center; }
+  .loading-screen{
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    min-height: 85vh; padding: 24px; text-align: center;
+    padding-bottom: calc(24px + var(--navbar-h) + 40px + env(safe-area-inset-bottom));
+  }
   .loading-logo{
     width: 72px; height: 72px; margin-bottom: 20px;
     background: var(--primary); border-radius: 16px;
@@ -454,24 +466,33 @@
   }
   .card-desc.expandido{ display: block; -webkit-line-clamp: unset; overflow: visible; }
 
-  /* Rodapé discreto com código e data */
-  .card-footer-meta{
-    display: flex; align-items: center; gap: 8px;
-    padding: 0 10px 10px;
-    font-size: .6rem; color: var(--muted);
+  /* Rodapé meta dentro da descrição — só visível quando expandida */
+  .card-desc-meta{
+    display: none;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px dashed var(--border);
+    font-size: .66rem;
+    color: var(--muted);
+    gap: 8px;
     flex-wrap: wrap;
+    align-items: center;
   }
-  .card-footer-meta .codigo{
+  .card-desc.expandido .card-desc-meta{ display: flex; }
+  .card-desc-meta .meta-codigo{
     font-family: var(--mono);
-    background: #f8fafc; color: var(--muted);
-    padding: 2px 6px; border-radius: 4px;
+    background: #f8fafc;
+    color: var(--muted);
+    padding: 2px 7px;
+    border-radius: 4px;
     border: 1px solid var(--border);
     cursor: pointer;
     transition: all .15s;
+    font-weight: 700;
   }
-  .card-footer-meta .codigo:hover{ background: var(--bg-alt); color: var(--primary); }
-  .card-footer-meta .codigo.copiado{ background: var(--success); color: #fff; border-color: var(--success); }
-  .card-footer-meta .data{ display: inline-flex; align-items: center; gap: 3px; }
+  .card-desc-meta .meta-codigo:hover{ background: var(--bg-alt); color: var(--primary); }
+  .card-desc-meta .meta-codigo.copiado{ background: var(--success); color: #fff; border-color: var(--success); }
+  .card-desc-meta .meta-data{ display: inline-flex; align-items: center; gap: 3px; font-weight: 600; }
 
   /* ============ EMPTY / ERRO ============ */
   .empty-state{
@@ -897,7 +918,7 @@ const state = {
   deviceToken: null,
   clienteInfo: null,
   imoveis: [],
-  filtroNav: null, // 'favoritos' | 'visitar' | null
+  filtroNav: null,
   salvandoIds: {},
   vistos: new Set(),
   ultimoAcesso: 0
@@ -1171,7 +1192,6 @@ function corretorDoCliente(){
     const pref = localStorage.getItem('vitrine_corretor_pref');
     if(pref && ZAP_CORRETORES[pref]) return pref;
   } catch(e){}
-  // fallback: pega o corretor do primeiro imóvel
   for(const im of state.imoveis){
     const c = getCorretor(im);
     if(c) return c;
@@ -1701,7 +1721,6 @@ function atualizarContadores(){
   const gostei = counts.gostei;
   const vis = counts['quero-visitar'];
 
-  // badges no menu inferior
   const bf = $('badgeFavoritos');
   const bv = $('badgeVisitar');
   if(bf){
@@ -1720,7 +1739,6 @@ function atualizarBadgesNav(){ atualizarContadores(); }
    MENU INFERIOR
 ===================================================== */
 function navIr(destino){
-  // Limpa ativos
   ['navInicio','navFavoritos','navVisitar','navCorretor','navAjuda'].forEach(id => {
     const el = $(id); if(el) el.classList.remove('active');
   });
@@ -1767,7 +1785,6 @@ function navIr(destino){
     msg += `Sou *${nomeCliente}* e estou usando minha vitrine de imóveis.\n\n`;
     msg += `Gostaria de tirar algumas dúvidas. Pode me ajudar?`;
     window.open(`https://wa.me/${zap}?text=${encodeURIComponent(msg)}`, '_blank');
-    // reativa "inicio" como visual ativo
     setTimeout(() => {
       ['navInicio','navFavoritos','navVisitar','navCorretor','navAjuda'].forEach(id => {
         const el = $(id); if(el) el.classList.remove('active');
@@ -1781,7 +1798,6 @@ function navIr(destino){
 
   if(destino === 'ajuda'){
     abrirAjuda();
-    // reativa estado anterior
     setTimeout(() => {
       ['navInicio','navFavoritos','navVisitar','navCorretor','navAjuda'].forEach(id => {
         const el = $(id); if(el) el.classList.remove('active');
@@ -1839,13 +1855,11 @@ function renderizarImoveis(){
   const grid = $('gridImoveis');
   let lista = [...state.imoveis];
 
-  // filtro do menu inferior
   if(state.filtroNav === 'favoritos'){
     lista = lista.filter(i => (i.status || 'pendente') === 'gostei');
   } else if(state.filtroNav === 'visitar'){
     lista = lista.filter(i => (i.status || 'pendente') === 'quero-visitar');
   } else {
-    // ordem: novos -> pendente -> quero-visitar -> gostei -> nao-gostei
     const ordemStatus = { 'pendente': 1, 'quero-visitar': 2, 'gostei': 3, 'nao-gostei': 4 };
     lista.sort((a,b) => {
       const na = imovelEhNovo(a) ? 0 : 1;
@@ -1935,6 +1949,8 @@ function cardHTML(im, idx){
   const badgeNovoHtml = ehNovo ? `<div class="badge-novo">NOVO</div>` : '';
   const animDelay = Math.min(idx * 30, 400);
 
+  const temDescricao = descTexto || im.codigo || dataFmt;
+
   return `
     <div class="card${cardExtraClass}" data-id="${id}" style="animation-delay:${animDelay}ms" onclick="clicarCard('${id}')">
       ${badgeNovoHtml}
@@ -1957,8 +1973,14 @@ function cardHTML(im, idx){
         ` : ''}
       </div>
 
-      ${descTexto ? `
-        <div class="card-desc" id="${descId}" onclick="event.stopPropagation(); toggleDesc('${descId}')">${esc(descTexto)}</div>
+      ${temDescricao ? `
+        <div class="card-desc" id="${descId}" onclick="event.stopPropagation(); toggleDesc('${descId}')">
+          ${descTexto ? esc(descTexto) : '<em>Clique para ver detalhes</em>'}
+          <div class="card-desc-meta">
+            ${im.codigo ? `<span class="meta-codigo" onclick="event.stopPropagation(); copiarCodigo('${esc(im.codigo)}', this)">#${esc(im.codigo)}</span>` : ''}
+            ${dataFmt ? `<span class="meta-data">📅 ${dataFmt}</span>` : ''}
+          </div>
+        </div>
       ` : ''}
 
       <div class="card-actions" onclick="event.stopPropagation();">
@@ -1996,11 +2018,6 @@ function cardHTML(im, idx){
           <button class="btn btn-primary btn-sm" style="flex:1; padding:8px; border-radius:6px; font-size:.75rem;" onclick="salvarEdicaoObs('${id}', '${obsId}')">💾 Salvar</button>
           <button class="btn btn-ghost btn-sm" style="padding:8px; border-radius:6px; font-size:.75rem;" onclick="cancelarEdicaoObs('${obsId}')">Cancelar</button>
         </div>
-      </div>
-
-      <div class="card-footer-meta" onclick="event.stopPropagation();">
-        ${im.codigo ? `<span class="codigo" onclick="copiarCodigo('${esc(im.codigo)}', this)">#${esc(im.codigo)}</span>` : ''}
-        ${dataFmt ? `<span class="data">📅 ${dataFmt}</span>` : ''}
       </div>
     </div>
   `;
