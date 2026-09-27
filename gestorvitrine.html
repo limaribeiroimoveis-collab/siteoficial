@@ -377,6 +377,7 @@
   .agenda-row-v2 .barra-acoes .acao-btn.btn-anuncio:hover{ background: var(--info-soft); border-color: #c9d6e4; color: var(--info); }
   .agenda-row-v2 .barra-acoes .acao-btn.btn-chave:hover{ background: var(--warn-soft); border-color: #e2d3a8; color: var(--warn); }
   .agenda-row-v2 .barra-acoes .acao-btn.btn-share:hover{ background: #ede9fe; border-color: #c9bfe8; color: #5b21b6; }
+ .agenda-row-v2 .barra-acoes .acao-btn.btn-sobre:hover{ background: var(--primary-soft); border-color: #c9d6e4; color: var(--primary); }
 
   /* MOBILE CARD AGENDA */
   @media(max-width:640px){
@@ -2708,6 +2709,10 @@ function agendaRowHTML(a, conflito){
           <svg class="ico" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
           <span class="lbl-btn">Compartilhar</span>
         </button>
+                <button class="acao-btn btn-sobre" onclick="abrirObsClienteDaAgenda('${tel}')" title="Observações internas do cliente">
+          <svg class="ico" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+          <span class="lbl-btn">Sobre</span>
+        </button>
       </div>
     </div>
   `;
@@ -2754,6 +2759,37 @@ function zapConversaEmBranco(){
   fecharModalWhatsAppAgenda();
 }
 
+/* =====================================================
+   BOTÃO "SOBRE" DA AGENDA — abre observações internas
+===================================================== */
+async function abrirObsClienteDaAgenda(telefone){
+  const tel = normalizaTel(telefone);
+  if(!tel){ toast('Telefone inválido', 'error'); return; }
+
+  // 1. Tenta achar o cliente no cache local
+  let cli = state.clientes.find(c => normalizaTel(c.telefone) === tel);
+
+  // 2. Se não achou, busca no servidor
+  if(!cli){
+    marcarSalvando(true);
+    const res = await api('buscarCliente', { senha: state.adminSenha, telefone: tel });
+    marcarSalvando(false);
+    if(res.ok && res.data) cli = res.data;
+  }
+
+  if(!cli){ toast('Cliente não encontrado', 'error'); return; }
+
+  // 3. Guarda o telefone e um backup do cliente (pra usar no salvar)
+  window._relatorioClienteTel = tel;
+  window._obsClienteBackup = { ...cli };
+
+  // 4. Abre o modal grande com o texto atual
+  $('obsGrande').value = cli.observacao || '';
+  atualizarContadorObs();
+  $('obsModalBackdrop').classList.add('show');
+  setTimeout(() => $('obsGrande').focus(), 120);
+}
+ 
 function zapConfirmarVisita(){
   const id = window._zapAgendamentoId;
   if(!id){ fecharModalWhatsAppAgenda(); return; }
@@ -3613,11 +3649,15 @@ function abrirModalObs(){
   $('obsModalBackdrop').classList.add('show');
   setTimeout(() => $('obsGrande').focus(), 100);
 }
-function fecharModalObs(){ $('obsModalBackdrop').classList.remove('show'); }
+function fecharModalObs(){
+  $('obsModalBackdrop').classList.remove('show');
+  window._obsClienteBackup = null;
+}
 
 async function salvarModalObs(){
   const txt = $('obsGrande').value;
 
+  // Caso 1: modal do cliente está aberto → só copia pro campo do cliente
   const emEdicaoCliente = $('clienteModalBackdrop').classList.contains('show');
   if(emEdicaoCliente){
     $('cliObservacao').value = txt;
@@ -3626,10 +3666,15 @@ async function salvarModalObs(){
     return;
   }
 
+  // Caso 2: botão "Sobre" da agenda → salva direto via API
   const tel = window._relatorioClienteTel;
   if(!tel){ fecharModalObs(); return; }
 
-  const cli = state.clientes.find(c => normalizaTel(c.telefone) === tel);
+  // Usa o backup (se existir) ou busca no state.clientes
+  let cli = window._obsClienteBackup;
+  if(!cli || normalizaTel(cli.telefone) !== tel){
+    cli = state.clientes.find(c => normalizaTel(c.telefone) === tel);
+  }
   if(!cli){ fecharModalObs(); return; }
 
   marcarSalvando(true);
@@ -3648,9 +3693,13 @@ async function salvarModalObs(){
 
   if(!res.ok){ toast(res.error || 'Erro ao salvar', 'error'); return; }
 
+  // Atualiza cache local (tanto o backup quanto o state)
   cli.observacao = txt;
+  const idx = state.clientes.findIndex(c => normalizaTel(c.telefone) === tel);
+  if(idx >= 0) state.clientes[idx].observacao = txt;
+
   fecharModalObs();
-  toast('Relatório salvo', 'success');
+  toast('Sobre salvo', 'success');
 }
 
 function atualizarContadorObs(){
