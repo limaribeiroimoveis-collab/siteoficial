@@ -1131,6 +1131,10 @@
         <svg class="ico ico-sm" viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
         Voltar
       </button>
+      <button class="btn btn-ghost btn-sm" onclick="abrirClonarVitrine()" title="Clonar imóveis desta vitrine para outro cliente">
+        <svg class="ico ico-sm" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        Clonar
+      </button>
       <button class="btn btn-ghost btn-sm" onclick="abrirEditarClienteAtual()">
         <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
         Editar
@@ -1195,15 +1199,15 @@
     <div class="form-row-3-preco">
       <div class="form-group">
         <label>Preço</label>
-        <input type="text" id="adPreco" placeholder="Ex: 450.000">
+        <input type="text" id="adPreco" inputmode="numeric" placeholder="Ex: 450000" oninput="mascaraPreco(this)">
       </div>
       <div class="form-group">
         <label>Condomínio</label>
-        <input type="text" id="adCondominio" placeholder="Ex: 800">
+        <input type="text" id="adCondominio" inputmode="numeric" placeholder="Ex: 800" oninput="mascaraPreco(this)">
       </div>
       <div class="form-group">
         <label>IPTU</label>
-        <input type="text" id="adIPTU" placeholder="Ex: 1200/ano">
+        <input type="text" id="adIPTU" inputmode="numeric" placeholder="Ex: 1200" oninput="mascaraPreco(this)">
       </div>
     </div>
     <div class="form-group">
@@ -1549,7 +1553,7 @@
     </div>
   </div>
 </div>
- 
+
 <div class="modal-backdrop" id="novoAcessoBackdrop" onclick="if(event.target===this) fecharNovoAcesso()">
   <div class="modal" style="max-width:480px;">
     <button class="modal-close" onclick="fecharNovoAcesso()">
@@ -1619,6 +1623,43 @@
     <div style="display:flex; gap:8px;">
       <button class="btn btn-primary" style="flex:1" onclick="salvarAgendamento(event)">Agendar</button>
       <button class="btn btn-ghost" id="btnCancelarAgendamento" onclick="cancelarAgendamento()">Cancelar agendamento</button>
+    </div>
+  </div>
+</div>
+
+<!-- ✅ NOVO: Modal de clonar vitrine -->
+<div class="modal-backdrop" id="clonarVitrineBackdrop" onclick="if(event.target===this) fecharClonarVitrine()">
+  <div class="modal" style="max-width:640px;">
+    <button class="modal-close" onclick="fecharClonarVitrine()">
+      <svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <h2>
+      <svg class="ico" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      Clonar vitrine
+    </h2>
+    <p class="text-muted" style="margin-bottom:16px; font-size:.82rem;" id="clonarVitrineSub">—</p>
+    
+    <div class="form-group">
+      <label>Cliente de destino <span class="req">*</span></label>
+      <select id="clonarClienteDestino"></select>
+    </div>
+    
+    <div class="form-group">
+      <label>Imóveis a enviar</label>
+      <div style="display:flex; gap:8px; margin-bottom:10px; flex-wrap:wrap; align-items:center;">
+        <button type="button" class="btn btn-soft btn-xs" onclick="clonarMarcarTodos(true)">Marcar todos</button>
+        <button type="button" class="btn btn-ghost btn-xs" onclick="clonarMarcarTodos(false)">Desmarcar todos</button>
+        <span style="margin-left:auto; font-size:.74rem; color:var(--muted); font-weight:600;" id="clonarContador">0 de 0 selecionados</span>
+      </div>
+      <div id="clonarListaImoveis" style="max-height:340px; overflow-y:auto; border:1px solid var(--border); border-radius:var(--radius); background:var(--bg); padding:8px;"></div>
+    </div>
+    
+    <div style="display:flex; gap:8px; margin-top:16px;">
+      <button class="btn btn-primary" style="flex:1" id="btnConfirmarClonagem" onclick="confirmarClonagem()">
+        <svg class="ico ico-sm" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+        Clonar imóveis selecionados
+      </button>
+      <button class="btn btn-ghost" onclick="fecharClonarVitrine()">Cancelar</button>
     </div>
   </div>
 </div>
@@ -1715,6 +1756,18 @@ function mascaraTelefone(input){
   else if(v.length <= 7) out = '(' + v.slice(0,2) + ') ' + v.slice(2,3) + ' ' + v.slice(3);
   else out = '(' + v.slice(0,2) + ') ' + v.slice(2,3) + ' ' + v.slice(3,7) + '-' + v.slice(7);
   input.value = out;
+}
+
+/* =====================================================
+   ✅ NOVO: MÁSCARA DE PREÇO (formata 1487000 → 1.487.000)
+===================================================== */
+function mascaraPreco(input){
+  let v = String(input.value || '').replace(/\D/g, '');
+  if(v.length === 0){ input.value = ''; return; }
+  // Remove zeros à esquerda
+  v = v.replace(/^0+/, '') || '0';
+  const num = parseInt(v, 10);
+  input.value = num.toLocaleString('pt-BR');
 }
 
 function toggleSenhaAdmin(btn){
@@ -2190,7 +2243,6 @@ async function entrarAdmin(){
 async function carregarHomeAdmin(){
   mostrarView('homeView');
   $('btnSair').classList.remove('hidden');
-  $('headerCorretorChips') && $('headerCorretorChips').classList.add('hidden');
 
   state.carregado = { agenda: false, visitar: false, clientes: false, geral: false };
 
@@ -2484,6 +2536,9 @@ function clienteRowHTML(c){
         </div>
       </div>
       <div class="tags">
+        <button class="btn btn-ghost btn-xs" title="Observações internas" onclick="abrirObsClienteDireto('${esc(c.telefone)}')">
+          <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        </button>
         <button class="btn btn-ghost btn-xs" title="Copiar link da vitrine" onclick="copiarLinkCliente('${esc(c.telefone)}')">
           <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
         </button>
@@ -2506,6 +2561,31 @@ async function copiarLinkCliente(telefone){
   marcarSalvando(false);
   if(!res.ok){ toast(res.error || 'Erro', 'error'); return; }
   copiarTexto(res.link);
+}
+
+/* =====================================================
+   ✅ NOVO: OBSERVAÇÕES DIRETO NOS CARDS
+===================================================== */
+async function abrirObsClienteDireto(telefone){
+  const tel = normalizaTel(telefone);
+  if(!tel){ toast('Telefone inválido', 'error'); return; }
+
+  let cli = state.clientes.find(c => normalizaTel(c.telefone) === tel);
+  if(!cli){
+    marcarSalvando(true);
+    const res = await api('buscarCliente', { senha: state.adminSenha, telefone: tel });
+    marcarSalvando(false);
+    if(res.ok && res.data) cli = res.data;
+  }
+  if(!cli){ toast('Cliente não encontrado', 'error'); return; }
+
+  window._relatorioClienteTel = tel;
+  window._obsClienteBackup = { ...cli };
+
+  $('obsGrande').value = cli.observacao || '';
+  atualizarContadorObs();
+  $('obsModalBackdrop').classList.add('show');
+  setTimeout(() => $('obsGrande').focus(), 120);
 }
 
 /* =====================================================
@@ -2709,7 +2789,7 @@ function agendaRowHTML(a, conflito){
           <svg class="ico" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
           <span class="lbl-btn">Compartilhar</span>
         </button>
-                <button class="acao-btn btn-sobre" onclick="abrirObsClienteDaAgenda('${tel}')" title="Observações internas do cliente">
+        <button class="acao-btn btn-sobre" onclick="abrirObsClienteDaAgenda('${tel}')" title="Observações internas do cliente">
           <svg class="ico" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
           <span class="lbl-btn">Sobre</span>
         </button>
@@ -2759,17 +2839,12 @@ function zapConversaEmBranco(){
   fecharModalWhatsAppAgenda();
 }
 
-/* =====================================================
-   BOTÃO "SOBRE" DA AGENDA — abre observações internas
-===================================================== */
 async function abrirObsClienteDaAgenda(telefone){
   const tel = normalizaTel(telefone);
   if(!tel){ toast('Telefone inválido', 'error'); return; }
 
-  // 1. Tenta achar o cliente no cache local
   let cli = state.clientes.find(c => normalizaTel(c.telefone) === tel);
 
-  // 2. Se não achou, busca no servidor
   if(!cli){
     marcarSalvando(true);
     const res = await api('buscarCliente', { senha: state.adminSenha, telefone: tel });
@@ -2779,17 +2854,15 @@ async function abrirObsClienteDaAgenda(telefone){
 
   if(!cli){ toast('Cliente não encontrado', 'error'); return; }
 
-  // 3. Guarda o telefone e um backup do cliente (pra usar no salvar)
   window._relatorioClienteTel = tel;
   window._obsClienteBackup = { ...cli };
 
-  // 4. Abre o modal grande com o texto atual
   $('obsGrande').value = cli.observacao || '';
   atualizarContadorObs();
   $('obsModalBackdrop').classList.add('show');
   setTimeout(() => $('obsGrande').focus(), 120);
 }
- 
+
 function zapConfirmarVisita(){
   const id = window._zapAgendamentoId;
   if(!id){ fecharModalWhatsAppAgenda(); return; }
@@ -2824,8 +2897,6 @@ function zapConfirmarVisita(){
   window.open(`https://wa.me/${telZap}?text=${encodeURIComponent(msg)}`, '_blank');
   fecharModalWhatsAppAgenda();
 }
-
-function confirmarVisitaWhatsApp(id){ abrirModalWhatsAppAgenda(id); }
 
 /* =====================================================
    MODAL FINALIZAR
@@ -3176,7 +3247,6 @@ async function executarRefreshSilencioso(){
   }
 }
 
-  
 /* =====================================================
    VITRINE DO CLIENTE
 ===================================================== */
@@ -3657,7 +3727,6 @@ function fecharModalObs(){
 async function salvarModalObs(){
   const txt = $('obsGrande').value;
 
-  // Caso 1: modal do cliente está aberto → só copia pro campo do cliente
   const emEdicaoCliente = $('clienteModalBackdrop').classList.contains('show');
   if(emEdicaoCliente){
     $('cliObservacao').value = txt;
@@ -3666,11 +3735,9 @@ async function salvarModalObs(){
     return;
   }
 
-  // Caso 2: botão "Sobre" da agenda → salva direto via API
   const tel = window._relatorioClienteTel;
   if(!tel){ fecharModalObs(); return; }
 
-  // Usa o backup (se existir) ou busca no state.clientes
   let cli = window._obsClienteBackup;
   if(!cli || normalizaTel(cli.telefone) !== tel){
     cli = state.clientes.find(c => normalizaTel(c.telefone) === tel);
@@ -3693,7 +3760,6 @@ async function salvarModalObs(){
 
   if(!res.ok){ toast(res.error || 'Erro ao salvar', 'error'); return; }
 
-  // Atualiza cache local (tanto o backup quanto o state)
   cli.observacao = txt;
   const idx = state.clientes.findIndex(c => normalizaTel(c.telefone) === tel);
   if(idx >= 0) state.clientes[idx].observacao = txt;
@@ -4722,8 +4788,7 @@ function renderizarListaGeral(){
     const corCorr = im.corretor ? corDoCorretor(chaveCorretor_(im.corretor)) : '#64748b';
     const desativado = isDesativado(im);
     const campos = camposEndereco_(im);
-    const chave = campos.chave;
-    const temChave = !!chave;
+    const link = String(im.link || '').trim();
     return `
       <div class="imovel-linha">
         <div class="ico-wrap">
@@ -4739,14 +4804,13 @@ function renderizarListaGeral(){
             ${im.clienteNome ? `<span>${esc(im.clienteNome)}</span>` : ''}
             ${im.corretor ? `<span class="corretor-badge" style="background:${corCorr}">${esc(im.corretor)}</span>` : ''}
             ${im.preco ? `<span class="preco">${esc(im.preco)}</span>` : ''}
-            ${temChave ? `<span style="color:#8b6f3a;">Tem chave</span>` : ''}
           </div>
         </div>
         <div class="acoes">
-          ${im.link ? `<button class="btn btn-ghost btn-xs" title="Copiar link" onclick="copiarTexto('${esc(im.link)}')">
-            <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+          ${link ? `<button class="btn btn-ghost btn-xs" title="Abrir anúncio no Quinto Andar" onclick="window.open('${esc(link)}','_blank','noopener')">
+            <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
           </button>` : ''}
-          ${temChave ? `<button class="btn btn-ghost btn-xs" title="Ver chave" data-chave="${esc(chave)}" data-end="${esc(im.titulo || '')}" onclick="abrirChaveModal(this.dataset.chave, this.dataset.end)">
+          ${link ? `<button class="btn btn-ghost btn-xs" title="Abrir anúncio (chave)" onclick="window.open('${esc(link)}','_blank','noopener')">
             <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
           </button>` : ''}
           <button class="btn btn-primary btn-xs" title="Abrir vitrine" onclick="fecharListaGeral(); abrirVitrineDoCliente('${esc(im.telefone)}')">
@@ -4756,6 +4820,154 @@ function renderizarListaGeral(){
       </div>
     `;
   }).join('');
+}
+
+/* =====================================================
+   ✅ NOVO: CLONAR VITRINE
+===================================================== */
+let _clonarSelecionados = new Set();
+let _clonarOrigemTel = null;
+
+function abrirClonarVitrine(){
+  if(!state.telefoneAtual){ toast('Abra a vitrine de origem primeiro', 'error'); return; }
+  
+  const origemTel = state.telefoneAtual;
+  const origemCli = state.clienteAtual;
+  if(!origemCli){ toast('Cliente de origem não carregado', 'error'); return; }
+  
+  const imoveisDisponiveis = state.imoveis.filter(im => !isDesativado(im));
+  
+  if(imoveisDisponiveis.length === 0){
+    toast('Nenhum imóvel disponível para clonar', 'error');
+    return;
+  }
+  
+  _clonarOrigemTel = origemTel;
+  _clonarSelecionados = new Set(imoveisDisponiveis.map(i => i.id));
+  
+  const sel = $('clonarClienteDestino');
+  const clientes = state.clientes
+    .filter(c => normalizaTel(c.telefone) !== origemTel)
+    .sort((a,b) => (a.nome||'').localeCompare(b.nome||'', 'pt-BR'));
+  
+  sel.innerHTML = '<option value="">— Selecione o cliente de destino —</option>' +
+    clientes.map(c => `<option value="${esc(normalizaTel(c.telefone))}">${esc(c.nome || 'Sem nome')} · ${esc(fmtTel(c.telefone))}</option>`).join('');
+  
+  $('clonarVitrineSub').textContent = 
+    `Origem: ${nomeCompletoCliente_(origemCli.nome, origemTel)} · ${imoveisDisponiveis.length} imóveis disponíveis`;
+  
+  renderizarListaClonagem(imoveisDisponiveis);
+  $('clonarVitrineBackdrop').classList.add('show');
+}
+
+function fecharClonarVitrine(){
+  $('clonarVitrineBackdrop').classList.remove('show');
+  _clonarSelecionados = new Set();
+  _clonarOrigemTel = null;
+}
+
+function renderizarListaClonagem(imoveis){
+  const lista = $('clonarListaImoveis');
+  if(!imoveis){
+    imoveis = state.imoveis.filter(im => !isDesativado(im));
+  }
+  if(imoveis.length === 0){
+    lista.innerHTML = '<div class="empty-state" style="padding:20px;"><p>Nenhum imóvel</p></div>';
+    return;
+  }
+  lista.innerHTML = imoveis.map(im => {
+    const marcado = _clonarSelecionados.has(im.id);
+    const campos = camposEndereco_(im);
+    return `
+      <label style="display:flex; align-items:center; gap:10px; padding:10px 12px; background:#fff; border:1px solid var(--border); border-radius:var(--radius-sm); margin-bottom:6px; cursor:pointer; transition:all .12s;" 
+             onmouseover="this.style.borderColor='var(--primary)'" 
+             onmouseout="this.style.borderColor='var(--border)'">
+        <input type="checkbox" ${marcado?'checked':''} 
+               onchange="toggleClonarImovel('${esc(im.id)}', this.checked)"
+               style="width:18px; height:18px; cursor:pointer; accent-color:var(--primary);">
+        <img src="${esc(im.imagem || '')}" style="width:48px; height:48px; object-fit:cover; border-radius:6px; background:var(--bg-alt);" onerror="this.style.visibility='hidden'">
+        <div style="flex:1; min-width:0;">
+          <div style="font-size:.82rem; font-weight:700; color:var(--text); margin-bottom:2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+            ${esc(im.titulo || 'Sem endereço')}
+          </div>
+          <div style="font-size:.7rem; color:var(--muted); display:flex; gap:8px; flex-wrap:wrap;">
+            ${im.codigo ? `<span>#${esc(im.codigo)}</span>` : ''}
+            ${im.preco ? `<span>${esc(im.preco)}</span>` : ''}
+            ${campos.bairro ? `<span>${esc(campos.bairro)}</span>` : ''}
+          </div>
+        </div>
+      </label>
+    `;
+  }).join('');
+  atualizarContadorClonagem();
+}
+
+function toggleClonarImovel(id, marcado){
+  if(marcado) _clonarSelecionados.add(id);
+  else _clonarSelecionados.delete(id);
+  atualizarContadorClonagem();
+}
+
+function clonarMarcarTodos(marcar){
+  const imoveis = state.imoveis.filter(im => !isDesativado(im));
+  if(marcar) imoveis.forEach(i => _clonarSelecionados.add(i.id));
+  else _clonarSelecionados.clear();
+  renderizarListaClonagem(imoveis);
+}
+
+function atualizarContadorClonagem(){
+  const total = state.imoveis.filter(im => !isDesativado(im)).length;
+  $('clonarContador').textContent = `${_clonarSelecionados.size} de ${total} selecionados`;
+}
+
+async function confirmarClonagem(){
+  const destinoTel = $('clonarClienteDestino').value;
+  if(!destinoTel){ toast('Selecione o cliente de destino', 'error'); return; }
+  if(_clonarSelecionados.size === 0){ toast('Selecione pelo menos 1 imóvel', 'error'); return; }
+  
+  const origemTel = _clonarOrigemTel;
+  if(!origemTel){ toast('Origem inválida', 'error'); return; }
+  
+  const imoveis = state.imoveis.filter(im => _clonarSelecionados.has(im.id));
+  
+  const ok = await confirmarAcao({
+    titulo: 'Confirmar clonagem?',
+    texto: `${imoveis.length} imóvel(is) serão copiados para a vitrine do cliente de destino. Marcações (gostei, visitar, observações) NÃO serão copiadas.`,
+    btnSim: 'Clonar', tipo: 'primary'
+  });
+  if(!ok) return;
+  
+  const btn = $('btnConfirmarClonagem');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="loader"></span> Clonando...';
+  marcarSalvando(true);
+  
+  try {
+    const res = await api('clonarImoveisVitrine', {
+      senha: state.adminSenha,
+      telefoneOrigem: origemTel,
+      telefoneDestino: destinoTel,
+      imovelIds: imoveis.map(i => i.id).join(',')
+    });
+    
+    marcarSalvando(false);
+    btn.disabled = false;
+    btn.innerHTML = '<svg class="ico ico-sm" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Clonar imóveis selecionados';
+    
+    if(!res.ok){ toast(res.error || 'Erro ao clonar', 'error'); return; }
+    
+    toast(`${res.copiados || imoveis.length} imóvel(is) clonado(s) com sucesso!`, 'success');
+    fecharClonarVitrine();
+    
+    if(state.telefoneAtual === normalizaTel(destinoTel)){
+      await irParaVitrine(true);
+    }
+  } catch(e){
+    marcarSalvando(false);
+    btn.disabled = false;
+    btn.innerHTML = '<svg class="ico ico-sm" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Clonar imóveis selecionados';
+    toast('Erro: ' + e.message, 'error');
+  }
 }
 
 /* =====================================================
@@ -4785,7 +4997,6 @@ function renderizarListaGeral(){
         setTimeout(() => $('inputAdminSenha').focus(), 200);
         return;
       }
-      // Bloqueia sair do site no primeiro voltar
       try { history.pushState({ tela: 'home' }, '', ''); } catch(e){}
       await carregarHomeAdmin();
     } catch(e){
@@ -4811,4 +5022,3 @@ window.addEventListener('beforeunload', function(e){
 </script>
 </body>
 </html>
-  
