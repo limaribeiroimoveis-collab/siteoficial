@@ -1733,24 +1733,25 @@ function mascaraTelefone(input){
 
 /* ✅ NOVO: MÁSCARA DE PREÇO (1487000 → 1.487.000) */
 function mascaraPreco(input){
-  // 1) Pega apenas os dígitos que o usuário digitou
+  // 1) Remove TUDO que não é dígito
   let v = String(input.value || '').replace(/\D/g, '');
-  if(v.length === 0){ input.value = ''; return; }
-
+  if(!v){ input.value = ''; return; }
+  
   // 2) Remove zeros à esquerda
   v = v.replace(/^0+/, '') || '0';
-
-  // 3) Converte para número e formata como moeda BR (com ,00 fixo)
-  const num = parseInt(v, 10);
-  const formatado = num.toLocaleString('pt-BR', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
-  });
-
-  // 4) Só atualiza o campo se realmente mudou (evita loop e inflar zeros)
-  if(input.value !== formatado){
-    input.value = formatado;
-  }
+  
+  // 3) Limita a 15 dígitos (evita números absurdos)
+  if(v.length > 15) v = v.slice(0, 15);
+  
+  // 4) Separa em reais e centavos (últimos 2 dígitos = centavos)
+  const reais = v.slice(0, -2) || '0';
+  const centavos = v.slice(-2).padStart(2, '0');
+  
+  // 5) Formata os reais com pontos de milhar
+  const reaisFmt = reais.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  
+  // 6) Monta o valor final SEMPRE do zero (não depende do que estava antes)
+  input.value = reaisFmt + ',' + centavos;
 }
 
 function toggleSenhaAdmin(btn){
