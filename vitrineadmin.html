@@ -16,15 +16,15 @@
     --warn:#8b6f3a; --warn-hover:#6f582d; --warn-soft:#f5efe0;
     --info:#2c5a8c; --info-soft:#e6eef7;
     --purple:#6d28d9; --purple-soft:#ede9fe;
-    --bg:#f4f6f8; --bg-alt:#e8ecf0;
+    --bg:#e5e9ee; --bg-alt:#dde2e8;
     --card:#ffffff;
     --text:#0f172a; --text-soft:#475569; --muted:#94a3b8;
     --border:#e2e8f0; --border-strong:#cbd5e1;
     --radius:8px; --radius-sm:6px; --radius-lg:12px;
-    --shadow-xs: 0 1px 2px rgba(15,23,42,.04);
-    --shadow-sm: 0 1px 3px rgba(15,23,42,.08), 0 1px 2px rgba(15,23,42,.04);
-    --shadow-md: 0 4px 12px rgba(15,23,42,.08), 0 1px 3px rgba(15,23,42,.05);
-    --shadow-lg: 0 12px 32px rgba(15,23,42,.12), 0 2px 6px rgba(15,23,42,.06);
+    --shadow-xs: 0 1px 2px rgba(15,23,42,.06);
+    --shadow-sm: 0 1px 3px rgba(15,23,42,.10), 0 1px 2px rgba(15,23,42,.06);
+    --shadow-md: 0 4px 12px rgba(15,23,42,.10), 0 1px 3px rgba(15,23,42,.06);
+    --shadow-lg: 0 12px 32px rgba(15,23,42,.14), 0 2px 6px rgba(15,23,42,.08);
     --font: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
     --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
   }
@@ -69,7 +69,7 @@
   .brand-title{ font-size: .85rem; font-weight: 700; letter-spacing: .2px; color: #fff; }
   .brand-sub{ font-size: .58rem; opacity: .6; letter-spacing: 1.5px; text-transform: uppercase; margin-top: 2px; }
 
-  .header-right{ display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+  .header-right{ display: flex; align-items: center; gap: 6px; flex-shrink: 0; flex-wrap: wrap; }
   .btn-header{
     background: transparent; color: #ddd6fe;
     border: 1px solid rgba(255,255,255,.15);
@@ -79,8 +79,8 @@
     display: inline-flex; align-items: center; gap: 7px; white-space: nowrap;
   }
   .btn-header:hover{ background: rgba(255,255,255,.1); color: #fff; border-color: rgba(255,255,255,.25); }
-  .btn-header.voltar{ color: #fbbf24; border-color: rgba(251,191,36,.35); }
-  .btn-header.voltar:hover{ background: rgba(251,191,36,.15); color: #fff; }
+  .btn-header.editar-cliente{ color: #fbbf24; border-color: rgba(251,191,36,.35); }
+  .btn-header.editar-cliente:hover{ background: rgba(251,191,36,.15); color: #fff; }
   .btn-header.atualizar{ color: #86efac; border-color: rgba(134,239,172,.35); }
   .btn-header.atualizar:hover{ background: rgba(134,239,172,.15); color: #fff; }
   .btn-header.atualizar.girando .ico{ animation: girar .8s linear infinite; }
@@ -114,10 +114,11 @@
   .erro-wrap h2{ font-size: 1.1rem; margin-bottom: 10px; color: var(--text); }
   .erro-wrap p{ font-size: .88rem; color: var(--text-soft); margin-bottom: 20px; line-height: 1.55; }
 
+  /* BARRA DO CLIENTE — só info agora */
   .cliente-bar{
     background: #fff; border-bottom: 1px solid var(--border);
     padding: 12px 16px;
-    display: flex; align-items: center; justify-content: space-between;
+    display: flex; align-items: center; justify-content: flex-start;
     gap: 12px; flex-wrap: wrap;
     position: sticky; top: 52px; z-index: 90;
     box-shadow: var(--shadow-xs);
@@ -125,7 +126,6 @@
   .cliente-bar .info{ display: flex; align-items: center; gap: 12px; flex-wrap: wrap; min-width: 0; font-size: .85rem; }
   .cliente-bar .nome-cli{ font-weight: 700; color: var(--text); font-size: .95rem; letter-spacing: -.01em; }
   .cliente-bar .meta{ display: flex; align-items: center; gap: 10px; font-size: .74rem; color: var(--text-soft); flex-wrap: wrap; }
-  .cliente-bar .acoes{ display: flex; gap: 6px; flex-wrap: wrap; }
   @media(max-width:640px){
     .cliente-bar{ padding: 10px 12px; top: 48px; }
     .cliente-bar .nome-cli{ font-size: .88rem; }
@@ -184,7 +184,7 @@
 
   .admin-panel{
     background: #fff; border-radius: var(--radius-lg); padding: 22px;
-    box-shadow: var(--shadow-xs); margin-top: 14px;
+    box-shadow: var(--shadow-sm); margin-top: 14px;
     border: 1px solid var(--border); position: relative;
     border-left: 3px solid var(--purple);
   }
@@ -202,7 +202,6 @@
   }
   .admin-panel .close-x:hover{ background: var(--bg-alt); color: var(--text); }
 
-  /* FORM NOVO LAYOUT */
   .form-row-4{ display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 12px; margin-bottom: 14px; }
   .form-row-2-img{ display: grid; grid-template-columns: 200px 1fr; gap: 14px; margin-bottom: 14px; align-items: start; }
   .form-row-3{ display: grid; grid-template-columns: 2fr 1fr 2fr; gap: 12px; margin-bottom: 14px; }
@@ -254,7 +253,6 @@
     border: 1px solid var(--border);
   }
 
-  /* FILTROS */
   .filters{
     display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
     gap: 8px; margin: 14px 0 4px;
@@ -276,7 +274,6 @@
   }
   .filters .filter-btn.active .filter-count{ background: rgba(255,255,255,.25); }
 
-  /* GRID */
   .grid{
     display: grid;
     grid-template-columns: repeat(5, minmax(0, 1fr));
@@ -290,13 +287,13 @@
 
   .card{
     background: #fff; border-radius: var(--radius-lg);
-    overflow: hidden; box-shadow: var(--shadow-xs);
+    overflow: hidden; box-shadow: var(--shadow-sm);
     display: flex; flex-direction: column;
     transition: box-shadow .15s, border-color .3s, opacity .2s, filter .2s, transform .15s;
     position: relative; border: 1px solid var(--border);
     min-width: 0;
   }
-  .card:hover{ box-shadow: var(--shadow-sm); border-color: var(--border-strong); }
+  .card:hover{ box-shadow: var(--shadow-md); border-color: var(--border-strong); }
   .card.destacado{ border-color: var(--purple); box-shadow: 0 0 0 3px rgba(109,40,217,.18), var(--shadow-md); }
   .card.card-nao-gostei{ opacity: .55; filter: grayscale(60%); background: #f7f8fa; }
   .card.card-nao-gostei:hover{ opacity: .75; filter: grayscale(40%); }
@@ -556,9 +553,9 @@
       </div>
     </div>
     <div class="header-right">
-      <button class="btn-header voltar" onclick="window.close()" title="Fechar esta aba">
-        <svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-        <span class="lbl-txt">Fechar</span>
+      <button class="btn-header editar-cliente" onclick="abrirEditarClienteAtual()" title="Editar dados do cliente">
+        <svg class="ico" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        <span class="lbl-txt">Editar cliente</span>
       </button>
       <button class="btn-header atualizar" id="btnAtualizarHeader" onclick="recarregarVitrine()" title="Recarregar imóveis deste cliente">
         <svg class="ico" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
@@ -598,16 +595,6 @@
       <div class="nome-cli" id="cbNome">—</div>
       <div class="meta" id="cbMeta"></div>
     </div>
-    <div class="acoes">
-      <button class="btn btn-ghost btn-sm" onclick="recarregarVitrine()">
-        <svg class="ico ico-sm" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
-        Atualizar
-      </button>
-      <button class="btn btn-ghost btn-sm" onclick="abrirEditarClienteAtual()">
-        <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-        Editar cliente
-      </button>
-    </div>
   </div>
 
   <div class="container">
@@ -618,7 +605,6 @@
       <h3 id="adminPanelTitle">Adicionar imóvel</h3>
       <input type="hidden" id="editingId">
 
-      <!-- Linha 1: Link | Preço | Condomínio | IPTU -->
       <div class="form-row-4">
         <div>
           <label>Link do anúncio</label>
@@ -638,7 +624,6 @@
         </div>
       </div>
 
-      <!-- Linha 2: Miniatura | Descrição -->
       <div class="form-row-2-img">
         <div>
           <label>Miniatura</label>
@@ -653,13 +638,11 @@
         </div>
       </div>
 
-      <!-- Botão Buscar entrada -->
       <button type="button" class="btn-buscar-entrada" id="btnBuscarEntrada" onclick="abrirBuscarEntradaForm()" disabled>
         <svg class="ico" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
         Buscar entrada <span class="codigo-badge" id="codigoBadge">sem código</span>
       </button>
 
-      <!-- Linha 3: Rua | Número | Bairro -->
       <div class="form-row-3">
         <div>
           <label>Rua <span class="req">*</span></label>
@@ -675,7 +658,6 @@
         </div>
       </div>
 
-      <!-- Chave -->
       <div class="form-group">
         <label>Chave (onde pegar)</label>
         <textarea id="adChaveTexto" placeholder="Ex: Chave na portaria com o Sr. José, ligar antes"></textarea>
@@ -800,7 +782,7 @@
     <button class="modal-close" onclick="fecharAgendarModal()"><svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
     <h2><svg class="ico" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> Agendar visita</h2>
     <input type="hidden" id="agendarImovelId">
-    <div class="form-group"><label>Data e hora <span class="req">*</span></label><input type="datetime-local" id="agendarDataHora"></div>
+    <div class="form-group"><label>Data e hora <span class="req">*</span></label><input type="datetime-local" id="agendarDataHora"><div style="font-size:.68rem; color:var(--muted); margin-top:4px;">Somente hoje e datas futuras</div></div>
     <div class="form-row-3">
       <div class="form-group"><label>Rua <span class="req">*</span></label><input type="text" id="agendarRua"></div>
       <div class="form-group"><label>Número <span class="req">*</span></label><input type="text" id="agendarNumero"></div>
@@ -941,7 +923,7 @@ const state = {
   _atividadeFiltro: 'todos',
   _atividadeEventos: null,
   _clonarSelecionados: new Set(),
-  _linkImovelTimer: null,
+  _linkDebounce: null,
   _codigoLinkAtual: ''
 };
 
@@ -1042,15 +1024,20 @@ function camposEndereco_(im){
 }
 function isDesativado(im){ return String(im.desativado || '').toLowerCase() === 'sim'; }
 
-/* Extrai o código do imóvel a partir do link */
 function extrairCodigoDoLink(url){
   if(!url) return '';
-  // Procura o último número na URL (ex: /informacoes-de-entrada/895694493)
   const match = String(url).match(/\/(\d{6,})\/?(?:[?#].*)?$/);
   if(match) return match[1];
-  // Fallback: pega qualquer bloco grande de números
   const match2 = String(url).match(/(\d{6,})/);
   return match2 ? match2[1] : '';
+}
+
+/* Retorna a data de hoje no formato YYYY-MM-DD */
+function hojeISO(){
+  const d = new Date();
+  const off = d.getTimezoneOffset();
+  const local = new Date(d.getTime() - off * 60000);
+  return local.toISOString().slice(0,10);
 }
 
 /* =====================================================
@@ -1596,7 +1583,6 @@ function limparFormAdmin(){
 }
 
 function atualizarPreview(url){
-  const box = $('imgPreviewBox');
   const img = $('previewImg');
   const semImg = $('semImgTxt');
   if(url && /^https?:\/\//.test(url)){
@@ -1640,22 +1626,20 @@ async function onLinkBlur(){
   }
 }
 
-let _linkDebounce = null;
 function onLinkImovelChanged(){
-  clearTimeout(_linkDebounce);
+  clearTimeout(state._linkDebounce);
   const url = $('adLink').value.trim();
   if(!url){ atualizarBotaoBuscarEntrada(''); return; }
   const codigo = extrairCodigoDoLink(url);
   atualizarBotaoBuscarEntrada(codigo);
   if(!codigo || !/^https?:\/\//.test(url)) return;
-  _linkDebounce = setTimeout(async () => {
+  state._linkDebounce = setTimeout(async () => {
     await buscarImagemDoLink(url, true);
   }, 900);
 }
 
 async function buscarImagemDoLink(url, mostrarToast){
   if(mostrarToast){
-    const box = $('imgPreviewBox');
     const semImg = $('semImgTxt');
     const img = $('previewImg');
     img.classList.add('hidden');
@@ -1665,7 +1649,6 @@ async function buscarImagemDoLink(url, mostrarToast){
     }
   }
   const res = await api('buscarImagem', { url });
-  const box = $('imgPreviewBox');
   const semImg = $('semImgTxt');
   if(res.ok && res.imagem){
     $('adImagem').value = res.imagem;
@@ -1679,7 +1662,6 @@ async function buscarImagemDoLink(url, mostrarToast){
   }
 }
 
-/* ✅ SALVAR — MODO SEGURO */
 async function salvarImovel(){
   const tel = TELEFONE_CLIENTE;
   const rua = $('adRua').value.trim();
@@ -1711,7 +1693,6 @@ async function salvarImovel(){
   const htmlOriginal = btn.innerHTML;
   btn.innerHTML = '<span class="loader" style="display:inline-block;width:14px;height:14px;border:2px solid currentColor;border-top-color:transparent;border-radius:50%;animation:girar .6s linear infinite;"></span> Salvando...';
 
-  // Se link e sem imagem, tenta buscar
   if(link && !imagem){
     marcarSalvando(true);
     const r = await api('buscarImagem', { url: link });
@@ -1730,11 +1711,9 @@ async function salvarImovel(){
     return;
   }
 
-  // Sucesso
   fecharPainelImovel();
   toast(editando ? 'Imóvel atualizado' : 'Imóvel salvo', 'success');
   await recarregarVitrine();
-  // Destaca o novo
   if(res.id){
     setTimeout(() => {
       const card = document.querySelector(`.card[data-id="${res.id}"]`);
@@ -1803,7 +1782,7 @@ function abrirVisitaModal(id){
   const im = state.imoveis.find(i => i.id === id);
   if(!im) return;
   $('visitaImovelId').value = id;
-  $('visitaData').value = toInputDate(im.dataVisita) || new Date().toISOString().slice(0,10);
+  $('visitaData').value = toInputDate(im.dataVisita) || hojeISO();
   $('visitaAvaliacao').value = im.avaliacaoVisita || '';
   $('btnLimparVisita').style.display = im.visitaFeita === 'Sim' ? 'inline-flex' : 'none';
   $('visitaBackdrop').classList.add('show');
@@ -1863,7 +1842,9 @@ function abrirAgendarModal(id){
   const im = state.imoveis.find(i => i.id === id);
   if(!im) return;
   $('agendarImovelId').value = id;
-  $('agendarDataHora').value = toInputDateTime(im.dataVisitaAgendada) || '';
+  const dtInput = $('agendarDataHora');
+  dtInput.min = hojeISO() + 'T00:00';
+  dtInput.value = toInputDateTime(im.dataVisitaAgendada) || '';
   const campos = camposEndereco_(im);
   $('agendarRua').value = campos.rua;
   $('agendarNumero').value = campos.numero;
@@ -1882,9 +1863,21 @@ async function salvarAgendamento(ev){
   if(!id || !dataHora){ toast('Informe data e hora', 'error'); return; }
   if(!rua){ toast('Informe a rua', 'error'); return; }
   if(!numero){ toast('Informe o número', 'error'); return; }
+
+  // ✅ Bloqueia datas passadas
+  const dataEscolhida = new Date(dataHora);
+  const agora = new Date();
+  // Zera as horas de hoje pra comparar só o dia
+  const hojeZero = new Date(agora.getFullYear(), agora.getMonth(), agora.getDate());
+  const dataZero = new Date(dataEscolhida.getFullYear(), dataEscolhida.getMonth(), dataEscolhida.getDate());
+  if(dataZero < hojeZero){
+    toast('Não é possível agendar em datas passadas', 'error');
+    return;
+  }
+
   const btn = ev?.target; if(btn) btn.disabled = true;
   marcarSalvando(true);
-  const iso = new Date(dataHora).toISOString();
+  const iso = dataEscolhida.toISOString();
   const res = await api('agendarVisita', {
     senha: SENHA_ADMIN, id, dataAgendada: iso,
     rua, numero, bairro
@@ -2058,7 +2051,9 @@ async function criarAcesso(ev){
   carregarAcessos();
 }
 
-/* ✅ Criar acesso admin — usa salvarCliente (mesma lógica do cliente novo) */
+/* ✅ Criar acesso admin — usa salvarCliente (mesma lógica do cliente novo)
+   AVISO: se o Apps Script só cria o admin quando o cliente é NOVO,
+   isso não vai criar. Nesse caso precisa mexer no backend. */
 async function criarAcessoAdminAqui(){
   const c = state.clienteAtual;
   if(!c){ toast('Cliente não carregado', 'error'); return; }
@@ -2069,7 +2064,6 @@ async function criarAcessoAdminAqui(){
   });
   if(!ok) return;
   marcarSalvando(true);
-  // Reenvia o cliente — o backend cuida de criar o acesso admin se não existir
   const res = await api('salvarCliente', {
     senha: SENHA_ADMIN,
     telefone: TELEFONE_CLIENTE,
@@ -2083,7 +2077,6 @@ async function criarAcessoAdminAqui(){
   });
   marcarSalvando(false);
   if(!res.ok){ toast(res.error || 'Erro ao criar acesso admin', 'error'); return; }
-  // Tenta pegar a senha admin gerada
   if(res.senhaAdmin){
     $('senhaGeradaTitulo').textContent = 'Acesso admin criado';
     $('senhaGeradaSub').textContent = 'Envie a senha abaixo para o admin do cliente.';
@@ -2091,7 +2084,7 @@ async function criarAcessoAdminAqui(){
     $('senhaGeradaValor').textContent = res.senhaAdmin;
     $('senhaGeradaBackdrop').classList.add('show');
   } else {
-    toast('Cliente atualizado. Acesso admin garantido.', 'success');
+    toast('Cliente atualizado. Recarregue os acessos pra conferir.', 'success');
   }
   carregarAcessos();
 }
