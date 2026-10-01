@@ -47,7 +47,6 @@
   .ico-sm{ width: 14px; height: 14px; vertical-align: -3px; }
   .ico-lg{ width: 20px; height: 20px; }
 
-  /* HEADER */
   header.app-header{
     background: #4c1d95; color: #fff; padding: 10px 16px;
     box-shadow: 0 1px 3px rgba(0,0,0,.12);
@@ -103,7 +102,6 @@
     .btn-header .lbl-txt{ display: none; }
   }
 
-  /* LOADING / ERRO */
   .loading-wrap{ display: flex; justify-content: center; align-items: center; min-height: 70vh; flex-direction: column; gap: 16px; color: var(--purple); }
   .loading-wrap p{ color: var(--text-soft); font-size: .9rem; }
   .spinner-lg{
@@ -116,7 +114,6 @@
   .erro-wrap h2{ font-size: 1.1rem; margin-bottom: 10px; color: var(--text); }
   .erro-wrap p{ font-size: .88rem; color: var(--text-soft); margin-bottom: 20px; line-height: 1.55; }
 
-  /* CLIENTE BAR */
   .cliente-bar{
     background: #fff; border-bottom: 1px solid var(--border);
     padding: 12px 16px;
@@ -135,7 +132,6 @@
     .cliente-bar .meta{ font-size: .7rem; gap: 6px; }
   }
 
-  /* BOTÕES */
   .btn{
     display: inline-flex; align-items: center; justify-content: center; gap: 7px;
     padding: 10px 16px; border-radius: var(--radius-sm); border: 1px solid transparent;
@@ -162,7 +158,6 @@
   .btn-sm{ padding: 7px 12px; font-size: .78rem; gap: 5px; }
   .btn-xs{ padding: 5px 9px; font-size: .72rem; gap: 4px; }
 
-  /* TOOLBAR */
   .admin-toolbar{
     display: flex; gap: 8px; flex-wrap: wrap;
     margin-top: 14px; margin-bottom: 6px;
@@ -170,7 +165,6 @@
   }
   .admin-toolbar .spacer{ flex: 1; }
 
-  /* INPUTS */
   input, textarea, select{
     width: 100%; padding: 10px 12px; border: 1px solid var(--border-strong);
     border-radius: var(--radius-sm); font-size: .88rem; font-family: inherit;
@@ -188,7 +182,6 @@
   label .req{ color: var(--danger); }
   .form-group{ margin-bottom: 16px; }
 
-  /* PANEL FORM */
   .admin-panel{
     background: #fff; border-radius: var(--radius-lg); padding: 22px;
     box-shadow: var(--shadow-xs); margin-top: 14px;
@@ -208,15 +201,57 @@
     transition: all .15s;
   }
   .admin-panel .close-x:hover{ background: var(--bg-alt); color: var(--text); }
-  .form-row{ display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-  .form-row-3{ display: grid; grid-template-columns: 2fr 1fr 2fr; gap: 14px; }
-  .form-row-3-preco{ display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
-  @media(max-width:640px){ .form-row, .form-row-3, .form-row-3-preco{ grid-template-columns: 1fr; } }
-  .preview-wrap{ display: flex; align-items: flex-start; gap: 12px; margin-top: 10px; }
-  .preview-img{
-    width: 120px; height: 80px; object-fit: cover;
-    border-radius: var(--radius-sm); border: 1px solid var(--border);
-    display: none; background: var(--bg-alt);
+
+  /* FORM NOVO LAYOUT */
+  .form-row-4{ display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 12px; margin-bottom: 14px; }
+  .form-row-2-img{ display: grid; grid-template-columns: 200px 1fr; gap: 14px; margin-bottom: 14px; align-items: start; }
+  .form-row-3{ display: grid; grid-template-columns: 2fr 1fr 2fr; gap: 12px; margin-bottom: 14px; }
+  @media(max-width:820px){
+    .form-row-4{ grid-template-columns: 1fr 1fr; }
+    .form-row-2-img{ grid-template-columns: 1fr; }
+    .form-row-3{ grid-template-columns: 1fr; }
+  }
+  @media(max-width:640px){
+    .form-row-4{ grid-template-columns: 1fr; }
+  }
+
+  .img-preview-box{
+    width: 100%; aspect-ratio: 4/3;
+    background: var(--bg-alt); border: 1px dashed var(--border-strong);
+    border-radius: var(--radius-sm);
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden; position: relative;
+  }
+  .img-preview-box img{
+    width: 100%; height: 100%; object-fit: cover; display: block;
+  }
+  .img-preview-box .sem-img{
+    color: var(--muted); font-size: .72rem; text-align: center;
+    padding: 10px; line-height: 1.4;
+  }
+  .img-preview-box .loading-img{
+    color: var(--purple); font-size: .72rem; display: flex; flex-direction: column;
+    align-items: center; gap: 8px;
+  }
+
+  .btn-buscar-entrada{
+    width: 100%; margin-bottom: 14px;
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    background: var(--primary-soft); color: var(--primary);
+    border: 1px solid var(--border-strong);
+    padding: 10px 16px; border-radius: var(--radius-sm);
+    font-size: .82rem; font-weight: 700; cursor: pointer;
+    font-family: inherit; transition: all .15s;
+  }
+  .btn-buscar-entrada:hover:not(:disabled){ background: #dde6ee; border-color: var(--primary); }
+  .btn-buscar-entrada:disabled{
+    opacity: .5; cursor: not-allowed;
+    background: var(--bg-alt); color: var(--muted); border-color: var(--border);
+  }
+  .btn-buscar-entrada .codigo-badge{
+    font-family: var(--mono); font-size: .72rem;
+    background: #fff; padding: 1px 7px; border-radius: 4px;
+    border: 1px solid var(--border);
   }
 
   /* FILTROS */
@@ -267,28 +302,8 @@
   .card.card-nao-gostei:hover{ opacity: .75; filter: grayscale(40%); }
   .card.card-desativado{ opacity: .55; filter: grayscale(80%); background: #f3f4f6; border-left: 3px solid var(--danger); }
   .card.card-desativado:hover{ opacity: .75; filter: grayscale(60%); }
-  .card.salvando{ opacity: .85; }
-  .card.salvando::after{
-    content: ''; position: absolute; inset: 0;
-    background: linear-gradient(90deg, transparent, rgba(109,40,217,.08), transparent);
-    animation: pulsar 1.4s ease-in-out infinite;
-    pointer-events: none;
-  }
-  @keyframes pulsar{ 0%{ transform: translateX(-100%);} 100%{ transform: translateX(100%);} }
-  .card-card-novo{ animation: cardNovo .4s ease-out; }
+  .card.card-novo{ animation: cardNovo .4s ease-out; }
   @keyframes cardNovo{ from{ transform: scale(.94); opacity: 0; } to{ transform: scale(1); opacity: 1; } }
-
-  .card-status-flag{
-    position: absolute; top: 6px; left: 6px; z-index: 5;
-    font-size: .58rem; font-weight: 800;
-    padding: 3px 7px; border-radius: 4px;
-    text-transform: uppercase; letter-spacing: .4px;
-    display: none;
-  }
-  .card-status-flag.mostrar{ display: inline-flex; align-items: center; gap: 4px; }
-  .card-status-flag.salvando-flag{ background: var(--purple-soft); color: var(--purple); }
-  .card-status-flag.ok-flag{ background: var(--success-soft); color: var(--success); }
-  .card-status-flag.erro-flag{ background: var(--danger-soft); color: var(--danger); }
 
   .card-topbar{
     display: flex; align-items: center; justify-content: space-between;
@@ -419,7 +434,6 @@
   }
   .visita-info{ font-size: .74rem; color: #2d4a3a; margin-bottom: 6px; line-height: 1.4; }
 
-  /* ACESSOS */
   #acessosSection{ border-left-color: var(--warn); }
   .acesso-card{
     background: var(--bg); border: 1px solid var(--border);
@@ -432,13 +446,11 @@
     font-family: var(--mono);
   }
 
-  /* EMPTY / LOADING */
   .loading-inline{ text-align: center; padding: 40px 20px; color: var(--purple); }
   .empty-state{ text-align: center; padding: 50px 20px; color: var(--muted); }
   .empty-state .empty-ico{ width: 48px; height: 48px; margin: 0 auto 12px; color: var(--border-strong); }
   .empty-state h3{ font-size: .95rem; margin-bottom: 4px; color: var(--text-soft); font-weight: 600; }
 
-  /* MODAIS */
   .modal-backdrop{
     position: fixed; inset: 0; background: rgba(15,23,42,.6); z-index: 1000;
     display: none; align-items: center; justify-content: center; padding: 20px;
@@ -487,7 +499,6 @@
   .confirm-box .confirm-actions{ display: flex; gap: 8px; }
   .confirm-box .confirm-actions .btn{ flex: 1; }
 
-  /* TOAST */
   .toast{
     position: fixed; bottom: 24px; left: 50%;
     transform: translate(-50%, 30px);
@@ -508,8 +519,7 @@
   .text-muted{ color: var(--muted); }
   .text-center{ text-align: center; }
 
-  /* Fila de salvamento */
-  .fila-indicador{
+  .saving-bar{
     position: fixed; bottom: 20px; right: 20px; z-index: 500;
     background: #fff; border: 1px solid var(--border);
     border-radius: var(--radius); padding: 10px 14px;
@@ -517,15 +527,14 @@
     display: none; align-items: center; gap: 10px;
     font-size: .78rem; font-weight: 600; color: var(--text-soft);
   }
-  .fila-indicador.mostrar{ display: flex; }
-  .fila-indicador .spinner-mini{
+  .saving-bar.mostrar{ display: flex; }
+  .saving-bar .spin{
     width: 16px; height: 16px;
     border: 2px solid rgba(109,40,217,.25);
     border-top-color: var(--purple);
     border-radius: 50%; animation: girar .7s linear infinite;
   }
 
-  /* Clonar lista */
   .clonar-item{
     display: flex; align-items: center; gap: 10px;
     padding: 10px 12px; background: #fff;
@@ -572,20 +581,17 @@
   </div>
 </header>
 
-<!-- Loading inicial -->
 <div id="loadingView" class="loading-wrap">
   <div class="spinner-lg"></div>
   <p>Carregando vitrine do cliente...</p>
 </div>
 
-<!-- Erro -->
 <div id="erroView" class="erro-wrap hidden">
   <h2 id="erroTitulo">Não foi possível abrir</h2>
   <p id="erroTexto">Verifique o link e tente novamente.</p>
   <button class="btn btn-primary btn-full" onclick="window.close()">Fechar aba</button>
 </div>
 
-<!-- Conteúdo -->
 <div id="conteudoView" class="hidden">
   <div class="cliente-bar" id="clienteBar">
     <div class="info">
@@ -605,75 +611,87 @@
   </div>
 
   <div class="container">
-    <!-- Form novo imóvel -->
     <div class="admin-panel hidden" id="adminPanel">
       <button class="close-x" onclick="fecharPainelImovel()">
         <svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </button>
       <h3 id="adminPanelTitle">Adicionar imóvel</h3>
       <input type="hidden" id="editingId">
-      <div class="form-row">
-        <div class="form-group">
-          <label>Telefone do cliente <span class="req">*</span></label>
-          <input type="tel" id="adTelefone" inputmode="numeric" maxlength="16" oninput="mascaraTelefone(this)">
-        </div>
-        <div class="form-group">
+
+      <!-- Linha 1: Link | Preço | Condomínio | IPTU -->
+      <div class="form-row-4">
+        <div>
           <label>Link do anúncio</label>
-          <input type="url" id="adLink" onblur="buscarImagemPreview(false)" oninput="onLinkImovelChanged()">
+          <input type="url" id="adLink" onblur="onLinkBlur()" oninput="onLinkImovelChanged()" placeholder="https://...">
+        </div>
+        <div>
+          <label>Preço</label>
+          <input type="text" id="adPreco" inputmode="numeric" placeholder="450.000,00" oninput="mascaraPreco(this)">
+        </div>
+        <div>
+          <label>Condomínio</label>
+          <input type="text" id="adCondominio" inputmode="numeric" placeholder="800,00" oninput="mascaraPreco(this)">
+        </div>
+        <div>
+          <label>IPTU</label>
+          <input type="text" id="adIPTU" inputmode="numeric" placeholder="1.200,00" oninput="mascaraPreco(this)">
         </div>
       </div>
+
+      <!-- Linha 2: Miniatura | Descrição -->
+      <div class="form-row-2-img">
+        <div>
+          <label>Miniatura</label>
+          <div class="img-preview-box" id="imgPreviewBox">
+            <div class="sem-img" id="semImgTxt">Cole um link<br>para buscar a imagem</div>
+            <img id="previewImg" class="hidden" alt="Preview">
+          </div>
+        </div>
+        <div>
+          <label>Descrição</label>
+          <textarea id="adDescricao" style="min-height:150px;" placeholder="Descrição do imóvel..."></textarea>
+        </div>
+      </div>
+
+      <!-- Botão Buscar entrada -->
+      <button type="button" class="btn-buscar-entrada" id="btnBuscarEntrada" onclick="abrirBuscarEntradaForm()" disabled>
+        <svg class="ico" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        Buscar entrada <span class="codigo-badge" id="codigoBadge">sem código</span>
+      </button>
+
+      <!-- Linha 3: Rua | Número | Bairro -->
       <div class="form-row-3">
-        <div class="form-group">
+        <div>
           <label>Rua <span class="req">*</span></label>
           <input type="text" id="adRua">
         </div>
-        <div class="form-group">
+        <div>
           <label>Número</label>
           <input type="text" id="adNumero">
         </div>
-        <div class="form-group">
+        <div>
           <label>Bairro</label>
           <input type="text" id="adBairro">
         </div>
       </div>
-      <div class="form-row-3-preco">
-        <div class="form-group">
-          <label>Preço</label>
-          <input type="text" id="adPreco" inputmode="numeric" placeholder="Ex: 450000" oninput="mascaraPreco(this)">
-        </div>
-        <div class="form-group">
-          <label>Condomínio</label>
-          <input type="text" id="adCondominio" inputmode="numeric" placeholder="Ex: 800" oninput="mascaraPreco(this)">
-        </div>
-        <div class="form-group">
-          <label>IPTU</label>
-          <input type="text" id="adIPTU" inputmode="numeric" placeholder="Ex: 1200" oninput="mascaraPreco(this)">
-        </div>
-      </div>
-      <div class="form-group">
-        <label>Descrição</label>
-        <textarea id="adDescricao"></textarea>
-      </div>
+
+      <!-- Chave -->
       <div class="form-group">
         <label>Chave (onde pegar)</label>
         <textarea id="adChaveTexto" placeholder="Ex: Chave na portaria com o Sr. José, ligar antes"></textarea>
       </div>
+
       <input type="hidden" id="adImagem">
-      <div class="preview-wrap"><img id="previewImg" class="preview-img" alt="Preview"></div>
+
       <div class="mt-3" style="display:flex; gap:8px; flex-wrap:wrap;">
         <button class="btn btn-purple" id="btnSalvarImovel" style="flex:1; min-width:180px;" onclick="salvarImovel()">
           <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
           Salvar imóvel
         </button>
-        <button class="btn btn-ghost" onclick="buscarImagemPreview(true)">
-          <svg class="ico ico-sm" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-          Buscar imagem
-        </button>
         <button class="btn btn-ghost" onclick="fecharPainelImovel()">Cancelar</button>
       </div>
     </div>
 
-    <!-- Acessos -->
     <div class="admin-panel hidden" id="acessosSection">
       <button class="close-x" onclick="toggleAcessosSection()">
         <svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
@@ -697,7 +715,6 @@
       <div id="acessosList"></div>
     </div>
 
-    <!-- Toolbar -->
     <div class="admin-toolbar">
       <button class="btn btn-purple" onclick="abrirPainelNovoImovel()">
         <svg class="ico ico-sm" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
@@ -706,7 +723,6 @@
       <span class="spacer"></span>
     </div>
 
-    <!-- Busca + filtros -->
     <div class="mt-3">
       <input type="search" id="buscaInput" placeholder="Buscar endereço ou descrição..." oninput="renderizarImoveis()">
     </div>
@@ -729,9 +745,7 @@
   </div>
 </div>
 
-<!-- ============ MODAIS ============ -->
-
-<!-- Modal Cliente (editar) -->
+<!-- Modais -->
 <div class="modal-backdrop" id="clienteModalBackdrop" onclick="if(event.target===this) fecharClienteModal()">
   <div class="modal" style="max-width:560px;">
     <button class="modal-close" onclick="fecharClienteModal()"><svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
@@ -758,7 +772,6 @@
   </div>
 </div>
 
-<!-- Modal Chave -->
 <div class="modal-backdrop" id="chaveModalBackdrop" onclick="if(event.target===this) fecharChaveModal()">
   <div class="modal" style="max-width:520px;">
     <button class="modal-close" onclick="fecharChaveModal()"><svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
@@ -768,7 +781,6 @@
   </div>
 </div>
 
-<!-- Modal Visita -->
 <div class="modal-backdrop" id="visitaBackdrop" onclick="if(event.target===this) fecharVisitaModal()">
   <div class="modal" style="max-width:480px;">
     <button class="modal-close" onclick="fecharVisitaModal()"><svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
@@ -783,7 +795,6 @@
   </div>
 </div>
 
-<!-- Modal Agendar -->
 <div class="modal-backdrop" id="agendarBackdrop" onclick="if(event.target===this) fecharAgendarModal()">
   <div class="modal" style="max-width:560px;">
     <button class="modal-close" onclick="fecharAgendarModal()"><svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
@@ -802,7 +813,6 @@
   </div>
 </div>
 
-<!-- Modal Senha Gerada -->
 <div class="modal-backdrop" id="senhaGeradaBackdrop" onclick="if(event.target===this) fecharSenhaGerada()">
   <div class="modal" style="max-width:460px; text-align:center;">
     <button class="modal-close" onclick="fecharSenhaGerada()"><svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
@@ -825,7 +835,6 @@
   </div>
 </div>
 
-<!-- Modal Novo Acesso -->
 <div class="modal-backdrop" id="novoAcessoBackdrop" onclick="if(event.target===this) fecharNovoAcesso()">
   <div class="modal" style="max-width:480px;">
     <button class="modal-close" onclick="fecharNovoAcesso()"><svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
@@ -842,7 +851,6 @@
   </div>
 </div>
 
-<!-- Modal Atividade -->
 <div class="modal-backdrop" id="atividadeBackdrop" onclick="if(event.target===this) fecharAtividade()">
   <div class="modal" style="max-width:720px;">
     <button class="modal-close" onclick="fecharAtividade()"><svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
@@ -860,7 +868,6 @@
   </div>
 </div>
 
-<!-- Modal Clonar -->
 <div class="modal-backdrop" id="clonarVitrineBackdrop" onclick="if(event.target===this) fecharClonarVitrine()">
   <div class="modal" style="max-width:640px;">
     <button class="modal-close" onclick="fecharClonarVitrine()"><svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
@@ -886,7 +893,6 @@
   </div>
 </div>
 
-<!-- Confirm -->
 <div class="confirm-backdrop" id="confirmBackdrop">
   <div class="confirm-box">
     <div class="icon-wrap" id="confirmIconWrap">
@@ -901,10 +907,9 @@
   </div>
 </div>
 
-<!-- Fila -->
-<div class="fila-indicador" id="filaIndicador">
-  <div class="spinner-mini"></div>
-  <span id="filaTexto">Salvando...</span>
+<div class="saving-bar" id="savingBar">
+  <div class="spin"></div>
+  <span id="savingTexto">Salvando...</span>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -936,9 +941,8 @@ const state = {
   _atividadeFiltro: 'todos',
   _atividadeEventos: null,
   _clonarSelecionados: new Set(),
-  // Fila de salvamento
-  _filaSalvar: [],
-  _filaProcessando: false
+  _linkImovelTimer: null,
+  _codigoLinkAtual: ''
 };
 
 const $ = id => document.getElementById(id);
@@ -1021,22 +1025,11 @@ function emojiTemperatura(temp){
   if(temp === 'morno') return '🌡️';
   return '❄️';
 }
-function corDoCorretor(nome){
-  const c = state.corretores.find(x => x.nome === nome);
-  return c ? c.cor : '#64748b';
-}
 function nomeCompletoCliente_(nome, telefone){
   const n = String(nome || '').trim() || 'Sem nome';
   const tel = normalizaTel(telefone);
   if(tel.length >= 4) return n + ' ' + tel.slice(-4);
   return n;
-}
-function chaveCorretor_(nome){
-  const s = String(nome || '').trim();
-  if(!s) return '';
-  const idx = s.indexOf('/');
-  if(idx > 0) return s.slice(0, idx).trim();
-  return s;
 }
 function camposEndereco_(im){
   if(!im) return { rua: '', numero: '', bairro: '', chave: '' };
@@ -1048,22 +1041,21 @@ function camposEndereco_(im){
   };
 }
 function isDesativado(im){ return String(im.desativado || '').toLowerCase() === 'sim'; }
-function gerarIdTemp(){ return 'tmp_' + Date.now() + '_' + Math.random().toString(36).slice(2,8); }
+
+/* Extrai o código do imóvel a partir do link */
+function extrairCodigoDoLink(url){
+  if(!url) return '';
+  // Procura o último número na URL (ex: /informacoes-de-entrada/895694493)
+  const match = String(url).match(/\/(\d{6,})\/?(?:[?#].*)?$/);
+  if(match) return match[1];
+  // Fallback: pega qualquer bloco grande de números
+  const match2 = String(url).match(/(\d{6,})/);
+  return match2 ? match2[1] : '';
+}
 
 /* =====================================================
    MÁSCARAS
 ===================================================== */
-function mascaraTelefone(input){
-  let v = input.value.replace(/\D/g, '');
-  if(v.length > 11) v = v.slice(0, 11);
-  let out = '';
-  if(v.length === 0) out = '';
-  else if(v.length <= 2) out = '(' + v;
-  else if(v.length <= 3) out = '(' + v.slice(0,2) + ') ' + v.slice(2);
-  else if(v.length <= 7) out = '(' + v.slice(0,2) + ') ' + v.slice(2,3) + ' ' + v.slice(3);
-  else out = '(' + v.slice(0,2) + ') ' + v.slice(2,3) + ' ' + v.slice(3,7) + '-' + v.slice(7);
-  input.value = out;
-}
 function mascaraPreco(input){
   let v = String(input.value || '').replace(/\D/g, '');
   if(!v){ input.value = ''; return; }
@@ -1076,45 +1068,21 @@ function mascaraPreco(input){
 }
 
 /* =====================================================
-   SALVAMENTO / FILA
+   SALVAMENTO
 ===================================================== */
 function marcarSalvando(inicio){
   if(inicio) state.salvando++;
   else state.salvando = Math.max(0, state.salvando - 1);
+  const bar = $('savingBar');
+  if(!bar) return;
+  if(state.salvando > 0){
+    bar.classList.add('mostrar');
+    $('savingTexto').textContent = state.salvando === 1 ? 'Salvando...' : `Salvando (${state.salvando})...`;
+  } else {
+    bar.classList.remove('mostrar');
+  }
 }
 function estaSalvando(){ return state.salvando > 0; }
-
-function atualizarFilaIndicador(){
-  const el = $('filaIndicador');
-  if(!el) return;
-  const total = state._filaSalvar.length + (state._filaProcessando ? 1 : 0);
-  if(total > 0){
-    el.classList.add('mostrar');
-    $('filaTexto').textContent = total === 1 ? 'Salvando 1 item...' : `Salvando ${total} itens...`;
-  } else {
-    el.classList.remove('mostrar');
-  }
-}
-
-function enfileirarSalvar(fn){
-  state._filaSalvar.push(fn);
-  atualizarFilaIndicador();
-  processarFila();
-}
-
-async function processarFila(){
-  if(state._filaProcessando) return;
-  if(state._filaSalvar.length === 0){ atualizarFilaIndicador(); return; }
-  state._filaProcessando = true;
-  atualizarFilaIndicador();
-  while(state._filaSalvar.length > 0){
-    const fn = state._filaSalvar.shift();
-    atualizarFilaIndicador();
-    try { await fn(); } catch(e){ console.warn('Erro na fila:', e); }
-  }
-  state._filaProcessando = false;
-  atualizarFilaIndicador();
-}
 
 /* =====================================================
    API
@@ -1161,11 +1129,9 @@ function confirmarAcao(opts){
     const wrapIcon = $('confirmIconWrap');
     $('confirmTitulo').textContent = opts.titulo || 'Confirmar ação';
     $('confirmTexto').textContent  = opts.texto  || 'Tem certeza?';
-
     wrapIcon.className = 'icon-wrap';
     if(opts.tipo === 'danger') wrapIcon.classList.add('danger');
     if(opts.tipo === 'success') wrapIcon.classList.add('success');
-
     const btnSim = $('confirmBtnSim');
     const btnNao = $('confirmBtnNao');
     btnSim.textContent = opts.btnSim || 'Confirmar';
@@ -1176,16 +1142,13 @@ function confirmarAcao(opts){
       opts.tipo === 'warn'    ? 'btn-warn'    :
                                 'btn-purple'
     );
-
     const novoSim = btnSim.cloneNode(true);
     const novoNao = btnNao.cloneNode(true);
     btnSim.parentNode.replaceChild(novoSim, btnSim);
     btnNao.parentNode.replaceChild(novoNao, btnNao);
-
     function fechar(){ backdrop.classList.remove('show'); }
     novoSim.addEventListener('click', () => { fechar(); resolve(true); });
     novoNao.addEventListener('click', () => { fechar(); resolve(false); });
-
     const onClickBackdrop = (e) => {
       if(e.target === backdrop){
         fechar();
@@ -1210,7 +1173,6 @@ function confirmarAcao(opts){
     $('erroTexto').textContent = 'Faltam parâmetros na URL (tel e senha).';
     return;
   }
-  // Valida senha
   marcarSalvando(true);
   const resValid = await api('adminListar', { senha: SENHA_ADMIN });
   marcarSalvando(false);
@@ -1221,19 +1183,16 @@ function confirmarAcao(opts){
     $('erroTexto').textContent = 'A senha do admin expirou ou está incorreta. Abra novamente pelo gestor.';
     return;
   }
-  // Carrega corretores (cache)
   try {
     const cache = JSON.parse(localStorage.getItem(CORRETORES_CACHE_KEY) || 'null');
     if(cache && Array.isArray(cache.data)) state.corretores = cache.data;
   } catch(e){}
-  // Carrega cliente + imóveis
   await carregarTudo();
-  // Mostra
   $('loadingView').classList.add('hidden');
   $('conteudoView').classList.remove('hidden');
 })();
 
-async function carregarTudo(silencioso){
+async function carregarTudo(){
   marcarSalvando(true);
   const [resCli, resIm, resCor] = await Promise.all([
     api('buscarCliente', { senha: SENHA_ADMIN, telefone: TELEFONE_CLIENTE }),
@@ -1241,7 +1200,6 @@ async function carregarTudo(silencioso){
     api('listarCorretores', { senha: SENHA_ADMIN })
   ]);
   marcarSalvando(false);
-
   if(resCor.ok && resCor.data){
     state.corretores = resCor.data;
     try { localStorage.setItem(CORRETORES_CACHE_KEY, JSON.stringify({ data: resCor.data, ts: Date.now() })); } catch(e){}
@@ -1252,29 +1210,20 @@ async function carregarTudo(silencioso){
       { nome: 'Carolina', cor: '#9333ea' }
     ];
   }
-
   state.clienteAtual = (resCli.ok && resCli.data) ? resCli.data : null;
-
   const todos = (resIm.ok && resIm.data) ? resIm.data : [];
   state.imoveis = todos
     .filter(i => normalizaTel(i.telefone) === TELEFONE_CLIENTE)
     .sort((a,b) => new Date(b.dataCadastro||0) - new Date(a.dataCadastro||0));
-
   atualizarBarraCliente();
   atualizarContadoresImoveis();
-  if(!silencioso){
-    renderizarImoveis();
-  } else {
-    renderizarImoveis();
-  }
+  renderizarImoveis();
   carregarAcessos();
 }
 
-/* ✅ Atualizar só os imóveis (o botão do header) */
 async function recarregarVitrine(){
   const btn = $('btnAtualizarHeader');
   if(btn) btn.classList.add('girando');
-  // Recarrega apenas os imóveis
   marcarSalvando(true);
   const resIm = await api('adminListar', { senha: SENHA_ADMIN });
   marcarSalvando(false);
@@ -1394,22 +1343,10 @@ function cardImovelHTML(im){
   const obsId = 'obs-' + id;
   const descTexto = (im.descricao || '').trim();
   const cardExtraClass = desativado ? ' card-desativado' : (statusAtual === 'nao-gostei' ? ' card-nao-gostei' : '');
-  const salvando = im._salvando ? ' salvando' : '';
-  const cardNovo = im._novo ? ' card-card-novo' : '';
   const btnGostei = (statusAtual === 'gostei' && !desativado) ? 'ativo' : '';
   const btnVisitar = (statusAtual === 'quero-visitar' && !desativado) ? 'ativo' : '';
   const btnNao = (statusAtual === 'nao-gostei' && !desativado) ? 'ativo' : '';
   const btnDesativar = desativado ? 'ativo' : '';
-
-  // Flag de status de salvamento
-  let flagHtml = '';
-  if(im._salvando){
-    flagHtml = `<span class="card-status-flag salvando-flag mostrar">
-      <span class="loader" style="width:10px;height:10px;border-width:2px;"></span> Salvando
-    </span>`;
-  } else if(im._erroSalvar){
-    flagHtml = `<span class="card-status-flag erro-flag mostrar">⚠️ Erro</span>`;
-  }
 
   let agHtml = '';
   const temAgendamento = !!im.dataVisitaAgendada && !desativado;
@@ -1456,8 +1393,7 @@ function cardImovelHTML(im){
   }
 
   return `
-    <div class="card${cardExtraClass}${salvando}${cardNovo}" data-id="${id}">
-      ${flagHtml}
+    <div class="card${cardExtraClass}" data-id="${id}">
       <div class="card-topbar">
         <div class="card-actions-mini">
           ${!desativado ? `
@@ -1497,7 +1433,7 @@ function cardImovelHTML(im){
           <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
           Ver anúncio
         </a>` : ''}
-        ${im.link ? `<button class="btn btn-ghost btn-sm" onclick="abrirBuscar('${esc(im.codigo||'')}')">Buscar entrada</button>` : ''}
+        ${im.codigo ? `<button class="btn btn-ghost btn-sm" onclick="abrirBuscar('${esc(im.codigo)}')">Buscar entrada</button>` : ''}
         <div class="obs-wrap" id="${obsId}">
           <div class="obs-label">Observação <button class="obs-edit-btn" onclick="abrirEdicaoObsImovel('${obsId}')">Editar</button></div>
           ${obsTexto ? `
@@ -1541,19 +1477,14 @@ async function marcarStatus(id, acao){
     : configs[acao];
   const ok = await confirmarAcao(cfg);
   if(!ok) return;
-
-  // OTIMISTA: atualiza na hora
   const backup = im.status;
   im.status = novaAcao;
   renderizarImoveis();
   atualizarContadoresImoveis();
-
   marcarSalvando(true);
   const res = await api('atualizarStatus', { id, telefone: TELEFONE_CLIENTE, acao: novaAcao });
   marcarSalvando(false);
-
   if(!res.ok){
-    // Rollback
     im.status = backup;
     renderizarImoveis();
     atualizarContadoresImoveis();
@@ -1572,16 +1503,13 @@ async function toggleDesativar(id){
     : { titulo:'Desativar imóvel?', texto:'Ficará oculto para o cliente.', btnSim:'Desativar', tipo:'danger' };
   const ok = await confirmarAcao(cfg);
   if(!ok) return;
-
   const backup = im.desativado;
   im.desativado = desativado ? '' : 'Sim';
   renderizarImoveis();
   atualizarContadoresImoveis();
-
   marcarSalvando(true);
   const res = await api(desativado ? 'reativarImovel' : 'desativarImovel', { senha: SENHA_ADMIN, id });
   marcarSalvando(false);
-
   if(!res.ok){
     im.desativado = backup;
     renderizarImoveis();
@@ -1636,13 +1564,13 @@ async function salvarEdicaoObsImovel(id, obsId){
 }
 
 /* =====================================================
-   FORM IMÓVEL — OTIMISTA
+   FORM IMÓVEL — MODO SEGURO
 ===================================================== */
 function abrirPainelNovoImovel(){
   limparFormAdmin();
   $('adminPanel').classList.remove('hidden');
   $('adminPanel').scrollIntoView({ behavior: 'smooth', block: 'start' });
-  setTimeout(() => $('adRua').focus(), 300);
+  setTimeout(() => $('adLink').focus(), 300);
 }
 function fecharPainelImovel(){
   $('adminPanel').classList.add('hidden');
@@ -1650,7 +1578,6 @@ function fecharPainelImovel(){
 }
 function limparFormAdmin(){
   $('editingId').value = '';
-  $('adTelefone').value = TELEFONE_CLIENTE ? fmtTel(TELEFONE_CLIENTE) : '';
   $('adLink').value = '';
   $('adRua').value = '';
   $('adNumero').value = '';
@@ -1661,59 +1588,109 @@ function limparFormAdmin(){
   $('adDescricao').value = '';
   $('adChaveTexto').value = '';
   $('adImagem').value = '';
-  $('previewImg').style.display = 'none';
-  $('previewImg').src = '';
+  atualizarPreview('');
+  atualizarBotaoBuscarEntrada('');
   $('btnSalvarImovel').innerHTML = '<svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Salvar imóvel';
+  $('btnSalvarImovel').disabled = false;
   $('adminPanelTitle').textContent = 'Adicionar imóvel';
 }
+
 function atualizarPreview(url){
+  const box = $('imgPreviewBox');
+  const img = $('previewImg');
+  const semImg = $('semImgTxt');
   if(url && /^https?:\/\//.test(url)){
-    $('previewImg').src = url;
-    $('previewImg').style.display = 'block';
+    img.src = url;
+    img.classList.remove('hidden');
+    if(semImg) semImg.style.display = 'none';
   } else {
-    $('previewImg').style.display = 'none';
+    img.src = '';
+    img.classList.add('hidden');
+    if(semImg) semImg.style.display = '';
   }
 }
-async function buscarImagemPreview(mostrarToast){
+
+function atualizarBotaoBuscarEntrada(codigo){
+  state._codigoLinkAtual = codigo || '';
+  const btn = $('btnBuscarEntrada');
+  const badge = $('codigoBadge');
+  if(!btn || !badge) return;
+  if(codigo){
+    btn.disabled = false;
+    badge.textContent = '#' + codigo;
+  } else {
+    btn.disabled = true;
+    badge.textContent = 'sem código';
+  }
+}
+
+function abrirBuscarEntradaForm(){
+  const codigo = state._codigoLinkAtual;
+  if(!codigo){ toast('Cole um link com código primeiro', 'error'); return; }
+  window.open(`${BUSCAR_BASE}/${codigo}`, '_blank', 'noopener');
+}
+
+async function onLinkBlur(){
   const url = $('adLink').value.trim();
-  if(!url){ if(mostrarToast) toast('Cole um link primeiro', 'error'); return; }
-  if(mostrarToast) toast('Buscando imagem...');
+  if(!url) return;
+  const codigo = extrairCodigoDoLink(url);
+  atualizarBotaoBuscarEntrada(codigo);
+  if(codigo){
+    await buscarImagemDoLink(url, false);
+  }
+}
+
+let _linkDebounce = null;
+function onLinkImovelChanged(){
+  clearTimeout(_linkDebounce);
+  const url = $('adLink').value.trim();
+  if(!url){ atualizarBotaoBuscarEntrada(''); return; }
+  const codigo = extrairCodigoDoLink(url);
+  atualizarBotaoBuscarEntrada(codigo);
+  if(!codigo || !/^https?:\/\//.test(url)) return;
+  _linkDebounce = setTimeout(async () => {
+    await buscarImagemDoLink(url, true);
+  }, 900);
+}
+
+async function buscarImagemDoLink(url, mostrarToast){
+  if(mostrarToast){
+    const box = $('imgPreviewBox');
+    const semImg = $('semImgTxt');
+    const img = $('previewImg');
+    img.classList.add('hidden');
+    if(semImg){
+      semImg.innerHTML = '<div class="loading-img"><div class="spin" style="width:18px;height:18px;border:2px solid rgba(109,40,217,.25);border-top-color:var(--purple);border-radius:50%;animation:girar .7s linear infinite;"></div>Buscando imagem...</div>';
+      semImg.style.display = '';
+    }
+  }
   const res = await api('buscarImagem', { url });
+  const box = $('imgPreviewBox');
+  const semImg = $('semImgTxt');
   if(res.ok && res.imagem){
     $('adImagem').value = res.imagem;
     atualizarPreview(res.imagem);
     if(mostrarToast) toast('Imagem encontrada!', 'success');
   } else {
-    if(mostrarToast) toast('Não encontrada', 'error');
+    if(mostrarToast){
+      semImg.innerHTML = 'Cole um link<br>para buscar a imagem';
+      toast('Não encontrada', 'error');
+    }
   }
 }
-let _linkImovelTimer = null;
-function onLinkImovelChanged(){
-  clearTimeout(_linkImovelTimer);
-  const url = $('adLink').value.trim();
-  if(!url || !/^https?:\/\//.test(url)) return;
-  _linkImovelTimer = setTimeout(async () => {
-    const res = await api('buscarImagem', { url });
-    if(res.ok && res.imagem){
-      $('adImagem').value = res.imagem;
-      atualizarPreview(res.imagem);
-    }
-  }, 800);
-}
 
-/* ✅ Salvar imóvel otimista */
+/* ✅ SALVAR — MODO SEGURO */
 async function salvarImovel(){
-  const tel = normalizaTel($('adTelefone').value);
+  const tel = TELEFONE_CLIENTE;
   const rua = $('adRua').value.trim();
   const link = $('adLink').value.trim();
   let imagem = $('adImagem').value.trim();
-  if(!tel || tel.length < 10){ toast('Telefone inválido', 'error'); return; }
+  if(!tel || tel.length < 10){ toast('Telefone do cliente inválido', 'error'); return; }
   if(!rua){ toast('Informe a rua', 'error'); return; }
 
   const editandoId = $('editingId').value || '';
   const editando = !!editandoId;
 
-  // Captura valores
   const dados = {
     id: editandoId,
     telefone: tel,
@@ -1729,98 +1706,54 @@ async function salvarImovel(){
     status: 'pendente'
   };
 
-  // Se link e sem imagem, busca imagem em background (não bloqueia)
+  const btn = $('btnSalvarImovel');
+  btn.disabled = true;
+  const htmlOriginal = btn.innerHTML;
+  btn.innerHTML = '<span class="loader" style="display:inline-block;width:14px;height:14px;border:2px solid currentColor;border-top-color:transparent;border-radius:50%;animation:girar .6s linear infinite;"></span> Salvando...';
+
+  // Se link e sem imagem, tenta buscar
   if(link && !imagem){
-    buscarImagemEContinuar(dados);
+    marcarSalvando(true);
+    const r = await api('buscarImagem', { url: link });
+    marcarSalvando(false);
+    if(r.ok && r.imagem) dados.imagem = r.imagem;
+  }
+
+  marcarSalvando(true);
+  const res = await api('salvarImovel', { senha: SENHA_ADMIN, ...dados });
+  marcarSalvando(false);
+
+  if(!res.ok){
+    btn.disabled = false;
+    btn.innerHTML = htmlOriginal;
+    toast(res.error || 'Erro ao salvar — tente novamente', 'error');
     return;
   }
-  await executarSalvarImovel(dados, editando);
-}
 
-async function buscarImagemEContinuar(dados){
-  marcarSalvando(true);
-  const r = await api('buscarImagem', { url: dados.link });
-  marcarSalvando(false);
-  if(r.ok && r.imagem) dados.imagem = r.imagem;
-  await executarSalvarImovel(dados, !!dados.id);
-}
-
-async function executarSalvarImovel(dados, editando){
-  // Fecha o painel imediatamente (fluidez)
+  // Sucesso
   fecharPainelImovel();
-
-  // Cria card temporário
-  const idTemp = editando ? dados.id : gerarIdTemp();
-  const cardVisual = {
-    id: idTemp,
-    telefone: dados.telefone,
-    rua: dados.rua, numero: dados.numero, bairro: dados.bairro,
-    titulo: dados.rua + (dados.numero ? ', ' + dados.numero : '') + (dados.bairro ? ' - ' + dados.bairro : ''),
-    preco: dados.preco, condominio: dados.condominio, iptu: dados.iptu,
-    descricao: dados.descricao, link: dados.link, imagem: dados.imagem,
-    chaveTexto: dados.chaveTexto, status: 'pendente',
-    dataCadastro: new Date().toISOString(),
-    _salvando: true,
-    _novo: !editando
-  };
-
-  if(editando){
-    const idx = state.imoveis.findIndex(i => i.id === dados.id);
-    if(idx >= 0){
-      const backup = { ...state.imoveis[idx] };
-      Object.assign(state.imoveis[idx], cardVisual);
-      state.imoveis[idx]._backupSalvar = backup;
-    }
-  } else {
-    state.imoveis.unshift(cardVisual);
-  }
-  atualizarContadoresImoveis();
-  renderizarImoveis();
-  scrollParaCard(idTemp);
-
-  // Salva em background
-  enfileirarSalvar(async () => {
-    const res = await api('salvarImovel', { senha: SENHA_ADMIN, ...dados });
-    const im = state.imoveis.find(i => i.id === idTemp);
-    if(!im) return;
-    if(res.ok){
-      im._salvando = false;
-      im._novo = false;
-      if(res.id) im.id = res.id;
-      delete im._backupSalvar;
-      renderizarImoveis();
-      toast(editando ? 'Imóvel atualizado' : 'Imóvel salvo', 'success');
-    } else {
-      // Rollback
-      if(editando && im._backupSalvar){
-        const idx = state.imoveis.findIndex(i => i.id === idTemp);
-        if(idx >= 0) state.imoveis[idx] = im._backupSalvar;
-      } else {
-        state.imoveis = state.imoveis.filter(i => i.id !== idTemp);
+  toast(editando ? 'Imóvel atualizado' : 'Imóvel salvo', 'success');
+  await recarregarVitrine();
+  // Destaca o novo
+  if(res.id){
+    setTimeout(() => {
+      const card = document.querySelector(`.card[data-id="${res.id}"]`);
+      if(card){
+        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        card.classList.add('destacado', 'card-novo');
+        setTimeout(() => {
+          card.classList.remove('destacado');
+          setTimeout(() => card.classList.remove('card-novo'), 500);
+        }, 3000);
       }
-      atualizarContadoresImoveis();
-      renderizarImoveis();
-      toast(res.error || 'Erro ao salvar — imóvel removido', 'error');
-    }
-  });
-}
-
-function scrollParaCard(id){
-  setTimeout(() => {
-    const card = document.querySelector(`.card[data-id="${id}"]`);
-    if(card){
-      card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      card.classList.add('destacado');
-      setTimeout(() => card.classList.remove('destacado'), 2500);
-    }
-  }, 120);
+    }, 300);
+  }
 }
 
 function editarImovel(id){
   const im = state.imoveis.find(i => i.id === id);
   if(!im) return;
   $('editingId').value = im.id;
-  $('adTelefone').value = fmtTel(im.telefone);
   $('adLink').value = im.link || '';
   const campos = camposEndereco_(im);
   $('adRua').value = campos.rua;
@@ -1833,7 +1766,10 @@ function editarImovel(id){
   $('adDescricao').value = im.descricao || '';
   $('adImagem').value = im.imagem || '';
   if(im.imagem) atualizarPreview(im.imagem);
+  if(im.codigo) atualizarBotaoBuscarEntrada(im.codigo);
+  else atualizarBotaoBuscarEntrada(extrairCodigoDoLink(im.link || ''));
   $('btnSalvarImovel').innerHTML = '<svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Atualizar';
+  $('btnSalvarImovel').disabled = false;
   $('adminPanelTitle').textContent = 'Editar imóvel';
   $('adminPanel').classList.remove('hidden');
   $('adminPanel').scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -1845,21 +1781,14 @@ async function excluirImovel(id){
     btnSim: 'Excluir', tipo: 'danger'
   });
   if(!ok) return;
-  const backup = [...state.imoveis];
-  state.imoveis = state.imoveis.filter(i => i.id !== id);
-  atualizarContadoresImoveis();
-  renderizarImoveis();
   marcarSalvando(true);
   const res = await api('excluirImovel', { senha: SENHA_ADMIN, id });
   marcarSalvando(false);
-  if(!res.ok){
-    state.imoveis = backup;
-    atualizarContadoresImoveis();
-    renderizarImoveis();
-    toast(res.error || 'Erro', 'error');
-    return;
-  }
+  if(!res.ok){ toast(res.error || 'Erro', 'error'); return; }
   toast('Imóvel excluído', 'success');
+  state.imoveis = state.imoveis.filter(i => i.id !== id);
+  atualizarContadoresImoveis();
+  renderizarImoveis();
 }
 
 function abrirBuscar(codigo){
@@ -2023,16 +1952,9 @@ async function abrirHistoricoImovel(id){
   marcarSalvando(true);
   const res = await api('listarHistoricoImovel', { senha: SENHA_ADMIN, imovelId: id });
   marcarSalvando(false);
-  if(!res.ok){
-    toast('Erro ao carregar', 'error');
-    return;
-  }
+  if(!res.ok){ toast('Erro ao carregar', 'error'); return; }
   const lista = res.data || [];
-  if(lista.length === 0){
-    toast('Nenhuma ação registrada');
-    return;
-  }
-  // Mostra em alert simples
+  if(lista.length === 0){ toast('Nenhuma ação registrada'); return; }
   const txt = lista.map(h => `• ${fmtDataHora(h.dataHora)} — ${h.acao}${h.detalhe ? ' (' + h.detalhe + ')' : ''}`).join('\n');
   alert('Histórico do imóvel:\n\n' + txt);
 }
@@ -2136,26 +2058,41 @@ async function criarAcesso(ev){
   carregarAcessos();
 }
 
+/* ✅ Criar acesso admin — usa salvarCliente (mesma lógica do cliente novo) */
 async function criarAcessoAdminAqui(){
+  const c = state.clienteAtual;
+  if(!c){ toast('Cliente não carregado', 'error'); return; }
   const ok = await confirmarAcao({
     titulo: 'Criar acesso admin?',
-    texto: 'Será criado um acesso de administrador para este cliente.',
+    texto: 'Será gerado um acesso de administrador para este cliente. Se já existir, será mantido.',
     btnSim: 'Criar acesso admin', tipo: 'warn'
   });
   if(!ok) return;
   marcarSalvando(true);
-  const res = await api('criarAcessoAdmin', { senha: SENHA_ADMIN, telefone: TELEFONE_CLIENTE });
+  // Reenvia o cliente — o backend cuida de criar o acesso admin se não existir
+  const res = await api('salvarCliente', {
+    senha: SENHA_ADMIN,
+    telefone: TELEFONE_CLIENTE,
+    nome: c.nome || '',
+    corretor: c.corretor || '',
+    tqc: c.tqc || '',
+    car: c.car || '',
+    inativo: c.inativo || '',
+    linkVitrine: c.linkVitrine || '',
+    observacao: c.observacao || ''
+  });
   marcarSalvando(false);
-  if(!res.ok){
-    toast(res.error || 'Erro ao criar acesso admin', 'error');
-    return;
+  if(!res.ok){ toast(res.error || 'Erro ao criar acesso admin', 'error'); return; }
+  // Tenta pegar a senha admin gerada
+  if(res.senhaAdmin){
+    $('senhaGeradaTitulo').textContent = 'Acesso admin criado';
+    $('senhaGeradaSub').textContent = 'Envie a senha abaixo para o admin do cliente.';
+    $('senhaGeradaApelido').textContent = 'Admin';
+    $('senhaGeradaValor').textContent = res.senhaAdmin;
+    $('senhaGeradaBackdrop').classList.add('show');
+  } else {
+    toast('Cliente atualizado. Acesso admin garantido.', 'success');
   }
-  toast('Acesso admin criado!', 'success');
-  $('senhaGeradaTitulo').textContent = 'Acesso admin criado';
-  $('senhaGeradaSub').textContent = 'Envie a senha abaixo para o admin do cliente.';
-  $('senhaGeradaApelido').textContent = res.apelido || 'Admin';
-  $('senhaGeradaValor').textContent = res.senha || '';
-  $('senhaGeradaBackdrop').classList.add('show');
   carregarAcessos();
 }
 
@@ -2273,7 +2210,6 @@ async function abrirAtividade(){
   }
   eventos.sort((a, b) => new Date(b.dataHora) - new Date(a.dataHora));
   state._atividadeEventos = eventos;
-
   const totalAcessos = eventos.filter(e => e.tipo === 'acesso').length;
   const totalAcoes = eventos.filter(e => e.tipo === 'acao').length;
   const ultimoEvento = eventos[0];
@@ -2397,7 +2333,6 @@ async function salvarCliente(){
   if(!res.ok){ toast(res.error || 'Erro', 'error'); return; }
   fecharClienteModal();
   toast('Cliente salvo', 'success');
-  // Atualiza local
   if(state.clienteAtual){
     state.clienteAtual.nome = nome;
     state.clienteAtual.corretor = corretor;
@@ -2419,7 +2354,6 @@ async function abrirClonarVitrine(){
     return;
   }
   state._clonarSelecionados = new Set(imoveisDisponiveis.map(i => i.id));
-  // Carrega clientes
   marcarSalvando(true);
   const resCli = await api('listarClientes', { senha: SENHA_ADMIN });
   marcarSalvando(false);
@@ -2539,11 +2473,8 @@ function fallbackCopy(texto){
   document.body.removeChild(ta);
 }
 
-/* =====================================================
-   BEFOREUNLOAD
-===================================================== */
 window.addEventListener('beforeunload', function(e){
-  if(estaSalvando() || state._filaSalvar.length > 0 || state._filaProcessando){
+  if(estaSalvando()){
     e.preventDefault();
     e.returnValue = 'Aguarde, estamos salvando...';
     return e.returnValue;
