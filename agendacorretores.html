@@ -164,6 +164,8 @@
   .btn-danger:hover:not(:disabled){ background: var(--danger-hover); }
   .btn-warn{ background: var(--warn); color: #fff; }
   .btn-warn:hover:not(:disabled){ background: var(--warn-hover); }
+  .btn-purple{ background: var(--purple); color: #fff; }
+  .btn-purple:hover:not(:disabled){ background: #5b21b6; }
   .btn-ghost{ background: #fff; color: var(--text-soft); border: 1px solid var(--border-strong); }
   .btn-ghost:hover:not(:disabled){ background: var(--bg-alt); color: var(--text); border-color: var(--muted); }
   .btn-soft{ background: var(--primary-soft); color: var(--primary); }
@@ -171,6 +173,10 @@
   .btn-full{ width: 100%; }
   .btn-sm{ padding: 7px 12px; font-size: .78rem; gap: 5px; }
   .btn-xs{ padding: 5px 9px; font-size: .72rem; gap: 4px; }
+  .btn-evento{
+    background: var(--purple); color: #fff; border: 1px solid var(--purple);
+  }
+  .btn-evento:hover:not(:disabled){ background: #5b21b6; }
 
   /* PANEL */
   .panel{
@@ -188,6 +194,7 @@
     display: flex; align-items: center; gap: 9px; letter-spacing: -.01em;
   }
   .panel-head h2 .ico{ color: var(--primary); }
+  .panel-head-actions{ display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
   .panel-body{ padding: 16px 20px; }
   @media(max-width:640px){ .panel-head{ padding: 12px 14px; } .panel-body{ padding: 12px 14px; } }
 
@@ -282,9 +289,14 @@
     background: var(--warn-soft); color: var(--warn);
     border: 1px solid #e2d3a8;
   }
-  .agenda-row-v2 .btn-finalizar{
+
+  .agenda-row-v2 .cabecalho-acoes{
     margin-left: auto;
-    display: inline-flex; align-items: center; gap: 6px;
+    display: flex; flex-direction: column; gap: 6px;
+    flex-shrink: 0;
+  }
+  .agenda-row-v2 .btn-finalizar{
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
     padding: 6px 14px; border-radius: var(--radius-sm);
     background: var(--primary); color: #fff;
     border: none; cursor: pointer; font-family: inherit;
@@ -293,6 +305,28 @@
   }
   .agenda-row-v2 .btn-finalizar:hover{ background: var(--primary-hover); }
   .agenda-row-v2 .btn-finalizar .ico{ width: 14px; height: 14px; }
+
+  .agenda-row-v2 .btn-editar-visita{
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    padding: 6px 14px; border-radius: var(--radius-sm);
+    background: #fff; color: var(--text-soft);
+    border: 1px solid var(--border-strong); cursor: pointer; font-family: inherit;
+    font-size: .76rem; font-weight: 700;
+    transition: all .15s; flex-shrink: 0;
+  }
+  .agenda-row-v2 .btn-editar-visita:hover{ background: var(--bg-alt); color: var(--text); border-color: var(--muted); }
+  .agenda-row-v2 .btn-editar-visita .ico{ width: 14px; height: 14px; }
+
+  .agenda-row-v2 .btn-excluir-evento{
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    padding: 6px 14px; border-radius: var(--radius-sm);
+    background: #fff; color: var(--danger);
+    border: 1px solid #e0c4c4; cursor: pointer; font-family: inherit;
+    font-size: .76rem; font-weight: 700;
+    transition: all .15s; flex-shrink: 0;
+  }
+  .agenda-row-v2 .btn-excluir-evento:hover{ background: var(--danger-soft); border-color: var(--danger); }
+  .agenda-row-v2 .btn-excluir-evento .ico{ width: 14px; height: 14px; }
 
   .agenda-row-v2 .barra-acoes{
     display: flex; gap: 6px; flex-wrap: wrap;
@@ -312,10 +346,31 @@
   }
   .agenda-row-v2 .barra-acoes .acao-btn .ico{ width: 14px; height: 14px; }
   .agenda-row-v2 .barra-acoes .acao-btn.btn-zap:hover{ background: #e7f6ed; border-color: #b8dfc7; color: #1e7a3f; }
+  .agenda-row-v2 .barra-acoes .acao-btn.btn-vitrine:hover{ background: var(--primary-soft); border-color: #c9d6e4; color: var(--primary); }
   .agenda-row-v2 .barra-acoes .acao-btn.btn-anuncio:hover{ background: var(--info-soft); border-color: #c9d6e4; color: var(--info); }
   .agenda-row-v2 .barra-acoes .acao-btn.btn-chave:hover{ background: var(--warn-soft); border-color: #e2d3a8; color: var(--warn); }
   .agenda-row-v2 .barra-acoes .acao-btn.btn-share:hover{ background: #ede9fe; border-color: #c9bfe8; color: #5b21b6; }
   .agenda-row-v2 .barra-acoes .acao-btn.btn-sobre:hover{ background: var(--primary-soft); border-color: #c9d6e4; color: var(--primary); }
+
+  .agenda-row-v2.evento{
+    background: #faf8ff;
+    border-color: #e0d9f5;
+    border-left-color: var(--purple) !important;
+  }
+  .agenda-row-v2.evento:hover{ border-color: #c9bfe8; }
+  .agenda-row-v2.evento .cliente{ color: #4c1d95; }
+  .agenda-row-v2.evento .detalhe{ color: #6b5b95; }
+  .agenda-row-v2.evento .quando{
+    background: var(--purple-soft) !important; color: var(--purple) !important;
+  }
+  .evento-badge{
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: .62rem; font-weight: 800;
+    text-transform: uppercase; letter-spacing: .5px;
+    padding: 2px 8px; border-radius: 4px;
+    background: var(--purple-soft); color: var(--purple);
+    border: 1px solid #d8ccf5;
+  }
 
   @media(max-width:640px){
     .agenda-row-v2{ padding: 10px 12px; gap: 8px; }
@@ -331,9 +386,14 @@
       order: 2; grid-column: 1 / -1;
       gap: 3px;
     }
-    .agenda-row-v2 .btn-finalizar{
+    .agenda-row-v2 .cabecalho-acoes{
       order: 1; justify-self: end; margin-left: 0;
-      padding: 5px 10px; font-size: .7rem;
+      flex-direction: column; gap: 4px;
+    }
+    .agenda-row-v2 .btn-finalizar,
+    .agenda-row-v2 .btn-editar-visita,
+    .agenda-row-v2 .btn-excluir-evento{
+      padding: 5px 10px; font-size: .68rem;
     }
     .agenda-row-v2 .cliente{ font-size: .82rem; gap: 6px; }
     .agenda-row-v2 .cliente .tel{ font-size: .72rem; }
@@ -512,6 +572,8 @@
     border-top-color: #fff; border-radius: 50%; animation: spin .8s linear infinite;
   }
   .saving-overlay .msg{ font-size: 1rem; font-weight: 600; }
+
+  #imgModalBackdrop .modal{ max-width: 640px; text-align: center; }
 </style>
 </head>
 <body>
@@ -579,10 +641,16 @@
         <svg class="ico ico-lg" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
         Agenda de Visitas
       </h2>
-      <button class="btn btn-ghost btn-sm" onclick="recarregarAgenda()">
-        <svg class="ico ico-sm" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
-        Atualizar
-      </button>
+      <div class="panel-head-actions">
+        <button class="btn btn-evento btn-sm" onclick="abrirNovoEvento()" title="Criar evento na agenda">
+          <svg class="ico ico-sm" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Novo evento
+        </button>
+        <button class="btn btn-ghost btn-sm" onclick="recarregarAgenda()">
+          <svg class="ico ico-sm" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+          Atualizar
+        </button>
+      </div>
     </div>
     <div class="panel-body">
       <div id="filtrosAgenda" class="filtros-wrap"></div>
@@ -594,7 +662,7 @@
 </div>
 
 <!-- MODAL TAREFAS -->
-<div class="modal-backdrop" id="tarefasBackdrop" onclick="if(event.target===this) fecharTarefas()">
+<div class="modal-backdrop" id="tarefasBackdrop">
   <div class="modal" style="max-width:760px;">
     <button class="modal-close" onclick="fecharTarefas()"><svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
     <h2><svg class="ico" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg> Tarefas / Lembretes</h2>
@@ -626,7 +694,7 @@
 </div>
 
 <!-- MODAL CHAVE -->
-<div class="modal-backdrop" id="chaveModalBackdrop" onclick="if(event.target===this) fecharChaveModal()">
+<div class="modal-backdrop" id="chaveModalBackdrop">
   <div class="modal" style="max-width:520px;">
     <button class="modal-close" onclick="fecharChaveModal()"><svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
     <h2><svg class="ico" viewBox="0 0 24 24"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg> Onde pegar a chave</h2>
@@ -635,8 +703,8 @@
   </div>
 </div>
 
-<!-- MODAL WHATSAPP AGENDA -->
-<div class="modal-backdrop" id="zapModalBackdrop" onclick="if(event.target===this) fecharModalWhatsAppAgenda()">
+<!-- MODAL WHATSAPP -->
+<div class="modal-backdrop" id="zapModalBackdrop">
   <div class="modal" style="max-width:440px;">
     <button class="modal-close" onclick="fecharModalWhatsAppAgenda()"><svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
     <h2><svg class="ico" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg> Enviar WhatsApp</h2>
@@ -655,7 +723,7 @@
 </div>
 
 <!-- MODAL FINALIZAR -->
-<div class="modal-backdrop" id="finalizarBackdrop" onclick="if(event.target===this) fecharModalFinalizar()">
+<div class="modal-backdrop" id="finalizarBackdrop">
   <div class="modal" style="max-width:420px;">
     <button class="modal-close" onclick="fecharModalFinalizar()"><svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
     <h2><svg class="ico" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Finalizar visita</h2>
@@ -674,7 +742,7 @@
 </div>
 
 <!-- MODAL VISITA REALIZADA -->
-<div class="modal-backdrop" id="visitaBackdrop" onclick="if(event.target===this) fecharVisitaModal()">
+<div class="modal-backdrop" id="visitaBackdrop">
   <div class="modal" style="max-width:480px;">
     <button class="modal-close" onclick="fecharVisitaModal()"><svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
     <h2><svg class="ico" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Registrar visita realizada</h2>
@@ -683,13 +751,68 @@
     <div class="form-group"><label>O que o cliente achou?</label><textarea id="visitaAvaliacao"></textarea></div>
     <div style="display:flex; gap:8px;">
       <button class="btn btn-primary" style="flex:1" onclick="salvarVisita(event)">Salvar</button>
-      <button class="btn btn-ghost" onclick="fecharVisitaModal()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL EVENTO -->
+<div class="modal-backdrop" id="eventoBackdrop">
+  <div class="modal" style="max-width:520px;">
+    <button class="modal-close" onclick="fecharEventoModal()"><svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <h2><svg class="ico" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> <span id="eventoModalTitulo">Novo evento</span></h2>
+    <input type="hidden" id="eventoId">
+    <div class="form-group">
+      <label>Título <span style="color:var(--danger)">*</span></label>
+      <input type="text" id="eventoTitulo" placeholder="Ex: Reunião com cliente, Almoço, Visita técnica...">
+    </div>
+    <div class="form-group">
+      <label>Descrição</label>
+      <textarea id="eventoDescricao" placeholder="Detalhes do evento..." style="min-height:80px;"></textarea>
+    </div>
+    <div class="form-group">
+      <label>Data e hora <span style="color:var(--danger)">*</span></label>
+      <input type="datetime-local" id="eventoDataHora">
+      <div style="font-size:.68rem; color:var(--muted); margin-top:4px;">Somente hoje e datas futuras</div>
+    </div>
+    <div class="form-group">
+      <label>Corretor <span style="color:var(--danger)">*</span></label>
+      <select id="eventoCorretor"></select>
+    </div>
+    <div style="display:flex; gap:8px; justify-content:flex-end;">
+      <button class="btn btn-ghost" onclick="fecharEventoModal()">Cancelar</button>
+      <button class="btn btn-evento" id="btnSalvarEvento" onclick="salvarEvento(event)">
+        <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+        Salvar evento
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL EDITAR AGENDAMENTO -->
+<div class="modal-backdrop" id="agendarBackdrop">
+  <div class="modal" style="max-width:560px;">
+    <button class="modal-close" onclick="fecharAgendarModal()"><svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <h2><svg class="ico" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> Editar agendamento</h2>
+    <input type="hidden" id="agendarImovelId">
+    <div class="form-group">
+      <label>Data e hora <span style="color:var(--danger)">*</span></label>
+      <input type="datetime-local" id="agendarDataHora">
+      <div style="font-size:.68rem; color:var(--muted); margin-top:4px;">Somente hoje e datas futuras</div>
+    </div>
+    <div class="form-row-3" style="display:grid; grid-template-columns: 2fr 1fr 2fr; gap:12px;">
+      <div class="form-group"><label>Rua <span style="color:var(--danger)">*</span></label><input type="text" id="agendarRua"></div>
+      <div class="form-group"><label>Número <span style="color:var(--danger)">*</span></label><input type="text" id="agendarNumero"></div>
+      <div class="form-group"><label>Bairro</label><input type="text" id="agendarBairro"></div>
+    </div>
+    <div style="display:flex; gap:8px;">
+      <button class="btn btn-primary" style="flex:1" onclick="salvarAgendamento(event)">Salvar alterações</button>
+      <button class="btn btn-ghost" id="btnCancelarAgendamento" onclick="cancelarAgendamentoEditado()">Cancelar agendamento</button>
     </div>
   </div>
 </div>
 
 <!-- MODAL OBSERVAÇÕES -->
-<div class="modal-backdrop" id="obsModalBackdrop" onclick="if(event.target===this) fecharModalObs()">
+<div class="modal-backdrop" id="obsModalBackdrop">
   <div class="modal" style="max-width:560px;">
     <button class="modal-close" onclick="fecharModalObs()"><svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
     <h2><svg class="ico" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> Observações internas</h2>
@@ -701,6 +824,23 @@
         <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
         Salvar
       </button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL IMAGEM -->
+<div class="modal-backdrop" id="imgModalBackdrop">
+  <div class="modal" style="max-width:640px; text-align:center;">
+    <button class="modal-close" onclick="fecharImgModal()"><svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <h2 style="justify-content:center;"><svg class="ico" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg> Cartão da visita</h2>
+    <p class="text-muted" style="margin-bottom:14px; font-size:.82rem;">Clique com o botão direito na imagem → <strong>Copiar imagem</strong>. Depois é só colar no WhatsApp.</p>
+    <img id="imgModalImg" src="" alt="Cartão da visita" style="width:100%; border-radius:var(--radius); border:1px solid var(--border); display:block;">
+    <div style="display:flex; gap:8px; margin-top:16px;">
+      <button class="btn btn-primary" style="flex:1;" onclick="baixarImgModal()">
+        <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Baixar imagem
+      </button>
+      <button class="btn btn-ghost" onclick="fecharImgModal()">Fechar</button>
     </div>
   </div>
 </div>
@@ -741,7 +881,14 @@ const LINK_TQC = 'https://corretor.quintoandar.com.br/traz-quem-compra/?origin=h
 const LINK_HUGO = 'https://www.quintoandar.com.br/corretor/atendimento/HugoFelipePereiraRibeiro-3M2K';
 const LINK_CAROL = '';
 
+const PREFIXO_EVENTO = 'evento_';
 const INTERVALO_INATIVIDADE = 15 * 60 * 1000;
+
+/* =====================================================
+   DIAS DA SEMANA
+===================================================== */
+const DIAS_SEMANA = ['DOMINGO','SEGUNDA','TERÇA','QUARTA','QUINTA','SEXTA','SÁBADO'];
+const DIAS_SEMANA_CURTO = ['DOM','SEG','TER','QUA','QUI','SEX','SÁB'];
 
 /* =====================================================
    ESTADO
@@ -753,12 +900,16 @@ const state = {
   corretores: [],
   clientes: [],
   tarefas: [],
+  todosImoveis: [],
   filtrosAgenda: new Set(),
   filtrosTarefasCorretores: new Set(),
   visaoPainel: { tarefas: 'ativas' },
   salvando: 0,
   _refreshTimer: null,
-  _refreshEmAndamento: false
+  _refreshEmAndamento: false,
+  _corretorPorImovelId: {},
+  _imgModalDataUrl: null,
+  _imgModalNome: null
 };
 
 const $ = id => document.getElementById(id);
@@ -783,23 +934,42 @@ function fmtTel(t){
   const n = normalizaTel(t);
   if(n.length === 11) return `(${n.slice(0,2)}) ${n.slice(2,3)} ${n.slice(3,7)}-${n.slice(7)}`;
   if(n.length === 10) return `(${n.slice(0,2)}) ${n.slice(2,6)}-${n.slice(6)}`;
-  return t;
+  return String(t || '');
 }
 function fmtData(d){
   if(!d) return '';
   const dt = new Date(d);
   if(isNaN(dt.getTime())) return '';
-  return String(dt.getDate()).padStart(2,'0') + '/' +
-         String(dt.getMonth()+1).padStart(2,'0') + '/' +
-         dt.getFullYear();
+  const dia = String(dt.getDate()).padStart(2,'0');
+  const mes = String(dt.getMonth()+1).padStart(2,'0');
+  const ano = dt.getFullYear();
+  const ds = DIAS_SEMANA[dt.getDay()];
+  return `${dia}/${mes}/${ano} - ${ds}`;
+}
+function fmtDataCurta(d){
+  if(!d) return '';
+  const dt = new Date(d);
+  if(isNaN(dt.getTime())) return '';
+  const dia = String(dt.getDate()).padStart(2,'0');
+  const mes = String(dt.getMonth()+1).padStart(2,'0');
+  const ds = DIAS_SEMANA_CURTO[dt.getDay()];
+  return `${dia}/${mes} - ${ds}`;
 }
 function fmtDataHora(d){
   if(!d) return '';
   const dt = new Date(d);
   if(isNaN(dt.getTime())) return '';
-  return fmtData(dt) + ' às ' +
-         String(dt.getHours()).padStart(2,'0') + ':' +
-         String(dt.getMinutes()).padStart(2,'0');
+  const h = String(dt.getHours()).padStart(2,'0');
+  const m = String(dt.getMinutes()).padStart(2,'0');
+  return fmtData(dt) + ' às ' + h + ':' + m;
+}
+function fmtDataHoraCurta(d){
+  if(!d) return '';
+  const dt = new Date(d);
+  if(isNaN(dt.getTime())) return '';
+  const h = String(dt.getHours()).padStart(2,'0');
+  const m = String(dt.getMinutes()).padStart(2,'0');
+  return fmtData(dt) + ' · ' + h + ':' + m;
 }
 function toInputDate(iso){
   if(!iso) return '';
@@ -811,21 +981,37 @@ function toInputDate(iso){
     return local.toISOString().slice(0,10);
   } catch(e){ return ''; }
 }
+function toInputDateTime(iso){
+  if(!iso) return '';
+  try {
+    const d = new Date(iso);
+    if(isNaN(d.getTime())) return '';
+    const off = d.getTimezoneOffset();
+    const local = new Date(d.getTime() - off * 60000);
+    return local.toISOString().slice(0,16);
+  } catch(e){ return ''; }
+}
+function hojeISO(){
+  const d = new Date();
+  const off = d.getTimezoneOffset();
+  const local = new Date(d.getTime() - off * 60000);
+  return local.toISOString().slice(0,10);
+}
+/* ✅ Sempre data completa com dia da semana */
 function classificarAgendamento(iso){
   if(!iso) return { label: '—', classe: 'distante' };
   const d = new Date(iso);
+  if(isNaN(d.getTime())) return { label: '—', classe: 'distante' };
   const hoje = new Date();
-  const amanha = new Date(); amanha.setDate(hoje.getDate() + 1);
-  const hora = String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
-  if(d.toDateString() === hoje.toDateString()) return { label: 'Hoje ' + hora, classe: 'hoje' };
-  if(d.toDateString() === amanha.toDateString()) return { label: 'Amanhã ' + hora, classe: 'amanha' };
   const diff = Math.floor((d - hoje) / 86400000);
-  const dataCurta = String(d.getDate()).padStart(2,'0') + '/' + String(d.getMonth()+1).padStart(2,'0');
-  if(diff >= 2 && diff <= 7) return { label: dataCurta + ' ' + hora, classe: 'semana' };
-  return { label: dataCurta + ' ' + hora, classe: 'distante' };
+  let classe = 'distante';
+  if(d.toDateString() === hoje.toDateString()) classe = 'hoje';
+  else if(diff === 1) classe = 'amanha';
+  else if(diff >= 2 && diff <= 7) classe = 'semana';
+  return { label: fmtDataHoraCurta(d), classe };
 }
 function corDoCorretor(nome){
-  const c = state.corretores.find(x => x.nome === nome);
+  const c = state.corretores.find(x => x.nome === chaveCorretor_(nome));
   return c ? c.cor : '#64748b';
 }
 function nomeCompletoCliente_(nome, telefone){
@@ -853,13 +1039,55 @@ function camposEndereco_(im){
     chave:  String(im.chaveTexto || '').trim()
   };
 }
+/* ✅ Detecta evento por prefixo evento_ ou telefone 00000000000 */
+function isEvento_(a){
+  if(!a) return false;
+  const id = String(a.id || '');
+  if(id.startsWith(PREFIXO_EVENTO)) return true;
+  const cod = String(a.codigo || '');
+  if(cod.startsWith(PREFIXO_EVENTO)) return true;
+  const tel = normalizaTel(a.telefone || '');
+  if(!tel || tel === '00000000000') return true;
+  return false;
+}
+/* ✅ Resolve corretor com fallback em cascata */
+function resolverCorretor_(item){
+  if(!item) return '';
+  if(item.corretor) return String(item.corretor).trim();
+  const idIm = String(item.id || '');
+  if(idIm && state._corretorPorImovelId[idIm]){
+    return String(state._corretorPorImovelId[idIm]).trim();
+  }
+  const tel = normalizaTel(item.telefone || '');
+  if(tel && tel !== '00000000000'){
+    const cli = state.clientes.find(c => normalizaTel(c.telefone) === tel);
+    if(cli && cli.corretor) return String(cli.corretor).trim();
+  }
+  const nome = String(item.clienteNome || '').trim().toLowerCase();
+  if(nome){
+    const cli = state.clientes.find(c => (c.nome||'').trim().toLowerCase() === nome);
+    if(cli && cli.corretor) return String(cli.corretor).trim();
+  }
+  return '';
+}
+/* ✅ Título do evento — remove "000", "S/N", " - descrição" */
+function tituloEventoLimpo_(a){
+  let t = String(a.rua || a.titulo || a.clienteNome || 'Evento').trim();
+  t = t.replace(/,?\s*(000|S\/N|s\/n|-|\.)\s*/g, ' ').replace(/\s+/g, ' ').trim();
+  const desc = String(a.bairro || '').trim();
+  if(desc){
+    const idx = t.toLowerCase().lastIndexOf(' - ' + desc.toLowerCase());
+    if(idx > 0) t = t.slice(0, idx).trim();
+  }
+  return t || 'Evento';
+}
 
 /* =====================================================
    CONFLITOS
 ===================================================== */
 function calcularConflitos_(agendamentos){
   const conflitos = {};
-  const lista = (agendamentos || []).filter(a => a.dataVisitaAgendada);
+  const lista = (agendamentos || []).filter(a => a.dataVisitaAgendada && !isEvento_(a));
   const porCorretor = {};
   lista.forEach(a => {
     const chave = chaveCorretor_(a.corretor) || '(sem corretor)';
@@ -966,14 +1194,6 @@ function confirmarAcao(opts){
     novoSim.addEventListener('click', () => { fechar(); resolve(true); });
     novoNao.addEventListener('click', () => { fechar(); resolve(false); });
 
-    const onClickBackdrop = (e) => {
-      if(e.target === backdrop){
-        fechar();
-        backdrop.removeEventListener('click', onClickBackdrop);
-        resolve(false);
-      }
-    };
-    backdrop.addEventListener('click', onClickBackdrop);
     backdrop.classList.add('show');
     setTimeout(() => novoSim.focus(), 80);
   });
@@ -999,7 +1219,6 @@ function copiarLinkCarol(){
   if(!LINK_CAROL){ toast('Link da Carol não configurado', 'error'); return; }
   copiarTexto(LINK_CAROL);
 }
-
 function toggleSenhaAdmin(btn){
   const input = $('inputAdminSenha');
   if(!input) return;
@@ -1032,7 +1251,6 @@ async function entrarAdmin(){
   localStorage.setItem(ADMIN_KEY, senha);
   await carregarAgendaHome();
 }
-
 function sair(){
   if(estaSalvando()){
     $('savingOverlay').classList.add('show');
@@ -1086,6 +1304,11 @@ async function carregarCorretores(){
     selTar.innerHTML = '<option value="">— Escolha o corretor —</option>' +
       state.corretores.map(c => `<option value="${esc(c.nome)}">${esc(c.nome)}</option>`).join('');
   }
+  const selEv = $('eventoCorretor');
+  if(selEv){
+    selEv.innerHTML = '<option value="">— Escolha o corretor —</option>' +
+      state.corretores.map(c => `<option value="${esc(c.nome)}">${esc(c.nome)}</option>`).join('');
+  }
 }
 
 /* =====================================================
@@ -1100,34 +1323,41 @@ async function carregarAgendaHome(){
   carregarTarefas(false);
   iniciarRefreshSilencioso();
 }
-
 async function carregarClientesBg_(){
   const res = await api('listarClientes', { senha: state.adminSenha });
   state.clientes = (res.ok && res.data) ? res.data : [];
 }
-
 async function carregarAgenda(mostrarLoading){
   if(mostrarLoading){
     $('agendaLista').innerHTML = '<div class="loading-inline"><span class="loader loader-lg"></span><p>Carregando agenda...</p></div>';
   }
-  const res = await api('listarAgendamentos', { senha: state.adminSenha });
+  /* ✅ Carrega agendamentos E todos imóveis em paralelo */
+  const [res, resIm] = await Promise.all([
+    api('listarAgendamentos', { senha: state.adminSenha }),
+    api('listarTodosImoveis', { senha: state.adminSenha })
+  ]);
   state.agendamentos = (res.ok && res.data) ? res.data : [];
+  if(resIm.ok && resIm.data){
+    state.todosImoveis = resIm.data;
+    state._corretorPorImovelId = {};
+    state.todosImoveis.forEach(im => {
+      state._corretorPorImovelId[String(im.id)] = im.corretor || '';
+    });
+  }
   renderizarFiltrosAgenda();
   renderizarAgenda();
 }
-
 async function recarregarAgenda(){
   await carregarAgenda(true);
   toast('Agenda atualizada', 'success');
 }
-
 function renderizarFiltrosAgenda(){
   const wrap = $('filtrosAgenda');
   if(!wrap) return;
   const total = state.agendamentos.length;
   const todosAtivo = state.filtrosAgenda.size === 0 ? 'active' : '';
   const chips = state.corretores.map(c => {
-    const cnt = state.agendamentos.filter(a => chaveCorretor_(a.corretor) === c.nome).length;
+    const cnt = state.agendamentos.filter(a => chaveCorretor_(resolverCorretor_(a)) === c.nome).length;
     const ativo = state.filtrosAgenda.has(c.nome);
     return `<button class="chip chip-corretor ${ativo ? 'active' : ''}"
               style="background:${ativo ? c.cor : '#fff'}; color:${ativo ? '#fff' : c.cor}; border-color:${c.cor}"
@@ -1137,13 +1367,11 @@ function renderizarFiltrosAgenda(){
   }).join('');
   wrap.innerHTML = `
     <div class="filtro-grupo">
-      <span class="lbl">Corretor:</span>
       <button class="chip ${todosAtivo}" onclick="limparFiltroAgenda()">Todos <span class="cnt">${total}</span></button>
       ${chips}
     </div>
   `;
 }
-
 function toggleFiltroAgenda(nome){
   if(state.filtrosAgenda.has(nome)) state.filtrosAgenda.delete(nome);
   else state.filtrosAgenda.add(nome);
@@ -1155,10 +1383,14 @@ function limparFiltroAgenda(){
   renderizarFiltrosAgenda();
   renderizarAgenda();
 }
-
 function renderizarAgenda(){
   const lista = $('agendaLista');
   let arr = [...state.agendamentos];
+  /* ✅ Enriquece com corretor via resolverCorretor_ */
+  arr = arr.map(a => {
+    if(a.corretor) return a;
+    return { ...a, corretor: resolverCorretor_(a) };
+  });
   if(state.filtrosAgenda.size > 0){
     arr = arr.filter(a => state.filtrosAgenda.has(chaveCorretor_(a.corretor)));
   }
@@ -1178,40 +1410,74 @@ function renderizarAgenda(){
   }
   lista.innerHTML = arr.map(a => agendaRowHTML(a, conflitos[a.id])).join('');
 }
-
 function agendaRowHTML(a, conflito){
   const quando = classificarAgendamento(a.dataVisitaAgendada);
-  const cor = a.corretor ? corDoCorretor(chaveCorretor_(a.corretor)) : '#64748b';
+  const evento = isEvento_(a);
+  const cor = a.corretor ? corDoCorretor(chaveCorretor_(a.corretor)) : '#94a3b8';
   const id = esc(a.id);
   const tel = esc(a.telefone);
+
+  /* ✅ CARD DE EVENTO */
+  if(evento){
+    const tituloEv = esc(tituloEventoLimpo_(a));
+    const descricaoEv = esc(String(a.bairro || '').trim());
+    const corrEv = a.corretor ? esc(a.corretor) : '';
+    const corCorrEv = a.corretor ? corDoCorretor(chaveCorretor_(a.corretor)) : '#64748b';
+    return `
+      <div class="agenda-row-v2 evento" data-id="${id}">
+        <div class="cabecalho">
+          <div class="quando">${esc(quando.label)}</div>
+          <div class="info">
+            <div class="cliente">
+              <span class="evento-badge">📌 Evento</span>
+              ${tituloEv}
+              ${corrEv ? `<span class="corretor-badge" style="background:${corCorrEv}">${corrEv}</span>` : ''}
+            </div>
+            ${descricaoEv ? `<div class="detalhe"><span>${descricaoEv}</span></div>` : ''}
+          </div>
+          <div class="cabecalho-acoes">
+            <button class="btn-editar-visita" onclick="abrirEditarEvento('${id}')" title="Editar evento">
+              <svg class="ico" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+              Editar
+            </button>
+            <button class="btn-excluir-evento" onclick="excluirEvento('${id}')" title="Excluir evento">
+              <svg class="ico" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+              Excluir
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  /* CARD DE VISITA */
   const telFmt = fmtTel(a.telefone);
   const nomeCliente = esc(nomeCompletoCliente_(a.clienteNome, a.telefone));
   const campos = camposEndereco_(a);
   const temChave = !!campos.chave;
-
   let conflitoBadge = '';
   if(conflito){
     const cls = conflito.nivel === 'alto' ? 'alto' : 'medio';
     conflitoBadge = `<span class="conflito-badge ${cls}">⚠️ ${esc(conflito.motivo)}</span>`;
   }
-
   const btnFinalizar = `<button class="btn-finalizar" onclick="abrirModalFinalizar('${id}')">
       <svg class="ico" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
       Finalizar
     </button>`;
-
+  const btnEditar = `<button class="btn-editar-visita" onclick="abrirEditarVisitaAgenda('${id}')" title="Alterar data/hora ou endereço">
+      <svg class="ico" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      Editar
+    </button>`;
   const btnAnuncio = a.codigo
     ? `<button class="acao-btn btn-anuncio" onclick="abrirAnuncioAgenda('${id}')" title="Buscar entrada">
         <svg class="ico" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
         <span class="lbl-btn">Entrada</span>
       </button>` : '';
-
   const btnChave = temChave
     ? `<button class="acao-btn btn-chave" data-chave="${esc(campos.chave)}" data-end="${esc(a.titulo || '')}" onclick="abrirChaveModal(this.dataset.chave, this.dataset.end)" title="Ver chave">
         <svg class="ico" viewBox="0 0 24 24"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
         <span class="lbl-btn">Chave</span>
       </button>` : '';
-
   return `
     <div class="agenda-row-v2" data-id="${id}" style="border-left-color:${cor};">
       <div class="cabecalho">
@@ -1231,7 +1497,10 @@ function agendaRowHTML(a, conflito){
           </div>
           ${conflitoBadge}
         </div>
-        ${btnFinalizar}
+        <div class="cabecalho-acoes">
+          ${btnFinalizar}
+          ${btnEditar}
+        </div>
       </div>
       <div class="barra-acoes">
         ${btnAnuncio}
@@ -1239,6 +1508,10 @@ function agendaRowHTML(a, conflito){
         <button class="acao-btn btn-zap" onclick="abrirModalWhatsAppAgenda('${id}')" title="Enviar WhatsApp">
           <svg class="ico" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
           <span class="lbl-btn">WhatsApp</span>
+        </button>
+        <button class="acao-btn btn-share" onclick="compartilharImagemAgendamento('${id}')" title="Compartilhar imagem">
+          <svg class="ico" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+          <span class="lbl-btn">Compartilhar</span>
         </button>
         <button class="acao-btn btn-sobre" onclick="abrirObsClienteDaAgenda('${tel}')" title="Observações internas do cliente">
           <svg class="ico" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
@@ -1248,7 +1521,6 @@ function agendaRowHTML(a, conflito){
     </div>
   `;
 }
-
 function abrirAnuncioAgenda(id){
   const a = state.agendamentos.find(x => x.id === id);
   if(!a || !a.codigo){ toast('Código do imóvel não disponível', 'error'); return; }
@@ -1256,7 +1528,141 @@ function abrirAnuncioAgenda(id){
 }
 
 /* =====================================================
-   MODAL WHATSAPP AGENDA
+   EVENTOS
+===================================================== */
+function abrirNovoEvento(){
+  $('eventoModalTitulo').textContent = 'Novo evento';
+  $('eventoId').value = '';
+  $('eventoTitulo').value = '';
+  $('eventoDescricao').value = '';
+  const dtInput = $('eventoDataHora');
+  dtInput.min = hojeISO() + 'T00:00';
+  dtInput.value = '';
+  $('eventoCorretor').value = '';
+  $('btnSalvarEvento').innerHTML = '<svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Salvar evento';
+  $('eventoBackdrop').classList.add('show');
+  setTimeout(() => $('eventoTitulo').focus(), 120);
+}
+function abrirEditarEvento(id){
+  const a = state.agendamentos.find(x => x.id === id);
+  if(!a){ toast('Evento não encontrado', 'error'); return; }
+  $('eventoModalTitulo').textContent = 'Editar evento';
+  $('eventoId').value = id;
+  $('eventoTitulo').value = tituloEventoLimpo_(a);
+  $('eventoDescricao').value = a.bairro || '';
+  const dtInput = $('eventoDataHora');
+  dtInput.min = hojeISO() + 'T00:00';
+  dtInput.value = toInputDateTime(a.dataVisitaAgendada) || '';
+  $('eventoCorretor').value = a.corretor || '';
+  $('btnSalvarEvento').innerHTML = '<svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Salvar alterações';
+  $('eventoBackdrop').classList.add('show');
+  setTimeout(() => $('eventoTitulo').focus(), 120);
+}
+function fecharEventoModal(){ $('eventoBackdrop').classList.remove('show'); }
+async function salvarEvento(ev){
+  const idEventoAntigo = $('eventoId').value || '';
+  const titulo = $('eventoTitulo').value.trim();
+  const descricao = $('eventoDescricao').value.trim();
+  const dataHora = $('eventoDataHora').value;
+  const corretor = $('eventoCorretor').value;
+
+  if(!titulo){ toast('Informe o título do evento', 'error'); return; }
+  if(!dataHora){ toast('Informe a data e hora', 'error'); return; }
+  if(!corretor){ toast('Escolha o corretor', 'error'); return; }
+
+  const dataEscolhida = new Date(dataHora);
+  const agora = new Date();
+  const hojeZero = new Date(agora.getFullYear(), agora.getMonth(), agora.getDate());
+  const dataZero = new Date(dataEscolhida.getFullYear(), dataEscolhida.getMonth(), dataEscolhida.getDate());
+  if(dataZero < hojeZero){
+    toast('Não é possível criar evento em datas passadas', 'error');
+    return;
+  }
+
+  const btn = ev?.target; if(btn) btn.disabled = true;
+  marcarSalvando(true);
+  const iso = dataEscolhida.toISOString();
+
+  let idImovel = idEventoAntigo;
+  if(!idImovel){
+    idImovel = await criarImovelAncoraEvento(titulo, descricao, corretor);
+    if(!idImovel){
+      marcarSalvando(false);
+      if(btn) btn.disabled = false;
+      toast('Erro ao criar evento', 'error');
+      return;
+    }
+  } else {
+    await api('salvarImovel', {
+      senha: state.adminSenha,
+      id: idImovel,
+      telefone: '00000000000',
+      rua: titulo,
+      numero: 'S/N',
+      bairro: descricao || '',
+      descricao: descricao || 'Evento da agenda',
+      corretor: corretor,
+      status: 'pendente'
+    });
+  }
+
+  const res = await api('agendarVisita', {
+    senha: state.adminSenha,
+    id: idImovel,
+    dataAgendada: iso,
+    rua: titulo,
+    numero: 'S/N',
+    bairro: descricao || ''
+  });
+  marcarSalvando(false);
+  if(btn) btn.disabled = false;
+
+  if(!res.ok){
+    toast(res.error || 'Erro ao salvar evento', 'error');
+    return;
+  }
+  toast(idEventoAntigo ? 'Evento atualizado' : 'Evento criado', 'success');
+  fecharEventoModal();
+  await carregarAgenda(false);
+}
+async function criarImovelAncoraEvento(titulo, descricao, corretor){
+  const res = await api('salvarImovel', {
+    senha: state.adminSenha,
+    id: '',
+    telefone: '00000000000',
+    rua: titulo,
+    numero: 'S/N',
+    bairro: descricao || '',
+    preco: '',
+    condominio: '',
+    iptu: '',
+    descricao: descricao || 'Evento da agenda',
+    link: '',
+    imagem: '',
+    chaveTexto: '',
+    corretor: corretor,
+    status: 'pendente'
+  });
+  if(!res.ok || !res.id) return null;
+  return res.id;
+}
+async function excluirEvento(id){
+  const ok = await confirmarAcao({
+    titulo: 'Excluir evento?',
+    texto: 'Esse evento será removido da agenda.',
+    btnSim: 'Excluir', tipo: 'danger'
+  });
+  if(!ok) return;
+  marcarSalvando(true);
+  const res = await api('cancelarAgendamento', { senha: state.adminSenha, id });
+  marcarSalvando(false);
+  if(!res.ok){ toast(res.error || 'Erro', 'error'); return; }
+  toast('Evento excluído', 'success');
+  await carregarAgenda(false);
+}
+
+/* =====================================================
+   WHATSAPP
 ===================================================== */
 function abrirModalWhatsAppAgenda(id){
   const a = state.agendamentos.find(x => x.id === id);
@@ -1269,12 +1675,10 @@ function abrirModalWhatsAppAgenda(id){
   $('zapModalSub').textContent = `${pNome} · ${telFmt}`;
   $('zapModalBackdrop').classList.add('show');
 }
-
 function fecharModalWhatsAppAgenda(){
   $('zapModalBackdrop').classList.remove('show');
   window._zapAgendamentoId = null;
 }
-
 function zapConversaEmBranco(){
   const id = window._zapAgendamentoId;
   if(!id){ fecharModalWhatsAppAgenda(); return; }
@@ -1285,7 +1689,6 @@ function zapConversaEmBranco(){
   window.open(`https://wa.me/${telZap}`, '_blank');
   fecharModalWhatsAppAgenda();
 }
-
 function zapConfirmarVisita(){
   const id = window._zapAgendamentoId;
   if(!id){ fecharModalWhatsAppAgenda(); return; }
@@ -1298,6 +1701,7 @@ function zapConfirmarVisita(){
   const dia = String(dt.getDate()).padStart(2,'0');
   const mes = String(dt.getMonth()+1).padStart(2,'0');
   const ano = dt.getFullYear();
+  const ds = DIAS_SEMANA[dt.getDay()];
   const hora = String(dt.getHours()).padStart(2,'0');
   const min = String(dt.getMinutes()).padStart(2,'0');
   const campos = camposEndereco_(a);
@@ -1305,7 +1709,7 @@ function zapConfirmarVisita(){
   const numero = campos.numero || '';
   const bairro = campos.bairro || '';
   let msg = `Ei ${pNome}, estou passando para confirmar nossa visita `;
-  msg += `dia ${dia}/${mes}/${ano} às ${hora}:${min}hs`;
+  msg += `dia ${dia}/${mes}/${ano} (${ds}) às ${hora}:${min}hs`;
   if(endereco) msg += ` na rua ${endereco}`;
   if(numero) msg += `, número ${numero}`;
   if(bairro) msg += ` bairro ${bairro}`;
@@ -1317,7 +1721,7 @@ function zapConfirmarVisita(){
 }
 
 /* =====================================================
-   MODAL FINALIZAR
+   FINALIZAR
 ===================================================== */
 function abrirModalFinalizar(id){
   const a = state.agendamentos.find(x => x.id === id);
@@ -1329,12 +1733,10 @@ function abrirModalFinalizar(id){
   $('finalizarModalSub').textContent = nomeCompleto;
   $('finalizarBackdrop').classList.add('show');
 }
-
 function fecharModalFinalizar(){
   $('finalizarBackdrop').classList.remove('show');
   window._finalizarAgendamentoId = null;
 }
-
 function finalizarRegistrar(){
   const id = window._finalizarAgendamentoId;
   fecharModalFinalizar();
@@ -1342,24 +1744,18 @@ function finalizarRegistrar(){
   const a = state.agendamentos.find(x => x.id === id);
   if(!a){ toast('Agendamento não encontrado', 'error'); return; }
   $('visitaImovelId').value = id;
-  $('visitaData').value = toInputDate(a.dataVisitaAgendada) || new Date().toISOString().slice(0,10);
+  $('visitaData').value = toInputDate(a.dataVisitaAgendada) || hojeISO();
   $('visitaAvaliacao').value = '';
   $('visitaBackdrop').classList.add('show');
   setTimeout(() => $('visitaAvaliacao').focus(), 100);
 }
-
 function finalizarCancelar(){
   const id = window._finalizarAgendamentoId;
   fecharModalFinalizar();
   if(!id) return;
   cancelarAgendamentoDireto(id);
 }
-
-/* =====================================================
-   VISITA REALIZADA
-===================================================== */
 function fecharVisitaModal(){ $('visitaBackdrop').classList.remove('show'); }
-
 async function salvarVisita(ev){
   const id = $('visitaImovelId').value;
   const data = $('visitaData').value;
@@ -1379,10 +1775,6 @@ async function salvarVisita(ev){
   fecharVisitaModal();
   await carregarAgenda(false);
 }
-
-/* =====================================================
-   CANCELAR AGENDAMENTO
-===================================================== */
 async function cancelarAgendamentoDireto(id){
   const ok = await confirmarAcao({
     titulo: 'Cancelar agendamento?',
@@ -1396,6 +1788,72 @@ async function cancelarAgendamentoDireto(id){
   if(!res.ok){ toast(res.error || 'Erro', 'error'); return; }
   toast('Cancelado', 'success');
   await carregarAgenda(false);
+}
+
+/* =====================================================
+   EDITAR AGENDAMENTO (não-evento)
+===================================================== */
+function abrirEditarVisitaAgenda(id){
+  const a = state.agendamentos.find(x => x.id === id);
+  if(!a){ toast('Agendamento não encontrado', 'error'); return; }
+  $('agendarImovelId').value = id;
+  const dtInput = $('agendarDataHora');
+  dtInput.min = hojeISO() + 'T00:00';
+  dtInput.value = toInputDateTime(a.dataVisitaAgendada) || '';
+  const campos = camposEndereco_(a);
+  $('agendarRua').value = campos.rua || '';
+  $('agendarNumero').value = campos.numero || '';
+  $('agendarBairro').value = campos.bairro || '';
+  $('btnCancelarAgendamento').style.display = 'inline-flex';
+  $('agendarBackdrop').classList.add('show');
+}
+function fecharAgendarModal(){ $('agendarBackdrop').classList.remove('show'); }
+async function salvarAgendamento(ev){
+  const id = $('agendarImovelId').value;
+  const dataHora = $('agendarDataHora').value;
+  const rua = $('agendarRua').value.trim();
+  const numero = $('agendarNumero').value.trim();
+  const bairro = $('agendarBairro').value.trim();
+  if(!id || !dataHora){ toast('Informe data e hora', 'error'); return; }
+  if(!rua){ toast('Informe a rua', 'error'); return; }
+  if(!numero){ toast('Informe o número', 'error'); return; }
+
+  const dataEscolhida = new Date(dataHora);
+  const agora = new Date();
+  const hojeZero = new Date(agora.getFullYear(), agora.getMonth(), agora.getDate());
+  const dataZero = new Date(dataEscolhida.getFullYear(), dataEscolhida.getMonth(), dataEscolhida.getDate());
+  if(dataZero < hojeZero){
+    toast('Não é possível agendar em datas passadas', 'error');
+    return;
+  }
+
+  const btn = ev?.target; if(btn) btn.disabled = true;
+  marcarSalvando(true);
+  const iso = dataEscolhida.toISOString();
+  const res = await api('agendarVisita', {
+    senha: state.adminSenha, id, dataAgendada: iso,
+    rua, numero, bairro
+  });
+  marcarSalvando(false);
+  if(btn) btn.disabled = false;
+  if(!res.ok){ toast(res.error || 'Erro', 'error'); return; }
+  toast('Agendamento atualizado', 'success');
+
+  const a = state.agendamentos.find(x => x.id === id);
+  if(a){
+    a.dataVisitaAgendada = iso;
+    a.titulo = rua + (numero ? ', ' + numero : '') + (bairro ? ' - ' + bairro : '');
+    a.rua = rua; a.numero = numero; a.bairro = bairro;
+  }
+  fecharAgendarModal();
+  renderizarFiltrosAgenda();
+  renderizarAgenda();
+}
+async function cancelarAgendamentoEditado(){
+  const id = $('agendarImovelId').value;
+  if(!id) return;
+  fecharAgendarModal();
+  await cancelarAgendamentoDireto(id);
 }
 
 /* =====================================================
@@ -1430,12 +1888,10 @@ async function abrirObsClienteDaAgenda(telefone){
   $('obsModalBackdrop').classList.add('show');
   setTimeout(() => $('obsGrande').focus(), 120);
 }
-
 function fecharModalObs(){
   $('obsModalBackdrop').classList.remove('show');
   window._obsClienteBackup = null;
 }
-
 async function salvarModalObs(){
   const txt = $('obsGrande').value;
   const tel = window._obsClienteTel;
@@ -1464,6 +1920,96 @@ async function salvarModalObs(){
 }
 
 /* =====================================================
+   COMPARTILHAR IMAGEM
+===================================================== */
+function compartilharImagemAgendamento(id){
+  const a = state.agendamentos.find(x => x.id === id);
+  if(!a){ toast('Agendamento não encontrado', 'error'); return; }
+  try {
+    const dataUrl = gerarCartaoVisitaDataURL(a);
+    window._imgModalDataUrl = dataUrl;
+    window._imgModalNome = 'visita' + (a.codigo ? '-' + a.codigo : '') + '.png';
+    $('imgModalImg').src = dataUrl;
+    $('imgModalBackdrop').classList.add('show');
+  } catch(e){
+    console.error(e);
+    toast('Não foi possível gerar a imagem', 'error');
+  }
+}
+function fecharImgModal(){
+  $('imgModalBackdrop').classList.remove('show');
+  $('imgModalImg').src = '';
+  window._imgModalDataUrl = null;
+  window._imgModalNome = null;
+}
+function baixarImgModal(){
+  const dataUrl = window._imgModalDataUrl;
+  const nome = window._imgModalNome || 'cartao-visita.png';
+  if(!dataUrl){ toast('Imagem indisponível', 'error'); return; }
+  const link = document.createElement('a');
+  link.href = dataUrl;
+  link.download = nome;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+function desenharTextoMultilinha(ctx, texto, x, y, maxWidth, lineHeight, maxLinhas){
+  const palavras = String(texto).split(' ');
+  let linha = '';
+  let linhas = 0;
+  for(let i = 0; i < palavras.length; i++){
+    const teste = linha ? linha + ' ' + palavras[i] : palavras[i];
+    const largura = ctx.measureText(teste).width;
+    if(largura > maxWidth && linha){
+      ctx.fillText(linha, x, y + linhas * lineHeight);
+      linhas++;
+      if(maxLinhas && linhas >= maxLinhas) return;
+      linha = palavras[i];
+    } else {
+      linha = teste;
+    }
+  }
+  if(linha) ctx.fillText(linha, x, y + linhas * lineHeight);
+}
+function gerarCartaoVisitaDataURL(im){
+  const W = 1200, H = 630;
+  const canvas = document.createElement('canvas');
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext('2d');
+  const grad = ctx.createLinearGradient(0, 0, W, H);
+  grad.addColorStop(0, '#fef2f2');
+  grad.addColorStop(1, '#fde8e8');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, W, H);
+  ctx.strokeStyle = '#d9534f';
+  ctx.lineWidth = 8;
+  ctx.strokeRect(4, 4, W - 8, H - 8);
+  ctx.fillStyle = '#d9534f';
+  ctx.fillRect(0, 0, 16, H);
+  ctx.fillStyle = '#b91c1c';
+  ctx.font = 'bold 44px -apple-system, "Segoe UI", Roboto, sans-serif';
+  ctx.textBaseline = 'top';
+  ctx.fillText('VISITA CONFIRMADA', 70, 60);
+  ctx.strokeStyle = '#fca5a5';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(70, 130); ctx.lineTo(W - 70, 130);
+  ctx.stroke();
+  ctx.fillStyle = '#7f1d1d';
+  ctx.font = 'bold 54px -apple-system, "Segoe UI", Roboto, sans-serif';
+  desenharTextoMultilinha(ctx, im.titulo || 'Endereço não informado', 70, 180, W - 140, 66, 2);
+  if(im.codigo){
+    ctx.fillStyle = '#4a3d6b';
+    ctx.font = 'bold 42px "Courier New", monospace';
+    ctx.fillText('#' + im.codigo, 70, 400);
+  }
+  ctx.fillStyle = '#b91c1c';
+  ctx.font = 'bold 48px -apple-system, "Segoe UI", Roboto, sans-serif';
+  ctx.fillText(fmtDataHoraCurta(im.dataVisitaAgendada), 70, H - 130);
+  return canvas.toDataURL('image/png');
+}
+
+/* =====================================================
    TAREFAS
 ===================================================== */
 async function carregarTarefas(mostrarLoading){
@@ -1477,14 +2023,12 @@ async function carregarTarefas(mostrarLoading){
   renderizarFiltrosTarefas();
   renderizarTarefas();
 }
-
 function atualizarBadgeTarefas(){
   const num = $('tarefasBadgeNum');
   if(!num) return;
   const pendentes = state.tarefas.filter(t => t.status === 'pendente').length;
   num.textContent = pendentes > 99 ? '99+' : pendentes;
 }
-
 function abrirTarefas(){
   $('tarefasBackdrop').classList.add('show');
   carregarTarefas(false);
@@ -1493,7 +2037,6 @@ function abrirTarefas(){
 function fecharTarefas(){
   $('tarefasBackdrop').classList.remove('show');
 }
-
 function renderizarFiltrosTarefas(){
   const wrap = $('filtrosTarefasCorretores');
   if(!wrap) return;
@@ -1519,7 +2062,6 @@ function renderizarFiltrosTarefas(){
     btn.classList.toggle('active', state.visaoPainel.tarefas === 'concluidas');
   }
 }
-
 function toggleFiltroTarefaCorretor(nome){
   if(state.filtrosTarefasCorretores.has(nome)) state.filtrosTarefasCorretores.delete(nome);
   else state.filtrosTarefasCorretores.add(nome);
@@ -1531,13 +2073,11 @@ function limparFiltroTarefasCorretor(){
   renderizarFiltrosTarefas();
   renderizarTarefas();
 }
-
 function alternarConcluidasTarefas(){
   state.visaoPainel.tarefas = state.visaoPainel.tarefas === 'concluidas' ? 'ativas' : 'concluidas';
   renderizarFiltrosTarefas();
   renderizarTarefas();
 }
-
 function renderizarTarefas(){
   const lista = $('tarefasLista');
   if(!lista) return;
@@ -1558,7 +2098,6 @@ function renderizarTarefas(){
   }
   lista.innerHTML = arr.map(t => tarefaRowHTML(t)).join('');
 }
-
 function tarefaRowHTML(t){
   const concluida = t.status === 'concluida';
   const cor = t.corretor ? corDoCorretor(chaveCorretor_(t.corretor)) : '#64748b';
@@ -1588,7 +2127,6 @@ function tarefaRowHTML(t){
     </div>
   `;
 }
-
 async function criarTarefa(){
   const texto = $('novaTarefaTexto').value.trim();
   const corretor = $('novaTarefaCorretor').value;
@@ -1602,7 +2140,6 @@ async function criarTarefa(){
   toast('Tarefa criada', 'success');
   await carregarTarefas(false);
 }
-
 async function onClickCheckTarefa(id, jaConcluida){
   if(jaConcluida){
     await reabrirTarefa(id);
@@ -1634,7 +2171,6 @@ async function onClickCheckTarefa(id, jaConcluida){
     await carregarTarefas(false);
   }, 400);
 }
-
 async function reabrirTarefa(id){
   marcarSalvando(true);
   const res = await api('reabrirTarefa', { senha: state.adminSenha, id });
@@ -1643,7 +2179,6 @@ async function reabrirTarefa(id){
   toast('Tarefa reaberta', 'success');
   await carregarTarefas(false);
 }
-
 async function excluirTarefa(id){
   const ok = await confirmarAcao({
     titulo: 'Apagar tarefa?',
@@ -1675,33 +2210,37 @@ function iniciarRefreshSilencioso(){
   ['mousemove','mousedown','keydown','touchstart','scroll','click'].forEach(evt => {
     document.addEventListener(evt, resetTimer, { passive: true });
   });
-  window._resetRefreshTimer = resetTimer;
   resetTimer();
 }
-
 function pararRefreshSilencioso(){
   if(state._refreshTimer){
     clearTimeout(state._refreshTimer);
     state._refreshTimer = null;
   }
 }
-
 async function executarRefreshSilencioso(){
   if(state._refreshEmAndamento) return;
   if(estaSalvando()) return;
   if(!state.isAdmin) return;
   state._refreshEmAndamento = true;
   try {
-    const [resAg, resCli, resTar] = await Promise.all([
+    const [resAg, resCli, resTar, resIm] = await Promise.all([
       api('listarAgendamentos', { senha: state.adminSenha }),
       api('listarClientes', { senha: state.adminSenha }),
-      api('listarTarefas', { senha: state.adminSenha })
+      api('listarTarefas', { senha: state.adminSenha }),
+      api('listarTodosImoveis', { senha: state.adminSenha })
     ]);
     if(estaSalvando()){ state._refreshEmAndamento = false; return; }
     if(resAg.ok && resAg.data) state.agendamentos = resAg.data;
     if(resCli.ok && resCli.data) state.clientes = resCli.data;
     if(resTar.ok && resTar.data) state.tarefas = resTar.data;
-
+    if(resIm.ok && resIm.data){
+      state.todosImoveis = resIm.data;
+      state._corretorPorImovelId = {};
+      state.todosImoveis.forEach(im => {
+        state._corretorPorImovelId[String(im.id)] = im.corretor || '';
+      });
+    }
     const emModal = document.querySelector('.modal-backdrop.show');
     atualizarBadgeTarefas();
     if(!emModal){
