@@ -1561,6 +1561,71 @@ const LINK_HUGO = 'https://www.quintoandar.com.br/corretor/atendimento/HugoFelip
 const LINK_CAROL = '';
 
 const PREFIXO_EVENTO = 'evento_';
+ const EVENTO_FAKE_KEY = 'evento_fake_imovel_id';
+const EVENTO_FAKE_CONFIG = {
+  telefone: '00000000000',
+  rua: 'Sistema de eventos',
+  numero: '000',
+  bairro: 'Sistema',
+  clienteNome: 'Sistema',
+  preco: '',
+  condominio: '',
+  iptu: '',
+  descricao: '',
+  link: '',
+  imagem: '',
+  chaveTexto: '',
+  status: 'pendente'
+};
+
+/* Garante que existe um imóvel "fantasma" pra ancorar eventos.
+   Cria 1x e guarda o id no localStorage. */
+async function garantirImovelFantasma(){
+  let idFake = localStorage.getItem(EVENTO_FAKE_KEY);
+  if(idFake) return idFake;
+
+  // Tenta achar se já existe um "Sistema de eventos" órfão
+  marcarSalvando(true);
+  const resList = await api('adminListar', { senha: state.adminSenha });
+  marcarSalvando(false);
+  if(resList.ok && resList.data){
+    const achado = resList.data.find(im =>
+      String(im.rua || '').trim() === 'Sistema de eventos' &&
+      String(im.numero || '').trim() === '000'
+    );
+    if(achado && achado.id){
+      localStorage.setItem(EVENTO_FAKE_KEY, achado.id);
+      return achado.id;
+    }
+  }
+
+  // Cria novo
+  marcarSalvando(true);
+  const res = await api('salvarImovel', {
+    senha: state.adminSenha,
+    id: '',
+    telefone: EVENTO_FAKE_CONFIG.telefone,
+    rua: EVENTO_FAKE_CONFIG.rua,
+    numero: EVENTO_FAKE_CONFIG.numero,
+    bairro: EVENTO_FAKE_CONFIG.bairro,
+    preco: '',
+    condominio: '',
+    iptu: '',
+    descricao: 'Imóvel técnico interno. Não usar.',
+    link: '',
+    imagem: '',
+    chaveTexto: '',
+    status: 'pendente'
+  });
+  marcarSalvando(false);
+
+  if(!res.ok || !res.id){
+    toast(res.error || 'Não foi possível preparar o sistema de eventos', 'error');
+    return null;
+  }
+  localStorage.setItem(EVENTO_FAKE_KEY, res.id);
+  return res.id;
+}
 
 /* Dias da semana em português */
 const DIAS_SEMANA = ['DOMINGO','SEGUNDA','TERÇA','QUARTA','QUINTA','SEXTA','SÁBADO'];
@@ -1789,6 +1854,8 @@ function isEvento_(a){
   if(!a) return false;
   const id = String(a.id || '');
   if(id.startsWith(PREFIXO_EVENTO)) return true;
+  const cod = String(a.codigo || '');
+  if(cod.startsWith(PREFIXO_EVENTO)) return true;
   const tel = normalizaTel(a.telefone || '');
   if(!tel || tel === '00000000000') return true;
   return false;
@@ -3018,10 +3085,18 @@ async function salvarEvento(ev){
   marcarSalvando(true);
   const iso = dataEscolhida.toISOString();
 
+  // ✅ Garante imóvel fantasma
+  const idFake = await garantirImovelFantasma();
+  if(!idFake){
+    marcarSalvando(false);
+    if(btn) btn.disabled = false;
+    return;
+  }
+
   const idEvento = id || (PREFIXO_EVENTO + Date.now() + '_' + Math.random().toString(36).slice(2,7));
   const res = await api('agendarVisita', {
     senha: state.adminSenha,
-    id: idEvento,
+    id: idFake,             // usa o imóvel fantasma
     dataAgendada: iso,
     rua: descricao || '',
     numero: '9999999',
@@ -3030,7 +3105,7 @@ async function salvarEvento(ev){
     clienteNome: titulo,
     corretor: corretor,
     titulo: titulo,
-    codigo: ''
+    codigo: idEvento        // guarda o id do evento como código pra recuperar depois
   });
   marcarSalvando(false);
   if(btn) btn.disabled = false;
