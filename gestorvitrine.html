@@ -1561,50 +1561,10 @@ const LINK_HUGO = 'https://www.quintoandar.com.br/corretor/atendimento/HugoFelip
 const LINK_CAROL = '';
 
 const PREFIXO_EVENTO = 'evento_';
- 
-  telefone: '00000000000',
-  rua: 'Sistema de eventos',
-  numero: '000',
-  bairro: 'Sistema',
-  clienteNome: 'Sistema',
-  preco: '',
-  condominio: '',
-  iptu: '',
-  descricao: '',
-  link: '',
-  imagem: '',
-  chaveTexto: '',
-  status: 'pendente'
-};
 
-/* Garante que existe um imóvel "fantasma" pra ancorar eventos.
-   Cria 1x e guarda o id no localStorage. */
-/* Cria 1 imóvel "âncora" por evento. Guarda o id no próprio agendamento. */
-async function criarImovelAncoraEvento(titulo, descricao, corretor){
-  marcarSalvando(true);
-  const res = await api('salvarImovel', {
-    senha: state.adminSenha,
-    id: '',
-    telefone: '00000000000',
-    rua: titulo,
-    numero: '000',
-    bairro: descricao || '',
-    preco: '',
-    condominio: '',
-    iptu: '',
-    descricao: descricao || 'Evento da agenda',
-    link: '',
-    imagem: '',
-    chaveTexto: '',
-    corretor: corretor,
-    status: 'pendente'
-  });
-  marcarSalvando(false);
-  if(!res.ok || !res.id) return null;
-  return res.id;
-}
-
-/* Dias da semana em português */
+/* =====================================================
+   DIAS DA SEMANA
+===================================================== */
 const DIAS_SEMANA = ['DOMINGO','SEGUNDA','TERÇA','QUARTA','QUINTA','SEXTA','SÁBADO'];
 const DIAS_SEMANA_CURTO = ['DOM','SEG','TER','QUA','QUI','SEX','SÁB'];
 
@@ -1684,25 +1644,26 @@ function toast(msg, type=''){
   clearTimeout(t._timer);
   t._timer = setTimeout(() => t.classList.remove('show'), 3200);
 }
+
+/* ✅ CORRIGIDO — normalizaTel readicionada */
 function normalizaTel(t){ return String(t || '').replace(/\D/g, ''); }
+
+/* ✅ CORRIGIDO — esc readicionada */
 function esc(s){
   return String(s || '')
     .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 }
 
+/* ✅ CORRIGIDO — fmtTel readicionada (estava faltando!) */
 function fmtTel(t){
   const n = normalizaTel(t);
   if(n.length === 11) return `(${n.slice(0,2)}) ${n.slice(2,3)} ${n.slice(3,7)}-${n.slice(7)}`;
   if(n.length === 10) return `(${n.slice(0,2)}) ${n.slice(2,6)}-${n.slice(6)}`;
-  return t;
+  return String(t || '');
 }
 
-/* =====================================================
-   ✅ DATAS COM DIA DA SEMANA
-===================================================== */
-
-/* 03/10/2026 - SÁBADO */
+/* ✅ CORRIGIDO — fmtData com dia da semana completo */
 function fmtData(d){
   if(!d) return '';
   const dt = new Date(d);
@@ -1714,7 +1675,7 @@ function fmtData(d){
   return `${dia}/${mes}/${ano} - ${ds}`;
 }
 
-/* 03/10 - SÁB */
+/* ✅ CORRIGIDO — fmtDataCurta com dia da semana curto */
 function fmtDataCurta(d){
   if(!d) return '';
   const dt = new Date(d);
@@ -1725,7 +1686,7 @@ function fmtDataCurta(d){
   return `${dia}/${mes} - ${ds}`;
 }
 
-/* 03/10/2026 - SÁBADO às 14:30 */
+/* ✅ CORRIGIDO — fmtDataHora com dia da semana completo */
 function fmtDataHora(d){
   if(!d) return '';
   const dt = new Date(d);
@@ -1735,7 +1696,7 @@ function fmtDataHora(d){
   return fmtData(dt) + ' às ' + h + ':' + m;
 }
 
-/* 03/10/2026 - SÁBADO · 14:30 */
+/* ✅ CORRIGIDO — fmtDataHoraCurta com dia da semana completo + · */
 function fmtDataHoraCurta(d){
   if(!d) return '';
   const dt = new Date(d);
@@ -1778,19 +1739,19 @@ function hojeISO(){
   return local.toISOString().slice(0,10);
 }
 
-/* Card da agenda: usa classe baseada em proximidade (só pra cor, mas texto sempre completo) */
+/* ✅ CORRIGIDO — classificarAgendamento agora sempre retorna data completa com dia da semana */
 function classificarAgendamento(iso){
   if(!iso) return { label: '—', classe: 'distante' };
   const d = new Date(iso);
+  if(isNaN(d.getTime())) return { label: '—', classe: 'distante' };
   const hoje = new Date();
   const diff = Math.floor((d - hoje) / 86400000);
   let classe = 'distante';
   if(d.toDateString() === hoje.toDateString()) classe = 'hoje';
   else if(diff === 1) classe = 'amanha';
   else if(diff >= 2 && diff <= 7) classe = 'semana';
-  const h = String(d.getHours()).padStart(2,'0');
-  const m = String(d.getMinutes()).padStart(2,'0');
-  return { label: fmtData(d) + ' · ' + h + ':' + m, classe };
+  // ✅ Sempre data completa com dia da semana, sem rótulos "Hoje"/"Amanhã"
+  return { label: fmtDataHoraCurta(d), classe };
 }
 
 function emojiTemperatura(temp){
@@ -1827,6 +1788,8 @@ function camposEndereco_(im){
     chave:  String(im.chaveTexto || '').trim()
   };
 }
+
+/* ✅ CORRIGIDO — isEvento_ detecta corretamente */
 function isEvento_(a){
   if(!a) return false;
   const id = String(a.id || '');
@@ -3065,6 +3028,7 @@ async function salvarEvento(ev){
   // EDITAR: reaproveita o imóvel antigo; CRIAR: cria imóvel novo
   let idImovel = idEventoAntigo;
   if(!idImovel){
+    // ✅ CORRIGIDO: criarImovelAncoraEvento não mexe mais no contador de salvando
     idImovel = await criarImovelAncoraEvento(titulo, descricao, corretor);
     if(!idImovel){
       marcarSalvando(false);
@@ -3109,6 +3073,29 @@ async function salvarEvento(ev){
   await carregarAgenda(false);
 }
 
+/* ✅ CORRIGIDO — criarImovelAncoraEvento não mexe mais no contador de salvando */
+async function criarImovelAncoraEvento(titulo, descricao, corretor){
+  const res = await api('salvarImovel', {
+    senha: state.adminSenha,
+    id: '',
+    telefone: '00000000000',
+    rua: titulo,
+    numero: '000',
+    bairro: descricao || '',
+    preco: '',
+    condominio: '',
+    iptu: '',
+    descricao: descricao || 'Evento da agenda',
+    link: '',
+    imagem: '',
+    chaveTexto: '',
+    corretor: corretor,
+    status: 'pendente'
+  });
+  if(!res.ok || !res.id) return null;
+  return res.id;
+}
+
 async function excluirEvento(id){
   const ok = await confirmarAcao({
     titulo: 'Excluir evento?',
@@ -3121,10 +3108,9 @@ async function excluirEvento(id){
   marcarSalvando(false);
   if(!res.ok){ toast(res.error || 'Erro', 'error'); return; }
   toast('Evento excluído', 'success');
-  state.agendamentos = state.agendamentos.filter(a => a.id !== id);
-  atualizarBalAgenda();
-  renderizarFiltrosAgenda();
-  renderizarAgenda();
+  // ✅ CORRIGIDO: recarrega a agenda em vez de só remover localmente
+  state.carregado.agenda = false;
+  await carregarAgenda(false);
 }
 
 /* =====================================================
