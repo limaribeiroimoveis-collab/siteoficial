@@ -379,7 +379,6 @@
   .agenda-row-v2 .btn-editar-visita:hover{ background: var(--bg-alt); color: var(--text); border-color: var(--muted); }
   .agenda-row-v2 .btn-editar-visita .ico{ width: 14px; height: 14px; }
 
-  /* ✅ NOVO — botão excluir com mesma aparência do btn-editar-visita, mas em vermelho */
   .agenda-row-v2 .btn-excluir-evento{
     display: inline-flex; align-items: center; justify-content: center; gap: 6px;
     padding: 6px 14px; border-radius: var(--radius-sm);
@@ -1616,7 +1615,8 @@ const state = {
   _atividadeFiltro: 'todos',
   _linkCachePorTel: {},
   _imgModalDataUrl: null,
-  _imgModalNome: null
+  _imgModalNome: null,
+  _corretorPorImovelId: {}   // ✅ id do imóvel âncora → corretor
 };
 
 const $ = id => document.getElementById(id);
@@ -1657,26 +1657,18 @@ function toast(msg, type=''){
   clearTimeout(t._timer);
   t._timer = setTimeout(() => t.classList.remove('show'), 3200);
 }
-
-/* ✅ normalizaTel */
 function normalizaTel(t){ return String(t || '').replace(/\D/g, ''); }
-
-/* ✅ esc */
 function esc(s){
   return String(s || '')
     .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 }
-
-/* ✅ fmtTel — readicionada */
 function fmtTel(t){
   const n = normalizaTel(t);
   if(n.length === 11) return `(${n.slice(0,2)}) ${n.slice(2,3)} ${n.slice(3,7)}-${n.slice(7)}`;
   if(n.length === 10) return `(${n.slice(0,2)}) ${n.slice(2,6)}-${n.slice(6)}`;
   return String(t || '');
 }
-
-/* ✅ fmtData — DD/MM/AAAA - DIA_DA_SEMANA */
 function fmtData(d){
   if(!d) return '';
   const dt = new Date(d);
@@ -1687,8 +1679,6 @@ function fmtData(d){
   const ds = DIAS_SEMANA[dt.getDay()];
   return `${dia}/${mes}/${ano} - ${ds}`;
 }
-
-/* ✅ fmtDataCurta — DD/MM - DIA */
 function fmtDataCurta(d){
   if(!d) return '';
   const dt = new Date(d);
@@ -1698,8 +1688,6 @@ function fmtDataCurta(d){
   const ds = DIAS_SEMANA_CURTO[dt.getDay()];
   return `${dia}/${mes} - ${ds}`;
 }
-
-/* ✅ fmtDataHora — DD/MM/AAAA - DIA_DA_SEMANA às HH:MM */
 function fmtDataHora(d){
   if(!d) return '';
   const dt = new Date(d);
@@ -1708,8 +1696,6 @@ function fmtDataHora(d){
   const m = String(dt.getMinutes()).padStart(2,'0');
   return fmtData(dt) + ' às ' + h + ':' + m;
 }
-
-/* ✅ fmtDataHoraCurta — DD/MM/AAAA - DIA_DA_SEMANA · HH:MM */
 function fmtDataHoraCurta(d){
   if(!d) return '';
   const dt = new Date(d);
@@ -1718,7 +1704,6 @@ function fmtDataHoraCurta(d){
   const m = String(dt.getMinutes()).padStart(2,'0');
   return fmtData(dt) + ' · ' + h + ':' + m;
 }
-
 function diasAtras(d){
   if(!d) return null;
   const dt = new Date(d);
@@ -1751,8 +1736,6 @@ function hojeISO(){
   const local = new Date(d.getTime() - off * 60000);
   return local.toISOString().slice(0,10);
 }
-
-/* ✅ classificarAgendamento — sempre data completa com dia da semana */
 function classificarAgendamento(iso){
   if(!iso) return { label: '—', classe: 'distante' };
   const d = new Date(iso);
@@ -1765,7 +1748,6 @@ function classificarAgendamento(iso){
   else if(diff >= 2 && diff <= 7) classe = 'semana';
   return { label: fmtDataHoraCurta(d), classe };
 }
-
 function emojiTemperatura(temp){
   if(temp === 'quente') return '🔥';
   if(temp === 'morno') return '🌡️';
@@ -1800,8 +1782,6 @@ function camposEndereco_(im){
     chave:  String(im.chaveTexto || '').trim()
   };
 }
-
-/* ✅ isEvento_ — detecta pelo prefixo evento_ ou telefone 00000000000 */
 function isEvento_(a){
   if(!a) return false;
   const id = String(a.id || '');
@@ -1816,21 +1796,40 @@ function isEvento_(a){
 /* ✅ NOVO — resolve o corretor de um item com fallback em cascata */
 function resolverCorretor_(item){
   if(!item) return '';
-  // 1) corretor direto do item (vem do backend)
+  // 1) corretor direto do item
   if(item.corretor) return String(item.corretor).trim();
-  // 2) corretor do cliente cadastrado (pelo telefone)
+  // 2) corretor do imóvel âncora (eventos) — busca pelo id
+  const idIm = String(item.id || '');
+  if(idIm && state._corretorPorImovelId && state._corretorPorImovelId[idIm]){
+    return String(state._corretorPorImovelId[idIm]).trim();
+  }
+  // 3) corretor do cliente cadastrado (pelo telefone)
   const tel = normalizaTel(item.telefone || '');
-  if(tel){
+  if(tel && tel !== '00000000000'){
     const cli = state.clientes.find(c => normalizaTel(c.telefone) === tel);
     if(cli && cli.corretor) return String(cli.corretor).trim();
   }
-  // 3) corretor do cliente cadastrado (pelo nome)
+  // 4) corretor do cliente cadastrado (pelo nome)
   const nome = String(item.clienteNome || '').trim().toLowerCase();
   if(nome){
     const cli = state.clientes.find(c => (c.nome||'').trim().toLowerCase() === nome);
     if(cli && cli.corretor) return String(cli.corretor).trim();
   }
   return '';
+}
+
+/* ✅ NOVO — limpa o título do evento: remove ", 000" e " - descricao" que o backend concatenou */
+function tituloEventoLimpo_(a){
+  let t = String(a.rua || a.titulo || a.clienteNome || 'Evento').trim();
+  // remove ", 000" ou ",000" (número placeholder)
+  t = t.replace(/,?\s*000\s*/g, ' ').replace(/\s+/g, ' ').trim();
+  // remove " - descricao" (o backend costuma concatenar bairro com " - ")
+  const desc = String(a.bairro || '').trim();
+  if(desc){
+    const idx = t.toLowerCase().lastIndexOf(' - ' + desc.toLowerCase());
+    if(idx > 0) t = t.slice(0, idx).trim();
+  }
+  return t || 'Evento';
 }
 
 /* =====================================================
@@ -2803,8 +2802,19 @@ async function carregarAgenda(mostrarLoading){
   if(mostrarLoading){
     $('agendaLista').innerHTML = '<div class="loading-inline"><span class="loader loader-lg"></span><p>Carregando agenda...</p></div>';
   }
-  const res = await api('listarAgendamentos', { senha: state.adminSenha });
+  // ✅ Carrega agendamentos E todos imóveis em paralelo, para mapear corretor dos eventos
+  const [res, resIm] = await Promise.all([
+    api('listarAgendamentos', { senha: state.adminSenha }),
+    api('listarTodosImoveis', { senha: state.adminSenha })
+  ]);
   state.agendamentos = (res.ok && res.data) ? res.data : [];
+  if(resIm.ok && resIm.data){
+    state.todosImoveis = resIm.data;
+    state._corretorPorImovelId = {};
+    state.todosImoveis.forEach(im => {
+      state._corretorPorImovelId[String(im.id)] = im.corretor || '';
+    });
+  }
   state.carregado.agenda = true;
   atualizarBalAgenda();
   renderizarFiltrosAgenda();
@@ -2856,7 +2866,7 @@ function limparFiltroAgenda(){
 function renderizarAgenda(){
   const lista = $('agendaLista');
   let arr = [...state.agendamentos];
-  // ✅ Enriquece com corretor do cliente quando ausente
+  // ✅ Enriquece com corretor do cliente/imóvel quando ausente
   arr = arr.map(a => {
     if(a.corretor) return a;
     const corr = resolverCorretor_(a);
@@ -2889,10 +2899,10 @@ function agendaRowHTML(a, conflito){
   const id = esc(a.id);
   const tel = esc(a.telefone);
 
-  // ✅ CARD DE EVENTO — descrição SÓ na segunda linha; botões Editar + Excluir na coluna direita
+  // ✅ CARD DE EVENTO — título limpo (sem "000" nem descrição concatenada) + descrição só na 2ª linha
   if(evento){
-    const tituloEv = esc(a.titulo || a.clienteNome || 'Evento');
-    const descricaoEv = esc(a.bairro || a.descricao || '');
+    const tituloEv = esc(tituloEventoLimpo_(a));
+    const descricaoEv = esc(String(a.bairro || '').trim());
     const corrEv = a.corretor ? esc(a.corretor) : '';
     const corCorrEv = a.corretor ? corDoCorretor(chaveCorretor_(a.corretor)) : '#64748b';
     return `
@@ -3025,9 +3035,10 @@ function abrirEditarEvento(id){
   if(!a){ toast('Evento não encontrado', 'error'); return; }
   $('eventoModalTitulo').textContent = 'Editar evento';
   $('eventoId').value = id;
-  $('eventoTitulo').value = a.titulo || a.rua || '';
-  // ✅ Descrição vem do campo bairro (é onde salvamos)
-  $('eventoDescricao').value = a.bairro || a.descricao || '';
+  // ✅ Título puro = a.rua (a.titulo vem concatenado do backend)
+  $('eventoTitulo').value = tituloEventoLimpo_(a);
+  // ✅ Descrição = a.bairro
+  $('eventoDescricao').value = a.bairro || '';
   const dtInput = $('eventoDataHora');
   dtInput.min = hojeISO() + 'T00:00';
   dtInput.value = toInputDateTime(a.dataVisitaAgendada) || '';
@@ -3073,12 +3084,13 @@ async function salvarEvento(ev){
       return;
     }
   } else {
+    // ✅ numero vazio para não concatenar "000" no título do backend
     await api('salvarImovel', {
       senha: state.adminSenha,
       id: idImovel,
       telefone: '00000000000',
       rua: titulo,
-      numero: '000',
+      numero: '',
       bairro: descricao || '',
       descricao: descricao || 'Evento da agenda',
       corretor: corretor,
@@ -3086,12 +3098,13 @@ async function salvarEvento(ev){
     });
   }
 
+  // ✅ numero vazio aqui também
   const res = await api('agendarVisita', {
     senha: state.adminSenha,
     id: idImovel,
     dataAgendada: iso,
     rua: titulo,
-    numero: '000',
+    numero: '',
     bairro: descricao || ''
   });
   marcarSalvando(false);
@@ -3109,12 +3122,13 @@ async function salvarEvento(ev){
 }
 
 async function criarImovelAncoraEvento(titulo, descricao, corretor){
+  // ✅ numero vazio para não concatenar "000" no título
   const res = await api('salvarImovel', {
     senha: state.adminSenha,
     id: '',
     telefone: '00000000000',
     rua: titulo,
-    numero: '000',
+    numero: '',
     bairro: descricao || '',
     preco: '',
     condominio: '',
@@ -3587,7 +3601,6 @@ function renderizarNotificacoes(){
       renderizarConcluidasNoPainel(listaVisitar, 'visita');
     } else {
       let arr = [...(state.notificacoes.visita || [])];
-      // ✅ Corretor com fallback em cascata
       arr = arr.map(item => {
         const cli = state.clientes.find(x => normalizaTel(x.telefone) === normalizaTel(item.telefone));
         const corretorFinal = resolverCorretor_(item);
@@ -3614,7 +3627,6 @@ function renderizarNotificacoes(){
       renderizarConcluidasNoPainel(listaGostei, 'gostei');
     } else {
       let arr = [...(state.notificacoes.gostei || [])];
-      // ✅ Corretor com fallback em cascata
       arr = arr.map(item => {
         const cli = state.clientes.find(x => normalizaTel(x.telefone) === normalizaTel(item.telefone));
         const corretorFinal = resolverCorretor_(item);
@@ -3676,7 +3688,6 @@ function renderizarConcluidasNoPainel(container, tipo){
 function concluidaRowHTML(im){
   const cli = state.clientes.find(c => normalizaTel(c.telefone) === normalizaTel(im.telefone));
   const nomeCliente = cli ? cli.nome : (im.clienteNome || '(sem cadastro)');
-  // ✅ Corretor com fallback
   const corretor = resolverCorretor_(im) || (cli && cli.corretor) || '';
   const cor = corretor ? corDoCorretor(chaveCorretor_(corretor)) : '#64748b';
   const isVisita = im.tipoConcluida === 'visita';
