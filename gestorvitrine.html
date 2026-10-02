@@ -1821,9 +1821,9 @@ function resolverCorretor_(item){
 /* ✅ NOVO — limpa o título do evento: remove ", 000" e " - descricao" que o backend concatenou */
 function tituloEventoLimpo_(a){
   let t = String(a.rua || a.titulo || a.clienteNome || 'Evento').trim();
-  // remove ", 000" ou ",000" (número placeholder)
-  t = t.replace(/,?\s*000\s*/g, ' ').replace(/\s+/g, ' ').trim();
-  // remove " - descricao" (o backend costuma concatenar bairro com " - ")
+  // ✅ Remove marcadores de número placeholder: 000, S/N, s/n, -, .
+  t = t.replace(/,?\s*(000|S\/N|s\/n|-|\.)\s*/g, ' ').replace(/\s+/g, ' ').trim();
+  // Remove " - descricao" (bairro concatenado)
   const desc = String(a.bairro || '').trim();
   if(desc){
     const idx = t.toLowerCase().lastIndexOf(' - ' + desc.toLowerCase());
@@ -3085,28 +3085,28 @@ async function salvarEvento(ev){
     }
   } else {
     // ✅ numero vazio para não concatenar "000" no título do backend
-    await api('salvarImovel', {
-      senha: state.adminSenha,
-      id: idImovel,
-      telefone: '00000000000',
-      rua: titulo,
-      numero: '',
-      bairro: descricao || '',
-      descricao: descricao || 'Evento da agenda',
-      corretor: corretor,
-      status: 'pendente'
-    });
+   await api('salvarImovel', {
+  senha: state.adminSenha,
+  id: idImovel,
+  telefone: '00000000000',
+  rua: titulo,
+  numero: 'S/N',              // ✅ era ''
+  bairro: descricao || '',
+  descricao: descricao || 'Evento da agenda',
+  corretor: corretor,
+  status: 'pendente'
+});
   }
 
   // ✅ numero vazio aqui também
   const res = await api('agendarVisita', {
-    senha: state.adminSenha,
-    id: idImovel,
-    dataAgendada: iso,
-    rua: titulo,
-    numero: '',
-    bairro: descricao || ''
-  });
+  senha: state.adminSenha,
+  id: idImovel,
+  dataAgendada: iso,
+  rua: titulo,
+  numero: 'S/N',              // ✅ era ''
+  bairro: descricao || ''
+});
   marcarSalvando(false);
   if(btn) btn.disabled = false;
 
@@ -3122,13 +3122,12 @@ async function salvarEvento(ev){
 }
 
 async function criarImovelAncoraEvento(titulo, descricao, corretor){
-  // ✅ numero vazio para não concatenar "000" no título
   const res = await api('salvarImovel', {
     senha: state.adminSenha,
     id: '',
     telefone: '00000000000',
     rua: titulo,
-    numero: '',
+    numero: 'S/N',            // ✅ era ''
     bairro: descricao || '',
     preco: '',
     condominio: '',
