@@ -1561,8 +1561,7 @@ const LINK_HUGO = 'https://www.quintoandar.com.br/corretor/atendimento/HugoFelip
 const LINK_CAROL = '';
 
 const PREFIXO_EVENTO = 'evento_';
- const EVENTO_FAKE_KEY = 'evento_fake_imovel_id';
-const EVENTO_FAKE_CONFIG = {
+ 
   telefone: '00000000000',
   rua: 'Sistema de eventos',
   numero: '000',
@@ -1580,50 +1579,28 @@ const EVENTO_FAKE_CONFIG = {
 
 /* Garante que existe um imóvel "fantasma" pra ancorar eventos.
    Cria 1x e guarda o id no localStorage. */
-async function garantirImovelFantasma(){
-  let idFake = localStorage.getItem(EVENTO_FAKE_KEY);
-  if(idFake) return idFake;
-
-  // Tenta achar se já existe um "Sistema de eventos" órfão
-  marcarSalvando(true);
-  const resList = await api('adminListar', { senha: state.adminSenha });
-  marcarSalvando(false);
-  if(resList.ok && resList.data){
-    const achado = resList.data.find(im =>
-      String(im.rua || '').trim() === 'Sistema de eventos' &&
-      String(im.numero || '').trim() === '000'
-    );
-    if(achado && achado.id){
-      localStorage.setItem(EVENTO_FAKE_KEY, achado.id);
-      return achado.id;
-    }
-  }
-
-  // Cria novo
+/* Cria 1 imóvel "âncora" por evento. Guarda o id no próprio agendamento. */
+async function criarImovelAncoraEvento(titulo, descricao, corretor){
   marcarSalvando(true);
   const res = await api('salvarImovel', {
     senha: state.adminSenha,
     id: '',
-    telefone: EVENTO_FAKE_CONFIG.telefone,
-    rua: EVENTO_FAKE_CONFIG.rua,
-    numero: EVENTO_FAKE_CONFIG.numero,
-    bairro: EVENTO_FAKE_CONFIG.bairro,
+    telefone: '00000000000',
+    rua: titulo,
+    numero: '000',
+    bairro: descricao || '',
     preco: '',
     condominio: '',
     iptu: '',
-    descricao: 'Imóvel técnico interno. Não usar.',
+    descricao: descricao || 'Evento da agenda',
     link: '',
     imagem: '',
     chaveTexto: '',
+    corretor: corretor,
     status: 'pendente'
   });
   marcarSalvando(false);
-
-  if(!res.ok || !res.id){
-    toast(res.error || 'Não foi possível preparar o sistema de eventos', 'error');
-    return null;
-  }
-  localStorage.setItem(EVENTO_FAKE_KEY, res.id);
+  if(!res.ok || !res.id) return null;
   return res.id;
 }
 
@@ -2911,9 +2888,9 @@ function agendaRowHTML(a, conflito){
   const id = esc(a.id);
   const tel = esc(a.telefone);
 
-  if(evento){
-    const tituloEv = esc(a.clienteNome || a.titulo || 'Evento');
-    const descricaoEv = esc(a.rua || '');
+   if(evento){
+    const tituloEv = esc(a.titulo || a.clienteNome || 'Evento');
+    const descricaoEv = esc(a.bairro || a.rua || '');
     const corrEv = a.corretor ? esc(a.corretor) : '';
     const corCorrEv = a.corretor ? corDoCorretor(chaveCorretor_(a.corretor)) : '#64748b';
     return `
@@ -3031,7 +3008,7 @@ function abrirAnuncioAgenda(id){
 ===================================================== */
 function abrirNovoEvento(){
   $('eventoModalTitulo').textContent = 'Novo evento';
-  $('eventoId').value = '';
+  $('eventoId').value = '';   // vazio = criar novo
   $('eventoTitulo').value = '';
   $('eventoDescricao').value = '';
   const dtInput = $('eventoDataHora');
@@ -3047,9 +3024,9 @@ function abrirEditarEvento(id){
   const a = state.agendamentos.find(x => x.id === id);
   if(!a){ toast('Evento não encontrado', 'error'); return; }
   $('eventoModalTitulo').textContent = 'Editar evento';
-  $('eventoId').value = id;
-  $('eventoTitulo').value = a.clienteNome || a.titulo || '';
-  $('eventoDescricao').value = a.rua || '';
+  $('eventoId').value = id;  // guarda o id do imóvel âncora
+  $('eventoTitulo').value = a.titulo || a.rua || '';
+  $('eventoDescricao').value = a.bairro || a.descricao || '';
   const dtInput = $('eventoDataHora');
   dtInput.min = hojeISO() + 'T00:00';
   dtInput.value = toInputDateTime(a.dataVisitaAgendada) || '';
@@ -3062,7 +3039,7 @@ function abrirEditarEvento(id){
 function fecharEventoModal(){ $('eventoBackdrop').classList.remove('show'); }
 
 async function salvarEvento(ev){
-  const id = $('eventoId').value || '';
+  const idEventoAntigo = $('eventoId').value || '';
   const titulo = $('eventoTitulo').value.trim();
   const descricao = $('eventoDescricao').value.trim();
   const dataHora = $('eventoDataHora').value;
@@ -3085,27 +3062,38 @@ async function salvarEvento(ev){
   marcarSalvando(true);
   const iso = dataEscolhida.toISOString();
 
-  // ✅ Garante imóvel fantasma
-  const idFake = await garantirImovelFantasma();
-  if(!idFake){
-    marcarSalvando(false);
-    if(btn) btn.disabled = false;
-    return;
+  // EDITAR: reaproveita o imóvel antigo; CRIAR: cria imóvel novo
+  let idImovel = idEventoAntigo;
+  if(!idImovel){
+    idImovel = await criarImovelAncoraEvento(titulo, descricao, corretor);
+    if(!idImovel){
+      marcarSalvando(false);
+      if(btn) btn.disabled = false;
+      toast('Erro ao criar evento', 'error');
+      return;
+    }
+  } else {
+    // Atualiza o imóvel existente com os novos dados
+    await api('salvarImovel', {
+      senha: state.adminSenha,
+      id: idImovel,
+      telefone: '00000000000',
+      rua: titulo,
+      numero: '000',
+      bairro: descricao || '',
+      descricao: descricao || 'Evento da agenda',
+      corretor: corretor,
+      status: 'pendente'
+    });
   }
 
-  const idEvento = id || (PREFIXO_EVENTO + Date.now() + '_' + Math.random().toString(36).slice(2,7));
   const res = await api('agendarVisita', {
     senha: state.adminSenha,
-    id: idFake,             // usa o imóvel fantasma
+    id: idImovel,
     dataAgendada: iso,
-    rua: descricao || '',
-    numero: '9999999',
-    bairro: '',
-    telefone: '',
-    clienteNome: titulo,
-    corretor: corretor,
-    titulo: titulo,
-    codigo: idEvento        // guarda o id do evento como código pra recuperar depois
+    rua: titulo,
+    numero: '000',
+    bairro: descricao || ''
   });
   marcarSalvando(false);
   if(btn) btn.disabled = false;
@@ -3115,7 +3103,7 @@ async function salvarEvento(ev){
     return;
   }
 
-  toast(id ? 'Evento atualizado' : 'Evento criado', 'success');
+  toast(idEventoAntigo ? 'Evento atualizado' : 'Evento criado', 'success');
   fecharEventoModal();
   state.carregado.agenda = false;
   await carregarAgenda(false);
