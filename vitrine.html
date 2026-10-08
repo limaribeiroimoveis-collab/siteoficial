@@ -123,7 +123,7 @@
     .brand-text{ display: none; }
   }
 
-  /* BOTÃO PWA NO CENTRO DO HEADER */
+  /* BOTÃO PWA NO CENTRO DO HEADER — sempre visível */
   .pwa-btn-center{
     background: rgba(255,255,255,.1);
     border: 1px solid rgba(255,255,255,.18);
@@ -131,7 +131,7 @@
     height: 36px;
     padding: 0 14px;
     border-radius: 999px;
-    display: none;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 7px;
@@ -145,7 +145,6 @@
     position: relative;
     animation: pwaPulse 2.4s ease-in-out infinite;
   }
-  .pwa-btn-center.show{ display: inline-flex; }
   .pwa-btn-center:hover{ background: rgba(255,255,255,.22); }
   .pwa-btn-center .pwa-emoji{ font-size: 1rem; line-height: 1; }
   @keyframes pwaPulse{
@@ -533,35 +532,57 @@
   }
   .card:hover .card-img{ transform: scale(1.04); }
 
-  /* ✅ OVERLAY com 2 linhas reais — cada linha mostra o máximo
-     possível antes de cortar com reticências */
+  /* ✅ OVERLAY 1 linha — fundo mais transparente (não tampa a foto) */
   .card-overlay-specs{
     position: absolute;
     left: 8px; right: 8px;
     bottom: 8px;
-    background: rgba(15,23,42,.78);
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
+    background: rgba(15,23,42,.55);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
     color: #fff;
     font-size: .68rem;
     font-weight: 700;
     line-height: 1.3;
-    padding: 6px 10px;
+    padding: 5px 10px;
     border-radius: 8px;
     letter-spacing: .2px;
-    box-shadow: 0 2px 8px rgba(0,0,0,.25);
+    box-shadow: 0 2px 6px rgba(0,0,0,.15);
     z-index: 3;
     pointer-events: none;
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-  }
-  .card-overlay-specs .spec-linha{
     display: block;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    width: 100%;
+    width: calc(100% - 16px);
+    text-shadow: 0 1px 2px rgba(0,0,0,.4);
+  }
+
+  /* ✅ Badge extraído de *asteriscos* — canto superior esquerdo, saindo um pouco pra cima */
+  .card-tag-topo{
+    position: absolute;
+    top: -8px;
+    left: 8px;
+    background: linear-gradient(135deg, #8b7355 0%, #6d5a42 100%);
+    color: #fff;
+    font-size: .62rem;
+    font-weight: 800;
+    letter-spacing: .5px;
+    text-transform: uppercase;
+    padding: 5px 12px;
+    border-radius: 999px;
+    z-index: 5;
+    box-shadow: 0 3px 8px rgba(0,0,0,.35), 0 0 0 2px rgba(255,255,255,.9);
+    white-space: nowrap;
+    max-width: calc(100% - 24px);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    pointer-events: none;
+    animation: badgeTagIn .3s ease-out both;
+  }
+  @keyframes badgeTagIn{
+    from{ opacity: 0; transform: translateY(-4px) scale(.9); }
+    to{ opacity: 1; transform: translateY(0) scale(1); }
   }
 
   .card-body{ padding: 10px 10px 8px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
@@ -1445,31 +1466,38 @@ function formatarPreco(valor){
 }
 
 /* ============================================================
-   ✅ EXTRAI AS 2 PRIMEIRAS LINHAS DA DESCRIÇÃO
-   Retorna array de até 2 strings. Aceita se a soma das duas linhas
-   tiver m² OU número + palavra-chave de imóvel.
-   Ex.: ["Privativa", "226m², 3 quartos e 2 vagas"]
+   ✅ EXTRAI SPECS DA DESCRIÇÃO
+   - Sempre pega só a 1ª linha (overlay sobre a foto)
+   - Extrai o que estiver entre *asteriscos* para virar "badge" no topo
+   Ex.: "178m², 4 quartos e 2 vagas *Cobertura*"
+        → specs = "178m², 4 quartos e 2 vagas"
+        → badge = "Cobertura"
 ============================================================ */
 function extrairSpecsDescricao(descricao){
-  if(!descricao) return [];
+  if(!descricao) return { specs: '', badge: '' };
   const texto = String(descricao);
   const linhas = texto.split('\n').map(l => l.trim()).filter(Boolean);
-  if(linhas.length === 0) return [];
+  if(linhas.length === 0) return { specs: '', badge: '' };
 
-  const linha1 = linhas[0] || '';
-  const linha2 = linhas[1] || '';
+  let linha1 = linhas[0] || '';
 
-  const juntas = (linha1 + ' ' + linha2).trim();
-  const temM2 = /\d+\s*m[²2]/i.test(juntas);
-  const temKeyword = /\b(quarto|quartos|vaga|vagas|suíte|suite|sala|salas|banheiro|banheiros|dormitório|dormitorio|dormitórios|dormitorios|privativa|privativo|área|area|terreno)\b/i.test(juntas);
-  const temNumero = /\d/.test(juntas);
+  // ✅ Extrai o que está entre *asteriscos* (primeira ocorrência)
+  let badge = '';
+  const mBadge = linha1.match(/\*([^*]+)\*/);
+  if(mBadge && mBadge[1]){
+    badge = mBadge[1].trim();
+    // Remove o *...* da linha 1 para não aparecer duplicado
+    linha1 = linha1.replace(mBadge[0], '').replace(/\s{2,}/g, ' ').trim();
+  }
 
-  if(!(temM2 || (temNumero && temKeyword))) return [];
+  // Valida se a linha1 parece ter specs de imóvel
+  const temM2 = /\d+\s*m[²2]/i.test(linha1);
+  const temKeyword = /\b(quarto|quartos|vaga|vagas|suíte|suite|sala|salas|banheiro|banheiros|dormitório|dormitorio|dormitórios|dormitorios|privativa|privativo|área|area|terreno)\b/i.test(linha1);
+  const temNumero = /\d/.test(linha1);
 
-  const out = [];
-  if(linha1) out.push(linha1);
-  if(linha2) out.push(linha2);
-  return out;
+  const specsValido = (temM2 || (temNumero && temKeyword)) ? linha1 : '';
+
+  return { specs: specsValido, badge: badge };
 }
 
 function fmtData(d){
@@ -2042,7 +2070,6 @@ async function irParaVitrine(){
     atualizarBadgesNav();
     if(cache.fresh){
       talvezMostrarAjudaPrimeiraVez();
-      talvezMostrarBannerPWA();
       return;
     }
   } else {
@@ -2051,7 +2078,6 @@ async function irParaVitrine(){
 
   await carregarImoveis();
   talvezMostrarAjudaPrimeiraVez();
-  talvezMostrarBannerPWA();
 }
 
 async function carregarImoveis(){
@@ -2419,22 +2445,6 @@ function talvezMostrarAjudaPrimeiraVez(){
   } catch(e){}
 }
 
-function talvezMostrarBannerPWA(){
-  try {
-    const fechado = localStorage.getItem(PWA_BANNER_KEY);
-    if(!fechado){
-      const el = $('pwaBtn');
-      if(el) el.classList.add('show');
-    }
-  } catch(e){}
-}
-
-function fecharBannerPWA(){
-  try { localStorage.setItem(PWA_BANNER_KEY, '1'); } catch(e){}
-  const el = $('pwaBtn');
-  if(el) el.classList.remove('show');
-}
-
 function abrirAjudaPWA(){
   const ua = navigator.userAgent;
   const isIOS = /iPhone|iPad|iPod/i.test(ua);
@@ -2452,10 +2462,8 @@ function abrirAjudaPWA(){
 }
 
 function fecharAjudaPWA(){
+  // ✅ Só fecha o modal. O botão do header continua sempre visível.
   $('pwaBackdrop').classList.remove('show');
-  try { localStorage.setItem(PWA_BANNER_KEY, '1'); } catch(e){}
-  const el = $('pwaBtn');
-  if(el) el.classList.remove('show');
 }
 
 function toggleBusca(){
@@ -2578,7 +2586,6 @@ function cardHTML(im, idx){
     'quero-visitar':'status-quero-visitar','pendente':'status-pendente'
   }[statusAtual] || 'status-pendente';
 
-  // ✅ Label do badge
   const statusLabel = {
     'gostei':'Gostei',
     'nao-gostei':'Não tenho interesse',
@@ -2616,10 +2623,13 @@ function cardHTML(im, idx){
   const iptuFmt = String(im.iptu || '').trim();
   const temPrecoSec = condFmt || iptuFmt;
 
-  // ✅ Specs overlay: 2 linhas com reticências em cada uma
-  const specsLinhas = extrairSpecsDescricao(im.descricao);
-  const specsHtml = specsLinhas.length
-    ? `<div class="card-overlay-specs">${specsLinhas.map(l => `<span class="spec-linha">${esc(l)}</span>`).join('')}</div>`
+  // ✅ Specs: só a 1ª linha no overlay + badge (asteriscos) no topo
+  const specsInfo = extrairSpecsDescricao(im.descricao);
+  const specsHtml = specsInfo.specs
+    ? `<div class="card-overlay-specs">${esc(specsInfo.specs)}</div>`
+    : '';
+  const badgeTagHtml = specsInfo.badge
+    ? `<div class="card-tag-topo">${esc(specsInfo.badge)}</div>`
     : '';
 
   const ehNovo = imovelEhNovo(im);
@@ -2661,14 +2671,20 @@ function cardHTML(im, idx){
       </div>
     `;
 
+  // ✅ Foto clicável → abre o anúncio (se tiver link)
+  const imgClickAttr = im.link
+    ? `onclick="event.stopPropagation(); clicarAnuncio('${id}'); window.open('${esc(im.link)}', '_blank', 'noopener');" style="cursor:pointer;"`
+    : '';
+
   return `
     <div class="card${cardExtraClass}" data-id="${id}" style="animation-delay:${animDelay}ms" onclick="clicarCard('${id}')">
       ${badgeNovoHtml}
       ${statusLabel ? `<div class="card-status-strip ${statusClass}"><span>${statusLabel}</span></div>` : ''}
 
-      <div class="card-img-wrap">
+      <div class="card-img-wrap" ${imgClickAttr}>
         <img class="card-img" src="${esc(img)}" alt="${enderecoCliente}" loading="lazy"
              onerror="this.src='https://via.placeholder.com/400x300/e2e8f0/64748b?text=Sem+imagem'">
+        ${badgeTagHtml}
         ${specsHtml}
       </div>
 
@@ -2926,7 +2942,6 @@ function fallbackCopy(texto, cb){
 
       if(mesmoCliente && cache && cache.fresh){
         talvezMostrarAjudaPrimeiraVez();
-        talvezMostrarBannerPWA();
         return;
       }
 
@@ -2948,12 +2963,10 @@ function fallbackCopy(texto, cb){
         renderizarNovidades();
         renderizarImoveis();
         talvezMostrarAjudaPrimeiraVez();
-        talvezMostrarBannerPWA();
         return;
       }
       await carregarImoveis();
       talvezMostrarAjudaPrimeiraVez();
-      talvezMostrarBannerPWA();
       return;
     }
 
@@ -2994,7 +3007,6 @@ function fallbackCopy(texto, cb){
 
   salvarUltimoAcesso();
   talvezMostrarAjudaPrimeiraVez();
-  talvezMostrarBannerPWA();
 
   if(cache && cache.fresh && telSalvo) return;
 
@@ -3081,12 +3093,10 @@ function fallbackCopy(texto, cb){
         renderizarNovidades();
         renderizarImoveis();
         talvezMostrarAjudaPrimeiraVez();
-        talvezMostrarBannerPWA();
         return;
       }
       await carregarImoveis();
       talvezMostrarAjudaPrimeiraVez();
-      talvezMostrarBannerPWA();
       return;
     }
     if(erroEhDispositivoVinculado(res.error)){
