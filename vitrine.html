@@ -134,6 +134,41 @@
   }
   .btn-lupa:hover{ background: rgba(255,255,255,.16); }
 
+  /* BANNER PWA */
+  .pwa-banner{
+    background: rgba(255,255,255,.06);
+    border-top: 1px solid rgba(255,255,255,.08);
+    color: #fff;
+    padding: 8px 16px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: .78rem;
+    cursor: pointer;
+    transition: background .15s;
+    max-width: 100%;
+    text-align: center;
+  }
+  .pwa-banner.show{ display: flex; }
+  .pwa-banner:hover{ background: rgba(255,255,255,.12); }
+  .pwa-banner .pwa-ico{
+    background: var(--accent);
+    width: 22px; height: 22px;
+    border-radius: 6px;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: .75rem;
+    flex-shrink: 0;
+  }
+  .pwa-banner .pwa-txt{ font-weight: 600; }
+  .pwa-banner .pwa-txt b{ font-weight: 800; }
+  .pwa-banner .pwa-close{
+    background: transparent; border: none; color: #fff;
+    font-size: 1.1rem; cursor: pointer; opacity: .6;
+    padding: 0 4px; margin-left: 4px; line-height: 1;
+  }
+  .pwa-banner .pwa-close:hover{ opacity: 1; }
+
   .busca-expansivel{
     display: none;
     padding: 0 16px 12px;
@@ -216,6 +251,16 @@
     border-radius: 50%; animation: spin .7s linear infinite;
   }
   @keyframes spin{ to{ transform: rotate(360deg); } }
+
+  .spinner-btn{
+    width: 14px; height: 14px;
+    border: 2px solid rgba(255,255,255,.4);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin .7s linear infinite;
+    display: inline-block;
+    vertical-align: middle;
+  }
 
   /* SEÇÕES */
   .section{ margin-top: 18px; animation: fadeInUp .35s ease-out both; }
@@ -395,8 +440,37 @@
     to{ opacity: 1; transform: translateY(0); }
   }
   .card:hover{ box-shadow: var(--shadow-md); transform: translateY(-2px); border-color: var(--border-strong); }
-  .card.card-nao-gostei{ opacity: .55; filter: grayscale(60%); }
-  .card.card-nao-gostei:hover{ opacity: .8; filter: grayscale(40%); }
+
+  /* ✅ CARD NÃO GOSTEI — quase sumindo */
+  .card.card-nao-gostei{
+    opacity: .25;
+    filter: grayscale(100%);
+    transform: scale(.98);
+  }
+  .card.card-nao-gostei:hover{
+    opacity: .45;
+    filter: grayscale(80%);
+    transform: scale(1);
+  }
+  /* Tarja diagonal "DESCARTADO" */
+  .card.card-nao-gostei::after{
+    content: 'DESCARTADO';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%) rotate(-22deg);
+    font-size: .78rem;
+    font-weight: 900;
+    letter-spacing: 3px;
+    color: #dc2626;
+    background: rgba(255,255,255,.92);
+    padding: 6px 18px;
+    border: 2px solid #dc2626;
+    border-radius: 6px;
+    z-index: 10;
+    pointer-events: none;
+    box-shadow: 0 4px 12px rgba(220,38,38,.25);
+    white-space: nowrap;
+  }
 
   .badge-novo{
     position: absolute; top: 8px; left: 8px;
@@ -440,6 +514,33 @@
   }
   .card:hover .card-img{ transform: scale(1.04); }
 
+  /* ✅ OVERLAY METRAGEM/QUARTOS sobre a foto (parte de baixo) */
+  .card-overlay-specs{
+    position: absolute;
+    left: 8px; right: 8px;
+    bottom: 8px;
+    background: rgba(15,23,42,.78);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    color: #fff;
+    font-size: .68rem;
+    font-weight: 700;
+    line-height: 1.25;
+    padding: 6px 10px;
+    border-radius: 8px;
+    letter-spacing: .2px;
+    /* máx 2 linhas, com reticências automáticas */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-word;
+    box-shadow: 0 2px 8px rgba(0,0,0,.25);
+    z-index: 3;
+    pointer-events: none;
+  }
+
   .card-body{ padding: 10px 10px 8px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
   .card-title{
     font-size: .78rem; font-weight: 700; line-height: 1.3; color: var(--text);
@@ -447,9 +548,12 @@
     overflow: hidden; min-height: 2.1em; letter-spacing: -.005em;
   }
   .card-preco{
-    font-size: .92rem; font-weight: 800;
+    font-size: 1.02rem;
+    font-weight: 800;
     color: var(--success-bright);
     display: inline-flex; align-items: center; gap: 4px;
+    letter-spacing: -.01em;
+    line-height: 1.15;
   }
   .card-preco-sec{
     font-size: .66rem; color: var(--muted); font-weight: 600;
@@ -491,8 +595,13 @@
     background: var(--danger); border-color: var(--danger); color: #fff;
     box-shadow: 0 2px 8px rgba(139,58,58,.25);
   }
+  /* ✅ Estado salvando: botão específico com spinner */
+  .card-actions .btn-action.salvando{
+    pointer-events: none;
+    opacity: .7;
+  }
 
-  /* Botão Ver Todas as Fotos — 1 linha, sem corte */
+  /* Botão Ver Todas as Fotos */
   .btn-ver-anuncio{
     display: flex; align-items: center; justify-content: center; gap: 5px;
     background: var(--primary); color: #fff; text-decoration: none;
@@ -556,7 +665,7 @@
   }
   .obs-empty:hover{ color: var(--primary); }
 
-  /* Descrição — 2 linhas reais, sem gap */
+  /* Descrição */
   .card-desc{
     padding: 0 10px 6px;
     margin-top: 0;
@@ -625,6 +734,16 @@
   }
   .empty-state svg{ width: 56px; height: 56px; margin-bottom: 12px; opacity: .35; }
   .empty-state h3{ font-size: .95rem; margin-bottom: 4px; color: var(--text-soft); }
+  .empty-state p{ margin-bottom: 18px; font-size: .82rem; }
+  .empty-state .btn-ver-todos{
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    background: var(--primary); color: #fff;
+    border: none; cursor: pointer; font-family: inherit;
+    padding: 12px 22px; border-radius: 10px;
+    font-size: .88rem; font-weight: 700;
+    transition: all .15s; box-shadow: 0 3px 10px rgba(30,58,95,.2);
+  }
+  .empty-state .btn-ver-todos:hover{ background: var(--primary-dark); transform: translateY(-1px); }
 
   .erro-conexao{
     background: #fff; border-radius: var(--radius);
@@ -840,6 +959,24 @@
     margin-top: 20px;
     display: flex; flex-direction: column; gap: 8px;
   }
+
+  /* MODAL PWA */
+  .pwa-step{
+    display: flex; gap: 12px; align-items: flex-start;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .pwa-step:last-of-type{ border-bottom: none; }
+  .pwa-step .num{
+    background: var(--primary); color: #fff;
+    width: 26px; height: 26px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: .78rem; font-weight: 800; flex-shrink: 0;
+  }
+  .pwa-step .txt{
+    font-size: .82rem; color: var(--text); line-height: 1.45;
+  }
+  .pwa-step .txt b{ font-weight: 800; }
 </style>
 </head>
 <body>
@@ -860,6 +997,14 @@
       </button>
     </div>
   </div>
+
+  <!-- ✅ BANNER PWA -->
+  <div class="pwa-banner" id="pwaBanner" onclick="abrirAjudaPWA()">
+    <span class="pwa-ico">📲</span>
+    <span class="pwa-txt">Instale como <b>app</b> — toque aqui e adicione à tela inicial</span>
+    <button class="pwa-close" onclick="event.stopPropagation(); fecharBannerPWA()" title="Fechar">×</button>
+  </div>
+
   <div class="busca-expansivel" id="buscaExpansivel">
     <input type="search" id="buscaInput" placeholder="🔍 Buscar por rua, bairro ou descrição..." oninput="renderizarImoveis()">
   </div>
@@ -954,7 +1099,7 @@
     <div class="bairros-bar" id="bairrosBar"></div>
   </div>
 
-  <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; padding: 10px 4px 0;">
+  <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; padding: 10px 4px 0; flex-wrap:wrap;">
     <div style="font-size:.78rem; color:var(--muted); font-weight:700;" id="contadorImoveis"></div>
     <div style="font-size:.74rem; color:var(--primary); font-weight:700; cursor:pointer; display:none;" id="filtroAtivoTag" onclick="limparFiltro()"></div>
   </div>
@@ -967,6 +1112,9 @@
     </svg>
     <h3 id="emptyTitulo">Nenhum imóvel aqui</h3>
     <p id="emptyMsg">Nada para mostrar neste filtro.</p>
+    <button class="btn-ver-todos hidden" id="btnVerTodos" onclick="limparFiltro()">
+      🏠 Ver todos os imóveis
+    </button>
   </div>
 </div>
 
@@ -1007,6 +1155,7 @@
   </button>
 </nav>
 
+<!-- MODAL COMO USAR -->
 <div class="modal-backdrop" id="ajudaBackdrop" onclick="if(event.target===this) fecharAjuda()">
   <div class="modal">
     <button class="modal-close" onclick="fecharAjuda()">×</button>
@@ -1063,6 +1212,64 @@
   </div>
 </div>
 
+<!-- MODAL PWA -->
+<div class="modal-backdrop" id="pwaBackdrop" onclick="if(event.target===this) fecharAjudaPWA()">
+  <div class="modal">
+    <button class="modal-close" onclick="fecharAjudaPWA()">×</button>
+    <h2>📲 Instalar como aplicativo</h2>
+    <p class="sub">Adicione sua vitrine à tela inicial e acesse com 1 toque.</p>
+
+    <div id="pwaStepsIOS" class="hidden">
+      <div class="pwa-step">
+        <div class="num">1</div>
+        <div class="txt">Toque no botão <b>Compartilhar</b> <span style="display:inline-block;background:#eef2f7;padding:1px 6px;border-radius:4px;font-family:monospace;">⬆️</span> no rodapé do Safari.</div>
+      </div>
+      <div class="pwa-step">
+        <div class="num">2</div>
+        <div class="txt">Role e escolha <b>"Adicionar à Tela de Início"</b>.</div>
+      </div>
+      <div class="pwa-step">
+        <div class="num">3</div>
+        <div class="txt">Confirme tocando em <b>Adicionar</b>. Pronto! 🎉</div>
+      </div>
+    </div>
+
+    <div id="pwaStepsAndroid" class="hidden">
+      <div class="pwa-step">
+        <div class="num">1</div>
+        <div class="txt">Toque no menu <b>⋮</b> no canto superior do Chrome.</div>
+      </div>
+      <div class="pwa-step">
+        <div class="num">2</div>
+        <div class="txt">Escolha <b>"Instalar aplicativo"</b> ou <b>"Adicionar à tela inicial"</b>.</div>
+      </div>
+      <div class="pwa-step">
+        <div class="num">3</div>
+        <div class="txt">Confirme. Pronto! 🎉</div>
+      </div>
+    </div>
+
+    <div id="pwaStepsOutros" class="hidden">
+      <div class="pwa-step">
+        <div class="num">1</div>
+        <div class="txt">No menu do seu navegador, procure por <b>"Instalar app"</b> ou <b>"Adicionar à tela inicial"</b>.</div>
+      </div>
+      <div class="pwa-step">
+        <div class="num">2</div>
+        <div class="txt">Confirme a instalação. Pronto! 🎉</div>
+      </div>
+    </div>
+
+    <div class="como-msg-final" style="margin-top:16px;">
+      <strong>💡 Dica:</strong> depois de instalar, sua vitrine abre como um app normal, com ícone próprio na tela inicial.
+    </div>
+
+    <div class="como-cta">
+      <button class="btn btn-primary btn-full" onclick="fecharAjudaPWA()">Entendi 👍</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -1076,6 +1283,7 @@ const ORIGINAL_URL_KEY = 'vitrine_url_original';
 const VISTOS_KEY = 'vitrine_imoveis_vistos';
 const ULTIMO_ACESSO_KEY = 'vitrine_ultimo_acesso';
 const AJUDA_VISTA_KEY = 'vitrine_ajuda_vista';
+const PWA_BANNER_KEY  = 'vitrine_pwa_banner_fechado';
 const CACHE_TTL = 5 * 60 * 1000;
 
 const TIMEOUT_API = 30000;
@@ -1129,6 +1337,71 @@ function esc(s){
   return String(s || '')
     .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+/* ============================================================
+   ✅ FORMATAÇÃO DE PREÇO
+   Aceita: 1800000 | "1800000" | "1800000,00" | "1.800.000" |
+           "1.800.000,00" | "R$ 1.800.000" | "R$ 1.800.000,00"
+   Retorna: "R$ 1.800.000,00"  (ou '' se vazio/inválido)
+============================================================ */
+function formatarPreco(valor){
+  if(valor === null || valor === undefined) return '';
+  let s = String(valor).trim();
+  if(!s) return '';
+
+  // remove R$, espaços, e caracteres não numéricos exceto . , -
+  s = s.replace(/R\$\s*/gi, '').trim();
+  if(!s) return '';
+
+  // remove tudo que não for dígito, ponto ou vírgula
+  s = s.replace(/[^\d.,]/g, '');
+  if(!s) return '';
+
+  let num;
+
+  if(s.indexOf(',') >= 0){
+    // formato brasileiro: ponto é milhar, vírgula é decimal
+    s = s.replace(/\./g, '');          // remove milhares
+    s = s.replace(',', '.');            // vírgula vira ponto decimal
+    num = parseFloat(s);
+  } else if(s.indexOf('.') >= 0){
+    // pode ser milhar BR (1.800.000) OU decimal EN (1800000.00)
+    const partes = s.split('.');
+    if(partes.length === 2 && partes[1].length !== 3){
+      // só 1 ponto e o que vem depois NÃO tem 3 dígitos → decimal
+      num = parseFloat(s);
+    } else {
+      // múltiplos pontos ou último bloco com 3 dígitos → milhar BR
+      num = parseFloat(s.replace(/\./g, ''));
+    }
+  } else {
+    num = parseFloat(s);
+  }
+
+  if(isNaN(num) || num <= 0) return '';
+
+  return num.toLocaleString('pt-BR', {
+    style: 'currency',
+    currency: 'BRL',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
+}
+
+/* ============================================================
+   ✅ EXTRAI A PRIMEIRA LINHA DA DESCRIÇÃO (specs do imóvel)
+   Só retorna se tiver "m²" em algum lugar (Opção B)
+============================================================ */
+function extrairSpecsDescricao(descricao){
+  if(!descricao) return '';
+  const texto = String(descricao);
+  const idxQuebra = texto.indexOf('\n');
+  const primeiraLinha = (idxQuebra >= 0 ? texto.slice(0, idxQuebra) : texto).trim();
+  if(!primeiraLinha) return '';
+  // Opção B: só mostra se tiver "m²" (aceita m2, m², M2, M²)
+  if(!/\d+\s*m[²2]/i.test(primeiraLinha)) return '';
+  return primeiraLinha;
 }
 
 function fmtData(d){
@@ -1831,14 +2104,14 @@ function novoCardHTML(im){
   const id = esc(im.id);
   const endereco = esc(enderecoSemNumero_(im));
   const img = esc(im.imagem || 'https://via.placeholder.com/400x300/e2e8f0/64748b?text=Sem+imagem');
-  const preco = String(im.preco || '').trim();
+  const precoFmt = formatarPreco(im.preco);
   return `
     <div class="novo-card" onclick="clicarNovoCard('${id}')">
       <img class="novo-card-img" src="${img}" loading="lazy"
            onerror="this.src='https://via.placeholder.com/400x300/e2e8f0/64748b?text=Sem+imagem'">
       <div class="novo-card-body">
         <div class="novo-card-endereco">🏠 ${endereco}</div>
-        ${preco ? `<div class="novo-card-preco">${esc(preco)}</div>` : ''}
+        ${precoFmt ? `<div class="novo-card-preco">${esc(precoFmt)}</div>` : ''}
       </div>
     </div>`;
 }
@@ -1856,29 +2129,70 @@ function clicarNovoCard(id){
   }
 }
 
-function atualizarContadores(){
-  const counts = { todos: state.imoveis.length, gostei: 0, 'quero-visitar': 0, 'nao-gostei': 0, pendente: 0 };
+/* ============================================================
+   ✅ CONTADORES — agora com "quero visitar" e "já visitado"
+   Zeros não aparecem. Só mostra o que faz sentido.
+============================================================ */
+function calcularContadores_(){
+  const c = {
+    total: state.imoveis.length,
+    gostei: 0,
+    queroVisitar: 0,
+    jaVisitado: 0,
+    naoGostei: 0,
+    pendente: 0
+  };
   state.imoveis.forEach(im => {
     const s = im.status || 'pendente';
-    if(counts[s] !== undefined) counts[s]++;
-    else counts.pendente++;
+    if(s === 'gostei') c.gostei++;
+    else if(s === 'nao-gostei') c.naoGostei++;
+    else if(s === 'pendente') c.pendente++;
+
+    // "quero visitar" = status quero-visitar E ainda não visitado
+    const jaVisitou = String(im.visitaFeita || '').toLowerCase() === 'sim';
+    if(s === 'quero-visitar' && !jaVisitou) c.queroVisitar++;
+
+    // "já visitado" = visitaFeita === 'Sim' (independente do status)
+    if(jaVisitou) c.jaVisitado++;
   });
-  const gostei = counts.gostei;
-  const vis = counts['quero-visitar'];
+  return c;
+}
+
+function atualizarContadores(){
+  const c = calcularContadores_();
 
   const bf = $('badgeFavoritos');
   const bv = $('badgeVisitar');
   if(bf){
-    bf.textContent = gostei;
-    bf.classList.toggle('hidden', gostei === 0);
+    bf.textContent = c.gostei;
+    bf.classList.toggle('hidden', c.gostei === 0);
   }
   if(bv){
-    bv.textContent = vis;
-    bv.classList.toggle('hidden', vis === 0);
+    bv.textContent = c.queroVisitar;
+    bv.classList.toggle('hidden', c.queroVisitar === 0);
   }
 }
 
 function atualizarBadgesNav(){ atualizarContadores(); }
+
+/* ============================================================
+   ✅ CONTADOR DO TOPO — chips informativos
+============================================================ */
+function atualizarContadorTopo_(lista){
+  const el = $('contadorImoveis');
+  if(!el) return;
+  const c = calcularContadores_();
+  const partes = [];
+  const total = lista ? lista.length : c.total;
+
+  partes.push(`${total} ${total === 1 ? 'imóvel' : 'imóveis'}`);
+
+  if(c.gostei > 0) partes.push(`${c.gostei} gostei`);
+  if(c.queroVisitar > 0) partes.push(`${c.queroVisitar} quero visitar`);
+  if(c.jaVisitado > 0) partes.push(`${c.jaVisitado} já visitado${c.jaVisitado > 1 ? 's' : ''}`);
+
+  el.textContent = partes.join(' · ');
+}
 
 function extrairBairros_(){
   const mapa = new Map();
@@ -2045,6 +2359,47 @@ function talvezMostrarAjudaPrimeiraVez(){
   } catch(e){}
 }
 
+/* ============================================================
+   ✅ PWA — Banner + modal explicativo
+============================================================ */
+function talvezMostrarBannerPWA(){
+  try {
+    const fechado = localStorage.getItem(PWA_BANNER_KEY);
+    if(!fechado){
+      setTimeout(() => {
+        const el = $('pwaBanner');
+        if(el) el.classList.add('show');
+      }, 1200);
+    }
+  } catch(e){}
+}
+
+function fecharBannerPWA(){
+  try { localStorage.setItem(PWA_BANNER_KEY, '1'); } catch(e){}
+  const el = $('pwaBanner');
+  if(el) el.classList.remove('show');
+}
+
+function abrirAjudaPWA(){
+  const ua = navigator.userAgent;
+  const isIOS = /iPhone|iPad|iPod/i.test(ua) && !window.MSStream;
+  const isAndroid = /Android/i.test(ua);
+
+  ['pwaStepsIOS','pwaStepsAndroid','pwaStepsOutros'].forEach(id => {
+    const el = $(id); if(el) el.classList.add('hidden');
+  });
+
+  if(isIOS) $('pwaStepsIOS').classList.remove('hidden');
+  else if(isAndroid) $('pwaStepsAndroid').classList.remove('hidden');
+  else $('pwaStepsOutros').classList.remove('hidden');
+
+  $('pwaBackdrop').classList.add('show');
+}
+
+function fecharAjudaPWA(){
+  $('pwaBackdrop').classList.remove('show');
+}
+
 function toggleBusca(){
   const barra = $('buscaExpansivel');
   if(!barra) return;
@@ -2108,20 +2463,32 @@ function renderizarImoveis(){
     );
   }
 
-  const contador = $('contadorImoveis');
-  if(contador){
-    contador.textContent = lista.length === 1 ? '1 imóvel' : `${lista.length} imóveis`;
-  }
+  atualizarContadorTopo_(lista);
 
   if(lista.length === 0){
     grid.innerHTML = '';
     $('emptyState').classList.remove('hidden');
     $('emptyTitulo').textContent = busca ? 'Nada encontrado' : 'Nenhum imóvel aqui';
-    $('emptyMsg').textContent = busca ? 'Tente outra busca.'
-      : state.filtroNav === 'favoritos' ? 'Você ainda não marcou nenhum como Gostei.'
-      : state.filtroNav === 'visitar' ? 'Você ainda não marcou nenhum como Visitar.'
-      : state.bairrosSelecionados.size > 0 ? 'Nenhum imóvel nos bairros selecionados.'
-      : 'Nada para mostrar.';
+
+    let msgVazia = 'Nada para mostrar.';
+    let mostrarBotao = false;
+
+    if(busca){
+      msgVazia = 'Tente outra busca.';
+    } else if(state.filtroNav === 'favoritos'){
+      msgVazia = 'Você ainda não marcou nenhum imóvel como Gostei.';
+      mostrarBotao = true;
+    } else if(state.filtroNav === 'visitar'){
+      msgVazia = 'Você ainda não marcou nenhum imóvel para Visitar.';
+      mostrarBotao = true;
+    } else if(state.bairrosSelecionados.size > 0){
+      msgVazia = 'Nenhum imóvel nos bairros selecionados.';
+      mostrarBotao = true;
+    }
+
+    $('emptyMsg').textContent = msgVazia;
+    const btn = $('btnVerTodos');
+    if(btn) btn.classList.toggle('hidden', !mostrarBotao);
     return;
   }
   $('emptyState').classList.add('hidden');
@@ -2179,16 +2546,32 @@ function cardHTML(im, idx){
   const btnNao = (statusAtual === 'nao-gostei') ? 'ativo' : '';
 
   const enderecoCliente = esc(enderecoSemNumero_(im));
-  const preco = String(im.preco || '').trim();
-  const cond = String(im.condominio || '').trim();
-  const iptu = String(im.iptu || '').trim();
-  const temPrecoSec = cond || iptu;
+  const precoFmt = formatarPreco(im.preco);
+  const condFmt = String(im.condominio || '').trim();
+  const iptuFmt = String(im.iptu || '').trim();
+  const temPrecoSec = condFmt || iptuFmt;
+
+  // ✅ Specs sobre a foto (primeira linha da descrição com m²)
+  const specs = extrairSpecsDescricao(im.descricao);
+  const specsHtml = specs
+    ? `<div class="card-overlay-specs">${esc(specs)}</div>`
+    : '';
 
   const ehNovo = imovelEhNovo(im);
   const badgeNovoHtml = ehNovo ? `<div class="badge-novo">NOVO</div>` : '';
   const animDelay = Math.min(idx * 30, 400);
 
   const temDescricao = descTexto || im.codigo || dataFmt;
+
+  // ✅ spinner no botão que está salvando
+  const iconeGostei = (salvando && statusAtual !== 'gostei') || (salvando && state._ultimoClique === im.id + '|gostei')
+    ? '<span class="spinner-btn"></span>'
+    : '❤️';
+  // Lógica simples: se está salvando este id, mostramos spinner em todos os 3 botões, fica ok
+  const spinnerHtml = '<span class="spinner-btn"></span>';
+  const iconeG = salvando ? spinnerHtml : '❤️';
+  const iconeV = salvando ? spinnerHtml : '📅';
+  const iconeN = salvando ? spinnerHtml : '❌';
 
   return `
     <div class="card${cardExtraClass}" data-id="${id}" style="animation-delay:${animDelay}ms" onclick="clicarCard('${id}')">
@@ -2198,16 +2581,17 @@ function cardHTML(im, idx){
       <div class="card-img-wrap">
         <img class="card-img" src="${esc(img)}" alt="${enderecoCliente}" loading="lazy"
              onerror="this.src='https://via.placeholder.com/400x300/e2e8f0/64748b?text=Sem+imagem'">
+        ${specsHtml}
       </div>
 
       <div class="card-body">
         <div class="card-title">${enderecoCliente}</div>
-        ${preco ? `<div class="card-preco">${esc(preco)}</div>` : ''}
+        ${precoFmt ? `<div class="card-preco">${esc(precoFmt)}</div>` : ''}
         ${temPrecoSec ? `
           <div class="card-preco-sec">
-            ${cond ? `Cond. ${esc(cond)}` : ''}
-            ${cond && iptu ? '<span class="sep">·</span>' : ''}
-            ${iptu ? `IPTU ${esc(iptu)}` : ''}
+            ${condFmt ? `Cond. ${esc(condFmt)}` : ''}
+            ${condFmt && iptuFmt ? '<span class="sep">·</span>' : ''}
+            ${iptuFmt ? `IPTU ${esc(iptuFmt)}` : ''}
           </div>
         ` : ''}
       </div>
@@ -2227,16 +2611,16 @@ function cardHTML(im, idx){
       ` : ''}
 
       <div class="card-actions" onclick="event.stopPropagation();">
-        <button class="btn-action act-gostei ${btnGostei}" ${disabledAttr} onclick="marcar('${id}','gostei')" title="Gostei">
-          <span class="icone">❤️</span>
+        <button class="btn-action act-gostei ${btnGostei} ${salvando ? 'salvando' : ''}" ${disabledAttr} onclick="marcar('${id}','gostei')" title="Gostei">
+          <span class="icone">${iconeG}</span>
           <span>Gostei</span>
         </button>
-        <button class="btn-action act-visitar ${btnVisitar}" ${disabledAttr} onclick="marcar('${id}','quero-visitar')" title="Quero visitar">
-          <span class="icone">📅</span>
+        <button class="btn-action act-visitar ${btnVisitar} ${salvando ? 'salvando' : ''}" ${disabledAttr} onclick="marcar('${id}','quero-visitar')" title="Quero visitar">
+          <span class="icone">${iconeV}</span>
           <span>Visitar</span>
         </button>
-        <button class="btn-action act-nao ${btnNao}" ${disabledAttr} onclick="marcar('${id}','nao-gostei')" title="Não gostei">
-          <span class="icone">❌</span>
+        <button class="btn-action act-nao ${btnNao} ${salvando ? 'salvando' : ''}" ${disabledAttr} onclick="marcar('${id}','nao-gostei')" title="Não gostei">
+          <span class="icone">${iconeN}</span>
           <span>Não</span>
         </button>
       </div>
@@ -2467,6 +2851,7 @@ function fallbackCopy(texto, cb){
 
       if(mesmoCliente && cache && cache.fresh){
         talvezMostrarAjudaPrimeiraVez();
+        talvezMostrarBannerPWA();
         return;
       }
 
@@ -2488,10 +2873,12 @@ function fallbackCopy(texto, cb){
         renderizarNovidades();
         renderizarImoveis();
         talvezMostrarAjudaPrimeiraVez();
+        talvezMostrarBannerPWA();
         return;
       }
       await carregarImoveis();
       talvezMostrarAjudaPrimeiraVez();
+      talvezMostrarBannerPWA();
       return;
     }
 
@@ -2532,6 +2919,7 @@ function fallbackCopy(texto, cb){
 
   salvarUltimoAcesso();
   talvezMostrarAjudaPrimeiraVez();
+  talvezMostrarBannerPWA();
 
   if(cache && cache.fresh && telSalvo) return;
 
@@ -2618,10 +3006,12 @@ function fallbackCopy(texto, cb){
         renderizarNovidades();
         renderizarImoveis();
         talvezMostrarAjudaPrimeiraVez();
+        talvezMostrarBannerPWA();
         return;
       }
       await carregarImoveis();
       talvezMostrarAjudaPrimeiraVez();
+      talvezMostrarBannerPWA();
       return;
     }
     if(erroEhDispositivoVinculado(res.error)){
