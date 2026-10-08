@@ -134,40 +134,36 @@
   }
   .btn-lupa:hover{ background: rgba(255,255,255,.16); }
 
-  /* BANNER PWA */
-  .pwa-banner{
-    background: rgba(255,255,255,.06);
-    border-top: 1px solid rgba(255,255,255,.08);
+  /* BOTÃO PWA COMPACTO NO HEADER */
+  .pwa-btn{
+    background: rgba(255,255,255,.1);
+    border: 1px solid rgba(255,255,255,.15);
     color: #fff;
-    padding: 8px 16px;
+    width: 36px; height: 36px;
+    border-radius: 999px;
     display: none;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    font-size: .78rem;
+    align-items: center; justify-content: center;
     cursor: pointer;
-    transition: background .15s;
-    max-width: 100%;
-    text-align: center;
-  }
-  .pwa-banner.show{ display: flex; }
-  .pwa-banner:hover{ background: rgba(255,255,255,.12); }
-  .pwa-banner .pwa-ico{
-    background: var(--accent);
-    width: 22px; height: 22px;
-    border-radius: 6px;
-    display: inline-flex; align-items: center; justify-content: center;
-    font-size: .75rem;
+    font-size: 1.05rem;
+    transition: all .15s;
     flex-shrink: 0;
+    position: relative;
+    animation: pwaPulse 2.4s ease-in-out infinite;
   }
-  .pwa-banner .pwa-txt{ font-weight: 600; }
-  .pwa-banner .pwa-txt b{ font-weight: 800; }
-  .pwa-banner .pwa-close{
-    background: transparent; border: none; color: #fff;
-    font-size: 1.1rem; cursor: pointer; opacity: .6;
-    padding: 0 4px; margin-left: 4px; line-height: 1;
+  .pwa-btn.show{ display: inline-flex; }
+  .pwa-btn:hover{ background: rgba(255,255,255,.22); }
+  @keyframes pwaPulse{
+    0%,100%{ box-shadow: 0 0 0 0 rgba(139,115,85,.6); }
+    50%{ box-shadow: 0 0 0 6px rgba(139,115,85,0); }
   }
-  .pwa-banner .pwa-close:hover{ opacity: 1; }
+  .pwa-btn .pwa-dot{
+    position: absolute;
+    top: 4px; right: 4px;
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: #fbbf24;
+    border: 1.5px solid #16263e;
+  }
 
   .busca-expansivel{
     display: none;
@@ -441,35 +437,25 @@
   }
   .card:hover{ box-shadow: var(--shadow-md); transform: translateY(-2px); border-color: var(--border-strong); }
 
-  /* ✅ CARD NÃO GOSTEI — quase sumindo */
+  /* ✅ CARD NÃO GOSTEI — mais apagado, sem tarja */
   .card.card-nao-gostei{
-    opacity: .25;
-    filter: grayscale(100%);
-    transform: scale(.98);
+    opacity: .38;
+    filter: grayscale(75%);
   }
   .card.card-nao-gostei:hover{
-    opacity: .45;
-    filter: grayscale(80%);
-    transform: scale(1);
+    opacity: .65;
+    filter: grayscale(40%);
   }
-  /* Tarja diagonal "DESCARTADO" */
-  .card.card-nao-gostei::after{
-    content: 'DESCARTADO';
+  /* Borda lateral sutil indicando "descartado" */
+  .card.card-nao-gostei::before{
+    content: '';
     position: absolute;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%) rotate(-22deg);
-    font-size: .78rem;
-    font-weight: 900;
-    letter-spacing: 3px;
-    color: #dc2626;
-    background: rgba(255,255,255,.92);
-    padding: 6px 18px;
-    border: 2px solid #dc2626;
-    border-radius: 6px;
-    z-index: 10;
+    left: 0; top: 0; bottom: 0;
+    width: 4px;
+    background: var(--danger);
+    opacity: .55;
+    z-index: 5;
     pointer-events: none;
-    box-shadow: 0 4px 12px rgba(220,38,38,.25);
-    white-space: nowrap;
   }
 
   .badge-novo{
@@ -529,7 +515,6 @@
     padding: 6px 10px;
     border-radius: 8px;
     letter-spacing: .2px;
-    /* máx 2 linhas, com reticências automáticas */
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
@@ -595,7 +580,6 @@
     background: var(--danger); border-color: var(--danger); color: #fff;
     box-shadow: 0 2px 8px rgba(139,58,58,.25);
   }
-  /* ✅ Estado salvando: botão específico com spinner */
   .card-actions .btn-action.salvando{
     pointer-events: none;
     opacity: .7;
@@ -869,7 +853,7 @@
   .nav-btn.nav-corretor:hover{ color: #1da851; }
   .nav-btn.nav-corretor.active{ color: #25D366; }
 
-  /* MODAL COMO USAR */
+  /* MODAL */
   .modal-backdrop{
     position: fixed; inset: 0;
     background: rgba(15,23,42,.6);
@@ -990,19 +974,16 @@
         <div class="brand-sub">Imóveis</div>
       </div>
     </div>
-    <div style="display:flex; align-items:center; gap:10px; min-width:0;">
+    <div style="display:flex; align-items:center; gap:8px; min-width:0;">
       <span class="user-info" id="userInfo"></span>
+      <button class="pwa-btn" id="pwaBtn" onclick="abrirAjudaPWA()" title="Instalar como app">
+        📲
+        <span class="pwa-dot"></span>
+      </button>
       <button class="btn-lupa" id="btnLupa" onclick="toggleBusca()" title="Buscar">
         <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
       </button>
     </div>
-  </div>
-
-  <!-- ✅ BANNER PWA -->
-  <div class="pwa-banner" id="pwaBanner" onclick="abrirAjudaPWA()">
-    <span class="pwa-ico">📲</span>
-    <span class="pwa-txt">Instale como <b>app</b> — toque aqui e adicione à tela inicial</span>
-    <button class="pwa-close" onclick="event.stopPropagation(); fecharBannerPWA()" title="Fechar">×</button>
   </div>
 
   <div class="busca-expansivel" id="buscaExpansivel">
@@ -1155,7 +1136,6 @@
   </button>
 </nav>
 
-<!-- MODAL COMO USAR -->
 <div class="modal-backdrop" id="ajudaBackdrop" onclick="if(event.target===this) fecharAjuda()">
   <div class="modal">
     <button class="modal-close" onclick="fecharAjuda()">×</button>
@@ -1212,7 +1192,6 @@
   </div>
 </div>
 
-<!-- MODAL PWA -->
 <div class="modal-backdrop" id="pwaBackdrop" onclick="if(event.target===this) fecharAjudaPWA()">
   <div class="modal">
     <button class="modal-close" onclick="fecharAjudaPWA()">×</button>
@@ -1340,40 +1319,37 @@ function esc(s){
 }
 
 /* ============================================================
-   ✅ FORMATAÇÃO DE PREÇO
-   Aceita: 1800000 | "1800000" | "1800000,00" | "1.800.000" |
-           "1.800.000,00" | "R$ 1.800.000" | "R$ 1.800.000,00"
-   Retorna: "R$ 1.800.000,00"  (ou '' se vazio/inválido)
+   ✅ FORMATAÇÃO DE PREÇO — regra robusta
+   Regras:
+   - Se tem vírgula → decimal BR (ponto = milhar, vírgula = decimal)
+   - Se só tem pontos:
+       * último bloco com 3 dígitos → todos os pontos são milhar
+       * último bloco com 1 ou 2 dígitos → último ponto é decimal
+   - Sem separador → inteiro puro
 ============================================================ */
 function formatarPreco(valor){
   if(valor === null || valor === undefined) return '';
   let s = String(valor).trim();
   if(!s) return '';
 
-  // remove R$, espaços, e caracteres não numéricos exceto . , -
   s = s.replace(/R\$\s*/gi, '').trim();
   if(!s) return '';
 
-  // remove tudo que não for dígito, ponto ou vírgula
   s = s.replace(/[^\d.,]/g, '');
   if(!s) return '';
 
   let num;
 
   if(s.indexOf(',') >= 0){
-    // formato brasileiro: ponto é milhar, vírgula é decimal
-    s = s.replace(/\./g, '');          // remove milhares
-    s = s.replace(',', '.');            // vírgula vira ponto decimal
+    s = s.replace(/\./g, '').replace(',', '.');
     num = parseFloat(s);
   } else if(s.indexOf('.') >= 0){
-    // pode ser milhar BR (1.800.000) OU decimal EN (1800000.00)
     const partes = s.split('.');
-    if(partes.length === 2 && partes[1].length !== 3){
-      // só 1 ponto e o que vem depois NÃO tem 3 dígitos → decimal
-      num = parseFloat(s);
-    } else {
-      // múltiplos pontos ou último bloco com 3 dígitos → milhar BR
+    const ultimo = partes[partes.length - 1];
+    if(partes.length > 1 && ultimo.length === 3){
       num = parseFloat(s.replace(/\./g, ''));
+    } else {
+      num = parseFloat(s);
     }
   } else {
     num = parseFloat(s);
@@ -1391,7 +1367,9 @@ function formatarPreco(valor){
 
 /* ============================================================
    ✅ EXTRAI A PRIMEIRA LINHA DA DESCRIÇÃO (specs do imóvel)
-   Só retorna se tiver "m²" em algum lugar (Opção B)
+   Aceita se a primeira linha tiver:
+   - m² / m2 (ex: "180m² ...")
+   - OU número + palavra-chave (quarto, vaga, suíte, sala, banheiro)
 ============================================================ */
 function extrairSpecsDescricao(descricao){
   if(!descricao) return '';
@@ -1399,9 +1377,13 @@ function extrairSpecsDescricao(descricao){
   const idxQuebra = texto.indexOf('\n');
   const primeiraLinha = (idxQuebra >= 0 ? texto.slice(0, idxQuebra) : texto).trim();
   if(!primeiraLinha) return '';
-  // Opção B: só mostra se tiver "m²" (aceita m2, m², M2, M²)
-  if(!/\d+\s*m[²2]/i.test(primeiraLinha)) return '';
-  return primeiraLinha;
+
+  const temM2 = /\d+\s*m[²2]/i.test(primeiraLinha);
+  const temKeyword = /\b(quarto|quartos|vaga|vagas|suíte|suite|sala|salas|banheiro|banheiros|dormitório|dormitorio|dormitórios|dormitorios)\b/i.test(primeiraLinha);
+  const temNumero = /\d/.test(primeiraLinha);
+
+  if(temM2 || (temNumero && temKeyword)) return primeiraLinha;
+  return '';
 }
 
 function fmtData(d){
@@ -2129,10 +2111,6 @@ function clicarNovoCard(id){
   }
 }
 
-/* ============================================================
-   ✅ CONTADORES — agora com "quero visitar" e "já visitado"
-   Zeros não aparecem. Só mostra o que faz sentido.
-============================================================ */
 function calcularContadores_(){
   const c = {
     total: state.imoveis.length,
@@ -2148,11 +2126,8 @@ function calcularContadores_(){
     else if(s === 'nao-gostei') c.naoGostei++;
     else if(s === 'pendente') c.pendente++;
 
-    // "quero visitar" = status quero-visitar E ainda não visitado
     const jaVisitou = String(im.visitaFeita || '').toLowerCase() === 'sim';
     if(s === 'quero-visitar' && !jaVisitou) c.queroVisitar++;
-
-    // "já visitado" = visitaFeita === 'Sim' (independente do status)
     if(jaVisitou) c.jaVisitado++;
   });
   return c;
@@ -2175,9 +2150,6 @@ function atualizarContadores(){
 
 function atualizarBadgesNav(){ atualizarContadores(); }
 
-/* ============================================================
-   ✅ CONTADOR DO TOPO — chips informativos
-============================================================ */
 function atualizarContadorTopo_(lista){
   const el = $('contadorImoveis');
   if(!el) return;
@@ -2359,30 +2331,25 @@ function talvezMostrarAjudaPrimeiraVez(){
   } catch(e){}
 }
 
-/* ============================================================
-   ✅ PWA — Banner + modal explicativo
-============================================================ */
 function talvezMostrarBannerPWA(){
   try {
     const fechado = localStorage.getItem(PWA_BANNER_KEY);
     if(!fechado){
-      setTimeout(() => {
-        const el = $('pwaBanner');
-        if(el) el.classList.add('show');
-      }, 1200);
+      const el = $('pwaBtn');
+      if(el) el.classList.add('show');
     }
   } catch(e){}
 }
 
 function fecharBannerPWA(){
   try { localStorage.setItem(PWA_BANNER_KEY, '1'); } catch(e){}
-  const el = $('pwaBanner');
+  const el = $('pwaBtn');
   if(el) el.classList.remove('show');
 }
 
 function abrirAjudaPWA(){
   const ua = navigator.userAgent;
-  const isIOS = /iPhone|iPad|iPod/i.test(ua) && !window.MSStream;
+  const isIOS = /iPhone|iPad|iPod/i.test(ua);
   const isAndroid = /Android/i.test(ua);
 
   ['pwaStepsIOS','pwaStepsAndroid','pwaStepsOutros'].forEach(id => {
@@ -2398,6 +2365,9 @@ function abrirAjudaPWA(){
 
 function fecharAjudaPWA(){
   $('pwaBackdrop').classList.remove('show');
+  try { localStorage.setItem(PWA_BANNER_KEY, '1'); } catch(e){}
+  const el = $('pwaBtn');
+  if(el) el.classList.remove('show');
 }
 
 function toggleBusca(){
@@ -2551,7 +2521,6 @@ function cardHTML(im, idx){
   const iptuFmt = String(im.iptu || '').trim();
   const temPrecoSec = condFmt || iptuFmt;
 
-  // ✅ Specs sobre a foto (primeira linha da descrição com m²)
   const specs = extrairSpecsDescricao(im.descricao);
   const specsHtml = specs
     ? `<div class="card-overlay-specs">${esc(specs)}</div>`
@@ -2563,11 +2532,6 @@ function cardHTML(im, idx){
 
   const temDescricao = descTexto || im.codigo || dataFmt;
 
-  // ✅ spinner no botão que está salvando
-  const iconeGostei = (salvando && statusAtual !== 'gostei') || (salvando && state._ultimoClique === im.id + '|gostei')
-    ? '<span class="spinner-btn"></span>'
-    : '❤️';
-  // Lógica simples: se está salvando este id, mostramos spinner em todos os 3 botões, fica ok
   const spinnerHtml = '<span class="spinner-btn"></span>';
   const iconeG = salvando ? spinnerHtml : '❤️';
   const iconeV = salvando ? spinnerHtml : '📅';
