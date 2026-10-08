@@ -38,7 +38,7 @@
     --primary:#1e3a5f; --primary-dark:#152a45; --primary-soft:#eef2f7;
     --accent:#8b7355;
     --success:#2f6b4f; --success-bright:#16a34a;
-    --danger:#8b3a3a; --warn:#8b6f3a;
+    --danger:#8b3a3a; --danger-bright:#dc2626; --warn:#8b6f3a;
     --purple:#4a3d6b;
     --bg:#eef1f4; --bg-alt:#e2e6ea;
     --card:#ffffff;
@@ -94,76 +94,112 @@
   }
   .header-inner{
     max-width: 1400px; margin: 0 auto;
-    display: flex; align-items: center; justify-content: space-between;
-    gap: 12px; flex-wrap: nowrap; min-height: 38px;
-    padding: 12px 16px;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    min-height: 56px;
   }
-  .brand{ display: flex; align-items: center; gap: 10px; min-width: 0; }
+  @media(max-width:640px){
+    .header-inner{
+      padding: 8px 10px;
+      gap: 6px;
+      min-height: 52px;
+    }
+  }
+
+  .brand{ display: flex; align-items: center; gap: 8px; min-width: 0; }
   .brand-icon{
-    width: 34px; height: 34px; flex-shrink: 0;
+    width: 32px; height: 32px; flex-shrink: 0;
     background: var(--accent); border-radius: 8px;
     display: flex; align-items: center; justify-content: center;
-    font-size: .9rem; color: #fff; font-weight: 800; letter-spacing: .5px;
+    font-size: .85rem; color: #fff; font-weight: 800; letter-spacing: .5px;
   }
   .brand-text{ display: flex; flex-direction: column; line-height: 1.05; min-width: 0; }
-  .brand-title{ font-size: .92rem; font-weight: 700; letter-spacing: .2px; }
-  .brand-sub{ font-size: .58rem; opacity: .7; letter-spacing: 1.2px; text-transform: uppercase; margin-top: 2px; }
+  .brand-title{ font-size: .88rem; font-weight: 700; letter-spacing: .2px; }
+  .brand-sub{ font-size: .55rem; opacity: .7; letter-spacing: 1.2px; text-transform: uppercase; margin-top: 2px; }
+  @media(max-width:480px){
+    .brand-text{ display: none; }
+  }
+
+  /* BOTÃO PWA NO CENTRO DO HEADER */
+  .pwa-btn-center{
+    background: rgba(255,255,255,.1);
+    border: 1px solid rgba(255,255,255,.18);
+    color: #fff;
+    height: 36px;
+    padding: 0 14px;
+    border-radius: 999px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    cursor: pointer;
+    font-size: .78rem;
+    font-weight: 700;
+    font-family: inherit;
+    transition: all .15s;
+    white-space: nowrap;
+    justify-self: center;
+    position: relative;
+    animation: pwaPulse 2.4s ease-in-out infinite;
+  }
+  .pwa-btn-center.show{ display: inline-flex; }
+  .pwa-btn-center:hover{ background: rgba(255,255,255,.22); }
+  .pwa-btn-center .pwa-emoji{ font-size: 1rem; line-height: 1; }
+  @keyframes pwaPulse{
+    0%,100%{ box-shadow: 0 0 0 0 rgba(139,115,85,.6); }
+    50%{ box-shadow: 0 0 0 8px rgba(139,115,85,0); }
+  }
+  @media(max-width:520px){
+    .pwa-btn-center{
+      font-size: .68rem;
+      height: 32px;
+      padding: 0 10px;
+      gap: 5px;
+    }
+    .pwa-btn-center .pwa-txt-app{ display: none; }
+  }
+  @media(max-width:400px){
+    .pwa-btn-center{ padding: 0 8px; }
+    .pwa-btn-center .pwa-emoji{ font-size: .9rem; }
+  }
+
+  .header-actions{
+    display: flex; align-items: center; gap: 6px;
+    min-width: 0;
+    justify-self: end;
+  }
+
   .user-info{
-    font-size: .78rem; opacity: .95;
+    font-size: .74rem; opacity: .95;
     display: flex; align-items: center; gap: 5px;
-    max-width: 40vw; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    max-width: 34vw; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
     background: rgba(255,255,255,.08);
-    padding: 6px 12px; border-radius: 999px;
+    padding: 5px 10px; border-radius: 999px;
     border: 1px solid rgba(255,255,255,.1);
   }
   @media(max-width:600px){
-    .user-info{ font-size: .7rem; max-width: 36vw; padding: 5px 10px; }
+    .user-info{ font-size: .68rem; max-width: 30vw; padding: 4px 8px; }
+  }
+  @media(max-width:400px){
+    .user-info{ max-width: 26vw; }
   }
 
   .btn-lupa{
     background: rgba(255,255,255,.08);
     border: 1px solid rgba(255,255,255,.1);
     color: #fff;
-    width: 36px; height: 36px;
+    width: 34px; height: 34px;
     border-radius: 999px;
     display: inline-flex; align-items: center; justify-content: center;
     cursor: pointer;
-    font-size: 1.05rem;
+    font-size: 1rem;
     transition: all .15s;
     flex-shrink: 0;
   }
   .btn-lupa:hover{ background: rgba(255,255,255,.16); }
-
-  /* BOTÃO PWA COMPACTO NO HEADER */
-  .pwa-btn{
-    background: rgba(255,255,255,.1);
-    border: 1px solid rgba(255,255,255,.15);
-    color: #fff;
-    width: 36px; height: 36px;
-    border-radius: 999px;
-    display: none;
-    align-items: center; justify-content: center;
-    cursor: pointer;
-    font-size: 1.05rem;
-    transition: all .15s;
-    flex-shrink: 0;
-    position: relative;
-    animation: pwaPulse 2.4s ease-in-out infinite;
-  }
-  .pwa-btn.show{ display: inline-flex; }
-  .pwa-btn:hover{ background: rgba(255,255,255,.22); }
-  @keyframes pwaPulse{
-    0%,100%{ box-shadow: 0 0 0 0 rgba(139,115,85,.6); }
-    50%{ box-shadow: 0 0 0 6px rgba(139,115,85,0); }
-  }
-  .pwa-btn .pwa-dot{
-    position: absolute;
-    top: 4px; right: 4px;
-    width: 7px; height: 7px;
-    border-radius: 50%;
-    background: #fbbf24;
-    border: 1.5px solid #16263e;
-  }
 
   .busca-expansivel{
     display: none;
@@ -209,7 +245,6 @@
   .form-group{ margin-bottom: 14px; }
   .code-input{ text-align: center; font-size: 1.5rem; font-weight: 700; letter-spacing: .4rem; text-transform: uppercase; font-family: var(--mono); padding: 14px; }
 
-  /* BOTÕES */
   .btn{
     display: inline-flex; align-items: center; justify-content: center; gap: 6px;
     padding: 12px 18px; border-radius: 10px; border: none; cursor: pointer;
@@ -258,7 +293,6 @@
     vertical-align: middle;
   }
 
-  /* SEÇÕES */
   .section{ margin-top: 18px; animation: fadeInUp .35s ease-out both; }
   @keyframes fadeInUp{
     from{ opacity: 0; transform: translateY(8px); }
@@ -276,7 +310,6 @@
     border: 1px solid var(--border); font-weight: 700;
   }
 
-  /* CARROSSEL */
   .carrossel-scroll{
     display: flex; gap: 10px; overflow-x: auto;
     padding: 4px 4px 10px;
@@ -290,7 +323,6 @@
   .carrossel-scroll > *{ scroll-snap-align: start; flex: 0 0 auto; width: 240px; }
   @media(min-width:768px){ .carrossel-scroll > *{ width: 280px; } }
 
-  /* VISITA CONFIRMADA */
   .visita-card{
     position: relative;
     background: linear-gradient(135deg, #fff5f5 0%, #ffe8e8 100%);
@@ -341,7 +373,6 @@
     border: 1px solid #ddd4ec; align-self: flex-start;
   }
 
-  /* CARD NOVO */
   .novo-card{
     background: #fff; border-radius: var(--radius);
     border: 2px solid #bbf7d0; overflow: hidden;
@@ -358,7 +389,6 @@
   }
   .novo-card-preco{ font-size: .9rem; font-weight: 800; color: var(--success-bright); }
 
-  /* FILTRO DE BAIRROS */
   .bairros-bar-wrap{
     position: relative;
     margin: 12px 0 6px;
@@ -411,7 +441,6 @@
   }
   .bairro-chip.active .cnt{ background: rgba(255,255,255,.25); }
 
-  /* GRID */
   .grid{
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -422,12 +451,11 @@
   @media(min-width:1200px){ .grid{ grid-template-columns: repeat(5, 1fr); } }
   @media(max-width:380px){ .grid{ gap: 8px; } }
 
-  /* CARD */
   .card{
     background: var(--card); border-radius: var(--radius);
     box-shadow: var(--shadow-xs);
     display: flex; flex-direction: column;
-    transition: all .2s; position: relative;
+    transition: all .25s; position: relative;
     border: 1px solid var(--border); overflow: hidden;
     animation: cardIn .35s ease-out both;
   }
@@ -437,23 +465,24 @@
   }
   .card:hover{ box-shadow: var(--shadow-md); transform: translateY(-2px); border-color: var(--border-strong); }
 
-  /* ✅ CARD NÃO GOSTEI — mais apagado, sem tarja */
+  /* ✅ CARD NÃO TENHO INTERESSE — bem apagado (opacidade baixa) */
   .card.card-nao-gostei{
-    opacity: .38;
-    filter: grayscale(75%);
+    opacity: .22;
+    filter: grayscale(90%);
+    transform: scale(.97);
   }
   .card.card-nao-gostei:hover{
-    opacity: .65;
-    filter: grayscale(40%);
+    opacity: .55;
+    filter: grayscale(50%);
+    transform: scale(1);
   }
-  /* Borda lateral sutil indicando "descartado" */
   .card.card-nao-gostei::before{
     content: '';
     position: absolute;
     left: 0; top: 0; bottom: 0;
-    width: 4px;
+    width: 5px;
     background: var(--danger);
-    opacity: .55;
+    opacity: .7;
     z-index: 5;
     pointer-events: none;
   }
@@ -484,6 +513,10 @@
     color: #fff; z-index: 4;
     box-shadow: 0 2px 6px rgba(0,0,0,.18);
     display: inline-flex; align-items: center; gap: 3px;
+    max-width: calc(100% - 24px);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
   .status-gostei{ background: var(--success); }
   .status-nao-gostei{ background: var(--danger); }
@@ -500,7 +533,6 @@
   }
   .card:hover .card-img{ transform: scale(1.04); }
 
-  /* ✅ OVERLAY METRAGEM/QUARTOS sobre a foto (parte de baixo) */
   .card-overlay-specs{
     position: absolute;
     left: 8px; right: 8px;
@@ -533,11 +565,11 @@
     overflow: hidden; min-height: 2.1em; letter-spacing: -.005em;
   }
   .card-preco{
-    font-size: 1.02rem;
+    font-size: 1.05rem;
     font-weight: 800;
     color: var(--success-bright);
     display: inline-flex; align-items: center; gap: 4px;
-    letter-spacing: -.01em;
+    letter-spacing: -.015em;
     line-height: 1.15;
   }
   .card-preco-sec{
@@ -585,7 +617,34 @@
     opacity: .7;
   }
 
-  /* Botão Ver Todas as Fotos */
+  /* ✅ BOTÃO REATIVAR — ocupa linha inteira quando card descartado */
+  .card-actions .btn-action.btn-reativar{
+    grid-column: 1 / -1;
+    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+    color: #fff;
+    border: none;
+    padding: 14px 12px;
+    border-radius: var(--radius-sm);
+    font-size: .82rem;
+    font-weight: 800;
+    letter-spacing: .3px;
+    min-height: 52px;
+    flex-direction: row;
+    gap: 8px;
+    box-shadow: 0 3px 10px rgba(220,38,38,.3);
+    transition: all .18s;
+  }
+  .card-actions .btn-action.btn-reativar:hover{
+    background: linear-gradient(135deg, #b91c1c 0%, #991b1b 100%);
+    box-shadow: 0 5px 14px rgba(220,38,38,.45);
+    transform: translateY(-1px);
+  }
+  .card-actions .btn-action.btn-reativar .icone{ font-size: 1.1rem; }
+  .card-actions .btn-action.btn-reativar.salvando{
+    pointer-events: none;
+    opacity: .7;
+  }
+
   .btn-ver-anuncio{
     display: flex; align-items: center; justify-content: center; gap: 5px;
     background: var(--primary); color: #fff; text-decoration: none;
@@ -607,7 +666,6 @@
     transform: translateY(-1px);
   }
 
-  /* Observação */
   .obs-wrap{
     margin: 0 10px 8px; background: var(--bg);
     border: 1px solid var(--border); border-radius: var(--radius-sm);
@@ -649,7 +707,6 @@
   }
   .obs-empty:hover{ color: var(--primary); }
 
-  /* Descrição */
   .card-desc{
     padding: 0 10px 6px;
     margin-top: 0;
@@ -710,7 +767,6 @@
   .card-desc-meta .meta-codigo.copiado{ background: var(--success); color: #fff; border-color: var(--success); }
   .card-desc-meta .meta-data{ display: inline-flex; align-items: center; gap: 3px; font-weight: 600; }
 
-  /* EMPTY / ERRO */
   .empty-state{
     text-align: center; padding: 60px 20px; color: var(--muted);
     background: #fff; border-radius: var(--radius); margin-top: 16px;
@@ -748,7 +804,6 @@
   }
   .erro-conexao .btn-recarregar:hover{ background: var(--primary-dark); transform: translateY(-1px); }
 
-  /* TOAST */
   .toast{
     position: fixed; bottom: calc(var(--navbar-h) + 20px); left: 50%;
     transform: translate(-50%, 30px);
@@ -765,7 +820,6 @@
 
   .hidden{ display: none !important; }
 
-  /* SKELETON */
   @keyframes shimmer{
     0%{ background-position: -400px 0; }
     100%{ background-position: 400px 0; }
@@ -789,7 +843,6 @@
   .skeleton-line.medium{ width: 70%; }
   .skeleton-line.long{ width: 90%; }
 
-  /* MENU INFERIOR */
   .bottom-nav{
     position: fixed; bottom: 0; left: 0; right: 0;
     height: calc(var(--navbar-h) + env(safe-area-inset-bottom));
@@ -853,7 +906,6 @@
   .nav-btn.nav-corretor:hover{ color: #1da851; }
   .nav-btn.nav-corretor.active{ color: #25D366; }
 
-  /* MODAL */
   .modal-backdrop{
     position: fixed; inset: 0;
     background: rgba(15,23,42,.6);
@@ -926,6 +978,7 @@
     font-size: .78rem; color: var(--text-soft);
     line-height: 1.45;
   }
+  .como-desc b{ color: var(--text); font-weight: 700; }
 
   .como-msg-final{
     margin-top: 16px;
@@ -944,7 +997,6 @@
     display: flex; flex-direction: column; gap: 8px;
   }
 
-  /* MODAL PWA */
   .pwa-step{
     display: flex; gap: 12px; align-items: flex-start;
     padding: 12px 0;
@@ -974,12 +1026,14 @@
         <div class="brand-sub">Imóveis</div>
       </div>
     </div>
-    <div style="display:flex; align-items:center; gap:8px; min-width:0;">
+
+    <button class="pwa-btn-center" id="pwaBtn" onclick="abrirAjudaPWA()" title="Instalar como aplicativo">
+      <span class="pwa-emoji">📲</span>
+      <span class="pwa-txt-app">Instalar como&nbsp;</span><span>APP</span>
+    </button>
+
+    <div class="header-actions">
       <span class="user-info" id="userInfo"></span>
-      <button class="pwa-btn" id="pwaBtn" onclick="abrirAjudaPWA()" title="Instalar como app">
-        📲
-        <span class="pwa-dot"></span>
-      </button>
       <button class="btn-lupa" id="btnLupa" onclick="toggleBusca()" title="Buscar">
         <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
       </button>
@@ -1136,11 +1190,12 @@
   </button>
 </nav>
 
+<!-- MODAL AJUDA -->
 <div class="modal-backdrop" id="ajudaBackdrop" onclick="if(event.target===this) fecharAjuda()">
   <div class="modal">
     <button class="modal-close" onclick="fecharAjuda()">×</button>
     <h2>Como usar sua vitrine</h2>
-    <p class="sub">Em 4 passos simples, você organiza tudo.</p>
+    <p class="sub">Em 5 passos simples, você organiza tudo.</p>
 
     <div class="como-item">
       <div class="como-ico">
@@ -1158,7 +1213,7 @@
       </div>
       <div class="como-txt">
         <div class="como-titulo">2. Marque o que gostou</div>
-        <div class="como-desc">Toque no <b>Gostei</b> nos imóveis que te agradaram. Assim ficam salvos em "Gostei".</div>
+        <div class="como-desc">Toque em <b>Gostei</b> nos imóveis que te agradaram.</div>
       </div>
     </div>
 
@@ -1168,7 +1223,17 @@
       </div>
       <div class="como-txt">
         <div class="como-titulo">3. Peça uma visita</div>
-        <div class="como-desc">Toque no <b>Visitar</b> nos que quiser conhecer pessoalmente.</div>
+        <div class="como-desc">Toque em <b>Visitar</b> nos que quiser conhecer pessoalmente.</div>
+      </div>
+    </div>
+
+    <div class="como-item">
+      <div class="como-ico">
+        <svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+      </div>
+      <div class="como-txt">
+        <div class="como-titulo">4. Mudou de ideia? Reative!</div>
+        <div class="como-desc">Se marcar <b>Não tenho interesse</b> em algum imóvel, ele fica apagado. Se mudar de ideia, é só tocar em <b>Reativar este imóvel</b> que ele volta ao normal.</div>
       </div>
     </div>
 
@@ -1177,8 +1242,18 @@
         <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
       </div>
       <div class="como-txt">
-        <div class="como-titulo">4. Fale com o corretor</div>
+        <div class="como-titulo">5. Fale com o corretor</div>
         <div class="como-desc">Toque em <b>Corretor</b> no menu abaixo para tirar dúvidas no WhatsApp.</div>
+      </div>
+    </div>
+
+    <div class="como-item">
+      <div class="como-ico">
+        <svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+      </div>
+      <div class="como-txt">
+        <div class="como-titulo">📲 Instale como aplicativo</div>
+        <div class="como-desc">Toque em <b>Instalar como APP</b> no topo. Adicione à tela inicial e acesse sua vitrine com 1 toque, como um app de verdade.</div>
       </div>
     </div>
 
@@ -1192,6 +1267,7 @@
   </div>
 </div>
 
+<!-- MODAL PWA -->
 <div class="modal-backdrop" id="pwaBackdrop" onclick="if(event.target===this) fecharAjudaPWA()">
   <div class="modal">
     <button class="modal-close" onclick="fecharAjudaPWA()">×</button>
@@ -1319,13 +1395,14 @@ function esc(s){
 }
 
 /* ============================================================
-   ✅ FORMATAÇÃO DE PREÇO — regra robusta
-   Regras:
+   ✅ FORMATAÇÃO DE PREÇO — regra robusta com heurística segura
    - Se tem vírgula → decimal BR (ponto = milhar, vírgula = decimal)
    - Se só tem pontos:
        * último bloco com 3 dígitos → todos os pontos são milhar
        * último bloco com 1 ou 2 dígitos → último ponto é decimal
    - Sem separador → inteiro puro
+   - HEURÍSTICA: se o número final for entre 100 e 99.999,
+     multiplica por 1000 (cobre admin digitando "1800" em vez de "1800000")
 ============================================================ */
 function formatarPreco(valor){
   if(valor === null || valor === undefined) return '';
@@ -1356,6 +1433,11 @@ function formatarPreco(valor){
   }
 
   if(isNaN(num) || num <= 0) return '';
+
+  // ✅ HEURÍSTICA: imóvel não custa R$ 1.800. Se for valor baixo, multiplica por 1000
+  if(num >= 100 && num <= 99999){
+    num = num * 1000;
+  }
 
   return num.toLocaleString('pt-BR', {
     style: 'currency',
@@ -1956,6 +2038,7 @@ async function irParaVitrine(){
     atualizarBadgesNav();
     if(cache.fresh){
       talvezMostrarAjudaPrimeiraVez();
+      talvezMostrarBannerPWA();
       return;
     }
   } else {
@@ -1964,6 +2047,7 @@ async function irParaVitrine(){
 
   await carregarImoveis();
   talvezMostrarAjudaPrimeiraVez();
+  talvezMostrarBannerPWA();
 }
 
 async function carregarImoveis(){
@@ -2483,12 +2567,19 @@ function renderizarImoveis(){
 
 function cardHTML(im, idx){
   const statusAtual = im.status || 'pendente';
+  const descartado = statusAtual === 'nao-gostei';
+
   const statusClass = {
     'gostei':'status-gostei','nao-gostei':'status-nao-gostei',
     'quero-visitar':'status-quero-visitar','pendente':'status-pendente'
   }[statusAtual] || 'status-pendente';
+
+  // ✅ Label do badge agora é "não tenho interesse"
   const statusLabel = {
-    'gostei':'Gostei','nao-gostei':'Não','quero-visitar':'Visitar','pendente':''
+    'gostei':'Gostei',
+    'nao-gostei':'Não tenho interesse',
+    'quero-visitar':'Visitar',
+    'pendente':''
   }[statusAtual] || '';
 
   const img = im.imagem || 'https://via.placeholder.com/400x300/e2e8f0/64748b?text=Sem+imagem';
@@ -2507,7 +2598,7 @@ function cardHTML(im, idx){
 
   const descId = 'desc-' + id;
 
-  const cardExtraClass = (statusAtual === 'nao-gostei') ? ' card-nao-gostei' : '';
+  const cardExtraClass = descartado ? ' card-nao-gostei' : '';
   const salvando = !!state.salvandoIds[im.id];
   const disabledAttr = salvando ? 'disabled' : '';
 
@@ -2536,6 +2627,34 @@ function cardHTML(im, idx){
   const iconeG = salvando ? spinnerHtml : '❤️';
   const iconeV = salvando ? spinnerHtml : '📅';
   const iconeN = salvando ? spinnerHtml : '❌';
+
+  // ✅ AÇÕES: se descartado → 1 botão grande "Reativar este imóvel"
+  //              se normal   → 3 botões (Gostei / Visitar / Não)
+  const acoesHtml = descartado
+    ? `
+      <div class="card-actions" onclick="event.stopPropagation();">
+        <button class="btn-action btn-reativar ${salvando ? 'salvando' : ''}" ${disabledAttr} onclick="marcar('${id}','nao-gostei')" title="Reativar este imóvel">
+          <span class="icone">${salvando ? spinnerHtml : '↻'}</span>
+          <span>Reativar este imóvel</span>
+        </button>
+      </div>
+    `
+    : `
+      <div class="card-actions" onclick="event.stopPropagation();">
+        <button class="btn-action act-gostei ${btnGostei} ${salvando ? 'salvando' : ''}" ${disabledAttr} onclick="marcar('${id}','gostei')" title="Gostei">
+          <span class="icone">${iconeG}</span>
+          <span>Gostei</span>
+        </button>
+        <button class="btn-action act-visitar ${btnVisitar} ${salvando ? 'salvando' : ''}" ${disabledAttr} onclick="marcar('${id}','quero-visitar')" title="Quero visitar">
+          <span class="icone">${iconeV}</span>
+          <span>Visitar</span>
+        </button>
+        <button class="btn-action act-nao ${btnNao} ${salvando ? 'salvando' : ''}" ${disabledAttr} onclick="marcar('${id}','nao-gostei')" title="Não tenho interesse">
+          <span class="icone">${iconeN}</span>
+          <span>Não</span>
+        </button>
+      </div>
+    `;
 
   return `
     <div class="card${cardExtraClass}" data-id="${id}" style="animation-delay:${animDelay}ms" onclick="clicarCard('${id}')">
@@ -2574,20 +2693,7 @@ function cardHTML(im, idx){
         </div>
       ` : ''}
 
-      <div class="card-actions" onclick="event.stopPropagation();">
-        <button class="btn-action act-gostei ${btnGostei} ${salvando ? 'salvando' : ''}" ${disabledAttr} onclick="marcar('${id}','gostei')" title="Gostei">
-          <span class="icone">${iconeG}</span>
-          <span>Gostei</span>
-        </button>
-        <button class="btn-action act-visitar ${btnVisitar} ${salvando ? 'salvando' : ''}" ${disabledAttr} onclick="marcar('${id}','quero-visitar')" title="Quero visitar">
-          <span class="icone">${iconeV}</span>
-          <span>Visitar</span>
-        </button>
-        <button class="btn-action act-nao ${btnNao} ${salvando ? 'salvando' : ''}" ${disabledAttr} onclick="marcar('${id}','nao-gostei')" title="Não gostei">
-          <span class="icone">${iconeN}</span>
-          <span>Não</span>
-        </button>
-      </div>
+      ${acoesHtml}
 
       ${im.link ? `
         <a class="btn-ver-anuncio" href="${esc(im.link)}" target="_blank" rel="noopener" onclick="event.stopPropagation(); clicarAnuncio('${id}');">
@@ -2666,10 +2772,10 @@ async function marcar(id, acao){
   } else {
     renderizarImoveis();
     atualizarContadores();
-    const msg = novaAcao === 'pendente' ? 'Voltou para aguardando'
+    const msg = novaAcao === 'pendente' ? 'Imóvel reativado!'
               : novaAcao === 'gostei' ? 'Gostei!'
               : novaAcao === 'quero-visitar' ? 'Vou querer visitar!'
-              : 'Não gostei';
+              : 'Não tenho interesse';
     toast(msg, 'success');
   }
 }
