@@ -483,50 +483,216 @@
     color: #fff; letter-spacing: .2px;
   }
 
+  /* ============ CLIENTES - V2 (3 LINHAS + CUTUCADA) ============ */
   .clientes-lista{ display: flex; flex-direction: column; gap: 4px; }
-  .cliente-row{
-    display: grid; grid-template-columns: 32px 1fr auto;
-    gap: 12px; align-items: center;
-    padding: 10px 14px; border-radius: var(--radius);
-    background: #fff; border: 1px solid var(--border);
+
+  .cliente-row-v2{
+    display: grid;
+    grid-template-columns: 32px minmax(0, 1fr) auto auto;
+    gap: 12px;
+    align-items: center;
+    padding: 10px 14px;
+    border-radius: var(--radius);
+    background: #fff;
+    border: 1px solid var(--border);
     transition: all .12s;
   }
-  .cliente-row:hover{ border-color: var(--border-strong); background: #fafbfc; }
-  .cliente-row.inativo{ opacity: .6; background: #f8f9fa; border-left: 3px solid var(--danger); }
-  .cliente-row .temp{
+  .cliente-row-v2:hover{ border-color: var(--border-strong); background: #fafbfc; }
+  .cliente-row-v2.inativo{ opacity: .65; background: #f8f9fa; border-left: 3px solid var(--danger); }
+  .cliente-row-v2 .temp{
     font-size: 1.2rem; text-align: center; line-height: 1;
     cursor: pointer; border-radius: var(--radius-sm); padding: 4px;
     transition: all .12s; user-select: none;
+    grid-row: span 3;
+    align-self: center;
   }
-  .cliente-row .temp:hover{ background: var(--bg-alt); }
-  .cliente-row .temp.manual::after{
+  .cliente-row-v2 .temp:hover{ background: var(--bg-alt); }
+  .cliente-row-v2 .temp.manual::after{
     content: '●'; color: var(--danger);
     font-size: .5rem; vertical-align: top; margin-left: 1px;
   }
-  .cliente-row .info{ min-width: 0; display: flex; flex-direction: column; gap: 3px; }
-  .cliente-row .nome{
+  .cliente-row-v2 .info{
+    min-width: 0;
+    display: flex; flex-direction: column; gap: 3px;
+  }
+  .cliente-row-v2 .nome{
     font-size: .86rem; font-weight: 700; color: var(--text);
     display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
     letter-spacing: -.005em;
   }
-  .cliente-row .linha2{
+  .cliente-row-v2 .linha2,
+  .cliente-row-v2 .linha3{
     font-size: .7rem; color: var(--text-soft);
     display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
   }
-  .cliente-row .linha2 .item{ display: inline-flex; align-items: center; gap: 4px; }
-  .cliente-row .linha2 .muted{ color: var(--muted); }
-  .cliente-row .tags{ display: flex; align-items: center; gap: 4px; justify-content: flex-end; flex-wrap: wrap; }
+  .cliente-row-v2 .linha2 .item,
+  .cliente-row-v2 .linha3 .item{
+    display: inline-flex; align-items: center; gap: 4px;
+  }
+  .cliente-row-v2 .linha2 .muted,
+  .cliente-row-v2 .linha3 .muted{ color: var(--muted); }
+  .cliente-row-v2 .cutucada-cell{
+    display: flex;
+    align-items: stretch;
+    grid-row: span 3;
+    align-self: stretch;
+  }
+  .cliente-row-v2 .tags{
+    display: flex; align-items: center; gap: 4px;
+    justify-content: flex-end; flex-wrap: wrap;
+    grid-row: span 3;
+    align-self: center;
+  }
+
+  @media(max-width:1100px){
+    .cliente-row-v2{
+      grid-template-columns: 32px 1fr auto;
+      grid-template-rows: auto auto;
+    }
+    .cliente-row-v2 .temp{ grid-row: span 2; }
+    .cliente-row-v2 .cutucada-cell{
+      grid-column: 2 / 3;
+      grid-row: 3;
+    }
+    .cliente-row-v2 .tags{
+      grid-column: 1 / -1;
+      grid-row: 4;
+      justify-content: flex-start;
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px dashed var(--border);
+    }
+  }
 
   @media(max-width:640px){
-    .cliente-row{ grid-template-columns: 26px 1fr auto; gap: 8px; padding: 9px 10px; }
-    .cliente-row .temp{ font-size: 1.05rem; }
-    .cliente-row .nome{ font-size: .8rem; gap: 6px; }
-    .cliente-row .linha2{ font-size: .66rem; gap: 6px; }
-    .cliente-row .linha2 .item.ult-admin{ display: none; }
-    .cliente-row .linha2 .item.ult-acao{ display: none; }
-    .cliente-row .linha2 .item.data-cad{ display: none; }
-    .cliente-row .tags .btn{ padding: 4px 6px; font-size: .68rem; }
-    .tag{ font-size: .58rem; padding: 1px 6px; }
+    .cliente-row-v2{
+      grid-template-columns: 26px 1fr;
+      gap: 8px;
+      padding: 9px 10px;
+    }
+    .cliente-row-v2 .temp{ font-size: 1.05rem; }
+    .cliente-row-v2 .nome{ font-size: .8rem; gap: 6px; }
+    .cliente-row-v2 .linha2,
+    .cliente-row-v2 .linha3{ font-size: .66rem; gap: 6px; }
+    .cliente-row-v2 .linha2 .item.ult-admin,
+    .cliente-row-v2 .linha2 .item.ult-acao,
+    .cliente-row-v2 .linha3 .item.data-cad{ display: none; }
+    .cliente-row-v2 .cutucada-cell{
+      grid-column: 2 / 3;
+      max-width: 100%;
+    }
+    .cutucada-wrap{
+      min-width: 0;
+      max-width: 100%;
+      padding: 6px 10px;
+    }
+  }
+
+  /* Cutucada - card */
+  .cutucada-wrap{
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 8px 12px;
+    background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+    border: 1px solid #7dd3fc;
+    border-left: 3px solid #0ea5e9;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: all .15s;
+    min-width: 200px;
+    max-width: 280px;
+    align-self: stretch;
+    position: relative;
+  }
+  .cutucada-wrap:hover{
+    background: linear-gradient(135deg, #bae6fd 0%, #7dd3fc 100%);
+    box-shadow: 0 2px 8px rgba(14,165,233,.25);
+    transform: translateY(-1px);
+  }
+  .cutucada-wrap .cutucada-head{
+    display: flex; align-items: center; gap: 6px;
+    font-size: .68rem; font-weight: 800;
+    color: #0369a1;
+    text-transform: uppercase;
+    letter-spacing: .3px;
+  }
+  .cutucada-wrap .cutucada-head .ico-cut{
+    font-size: .85rem;
+    line-height: 1;
+  }
+  .cutucada-wrap .cutucada-data{
+    font-family: var(--mono);
+    font-size: .66rem;
+    font-weight: 700;
+    color: #075985;
+    letter-spacing: .2px;
+  }
+  .cutucada-wrap .cutucada-texto{
+    font-size: .74rem;
+    color: #0c4a6e;
+    line-height: 1.35;
+    white-space: pre-wrap;
+    word-break: break-word;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    font-weight: 500;
+  }
+  .cutucada-wrap .cutucada-vazia{
+    font-size: .72rem;
+    color: #0369a1;
+    font-style: italic;
+    opacity: .8;
+  }
+
+  /* Modal de Cutucadas */
+  .cutucada-lista{
+    display: flex; flex-direction: column; gap: 10px;
+    max-height: 55vh; overflow-y: auto;
+    padding-right: 4px;
+    margin-bottom: 12px;
+  }
+  .cutucada-item{
+    padding: 12px 14px;
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    border: 1px solid #bae6fd;
+    border-left: 3px solid #0ea5e9;
+    border-radius: var(--radius);
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .cutucada-item .cut-data{
+    font-family: var(--mono);
+    font-size: .7rem;
+    font-weight: 700;
+    color: #0369a1;
+    letter-spacing: .3px;
+    display: inline-flex; align-items: center; gap: 5px;
+  }
+  .cutucada-item .cut-texto{
+    font-size: .84rem;
+    color: #0c4a6e;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .cutucada-nova-wrap{
+    display: flex; flex-direction: column; gap: 8px;
+    padding: 12px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-top: 12px;
+  }
+  .cutucada-nova-wrap textarea{
+    min-height: 70px;
+    font-size: .86rem;
+    padding: 10px 12px;
+    resize: vertical;
+  }
+  .cutucada-nova-wrap .row-btn{
+    display: flex; justify-content: flex-end; gap: 8px;
   }
 
   .tag{
@@ -1534,6 +1700,34 @@
   </div>
 </div>
 
+<!-- ✅ NOVO: Modal Cutucadas -->
+<div class="modal-backdrop" id="cutucadasBackdrop">
+  <div class="modal" style="max-width:560px;">
+    <button class="modal-close" onclick="fecharCutucadas()"><svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <h2>
+      <svg class="ico" viewBox="0 0 24 24" style="stroke:#0ea5e9;"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+      Cutucadas — <span id="cutucadasNome" style="color:var(--text-soft);font-weight:600;"></span>
+    </h2>
+    <p class="text-muted" style="margin-bottom:14px; font-size:.78rem;" id="cutucadasSub">—</p>
+
+    <div class="cutucada-lista" id="cutucadaLista">
+      <div class="loading-inline"><span class="loader loader-lg"></span><p>Carregando cutucadas...</p></div>
+    </div>
+
+    <div class="cutucada-nova-wrap">
+      <label style="margin-bottom:0;">Nova cutucada</label>
+      <textarea id="cutucadaNovaTexto" placeholder="Escreva aqui a cutucada para este cliente..." maxlength="500"></textarea>
+      <div class="row-btn">
+        <button class="btn btn-ghost btn-sm" onclick="fecharCutucadas()">Fechar</button>
+        <button class="btn btn-primary btn-sm" id="btnSalvarCutucada" onclick="salvarNovaCutucada()">
+          <svg class="ico ico-sm" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Adicionar cutucada
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- Confirm -->
 <div class="confirm-backdrop" id="confirmBackdrop">
   <div class="confirm-box">
@@ -1554,7 +1748,7 @@
   <div class="spinner"></div>
   <div class="msg">Aguarde, estamos salvando...</div>
 </div>
-  <script>
+<script>
 /* =====================================================
    CONFIG
 ===================================================== */
@@ -1615,7 +1809,9 @@ const state = {
   _linkCachePorTel: {},
   _imgModalDataUrl: null,
   _imgModalNome: null,
-  _corretorPorImovelId: {}   // ✅ id do imóvel âncora → corretor
+  _corretorPorImovelId: {},
+  _cutucadaTelAtual: null,
+  _cutucadasAtuais: []
 };
 
 const $ = id => document.getElementById(id);
@@ -1795,20 +1991,16 @@ function isEvento_(a){
 /* ✅ NOVO — resolve o corretor de um item com fallback em cascata */
 function resolverCorretor_(item){
   if(!item) return '';
-  // 1) corretor direto do item
   if(item.corretor) return String(item.corretor).trim();
-  // 2) corretor do imóvel âncora (eventos) — busca pelo id
   const idIm = String(item.id || '');
   if(idIm && state._corretorPorImovelId && state._corretorPorImovelId[idIm]){
     return String(state._corretorPorImovelId[idIm]).trim();
   }
-  // 3) corretor do cliente cadastrado (pelo telefone)
   const tel = normalizaTel(item.telefone || '');
   if(tel && tel !== '00000000000'){
     const cli = state.clientes.find(c => normalizaTel(c.telefone) === tel);
     if(cli && cli.corretor) return String(cli.corretor).trim();
   }
-  // 4) corretor do cliente cadastrado (pelo nome)
   const nome = String(item.clienteNome || '').trim().toLowerCase();
   if(nome){
     const cli = state.clientes.find(c => (c.nome||'').trim().toLowerCase() === nome);
@@ -1817,18 +2009,52 @@ function resolverCorretor_(item){
   return '';
 }
 
-/* ✅ NOVO — limpa o título do evento: remove ", 000" e " - descricao" que o backend concatenou */
+/* ✅ NOVO — limpa o título do evento: remove ", 000" e " - descricao" */
 function tituloEventoLimpo_(a){
   let t = String(a.rua || a.titulo || a.clienteNome || 'Evento').trim();
-  // ✅ Remove marcadores de número placeholder: 000, S/N, s/n, -, .
   t = t.replace(/,?\s*(000|S\/N|s\/n|-|\.)\s*/g, ' ').replace(/\s+/g, ' ').trim();
-  // Remove " - descricao" (bairro concatenado)
   const desc = String(a.bairro || '').trim();
   if(desc){
     const idx = t.toLowerCase().lastIndexOf(' - ' + desc.toLowerCase());
     if(idx > 0) t = t.slice(0, idx).trim();
   }
   return t || 'Evento';
+}
+
+/* =====================================================
+   CUTUCADAS — Helpers
+===================================================== */
+
+// Parse do campo salvo na planilha no formato "DataISO|Texto"
+function parseCutucada_(valor){
+  if(!valor) return null;
+  const s = String(valor).trim();
+  if(!s) return null;
+  const idx = s.indexOf('|');
+  if(idx < 0) return null;
+  const dataIso = s.slice(0, idx).trim();
+  const texto = s.slice(idx + 1).trim();
+  if(!dataIso || !texto) return null;
+
+  const d = new Date(dataIso);
+  if(isNaN(d.getTime())) return null;
+
+  return {
+    dataIso: dataIso,
+    dataFmt: formatarDataHoraCurta_(d),
+    texto: texto
+  };
+}
+
+// Formata "dd/mm/aaaa   hh:mm"
+function formatarDataHoraCurta_(d){
+  if(!(d instanceof Date) || isNaN(d.getTime())) return '';
+  const dia = String(d.getDate()).padStart(2,'0');
+  const mes = String(d.getMonth()+1).padStart(2,'0');
+  const ano = d.getFullYear();
+  const h = String(d.getHours()).padStart(2,'0');
+  const m = String(d.getMinutes()).padStart(2,'0');
+  return `${dia}/${mes}/${ano}   ${h}:${m}`;
 }
 
 /* =====================================================
@@ -2501,6 +2727,7 @@ function renderizarClientes(){
   lista.innerHTML = arr.map(c => clienteRowHTML(c)).join('');
 }
 
+/* ✅ NOVA VERSÃO — 3 linhas + cutucada + botões */
 function clienteRowHTML(c){
   const inativo = String(c.inativo||'').toLowerCase() === 'sim';
   const tqc = String(c.tqc||'').toLowerCase() === 'sim';
@@ -2514,9 +2741,13 @@ function clienteRowHTML(c){
   const nomeCompleto = esc(nomeCompletoCliente_(c.nome, c.telefone));
   const tel = esc(c.telefone);
 
+  // ✅ CUTUCADA — parse do campo "DataISO|Texto"
+  const cut = parseCutucada_(c.cutucada);
+
   return `
-    <div class="cliente-row ${inativo ? 'inativo' : ''}">
+    <div class="cliente-row-v2 ${inativo ? 'inativo' : ''}">
       <div class="temp ${manual}" title="${temp}${c.temperaturaManual ? ' (manual)' : ''} - clique para alterar" onclick="abrirTempModal('${tel}')">${emoji}</div>
+
       <div class="info">
         <div class="nome">
           ${nomeCompleto}
@@ -2532,11 +2763,28 @@ function clienteRowHTML(c){
           ${c.corretor ? `<span class="item"><span class="corretor-badge" style="background:${corCorr}">${esc(c.corretor)}</span></span>` : ''}
           <span class="item ult-admin">Admin: ${c.dataUltimaAcaoAdmin ? fmtData(c.dataUltimaAcaoAdmin) : '—'}</span>
           <span class="item ult-acao">Cliente: ${c.dataUltimaAcaoCliente ? fmtData(c.dataUltimaAcaoCliente) : '—'}</span>
-          <span class="item data-cad">Cadastro: ${c.dataCadastro ? fmtData(c.dataCadastro) : '—'}</span>
-          <span class="item muted">Imóveis: ${totalIm}</span>
-          <span class="item muted">Visitas: ${totalVi}</span>
+        </div>
+        <div class="linha3">
+          <span class="item data-cad">📅 Cadastro: ${c.dataCadastro ? fmtData(c.dataCadastro) : '—'}</span>
+          <span class="item muted">🏠 Imóveis: ${totalIm}</span>
+          <span class="item muted">👁️ Visitas: ${totalVi}</span>
         </div>
       </div>
+
+      <div class="cutucada-cell">
+        <div class="cutucada-wrap" onclick="abrirCutucadas('${tel}')" title="Clique para ver todas as cutucadas">
+          <div class="cutucada-head">
+            <span class="ico-cut">📣</span>
+            <span>Cutucada</span>
+          </div>
+          ${cut
+            ? `<span class="cutucada-data">${esc(cut.dataFmt)}</span>
+               <div class="cutucada-texto">${esc(cut.texto)}</div>`
+            : `<div class="cutucada-vazia">Nenhuma cutucada ainda. Clique para adicionar.</div>`
+          }
+        </div>
+      </div>
+
       <div class="tags">
         <button class="btn btn-ghost btn-xs" title="Observações internas" onclick="abrirObsClienteDireto('${tel}')">
           <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
@@ -2560,6 +2808,111 @@ function clienteRowHTML(c){
     </div>
   `;
 }
+
+/* =====================================================
+   ✅ CUTUCADAS — Frontend
+===================================================== */
+
+async function abrirCutucadas(telefone){
+  const tel = normalizaTel(telefone);
+  if(!tel){ toast('Telefone inválido', 'error'); return; }
+
+  const cli = state.clientes.find(c => normalizaTel(c.telefone) === tel);
+  const nome = cli ? (cli.nome || '') : '';
+
+  window._cutucadaTelAtual = tel;
+  $('cutucadasNome').textContent = nomeCompletoCliente_(nome, tel);
+  $('cutucadasSub').textContent = fmtTel(tel);
+  $('cutucadaNovaTexto').value = '';
+  $('cutucadaLista').innerHTML = '<div class="loading-inline"><span class="loader loader-lg"></span><p>Carregando cutucadas...</p></div>';
+  $('cutucadasBackdrop').classList.add('show');
+
+  marcarSalvando(true);
+  const res = await api('listarCutucadas', { senha: state.adminSenha, telefone: tel });
+  marcarSalvando(false);
+
+  if(!res.ok){
+    $('cutucadaLista').innerHTML = '<div class="empty-state"><p>Erro ao carregar cutucadas</p></div>';
+    return;
+  }
+
+  const lista = res.data || [];
+  renderizarListaCutucadas_(lista);
+}
+
+function renderizarListaCutucadas_(lista){
+  window._cutucadasAtuais = lista || [];
+  const cont = $('cutucadaLista');
+  if(!lista || lista.length === 0){
+    cont.innerHTML = '<div class="empty-state" style="padding:30px 20px;"><p>Nenhuma cutucada registrada ainda.</p></div>';
+    return;
+  }
+  cont.innerHTML = lista.map(c => {
+    const d = new Date(c.dataHora);
+    const dataFmt = formatarDataHoraCurta_(d);
+    return `
+      <div class="cutucada-item">
+        <span class="cut-data">📣 ${esc(dataFmt)}</span>
+        <div class="cut-texto">${esc(c.texto)}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+function fecharCutucadas(){
+  $('cutucadasBackdrop').classList.remove('show');
+  window._cutucadaTelAtual = null;
+  window._cutucadasAtuais = [];
+}
+
+async function salvarNovaCutucada(){
+  const tel = window._cutucadaTelAtual;
+  if(!tel){ toast('Telefone não identificado', 'error'); return; }
+  const texto = ($('cutucadaNovaTexto').value || '').trim();
+  if(!texto){ toast('Escreva a cutucada', 'error'); return; }
+
+  const btn = $('btnSalvarCutucada');
+  if(btn) btn.disabled = true;
+  marcarSalvando(true);
+  const res = await api('adicionarCutucada', {
+    senha: state.adminSenha, telefone: tel, texto: texto
+  });
+  marcarSalvando(false);
+  if(btn) btn.disabled = false;
+
+  if(!res.ok){
+    toast(res.error || 'Erro ao salvar cutucada', 'error');
+    return;
+  }
+
+  const cli = state.clientes.find(c => normalizaTel(c.telefone) === tel);
+  if(cli){
+    cli.cutucada = res.dataHora + '|' + texto;
+  }
+
+  const item = {
+    id: res.id,
+    telefone: tel,
+    texto: texto,
+    dataHora: res.dataHora,
+    origem: 'admin',
+    apelido: 'admin'
+  };
+  const listaAtual = window._cutucadasAtuais || [];
+  listaAtual.unshift(item);
+  renderizarListaCutucadas_(listaAtual);
+
+  $('cutucadaNovaTexto').value = '';
+  toast('Cutucada salva ✅', 'success');
+  renderizarClientes();
+}
+
+/* =====================================================
+   ABRIR EDIÇÕES / VITRINE / ETC (continua na parte 4)
+===================================================== */
+/* =====================================================
+   ABRIR VITRINE / LINK / ETC
+===================================================== */
 
 function abrirVitrineCliente(telefone){
   const tel = normalizaTel(telefone);
@@ -2801,7 +3154,6 @@ async function carregarAgenda(mostrarLoading){
   if(mostrarLoading){
     $('agendaLista').innerHTML = '<div class="loading-inline"><span class="loader loader-lg"></span><p>Carregando agenda...</p></div>';
   }
-  // ✅ Carrega agendamentos E todos imóveis em paralelo, para mapear corretor dos eventos
   const [res, resIm] = await Promise.all([
     api('listarAgendamentos', { senha: state.adminSenha }),
     api('listarTodosImoveis', { senha: state.adminSenha })
@@ -2865,7 +3217,6 @@ function limparFiltroAgenda(){
 function renderizarAgenda(){
   const lista = $('agendaLista');
   let arr = [...state.agendamentos];
-  // ✅ Enriquece com corretor do cliente/imóvel quando ausente
   arr = arr.map(a => {
     if(a.corretor) return a;
     const corr = resolverCorretor_(a);
@@ -2898,7 +3249,6 @@ function agendaRowHTML(a, conflito){
   const id = esc(a.id);
   const tel = esc(a.telefone);
 
-  // ✅ CARD DE EVENTO — título limpo (sem "000" nem descrição concatenada) + descrição só na 2ª linha
   if(evento){
     const tituloEv = esc(tituloEventoLimpo_(a));
     const descricaoEv = esc(String(a.bairro || '').trim());
@@ -3034,9 +3384,7 @@ function abrirEditarEvento(id){
   if(!a){ toast('Evento não encontrado', 'error'); return; }
   $('eventoModalTitulo').textContent = 'Editar evento';
   $('eventoId').value = id;
-  // ✅ Título puro = a.rua (a.titulo vem concatenado do backend)
   $('eventoTitulo').value = tituloEventoLimpo_(a);
-  // ✅ Descrição = a.bairro
   $('eventoDescricao').value = a.bairro || '';
   const dtInput = $('eventoDataHora');
   dtInput.min = hojeISO() + 'T00:00';
@@ -3083,29 +3431,27 @@ async function salvarEvento(ev){
       return;
     }
   } else {
-    // ✅ numero vazio para não concatenar "000" no título do backend
-   await api('salvarImovel', {
-  senha: state.adminSenha,
-  id: idImovel,
-  telefone: '00000000000',
-  rua: titulo,
-  numero: 'S/N',              // ✅ era ''
-  bairro: descricao || '',
-  descricao: descricao || 'Evento da agenda',
-  corretor: corretor,
-  status: 'pendente'
-});
+    await api('salvarImovel', {
+      senha: state.adminSenha,
+      id: idImovel,
+      telefone: '00000000000',
+      rua: titulo,
+      numero: 'S/N',
+      bairro: descricao || '',
+      descricao: descricao || 'Evento da agenda',
+      corretor: corretor,
+      status: 'pendente'
+    });
   }
 
-  // ✅ numero vazio aqui também
   const res = await api('agendarVisita', {
-  senha: state.adminSenha,
-  id: idImovel,
-  dataAgendada: iso,
-  rua: titulo,
-  numero: 'S/N',              // ✅ era ''
-  bairro: descricao || ''
-});
+    senha: state.adminSenha,
+    id: idImovel,
+    dataAgendada: iso,
+    rua: titulo,
+    numero: 'S/N',
+    bairro: descricao || ''
+  });
   marcarSalvando(false);
   if(btn) btn.disabled = false;
 
@@ -3126,7 +3472,7 @@ async function criarImovelAncoraEvento(titulo, descricao, corretor){
     id: '',
     telefone: '00000000000',
     rua: titulo,
-    numero: 'S/N',            // ✅ era ''
+    numero: 'S/N',
     bairro: descricao || '',
     preco: '',
     condominio: '',
@@ -3977,7 +4323,8 @@ async function marcarCorrecaoResolvida(idx){
   toast('Pendência removida', 'success');
   abrirCorrecoes();
 }
-  /* =====================================================
+
+/* =====================================================
    CLIENTE MODAL
 ===================================================== */
 function abrirNovoCliente(){
@@ -4534,3 +4881,4 @@ window.addEventListener('beforeunload', function(e){
 </script>
 </body>
 </html>
+ 
