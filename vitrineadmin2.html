@@ -114,7 +114,6 @@
   .erro-wrap h2{ font-size: 1.1rem; margin-bottom: 10px; color: var(--text); }
   .erro-wrap p{ font-size: .88rem; color: var(--text-soft); margin-bottom: 20px; line-height: 1.55; }
 
-  /* BARRA DO CLIENTE — só info agora */
   .cliente-bar{
     background: #fff; border-bottom: 1px solid var(--border);
     padding: 12px 16px;
@@ -253,6 +252,43 @@
     border: 1px solid var(--border);
   }
 
+  /* ✅ Escolha do corretor (antes de salvar) */
+  .corretor-escolha-wrap{
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    padding: 12px 14px; background: var(--bg);
+    border: 1px solid var(--border); border-radius: var(--radius);
+    margin-top: 14px;
+  }
+  .corretor-escolha-wrap .titulo{
+    font-size: .72rem; font-weight: 700; color: var(--text-soft);
+    text-transform: uppercase; letter-spacing: .4px;
+    display: flex; align-items: center; gap: 5px;
+    margin-right: 4px;
+  }
+  .corretor-escolha-wrap .titulo .req{ color: var(--danger); }
+  .btn-corretor-escolha{
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 10px 16px; border-radius: var(--radius-sm);
+    border: 2px solid var(--border); background: #fff;
+    cursor: pointer; font-family: inherit;
+    font-size: .85rem; font-weight: 700; color: var(--text-soft);
+    transition: all .15s; white-space: nowrap;
+  }
+  .btn-corretor-escolha:hover{ border-color: var(--purple); color: var(--purple); }
+  .btn-corretor-escolha.ativo{
+    background: var(--purple); color: #fff; border-color: var(--purple);
+    box-shadow: 0 3px 10px rgba(109,40,217,.25);
+  }
+  .btn-corretor-escolha .inicial{
+    width: 22px; height: 22px; border-radius: 50%;
+    background: rgba(109,40,217,.15); color: var(--purple);
+    display: inline-flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: .72rem; flex-shrink: 0;
+  }
+  .btn-corretor-escolha.ativo .inicial{
+    background: rgba(255,255,255,.25); color: #fff;
+  }
+
   .filters{
     display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
     gap: 8px; margin: 14px 0 4px;
@@ -276,15 +312,15 @@
 
   .grid{
     display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: 12px;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
     margin-top: 16px;
   }
-  @media(max-width:1280px){ .grid{ grid-template-columns: repeat(4, minmax(0, 1fr)); } }
-  @media(max-width:1024px){ .grid{ grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-  @media(max-width:768px){ .grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; } }
-  @media(max-width:400px){ .grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; } }
+  @media(max-width:1200px){ .grid{ grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  @media(max-width:900px){ .grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; } }
+  @media(max-width:480px){ .grid{ grid-template-columns: 1fr; gap: 10px; } }
 
+  /* ✅ CARD ESTILO VITRINE DO CLIENTE */
   .card{
     background: #fff; border-radius: var(--radius-lg);
     overflow: hidden; box-shadow: var(--shadow-sm);
@@ -295,52 +331,100 @@
   }
   .card:hover{ box-shadow: var(--shadow-md); border-color: var(--border-strong); }
   .card.destacado{ border-color: var(--purple); box-shadow: 0 0 0 3px rgba(109,40,217,.18), var(--shadow-md); }
-  .card.card-nao-gostei{ opacity: .55; filter: grayscale(60%); background: #f7f8fa; }
-  .card.card-nao-gostei:hover{ opacity: .75; filter: grayscale(40%); }
-  .card.card-desativado{ opacity: .55; filter: grayscale(80%); background: #f3f4f6; border-left: 3px solid var(--danger); }
-  .card.card-desativado:hover{ opacity: .75; filter: grayscale(60%); }
+  .card.card-nao-gostei{ opacity: .35; filter: grayscale(90%); background: #f7f8fa; }
+  .card.card-nao-gostei:hover{ opacity: .6; filter: grayscale(50%); }
+  .card.card-desativado{ opacity: .35; filter: grayscale(95%); background: #f3f4f6; border-left: 4px solid var(--danger); }
+  .card.card-desativado:hover{ opacity: .6; filter: grayscale(60%); }
   .card.card-novo{ animation: cardNovo .4s ease-out; }
   @keyframes cardNovo{ from{ transform: scale(.94); opacity: 0; } to{ transform: scale(1); opacity: 1; } }
 
-  .card-topbar{
-    display: flex; align-items: center; justify-content: space-between;
-    gap: 6px; padding: 8px 12px; background: var(--bg);
-    border-bottom: 1px solid var(--border); flex-wrap: wrap;
+  .card-img-wrap{
+    width: 100%; aspect-ratio: 4 / 3; overflow: hidden;
+    background: var(--bg-alt); position: relative;
   }
-  .card-actions-mini{ display: flex; gap: 4px; align-items: center; }
-  .card-actions-mini .act{
-    display: inline-flex; align-items: center; justify-content: center;
-    gap: 4px; padding: 4px 8px; border-radius: var(--radius-sm);
-    background: #fff; border: 1px solid var(--border);
-    cursor: pointer; font-family: inherit;
-    font-size: .68rem; font-weight: 600; color: var(--text-soft);
-    transition: all .15s; line-height: 1;
-  }
-  .card-actions-mini .act .ico{ width: 14px; height: 14px; }
-  .card-actions-mini .act:hover{ background: var(--bg-alt); color: var(--text); border-color: var(--border-strong); }
-  .card-actions-mini .act.act-gostei.ativo{ background: var(--success-soft); color: var(--success); border-color: #b8dfc7; }
-  .card-actions-mini .act.act-visitar.ativo{ background: var(--warn-soft); color: var(--warn); border-color: #e2d3a8; }
-  .card-actions-mini .act.act-nao.ativo{ background: var(--danger-soft); color: var(--danger); border-color: #e0c4c4; }
-  .card-actions-mini .act.act-desativar.ativo{ background: #e2e8f0; color: #334155; border-color: #cbd5e1; }
-  .card-status-badge{
-    font-size: .6rem; font-weight: 800;
-    text-transform: uppercase; letter-spacing: .5px;
-    padding: 3px 8px; border-radius: 4px;
-  }
-  .card-status-badge.status-gostei{ background: var(--success-soft); color: var(--success); }
-  .card-status-badge.status-nao-gostei{ background: var(--danger-soft); color: var(--danger); }
-  .card-status-badge.status-quero-visitar{ background: var(--warn-soft); color: var(--warn); }
-  .card-status-badge.status-pendente{ background: var(--bg-alt); color: var(--text-soft); }
-  .card-status-badge.status-desativado{ background: #e2e8f0; color: #334155; }
-
-  .card-row{ display: flex; gap: 12px; padding: 12px; align-items: flex-start; }
   .card-img{
-    width: 76px; height: 76px; object-fit: cover;
-    background: var(--bg-alt); display: block;
-    border-radius: var(--radius-sm); flex-shrink: 0;
+    width: 100%; height: 100%; object-fit: cover;
+    display: block; transition: transform .3s ease;
     cursor: pointer;
   }
-  .card-info{ flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 5px; }
+  .card:hover .card-img{ transform: scale(1.04); }
+
+  /* ✅ Overlay specs (só 1 linha) */
+  .card-overlay-specs{
+    position: absolute;
+    left: 8px; right: 8px;
+    bottom: 8px;
+    background: rgba(15,23,42,.55);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    color: #fff;
+    font-size: .68rem;
+    font-weight: 700;
+    line-height: 1.3;
+    padding: 5px 10px;
+    border-radius: 8px;
+    letter-spacing: .2px;
+    box-shadow: 0 2px 6px rgba(0,0,0,.15);
+    z-index: 3;
+    pointer-events: none;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    text-shadow: 0 1px 2px rgba(0,0,0,.4);
+  }
+
+  /* ✅ Badge asteriscos */
+  .card-tag-topo{
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    background: linear-gradient(135deg, #8b7355 0%, #6d5a42 100%);
+    color: #fff;
+    font-size: .55rem;
+    font-weight: 800;
+    letter-spacing: .4px;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 6px;
+    z-index: 5;
+    box-shadow: 0 2px 6px rgba(0,0,0,.35);
+    white-space: nowrap;
+    max-width: calc(100% - 60px);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    pointer-events: none;
+    line-height: 1.2;
+  }
+
+  .card-status-strip{
+    position: absolute; top: 8px; right: 8px;
+    padding: 4px 9px; border-radius: 999px;
+    font-size: .58rem; font-weight: 800;
+    text-transform: uppercase; letter-spacing: .4px;
+    color: #fff; z-index: 4;
+    box-shadow: 0 2px 6px rgba(0,0,0,.18);
+    white-space: nowrap;
+  }
+  .status-gostei{ background: var(--success); }
+  .status-nao-gostei{ background: var(--danger); }
+  .status-quero-visitar{ background: var(--warn); }
+  .status-pendente{ display: none; }
+  .status-desativado{ background: #475569; }
+
+  .badge-novo{
+    position: absolute; top: 8px; left: 8px;
+    background: linear-gradient(135deg, #16a34a 0%, #22c55e 100%);
+    color: #fff; font-size: .6rem; font-weight: 800;
+    letter-spacing: .6px; padding: 4px 9px; border-radius: 999px;
+    z-index: 6; box-shadow: 0 2px 8px rgba(22,163,74,.4);
+    display: inline-flex; align-items: center; gap: 4px;
+  }
+  .badge-novo::before{
+    content: ''; width: 5px; height: 5px; border-radius: 50%;
+    background: #fff;
+  }
+
+  .card-body{ padding: 12px 12px 8px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
   .card-top-meta{ display: flex; align-items: center; gap: 5px; flex-wrap: wrap; }
   .card-date{ font-size: .62rem; color: var(--muted); background: var(--bg-alt); padding: 2px 7px; border-radius: 4px; font-weight: 600; }
   .card-code{
@@ -356,24 +440,78 @@
     display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
     overflow: hidden; letter-spacing: -.005em;
   }
+  .card-price{ font-size: 1rem; font-weight: 800; color: var(--success-bright, #16a34a); margin-top: 2px; }
   .card-desc{
     font-size: .74rem; color: var(--text-soft); line-height: 1.45;
     display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
     overflow: hidden; cursor: pointer; white-space: pre-wrap;
   }
   .card-desc.expandido{ display: block; -webkit-line-clamp: unset; overflow: visible; }
-  .card-bottom{ padding: 0 12px 12px; display: flex; flex-direction: column; gap: 8px; }
-  .card-bottom-actions{ display: flex; gap: 6px; flex-wrap: wrap; }
-  .card-bottom-actions .btn{ flex: 1; min-width: 0; padding: 6px 8px; font-size: .7rem; }
-  .btn-ver-anuncio{
-    display: flex; align-items: center; justify-content: center; gap: 6px;
-    background: var(--primary-soft); color: var(--primary); text-decoration: none;
-    padding: 8px 12px; border-radius: var(--radius-sm);
-    font-size: .74rem; font-weight: 600; transition: all .15s;
-  }
-  .btn-ver-anuncio:hover{ background: #dde6ee; }
 
-  .obs-wrap{ background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 8px 10px; }
+  .card-actions{
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 4px; padding: 0 10px 10px;
+  }
+  .card-actions .btn-action{
+    padding: 8px 4px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: #f8fafc;
+    cursor: pointer; font-family: inherit;
+    font-size: .7rem; font-weight: 700;
+    transition: all .15s;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 2px;
+    min-height: 44px;
+    color: var(--text-soft);
+    line-height: 1.15;
+  }
+  .card-actions .btn-action .icone{ font-size: .95rem; line-height: 1; }
+  .card-actions .btn-action:hover{ background: var(--bg-alt); }
+  .card-actions .btn-action.act-gostei.ativo{
+    background: var(--success); border-color: var(--success); color: #fff;
+  }
+  .card-actions .btn-action.act-visitar.ativo{
+    background: var(--warn); border-color: var(--warn); color: #fff;
+  }
+  .card-actions .btn-action.act-nao.ativo{
+    background: var(--danger); border-color: var(--danger); color: #fff;
+  }
+  .card-actions .btn-action.act-desativar{
+    grid-column: 1 / -1;
+    background: linear-gradient(135deg, #64748b 0%, #475569 100%);
+    color: #fff;
+    border: none;
+    padding: 10px 12px;
+    font-size: .74rem;
+    font-weight: 800;
+    letter-spacing: .3px;
+    min-height: 40px;
+    flex-direction: row;
+    gap: 6px;
+  }
+  .card-actions .btn-action.act-desativar:hover{
+    background: linear-gradient(135deg, #475569 0%, #334155 100%);
+  }
+  .card-actions .btn-action.act-reativar{
+    grid-column: 1 / -1;
+    background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+    color: #fff;
+    border: none;
+    padding: 10px 12px;
+    font-size: .74rem;
+    font-weight: 800;
+    letter-spacing: .3px;
+    min-height: 40px;
+    flex-direction: row;
+    gap: 6px;
+  }
+  .card-actions .btn-action.act-reativar:hover{
+    background: linear-gradient(135deg, #15803d 0%, #14532d 100%);
+  }
+
+  .obs-wrap{ background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 8px 10px; margin: 0 12px 12px; }
   .obs-label{
     font-size: .62rem; font-weight: 700; color: var(--muted);
     text-transform: uppercase; letter-spacing: .4px; margin-bottom: 5px;
@@ -410,6 +548,7 @@
   .agendamento-box{
     background: var(--info-soft); border: 1px solid #c9d6e4;
     border-radius: var(--radius-sm); padding: 10px 12px;
+    margin: 0 12px 12px;
   }
   .agendamento-box .titulo{
     font-size: .64rem; font-weight: 700; color: var(--info);
@@ -423,13 +562,25 @@
   }
   .agendamento-actions{ display: flex; gap: 5px; flex-wrap: wrap; }
   .agendamento-actions .btn{ padding: 5px 9px; font-size: .7rem; border-radius: var(--radius-sm); }
-  .visita-box{ background: var(--success-soft); border: 1px solid #b8dfc7; border-radius: var(--radius-sm); padding: 10px 12px; }
+  .visita-box{ background: var(--success-soft); border: 1px solid #b8dfc7; border-radius: var(--radius-sm); padding: 10px 12px; margin: 0 12px 12px; }
   .visita-box .titulo{
     font-size: .64rem; font-weight: 700; color: var(--success);
     text-transform: uppercase; letter-spacing: .4px; margin-bottom: 6px;
     display: flex; align-items: center; gap: 5px;
   }
   .visita-info{ font-size: .74rem; color: #2d4a3a; margin-bottom: 6px; line-height: 1.4; }
+
+  .card-footer{
+    padding: 0 12px 12px;
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .card-footer-actions{
+    display: flex; gap: 5px; flex-wrap: wrap;
+  }
+  .card-footer-actions .btn{
+    flex: 1; min-width: 0;
+    padding: 7px 8px; font-size: .72rem;
+  }
 
   #acessosSection{ border-left-color: var(--warn); }
   .acesso-card{
@@ -665,8 +816,27 @@
 
       <input type="hidden" id="adImagem">
 
+      <!-- ✅ Escolha do corretor -->
+      <div class="corretor-escolha-wrap">
+        <span class="titulo">
+          <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Corretor <span class="req">*</span>
+        </span>
+        <button type="button" class="btn-corretor-escolha" data-corretor="Hugo" onclick="escolherCorretor('Hugo', this)">
+          <span class="inicial">H</span>
+          Hugo
+        </button>
+        <button type="button" class="btn-corretor-escolha" data-corretor="Carolina" onclick="escolherCorretor('Carolina', this)">
+          <span class="inicial">C</span>
+          Carol
+        </button>
+        <span style="font-size:.72rem; color:var(--muted); margin-left:auto;" id="corretorAviso">
+          Selecione um corretor para liberar o salvamento
+        </span>
+      </div>
+
       <div class="mt-3" style="display:flex; gap:8px; flex-wrap:wrap;">
-        <button class="btn btn-purple" id="btnSalvarImovel" style="flex:1; min-width:180px;" onclick="salvarImovel()">
+        <button class="btn btn-purple" id="btnSalvarImovel" style="flex:1; min-width:180px;" onclick="salvarImovel()" disabled>
           <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
           Salvar imóvel
         </button>
@@ -875,6 +1045,26 @@
   </div>
 </div>
 
+<!-- Modal Excluir / Desativar -->
+<div class="modal-backdrop" id="excluirOuDesativarBackdrop">
+  <div class="modal" style="max-width:460px;">
+    <button class="modal-close" onclick="fecharExcluirOuDesativar()"><svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <h2><svg class="ico" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> O que deseja fazer?</h2>
+    <p class="text-muted" style="margin-bottom:16px; font-size:.82rem;" id="excluirOuDesativarSub">Escolha entre desativar (recomendado, você pode reativar depois) ou excluir permanentemente.</p>
+    <div style="display:flex; flex-direction:column; gap:10px;">
+      <button class="btn btn-warn" style="justify-content:flex-start; padding:14px 18px;" onclick="confirmarDesativar()">
+        <svg class="ico ico-lg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+        <span style="font-weight:700; margin-left:8px;">Desativar (recomendado)</span>
+      </button>
+      <button class="btn btn-danger" style="justify-content:flex-start; padding:14px 18px;" onclick="confirmarExcluir()">
+        <svg class="ico ico-lg" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+        <span style="font-weight:700; margin-left:8px;">Excluir permanentemente</span>
+      </button>
+      <button class="btn btn-ghost" onclick="fecharExcluirOuDesativar()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
 <div class="confirm-backdrop" id="confirmBackdrop">
   <div class="confirm-box">
     <div class="icon-wrap" id="confirmIconWrap">
@@ -895,8 +1085,7 @@
 </div>
 
 <div class="toast" id="toast"></div>
-
-<script>
+ <script>
 /* =====================================================
    CONFIG
 ===================================================== */
@@ -905,6 +1094,13 @@ const CORRETORES_CACHE_KEY = 'vitrine_corretores_v11';
 const BUSCAR_BASE = 'https://corretor.quintoandar.com.br/informacoes-de-entrada';
 const VITRINE_URL_BASE = 'https://limaribeiroimoveis.com.br/vitrine.html';
 const TIMEOUT_API = 90000;
+const TIMEOUT_SALVAR = 15000; // ✅ Timeout de 15s para o salvar
+
+// ✅ Finais de link por corretor (definem o sufixo do link que o corretor compartilha)
+const FINAIS_LINK = {
+  'Hugo':     'HugoFelipePereiraRibeiro-3M2K',
+  'Carolina': 'CarolinaLima-ZADT'
+};
 
 const urlParams = new URLSearchParams(window.location.search);
 const TELEFONE_CLIENTE = (urlParams.get('tel') || '').replace(/\D/g, '');
@@ -919,12 +1115,16 @@ const state = {
   corretores: [],
   acessos: [],
   filtro: 'todos',
+  filtroCorretor: new Set(),   // ✅ Filtro por corretor (Hugo, Carol, Hugo/Iasmin, …)
   salvando: 0,
   _atividadeFiltro: 'todos',
   _atividadeEventos: null,
   _clonarSelecionados: new Set(),
   _linkDebounce: null,
-  _codigoLinkAtual: ''
+  _codigoLinkAtual: '',
+  _corretorEscolhido: '',      // ✅ Corretor escolhido no form
+  _excluirDesativarId: null,   // ✅ ID do imóvel que está sendo excluído/desativado
+  _salvarTimeout: null         // ✅ Timeout do salvar
 };
 
 const $ = id => document.getElementById(id);
@@ -1024,6 +1224,20 @@ function camposEndereco_(im){
 }
 function isDesativado(im){ return String(im.desativado || '').toLowerCase() === 'sim'; }
 
+// ✅ Chave EXATA do corretor (não corta em "/")
+function chaveCorretorExata_(nome){
+  return String(nome || '').trim();
+}
+
+// ✅ Chave "grupo" do corretor (corta em "/") — usada para agrupar variantes
+function chaveCorretorGrupo_(nome){
+  const s = String(nome || '').trim();
+  if(!s) return '';
+  const idx = s.indexOf('/');
+  if(idx > 0) return s.slice(0, idx).trim();
+  return s;
+}
+
 function extrairCodigoDoLink(url){
   if(!url) return '';
   const match = String(url).match(/\/(\d{6,})\/?(?:[?#].*)?$/);
@@ -1032,7 +1246,31 @@ function extrairCodigoDoLink(url){
   return match2 ? match2[1] : '';
 }
 
-/* Retorna a data de hoje no formato YYYY-MM-DD */
+// ✅ Extrai a primeira linha da descrição (para overlay) + badge de asteriscos
+function extrairSpecsDescricao(descricao){
+  if(!descricao) return { specs: '', badge: '' };
+  const texto = String(descricao);
+  const linhas = texto.split('\n').map(l => l.trim()).filter(Boolean);
+  if(linhas.length === 0) return { specs: '', badge: '' };
+
+  let linha1 = linhas[0] || '';
+
+  let badge = '';
+  const mBadge = linha1.match(/\*([^*]+)\*/);
+  if(mBadge && mBadge[1]){
+    badge = mBadge[1].trim();
+    linha1 = linha1.replace(mBadge[0], '').replace(/\s{2,}/g, ' ').trim();
+  }
+
+  const temM2 = /\d+\s*m[²2]/i.test(linha1);
+  const temKeyword = /\b(quarto|quartos|vaga|vagas|suíte|suite|sala|salas|banheiro|banheiros|dormitório|dormitorio|dormitórios|dormitorios|privativa|privativo|área|area|terreno)\b/i.test(linha1);
+  const temNumero = /\d/.test(linha1);
+
+  const specsValido = (temM2 || (temNumero && temKeyword)) ? linha1 : '';
+
+  return { specs: specsValido, badge: badge };
+}
+
 function hojeISO(){
   const d = new Date();
   const off = d.getTimezoneOffset();
@@ -1072,7 +1310,7 @@ function marcarSalvando(inicio){
 function estaSalvando(){ return state.salvando > 0; }
 
 /* =====================================================
-   API
+   API — COM TIMEOUT CONFIGURÁVEL
 ===================================================== */
 async function apiOnce(action, params, timeoutMs){
   const qs = new URLSearchParams({ action, ...params, _t: Date.now() }).toString();
@@ -1292,6 +1530,14 @@ function renderizarImoveis(){
       lista = lista.filter(i => (i.status || 'pendente') === state.filtro);
     }
   }
+  // ✅ Filtro por corretor (exato ou grupo)
+  if(state.filtroCorretor.size > 0){
+    lista = lista.filter(i => {
+      const exato = chaveCorretorExata_(i.corretor);
+      const grupo = chaveCorretorGrupo_(i.corretor);
+      return state.filtroCorretor.has(exato) || state.filtroCorretor.has(grupo);
+    });
+  }
   const busca = ($('buscaInput').value || '').toLowerCase().trim();
   if(busca){
     lista = lista.filter(i =>
@@ -1322,19 +1568,36 @@ function cardImovelHTML(im){
     'gostei':'status-gostei','nao-gostei':'status-nao-gostei',
     'quero-visitar':'status-quero-visitar','pendente':'status-pendente'
   }[statusAtual] || 'status-pendente');
-  const img = im.imagem || 'https://via.placeholder.com/200x200/e2e8f0/64748b?text=Sem+imagem';
+
+  const img = im.imagem || 'https://via.placeholder.com/400x300/e2e8f0/64748b?text=Sem+imagem';
   const id = esc(im.id);
   const dataFmt = fmtData(im.dataCadastro);
   const obsTexto = (im.observacao || '').trim();
   const obsLonga = obsTexto.length > 100;
   const obsId = 'obs-' + id;
   const descTexto = (im.descricao || '').trim();
+
+  // ✅ Specs e badge (asteriscos)
+  const specsInfo = extrairSpecsDescricao(im.descricao);
+  const specsHtml = specsInfo.specs
+    ? `<div class="card-overlay-specs">${esc(specsInfo.specs)}</div>`
+    : '';
+  const badgeTagHtml = specsInfo.badge
+    ? `<div class="card-tag-topo">${esc(specsInfo.badge)}</div>`
+    : '';
+
   const cardExtraClass = desativado ? ' card-desativado' : (statusAtual === 'nao-gostei' ? ' card-nao-gostei' : '');
+
   const btnGostei = (statusAtual === 'gostei' && !desativado) ? 'ativo' : '';
   const btnVisitar = (statusAtual === 'quero-visitar' && !desativado) ? 'ativo' : '';
   const btnNao = (statusAtual === 'nao-gostei' && !desativado) ? 'ativo' : '';
-  const btnDesativar = desativado ? 'ativo' : '';
 
+  // ✅ Foto clicável (abre o anúncio em nova aba)
+  const imgClickAttr = im.link
+    ? `onclick="window.open('${esc(im.link)}', '_blank', 'noopener');"`
+    : '';
+
+  // Agendamento + chave
   let agHtml = '';
   const temAgendamento = !!im.dataVisitaAgendada && !desativado;
   const campos = camposEndereco_(im);
@@ -1368,6 +1631,7 @@ function cardImovelHTML(im){
         </div>`;
     }
   }
+
   let visHtml = '';
   if(im.visitaFeita === 'Sim' && im.dataVisita && !desativado){
     const aval = (im.avaliacaoVisita || '').trim();
@@ -1379,66 +1643,89 @@ function cardImovelHTML(im){
       </div>`;
   }
 
+  // ✅ Ações inferiores (Gostei/Visitar/Não embaixo, estilo do cliente)
+  const acoesHtml = !desativado
+    ? `
+      <div class="card-actions" onclick="event.stopPropagation();">
+        <button class="btn-action act-gostei ${btnGostei}" onclick="marcarStatus('${id}','gostei')" title="Gostei">
+          <span class="icone">❤️</span>
+          <span>Gostei</span>
+        </button>
+        <button class="btn-action act-visitar ${btnVisitar}" onclick="marcarStatus('${id}','quero-visitar')" title="Quero visitar">
+          <span class="icone">📅</span>
+          <span>Visitar</span>
+        </button>
+        <button class="btn-action act-nao ${btnNao}" onclick="marcarStatus('${id}','nao-gostei')" title="Não gostei">
+          <span class="icone">❌</span>
+          <span>Não</span>
+        </button>
+        <button class="btn-action act-desativar" onclick="abrirExcluirOuDesativar('${id}')" title="Desativar ou excluir">
+          <span class="icone">🚫</span>
+          <span>Desativar / Excluir</span>
+        </button>
+      </div>
+    `
+    : `
+      <div class="card-actions" onclick="event.stopPropagation();">
+        <button class="btn-action act-reativar" onclick="toggleDesativar('${id}')" title="Reativar este imóvel">
+          <span class="icone">↻</span>
+          <span>Reativar este imóvel</span>
+        </button>
+      </div>
+    `;
+
   return `
     <div class="card${cardExtraClass}" data-id="${id}">
-      <div class="card-topbar">
-        <div class="card-actions-mini">
-          ${!desativado ? `
-            <button class="act act-gostei ${btnGostei}" onclick="marcarStatus('${id}','gostei')">
-              <svg class="ico" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-              Gostei
-            </button>
-            <button class="act act-visitar ${btnVisitar}" onclick="marcarStatus('${id}','quero-visitar')">
-              <svg class="ico" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-              Visitar
-            </button>
-            <button class="act act-nao ${btnNao}" onclick="marcarStatus('${id}','nao-gostei')">
-              <svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-              Não
-            </button>
-          ` : ''}
-          <button class="act act-desativar ${btnDesativar}" onclick="toggleDesativar('${id}')">
-            ${desativado ? 'Reativar' : 'Desativar'}
+      ${statusLabel ? `<div class="card-status-strip ${statusClass}"><span>${statusLabel}</span></div>` : ''}
+
+      <div class="card-img-wrap">
+        <img class="card-img" src="${esc(img)}" ${imgClickAttr} onerror="this.src='https://via.placeholder.com/400x300/e2e8f0/64748b?text=Sem+imagem'">
+        ${badgeTagHtml}
+        ${specsHtml}
+      </div>
+
+      <div class="card-body">
+        <div class="card-top-meta">
+          ${dataFmt ? `<span class="card-date">${dataFmt}</span>` : ''}
+          ${im.codigo ? `<span class="card-code" onclick="event.stopPropagation(); copiarCodigo('${esc(im.codigo)}', this)">#${esc(im.codigo)}</span>` : ''}
+        </div>
+        <div class="card-title">${esc(im.titulo) || 'Sem endereço'}</div>
+        ${im.preco ? `<div class="card-price">${esc(im.preco)}</div>` : ''}
+        ${descTexto ? `<div class="card-desc" onclick="event.stopPropagation(); this.classList.toggle('expandido')">${esc(descTexto)}</div>` : ''}
+      </div>
+
+      ${im.codigo ? `
+        <div style="padding: 0 12px 8px;">
+          <button class="btn btn-ghost btn-sm" style="width:100%;" onclick="event.stopPropagation(); abrirBuscar('${esc(im.codigo)}')">
+            <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            Buscar entrada #${esc(im.codigo)}
           </button>
         </div>
-        <span class="card-status-badge ${statusClass}">${statusLabel}</span>
-      </div>
-      <div class="card-row">
-        <img class="card-img" src="${esc(img)}" onerror="this.src='https://via.placeholder.com/200x200/e2e8f0/64748b?text=Sem+imagem'" onclick="window.open('${esc(img)}','_blank','noopener')">
-        <div class="card-info">
-          <div class="card-top-meta">
-            ${dataFmt ? `<span class="card-date">${dataFmt}</span>` : ''}
-            ${im.codigo ? `<span class="card-code" onclick="copiarCodigo('${esc(im.codigo)}', this)">#${esc(im.codigo)}</span>` : ''}
-            ${im.preco ? `<span class="card-date" style="background:var(--success-soft); color:var(--success);">${esc(im.preco)}</span>` : ''}
-          </div>
-          <div class="card-title">${esc(im.titulo) || 'Sem endereço'}</div>
-          ${descTexto ? `<div class="card-desc" onclick="this.classList.toggle('expandido')">${esc(descTexto)}</div>` : ''}
+      ` : ''}
+
+      ${acoesHtml}
+
+      ${agHtml}
+      ${visHtml}
+
+      <div class="obs-wrap" id="${obsId}" onclick="event.stopPropagation();">
+        <div class="obs-label">Observação <button class="obs-edit-btn" onclick="event.stopPropagation(); abrirEdicaoObsImovel('${obsId}')">Editar</button></div>
+        ${obsTexto ? `
+          <div class="obs-text ${obsLonga ? '' : 'expandido'}" id="${obsId}-text">${esc(obsTexto)}</div>
+          ${obsLonga ? `<button class="obs-toggle" onclick="event.stopPropagation(); toggleObsImovel('${obsId}')">Ver mais</button>` : ''}
+        ` : `<div class="obs-empty" onclick="event.stopPropagation(); abrirEdicaoObsImovel('${obsId}')">Clique para adicionar</div>`}
+        <textarea class="obs-textarea" id="${obsId}-input">${esc(obsTexto)}</textarea>
+        <div class="obs-edit-actions">
+          <button class="btn btn-purple btn-sm" style="flex:1" onclick="event.stopPropagation(); salvarEdicaoObsImovel('${id}', '${obsId}')">Salvar</button>
+          <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation(); cancelarEdicaoObsImovel('${obsId}')">Cancelar</button>
         </div>
       </div>
-      <div class="card-bottom">
-        ${im.link ? `<a class="btn-ver-anuncio" href="${esc(im.link)}" target="_blank" rel="noopener">
-          <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-          Ver anúncio
-        </a>` : ''}
-        ${im.codigo ? `<button class="btn btn-ghost btn-sm" onclick="abrirBuscar('${esc(im.codigo)}')">Buscar entrada</button>` : ''}
-        <div class="obs-wrap" id="${obsId}">
-          <div class="obs-label">Observação <button class="obs-edit-btn" onclick="abrirEdicaoObsImovel('${obsId}')">Editar</button></div>
-          ${obsTexto ? `
-            <div class="obs-text ${obsLonga ? '' : 'expandido'}" id="${obsId}-text">${esc(obsTexto)}</div>
-            ${obsLonga ? `<button class="obs-toggle" onclick="toggleObsImovel('${obsId}')">Ver mais</button>` : ''}
-          ` : `<div class="obs-empty" onclick="abrirEdicaoObsImovel('${obsId}')">Clique para adicionar</div>`}
-          <textarea class="obs-textarea" id="${obsId}-input">${esc(obsTexto)}</textarea>
-          <div class="obs-edit-actions">
-            <button class="btn btn-purple btn-sm" style="flex:1" onclick="salvarEdicaoObsImovel('${id}', '${obsId}')">Salvar</button>
-            <button class="btn btn-ghost btn-sm" onclick="cancelarEdicaoObsImovel('${obsId}')">Cancelar</button>
-          </div>
-        </div>
-        ${agHtml}
-        ${visHtml}
-        <div class="card-bottom-actions">
+
+      <div class="card-footer">
+        <div class="card-footer-actions">
           <button class="btn btn-ghost btn-sm" onclick="abrirHistoricoImovel('${id}')">Histórico</button>
           <button class="btn btn-ghost btn-sm" onclick="editarImovel('${id}')">Editar</button>
-          <button class="btn btn-danger btn-sm" onclick="excluirImovel('${id}')">Excluir</button>
+          <button class="btn btn-danger btn-sm" onclick="abrirExcluirOuDesativar('${id}')">Excluir</button>
         </div>
       </div>
     </div>
@@ -1507,6 +1794,49 @@ async function toggleDesativar(id){
   toast(desativado ? 'Reativado' : 'Desativado', 'success');
 }
 
+/* ✅ Modal Excluir OU Desativar */
+function abrirExcluirOuDesativar(id){
+  state._excluirDesativarId = id;
+  $('excluirOuDesativarBackdrop').classList.add('show');
+}
+function fecharExcluirOuDesativar(){
+  $('excluirOuDesativarBackdrop').classList.remove('show');
+  state._excluirDesativarId = null;
+}
+async function confirmarDesativar(){
+  const id = state._excluirDesativarId;
+  fecharExcluirOuDesativar();
+  if(!id) return;
+  const im = state.imoveis.find(i => i.id === id);
+  if(!im) return;
+  marcarSalvando(true);
+  const res = await api('desativarImovel', { senha: SENHA_ADMIN, id });
+  marcarSalvando(false);
+  if(!res.ok){ toast(res.error || 'Erro', 'error'); return; }
+  im.desativado = 'Sim';
+  atualizarContadoresImoveis();
+  renderizarImoveis();
+  toast('Imóvel desativado', 'success');
+}
+async function confirmarExcluir(){
+  const id = state._excluirDesativarId;
+  fecharExcluirOuDesativar();
+  if(!id) return;
+  const ok = await confirmarAcao({
+    titulo: 'Excluir permanentemente?', texto: 'Essa ação NÃO pode ser desfeita. O imóvel será removido da vitrine do cliente.',
+    btnSim: 'Excluir', tipo: 'danger'
+  });
+  if(!ok) return;
+  marcarSalvando(true);
+  const res = await api('excluirImovel', { senha: SENHA_ADMIN, id });
+  marcarSalvando(false);
+  if(!res.ok){ toast(res.error || 'Erro', 'error'); return; }
+  toast('Imóvel excluído', 'success');
+  state.imoveis = state.imoveis.filter(i => i.id !== id);
+  atualizarContadoresImoveis();
+  renderizarImoveis();
+}
+
 function copiarCodigo(codigo, el){
   if(!codigo) return;
   copiarTexto(String(codigo));
@@ -1551,7 +1881,7 @@ async function salvarEdicaoObsImovel(id, obsId){
 }
 
 /* =====================================================
-   FORM IMÓVEL — MODO SEGURO
+   FORM IMÓVEL
 ===================================================== */
 function abrirPainelNovoImovel(){
   limparFormAdmin();
@@ -1575,11 +1905,29 @@ function limparFormAdmin(){
   $('adDescricao').value = '';
   $('adChaveTexto').value = '';
   $('adImagem').value = '';
+  state._corretorEscolhido = '';
   atualizarPreview('');
   atualizarBotaoBuscarEntrada('');
+  atualizarBtnsCorretor('');
   $('btnSalvarImovel').innerHTML = '<svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Salvar imóvel';
-  $('btnSalvarImovel').disabled = false;
+  $('btnSalvarImovel').disabled = true;
   $('adminPanelTitle').textContent = 'Adicionar imóvel';
+  $('corretorAviso').textContent = 'Selecione um corretor para liberar o salvamento';
+  $('corretorAviso').style.color = 'var(--muted)';
+}
+
+function atualizarBtnsCorretor(valor){
+  document.querySelectorAll('.btn-corretor-escolha').forEach(btn => {
+    btn.classList.toggle('ativo', btn.dataset.corretor === valor);
+  });
+}
+
+function escolherCorretor(nome, el){
+  state._corretorEscolhido = nome;
+  atualizarBtnsCorretor(nome);
+  $('btnSalvarImovel').disabled = false;
+  $('corretorAviso').textContent = '✓ Link sairá como: …/' + (FINAIS_LINK[nome] || nome);
+  $('corretorAviso').style.color = 'var(--success)';
 }
 
 function atualizarPreview(url){
@@ -1616,13 +1964,15 @@ function abrirBuscarEntradaForm(){
   window.open(`${BUSCAR_BASE}/${codigo}`, '_blank', 'noopener');
 }
 
+// ✅ Ao colar/sair do campo link
 async function onLinkBlur(){
   const url = $('adLink').value.trim();
   if(!url) return;
   const codigo = extrairCodigoDoLink(url);
   atualizarBotaoBuscarEntrada(codigo);
   if(codigo){
-    await buscarImagemDoLink(url, false);
+    // Tenta preencher automaticamente via busca no banco
+    await tentarPreencherPorCodigo(codigo);
   }
 }
 
@@ -1634,8 +1984,50 @@ function onLinkImovelChanged(){
   atualizarBotaoBuscarEntrada(codigo);
   if(!codigo || !/^https?:\/\//.test(url)) return;
   state._linkDebounce = setTimeout(async () => {
-    await buscarImagemDoLink(url, true);
+    // Busca imagem no link (fallback) + tenta achar o imóvel na base
+    await buscarImagemDoLink(url, false);
+    await tentarPreencherPorCodigo(codigo);
   }, 900);
+}
+
+// ✅ Tenta achar o imóvel na base por código e preencher
+async function tentarPreencherPorCodigo(codigo){
+  if(!codigo) return;
+  // Se já está editando, não sobrescreve
+  if($('editingId').value) return;
+  // Se todos os campos já estão preenchidos, não sobrescreve
+  const ruaPreenchida = $('adRua').value.trim();
+  if(ruaPreenchida) return;
+
+  // Busca na base atual (todos os imóveis do cliente e do banco global)
+  marcarSalvando(true);
+  const res = await api('listarTodosImoveis', { senha: SENHA_ADMIN });
+  marcarSalvando(false);
+  if(!res.ok || !res.data) return;
+
+  const achado = res.data.find(im => String(im.codigo || '').trim() === String(codigo));
+  if(!achado) return;
+
+  // Preenche os campos
+  $('adRua').value = achado.rua || '';
+  $('adNumero').value = achado.numero || '';
+  $('adBairro').value = achado.bairro || '';
+  $('adPreco').value = achado.preco || '';
+  $('adCondominio').value = achado.condominio || '';
+  $('adIPTU').value = achado.iptu || '';
+  $('adDescricao').value = achado.descricao || '';
+  $('adChaveTexto').value = achado.chaveTexto || '';
+  $('adImagem').value = achado.imagem || '';
+  if(achado.imagem) atualizarPreview(achado.imagem);
+
+  // Escolhe o corretor com base no cadastro (se tiver)
+  if(achado.corretor){
+    const nomeCurto = chaveCorretorGrupo_(achado.corretor);
+    const btn = document.querySelector(`.btn-corretor-escolha[data-corretor="${nomeCurto}"]`);
+    if(btn){ escolherCorretor(nomeCurto, btn); }
+  }
+
+  toast('✨ Dados do imóvel preenchidos automaticamente!', 'success');
 }
 
 async function buscarImagemDoLink(url, mostrarToast){
@@ -1662,16 +2054,47 @@ async function buscarImagemDoLink(url, mostrarToast){
   }
 }
 
+// ✅ Salvar imóvel — com timeout de 15s + corretor obrigatório + mantém status
 async function salvarImovel(){
   const tel = TELEFONE_CLIENTE;
   const rua = $('adRua').value.trim();
   const link = $('adLink').value.trim();
   let imagem = $('adImagem').value.trim();
+
+  // ✅ Corretor obrigatório
+  if(!state._corretorEscolhido){
+    toast('Escolha o corretor (Hugo ou Carol) antes de salvar', 'error');
+    $('corretorAviso').textContent = '⚠️ Escolha um corretor!';
+    $('corretorAviso').style.color = 'var(--danger)';
+    return;
+  }
+
   if(!tel || tel.length < 10){ toast('Telefone do cliente inválido', 'error'); return; }
   if(!rua){ toast('Informe a rua', 'error'); return; }
 
   const editandoId = $('editingId').value || '';
   const editando = !!editandoId;
+
+  // ✅ Mantém o status ao editar
+  let statusAtual = 'pendente';
+  if(editando){
+    const imOriginal = state.imoveis.find(i => String(i.id) === String(editandoId));
+    if(imOriginal && imOriginal.status) statusAtual = imOriginal.status;
+  }
+
+  // ✅ Monta o link final com o sufixo do corretor
+  let linkFinal = link;
+  if(link && state._corretorEscolhido){
+    const sufixo = FINAIS_LINK[state._corretorEscolhido] || '';
+    if(sufixo){
+      // Troca o último segmento do link pelo sufixo correto
+      const partes = link.split('/');
+      if(partes.length > 1){
+        partes[partes.length - 1] = sufixo;
+        linkFinal = partes.join('/');
+      }
+    }
+  }
 
   const dados = {
     id: editandoId,
@@ -1683,9 +2106,11 @@ async function salvarImovel(){
     condominio: $('adCondominio').value.trim(),
     iptu: $('adIPTU').value.trim(),
     descricao: $('adDescricao').value.trim(),
-    link, imagem,
+    link: linkFinal,
+    imagem,
     chaveTexto: $('adChaveTexto').value.trim(),
-    status: 'pendente'
+    status: statusAtual,        // ✅ mantém o status ao editar
+    corretor: state._corretorEscolhido  // ✅ salva o corretor junto
   };
 
   const btn = $('btnSalvarImovel');
@@ -1693,16 +2118,43 @@ async function salvarImovel(){
   const htmlOriginal = btn.innerHTML;
   btn.innerHTML = '<span class="loader" style="display:inline-block;width:14px;height:14px;border:2px solid currentColor;border-top-color:transparent;border-radius:50%;animation:girar .6s linear infinite;"></span> Salvando...';
 
-  if(link && !imagem){
+  // Se tem link mas não imagem, tenta pegar
+  if(linkFinal && !imagem){
     marcarSalvando(true);
-    const r = await api('buscarImagem', { url: link });
+    const r = await api('buscarImagem', { url: linkFinal });
     marcarSalvando(false);
     if(r.ok && r.imagem) dados.imagem = r.imagem;
   }
 
   marcarSalvando(true);
-  const res = await api('salvarImovel', { senha: SENHA_ADMIN, ...dados });
-  marcarSalvando(false);
+
+  // ✅ Timeout de 15s no salvar
+  const timeoutPromise = new Promise((resolve) => {
+    state._salvarTimeout = setTimeout(() => {
+      resolve({ ok: false, error: 'TIMEOUT_15S' });
+    }, TIMEOUT_SALVAR);
+  });
+
+  const savePromise = api('salvarImovel', { senha: SENHA_ADMIN, ...dados });
+
+  let res;
+  try {
+    res = await Promise.race([savePromise, timeoutPromise]);
+  } finally {
+    if(state._salvarTimeout){
+      clearTimeout(state._salvarTimeout);
+      state._salvarTimeout = null;
+    }
+    marcarSalvando(false);
+  }
+
+  // ✅ Timeout
+  if(res && res.error === 'TIMEOUT_15S'){
+    btn.disabled = false;
+    btn.innerHTML = htmlOriginal;
+    toast('⏱️ Demorou demais (15s). Seus dados estão preservados. Tente salvar novamente.', 'error');
+    return;
+  }
 
   if(!res.ok){
     btn.disabled = false;
@@ -1747,35 +2199,34 @@ function editarImovel(id){
   if(im.imagem) atualizarPreview(im.imagem);
   if(im.codigo) atualizarBotaoBuscarEntrada(im.codigo);
   else atualizarBotaoBuscarEntrada(extrairCodigoDoLink(im.link || ''));
+
+  // ✅ Corretor (tenta preservar o que já estava)
+  const nomeCurto = chaveCorretorGrupo_(im.corretor);
+  if(nomeCurto && FINAIS_LINK[nomeCurto]){
+    state._corretorEscolhido = nomeCurto;
+    atualizarBtnsCorretor(nomeCurto);
+    $('btnSalvarImovel').disabled = false;
+    $('corretorAviso').textContent = '✓ Link sairá como: …/' + (FINAIS_LINK[nomeCurto] || nomeCurto);
+    $('corretorAviso').style.color = 'var(--success)';
+  } else {
+    state._corretorEscolhido = '';
+    atualizarBtnsCorretor('');
+    $('btnSalvarImovel').disabled = true;
+    $('corretorAviso').textContent = 'Selecione um corretor para liberar o salvamento';
+    $('corretorAviso').style.color = 'var(--muted)';
+  }
+
   $('btnSalvarImovel').innerHTML = '<svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Atualizar';
-  $('btnSalvarImovel').disabled = false;
   $('adminPanelTitle').textContent = 'Editar imóvel';
   $('adminPanel').classList.remove('hidden');
   $('adminPanel').scrollIntoView({ behavior: 'smooth', block: 'start' });
-}
-
-async function excluirImovel(id){
-  const ok = await confirmarAcao({
-    titulo: 'Excluir imóvel?', texto: 'Essa ação não pode ser desfeita.',
-    btnSim: 'Excluir', tipo: 'danger'
-  });
-  if(!ok) return;
-  marcarSalvando(true);
-  const res = await api('excluirImovel', { senha: SENHA_ADMIN, id });
-  marcarSalvando(false);
-  if(!res.ok){ toast(res.error || 'Erro', 'error'); return; }
-  toast('Imóvel excluído', 'success');
-  state.imoveis = state.imoveis.filter(i => i.id !== id);
-  atualizarContadoresImoveis();
-  renderizarImoveis();
 }
 
 function abrirBuscar(codigo){
   const url = codigo ? `${BUSCAR_BASE}/${codigo}` : BUSCAR_BASE;
   window.open(url, '_blank');
 }
-
-/* =====================================================
+  /* =====================================================
    VISITA / AGENDAMENTO
 ===================================================== */
 function abrirVisitaModal(id){
@@ -1867,7 +2318,6 @@ async function salvarAgendamento(ev){
   // ✅ Bloqueia datas passadas
   const dataEscolhida = new Date(dataHora);
   const agora = new Date();
-  // Zera as horas de hoje pra comparar só o dia
   const hojeZero = new Date(agora.getFullYear(), agora.getMonth(), agora.getDate());
   const dataZero = new Date(dataEscolhida.getFullYear(), dataEscolhida.getMonth(), dataEscolhida.getDate());
   if(dataZero < hojeZero){
@@ -2051,9 +2501,6 @@ async function criarAcesso(ev){
   carregarAcessos();
 }
 
-/* ✅ Criar acesso admin — usa salvarCliente (mesma lógica do cliente novo)
-   AVISO: se o Apps Script só cria o admin quando o cliente é NOVO,
-   isso não vai criar. Nesse caso precisa mexer no backend. */
 async function criarAcessoAdminAqui(){
   const c = state.clienteAtual;
   if(!c){ toast('Cliente não carregado', 'error'); return; }
