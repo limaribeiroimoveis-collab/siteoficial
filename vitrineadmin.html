@@ -252,41 +252,34 @@
     border: 1px solid var(--border);
   }
 
-  /* ✅ Escolha do corretor (antes de salvar) */
-  .corretor-escolha-wrap{
-    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
-    padding: 12px 14px; background: var(--bg);
-    border: 1px solid var(--border); border-radius: var(--radius);
+  /* ✅ Escolha do corretor — inline com o botão salvar */
+  .form-actions-row{
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
     margin-top: 14px;
   }
-  .corretor-escolha-wrap .titulo{
-    font-size: .72rem; font-weight: 700; color: var(--text-soft);
-    text-transform: uppercase; letter-spacing: .4px;
-    display: flex; align-items: center; gap: 5px;
-    margin-right: 4px;
+  .form-actions-row .link-label{
+    font-size: .82rem; font-weight: 700; color: var(--text-soft);
+    display: inline-flex; align-items: center; gap: 4px;
+    white-space: nowrap;
   }
-  .corretor-escolha-wrap .titulo .req{ color: var(--danger); }
+  .form-actions-row .link-label .req{ color: var(--danger); }
   .btn-corretor-escolha{
-    display: inline-flex; align-items: center; gap: 8px;
-    padding: 10px 16px; border-radius: var(--radius-sm);
+    display: inline-flex; align-items: center; justify-content: center;
+    padding: 9px 14px; border-radius: var(--radius-sm);
     border: 2px solid var(--border); background: #fff;
     cursor: pointer; font-family: inherit;
-    font-size: .85rem; font-weight: 700; color: var(--text-soft);
-    transition: all .15s; white-space: nowrap;
+    font-size: .82rem; font-weight: 700; color: var(--text-soft);
+    transition: all .15s; white-space: nowrap; min-width: 70px;
   }
   .btn-corretor-escolha:hover{ border-color: var(--purple); color: var(--purple); }
   .btn-corretor-escolha.ativo{
     background: var(--purple); color: #fff; border-color: var(--purple);
-    box-shadow: 0 3px 10px rgba(109,40,217,.25);
+    box-shadow: 0 2px 8px rgba(109,40,217,.25);
   }
-  .btn-corretor-escolha .inicial{
-    width: 22px; height: 22px; border-radius: 50%;
-    background: rgba(109,40,217,.15); color: var(--purple);
-    display: inline-flex; align-items: center; justify-content: center;
-    font-weight: 800; font-size: .72rem; flex-shrink: 0;
-  }
-  .btn-corretor-escolha.ativo .inicial{
-    background: rgba(255,255,255,.25); color: #fff;
+  @media(max-width:640px){
+    .form-actions-row{ gap: 6px; }
+    .btn-corretor-escolha{ padding: 8px 10px; font-size: .75rem; min-width: 60px; }
+    .form-actions-row .btn-salvar-imovel{ flex: 1 1 100%; order: 99; margin-top: 4px; }
   }
 
   .filters{
@@ -310,22 +303,24 @@
   }
   .filters .filter-btn.active .filter-count{ background: rgba(255,255,255,.25); }
 
+  /* ✅ Grid responsivo: 5 no PC, 2 no celular */
   .grid{
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 14px;
     margin-top: 16px;
   }
-  @media(max-width:1200px){ .grid{ grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-  @media(max-width:900px){ .grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; } }
-  @media(max-width:480px){ .grid{ grid-template-columns: 1fr; gap: 10px; } }
+  @media(max-width:1400px){ .grid{ grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+  @media(max-width:1100px){ .grid{ grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  @media(max-width:820px){ .grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; } }
+  @media(max-width:420px){ .grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; } }
 
   /* ✅ CARD ESTILO VITRINE DO CLIENTE */
   .card{
     background: #fff; border-radius: var(--radius-lg);
     overflow: hidden; box-shadow: var(--shadow-sm);
     display: flex; flex-direction: column;
-    transition: box-shadow .15s, border-color .3s, opacity .2s, filter .2s, transform .15s;
+    transition: box-shadow .15s, border-color .3s, opacity .2s, filter .2s, transform .15s, background .2s;
     position: relative; border: 1px solid var(--border);
     min-width: 0;
   }
@@ -335,6 +330,17 @@
   .card.card-nao-gostei:hover{ opacity: .6; filter: grayscale(50%); }
   .card.card-desativado{ opacity: .35; filter: grayscale(95%); background: #f3f4f6; border-left: 4px solid var(--danger); }
   .card.card-desativado:hover{ opacity: .6; filter: grayscale(60%); }
+
+  /* ✅ Card com agendamento → fundo verde claro */
+  .card.card-agendado{
+    background: #f0fdf4;
+    border-color: #bbf7d0;
+  }
+  .card.card-agendado:hover{
+    background: #dcfce7;
+    border-color: #86efac;
+  }
+
   .card.card-novo{ animation: cardNovo .4s ease-out; }
   @keyframes cardNovo{ from{ transform: scale(.94); opacity: 0; } to{ transform: scale(1); opacity: 1; } }
 
@@ -477,22 +483,6 @@
   }
   .card-actions .btn-action.act-nao.ativo{
     background: var(--danger); border-color: var(--danger); color: #fff;
-  }
-  .card-actions .btn-action.act-desativar{
-    grid-column: 1 / -1;
-    background: linear-gradient(135deg, #64748b 0%, #475569 100%);
-    color: #fff;
-    border: none;
-    padding: 10px 12px;
-    font-size: .74rem;
-    font-weight: 800;
-    letter-spacing: .3px;
-    min-height: 40px;
-    flex-direction: row;
-    gap: 6px;
-  }
-  .card-actions .btn-action.act-desativar:hover{
-    background: linear-gradient(135deg, #475569 0%, #334155 100%);
   }
   .card-actions .btn-action.act-reativar{
     grid-column: 1 / -1;
@@ -692,7 +682,8 @@
   .clonar-item:hover{ border-color: var(--purple); }
 </style>
 </head>
-<body>
+
+ <body>
 
 <header class="app-header">
   <div class="header-inner">
@@ -816,27 +807,14 @@
 
       <input type="hidden" id="adImagem">
 
-      <!-- ✅ Escolha do corretor -->
-      <div class="corretor-escolha-wrap">
-        <span class="titulo">
-          <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-          Corretor <span class="req">*</span>
+      <!-- ✅ Ações em linha única: Link de: Hugo / Carol / Salvar / Cancelar -->
+      <div class="form-actions-row">
+        <span class="link-label">
+          Link de: <span class="req">*</span>
         </span>
-        <button type="button" class="btn-corretor-escolha" data-corretor="Hugo" onclick="escolherCorretor('Hugo', this)">
-          <span class="inicial">H</span>
-          Hugo
-        </button>
-        <button type="button" class="btn-corretor-escolha" data-corretor="Carolina" onclick="escolherCorretor('Carolina', this)">
-          <span class="inicial">C</span>
-          Carol
-        </button>
-        <span style="font-size:.72rem; color:var(--muted); margin-left:auto;" id="corretorAviso">
-          Selecione um corretor para liberar o salvamento
-        </span>
-      </div>
-
-      <div class="mt-3" style="display:flex; gap:8px; flex-wrap:wrap;">
-        <button class="btn btn-purple" id="btnSalvarImovel" style="flex:1; min-width:180px;" onclick="salvarImovel()" disabled>
+        <button type="button" class="btn-corretor-escolha" data-corretor="Hugo" onclick="escolherCorretor('Hugo', this)">Hugo</button>
+        <button type="button" class="btn-corretor-escolha" data-corretor="Carolina" onclick="escolherCorretor('Carolina', this)">Carol</button>
+        <button class="btn btn-purple btn-salvar-imovel" id="btnSalvarImovel" style="flex:1; min-width:180px;" onclick="salvarImovel()" disabled>
           <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
           Salvar imóvel
         </button>
@@ -1085,7 +1063,8 @@
 </div>
 
 <div class="toast" id="toast"></div>
- <script>
+
+  <script>
 /* =====================================================
    CONFIG
 ===================================================== */
@@ -1094,7 +1073,7 @@ const CORRETORES_CACHE_KEY = 'vitrine_corretores_v11';
 const BUSCAR_BASE = 'https://corretor.quintoandar.com.br/informacoes-de-entrada';
 const VITRINE_URL_BASE = 'https://limaribeiroimoveis.com.br/vitrine.html';
 const TIMEOUT_API = 90000;
-const TIMEOUT_SALVAR = 15000; // ✅ Timeout de 15s para o salvar
+const TIMEOUT_SALVAR = 15000;
 
 // ✅ Finais de link por corretor (definem o sufixo do link que o corretor compartilha)
 const FINAIS_LINK = {
@@ -1115,16 +1094,16 @@ const state = {
   corretores: [],
   acessos: [],
   filtro: 'todos',
-  filtroCorretor: new Set(),   // ✅ Filtro por corretor (Hugo, Carol, Hugo/Iasmin, …)
+  filtroCorretor: new Set(),
   salvando: 0,
   _atividadeFiltro: 'todos',
   _atividadeEventos: null,
   _clonarSelecionados: new Set(),
   _linkDebounce: null,
   _codigoLinkAtual: '',
-  _corretorEscolhido: '',      // ✅ Corretor escolhido no form
-  _excluirDesativarId: null,   // ✅ ID do imóvel que está sendo excluído/desativado
-  _salvarTimeout: null         // ✅ Timeout do salvar
+  _corretorEscolhido: '',
+  _excluirDesativarId: null,
+  _salvarTimeout: null
 };
 
 const $ = id => document.getElementById(id);
@@ -1224,12 +1203,9 @@ function camposEndereco_(im){
 }
 function isDesativado(im){ return String(im.desativado || '').toLowerCase() === 'sim'; }
 
-// ✅ Chave EXATA do corretor (não corta em "/")
 function chaveCorretorExata_(nome){
   return String(nome || '').trim();
 }
-
-// ✅ Chave "grupo" do corretor (corta em "/") — usada para agrupar variantes
 function chaveCorretorGrupo_(nome){
   const s = String(nome || '').trim();
   if(!s) return '';
@@ -1246,7 +1222,6 @@ function extrairCodigoDoLink(url){
   return match2 ? match2[1] : '';
 }
 
-// ✅ Extrai a primeira linha da descrição (para overlay) + badge de asteriscos
 function extrairSpecsDescricao(descricao){
   if(!descricao) return { specs: '', badge: '' };
   const texto = String(descricao);
@@ -1310,7 +1285,7 @@ function marcarSalvando(inicio){
 function estaSalvando(){ return state.salvando > 0; }
 
 /* =====================================================
-   API — COM TIMEOUT CONFIGURÁVEL
+   API
 ===================================================== */
 async function apiOnce(action, params, timeoutMs){
   const qs = new URLSearchParams({ action, ...params, _t: Date.now() }).toString();
@@ -1530,7 +1505,6 @@ function renderizarImoveis(){
       lista = lista.filter(i => (i.status || 'pendente') === state.filtro);
     }
   }
-  // ✅ Filtro por corretor (exato ou grupo)
   if(state.filtroCorretor.size > 0){
     lista = lista.filter(i => {
       const exato = chaveCorretorExata_(i.corretor);
@@ -1577,7 +1551,6 @@ function cardImovelHTML(im){
   const obsId = 'obs-' + id;
   const descTexto = (im.descricao || '').trim();
 
-  // ✅ Specs e badge (asteriscos)
   const specsInfo = extrairSpecsDescricao(im.descricao);
   const specsHtml = specsInfo.specs
     ? `<div class="card-overlay-specs">${esc(specsInfo.specs)}</div>`
@@ -1586,18 +1559,22 @@ function cardImovelHTML(im){
     ? `<div class="card-tag-topo">${esc(specsInfo.badge)}</div>`
     : '';
 
-  const cardExtraClass = desativado ? ' card-desativado' : (statusAtual === 'nao-gostei' ? ' card-nao-gostei' : '');
+  // ✅ Card com agendamento → verde claro
+  const temAgendamentoAtivo = !!im.dataVisitaAgendada && !desativado;
+  const cardExtraClass =
+    desativado ? ' card-desativado'
+    : statusAtual === 'nao-gostei' ? ' card-nao-gostei'
+    : temAgendamentoAtivo ? ' card-agendado'
+    : '';
 
   const btnGostei = (statusAtual === 'gostei' && !desativado) ? 'ativo' : '';
   const btnVisitar = (statusAtual === 'quero-visitar' && !desativado) ? 'ativo' : '';
   const btnNao = (statusAtual === 'nao-gostei' && !desativado) ? 'ativo' : '';
 
-  // ✅ Foto clicável (abre o anúncio em nova aba)
   const imgClickAttr = im.link
     ? `onclick="window.open('${esc(im.link)}', '_blank', 'noopener');"`
     : '';
 
-  // Agendamento + chave
   let agHtml = '';
   const temAgendamento = !!im.dataVisitaAgendada && !desativado;
   const campos = camposEndereco_(im);
@@ -1643,7 +1620,7 @@ function cardImovelHTML(im){
       </div>`;
   }
 
-  // ✅ Ações inferiores (Gostei/Visitar/Não embaixo, estilo do cliente)
+  // ✅ Ações: Gostei / Visitar / Não (sem desativar/excluir)
   const acoesHtml = !desativado
     ? `
       <div class="card-actions" onclick="event.stopPropagation();">
@@ -1658,10 +1635,6 @@ function cardImovelHTML(im){
         <button class="btn-action act-nao ${btnNao}" onclick="marcarStatus('${id}','nao-gostei')" title="Não gostei">
           <span class="icone">❌</span>
           <span>Não</span>
-        </button>
-        <button class="btn-action act-desativar" onclick="abrirExcluirOuDesativar('${id}')" title="Desativar ou excluir">
-          <span class="icone">🚫</span>
-          <span>Desativar / Excluir</span>
         </button>
       </div>
     `
@@ -1912,8 +1885,6 @@ function limparFormAdmin(){
   $('btnSalvarImovel').innerHTML = '<svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Salvar imóvel';
   $('btnSalvarImovel').disabled = true;
   $('adminPanelTitle').textContent = 'Adicionar imóvel';
-  $('corretorAviso').textContent = 'Selecione um corretor para liberar o salvamento';
-  $('corretorAviso').style.color = 'var(--muted)';
 }
 
 function atualizarBtnsCorretor(valor){
@@ -1926,8 +1897,6 @@ function escolherCorretor(nome, el){
   state._corretorEscolhido = nome;
   atualizarBtnsCorretor(nome);
   $('btnSalvarImovel').disabled = false;
-  $('corretorAviso').textContent = '✓ Link sairá como: …/' + (FINAIS_LINK[nome] || nome);
-  $('corretorAviso').style.color = 'var(--success)';
 }
 
 function atualizarPreview(url){
@@ -1964,14 +1933,12 @@ function abrirBuscarEntradaForm(){
   window.open(`${BUSCAR_BASE}/${codigo}`, '_blank', 'noopener');
 }
 
-// ✅ Ao colar/sair do campo link
 async function onLinkBlur(){
   const url = $('adLink').value.trim();
   if(!url) return;
   const codigo = extrairCodigoDoLink(url);
   atualizarBotaoBuscarEntrada(codigo);
   if(codigo){
-    // Tenta preencher automaticamente via busca no banco
     await tentarPreencherPorCodigo(codigo);
   }
 }
@@ -1984,22 +1951,17 @@ function onLinkImovelChanged(){
   atualizarBotaoBuscarEntrada(codigo);
   if(!codigo || !/^https?:\/\//.test(url)) return;
   state._linkDebounce = setTimeout(async () => {
-    // Busca imagem no link (fallback) + tenta achar o imóvel na base
     await buscarImagemDoLink(url, false);
     await tentarPreencherPorCodigo(codigo);
   }, 900);
 }
 
-// ✅ Tenta achar o imóvel na base por código e preencher
 async function tentarPreencherPorCodigo(codigo){
   if(!codigo) return;
-  // Se já está editando, não sobrescreve
   if($('editingId').value) return;
-  // Se todos os campos já estão preenchidos, não sobrescreve
   const ruaPreenchida = $('adRua').value.trim();
   if(ruaPreenchida) return;
 
-  // Busca na base atual (todos os imóveis do cliente e do banco global)
   marcarSalvando(true);
   const res = await api('listarTodosImoveis', { senha: SENHA_ADMIN });
   marcarSalvando(false);
@@ -2008,7 +1970,6 @@ async function tentarPreencherPorCodigo(codigo){
   const achado = res.data.find(im => String(im.codigo || '').trim() === String(codigo));
   if(!achado) return;
 
-  // Preenche os campos
   $('adRua').value = achado.rua || '';
   $('adNumero').value = achado.numero || '';
   $('adBairro').value = achado.bairro || '';
@@ -2020,7 +1981,6 @@ async function tentarPreencherPorCodigo(codigo){
   $('adImagem').value = achado.imagem || '';
   if(achado.imagem) atualizarPreview(achado.imagem);
 
-  // Escolhe o corretor com base no cadastro (se tiver)
   if(achado.corretor){
     const nomeCurto = chaveCorretorGrupo_(achado.corretor);
     const btn = document.querySelector(`.btn-corretor-escolha[data-corretor="${nomeCurto}"]`);
@@ -2054,18 +2014,14 @@ async function buscarImagemDoLink(url, mostrarToast){
   }
 }
 
-// ✅ Salvar imóvel — com timeout de 15s + corretor obrigatório + mantém status
 async function salvarImovel(){
   const tel = TELEFONE_CLIENTE;
   const rua = $('adRua').value.trim();
   const link = $('adLink').value.trim();
   let imagem = $('adImagem').value.trim();
 
-  // ✅ Corretor obrigatório
   if(!state._corretorEscolhido){
     toast('Escolha o corretor (Hugo ou Carol) antes de salvar', 'error');
-    $('corretorAviso').textContent = '⚠️ Escolha um corretor!';
-    $('corretorAviso').style.color = 'var(--danger)';
     return;
   }
 
@@ -2075,19 +2031,16 @@ async function salvarImovel(){
   const editandoId = $('editingId').value || '';
   const editando = !!editandoId;
 
-  // ✅ Mantém o status ao editar
   let statusAtual = 'pendente';
   if(editando){
     const imOriginal = state.imoveis.find(i => String(i.id) === String(editandoId));
     if(imOriginal && imOriginal.status) statusAtual = imOriginal.status;
   }
 
-  // ✅ Monta o link final com o sufixo do corretor
   let linkFinal = link;
   if(link && state._corretorEscolhido){
     const sufixo = FINAIS_LINK[state._corretorEscolhido] || '';
     if(sufixo){
-      // Troca o último segmento do link pelo sufixo correto
       const partes = link.split('/');
       if(partes.length > 1){
         partes[partes.length - 1] = sufixo;
@@ -2109,8 +2062,8 @@ async function salvarImovel(){
     link: linkFinal,
     imagem,
     chaveTexto: $('adChaveTexto').value.trim(),
-    status: statusAtual,        // ✅ mantém o status ao editar
-    corretor: state._corretorEscolhido  // ✅ salva o corretor junto
+    status: statusAtual,
+    corretor: state._corretorEscolhido
   };
 
   const btn = $('btnSalvarImovel');
@@ -2118,7 +2071,6 @@ async function salvarImovel(){
   const htmlOriginal = btn.innerHTML;
   btn.innerHTML = '<span class="loader" style="display:inline-block;width:14px;height:14px;border:2px solid currentColor;border-top-color:transparent;border-radius:50%;animation:girar .6s linear infinite;"></span> Salvando...';
 
-  // Se tem link mas não imagem, tenta pegar
   if(linkFinal && !imagem){
     marcarSalvando(true);
     const r = await api('buscarImagem', { url: linkFinal });
@@ -2128,7 +2080,6 @@ async function salvarImovel(){
 
   marcarSalvando(true);
 
-  // ✅ Timeout de 15s no salvar
   const timeoutPromise = new Promise((resolve) => {
     state._salvarTimeout = setTimeout(() => {
       resolve({ ok: false, error: 'TIMEOUT_15S' });
@@ -2148,7 +2099,6 @@ async function salvarImovel(){
     marcarSalvando(false);
   }
 
-  // ✅ Timeout
   if(res && res.error === 'TIMEOUT_15S'){
     btn.disabled = false;
     btn.innerHTML = htmlOriginal;
@@ -2200,20 +2150,15 @@ function editarImovel(id){
   if(im.codigo) atualizarBotaoBuscarEntrada(im.codigo);
   else atualizarBotaoBuscarEntrada(extrairCodigoDoLink(im.link || ''));
 
-  // ✅ Corretor (tenta preservar o que já estava)
   const nomeCurto = chaveCorretorGrupo_(im.corretor);
   if(nomeCurto && FINAIS_LINK[nomeCurto]){
     state._corretorEscolhido = nomeCurto;
     atualizarBtnsCorretor(nomeCurto);
     $('btnSalvarImovel').disabled = false;
-    $('corretorAviso').textContent = '✓ Link sairá como: …/' + (FINAIS_LINK[nomeCurto] || nomeCurto);
-    $('corretorAviso').style.color = 'var(--success)';
   } else {
     state._corretorEscolhido = '';
     atualizarBtnsCorretor('');
     $('btnSalvarImovel').disabled = true;
-    $('corretorAviso').textContent = 'Selecione um corretor para liberar o salvamento';
-    $('corretorAviso').style.color = 'var(--muted)';
   }
 
   $('btnSalvarImovel').innerHTML = '<svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Atualizar';
@@ -2315,14 +2260,25 @@ async function salvarAgendamento(ev){
   if(!rua){ toast('Informe a rua', 'error'); return; }
   if(!numero){ toast('Informe o número', 'error'); return; }
 
-  // ✅ Bloqueia datas passadas
+  // ✅ Bloqueia datas e horários passados
   const dataEscolhida = new Date(dataHora);
   const agora = new Date();
+
   const hojeZero = new Date(agora.getFullYear(), agora.getMonth(), agora.getDate());
   const dataZero = new Date(dataEscolhida.getFullYear(), dataEscolhida.getMonth(), dataEscolhida.getDate());
+
   if(dataZero < hojeZero){
     toast('Não é possível agendar em datas passadas', 'error');
     return;
+  }
+
+  // ✅ Se for HOJE, bloqueia horário anterior ao atual (tolerância de 5min)
+  if(dataZero.getTime() === hojeZero.getTime()){
+    const tolerancia = 5 * 60 * 1000;
+    if(dataEscolhida.getTime() < (agora.getTime() - tolerancia)){
+      toast('Horário já passou. Escolha um horário futuro.', 'error');
+      return;
+    }
   }
 
   const btn = ev?.target; if(btn) btn.disabled = true;
@@ -2922,4 +2878,4 @@ window.addEventListener('beforeunload', function(e){
 });
 </script>
 </body>
-</html>
+</html> 
