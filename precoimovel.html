@@ -43,7 +43,7 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  /* ===== HEADER ===== */
+  /* HEADER */
   .header {
     padding: 20px 24px;
     display: flex;
@@ -62,7 +62,6 @@
     display: block;
   }
 
-  /* ===== LAYOUT ===== */
   .container {
     max-width: 1180px;
     margin: 0 auto;
@@ -78,7 +77,7 @@
     align-items: start;
   }
 
-  /* ===== COLUNA ESQUERDA — Apresentação ===== */
+  /* APRESENTAÇÃO */
   .apresentacao .badge {
     display: inline-flex;
     align-items: center;
@@ -177,7 +176,7 @@
   }
   .selo-quintoandar strong { color: var(--texto); }
 
-  /* ===== COLUNA DIREITA — Formulário ===== */
+  /* FORM */
   .form-card {
     background: #fff;
     border-radius: 24px;
@@ -260,6 +259,11 @@
     grid-template-columns: 1fr 1fr;
     gap: 12px;
   }
+  .linha-tripla {
+    display: grid;
+    grid-template-columns: 0.75fr 1.25fr 1.1fr;
+    gap: 12px;
+  }
 
   .btn-enviar {
     width: 100%;
@@ -307,7 +311,7 @@
     flex-shrink: 0;
   }
 
-  /* ===== SUCESSO ===== */
+  /* SUCESSO */
   .sucesso-card {
     text-align: center;
     padding: 20px 8px 8px;
@@ -366,7 +370,7 @@
     margin-top: 14px;
   }
 
-  /* ===== FOOTER ===== */
+  /* FOOTER */
   .footer-mini {
     padding: 20px 24px;
     text-align: center;
@@ -377,7 +381,7 @@
   }
   .footer-mini a { color: var(--azul); text-decoration: none; }
 
-  /* ===== RESPONSIVO ===== */
+  /* RESPONSIVO */
   @media (max-width: 900px) {
     .main-grid {
       grid-template-columns: 1fr;
@@ -411,12 +415,31 @@
     .campo input { padding: 12px; font-size: 0.9rem; }
     .btn-enviar { padding: 14px; font-size: 0.95rem; }
 
+    /* No mobile: número e complemento dividem a linha, bairro embaixo */
+    .linha-tripla {
+      grid-template-columns: 1fr 1.5fr;
+      grid-template-areas:
+        "numero complemento"
+        "bairro bairro";
+    }
+    .linha-tripla .campo-numero { grid-area: numero; }
+    .linha-tripla .campo-complemento { grid-area: complemento; }
+    .linha-tripla .campo-bairro { grid-area: bairro; }
+
     .sucesso-card h2 { font-size: 1.15rem; }
     .btn-ir-calculadora { padding: 14px 22px; font-size: 0.92rem; }
   }
 
-  @media (max-width: 380px) {
+  @media (max-width: 420px) {
     .linha-dupla { grid-template-columns: 1fr; }
+    /* Em telas muito pequenas: tudo empilhado */
+    .linha-tripla {
+      grid-template-columns: 1fr;
+      grid-template-areas:
+        "numero"
+        "complemento"
+        "bairro";
+    }
   }
 </style>
 </head>
@@ -485,7 +508,7 @@
             <i class="fas fa-home"></i> Preencha para liberar a calculadora
           </div>
           <p class="form-sub">
-            São só <strong>5 campos rápidos</strong>. Depois disso, a calculadora será liberada automaticamente.
+            São só <strong>6 campos rápidos</strong>. Depois disso, a calculadora será liberada automaticamente.
           </p>
 
           <form id="formCaptacao" novalidate onsubmit="enviarFormulario(event)">
@@ -505,12 +528,17 @@
               <input type="text" id="rua" name="rua" placeholder="Ex: Rua das Flores" autocomplete="street-address" required>
             </div>
 
-            <div class="linha-dupla">
-              <div class="campo">
+            <!-- ✅ LINHA TRIPLA: Número | Complemento | Bairro -->
+            <div class="linha-tripla">
+              <div class="campo campo-numero">
                 <label for="numero">Número <span class="obrig">*</span></label>
-                <input type="text" id="numero" name="numero" placeholder="Ex: 123" required>
+                <input type="text" id="numero" name="numero" placeholder="123" required>
               </div>
-              <div class="campo">
+              <div class="campo campo-complemento">
+                <label for="complemento">Complemento <span class="obrig">*</span></label>
+                <input type="text" id="complemento" name="complemento" placeholder="Ex: Apto 101, Casa, Bloco B..." required>
+              </div>
+              <div class="campo campo-bairro">
                 <label for="bairro">Bairro <span class="obrig">*</span></label>
                 <input type="text" id="bairro" name="bairro" placeholder="Ex: Gutierrez" required>
               </div>
@@ -578,7 +606,7 @@
     }
 
     // ============================================================
-    // NAVEGADOR (para saber qual dispositivo a pessoa usou)
+    // DETECTAR NAVEGADOR
     // ============================================================
     function detectarNavegador(){
       const ua = navigator.userAgent;
@@ -595,7 +623,7 @@
     // VALIDAÇÃO
     // ============================================================
     function validarFormulario(){
-      const campos = ['nome', 'telefone', 'rua', 'numero', 'bairro'];
+      const campos = ['nome', 'telefone', 'rua', 'numero', 'complemento', 'bairro'];
       let primeiroErro = null;
 
       campos.forEach(id => {
@@ -608,7 +636,6 @@
         }
       });
 
-      // Validações específicas
       const tel = $('telefone').value.replace(/\D/g, '');
       if(tel && tel.length < 10){
         $('telefone').classList.add('erro');
@@ -639,13 +666,14 @@
       btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span>Liberando calculadora...</span>';
 
       const dados = {
-        nome:      $('nome').value.trim(),
-        telefone:  $('telefone').value.replace(/\D/g, ''),
-        rua:       $('rua').value.trim(),
-        numero:    $('numero').value.trim(),
-        bairro:    $('bairro').value.trim(),
-        origem:    'qpreco',
-        navegador: detectarNavegador()
+        nome:        $('nome').value.trim(),
+        telefone:    $('telefone').value.replace(/\D/g, ''),
+        rua:         $('rua').value.trim(),
+        numero:      $('numero').value.trim(),
+        complemento: $('complemento').value.trim(),
+        bairro:      $('bairro').value.trim(),
+        origem:      'qpreco',
+        navegador:   detectarNavegador()
       };
 
       try {
@@ -671,7 +699,6 @@
           return;
         }
 
-        // Sucesso: mostra tela de sucesso + redireciona
         mostrarSucesso();
       } catch(err){
         console.error(err);
@@ -688,10 +715,8 @@
       $('formularioWrap').style.display = 'none';
       $('sucessoWrap').style.display = 'block';
 
-      // Rola até o topo do card em mobile
       $('colunaForm').scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-      // Contagem regressiva para redirecionamento
       let segundos = 4;
       const aviso = $('avisoRedirect');
       const atualizarAviso = () => {
