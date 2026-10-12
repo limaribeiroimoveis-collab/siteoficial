@@ -13,11 +13,7 @@
 
     <style>
         /* ===== RESET & BASE ===== */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             background-color: #f5f7fc;
@@ -28,11 +24,7 @@
             padding-bottom: 70px;
         }
 
-        .container {
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 0 24px;
-        }
+        .container { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
 
         /* ===== CORES ===== */
         :root {
@@ -43,6 +35,10 @@
             --branco: #ffffff;
             --texto-escuro: #1a1a2e;
             --texto-cinza: #5a5a72;
+            --muted: #94a3b8;
+            --borda: #e2e8f0;
+            --borda-forte: #cbd5e1;
+            --roxo: #7c3aed;
             --sombra-suave: 0 8px 32px rgba(0, 30, 240, 0.06);
             --sombra-media: 0 12px 48px rgba(0, 30, 240, 0.10);
             --border-radius: 16px;
@@ -202,11 +198,6 @@
             opacity: 0.8;
         }
 
-        .bottom-menu-item.active .menu-label {
-            opacity: 1;
-            font-weight: 700;
-        }
-
         /* ===== HERO ===== */
         .hero {
             display: grid;
@@ -290,9 +281,7 @@
             text-decoration: none;
         }
 
-        .btn-secondary-light i {
-            color: var(--azul-quinto);
-        }
+        .btn-secondary-light i { color: var(--azul-quinto); }
 
         .btn-secondary-light:hover {
             border-color: var(--azul-quinto);
@@ -313,7 +302,7 @@
             margin-right: 6px;
         }
 
-        /* ===== ANÚNCIOS DE IMÓVEIS (substitui o carrossel de vídeos) ===== */
+        /* ===== IMÓVEIS EM DESTAQUE (hero lateral) ===== */
         .imoveis-destaque-wrapper {
             background: var(--branco);
             border-radius: var(--border-radius-lg);
@@ -463,6 +452,7 @@
             gap: 12px;
             padding: 32px 16px;
             color: var(--texto-cinza);
+            grid-column: 1 / -1;
         }
 
         .imoveis-destaque-placeholder i {
@@ -504,132 +494,302 @@
             box-shadow: 0 16px 48px rgba(0, 30, 240, 0.12);
         }
 
-        /* ===== VÍDEOS DO YOUTUBE (nova seção) ===== */
-        .videos-section {
-            padding: 24px 0 40px;
+        /* ============================================================ */
+        /* ✅ NOVA SEÇÃO: ÚLTIMOS LANÇAMENTOS */
+        /* ============================================================ */
+        .lancamentos-section {
+            padding: 40px 0 32px;
             border-top: 1px solid rgba(0, 30, 240, 0.06);
         }
 
-        .videos-header {
+        .lancamentos-header {
             display: flex;
             justify-content: space-between;
             align-items: flex-end;
+            gap: 20px;
             flex-wrap: wrap;
-            gap: 12px;
-            margin-bottom: 24px;
+            margin-bottom: 28px;
         }
 
-        .videos-header .videos-header-text {
-            flex: 1;
-            min-width: 240px;
+        .lancamentos-header-texto h2 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            letter-spacing: -0.6px;
+            color: var(--texto-escuro);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        .btn-canal-youtube {
-            background: #ff0000;
+        .lancamentos-header-texto h2 i {
+            color: var(--azul-quinto);
+            font-size: 1.5rem;
+        }
+
+        .lancamentos-header-texto p {
+            color: var(--texto-cinza);
+            font-size: 0.95rem;
+            max-width: 520px;
+        }
+
+        /* ✅ Botão "Ver todos" DESTACADO */
+        .btn-ver-todos-destaque {
+            background: linear-gradient(135deg, #001EF0, #0044ff);
             color: #fff;
             border: none;
-            padding: 10px 24px;
-            border-radius: 40px;
-            font-weight: 600;
-            font-size: 0.85rem;
+            padding: 14px 28px;
+            border-radius: 60px;
+            font-weight: 700;
+            font-size: 0.95rem;
             cursor: pointer;
-            transition: 0.2s;
+            transition: 0.25s;
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             text-decoration: none;
+            box-shadow: 0 6px 24px rgba(0, 30, 240, 0.3);
             white-space: nowrap;
         }
 
-        .btn-canal-youtube:hover {
-            background: #cc0000;
-            transform: scale(1.04);
-            box-shadow: 0 6px 20px rgba(255, 0, 0, 0.3);
+        .btn-ver-todos-destaque:hover {
+            transform: translateY(-2px) scale(1.03);
+            box-shadow: 0 10px 32px rgba(0, 30, 240, 0.4);
         }
 
-        .videos-grid {
+        .btn-ver-todos-destaque i {
+            font-size: 1rem;
+        }
+
+        /* Grid de 6 imóveis */
+        .lancamentos-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 16px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
         }
 
-        .video-card {
-            background: var(--branco);
+        .lancamento-card {
+            background: #fff;
             border-radius: var(--border-radius);
             overflow: hidden;
             box-shadow: var(--sombra-suave);
-            border: 1px solid rgba(0, 30, 240, 0.06);
-            transition: 0.3s;
+            border: 1px solid var(--borda);
+            transition: 0.25s;
             cursor: pointer;
             display: flex;
             flex-direction: column;
             text-decoration: none;
             color: inherit;
-        }
-
-        .video-card:hover {
-            transform: translateY(-4px);
-            border-color: var(--azul-quinto);
-            box-shadow: var(--sombra-media);
-        }
-
-        .video-card .video-thumb {
-            width: 100%;
-            aspect-ratio: 16 / 9;
             position: relative;
+        }
+
+        .lancamento-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--sombra-media);
+            border-color: rgba(0, 30, 240, 0.2);
+        }
+
+        .lancamento-card .foto {
+            width: 100%;
+            aspect-ratio: 16 / 10;
+            background: var(--cinza-claro);
             background-size: cover;
             background-position: center;
-            background-repeat: no-repeat;
-            background-color: #0a0a1a;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .video-card .video-thumb::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.2);
-            transition: 0.3s;
-        }
-
-        .video-card:hover .video-thumb::after {
-            background: rgba(0, 0, 0, 0.05);
-        }
-
-        .video-card .play-icon {
             position: relative;
-            z-index: 2;
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.95);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.3rem;
-            color: #ff0000;
-            transition: 0.3s;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+            color: var(--muted);
+            font-size: 1.6rem;
         }
 
-        .video-card:hover .play-icon {
-            transform: scale(1.12);
-            background: #fff;
-        }
-
-        .video-card .video-title {
-            padding: 12px 14px;
-            font-size: 0.82rem;
-            font-weight: 600;
-            color: var(--texto-escuro);
-            line-height: 1.35;
+        .lancamento-card .foto .badge-descricao {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            background: rgba(0, 30, 240, 0.92);
+            color: #fff;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.2px;
+            backdrop-filter: blur(4px);
+            line-height: 1.3;
+            text-align: center;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
+        }
+
+        .lancamento-card .foto .badge-tipo {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background: rgba(124, 58, 237, 0.95);
+            color: #fff;
+            padding: 3px 10px;
+            border-radius: 6px;
+            font-size: 0.6rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            backdrop-filter: blur(4px);
+        }
+
+        .lancamento-card .foto .badge-novo {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #16a34a;
+            color: #fff;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.6rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 8px rgba(22, 163, 74, 0.4);
+            backdrop-filter: blur(4px);
+        }
+
+        .lancamento-card .corpo {
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
             flex: 1;
+        }
+
+        .lancamento-card .preco {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--azul-quinto);
+            letter-spacing: -0.4px;
+            line-height: 1.1;
+        }
+
+        .lancamento-card .preco .tipo {
+            font-size: 0.66rem;
+            font-weight: 600;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .lancamento-card .endereco-linha {
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+            flex-wrap: wrap;
+            line-height: 1.35;
+        }
+
+        .lancamento-card .endereco-linha .rua {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--texto-escuro);
+        }
+
+        .lancamento-card .endereco-linha .bairro-destaque {
+            font-size: 0.72rem;
+            font-weight: 800;
+            color: var(--azul-quinto);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .lancamento-card .descricao-2linhas {
+            font-size: 0.74rem;
+            color: var(--texto-cinza);
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .lancamento-card .condo-info {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            padding-top: 8px;
+            border-top: 1px solid var(--borda);
+            font-size: 0.72rem;
+            color: var(--texto-cinza);
+            margin-top: auto;
+        }
+
+        .lancamento-card .condo-info .feat {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-weight: 500;
+        }
+
+        .lancamento-card .condo-info .feat i {
+            color: var(--azul-quinto);
+            font-size: 0.76rem;
+        }
+
+        /* Skeleton loading */
+        .lancamento-skeleton {
+            background: #fff;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            border: 1px solid var(--borda);
+            display: flex;
+            flex-direction: column;
+        }
+        .lancamento-skeleton .sk-foto {
+            width: 100%;
+            aspect-ratio: 16 / 10;
+            background: linear-gradient(90deg, #f0f2f8 25%, #e4e8f0 50%, #f0f2f8 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.4s infinite;
+        }
+        .lancamento-skeleton .sk-corpo {
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .lancamento-skeleton .sk-linha {
+            height: 12px;
+            border-radius: 6px;
+            background: linear-gradient(90deg, #f0f2f8 25%, #e4e8f0 50%, #f0f2f8 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.4s infinite;
+        }
+        .lancamento-skeleton .sk-linha.curta { width: 60%; }
+        .lancamento-skeleton .sk-linha.media { width: 80%; height: 18px; }
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* Empty state */
+        .lancamentos-empty {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--muted);
+        }
+        .lancamentos-empty i {
+            font-size: 3rem;
+            color: var(--borda-forte);
+            margin-bottom: 14px;
+            display: block;
+        }
+        .lancamentos-empty h3 {
+            font-size: 1.05rem;
+            color: var(--texto-cinza);
+            font-weight: 600;
+            margin-bottom: 6px;
         }
 
         /* ===== SEÇÃO DIFERENCIAIS ===== */
@@ -646,9 +806,7 @@
             color: var(--texto-escuro);
         }
 
-        .section-title .azul {
-            color: var(--azul-quinto);
-        }
+        .section-title .azul { color: var(--azul-quinto); }
 
         .section-sub {
             color: var(--texto-cinza);
@@ -717,18 +875,7 @@
             line-height: 1.8;
         }
 
-        .tech-badge strong {
-            color: var(--azul-quinto);
-        }
-
-        .tech-badge .highlight {
-            background: var(--azul-quinto);
-            color: #fff;
-            padding: 4px 16px;
-            border-radius: 20px;
-            font-weight: 600;
-            display: inline-block;
-        }
+        .tech-badge strong { color: var(--azul-quinto); }
 
         /* ===== FOOTER ===== */
         .footer {
@@ -758,9 +905,7 @@
             transition: 0.2s;
         }
 
-        .footer .social .social-item:hover {
-            color: var(--azul-quinto);
-        }
+        .footer .social .social-item:hover { color: var(--azul-quinto); }
 
         .footer .social .social-item .avatar-small {
             width: 32px;
@@ -770,9 +915,7 @@
             border: 2px solid var(--azul-claro);
         }
 
-        .footer .social .social-item i {
-            font-size: 1.2rem;
-        }
+        .footer .social .social-item i { font-size: 1.2rem; }
 
         /* ===== WHATSAPP FLOAT ===== */
         .whatsapp-float {
@@ -813,9 +956,7 @@
             padding: 20px;
         }
 
-        .modal-overlay.active {
-            display: flex;
-        }
+        .modal-overlay.active { display: flex; }
 
         .modal-box {
             background: var(--branco);
@@ -830,14 +971,8 @@
         }
 
         @keyframes fadeUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .modal-box h3 {
@@ -910,9 +1045,7 @@
             flex-shrink: 0;
         }
 
-        .contact-item .info {
-            flex: 1;
-        }
+        .contact-item .info { flex: 1; }
 
         .contact-item .info .name {
             font-weight: 600;
@@ -930,17 +1063,9 @@
             flex-shrink: 0;
         }
 
-        .contact-item .icon-right.whatsapp {
-            color: #25d366;
-        }
-
-        .contact-item .icon-right.instagram {
-            color: #E4405F;
-        }
-
-        .contact-item .icon-right.email {
-            color: #EA4335;
-        }
+        .contact-item .icon-right.whatsapp { color: #25d366; }
+        .contact-item .icon-right.instagram { color: #E4405F; }
+        .contact-item .icon-right.email { color: #EA4335; }
 
         .modal-divider {
             border: none;
@@ -969,30 +1094,9 @@
             transition: 0.2s;
         }
 
-        .modal-close:hover {
-            background: #d0d7e6;
-        }
+        .modal-close:hover { background: #d0d7e6; }
 
-        .modal-box ul {
-            list-style: none;
-            padding: 0;
-            margin: 12px 0 18px;
-        }
-
-        .modal-box ul li {
-            padding: 8px 0;
-            border-bottom: 1px solid #eee;
-            font-size: 0.92rem;
-        }
-
-        .modal-box ul li:last-child {
-            border-bottom: none;
-        }
-
-        /* ===== MODAL INFORMATIVOS ===== */
-        .info-accordion {
-            margin: 12px 0;
-        }
+        .info-accordion { margin: 12px 0; }
 
         .info-accordion-item {
             border: 1px solid #e8ecf2;
@@ -1014,9 +1118,7 @@
             user-select: none;
         }
 
-        .info-accordion-item .accordion-header:hover {
-            background: #e0e4ef;
-        }
+        .info-accordion-item .accordion-header:hover { background: #e0e4ef; }
 
         .info-accordion-item .accordion-header i {
             color: var(--azul-quinto);
@@ -1024,13 +1126,8 @@
             transition: 0.3s;
         }
 
-        .info-accordion-item .accordion-header .arrow {
-            transition: 0.3s;
-        }
-
-        .info-accordion-item .accordion-header .arrow.open {
-            transform: rotate(180deg);
-        }
+        .info-accordion-item .accordion-header .arrow { transition: 0.3s; }
+        .info-accordion-item .accordion-header .arrow.open { transform: rotate(180deg); }
 
         .info-accordion-item .accordion-body {
             max-height: 0;
@@ -1066,81 +1163,37 @@
             gap: 4px;
         }
 
-        .info-accordion-item .accordion-body .body-content .copy-btn:hover {
-            background: var(--azul-quinto);
-            color: #fff;
-        }
-
-        .info-accordion-item .accordion-body .body-content .copy-btn.copied {
-            background: #25d366;
-            color: #fff;
-        }
-
         /* ============================================================ */
         /* ===== RESPONSIVO ===== */
         /* ============================================================ */
 
         @media (max-width: 1024px) {
-            .hero {
-                grid-template-columns: 1fr 1fr;
-                gap: 30px;
-            }
-            .hero-content h1 {
-                font-size: 2.4rem;
-            }
-            .imoveis-destaque-wrapper {
-                min-height: 360px;
-            }
-            .videos-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
+            .hero { grid-template-columns: 1fr 1fr; gap: 30px; }
+            .hero-content h1 { font-size: 2.4rem; }
+            .imoveis-destaque-wrapper { min-height: 360px; }
+
+            .lancamentos-grid { grid-template-columns: repeat(3, 1fr); gap: 16px; }
+        }
+
+        @media (max-width: 900px) {
+            .lancamentos-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
+            .lancamentos-header-texto h2 { font-size: 1.5rem; }
         }
 
         @media (max-width: 768px) {
-            body {
-                padding-bottom: 70px;
-            }
+            body { padding-bottom: 70px; }
 
-            .navbar {
-                padding: 10px 16px;
-                gap: 8px;
-            }
+            .navbar { padding: 10px 16px; gap: 8px; }
+            .nav-links { display: none !important; }
+            .nav-right { display: flex !important; align-items: center; gap: 6px; }
+            .logo-img { height: 42px; }
+            .btn-indique-nav { font-size: 0.7rem; padding: 6px 14px; }
 
-            .nav-links {
-                display: none !important;
-            }
+            .bottom-menu { display: flex !important; }
 
-            .nav-right {
-                display: flex !important;
-                align-items: center;
-                gap: 6px;
-            }
-
-            .logo-img {
-                height: 42px;
-            }
-
-            .btn-indique-nav {
-                font-size: 0.7rem;
-                padding: 6px 14px;
-            }
-
-            .bottom-menu {
-                display: flex !important;
-            }
-
-            .bottom-menu-item {
-                padding: 6px 8px;
-                min-width: 50px;
-            }
-
-            .bottom-menu-item i {
-                font-size: 1.4rem;
-            }
-
-            .bottom-menu-item .menu-label {
-                font-size: 0.55rem;
-            }
+            .bottom-menu-item { padding: 6px 8px; min-width: 50px; }
+            .bottom-menu-item i { font-size: 1.4rem; }
+            .bottom-menu-item .menu-label { font-size: 0.55rem; }
 
             .whatsapp-float {
                 bottom: 80px;
@@ -1150,132 +1203,68 @@
                 font-size: 1.8rem;
             }
 
-            .hero {
-                grid-template-columns: 1fr;
-                gap: 24px;
-                padding: 20px 0 28px;
+            .hero { grid-template-columns: 1fr; gap: 24px; padding: 20px 0 28px; }
+            .hero-content h1 { font-size: 2rem; }
+            .hero-content p { max-width: 100%; font-size: 0.95rem; }
+
+            .imoveis-destaque-wrapper { min-height: 320px; padding: 14px; gap: 12px; }
+            .imoveis-destaque-grid { gap: 10px; }
+            .imovel-card .imovel-img { min-height: 70px; }
+            .imovel-card .imovel-info { padding: 8px 10px; }
+            .imovel-card .imovel-info .imovel-titulo { font-size: 0.7rem; }
+            .imovel-card .imovel-info .imovel-detalhe { font-size: 0.6rem; }
+            .imovel-card .imovel-info .imovel-preco { font-size: 0.75rem; }
+            .imoveis-destaque-header h3 { font-size: 0.95rem; }
+            .btn-ver-todos { font-size: 0.72rem; padding: 6px 14px; }
+
+            .banners-fixos { grid-template-columns: 1fr; gap: 16px; padding: 12px 0 24px; }
+
+            /* ✅ Últimos lançamentos no mobile: 2 colunas */
+            .lancamentos-section { padding: 28px 0 24px; }
+            .lancamentos-header {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 14px;
+                margin-bottom: 20px;
+            }
+            .lancamentos-header-texto h2 { font-size: 1.35rem; }
+            .lancamentos-header-texto h2 i { font-size: 1.2rem; }
+            .lancamentos-header-texto p { font-size: 0.86rem; }
+
+            .btn-ver-todos-destaque {
+                width: 100%;
+                justify-content: center;
+                padding: 13px 20px;
+                font-size: 0.9rem;
             }
 
-            .hero-content h1 {
-                font-size: 2rem;
-            }
-
-            .hero-content p {
-                max-width: 100%;
-                font-size: 0.95rem;
-            }
-
-            .imoveis-destaque-wrapper {
-                min-height: 320px;
-                padding: 14px;
-                gap: 12px;
-            }
-
-            .imoveis-destaque-grid {
-                gap: 10px;
-            }
-
-            .imovel-card .imovel-img {
-                min-height: 70px;
-            }
-
-            .imovel-card .imovel-info {
-                padding: 8px 10px;
-            }
-
-            .imovel-card .imovel-info .imovel-titulo {
-                font-size: 0.7rem;
-            }
-
-            .imovel-card .imovel-info .imovel-detalhe {
-                font-size: 0.6rem;
-            }
-
-            .imovel-card .imovel-info .imovel-preco {
-                font-size: 0.75rem;
-            }
-
-            .imoveis-destaque-header h3 {
-                font-size: 0.95rem;
-            }
-
-            .btn-ver-todos {
-                font-size: 0.72rem;
-                padding: 6px 14px;
-            }
-
-            .banners-fixos {
-                grid-template-columns: 1fr;
-                gap: 16px;
-                padding: 12px 0 24px;
-            }
-
-            .banner-fixo-img {
-                aspect-ratio: 16 / 6;
-            }
-
-            .videos-section {
-                padding: 18px 0 28px;
-            }
-
-            .videos-grid {
+            .lancamentos-grid {
                 grid-template-columns: repeat(2, 1fr);
                 gap: 12px;
             }
 
-            .video-card .play-icon {
-                width: 38px;
-                height: 38px;
-                font-size: 1rem;
+            .lancamento-card .foto .badge-descricao {
+                font-size: 0.62rem;
+                padding: 5px 8px;
             }
+            .lancamento-card .corpo { padding: 10px; gap: 6px; }
+            .lancamento-card .preco { font-size: 1rem; }
+            .lancamento-card .endereco-linha .rua { font-size: 0.78rem; }
+            .lancamento-card .endereco-linha .bairro-destaque { font-size: 0.65rem; }
+            .lancamento-card .descricao-2linhas { font-size: 0.66rem; }
+            .lancamento-card .condo-info { font-size: 0.66rem; gap: 8px; }
 
-            .video-card .video-title {
-                font-size: 0.72rem;
-                padding: 8px 10px;
-            }
+            .tech-badge { padding: 18px 20px; }
+            .tech-badge p { font-size: 0.9rem; line-height: 1.6; }
 
-            .btn-canal-youtube {
-                font-size: 0.78rem;
-                padding: 8px 18px;
-            }
+            .differentials { grid-template-columns: 1fr 1fr; gap: 12px; }
+            .diff-item { padding: 18px 16px; }
+            .diff-item i { font-size: 1.4rem; }
+            .diff-item h4 { font-size: 0.95rem; }
+            .diff-item p { font-size: 0.82rem; }
 
-            .tech-badge {
-                padding: 18px 20px;
-            }
-
-            .tech-badge p {
-                font-size: 0.9rem;
-                line-height: 1.6;
-            }
-
-            .differentials {
-                grid-template-columns: 1fr 1fr;
-                gap: 12px;
-            }
-
-            .diff-item {
-                padding: 18px 16px;
-            }
-
-            .diff-item i {
-                font-size: 1.4rem;
-            }
-
-            .diff-item h4 {
-                font-size: 0.95rem;
-            }
-
-            .diff-item p {
-                font-size: 0.82rem;
-            }
-
-            .section-title {
-                font-size: 1.4rem;
-            }
-
-            .section-sub {
-                font-size: 0.9rem;
-            }
+            .section-title { font-size: 1.4rem; }
+            .section-sub { font-size: 0.9rem; }
 
             .footer {
                 flex-direction: column;
@@ -1284,11 +1273,7 @@
                 padding: 18px 0 12px;
                 font-size: 0.75rem;
             }
-
-            .footer .social {
-                justify-content: center;
-                flex-wrap: wrap;
-            }
+            .footer .social { justify-content: center; flex-wrap: wrap; }
 
             .btn-primary-blue,
             .btn-secondary-light {
@@ -1298,116 +1283,42 @@
                 font-size: 0.9rem;
             }
 
-            .hero-tags {
-                gap: 12px;
-                font-size: 0.8rem;
-            }
+            .hero-tags { gap: 12px; font-size: 0.8rem; }
 
-            .modal-box {
-                padding: 20px 16px;
-                margin: 10px;
-                max-width: 100%;
-            }
+            .modal-box { padding: 20px 16px; margin: 10px; max-width: 100%; }
 
-            .contact-item {
-                padding: 10px 12px;
-            }
-
+            .contact-item { padding: 10px 12px; }
             .contact-item .avatar,
-            .contact-item .avatar-icon {
-                width: 38px;
-                height: 38px;
-            }
-
-            .contact-item .info .name {
-                font-size: 0.85rem;
-            }
+            .contact-item .avatar-icon { width: 38px; height: 38px; }
+            .contact-item .info .name { font-size: 0.85rem; }
         }
 
         @media (max-width: 480px) {
-            .hero-content h1 {
-                font-size: 1.6rem;
-            }
+            .hero-content h1 { font-size: 1.6rem; }
 
-            .imoveis-destaque-wrapper {
-                min-height: 260px;
-                padding: 10px;
-                gap: 10px;
-            }
+            /* ✅ No mobile estreito: 1 coluna */
+            .lancamentos-grid { grid-template-columns: 1fr; gap: 12px; }
+            .lancamento-card .foto { aspect-ratio: 16/9; }
+            .lancamento-card .preco { font-size: 1.15rem; }
 
-            .imoveis-destaque-grid {
-                gap: 8px;
-            }
+            .imoveis-destaque-wrapper { min-height: 260px; padding: 10px; gap: 10px; }
+            .imoveis-destaque-grid { gap: 8px; }
+            .imovel-card .imovel-img { min-height: 55px; }
+            .imovel-card .imovel-info { padding: 6px 8px; }
+            .imovel-card .imovel-info .imovel-titulo { font-size: 0.62rem; }
+            .imovel-card .imovel-info .imovel-detalhe { font-size: 0.55rem; }
+            .imovel-card .imovel-info .imovel-preco { font-size: 0.68rem; }
+            .imoveis-destaque-header h3 { font-size: 0.85rem; }
+            .btn-ver-todos { font-size: 0.65rem; padding: 5px 12px; }
 
-            .imovel-card .imovel-img {
-                min-height: 55px;
-            }
+            .banner-fixo-img { aspect-ratio: 16 / 6; }
 
-            .imovel-card .imovel-info {
-                padding: 6px 8px;
-            }
+            .differentials { grid-template-columns: 1fr; }
 
-            .imovel-card .imovel-info .imovel-titulo {
-                font-size: 0.62rem;
-            }
-
-            .imovel-card .imovel-info .imovel-detalhe {
-                font-size: 0.55rem;
-            }
-
-            .imovel-card .imovel-info .imovel-preco {
-                font-size: 0.68rem;
-            }
-
-            .imoveis-destaque-header h3 {
-                font-size: 0.85rem;
-            }
-
-            .btn-ver-todos {
-                font-size: 0.65rem;
-                padding: 5px 12px;
-            }
-
-            .videos-grid {
-                grid-template-columns: 1fr;
-                gap: 12px;
-            }
-
-            .videos-header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .btn-canal-youtube {
-                width: 100%;
-                justify-content: center;
-            }
-
-            .banner-fixo-img {
-                aspect-ratio: 16 / 6;
-            }
-
-            .differentials {
-                grid-template-columns: 1fr;
-            }
-
-            .btn-indique-nav {
-                font-size: 0.65rem;
-                padding: 5px 12px;
-            }
-
-            .bottom-menu-item {
-                padding: 4px 6px;
-                min-width: 44px;
-            }
-
-            .bottom-menu-item i {
-                font-size: 1.2rem;
-            }
-
-            .bottom-menu-item .menu-label {
-                font-size: 0.5rem;
-            }
+            .btn-indique-nav { font-size: 0.65rem; padding: 5px 12px; }
+            .bottom-menu-item { padding: 4px 6px; min-width: 44px; }
+            .bottom-menu-item i { font-size: 1.2rem; }
+            .bottom-menu-item .menu-label { font-size: 0.5rem; }
 
             .whatsapp-float {
                 width: 48px;
@@ -1417,9 +1328,7 @@
                 right: 12px;
             }
 
-            .modal-box {
-                padding: 16px 12px;
-            }
+            .modal-box { padding: 16px 12px; }
         }
     </style>
 </head>
@@ -1492,7 +1401,7 @@
                 </div>
             </div>
 
-            <!-- ===== ANÚNCIOS DE IMÓVEIS EM DESTAQUE ===== -->
+            <!-- ===== IMÓVEIS EM DESTAQUE (lateral) ===== -->
             <div class="imoveis-destaque-wrapper">
                 <div class="imoveis-destaque-header">
                     <h3><i class="fas fa-building"></i> Imóveis em destaque</h3>
@@ -1506,9 +1415,8 @@
             </div>
         </section>
 
-        <!-- ===== BANNERS FIXOS (imagens) ===== -->
+        <!-- ===== BANNERS FIXOS ===== -->
         <div class="banners-fixos">
-            <!-- Banner QPreço - redireciona para precoimovel.html -->
             <a href="precoimovel.html">
                 <img 
                     src="https://via.placeholder.com/800x300/001EF0/ffffff?text=Banner+QPreco" 
@@ -1516,7 +1424,6 @@
                     class="banner-fixo-img"
                 />
             </a>
-            <!-- Banner Indique e Ganhe -->
             <a href="https://www.limaribeiroimoveis.com.br/indiqueeganhe" target="_blank">
                 <img 
                     src="https://via.placeholder.com/800x300/f5a623/ffffff?text=Banner+Indique+e+Ganhe" 
@@ -1526,19 +1433,71 @@
             </a>
         </div>
 
-        <!-- ===== VÍDEOS DO YOUTUBE ===== -->
-        <section class="videos-section">
-            <div class="videos-header">
-                <div class="videos-header-text">
-                    <h2 class="section-title">Nossos <span class="azul">vídeos</span></h2>
-                    <div class="section-sub">Dicas, tours e novidades do mercado imobiliário.</div>
+        <!-- ============================================================ -->
+        <!-- ✅ ÚLTIMOS LANÇAMENTOS -->
+        <!-- ============================================================ -->
+        <section class="lancamentos-section">
+            <div class="lancamentos-header">
+                <div class="lancamentos-header-texto">
+                    <h2><i class="fas fa-sparkles"></i> Últimos Lançamentos</h2>
+                    <p>Os imóveis mais recentes que chegaram na Lima Ribeiro. Confira antes de todo mundo!</p>
                 </div>
-                <a href="https://www.youtube.com/@LimaRibeiroImoveis" target="_blank" class="btn-canal-youtube">
-                    <i class="fab fa-youtube"></i> Ver canal no YouTube
+                <a href="imoveis.html" class="btn-ver-todos-destaque">
+                    <i class="fas fa-th-large"></i> Ver todos os imóveis
+                    <i class="fas fa-arrow-right"></i>
                 </a>
             </div>
-            <div class="videos-grid" id="videosGrid">
-                <!-- Injetado via JS -->
+
+            <div class="lancamentos-grid" id="lancamentosGrid">
+                <!-- Skeletons (substituídos via JS) -->
+                <div class="lancamento-skeleton">
+                    <div class="sk-foto"></div>
+                    <div class="sk-corpo">
+                        <div class="sk-linha curta"></div>
+                        <div class="sk-linha media"></div>
+                        <div class="sk-linha curta"></div>
+                    </div>
+                </div>
+                <div class="lancamento-skeleton">
+                    <div class="sk-foto"></div>
+                    <div class="sk-corpo">
+                        <div class="sk-linha curta"></div>
+                        <div class="sk-linha media"></div>
+                        <div class="sk-linha curta"></div>
+                    </div>
+                </div>
+                <div class="lancamento-skeleton">
+                    <div class="sk-foto"></div>
+                    <div class="sk-corpo">
+                        <div class="sk-linha curta"></div>
+                        <div class="sk-linha media"></div>
+                        <div class="sk-linha curta"></div>
+                    </div>
+                </div>
+                <div class="lancamento-skeleton">
+                    <div class="sk-foto"></div>
+                    <div class="sk-corpo">
+                        <div class="sk-linha curta"></div>
+                        <div class="sk-linha media"></div>
+                        <div class="sk-linha curta"></div>
+                    </div>
+                </div>
+                <div class="lancamento-skeleton">
+                    <div class="sk-foto"></div>
+                    <div class="sk-corpo">
+                        <div class="sk-linha curta"></div>
+                        <div class="sk-linha media"></div>
+                        <div class="sk-linha curta"></div>
+                    </div>
+                </div>
+                <div class="lancamento-skeleton">
+                    <div class="sk-foto"></div>
+                    <div class="sk-corpo">
+                        <div class="sk-linha curta"></div>
+                        <div class="sk-linha media"></div>
+                        <div class="sk-linha curta"></div>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -1641,13 +1600,10 @@
             <h3><i class="fas fa-address-book" style="color: var(--azul-quinto);"></i> Contato</h3>
             <p class="sub">Escolha a melhor forma de falar com a gente.</p>
 
-            <!-- WhatsApp -->
             <div class="modal-section-title"><i class="fab fa-whatsapp" style="color:#25d366;"></i> WhatsApp</div>
             <div class="contact-list">
                 <a href="https://wa.me/5531996273985?text=Olá! Gostaria de saber mais sobre os imóveis da Lima Ribeiro." target="_blank" class="contact-item">
-                    <div class="avatar">
-                        <img data-corretor="carolina" alt="Carolina" />
-                    </div>
+                    <div class="avatar"><img data-corretor="carolina" alt="Carolina" /></div>
                     <div class="info">
                         <div class="name">Carolina Lima</div>
                         <div class="role">Consultora de Imóveis</div>
@@ -1655,9 +1611,7 @@
                     <i class="fab fa-whatsapp icon-right whatsapp"></i>
                 </a>
                 <a href="https://wa.me/5531996070930?text=Olá! Gostaria de saber mais sobre os imóveis da Lima Ribeiro." target="_blank" class="contact-item">
-                    <div class="avatar">
-                        <img data-corretor="hugo" alt="Hugo" />
-                    </div>
+                    <div class="avatar"><img data-corretor="hugo" alt="Hugo" /></div>
                     <div class="info">
                         <div class="name">Hugo Ribeiro</div>
                         <div class="role">Consultor de Imóveis</div>
@@ -1668,13 +1622,10 @@
 
             <hr class="modal-divider" />
 
-            <!-- Agendamento de Visitas -->
             <div class="modal-section-title"><i class="far fa-calendar-alt" style="color: var(--azul-quinto);"></i> Agendar Visita</div>
             <div class="contact-list">
                 <a href="https://www.quintoandar.com.br/corretor/atendimento/CarolinaLima-ZADT" target="_blank" class="contact-item">
-                    <div class="avatar">
-                        <img data-corretor="carolina" alt="Carolina" />
-                    </div>
+                    <div class="avatar"><img data-corretor="carolina" alt="Carolina" /></div>
                     <div class="info">
                         <div class="name">Carolina Lima</div>
                         <div class="role">Agendar visita</div>
@@ -1682,9 +1633,7 @@
                     <i class="fas fa-arrow-right icon-right"></i>
                 </a>
                 <a href="https://www.quintoandar.com.br/corretor/atendimento/HugoFelipePereiraRibeiro-3M2K" target="_blank" class="contact-item">
-                    <div class="avatar">
-                        <img data-corretor="hugo" alt="Hugo" />
-                    </div>
+                    <div class="avatar"><img data-corretor="hugo" alt="Hugo" /></div>
                     <div class="info">
                         <div class="name">Hugo Ribeiro</div>
                         <div class="role">Agendar visita</div>
@@ -1695,7 +1644,6 @@
 
             <hr class="modal-divider" />
 
-            <!-- E-mail -->
             <div class="modal-section-title"><i class="fas fa-envelope" style="color:#EA4335;"></i> E-mail</div>
             <div class="contact-list">
                 <a href="mailto:limaribeiroimoveis@gmail.com" class="contact-item">
@@ -1710,13 +1658,10 @@
 
             <hr class="modal-divider" />
 
-            <!-- Instagram -->
             <div class="modal-section-title"><i class="fab fa-instagram" style="color:#E4405F;"></i> Instagram</div>
             <div class="contact-list">
                 <a href="https://www.instagram.com/carollimaimoveisbh/" target="_blank" class="contact-item">
-                    <div class="avatar">
-                        <img data-corretor="carolina" alt="Carolina" />
-                    </div>
+                    <div class="avatar"><img data-corretor="carolina" alt="Carolina" /></div>
                     <div class="info">
                         <div class="name">@carollimaimoveisbh</div>
                         <div class="role">Carolina Lima</div>
@@ -1724,9 +1669,7 @@
                     <i class="fab fa-instagram icon-right instagram"></i>
                 </a>
                 <a href="https://www.instagram.com/hugoribeiro.imoveis/" target="_blank" class="contact-item">
-                    <div class="avatar">
-                        <img data-corretor="hugo" alt="Hugo" />
-                    </div>
+                    <div class="avatar"><img data-corretor="hugo" alt="Hugo" /></div>
                     <div class="info">
                         <div class="name">@hugoribeiro.imoveis</div>
                         <div class="role">Hugo Ribeiro</div>
@@ -1744,12 +1687,9 @@
         <div class="modal-box">
             <h3><i class="fas fa-calendar-check" style="color: var(--azul-quinto);"></i> Agendar Visita</h3>
             <p class="sub">Escolha um de nossos consultores para agendar sua visita.</p>
-
             <div class="contact-list">
                 <a href="https://www.quintoandar.com.br/corretor/atendimento/CarolinaLima-ZADT" target="_blank" class="contact-item">
-                    <div class="avatar">
-                        <img data-corretor="carolina" alt="Carolina" />
-                    </div>
+                    <div class="avatar"><img data-corretor="carolina" alt="Carolina" /></div>
                     <div class="info">
                         <div class="name">Carolina Lima</div>
                         <div class="role">Agendar visita</div>
@@ -1757,9 +1697,7 @@
                     <i class="fas fa-arrow-right icon-right"></i>
                 </a>
                 <a href="https://www.quintoandar.com.br/corretor/atendimento/HugoFelipePereiraRibeiro-3M2K" target="_blank" class="contact-item">
-                    <div class="avatar">
-                        <img data-corretor="hugo" alt="Hugo" />
-                    </div>
+                    <div class="avatar"><img data-corretor="hugo" alt="Hugo" /></div>
                     <div class="info">
                         <div class="name">Hugo Ribeiro</div>
                         <div class="role">Agendar visita</div>
@@ -1767,7 +1705,6 @@
                     <i class="fas fa-arrow-right icon-right"></i>
                 </a>
             </div>
-
             <button class="modal-close" onclick="closeAgendarVisitaModal()">Fechar</button>
         </div>
     </div>
@@ -1777,9 +1714,7 @@
         <div class="modal-box" style="max-width: 600px;">
             <h3><i class="fas fa-info-circle" style="color: var(--azul-quinto);"></i> Informativos</h3>
             <p class="sub">Clique nos títulos para expandir e copiar o conteúdo.</p>
-            <div class="info-accordion" id="infoAccordion">
-                <!-- injetado via JS -->
-            </div>
+            <div class="info-accordion" id="infoAccordion"></div>
             <button class="modal-close" onclick="closeInformativosModal()">Fechar</button>
         </div>
     </div>
@@ -1809,10 +1744,15 @@
         </div>
     </div>
 
-
     <script>
         // ============================================================
-        // ★★★ CONFIGURAÇÃO CENTRAL DAS FOTOS DOS CORRETORES ★★★
+        // CONFIG
+        // ============================================================
+        const API_URL = 'https://script.google.com/macros/s/AKfycbzuCjg_5ZJDMWWKmjYp1ThW34iWS0YouviWFdiMGx8W3yApv0F1fdUcjeZdjm0s6Mg/exec';
+        const QTD_LANCAMENTOS = 6;
+
+        // ============================================================
+        // FOTOS DOS CORRETORES
         // ============================================================
         const FOTOS_CORRETORES = {
             carolina: 'https://drive.google.com/file/d/1ODYDixXOwn46BKdogBVVngLFDW30G0wE/view?usp=sharing',
@@ -1823,183 +1763,311 @@
             if (!url) return '';
             if (url.includes('drive.google.com/file/d/')) {
                 const match = url.match(/\/d\/([^\/]+)/);
-                if (match && match[1]) {
-                    return `https://drive.google.com/thumbnail?id=${match[1]}&sz=w800`;
-                }
+                if (match && match[1]) return `https://drive.google.com/thumbnail?id=${match[1]}&sz=w800`;
             }
             if (url.includes('drive.google.com/open?id=')) {
                 const match = url.match(/id=([^&]+)/);
-                if (match && match[1]) {
-                    return `https://drive.google.com/thumbnail?id=${match[1]}&sz=w800`;
-                }
+                if (match && match[1]) return `https://drive.google.com/thumbnail?id=${match[1]}&sz=w800`;
             }
             if (url.includes('drive.google.com/uc')) {
                 const match = url.match(/id=([^&]+)/);
-                if (match && match[1]) {
-                    return `https://drive.google.com/thumbnail?id=${match[1]}&sz=w800`;
-                }
+                if (match && match[1]) return `https://drive.google.com/thumbnail?id=${match[1]}&sz=w800`;
             }
             return url;
         }
 
         function getFotoCorretor(nome) {
-            const link = FOTOS_CORRETORES[nome];
-            return converterLinkImagem(link);
+            return converterLinkImagem(FOTOS_CORRETORES[nome]);
         }
 
         function aplicarFotosCorretores() {
             document.querySelectorAll('img[data-corretor]').forEach(img => {
                 const nome = img.getAttribute('data-corretor');
                 const url = getFotoCorretor(nome);
-                if (url) {
-                    img.src = url;
-                }
+                if (url) img.src = url;
             });
         }
 
         // ============================================================
-        // ★★★ CONFIGURAÇÃO DOS IMÓVEIS EM DESTAQUE ★★★
-        // ------------------------------------------------------------
-        // ➤ Aqui você define os 4 imóveis que aparecem na home.
-        //   Depois, quando criar o site imoveis.html, esses dados
-        //   podem ser sincronizados automaticamente.
-        // ➤ Para trocar, basta editar os campos abaixo.
+        // HELPERS
         // ============================================================
-        const IMOVEIS_DESTAQUE = [
-            {
-                titulo: 'Apartamento no Gutierrez',
-                detalhe: '2 quartos · 1 suíte · 1 vaga',
-                preco: 'R$ 450.000',
-                badge: 'Destaque',
-                img: 'https://via.placeholder.com/400x300/001EF0/ffffff?text=Imovel+1',
-                link: 'imoveis.html'
-            },
-            {
-                titulo: 'Casa na Savassi',
-                detalhe: '3 quartos · 2 suítes · 2 vagas',
-                preco: 'R$ 890.000',
-                badge: 'Novo',
-                img: 'https://via.placeholder.com/400x300/0044ff/ffffff?text=Imovel+2',
-                link: 'imoveis.html'
-            },
-            {
-                titulo: 'Studio Santo Antônio',
-                detalhe: '1 quarto · 1 banheiro · 1 vaga',
-                preco: 'R$ 320.000',
-                badge: 'Oportunidade',
-                img: 'https://via.placeholder.com/400x300/0011a0/ffffff?text=Imovel+3',
-                link: 'imoveis.html'
-            },
-            {
-                titulo: 'Cobertura no Lourdes',
-                detalhe: '4 quartos · 3 suítes · 3 vagas',
-                preco: 'R$ 1.500.000',
-                badge: 'Alto padrão',
-                img: 'https://via.placeholder.com/400x300/001EF0/ffffff?text=Imovel+4',
-                link: 'imoveis.html'
+        const $ = id => document.getElementById(id);
+
+        function esc(s){
+            return String(s == null ? '' : s)
+                .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+        }
+
+        function parseNumeroBR(valor){
+            if(valor === null || valor === undefined || valor === '') return 0;
+            if(typeof valor === 'number') return valor;
+            let str = String(valor).trim();
+            if(!str) return 0;
+            str = str.replace(/R\$\s*/gi, '').trim().replace(/\s/g, '');
+            if(str.includes(',')){
+                str = str.replace(/\./g, '').replace(',', '.');
+                const n = parseFloat(str);
+                return isNaN(n) ? 0 : n;
             }
-        ];
-
-        function renderImoveisDestaque() {
-            const grid = document.getElementById('imoveisDestaqueGrid');
-            if (!grid) return;
-            grid.innerHTML = '';
-
-            if (IMOVEIS_DESTAQUE.length === 0) {
-                grid.innerHTML = `
-                    <div class="imoveis-destaque-placeholder">
-                        <i class="fas fa-building"></i>
-                        <p>Em breve, nossos imóveis em destaque aparecerão aqui. Enquanto isso, fale com um de nossos consultores!</p>
-                    </div>
-                `;
-                return;
+            if(str.includes('.')){
+                const partes = str.split('.');
+                if(partes[partes.length - 1].length === 3){
+                    str = str.replace(/\./g, '');
+                    const n = parseInt(str, 10);
+                    return isNaN(n) ? 0 : n;
+                } else {
+                    const n = parseFloat(str);
+                    return isNaN(n) ? 0 : n;
+                }
             }
+            const n = parseInt(str.replace(/\D/g, ''), 10);
+            return isNaN(n) ? 0 : n;
+        }
 
-            IMOVEIS_DESTAQUE.forEach(imovel => {
-                const a = document.createElement('a');
-                a.className = 'imovel-card';
-                a.href = imovel.link || 'imoveis.html';
-                a.innerHTML = `
-                    <div class="imovel-img" style="background-image: url('${imovel.img}');">
-                        <span class="imovel-badge">${imovel.badge || ''}</span>
+        function fmtPreco(valor){
+            const n = parseNumeroBR(valor);
+            if(!n || n <= 0) return 'Consulte';
+            return n.toLocaleString('pt-BR', {
+                style: 'currency',
+                currency: 'BRL',
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+        }
+
+        function urlImagem(im){
+            const img = String(im.imagem || '').trim();
+            if(!img) return '';
+            const m = img.match(/\/d\/([^\/]+)/);
+            if(m && m[1]) return `https://drive.google.com/thumbnail?id=${m[1]}&sz=w800`;
+            const m2 = img.match(/[?&]id=([^&]+)/);
+            if(m2 && m2[1]) return `https://drive.google.com/thumbnail?id=${m2[1]}&sz=w800`;
+            return img;
+        }
+
+        function duasLinhasDescricao(descricao){
+            if(!descricao) return '';
+            const linhas = String(descricao)
+                .split(/\r?\n/)
+                .map(l => l.trim())
+                .filter(l => l.length > 0);
+            if(linhas.length === 0) return '';
+            if(linhas.length === 1) return linhas[0];
+            return linhas[0] + ' · ' + linhas[1];
+        }
+
+        function primeiraLinhaDescricao(descricao){
+            if(!descricao) return '';
+            const linhas = String(descricao)
+                .split(/\r?\n/)
+                .map(l => l.trim())
+                .filter(l => l.length > 0);
+            return linhas[0] || '';
+        }
+
+        function extrairTipoImovel(descricao){
+            if(!descricao) return '';
+            const matches = String(descricao).match(/\*+([^*\n]+)\*+/g);
+            if(!matches) return '';
+            for(const m of matches){
+                const texto = m.replace(/\*/g, '').trim().toLowerCase();
+                if(texto.includes('cobertura')) return 'Cobertura';
+                if(texto.includes('area privativa') || texto.includes('área privativa')) return 'Área privativa';
+            }
+            return '';
+        }
+
+        function ehRecente(dataCadastro){
+            if(!dataCadastro) return false;
+            try {
+                const dt = new Date(dataCadastro);
+                if(isNaN(dt.getTime())) return false;
+                const dias = (Date.now() - dt.getTime()) / 86400000;
+                return dias <= 15;
+            } catch(e){ return false; }
+        }
+
+        // ============================================================
+        // API
+        // ============================================================
+        async function apiGet(action, params = {}){
+            const qs = new URLSearchParams({ action, _t: Date.now(), ...params }).toString();
+            const controller = new AbortController();
+            const timer = setTimeout(() => controller.abort(), 30000);
+            try {
+                const resp = await fetch(API_URL + '?' + qs, {
+                    method: 'GET',
+                    mode: 'cors',
+                    headers: { 'Accept': 'application/json' },
+                    redirect: 'follow',
+                    signal: controller.signal
+                });
+                clearTimeout(timer);
+                if(!resp.ok) throw new Error('HTTP ' + resp.status);
+                return await resp.json();
+            } catch(e){
+                clearTimeout(timer);
+                throw e;
+            }
+        }
+
+        // ============================================================
+        // ✅ IMÓVEIS EM DESTAQUE (hero lateral — 4 imóveis)
+        // ============================================================
+        async function carregarImoveisDestaque(){
+            const grid = $('imoveisDestaqueGrid');
+            if(!grid) return;
+
+            try {
+                const res = await apiGet('listarImoveisPublicos');
+                if(!res.ok || !res.data){
+                    renderPlaceholderDestaque();
+                    return;
+                }
+
+                // Ordena por data de cadastro (mais recentes primeiro)
+                const ordenados = [...res.data].sort((a, b) =>
+                    new Date(b.dataCadastro || 0) - new Date(a.dataCadastro || 0)
+                );
+
+                const top4 = ordenados.slice(0, 4);
+
+                if(top4.length === 0){
+                    renderPlaceholderDestaque();
+                    return;
+                }
+
+                grid.innerHTML = top4.map(im => imovelDestaqueHTML(im)).join('');
+            } catch(e){
+                console.error('Erro ao carregar imóveis em destaque:', e);
+                renderPlaceholderDestaque();
+            }
+        }
+
+        function renderPlaceholderDestaque(){
+            const grid = $('imoveisDestaqueGrid');
+            if(!grid) return;
+            grid.innerHTML = `
+                <div class="imoveis-destaque-placeholder">
+                    <i class="fas fa-building"></i>
+                    <p>Em breve, nossos imóveis em destaque aparecerão aqui. Enquanto isso, fale com um de nossos consultores!</p>
+                </div>
+            `;
+        }
+
+        function imovelDestaqueHTML(im){
+            const fotoStyle = im.imagem
+                ? `background-image: url('${esc(urlImagem(im))}');`
+                : 'background: linear-gradient(135deg, #e8edff, #d0d7e6);';
+            const fotoIcone = im.imagem ? '' : '<i class="fas fa-image"></i>';
+            const titulo = im.rua || im.titulo || 'Endereço não informado';
+            const detalhe = duasLinhasDescricao(im.descricao) || im.bairro || '';
+            const url = 'imoveis.html?codigo=' + encodeURIComponent(im.codigo || '');
+
+            return `
+                <a class="imovel-card" href="${esc(url)}">
+                    <div class="imovel-img" style="${fotoStyle}">
+                        ${fotoIcone}
+                        ${im.bairro ? `<span class="imovel-badge">${esc(im.bairro)}</span>` : ''}
                     </div>
                     <div class="imovel-info">
-                        <div class="imovel-titulo">${imovel.titulo}</div>
-                        <div class="imovel-detalhe">${imovel.detalhe}</div>
-                        <div class="imovel-preco">${imovel.preco}</div>
+                        <div class="imovel-titulo">${esc(titulo)}</div>
+                        ${detalhe ? `<div class="imovel-detalhe">${esc(detalhe)}</div>` : ''}
+                        <div class="imovel-preco">${esc(fmtPreco(im.preco))}</div>
                     </div>
-                `;
-                grid.appendChild(a);
-            });
+                </a>
+            `;
         }
 
         // ============================================================
-        // ★★★ CONFIGURAÇÃO DOS VÍDEOS DO YOUTUBE ★★★
-        // ------------------------------------------------------------
-        // ➤ Para cada vídeo, informe:
-        //   - titulo: o texto que aparece embaixo do vídeo
-        //   - videoId: o ID do vídeo no YouTube (a parte depois de v=)
-        //   - thumb: (opcional) URL da miniatura. Se não informar,
-        //            usamos a miniatura automática do YouTube.
-        //   - link: (opcional) link direto do vídeo. Se não informar,
-        //           montamos automaticamente com o videoId.
+        // ✅ ÚLTIMOS LANÇAMENTOS (6 imóveis mais recentes)
         // ============================================================
-        const VIDEOS_YOUTUBE = [
-            {
-                titulo: 'Tour completo: Apartamento no Gutierrez',
-                videoId: 'dQw4w9WgXcQ',
-                thumb: '',
-                link: ''
-            },
-            {
-                titulo: 'Dicas para comprar seu primeiro imóvel',
-                videoId: 'dQw4w9WgXcQ',
-                thumb: '',
-                link: ''
-            },
-            {
-                titulo: 'Como funciona o financiamento imobiliário',
-                videoId: 'dQw4w9WgXcQ',
-                thumb: '',
-                link: ''
-            },
-            {
-                titulo: 'Documentação necessária para vender seu imóvel',
-                videoId: 'dQw4w9WgXcQ',
-                thumb: '',
-                link: ''
+        async function carregarUltimosLancamentos(){
+            const grid = $('lancamentosGrid');
+            if(!grid) return;
+
+            try {
+                const res = await apiGet('listarImoveisPublicos');
+                if(!res.ok || !res.data){
+                    renderLancamentosVazio();
+                    return;
+                }
+
+                // Ordena por data de cadastro (mais recentes primeiro)
+                const ordenados = [...res.data].sort((a, b) =>
+                    new Date(b.dataCadastro || 0) - new Date(a.dataCadastro || 0)
+                );
+
+                const top6 = ordenados.slice(0, QTD_LANCAMENTOS);
+
+                if(top6.length === 0){
+                    renderLancamentosVazio();
+                    return;
+                }
+
+                grid.innerHTML = top6.map(im => lancamentoHTML(im)).join('');
+            } catch(e){
+                console.error('Erro ao carregar últimos lançamentos:', e);
+                renderLancamentosVazio();
             }
-        ];
+        }
 
-        // Link do seu canal no YouTube (troque pelo link real depois)
-        const CANAL_YOUTUBE_URL = 'https://www.youtube.com/@LimaRibeiroImoveis';
+        function renderLancamentosVazio(){
+            const grid = $('lancamentosGrid');
+            if(!grid) return;
+            grid.innerHTML = `
+                <div class="lancamentos-empty">
+                    <i class="fas fa-building"></i>
+                    <h3>Nenhum imóvel disponível no momento</h3>
+                    <p>Volte em breve ou fale com um de nossos consultores!</p>
+                </div>
+            `;
+        }
 
-        function renderVideos() {
-            const grid = document.getElementById('videosGrid');
-            if (!grid) return;
-            grid.innerHTML = '';
+        function lancamentoHTML(im){
+            const fotoStyle = im.imagem
+                ? `background-image: url('${esc(urlImagem(im))}');`
+                : 'background: linear-gradient(135deg, #e8edff, #d0d7e6);';
+            const fotoIcone = im.imagem ? '' : '<i class="fas fa-image"></i>';
 
-            VIDEOS_YOUTUBE.forEach(video => {
-                const thumbUrl = video.thumb && video.thumb.trim() !== ''
-                    ? video.thumb
-                    : `https://img.youtube.com/vi/${video.videoId}/hqdefault.jpg`;
-                const linkUrl = video.link && video.link.trim() !== ''
-                    ? video.link
-                    : `https://www.youtube.com/watch?v=${video.videoId}`;
+            const rua = im.rua || im.titulo || 'Endereço não informado';
+            const bairro = im.bairro || '';
+            const descTopo = duasLinhasDescricao(im.descricao) || im.titulo || '';
+            const descDuasLinhas = duasLinhasDescricao(im.descricao);
+            const tipo = extrairTipoImovel(im.descricao);
+            const novo = ehRecente(im.dataCadastro);
 
-                const card = document.createElement('a');
-                card.className = 'video-card';
-                card.href = linkUrl;
-                card.target = '_blank';
-                card.rel = 'noopener noreferrer';
-                card.innerHTML = `
-                    <div class="video-thumb" style="background-image: url('${thumbUrl}');">
-                        <div class="play-icon"><i class="fas fa-play"></i></div>
+            const extras = [];
+            const c = parseNumeroBR(im.condominio);
+            const i = parseNumeroBR(im.iptu);
+            if(c > 0) extras.push(`<span class="feat"><i class="fas fa-building"></i> Cond. ${esc(fmtPreco(im.condominio))}</span>`);
+            if(i > 0) extras.push(`<span class="feat"><i class="fas fa-file-invoice-dollar"></i> IPTU ${esc(fmtPreco(im.iptu))}</span>`);
+
+            const url = 'imoveis.html?codigo=' + encodeURIComponent(im.codigo || '');
+
+            return `
+                <a class="lancamento-card" href="${esc(url)}">
+                    <div class="foto" style="${fotoStyle}">
+                        ${fotoIcone}
+                        ${descTopo ? `<span class="badge-descricao" title="${esc(descTopo)}">${esc(descTopo)}</span>` : ''}
+                        ${tipo ? `<span class="badge-tipo">${esc(tipo)}</span>` : ''}
+                        ${novo ? `<span class="badge-novo"><i class="fas fa-star"></i> Novo</span>` : ''}
                     </div>
-                    <div class="video-title">${video.titulo}</div>
-                `;
-                grid.appendChild(card);
-            });
+                    <div class="corpo">
+                        <div class="preco">
+                            <span class="tipo">Venda</span>
+                            ${esc(fmtPreco(im.preco))}
+                        </div>
+                        <div class="endereco-linha">
+                            <span class="rua">${esc(rua)}</span>
+                            ${bairro ? `<span class="bairro-destaque">· ${esc(bairro)}</span>` : ''}
+                        </div>
+                        ${descDuasLinhas ? `<div class="descricao-2linhas">${esc(descDuasLinhas)}</div>` : ''}
+                        ${extras.length ? `<div class="condo-info">${extras.join('')}</div>` : ''}
+                    </div>
+                </a>
+            `;
         }
 
         // ============================================================
@@ -2161,10 +2229,8 @@
                     const text = item.conteudo;
                     navigator.clipboard.writeText(text).then(() => {
                         copyBtn.innerHTML = '<i class="fas fa-check"></i> Copiado!';
-                        copyBtn.classList.add('copied');
                         setTimeout(() => {
                             copyBtn.innerHTML = '<i class="fas fa-copy"></i> Copiar';
-                            copyBtn.classList.remove('copied');
                         }, 2000);
                     }).catch(() => {
                         const textarea = document.createElement('textarea');
@@ -2174,10 +2240,8 @@
                         document.execCommand('copy');
                         document.body.removeChild(textarea);
                         copyBtn.innerHTML = '<i class="fas fa-check"></i> Copiado!';
-                        copyBtn.classList.add('copied');
                         setTimeout(() => {
                             copyBtn.innerHTML = '<i class="fas fa-copy"></i> Copiar';
-                            copyBtn.classList.remove('copied');
                         }, 2000);
                     });
                 });
@@ -2190,79 +2254,34 @@
         function openWhatsAppModal() {
             const modal = document.getElementById('whatsappModal');
             const sub = document.getElementById('whatsappModalSub');
-            
             sub.textContent = 'Escolha um de nossos especialistas para atendimento personalizado.';
-            
+
             const mensagemPadrao = 'Olá! Gostaria de saber mais sobre os imóveis da Lima Ribeiro.';
             const mensagemEncoded = encodeURIComponent(mensagemPadrao);
-            
+
             const linkCarolina = document.getElementById('whatsappCarolina');
             const linkHugo = document.getElementById('whatsappHugo');
-            
-            if (linkCarolina) {
-                linkCarolina.href = `https://wa.me/5531996273985?text=${mensagemEncoded}`;
-            }
-            if (linkHugo) {
-                linkHugo.href = `https://wa.me/5531996070930?text=${mensagemEncoded}`;
-            }
-            
+            if (linkCarolina) linkCarolina.href = `https://wa.me/5531996273985?text=${mensagemEncoded}`;
+            if (linkHugo) linkHugo.href = `https://wa.me/5531996070930?text=${mensagemEncoded}`;
+
             modal.classList.add('active');
         }
 
-        function closeWhatsAppModal() {
-            document.getElementById('whatsappModal').classList.remove('active');
-        }
-
-        function openContatoCompletoModal() {
-            document.getElementById('contatoCompletoModal').classList.add('active');
-        }
-
-        function closeContatoCompletoModal() {
-            document.getElementById('contatoCompletoModal').classList.remove('active');
-        }
-
-        function openAgendarVisitaModal() {
-            document.getElementById('agendarVisitaModal').classList.add('active');
-        }
-
-        function closeAgendarVisitaModal() {
-            document.getElementById('agendarVisitaModal').classList.remove('active');
-        }
-
-        function openInformativosModal() {
-            document.getElementById('informativosModal').classList.add('active');
-            renderInformativos();
-        }
-
-        function closeInformativosModal() {
-            document.getElementById('informativosModal').classList.remove('active');
-        }
-
-        function openMenuMobileModal() {
-            document.getElementById('menuMobileModal').classList.add('active');
-        }
-
-        function closeMenuMobileModal() {
-            document.getElementById('menuMobileModal').classList.remove('active');
-        }
+        function closeWhatsAppModal() { document.getElementById('whatsappModal').classList.remove('active'); }
+        function openContatoCompletoModal() { document.getElementById('contatoCompletoModal').classList.add('active'); }
+        function closeContatoCompletoModal() { document.getElementById('contatoCompletoModal').classList.remove('active'); }
+        function openAgendarVisitaModal() { document.getElementById('agendarVisitaModal').classList.add('active'); }
+        function closeAgendarVisitaModal() { document.getElementById('agendarVisitaModal').classList.remove('active'); }
+        function openInformativosModal() { document.getElementById('informativosModal').classList.add('active'); renderInformativos(); }
+        function closeInformativosModal() { document.getElementById('informativosModal').classList.remove('active'); }
+        function openMenuMobileModal() { document.getElementById('menuMobileModal').classList.add('active'); }
+        function closeMenuMobileModal() { document.getElementById('menuMobileModal').classList.remove('active'); }
 
         function openModal(type) {
-            if (type === 'contatoCompleto') {
-                openContatoCompletoModal();
-                return;
-            }
-            if (type === 'agendarVisita') {
-                openAgendarVisitaModal();
-                return;
-            }
-            if (type === 'informativos') {
-                openInformativosModal();
-                return;
-            }
-            if (type === 'menuMobile') {
-                openMenuMobileModal();
-                return;
-            }
+            if (type === 'contatoCompleto') { openContatoCompletoModal(); return; }
+            if (type === 'agendarVisita') { openAgendarVisitaModal(); return; }
+            if (type === 'informativos') { openInformativosModal(); return; }
+            if (type === 'menuMobile') { openMenuMobileModal(); return; }
 
             const modal = document.getElementById('genericModal');
             const title = document.getElementById('modalTitle');
@@ -2270,28 +2289,19 @@
 
             if (type === 'sobre') {
                 title.textContent = '💙 Sobre a Lima Ribeiro';
-                body.innerHTML = `
-                    Somos uma imobiliária que acredita que encontrar um lar é uma das decisões mais importantes da vida.
-                    Por isso, unimos tecnologia (com o apoio do QuintoAndar) e atendimento humano para filtrar exatamente
-                    o que você precisa. Nossa missão: economizar seu tempo e tornar essa mudança mais leve e fácil.
-                `;
+                body.innerHTML = `Somos uma imobiliária que acredita que encontrar um lar é uma das decisões mais importantes da vida. Por isso, unimos tecnologia (com o apoio do QuintoAndar) e atendimento humano para filtrar exatamente o que você precisa. Nossa missão: economizar seu tempo e tornar essa mudança mais leve e fácil.`;
             } else {
                 title.textContent = 'Em breve';
                 body.textContent = 'Esta funcionalidade será disponibilizada em breve.';
             }
-
             modal.classList.add('active');
         }
 
-        function closeGenericModal() {
-            document.getElementById('genericModal').classList.remove('active');
-        }
+        function closeGenericModal() { document.getElementById('genericModal').classList.remove('active'); }
 
         document.querySelectorAll('.modal-overlay').forEach(overlay => {
             overlay.addEventListener('click', (e) => {
-                if (e.target === overlay) {
-                    overlay.classList.remove('active');
-                }
+                if (e.target === overlay) overlay.classList.remove('active');
             });
         });
 
@@ -2300,9 +2310,11 @@
         // ============================================================
         document.addEventListener('DOMContentLoaded', () => {
             aplicarFotosCorretores();
-            renderImoveisDestaque();
-            renderVideos();
             renderInformativos();
+
+            // ✅ Carrega os imóveis dinamicamente
+            carregarImoveisDestaque();
+            carregarUltimosLancamentos();
         });
 
         // Expor funções globalmente
@@ -2323,12 +2335,6 @@
 
         console.log('🏠 Lima Ribeiro Imóveis · Encontre seu lar!');
         console.log('💙 Design profissional e responsivo.');
-        console.log('📧 E-mail: limaribeiroimoveis@gmail.com');
-        console.log('📱 WhatsApp: Carolina (31) 99627-3985 | Hugo (31) 99607-0930');
-        console.log('📸 Instagram: @carollimaimoveisbh | @hugoribeiro.imoveis');
-        console.log('💰 Indique e Ganhe: www.limaribeiroimoveis.com.br/indiqueeganhe');
-        console.log('🎬 YouTube: edite VIDEOS_YOUTUBE no <script> para adicionar seus vídeos.');
-        console.log('🏢 Imóveis em destaque: edite IMOVEIS_DESTAQUE no <script>.');
     </script>
 
 </body>
