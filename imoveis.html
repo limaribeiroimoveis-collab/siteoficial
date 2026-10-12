@@ -32,6 +32,7 @@
     --verde: #16a34a;
     --vermelho: #dc2626;
     --laranja: #ea580c;
+    --roxo: #7c3aed;
     --sombra-suave: 0 8px 32px rgba(0, 30, 240, 0.06);
     --sombra-media: 0 12px 48px rgba(0, 30, 240, 0.10);
     --sombra-forte: 0 20px 60px rgba(0, 30, 240, 0.18);
@@ -157,7 +158,7 @@
   .modo-btn.ativo i { color: var(--azul-quinto); transform: scale(1.1); }
   .modo-btn.ativo .titulo { color: var(--azul-quinto); }
 
-  /* ===== FILTROS ===== */
+  /* ===== FILTROS — GRID ALINHADO ===== */
   .filtros-wrap {
     background: #fff;
     border-radius: var(--radius);
@@ -173,19 +174,26 @@
     z-index: 900;
   }
 
-  .filtros-linha {
-    display: flex;
-    gap: 10px;
-    align-items: stretch;
-    flex-wrap: wrap;
+  /* Grid principal: linha 1 = busca + bairro */
+  .filtros-grid-1 {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 12px;
+    align-items: end;
+  }
+  /* Grid linha 2: preço + condomínio + tipo + ordenar + limpar */
+  .filtros-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr auto;
+    gap: 12px;
+    align-items: end;
   }
 
   .filtro-grupo {
     display: flex;
     flex-direction: column;
-    gap: 4px;
-    flex: 1;
-    min-width: 140px;
+    gap: 5px;
+    min-width: 0;
   }
   .filtro-grupo label {
     font-size: 0.66rem;
@@ -193,6 +201,8 @@
     text-transform: uppercase;
     letter-spacing: 0.4px;
     color: var(--muted);
+    height: 14px;
+    line-height: 14px;
   }
   .filtro-grupo input,
   .filtro-grupo select {
@@ -205,6 +215,7 @@
     background: #fff;
     color: var(--texto-escuro);
     transition: 0.15s;
+    height: 40px;
   }
   .filtro-grupo input:focus,
   .filtro-grupo select:focus {
@@ -215,8 +226,6 @@
 
   .busca-wrap {
     position: relative;
-    flex: 2;
-    min-width: 240px;
   }
   .busca-wrap i {
     position: absolute;
@@ -226,43 +235,28 @@
     color: var(--muted);
     font-size: 0.9rem;
     pointer-events: none;
+    margin-top: 7px;
   }
   .busca-wrap input {
     padding-left: 34px;
-    width: 100%;
-    padding-top: 9px;
-    padding-bottom: 9px;
-    padding-right: 12px;
-    border: 1.5px solid var(--borda-forte);
-    border-radius: 10px;
-    font-size: 0.86rem;
-    font-family: inherit;
-  }
-  .busca-wrap input:focus {
-    outline: none;
-    border-color: var(--azul-quinto);
-    box-shadow: 0 0 0 3px rgba(0, 30, 240, 0.1);
-  }
-
-  .botoes-extras {
-    display: flex;
-    gap: 8px;
-    align-items: flex-end;
-    flex-wrap: wrap;
   }
 
   .btn-limpar {
     background: transparent;
     border: 1.5px dashed var(--borda-forte);
     color: var(--texto-cinza);
-    padding: 8px 14px;
+    padding: 9px 18px;
     border-radius: 10px;
     font-family: inherit;
     font-weight: 600;
-    font-size: 0.8rem;
+    font-size: 0.82rem;
     cursor: pointer;
     transition: 0.15s;
     white-space: nowrap;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
   }
   .btn-limpar:hover { background: var(--cinza-claro); color: var(--texto-escuro); border-style: solid; }
 
@@ -270,9 +264,8 @@
     display: flex;
     gap: 6px;
     flex-wrap: wrap;
-    padding-top: 8px;
+    padding-top: 10px;
     border-top: 1px dashed var(--borda);
-    margin-top: 2px;
   }
   .bairros-rapidos .lbl-rapido {
     font-size: 0.66rem;
@@ -311,13 +304,13 @@
     position: relative;
   }
   .conteudo-principal.modo-mapa {
-    grid-template-columns: 380px 1fr;
-    height: calc(100vh - 320px);
+    grid-template-columns: 340px 1fr;
+    height: calc(100vh - 300px);
     min-height: 500px;
     padding-bottom: 20px;
   }
 
-  /* ===== GRID DE CARDS ===== */
+  /* ===== GRID DE CARDS (modo lista) ===== */
   .cards-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -325,17 +318,17 @@
     align-content: start;
   }
 
-  /* ✅ No modo mapa, cards em 1 coluna, largura fixa, scroll visível */
+  /* ===== MODO MAPA: lista compacta à esquerda ===== */
   .conteudo-principal.modo-mapa .cards-grid {
     grid-template-columns: 1fr;
-    gap: 12px;
+    gap: 10px;
     max-height: 100%;
     overflow-y: auto;
-    padding-right: 8px;
+    padding: 10px;
     background: #fff;
     border: 1px solid var(--borda);
     border-radius: var(--radius);
-    padding: 12px;
+    box-shadow: var(--sombra-suave);
   }
   .conteudo-principal.modo-mapa .cards-grid::-webkit-scrollbar { width: 8px; }
   .conteudo-principal.modo-mapa .cards-grid::-webkit-scrollbar-thumb {
@@ -343,39 +336,92 @@
     border-radius: 4px;
   }
 
-  /* Cards menores no modo mapa */
-  .conteudo-principal.modo-mapa .imovel-card {
+  /* Card horizontal no modo mapa */
+  .card-mapa {
     display: grid;
-    grid-template-columns: 120px 1fr;
-    gap: 0;
+    grid-template-columns: 92px 1fr;
+    gap: 10px;
+    background: #fff;
+    border: 1px solid var(--borda);
+    border-radius: 10px;
+    padding: 8px;
+    cursor: pointer;
+    transition: 0.15s;
+    align-items: center;
   }
-  .conteudo-principal.modo-mapa .imovel-card .foto {
-    aspect-ratio: auto;
-    height: 100%;
-    min-height: 110px;
-    border-radius: 0;
+  .card-mapa:hover {
+    border-color: var(--azul-quinto);
+    box-shadow: 0 2px 10px rgba(0,30,240,0.08);
+    transform: translateX(2px);
   }
-  .conteudo-principal.modo-mapa .imovel-card .foto .badge-descricao {
-    font-size: 0.6rem;
-    padding: 3px 6px;
-    top: 6px;
-    left: 6px;
-    right: 6px;
-    white-space: normal;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
+  .card-mapa .thumb {
+    width: 92px;
+    height: 92px;
+    border-radius: 8px;
+    background-size: cover;
+    background-position: center;
+    background-color: var(--cinza-claro);
+    flex-shrink: 0;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted);
+    font-size: 1.2rem;
+  }
+  .card-mapa .thumb .badge-tipo {
+    position: absolute;
+    bottom: 4px;
+    left: 4px;
+    right: 4px;
+    background: rgba(124, 58, 237, 0.9);
+    color: #fff;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.55rem;
+    font-weight: 700;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+  .card-mapa .info {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+  }
+  .card-mapa .preco {
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: var(--azul-quinto);
+    line-height: 1.1;
+    letter-spacing: -0.3px;
+  }
+  .card-mapa .rua {
+    font-size: 0.74rem;
+    font-weight: 600;
+    color: var(--texto-escuro);
+    white-space: nowrap;
     overflow: hidden;
+    text-overflow: ellipsis;
   }
-  .conteudo-principal.modo-mapa .imovel-card .corpo {
-    padding: 10px 12px;
-    gap: 4px;
+  .card-mapa .bairro-txt {
+    font-size: 0.68rem;
+    color: var(--azul-quinto);
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
-  .conteudo-principal.modo-mapa .imovel-card .preco { font-size: 1rem; }
-  .conteudo-principal.modo-mapa .imovel-card .endereco { font-size: 0.78rem; -webkit-line-clamp: 1; min-height: auto; }
-  .conteudo-principal.modo-mapa .imovel-card .descricao-2linhas { font-size: 0.7rem; -webkit-line-clamp: 2; }
-  .conteudo-principal.modo-mapa .imovel-card .condo-info { display: none; }
+  .card-mapa .desc-linha {
+    font-size: 0.66rem;
+    color: var(--texto-cinza);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 
+  /* ===== CARD PADRÃO (modo lista) ===== */
   .imovel-card {
     background: #fff;
     border-radius: var(--radius);
@@ -427,6 +473,20 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
+  .imovel-card .foto .badge-tipo {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    background: rgba(124, 58, 237, 0.95);
+    color: #fff;
+    padding: 3px 10px;
+    border-radius: 6px;
+    font-size: 0.62rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    backdrop-filter: blur(4px);
+  }
 
   .imovel-card .corpo {
     padding: 14px;
@@ -450,18 +510,28 @@
     display: block;
     margin-bottom: 2px;
   }
-  .imovel-card .endereco {
+
+  /* ✅ Endereço: Rua + Bairro destacado */
+  .imovel-card .endereco-linha {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    flex-wrap: wrap;
+    line-height: 1.35;
+  }
+  .imovel-card .endereco-linha .rua {
     font-size: 0.85rem;
     font-weight: 600;
     color: var(--texto-escuro);
-    line-height: 1.35;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    min-height: 2.3em;
   }
-  /* ✅ 2 linhas da descrição no lugar do bairro */
+  .imovel-card .endereco-linha .bairro-destaque {
+    font-size: 0.74rem;
+    font-weight: 800;
+    color: var(--azul-quinto);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+
   .imovel-card .descricao-2linhas {
     font-size: 0.76rem;
     color: var(--texto-cinza);
@@ -570,12 +640,15 @@
     font-size: 0.78rem;
     color: var(--texto-escuro);
     font-weight: 600;
-    margin-bottom: 6px;
+    margin-bottom: 3px;
     line-height: 1.3;
   }
   .popup-imovel .popup-bairro {
     font-size: 0.7rem;
-    color: var(--texto-cinza);
+    color: var(--azul-quinto);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
     margin-bottom: 8px;
   }
   .popup-imovel .popup-btn {
@@ -704,7 +777,7 @@
   .modal-detalhes .topo {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 8px;
   }
   .modal-detalhes .topo .codigo-linha {
     display: flex;
@@ -720,6 +793,16 @@
     font-size: 0.78rem;
     font-weight: 700;
     font-family: 'SF Mono', Menlo, monospace;
+    letter-spacing: 0.5px;
+  }
+  .modal-detalhes .topo .tipo-badge {
+    background: var(--roxo);
+    color: #fff;
+    padding: 4px 12px;
+    border-radius: 8px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
     letter-spacing: 0.5px;
   }
   .modal-detalhes .topo h2 {
@@ -738,6 +821,14 @@
   .modal-detalhes .topo .endereco-completo i {
     color: var(--azul-quinto);
     margin-right: 6px;
+  }
+  .modal-detalhes .topo .endereco-completo .bairro-destaque {
+    color: var(--azul-quinto);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    font-size: 0.85rem;
+    margin-left: 6px;
   }
 
   .modal-detalhes .descricao {
@@ -885,12 +976,23 @@
 
   /* ===== RESPONSIVO ===== */
   @media (max-width: 900px) {
+    .filtros-grid-1 {
+      grid-template-columns: 1fr;
+    }
+    .filtros-grid-2 {
+      grid-template-columns: 1fr 1fr;
+    }
+    .filtros-grid-2 .btn-limpar {
+      grid-column: 1 / -1;
+      justify-content: center;
+    }
+
     .conteudo-principal.modo-mapa {
       grid-template-columns: 1fr;
       height: auto;
     }
     .conteudo-principal.modo-mapa .cards-grid {
-      max-height: 400px;
+      max-height: 420px;
     }
     .mapa-wrap { height: 60vh; min-height: 400px; }
   }
@@ -908,18 +1010,13 @@
     .modo-btn .sub { font-size: 0.66rem; }
 
     .filtros-wrap { padding: 12px; gap: 10px; top: 60px; }
-    .filtros-linha { gap: 8px; }
-    .filtro-grupo { min-width: 100%; flex-basis: 100%; }
-    .filtro-grupo.half { flex-basis: calc(50% - 4px); min-width: calc(50% - 4px); }
-    .busca-wrap { min-width: 100%; flex-basis: 100%; }
+    .filtros-grid-2 {
+      grid-template-columns: 1fr;
+    }
 
     .cards-grid { grid-template-columns: 1fr; gap: 12px; }
     .imovel-card .preco { font-size: 1.15rem; }
     .imovel-card .foto .badge-descricao { font-size: 0.66rem; padding: 5px 10px; }
-
-    .conteudo-principal.modo-mapa .imovel-card {
-      grid-template-columns: 100px 1fr;
-    }
 
     .modal-detalhes .conteudo { padding: 18px; }
     .modal-detalhes .topo h2 { font-size: 1.2rem; }
@@ -971,8 +1068,9 @@
 <!-- ===== FILTROS ===== -->
 <div class="container">
   <div class="filtros-wrap">
-    <div class="filtros-linha">
-      <div class="busca-wrap">
+    <div class="filtros-grid-1">
+      <div class="filtro-grupo busca-wrap">
+        <label for="filtroBusca">&nbsp;</label>
         <i class="fas fa-search"></i>
         <input type="text" id="filtroBusca" placeholder="Buscar por código, rua ou bairro...">
       </div>
@@ -984,7 +1082,7 @@
       </div>
     </div>
 
-    <div class="filtros-linha">
+    <div class="filtros-grid-2">
       <div class="filtro-grupo">
         <label for="filtroPreco">Faixa de preço</label>
         <select id="filtroPreco">
@@ -1005,6 +1103,14 @@
         </select>
       </div>
       <div class="filtro-grupo">
+        <label for="filtroTipo">Tipo</label>
+        <select id="filtroTipo">
+          <option value="">Todos os tipos</option>
+          <option value="cobertura">Cobertura</option>
+          <option value="area-privativa">Área privativa</option>
+        </select>
+      </div>
+      <div class="filtro-grupo">
         <label for="filtroOrdenacao">Ordenar por</label>
         <select id="filtroOrdenacao">
           <option value="recentes">Mais recentes</option>
@@ -1012,9 +1118,7 @@
           <option value="maior-preco">Maior preço</option>
         </select>
       </div>
-      <div class="botoes-extras">
-        <button class="btn-limpar" id="btnLimparFiltros"><i class="fas fa-times"></i> Limpar</button>
-      </div>
+      <button class="btn-limpar" id="btnLimparFiltros"><i class="fas fa-times"></i> Limpar</button>
     </div>
 
     <div class="bairros-rapidos" id="bairrosRapidos"></div>
@@ -1054,6 +1158,7 @@
       <div class="topo">
         <div class="codigo-linha">
           <span class="codigo-badge" id="detalheCodigo">#---</span>
+          <span class="tipo-badge" id="detalheTipo" style="display:none;">Tipo</span>
         </div>
         <h2 id="detalhePreco">R$ ---</h2>
         <div class="endereco-completo" id="detalheEndereco">
@@ -1119,49 +1224,30 @@ function esc(s){
 }
 
 /* =====================================================
-   ✅ PARSE DE PREÇO (aceita formatos da planilha)
-   - "500.000,00"  → 500000
-   - "465000"      → 465000
-   - "380,00"      → 380
-   - 500000 (num)  → 500000
+   PARSE DE PREÇO
 ===================================================== */
 function parseNumeroBR(valor){
   if(valor === null || valor === undefined || valor === '') return 0;
-
-  // Se já é número, retorna direto
   if(typeof valor === 'number') return valor;
-
   let str = String(valor).trim();
   if(!str) return 0;
-
-  // Remove R$ e espaços
-  str = str.replace(/R\$\s*/gi, '').trim();
-  str = str.replace(/\s/g, '');
-
-  // Se tem vírgula, é decimal pt-BR
+  str = str.replace(/R\$\s*/gi, '').trim().replace(/\s/g, '');
   if(str.includes(',')){
-    // Remove pontos (milhar) e troca vírgula por ponto
     str = str.replace(/\./g, '').replace(',', '.');
     const n = parseFloat(str);
     return isNaN(n) ? 0 : n;
   }
-
-  // Se tem ponto, pode ser milhar (500.000) ou decimal (500.00)
   if(str.includes('.')){
     const partes = str.split('.');
-    // Se a última parte tem 3 dígitos, é milhar
     if(partes[partes.length - 1].length === 3){
       str = str.replace(/\./g, '');
       const n = parseInt(str, 10);
       return isNaN(n) ? 0 : n;
     } else {
-      // Senão, é decimal
       const n = parseFloat(str);
       return isNaN(n) ? 0 : n;
     }
   }
-
-  // Só dígitos
   const n = parseInt(str.replace(/\D/g, ''), 10);
   return isNaN(n) ? 0 : n;
 }
@@ -1178,6 +1264,25 @@ function fmtPreco(valor){
 }
 
 /* =====================================================
+   ✅ EXTRAIR TIPO DO IMÓVEL (do ** na descrição)
+===================================================== */
+function extrairTipoImovel(descricao){
+  if(!descricao) return '';
+  const str = String(descricao);
+
+  // Procura por *texto* ou **texto**
+  const matches = str.match(/\*+([^*\n]+)\*+/g);
+  if(!matches) return '';
+
+  for(const m of matches){
+    const texto = m.replace(/\*/g, '').trim().toLowerCase();
+    if(texto.includes('cobertura')) return 'Cobertura';
+    if(texto.includes('area privativa') || texto.includes('área privativa')) return 'Área privativa';
+  }
+  return '';
+}
+
+/* =====================================================
    ✅ 2 PRIMEIRAS LINHAS DA DESCRIÇÃO
 ===================================================== */
 function duasLinhasDescricao(descricao){
@@ -1186,19 +1291,9 @@ function duasLinhasDescricao(descricao){
     .split(/\r?\n/)
     .map(l => l.trim())
     .filter(l => l.length > 0);
-
   if(linhas.length === 0) return '';
   if(linhas.length === 1) return linhas[0];
   return linhas[0] + ' · ' + linhas[1];
-}
-
-function primeiraLinhaDescricao(descricao){
-  if(!descricao) return '';
-  const linhas = String(descricao)
-    .split(/\r?\n/)
-    .map(l => l.trim())
-    .filter(l => l.length > 0);
-  return linhas[0] || '';
 }
 
 function normalizaTexto(s){
@@ -1320,7 +1415,8 @@ function temFiltroAtivo(){
   const bairro = $('filtroBairro').value;
   const preco = $('filtroPreco').value;
   const cond = $('filtroCondominio').value;
-  return !!(busca || bairro || preco || cond);
+  const tipo = $('filtroTipo').value;
+  return !!(busca || bairro || preco || cond || tipo);
 }
 
 function aplicarFiltros(){
@@ -1328,6 +1424,7 @@ function aplicarFiltros(){
   const bairro = $('filtroBairro').value;
   const precoRange = $('filtroPreco').value;
   const condominio = $('filtroCondominio').value;
+  const tipoFiltro = $('filtroTipo').value;
   const ordenacao = $('filtroOrdenacao').value;
 
   state.filtroAtivo = temFiltroAtivo();
@@ -1362,6 +1459,13 @@ function aplicarFiltros(){
     arr = arr.filter(im => parseNumeroBR(im.condominio) === 0);
   }
 
+  // ✅ Filtro por tipo (Cobertura / Área privativa)
+  if(tipoFiltro === 'cobertura'){
+    arr = arr.filter(im => extrairTipoImovel(im.descricao) === 'Cobertura');
+  } else if(tipoFiltro === 'area-privativa'){
+    arr = arr.filter(im => extrairTipoImovel(im.descricao) === 'Área privativa');
+  }
+
   arr.sort((a, b) => {
     if(ordenacao === 'menor-preco') return parseNumeroBR(a.preco) - parseNumeroBR(b.preco);
     if(ordenacao === 'maior-preco') return parseNumeroBR(b.preco) - parseNumeroBR(a.preco);
@@ -1387,6 +1491,7 @@ function limparFiltros(){
   $('filtroBairro').value = '';
   $('filtroPreco').value = '';
   $('filtroCondominio').value = '';
+  $('filtroTipo').value = '';
   $('filtroOrdenacao').value = 'recentes';
   document.querySelectorAll('.bairro-chip').forEach(c => c.classList.remove('ativo'));
   aplicarFiltros();
@@ -1410,13 +1515,19 @@ function renderizarCards(){
     return;
   }
 
-  grid.innerHTML = arr.map(im => cardHTML(im)).join('');
+  // Modo mapa → card compacto horizontal
+  if(state.modoView === 'mapa'){
+    grid.innerHTML = arr.map(im => cardMapaHTML(im)).join('');
+  } else {
+    grid.innerHTML = arr.map(im => cardHTML(im)).join('');
+  }
 
-  document.querySelectorAll('.imovel-card').forEach(card => {
+  document.querySelectorAll('.imovel-card, .card-mapa').forEach(card => {
     card.addEventListener('click', () => abrirDetalhes(card.dataset.id));
   });
 }
 
+/* ===== Card padrão (lista) ===== */
 function cardHTML(im){
   const extras = [];
   const c = parseNumeroBR(im.condominio);
@@ -1429,29 +1540,59 @@ function cardHTML(im){
     : 'background: linear-gradient(135deg, #e8edff, #d0d7e6);';
   const fotoIcone = im.imagem ? '' : '<i class="fas fa-image"></i>';
 
-  // ✅ Sem número do endereço
-  const enderecoLinha = im.rua || im.titulo || 'Endereço não informado';
+  const rua = im.rua || im.titulo || 'Endereço não informado';
+  const bairro = im.bairro || '';
 
-  // ✅ 2 linhas da descrição no topo da foto
   const descTopo = duasLinhasDescricao(im.descricao) || im.titulo || '';
-
-  // ✅ 2 linhas da descrição onde antes era o bairro
   const descDuasLinhas = duasLinhasDescricao(im.descricao);
+  const tipo = extrairTipoImovel(im.descricao);
 
   return `
     <div class="imovel-card" data-id="${esc(im.id)}">
       <div class="foto" style="${fotoStyle}">
         ${fotoIcone}
         ${descTopo ? `<span class="badge-descricao" title="${esc(descTopo)}">${esc(descTopo)}</span>` : ''}
+        ${tipo ? `<span class="badge-tipo">${esc(tipo)}</span>` : ''}
       </div>
       <div class="corpo">
         <div class="preco">
           <span class="tipo">Venda</span>
           ${esc(fmtPreco(im.preco))}
         </div>
-        <div class="endereco">${esc(enderecoLinha)}</div>
+        <div class="endereco-linha">
+          <span class="rua">${esc(rua)}</span>
+          ${bairro ? `<span class="bairro-destaque">· ${esc(bairro)}</span>` : ''}
+        </div>
         ${descDuasLinhas ? `<div class="descricao-2linhas">${esc(descDuasLinhas)}</div>` : ''}
         ${extras.length ? `<div class="condo-info">${extras.join('')}</div>` : ''}
+      </div>
+    </div>
+  `;
+}
+
+/* ===== Card compacto (mapa) ===== */
+function cardMapaHTML(im){
+  const fotoStyle = im.imagem
+    ? `background-image: url('${esc(urlImagem(im))}');`
+    : 'background: linear-gradient(135deg, #e8edff, #d0d7e6);';
+  const fotoIcone = im.imagem ? '' : '<i class="fas fa-image"></i>';
+
+  const rua = im.rua || im.titulo || 'Endereço não informado';
+  const bairro = im.bairro || '';
+  const descLinha = duasLinhasDescricao(im.descricao);
+  const tipo = extrairTipoImovel(im.descricao);
+
+  return `
+    <div class="card-mapa" data-id="${esc(im.id)}">
+      <div class="thumb" style="${fotoStyle}">
+        ${fotoIcone}
+        ${tipo ? `<span class="badge-tipo">${esc(tipo)}</span>` : ''}
+      </div>
+      <div class="info">
+        <div class="preco">${esc(fmtPreco(im.preco))}</div>
+        <div class="rua">${esc(rua)}</div>
+        ${bairro ? `<div class="bairro-txt">${esc(bairro)}</div>` : ''}
+        ${descLinha ? `<div class="desc-linha">${esc(descLinha)}</div>` : ''}
       </div>
     </div>
   `;
@@ -1475,11 +1616,25 @@ function abrirDetalhes(id){
   }
 
   $('detalheCodigo').textContent = '#' + (im.codigo || '---');
+
+  // ✅ Tipo (Cobertura / Área privativa)
+  const tipo = extrairTipoImovel(im.descricao);
+  if(tipo){
+    $('detalheTipo').textContent = tipo;
+    $('detalheTipo').style.display = 'inline-flex';
+  } else {
+    $('detalheTipo').style.display = 'none';
+  }
+
   $('detalhePreco').textContent = fmtPreco(im.preco);
 
-  // ✅ Só rua + bairro (sem número)
-  const endereco = [im.rua, im.bairro].filter(Boolean).join(' - ');
-  $('detalheEndereco').innerHTML = `<i class="fas fa-map-marker-alt"></i> ${esc(endereco || im.titulo || 'Endereço não informado')}`;
+  // ✅ Endereço: rua + bairro destacado (sem número)
+  const rua = im.rua || im.titulo || 'Endereço não informado';
+  const bairro = im.bairro || '';
+  $('detalheEndereco').innerHTML = `
+    <i class="fas fa-map-marker-alt"></i> ${esc(rua)}
+    ${bairro ? `<span class="bairro-destaque">· ${esc(bairro)}</span>` : ''}
+  `;
 
   $('detalheDescricao').textContent = im.descricao || 'Sem descrição disponível.';
 
@@ -1495,7 +1650,7 @@ function abrirDetalhes(id){
     $('detalheGastos').style.display = 'none';
   }
 
-  const msg = encodeURIComponent(`Olá! Tenho interesse no imóvel #${im.codigo}${im.bairro ? ' no ' + im.bairro : ''}. Podem me passar mais informações?`);
+  const msg = encodeURIComponent(`Olá! Tenho interesse no imóvel #${im.codigo}${bairro ? ' no ' + bairro : ''}. Podem me passar mais informações?`);
   $('detalheZap').href = `https://wa.me/${WHATSAPP_FALLBACK}?text=${msg}`;
 
   if(im.link){
@@ -1665,7 +1820,6 @@ async function renderizarMapa(){
 
   for(let i = 0; i < arr.length; i++){
     const im = arr[i];
-    // ✅ Geocodifica sem número (rua + bairro)
     const enderecoCompleto = [im.rua, im.bairro].filter(Boolean).join(', ');
     if(!enderecoCompleto) continue;
 
@@ -1699,20 +1853,21 @@ function adicionarMarker(im, coords){
     ? `background-image: url('${esc(urlImagem(im))}');`
     : 'background: linear-gradient(135deg, #e8edff, #d0d7e6);';
 
-  // ✅ Sem número
-  const endereco = [im.rua, im.bairro].filter(Boolean).join(', ') || im.titulo || '';
+  const rua = im.rua || im.titulo || '';
+  const bairro = im.bairro || '';
 
   const popupHTML = `
     <div class="popup-imovel">
       <div class="popup-foto" style="${fotoStyle}"></div>
       <div class="popup-preco">${esc(fmtPreco(im.preco))}</div>
-      <div class="popup-end">${esc(endereco)}</div>
+      <div class="popup-end">${esc(rua)}</div>
+      ${bairro ? `<div class="popup-bairro">${esc(bairro)}</div>` : ''}
       <button class="popup-btn" onclick="abrirDetalhes('${esc(im.id)}')">Ver detalhes</button>
     </div>
   `;
 
   const marker = L.marker([coords.lat, coords.lng], {
-    title: `${im.codigo} - ${im.bairro || ''}`
+    title: `${im.codigo} - ${bairro}`
   }).bindPopup(popupHTML, {
     maxWidth: 260,
     minWidth: 220,
@@ -1736,12 +1891,14 @@ function trocarModo(modo){
 
   if(modo === 'mapa'){
     cont.classList.add('modo-mapa');
+    renderizarCards(); // re-renderiza no formato compacto
     setTimeout(() => {
       if(state.mapa) state.mapa.invalidateSize();
       aplicarFiltros();
     }, 100);
   } else {
     cont.classList.remove('modo-mapa');
+    renderizarCards(); // volta ao formato grande
   }
 }
 
@@ -1760,6 +1917,7 @@ async function init(){
   });
   $('filtroPreco').addEventListener('change', aplicarFiltros);
   $('filtroCondominio').addEventListener('change', aplicarFiltros);
+  $('filtroTipo').addEventListener('change', aplicarFiltros);
   $('filtroOrdenacao').addEventListener('change', aplicarFiltros);
   $('btnLimparFiltros').addEventListener('click', limparFiltros);
 
