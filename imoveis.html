@@ -11,13 +11,11 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
-<!-- Leaflet (mapa) -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
 
 <style>
-  /* ===== RESET & BASE ===== */
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
   :root {
@@ -86,7 +84,7 @@
   }
   .navbar .nav-links a.destaque:hover { background: var(--azul-escuro); }
 
-  /* ===== HERO CURTO ===== */
+  /* ===== HERO ===== */
   .hero-imoveis {
     background: linear-gradient(135deg, #001EF0 0%, #0044ff 100%);
     color: #fff;
@@ -106,8 +104,58 @@
     backdrop-filter: blur(6px);
   }
 
-  /* ===== LAYOUT ===== */
   .container { max-width: 1400px; margin: 0 auto; padding: 0 20px; }
+
+  /* ===== SELETOR DE MODO (LISTA / MAPA) ===== */
+  .modo-selector {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 20px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+  }
+  .modo-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    background: #fff;
+    border: 2px solid var(--borda);
+    border-radius: var(--radius);
+    padding: 18px 32px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.18s;
+    min-width: 160px;
+    box-shadow: var(--sombra-suave);
+  }
+  .modo-btn i {
+    font-size: 1.6rem;
+    color: var(--texto-cinza);
+    transition: 0.18s;
+  }
+  .modo-btn .titulo {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--texto-escuro);
+  }
+  .modo-btn .sub {
+    font-size: 0.72rem;
+    color: var(--muted);
+    font-weight: 500;
+  }
+  .modo-btn:hover {
+    border-color: var(--azul-claro);
+    transform: translateY(-2px);
+    box-shadow: var(--sombra-media);
+  }
+  .modo-btn.ativo {
+    border-color: var(--azul-quinto);
+    background: linear-gradient(180deg, #fff 0%, var(--azul-claro) 100%);
+  }
+  .modo-btn.ativo i { color: var(--azul-quinto); transform: scale(1.1); }
+  .modo-btn.ativo .titulo { color: var(--azul-quinto); }
 
   /* ===== FILTROS ===== */
   .filtros-wrap {
@@ -139,7 +187,6 @@
     flex: 1;
     min-width: 140px;
   }
-  .filtro-grupo.full { flex-basis: 100%; }
   .filtro-grupo label {
     font-size: 0.66rem;
     font-weight: 700;
@@ -204,35 +251,6 @@
     flex-wrap: wrap;
   }
 
-  .btn-toggle-view {
-    display: inline-flex;
-    background: var(--cinza-claro);
-    border-radius: 10px;
-    padding: 3px;
-    gap: 2px;
-  }
-  .btn-toggle-view button {
-    background: transparent;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 8px;
-    font-family: inherit;
-    font-weight: 600;
-    font-size: 0.82rem;
-    cursor: pointer;
-    color: var(--texto-cinza);
-    transition: 0.15s;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-  }
-  .btn-toggle-view button.ativo {
-    background: #fff;
-    color: var(--azul-quinto);
-    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
-  }
-  .btn-toggle-view button i { font-size: 0.86rem; }
-
   .btn-limpar {
     background: transparent;
     border: 1.5px dashed var(--borda-forte);
@@ -248,14 +266,22 @@
   }
   .btn-limpar:hover { background: var(--cinza-claro); color: var(--texto-escuro); border-style: solid; }
 
-  /* ===== CHIPS DE BAIRROS RÁPIDOS ===== */
   .bairros-rapidos {
     display: flex;
     gap: 6px;
     flex-wrap: wrap;
-    padding-top: 4px;
+    padding-top: 8px;
     border-top: 1px dashed var(--borda);
     margin-top: 2px;
+  }
+  .bairros-rapidos .lbl-rapido {
+    font-size: 0.66rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    color: var(--muted);
+    align-self: center;
+    margin-right: 4px;
   }
   .bairro-chip {
     padding: 5px 12px;
@@ -286,7 +312,7 @@
   }
   .conteudo-principal.modo-mapa {
     grid-template-columns: 1fr 1fr;
-    height: calc(100vh - 260px);
+    height: calc(100vh - 320px);
     min-height: 500px;
     padding-bottom: 20px;
   }
@@ -350,23 +376,6 @@
     letter-spacing: 0.4px;
     backdrop-filter: blur(4px);
   }
-  .imovel-card .foto .badge-status {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: rgba(22, 163, 74, 0.95);
-    color: #fff;
-    padding: 3px 10px;
-    border-radius: 6px;
-    font-size: 0.65rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.4px;
-    backdrop-filter: blur(4px);
-  }
-  .imovel-card .foto .badge-status.gostei { background: rgba(22, 163, 74, 0.95); }
-  .imovel-card .foto .badge-status.visitar { background: rgba(234, 88, 12, 0.95); }
-  .imovel-card .foto .badge-status.pendente { background: rgba(148, 163, 184, 0.95); }
 
   .imovel-card .corpo {
     padding: 14px;
@@ -410,7 +419,7 @@
   }
   .imovel-card .bairro i { color: var(--azul-quinto); font-size: 0.7rem; }
 
-  .imovel-card .features {
+  .imovel-card .condo-info {
     display: flex;
     gap: 10px;
     flex-wrap: wrap;
@@ -419,13 +428,13 @@
     font-size: 0.74rem;
     color: var(--texto-cinza);
   }
-  .imovel-card .features .feat {
+  .imovel-card .condo-info .feat {
     display: inline-flex;
     align-items: center;
     gap: 4px;
     font-weight: 500;
   }
-  .imovel-card .features .feat i { color: var(--azul-quinto); font-size: 0.78rem; }
+  .imovel-card .condo-info .feat i { color: var(--azul-quinto); font-size: 0.78rem; }
 
   /* ===== MAPA ===== */
   .mapa-wrap {
@@ -466,20 +475,18 @@
   }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* ===== POPUP DO MAPA ===== */
   .popup-imovel {
     min-width: 200px;
     font-family: 'Inter', sans-serif;
   }
   .popup-imovel .popup-foto {
-    width: 100%;
+    width: calc(100% + 40px);
     height: 110px;
     background-size: cover;
     background-position: center;
     background-color: var(--cinza-claro);
     border-radius: 8px 8px 0 0;
     margin: -14px -20px 10px;
-    width: calc(100% + 40px);
   }
   .popup-imovel .popup-preco {
     font-size: 1rem;
@@ -515,16 +522,13 @@
   }
   .popup-imovel .popup-btn:hover { background: var(--azul-escuro); }
 
-  /* Customização do Leaflet */
   .leaflet-popup-content-wrapper {
     border-radius: 12px !important;
     padding: 0 !important;
     overflow: hidden;
     box-shadow: 0 8px 32px rgba(0,0,0,0.15) !important;
   }
-  .leaflet-popup-content {
-    margin: 14px 20px !important;
-  }
+  .leaflet-popup-content { margin: 14px 20px !important; }
   .leaflet-container a.leaflet-popup-close-button {
     color: #fff !important;
     background: rgba(0,0,0,0.3) !important;
@@ -664,33 +668,6 @@
     margin-right: 6px;
   }
 
-  .modal-detalhes .features-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    gap: 12px;
-    background: var(--cinza-claro);
-    padding: 16px;
-    border-radius: var(--radius);
-  }
-  .modal-detalhes .feature-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .modal-detalhes .feature-item i {
-    color: var(--azul-quinto);
-    font-size: 1.1rem;
-    width: 20px;
-    text-align: center;
-  }
-  .modal-detalhes .feature-item .fl {
-    display: flex;
-    flex-direction: column;
-    line-height: 1.2;
-  }
-  .modal-detalhes .feature-item .fl .num { font-size: 0.92rem; font-weight: 700; color: var(--texto-escuro); }
-  .modal-detalhes .feature-item .fl .lbl { font-size: 0.66rem; text-transform: uppercase; color: var(--muted); font-weight: 600; letter-spacing: 0.3px; }
-
   .modal-detalhes .descricao {
     font-size: 0.9rem;
     line-height: 1.65;
@@ -758,6 +735,7 @@
     text-align: center;
     padding: 60px 20px;
     color: var(--texto-cinza);
+    grid-column: 1 / -1;
   }
   .loading-principal .spinner {
     width: 44px;
@@ -790,7 +768,6 @@
   }
   .empty-state p { font-size: 0.85rem; }
 
-  /* ===== BOTÃO VOLTAR AO TOPO ===== */
   .btn-topo {
     position: fixed;
     bottom: 24px;
@@ -813,7 +790,6 @@
   .btn-topo.show { display: flex; }
   .btn-topo:hover { transform: scale(1.08); background: var(--azul-escuro); }
 
-  /* ===== TOAST ===== */
   .toast {
     position: fixed;
     bottom: 24px;
@@ -852,11 +828,12 @@
     .hero-imoveis h1 { font-size: 1.4rem; }
     .container { padding: 0 12px; }
 
-    .filtros-wrap {
-      padding: 12px;
-      gap: 10px;
-      top: 60px;
-    }
+    .modo-btn { padding: 14px 20px; min-width: 130px; flex: 1; }
+    .modo-btn i { font-size: 1.3rem; }
+    .modo-btn .titulo { font-size: 0.9rem; }
+    .modo-btn .sub { font-size: 0.66rem; }
+
+    .filtros-wrap { padding: 12px; gap: 10px; top: 60px; }
     .filtros-linha { gap: 8px; }
     .filtro-grupo { min-width: 100%; flex-basis: 100%; }
     .filtro-grupo.half { flex-basis: calc(50% - 4px); min-width: calc(50% - 4px); }
@@ -872,7 +849,6 @@
     .btn-topo { bottom: 16px; right: 16px; width: 44px; height: 44px; }
   }
 
-  /* ===== SCROLLBAR custom ===== */
   .cards-grid::-webkit-scrollbar,
   .modal-detalhes::-webkit-scrollbar { width: 8px; }
   .cards-grid::-webkit-scrollbar-thumb,
@@ -899,11 +875,27 @@
 <!-- ===== HERO ===== -->
 <section class="hero-imoveis">
   <h1><i class="fas fa-search"></i> Encontre seu imóvel ideal</h1>
-  <p>Busque por região, preço e características — tudo em um só lugar.</p>
+  <p>Busque por região e preço — encontre o lar perfeito para você.</p>
   <div class="contador" id="contadorImoveis">
     <i class="fas fa-spinner fa-spin"></i> Carregando imóveis...
   </div>
 </section>
+
+<!-- ===== SELETOR DE MODO (LISTA / MAPA) ===== -->
+<div class="container">
+  <div class="modo-selector">
+    <button class="modo-btn ativo" id="modoLista">
+      <i class="fas fa-th-large"></i>
+      <span class="titulo">Ver em lista</span>
+      <span class="sub">Cards com todos os detalhes</span>
+    </button>
+    <button class="modo-btn" id="modoMapa">
+      <i class="fas fa-map-marked-alt"></i>
+      <span class="titulo">Ver no mapa</span>
+      <span class="sub">Navegue pelos imóveis na região</span>
+    </button>
+  </div>
+</div>
 
 <!-- ===== FILTROS ===== -->
 <div class="container">
@@ -919,6 +911,9 @@
           <option value="">Todos os bairros</option>
         </select>
       </div>
+    </div>
+
+    <div class="filtros-linha">
       <div class="filtro-grupo">
         <label for="filtroPreco">Faixa de preço</label>
         <select id="filtroPreco">
@@ -930,26 +925,12 @@
           <option value="1200000-999999999">Acima de R$ 1,2 mi</option>
         </select>
       </div>
-    </div>
-
-    <div class="filtros-linha">
-      <div class="filtro-grupo half">
-        <label for="filtroQuartos">Quartos</label>
-        <select id="filtroQuartos">
+      <div class="filtro-grupo">
+        <label for="filtroCondominio">Condomínio</label>
+        <select id="filtroCondominio">
           <option value="">Qualquer</option>
-          <option value="1">1+</option>
-          <option value="2">2+</option>
-          <option value="3">3+</option>
-          <option value="4">4+</option>
-        </select>
-      </div>
-      <div class="filtro-grupo half">
-        <label for="filtroVagas">Vagas</label>
-        <select id="filtroVagas">
-          <option value="">Qualquer</option>
-          <option value="1">1+</option>
-          <option value="2">2+</option>
-          <option value="3">3+</option>
+          <option value="com">Com condomínio</option>
+          <option value="sem">Sem condomínio (isento)</option>
         </select>
       </div>
       <div class="filtro-grupo">
@@ -958,14 +939,9 @@
           <option value="recentes">Mais recentes</option>
           <option value="menor-preco">Menor preço</option>
           <option value="maior-preco">Maior preço</option>
-          <option value="maior-area">Maior área</option>
         </select>
       </div>
       <div class="botoes-extras">
-        <div class="btn-toggle-view" id="toggleView">
-          <button data-view="lista" class="ativo"><i class="fas fa-th-large"></i> Lista</button>
-          <button data-view="mapa"><i class="fas fa-map-marked-alt"></i> Mapa</button>
-        </div>
         <button class="btn-limpar" id="btnLimparFiltros"><i class="fas fa-times"></i> Limpar</button>
       </div>
     </div>
@@ -993,7 +969,6 @@
   </div>
 </div>
 
-<!-- ===== BOTÃO VOLTAR AO TOPO ===== -->
 <button class="btn-topo" id="btnTopo" onclick="window.scrollTo({top:0,behavior:'smooth'})">
   <i class="fas fa-arrow-up"></i>
 </button>
@@ -1007,14 +982,12 @@
       <div class="topo">
         <div class="codigo-linha">
           <span class="codigo-badge" id="detalheCodigo">#---</span>
-          <span id="detalheStatus"></span>
         </div>
         <h2 id="detalhePreco">R$ ---</h2>
         <div class="endereco-completo" id="detalheEndereco">
           <i class="fas fa-map-marker-alt"></i> ---
         </div>
       </div>
-      <div class="features-grid" id="detalheFeatures"></div>
       <div class="descricao" id="detalheDescricao"></div>
       <div class="gastos" id="detalheGastos" style="display:none;"></div>
       <div class="acoes">
@@ -1030,10 +1003,8 @@
   </div>
 </div>
 
-<!-- ===== TOAST ===== -->
 <div class="toast" id="toast"></div>
 
-<!-- ===== SCRIPTS ===== -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
 
@@ -1042,16 +1013,12 @@
    CONFIG
 ===================================================== */
 const API_URL = 'https://script.google.com/macros/s/AKfycbzuCjg_5ZJDMWWKmjYp1ThW34iWS0YouviWFdiMGx8W3yApv0F1fdUcjeZdjm0s6Mg/exec';
-const WHATSAPP_FALLBACK = '5531996070930'; // Hugo (caso não ache corretor)
+const WHATSAPP_FALLBACK = '5531996070930';
 const CENTRO_BH = [-19.9191, -43.9386];
 const ZOOM_INICIAL = 12;
-const GEOCODE_CACHE_KEY = 'lr_geocode_cache_v1';
+const GEOCODE_CACHE_KEY = 'lr_geocode_cache_v2';
 
-/* =====================================================
-   ESTADO
-===================================================== */
 const state = {
-  todosImoveis: [],
   imoveisUnicos: [],
   imoveisFiltrados: [],
   geocodeCache: {},
@@ -1062,9 +1029,6 @@ const state = {
   imovelAtual: null
 };
 
-/* =====================================================
-   HELPERS
-===================================================== */
 const $ = id => document.getElementById(id);
 
 function toast(msg, tipo=''){
@@ -1096,31 +1060,9 @@ function normalizaTexto(s){
 
 function normalizaTel(t){ return String(t || '').replace(/\D/g, ''); }
 
-function extrairBairro(im){
-  // Tenta pegar do campo bairro, ou extrai do titulo
-  if(im.bairro && String(im.bairro).trim()) return String(im.bairro).trim();
-  const titulo = String(im.titulo || '');
-  const partes = titulo.split(/[-–,]/).map(s => s.trim()).filter(Boolean);
-  if(partes.length > 1) return partes[partes.length - 1];
-  return '';
-}
-
-function extrairRua(im){
-  if(im.rua && String(im.rua).trim()) return String(im.rua).trim();
-  const titulo = String(im.titulo || '');
-  const partes = titulo.split(/[-–,]/).map(s => s.trim()).filter(Boolean);
-  return partes[0] || '';
-}
-
-function extrairNumero(im){
-  if(im.numero && String(im.numero).trim()) return String(im.numero).trim();
-  return '';
-}
-
 function urlImagem(im){
   const img = String(im.imagem || '').trim();
   if(!img) return '';
-  // Google Drive
   const m = img.match(/\/d\/([^\/]+)/);
   if(m && m[1]) return `https://drive.google.com/thumbnail?id=${m[1]}&sz=w800`;
   const m2 = img.match(/[?&]id=([^&]+)/);
@@ -1152,19 +1094,16 @@ async function apiGet(action, params = {}){
   }
 }
 
-/* =====================================================
-   CARREGAR IMÓVEIS
-===================================================== */
 async function carregarImoveis(){
   try {
-    const res = await apiGet('listarTodosImoveis');
+    const res = await apiGet('listarImoveisPublicos');
     if(!res.ok){
       console.error('API erro:', res.error);
       mostrarErroCarregamento(res.error || 'Erro ao carregar imóveis');
       return;
     }
-    state.todosImoveis = res.data || [];
-    processarImoveis();
+    state.imoveisUnicos = res.data || [];
+    finalizarCarregamento();
   } catch(e){
     console.error(e);
     mostrarErroCarregamento(e.message);
@@ -1183,55 +1122,9 @@ function mostrarErroCarregamento(msg){
   `;
 }
 
-function processarImoveis(){
-  // Agrupa por código (mesmo imóvel salvo por vários clientes)
-  const grupos = {};
-  state.todosImoveis.forEach(im => {
-    const status = String(im.status || '').toLowerCase();
-    // Filtra: só mostra imóveis com código válido e que não estejam desativados
-    const codigo = String(im.codigo || '').trim();
-    if(!codigo) return;
-    if(status === 'desativado' || status === 'cancelado') return;
-
-    const chave = 'cod:' + codigo;
-    if(!grupos[chave]){
-      grupos[chave] = {
-        id: im.id,
-        codigo: codigo,
-        titulo: im.titulo || '',
-        rua: extrairRua(im),
-        numero: extrairNumero(im),
-        bairro: extrairBairro(im),
-        preco: im.preco || '',
-        condominio: im.condominio || '',
-        iptu: im.iptu || '',
-        descricao: im.descricao || '',
-        link: im.link || '',
-        imagem: urlImagem(im),
-        quartos: im.quartos || im.dormitorios || '',
-        suites: im.suites || '',
-        banheiros: im.banheiros || '',
-        vagas: im.vagas || im.garagem || '',
-        area: im.area || im.areaUtil || '',
-        status: status,
-        dataCadastro: im.dataCadastro || '',
-        corretor: im.corretor || '',
-        clientesCount: 1
-      };
-    } else {
-      grupos[chave].clientesCount++;
-    }
-  });
-
-  state.imoveisUnicos = Object.values(grupos);
-
-  // Atualiza contador
+function finalizarCarregamento(){
   $('contadorImoveis').innerHTML = `<i class="fas fa-home"></i> ${state.imoveisUnicos.length} ${state.imoveisUnicos.length === 1 ? 'imóvel disponível' : 'imóveis disponíveis'}`;
-
-  // Popula filtro de bairros
   popularFiltroBairros();
-
-  // Aplica filtros iniciais (nenhum) → renderiza tudo
   aplicarFiltros();
 }
 
@@ -1246,20 +1139,18 @@ function popularFiltroBairros(){
   });
   const ordenados = Object.keys(bairros).sort((a,b) => a.localeCompare(b, 'pt-BR'));
 
-  // Select
   const sel = $('filtroBairro');
   sel.innerHTML = '<option value="">Todos os bairros</option>' +
     ordenados.map(b => `<option value="${esc(b)}">${esc(b)} (${bairros[b]})</option>`).join('');
 
-  // Chips rápidos (top 8 mais frequentes)
   const top = Object.entries(bairros)
     .sort((a,b) => b[1] - a[1])
     .slice(0, 8);
-  $('bairrosRapidos').innerHTML = top.map(([b, n]) =>
-    `<button class="bairro-chip" data-bairro="${esc(b)}">${esc(b)} <span style="opacity:0.6;">(${n})</span></button>`
-  ).join('');
+  $('bairrosRapidos').innerHTML = '<span class="lbl-rapido">Mais buscados:</span>' +
+    top.map(([b, n]) =>
+      `<button class="bairro-chip" data-bairro="${esc(b)}">${esc(b)} <span style="opacity:0.6;">(${n})</span></button>`
+    ).join('');
 
-  // Event listeners dos chips
   document.querySelectorAll('.bairro-chip').forEach(chip => {
     chip.addEventListener('click', () => {
       const b = chip.dataset.bairro;
@@ -1281,8 +1172,7 @@ function aplicarFiltros(){
   const busca = normalizaTexto($('filtroBusca').value);
   const bairro = $('filtroBairro').value;
   const precoRange = $('filtroPreco').value;
-  const quartosMin = parseInt($('filtroQuartos').value) || 0;
-  const vagasMin = parseInt($('filtroVagas').value) || 0;
+  const condominio = $('filtroCondominio').value;
   const ordenacao = $('filtroOrdenacao').value;
 
   let arr = [...state.imoveisUnicos];
@@ -1309,21 +1199,18 @@ function aplicarFiltros(){
     });
   }
 
-  if(quartosMin > 0){
+  if(condominio === 'com'){
     arr = arr.filter(im => {
-      const q = parseInt(im.quartos) || 0;
-      return q >= quartosMin;
+      const c = parseFloat(String(im.condominio || '').replace(/\D/g, '')) || 0;
+      return c > 0;
+    });
+  } else if(condominio === 'sem'){
+    arr = arr.filter(im => {
+      const c = parseFloat(String(im.condominio || '').replace(/\D/g, '')) || 0;
+      return c === 0;
     });
   }
 
-  if(vagasMin > 0){
-    arr = arr.filter(im => {
-      const v = parseInt(im.vagas) || 0;
-      return v >= vagasMin;
-    });
-  }
-
-  // Ordenação
   arr.sort((a, b) => {
     if(ordenacao === 'menor-preco'){
       return (parseFloat(String(a.preco||'').replace(/\D/g,''))||0) - (parseFloat(String(b.preco||'').replace(/\D/g,''))||0);
@@ -1331,17 +1218,12 @@ function aplicarFiltros(){
     if(ordenacao === 'maior-preco'){
       return (parseFloat(String(b.preco||'').replace(/\D/g,''))||0) - (parseFloat(String(a.preco||'').replace(/\D/g,''))||0);
     }
-    if(ordenacao === 'maior-area'){
-      return (parseFloat(String(b.area||'').replace(/\D/g,''))||0) - (parseFloat(String(a.area||'').replace(/\D/g,''))||0);
-    }
-    // recentes
     return new Date(b.dataCadastro||0) - new Date(a.dataCadastro||0);
   });
 
   state.imoveisFiltrados = arr;
   renderizarCards();
 
-  // Se estiver no modo mapa, atualiza os pins
   if(state.modoView === 'mapa'){
     renderizarMapa();
   }
@@ -1351,8 +1233,7 @@ function limparFiltros(){
   $('filtroBusca').value = '';
   $('filtroBairro').value = '';
   $('filtroPreco').value = '';
-  $('filtroQuartos').value = '';
-  $('filtroVagas').value = '';
+  $('filtroCondominio').value = '';
   $('filtroOrdenacao').value = 'recentes';
   document.querySelectorAll('.bairro-chip').forEach(c => c.classList.remove('ativo'));
   aplicarFiltros();
@@ -1378,25 +1259,24 @@ function renderizarCards(){
 
   grid.innerHTML = arr.map(im => cardHTML(im)).join('');
 
-  // Event listeners
   document.querySelectorAll('.imovel-card').forEach(card => {
     card.addEventListener('click', () => abrirDetalhes(card.dataset.id));
   });
 }
 
 function cardHTML(im){
-  const features = [];
-  if(im.quartos) features.push(`<span class="feat"><i class="fas fa-bed"></i> ${esc(im.quartos)}</span>`);
-  if(im.banheiros) features.push(`<span class="feat"><i class="fas fa-bath"></i> ${esc(im.banheiros)}</span>`);
-  if(im.vagas) features.push(`<span class="feat"><i class="fas fa-car"></i> ${esc(im.vagas)}</span>`);
-  if(im.area) features.push(`<span class="feat"><i class="fas fa-ruler-combined"></i> ${esc(im.area)} m²</span>`);
-
-  const statusBadge = im.status === 'gostei' ? '<span class="badge-status gostei">Destaque</span>'
-    : im.status === 'quero-visitar' ? '<span class="badge-status visitar">Procurado</span>'
-    : '';
+  const extras = [];
+  if(im.condominio){
+    const c = parseFloat(String(im.condominio).replace(/\D/g, '')) || 0;
+    if(c > 0) extras.push(`<span class="feat"><i class="fas fa-building"></i> Cond. ${esc(fmtPreco(im.condominio))}</span>`);
+  }
+  if(im.iptu){
+    const i = parseFloat(String(im.iptu).replace(/\D/g, '')) || 0;
+    if(i > 0) extras.push(`<span class="feat"><i class="fas fa-file-invoice-dollar"></i> IPTU ${esc(fmtPreco(im.iptu))}</span>`);
+  }
 
   const fotoStyle = im.imagem
-    ? `background-image: url('${esc(im.imagem)}');`
+    ? `background-image: url('${esc(urlImagem(im))}');`
     : 'background: linear-gradient(135deg, #e8edff, #d0d7e6);';
   const fotoIcone = im.imagem ? '' : '<i class="fas fa-image"></i>';
 
@@ -1407,7 +1287,6 @@ function cardHTML(im){
       <div class="foto" style="${fotoStyle}">
         ${fotoIcone}
         ${im.codigo ? `<span class="badge-codigo">#${esc(im.codigo)}</span>` : ''}
-        ${statusBadge}
       </div>
       <div class="corpo">
         <div class="preco">
@@ -1416,7 +1295,7 @@ function cardHTML(im){
         </div>
         <div class="endereco">${esc(enderecoLinha)}</div>
         ${im.bairro ? `<div class="bairro"><i class="fas fa-map-marker-alt"></i> ${esc(im.bairro)}</div>` : ''}
-        ${features.length ? `<div class="features">${features.join('')}</div>` : ''}
+        ${extras.length ? `<div class="condo-info">${extras.join('')}</div>` : ''}
       </div>
     </div>
   `;
@@ -1431,56 +1310,27 @@ function abrirDetalhes(id){
   if(!im) return;
   state.imovelAtual = im;
 
-  // Foto
   if(im.imagem){
-    $('detalheFoto').style.backgroundImage = `url('${im.imagem}')`;
+    $('detalheFoto').style.backgroundImage = `url('${urlImagem(im)}')`;
     $('detalheFoto').innerHTML = '';
   } else {
     $('detalheFoto').style.backgroundImage = '';
     $('detalheFoto').innerHTML = '<i class="fas fa-image"></i>';
   }
 
-  // Código + status
   $('detalheCodigo').textContent = '#' + (im.codigo || '---');
-  const statusTxt = im.status === 'gostei' ? '<span class="codigo-badge" style="background:#dcfce7;color:#16a34a;">Destaque</span>'
-    : im.status === 'quero-visitar' ? '<span class="codigo-badge" style="background:#ffedd5;color:#ea580c;">Procurado</span>'
-    : '';
-  $('detalheStatus').innerHTML = statusTxt;
-
-  // Preço
   $('detalhePreco').textContent = fmtPreco(im.preco);
 
-  // Endereço
   const endereco = [im.rua, im.numero, im.bairro].filter(Boolean).join(' - ');
   $('detalheEndereco').innerHTML = `<i class="fas fa-map-marker-alt"></i> ${esc(endereco || im.titulo || 'Endereço não informado')}`;
 
-  // Features
-  const feats = [];
-  if(im.quartos) feats.push({ i: 'fa-bed', n: im.quartos, l: 'Quartos' });
-  if(im.suites) feats.push({ i: 'fa-star', n: im.suites, l: 'Suítes' });
-  if(im.banheiros) feats.push({ i: 'fa-bath', n: im.banheiros, l: 'Banheiros' });
-  if(im.vagas) feats.push({ i: 'fa-car', n: im.vagas, l: 'Vagas' });
-  if(im.area) feats.push({ i: 'fa-ruler-combined', n: im.area + ' m²', l: 'Área' });
-
-  $('detalheFeatures').innerHTML = feats.length
-    ? feats.map(f => `
-        <div class="feature-item">
-          <i class="fas ${f.i}"></i>
-          <div class="fl">
-            <span class="num">${esc(f.n)}</span>
-            <span class="lbl">${esc(f.l)}</span>
-          </div>
-        </div>
-      `).join('')
-    : '<div style="grid-column:1/-1;text-align:center;color:var(--muted);font-size:.82rem;padding:8px;">Sem informações detalhadas</div>';
-
-  // Descrição
   $('detalheDescricao').textContent = im.descricao || 'Sem descrição disponível.';
 
-  // Gastos
   const gastos = [];
-  if(im.condominio) gastos.push(`<span><strong>Condomínio:</strong> ${esc(fmtPreco(im.condominio))}/mês</span>`);
-  if(im.iptu) gastos.push(`<span><strong>IPTU:</strong> ${esc(fmtPreco(im.iptu))}/mês</span>`);
+  const c = parseFloat(String(im.condominio || '').replace(/\D/g, '')) || 0;
+  const ip = parseFloat(String(im.iptu || '').replace(/\D/g, '')) || 0;
+  if(c > 0) gastos.push(`<span><strong>Condomínio:</strong> ${esc(fmtPreco(im.condominio))}/mês</span>`);
+  if(ip > 0) gastos.push(`<span><strong>IPTU:</strong> ${esc(fmtPreco(im.iptu))}/mês</span>`);
   if(gastos.length){
     $('detalheGastos').style.display = 'flex';
     $('detalheGastos').innerHTML = gastos.join('');
@@ -1488,11 +1338,9 @@ function abrirDetalhes(id){
     $('detalheGastos').style.display = 'none';
   }
 
-  // WhatsApp
   const msg = encodeURIComponent(`Olá! Tenho interesse no imóvel #${im.codigo}${im.bairro ? ' no ' + im.bairro : ''}. Podem me passar mais informações?`);
   $('detalheZap').href = `https://wa.me/${WHATSAPP_FALLBACK}?text=${msg}`;
 
-  // Anúncio
   if(im.link){
     $('detalheAnuncio').href = im.link;
     $('detalheAnuncio').style.display = 'inline-flex';
@@ -1577,7 +1425,6 @@ function inicializarMapa(){
   state.mapa.addLayer(state.markerCluster);
 }
 
-/* Cache de geocoding (localStorage) */
 function carregarCacheGeocode(){
   try {
     const raw = localStorage.getItem(GEOCODE_CACHE_KEY);
@@ -1590,7 +1437,6 @@ function salvarCacheGeocode(){
   } catch(e){}
 }
 
-/* Geocodifica um endereço usando Nominatim */
 async function geocodificar(endereco){
   if(!endereco) return null;
   const chave = normalizaTexto(endereco);
@@ -1598,9 +1444,7 @@ async function geocodificar(endereco){
 
   const url = `https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(endereco + ', Belo Horizonte, MG, Brasil')}`;
   try {
-    const resp = await fetch(url, {
-      headers: { 'Accept': 'application/json' }
-    });
+    const resp = await fetch(url, { headers: { 'Accept': 'application/json' } });
     if(!resp.ok) return null;
     const json = await resp.json();
     if(!json || !json.length) return null;
@@ -1614,14 +1458,12 @@ async function geocodificar(endereco){
   }
 }
 
-/* Delay entre requisições (Nominatim exige 1 req/seg) */
 function delay(ms){ return new Promise(r => setTimeout(r, ms)); }
 
 async function renderizarMapa(){
   inicializarMapa();
   const loading = $('mapaLoading');
 
-  // Limpa markers antigos
   state.markerCluster.clearLayers();
   state.markersPorId = {};
 
@@ -1642,28 +1484,23 @@ async function renderizarMapa(){
     const enderecoCompleto = [im.rua, im.numero, im.bairro].filter(Boolean).join(', ');
     if(!enderecoCompleto) continue;
 
+    const chaveCache = normalizaTexto(enderecoCompleto);
+    const estavaEmCache = !!state.geocodeCache[chaveCache];
+
     const coords = await geocodificar(enderecoCompleto);
     if(coords){
       adicionarMarker(im, coords);
       bounds.push([coords.lat, coords.lng]);
       geocodificados++;
-
-      // Atualiza progresso
       loading.innerHTML = `<div class="spinner"></div><p>Localizando imóveis no mapa... (${geocodificados}/${arr.length})</p>`;
     }
 
-    // Se não está em cache, espera 1s (respeitar Nominatim)
-    const chaveCache = normalizaTexto(enderecoCompleto);
-    if(!state.geocodeCache[chaveCache] || i === 0){
-      // já esperou acima
-    }
-    // Delay entre requisições
-    if(i < arr.length - 1) await delay(1100);
+    // Só espera 1.1s se NÃO estava em cache (pra não sobrecarregar Nominatim)
+    if(!estavaEmCache && i < arr.length - 1) await delay(1100);
   }
 
   loading.style.display = 'none';
 
-  // Ajusta zoom para mostrar todos os pins
   if(bounds.length > 0){
     try {
       state.mapa.fitBounds(bounds, { padding: [40, 40], maxZoom: 15 });
@@ -1675,7 +1512,7 @@ async function renderizarMapa(){
 
 function adicionarMarker(im, coords){
   const fotoStyle = im.imagem
-    ? `background-image: url('${esc(im.imagem)}');`
+    ? `background-image: url('${esc(urlImagem(im))}');`
     : 'background: linear-gradient(135deg, #e8edff, #d0d7e6);';
 
   const popupHTML = `
@@ -1702,18 +1539,17 @@ function adicionarMarker(im, coords){
 }
 
 /* =====================================================
-   TOGGLE VIEW
+   TROCA DE MODO
 ===================================================== */
-function trocarView(modo){
+function trocarModo(modo){
   state.modoView = modo;
   const cont = $('conteudoPrincipal');
-  const btns = document.querySelectorAll('#toggleView button');
 
-  btns.forEach(b => b.classList.toggle('ativo', b.dataset.view === modo));
+  $('modoLista').classList.toggle('ativo', modo === 'lista');
+  $('modoMapa').classList.toggle('ativo', modo === 'mapa');
 
   if(modo === 'mapa'){
     cont.classList.add('modo-mapa');
-    // Invalida o mapa (Leaflet precisa recalcular tamanho quando visível)
     setTimeout(() => {
       if(state.mapa) state.mapa.invalidateSize();
       renderizarMapa();
@@ -1729,7 +1565,6 @@ function trocarView(modo){
 async function init(){
   carregarCacheGeocode();
 
-  // Event listeners de filtros
   $('filtroBusca').addEventListener('input', debounce(aplicarFiltros, 250));
   $('filtroBairro').addEventListener('change', () => {
     document.querySelectorAll('.bairro-chip').forEach(c => {
@@ -1738,17 +1573,13 @@ async function init(){
     aplicarFiltros();
   });
   $('filtroPreco').addEventListener('change', aplicarFiltros);
-  $('filtroQuartos').addEventListener('change', aplicarFiltros);
-  $('filtroVagas').addEventListener('change', aplicarFiltros);
+  $('filtroCondominio').addEventListener('change', aplicarFiltros);
   $('filtroOrdenacao').addEventListener('change', aplicarFiltros);
   $('btnLimparFiltros').addEventListener('click', limparFiltros);
 
-  // Toggle view
-  document.querySelectorAll('#toggleView button').forEach(btn => {
-    btn.addEventListener('click', () => trocarView(btn.dataset.view));
-  });
+  $('modoLista').addEventListener('click', () => trocarModo('lista'));
+  $('modoMapa').addEventListener('click', () => trocarModo('mapa'));
 
-  // Modal
   $('modalDetalhes').addEventListener('click', (e) => {
     if(e.target === $('modalDetalhes')) fecharDetalhes();
   });
@@ -1756,19 +1587,15 @@ async function init(){
     if(e.key === 'Escape' && $('modalDetalhes').classList.contains('show')) fecharDetalhes();
   });
 
-  // Botão topo
   window.addEventListener('scroll', () => {
     $('btnTopo').classList.toggle('show', window.scrollY > 400);
   });
 
-  // Deep link (?codigo=XXXX ou ?id=YYY)
   const params = new URLSearchParams(window.location.search);
   const codigoParams = params.get('codigo');
 
-  // Carrega imóveis
   await carregarImoveis();
 
-  // Se tem código na URL, abre o modal automaticamente
   if(codigoParams){
     const im = state.imoveisUnicos.find(x => x.codigo === codigoParams);
     if(im) setTimeout(() => abrirDetalhes(im.id), 500);
