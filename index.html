@@ -140,7 +140,7 @@
             border-bottom: none !important;
         }
 
-        /* ===== MENU INFERIOR (Mobile) - Moderno ===== */
+        /* ===== MENU INFERIOR (Mobile) ===== */
         .bottom-menu {
             display: none;
             position: fixed;
@@ -313,89 +313,170 @@
             margin-right: 6px;
         }
 
-        /* ===== CARROSSEL HORIZONTAL ===== */
-        .carousel-wrapper {
+        /* ===== ANÚNCIOS DE IMÓVEIS (substitui o carrossel de vídeos) ===== */
+        .imoveis-destaque-wrapper {
             background: var(--branco);
             border-radius: var(--border-radius-lg);
             box-shadow: var(--sombra-media);
-            overflow: hidden;
-            position: relative;
             border: 1px solid rgba(0, 30, 240, 0.06);
             height: 100%;
             min-height: 420px;
             display: flex;
             flex-direction: column;
+            padding: 20px;
+            gap: 16px;
         }
 
-        .carousel-track {
+        .imoveis-destaque-header {
             display: flex;
-            transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            height: 100%;
-            flex: 1;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
         }
 
-        .carousel-slide {
-            flex: 0 0 50%;
-            padding: 8px;
-            box-sizing: border-box;
+        .imoveis-destaque-header h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--texto-escuro);
+        }
+
+        .imoveis-destaque-header h3 i {
+            color: var(--azul-quinto);
+            margin-right: 6px;
+        }
+
+        .btn-ver-todos {
+            background: var(--azul-quinto);
+            color: #fff;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.8rem;
             cursor: pointer;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+        }
+
+        .btn-ver-todos:hover {
+            background: var(--azul-escuro);
+            transform: scale(1.04);
+            box-shadow: 0 4px 16px rgba(0, 30, 240, 0.3);
+        }
+
+        .imoveis-destaque-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 12px;
+            flex: 1;
             height: 100%;
-            display: flex;
-            align-items: stretch;
         }
 
-        .carousel-slide:hover {
-            transform: scale(1.01);
-        }
-
-        .carousel-card {
+        .imovel-card {
+            background: var(--cinza-claro);
             border-radius: 12px;
             overflow: hidden;
-            width: 100%;
+            position: relative;
+            cursor: pointer;
+            transition: 0.3s;
             display: flex;
             flex-direction: column;
-            justify-content: flex-end;
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
+            border: 1px solid rgba(0, 30, 240, 0.04);
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .imovel-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(0, 30, 240, 0.12);
+            border-color: var(--azul-quinto);
+        }
+
+        .imovel-card .imovel-img {
+            flex: 1;
             position: relative;
-            transition: 0.3s;
-            min-height: 260px;
-        }
-
-        .carousel-card::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.1);
-            border-radius: 12px;
-        }
-
-        .carousel-indicators {
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            min-height: 90px;
             display: flex;
-            justify-content: center;
-            gap: 8px;
-            padding: 12px 0 14px;
+            align-items: flex-start;
+            justify-content: flex-end;
+            padding: 8px;
+        }
+
+        .imovel-card .imovel-badge {
+            background: rgba(0, 30, 240, 0.9);
+            color: #fff;
+            font-size: 0.6rem;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .imovel-card .imovel-info {
+            padding: 10px 12px;
             background: var(--branco);
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
             flex-shrink: 0;
         }
 
-        .carousel-indicators span {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #d0d7e6;
-            cursor: pointer;
-            transition: 0.3s;
+        .imovel-card .imovel-info .imovel-titulo {
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--texto-escuro);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
-        .carousel-indicators span.active {
-            background: var(--azul-quinto);
-            width: 24px;
-            border-radius: 6px;
+        .imovel-card .imovel-info .imovel-detalhe {
+            font-size: 0.68rem;
+            color: var(--texto-cinza);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
-        /* ===== BANNERS FIXOS ===== */
+        .imovel-card .imovel-info .imovel-preco {
+            font-size: 0.85rem;
+            font-weight: 800;
+            color: var(--azul-quinto);
+            margin-top: 2px;
+        }
+
+        .imoveis-destaque-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            gap: 12px;
+            padding: 32px 16px;
+            color: var(--texto-cinza);
+        }
+
+        .imoveis-destaque-placeholder i {
+            font-size: 2.4rem;
+            color: var(--azul-claro);
+        }
+
+        .imoveis-destaque-placeholder p {
+            font-size: 0.85rem;
+            line-height: 1.5;
+            max-width: 280px;
+        }
+
+        /* ===== BANNERS FIXOS (imagens) ===== */
         .banners-fixos {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -403,118 +484,152 @@
             padding: 16px 0 36px;
         }
 
-        .banner-fixo {
-            background: var(--branco);
+        .banner-fixo-img {
+            display: block;
+            width: 100%;
             border-radius: var(--border-radius-lg);
-            padding: 28px 30px;
             box-shadow: var(--sombra-media);
             border: 1px solid rgba(0, 30, 240, 0.06);
             transition: 0.3s;
             cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            min-height: 140px;
-            position: relative;
             overflow: hidden;
+            background: var(--branco);
+            object-fit: cover;
+            aspect-ratio: 16 / 6;
         }
 
-        .banner-fixo::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -30%;
-            width: 200px;
-            height: 200px;
-            background: radial-gradient(circle, rgba(0, 30, 240, 0.03) 0%, transparent 70%);
-            border-radius: 50%;
-            pointer-events: none;
-        }
-
-        .banner-fixo:hover {
+        .banner-fixo-img:hover {
             transform: translateY(-4px);
             border-color: var(--azul-quinto);
             box-shadow: 0 16px 48px rgba(0, 30, 240, 0.12);
         }
 
-        .banner-fixo .banner-header {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            margin-bottom: 10px;
+        /* ===== VÍDEOS DO YOUTUBE (nova seção) ===== */
+        .videos-section {
+            padding: 24px 0 40px;
+            border-top: 1px solid rgba(0, 30, 240, 0.06);
         }
 
-        .banner-fixo .banner-icon {
-            font-size: 2rem;
-            color: var(--azul-quinto);
-            width: 48px;
-            height: 48px;
-            background: var(--azul-claro);
-            border-radius: 12px;
+        .videos-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .videos-header .videos-header-text {
+            flex: 1;
+            min-width: 240px;
+        }
+
+        .btn-canal-youtube {
+            background: #ff0000;
+            color: #fff;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .btn-canal-youtube:hover {
+            background: #cc0000;
+            transform: scale(1.04);
+            box-shadow: 0 6px 20px rgba(255, 0, 0, 0.3);
+        }
+
+        .videos-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+
+        .video-card {
+            background: var(--branco);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--sombra-suave);
+            border: 1px solid rgba(0, 30, 240, 0.06);
+            transition: 0.3s;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .video-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--azul-quinto);
+            box-shadow: var(--sombra-media);
+        }
+
+        .video-card .video-thumb {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            position: relative;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-color: #0a0a1a;
             display: flex;
             align-items: center;
             justify-content: center;
-            flex-shrink: 0;
         }
 
-        .banner-fixo .banner-icon.gold {
-            color: #f5a623;
-            background: #fff5e0;
+        .video-card .video-thumb::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.2);
+            transition: 0.3s;
         }
 
-        .banner-fixo h3 {
-            font-size: 1.2rem;
-            font-weight: 700;
+        .video-card:hover .video-thumb::after {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .video-card .play-icon {
+            position: relative;
+            z-index: 2;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.95);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            color: #ff0000;
+            transition: 0.3s;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+        }
+
+        .video-card:hover .play-icon {
+            transform: scale(1.12);
+            background: #fff;
+        }
+
+        .video-card .video-title {
+            padding: 12px 14px;
+            font-size: 0.82rem;
+            font-weight: 600;
             color: var(--texto-escuro);
-        }
-
-        .banner-fixo p {
-            color: var(--texto-cinza);
-            font-size: 0.92rem;
-            line-height: 1.5;
-            max-width: 90%;
-        }
-
-        .banner-fixo .btn-banner {
-            margin-top: 14px;
-            align-self: flex-start;
-            background: var(--azul-quinto);
-            color: #fff;
-            border: none;
-            padding: 8px 22px;
-            border-radius: 40px;
-            font-weight: 600;
-            font-size: 0.85rem;
-            cursor: pointer;
-            transition: 0.2s;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .banner-fixo .btn-banner:hover {
-            background: var(--azul-escuro);
-            transform: scale(1.03);
-        }
-
-        .banner-fixo .btn-banner-outline {
-            background: transparent;
-            border: 1.5px solid var(--azul-quinto);
-            color: var(--azul-quinto);
-            padding: 8px 22px;
-            border-radius: 40px;
-            font-weight: 600;
-            font-size: 0.85rem;
-            cursor: pointer;
-            transition: 0.2s;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .banner-fixo .btn-banner-outline:hover {
-            background: var(--azul-quinto);
-            color: #fff;
+            line-height: 1.35;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            flex: 1;
         }
 
         /* ===== SEÇÃO DIFERENCIAIS ===== */
@@ -961,104 +1076,6 @@
             color: #fff;
         }
 
-        /* ===== MODAL QPRECO ===== */
-        .qpreco-step {
-            display: block;
-        }
-
-        .qpreco-step.hidden {
-            display: none;
-        }
-
-        .qpreco-step .form-group {
-            margin-bottom: 16px;
-        }
-
-        .qpreco-step .form-group label {
-            display: block;
-            font-weight: 600;
-            font-size: 0.85rem;
-            margin-bottom: 4px;
-            color: var(--texto-escuro);
-        }
-
-        .qpreco-step .form-group input,
-        .qpreco-step .form-group select {
-            width: 100%;
-            padding: 10px 14px;
-            border: 1.5px solid #d0d7e6;
-            border-radius: 12px;
-            font-size: 0.95rem;
-            font-family: 'Inter', sans-serif;
-            transition: 0.2s;
-            background: var(--branco);
-        }
-
-        .qpreco-step .form-group input:focus,
-        .qpreco-step .form-group select:focus {
-            border-color: var(--azul-quinto);
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(0, 30, 240, 0.1);
-        }
-
-        .qpreco-step .form-group input::placeholder {
-            color: #b0b8cc;
-        }
-
-        .qpreco-step .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
-
-        .qpreco-step .btn-next {
-            width: 100%;
-            padding: 14px;
-            background: var(--azul-quinto);
-            color: #fff;
-            border: none;
-            border-radius: 60px;
-            font-weight: 700;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: 0.2s;
-            margin-top: 8px;
-        }
-
-        .qpreco-step .btn-next:hover {
-            background: var(--azul-escuro);
-            transform: scale(1.02);
-        }
-
-        .qpreco-step .step-indicator {
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-            margin: 16px 0 20px;
-        }
-
-        .qpreco-step .step-indicator .dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: #d0d7e6;
-            transition: 0.3s;
-        }
-
-        .qpreco-step .step-indicator .dot.active {
-            background: var(--azul-quinto);
-            width: 28px;
-            border-radius: 6px;
-        }
-
-        .qpreco-step .step-counter {
-            text-align: center;
-            font-size: 0.8rem;
-            color: var(--texto-cinza);
-            font-weight: 500;
-            margin-bottom: 12px;
-        }
-
         /* ============================================================ */
         /* ===== RESPONSIVO ===== */
         /* ============================================================ */
@@ -1071,14 +1088,11 @@
             .hero-content h1 {
                 font-size: 2.4rem;
             }
-            .carousel-wrapper {
+            .imoveis-destaque-wrapper {
                 min-height: 360px;
             }
-            .carousel-slide {
-                flex: 0 0 50%;
-            }
-            .carousel-card {
-                min-height: 220px;
+            .videos-grid {
+                grid-template-columns: repeat(2, 1fr);
             }
         }
 
@@ -1151,17 +1165,43 @@
                 font-size: 0.95rem;
             }
 
-            .carousel-wrapper {
-                min-height: 280px;
+            .imoveis-destaque-wrapper {
+                min-height: 320px;
+                padding: 14px;
+                gap: 12px;
             }
 
-            .carousel-slide {
-                flex: 0 0 50%;
-                padding: 6px;
+            .imoveis-destaque-grid {
+                gap: 10px;
             }
 
-            .carousel-card {
-                min-height: 180px;
+            .imovel-card .imovel-img {
+                min-height: 70px;
+            }
+
+            .imovel-card .imovel-info {
+                padding: 8px 10px;
+            }
+
+            .imovel-card .imovel-info .imovel-titulo {
+                font-size: 0.7rem;
+            }
+
+            .imovel-card .imovel-info .imovel-detalhe {
+                font-size: 0.6rem;
+            }
+
+            .imovel-card .imovel-info .imovel-preco {
+                font-size: 0.75rem;
+            }
+
+            .imoveis-destaque-header h3 {
+                font-size: 0.95rem;
+            }
+
+            .btn-ver-todos {
+                font-size: 0.72rem;
+                padding: 6px 14px;
             }
 
             .banners-fixos {
@@ -1170,24 +1210,33 @@
                 padding: 12px 0 24px;
             }
 
-            .banner-fixo {
-                min-height: 110px;
-                padding: 18px 20px;
+            .banner-fixo-img {
+                aspect-ratio: 16 / 6;
             }
 
-            .banner-fixo p {
-                max-width: 100%;
-                font-size: 0.85rem;
+            .videos-section {
+                padding: 18px 0 28px;
             }
 
-            .banner-fixo h3 {
-                font-size: 1.05rem;
+            .videos-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
             }
 
-            .banner-fixo .banner-icon {
-                width: 40px;
-                height: 40px;
-                font-size: 1.4rem;
+            .video-card .play-icon {
+                width: 38px;
+                height: 38px;
+                font-size: 1rem;
+            }
+
+            .video-card .video-title {
+                font-size: 0.72rem;
+                padding: 8px 10px;
+            }
+
+            .btn-canal-youtube {
+                font-size: 0.78rem;
+                padding: 8px 18px;
             }
 
             .tech-badge {
@@ -1197,13 +1246,6 @@
             .tech-badge p {
                 font-size: 0.9rem;
                 line-height: 1.6;
-            }
-
-            .tech-badge .highlight {
-                background: transparent !important;
-                color: var(--azul-quinto) !important;
-                padding: 0 !important;
-                display: inline !important;
             }
 
             .differentials {
@@ -1261,10 +1303,6 @@
                 font-size: 0.8rem;
             }
 
-            .carousel-indicators {
-                padding: 8px 0 10px;
-            }
-
             .modal-box {
                 padding: 20px 16px;
                 margin: 10px;
@@ -1284,10 +1322,6 @@
             .contact-item .info .name {
                 font-size: 0.85rem;
             }
-
-            .qpreco-step .form-row {
-                grid-template-columns: 1fr;
-            }
         }
 
         @media (max-width: 480px) {
@@ -1295,23 +1329,62 @@
                 font-size: 1.6rem;
             }
 
-            .carousel-wrapper {
-                min-height: 220px;
+            .imoveis-destaque-wrapper {
+                min-height: 260px;
+                padding: 10px;
+                gap: 10px;
             }
 
-            .carousel-card {
-                min-height: 140px;
+            .imoveis-destaque-grid {
+                gap: 8px;
             }
 
-            .banner-fixo {
-                padding: 14px 16px;
-                min-height: 90px;
+            .imovel-card .imovel-img {
+                min-height: 55px;
             }
 
-            .banner-fixo .btn-banner,
-            .banner-fixo .btn-banner-outline {
-                font-size: 0.75rem;
-                padding: 6px 16px;
+            .imovel-card .imovel-info {
+                padding: 6px 8px;
+            }
+
+            .imovel-card .imovel-info .imovel-titulo {
+                font-size: 0.62rem;
+            }
+
+            .imovel-card .imovel-info .imovel-detalhe {
+                font-size: 0.55rem;
+            }
+
+            .imovel-card .imovel-info .imovel-preco {
+                font-size: 0.68rem;
+            }
+
+            .imoveis-destaque-header h3 {
+                font-size: 0.85rem;
+            }
+
+            .btn-ver-todos {
+                font-size: 0.65rem;
+                padding: 5px 12px;
+            }
+
+            .videos-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .videos-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .btn-canal-youtube {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .banner-fixo-img {
+                aspect-ratio: 16 / 6;
             }
 
             .differentials {
@@ -1358,7 +1431,7 @@
             <img src="https://cdn.awsli.com.br/1608/1608652/arquivos/logo-lr-imoveis.jpg" alt="Lima Ribeiro Imóveis" class="logo-img" id="logoImg" />
         </a>
         <div class="nav-links">
-            <a href="#" onclick="alert('Página de Imóveis (em breve)')">Imóveis</a>
+            <a href="imoveis.html">Catálogo de Imóveis</a>
             <a href="#" onclick="openModal('sobre')">Sobre</a>
             <a href="#" onclick="openModal('contatoCompleto')">Contato</a>
             <a href="#" onclick="openModal('informativos')">Informativos</a>
@@ -1371,23 +1444,19 @@
         </div>
     </nav>
 
-    <!-- ===== MENU INFERIOR (Mobile) - Moderno ===== -->
+    <!-- ===== MENU INFERIOR (Mobile) ===== -->
     <div class="bottom-menu" id="bottomMenu">
         <button class="bottom-menu-item" onclick="openModal('menuMobile')">
             <i class="fas fa-bars"></i>
             <span class="menu-label">Menu</span>
         </button>
-        <button class="bottom-menu-item" onclick="alert('Página de Imóveis (em breve)')">
+        <button class="bottom-menu-item" onclick="window.location.href='imoveis.html'">
             <i class="fas fa-home"></i>
             <span class="menu-label">Imóveis</span>
         </button>
         <button class="bottom-menu-item" onclick="openModal('contatoCompleto')">
             <i class="fas fa-envelope"></i>
             <span class="menu-label">Contato</span>
-        </button>
-        <button class="bottom-menu-item" onclick="openQprecoOptionsModal()">
-            <i class="fas fa-calculator"></i>
-            <span class="menu-label">Valores</span>
         </button>
         <button class="bottom-menu-item" onclick="window.open('https://www.limaribeiroimoveis.com.br/indiqueeganhe', '_blank')">
             <i class="fas fa-dollar-sign"></i>
@@ -1423,42 +1492,55 @@
                 </div>
             </div>
 
-            <!-- ===== CARROSSEL HORIZONTAL ===== -->
-            <div class="carousel-wrapper">
-                <div class="carousel-track" id="carouselTrack">
-                    <!-- injetado via JS -->
+            <!-- ===== ANÚNCIOS DE IMÓVEIS EM DESTAQUE ===== -->
+            <div class="imoveis-destaque-wrapper">
+                <div class="imoveis-destaque-header">
+                    <h3><i class="fas fa-building"></i> Imóveis em destaque</h3>
+                    <a href="imoveis.html" class="btn-ver-todos">
+                        <i class="fas fa-th-large"></i> Ver todos
+                    </a>
                 </div>
-                <div class="carousel-indicators" id="carouselIndicators"></div>
+                <div class="imoveis-destaque-grid" id="imoveisDestaqueGrid">
+                    <!-- Injetado via JS -->
+                </div>
             </div>
         </section>
 
-        <!-- ===== BANNERS FIXOS ===== -->
+        <!-- ===== BANNERS FIXOS (imagens) ===== -->
         <div class="banners-fixos">
-            <div class="banner-fixo" onclick="openModal('qpreco')">
-                <div class="banner-header">
-                    <div class="banner-icon"><i class="fas fa-calculator"></i></div>
-                    <h3>QPreço · QuintoAndar</h3>
-                </div>
-                <p>Calcule o valor de mercado do seu imóvel com dados exclusivos e públicos. Gratuito e confiável.</p>
-                <button class="btn-banner">
-                    <i class="fas fa-arrow-right"></i> Simular agora
-                </button>
-            </div>
-
-            <div class="banner-fixo" onclick="window.open('https://www.limaribeiroimoveis.com.br/indiqueeganhe', '_blank')">
-                <div class="banner-header">
-                    <div class="banner-icon gold"><i class="fas fa-dollar-sign"></i></div>
-                    <h3>Indique e Ganhe</h3>
-                </div>
-                <p>
-                    Indique imóveis à venda e ganhe prêmios em dinheiro! Bonificações progressivas 
-                    acompanhadas em tempo real.
-                </p>
-                <button class="btn-banner-outline">
-                    <i class="fas fa-rocket"></i> Participar agora
-                </button>
-            </div>
+            <!-- Banner QPreço - redireciona para precoimovel.html -->
+            <a href="precoimovel.html">
+                <img 
+                    src="https://via.placeholder.com/800x300/001EF0/ffffff?text=Banner+QPreco" 
+                    alt="QPreço - Calcule o valor do seu imóvel" 
+                    class="banner-fixo-img"
+                />
+            </a>
+            <!-- Banner Indique e Ganhe -->
+            <a href="https://www.limaribeiroimoveis.com.br/indiqueeganhe" target="_blank">
+                <img 
+                    src="https://via.placeholder.com/800x300/f5a623/ffffff?text=Banner+Indique+e+Ganhe" 
+                    alt="Indique e Ganhe - Lima Ribeiro Imóveis" 
+                    class="banner-fixo-img"
+                />
+            </a>
         </div>
+
+        <!-- ===== VÍDEOS DO YOUTUBE ===== -->
+        <section class="videos-section">
+            <div class="videos-header">
+                <div class="videos-header-text">
+                    <h2 class="section-title">Nossos <span class="azul">vídeos</span></h2>
+                    <div class="section-sub">Dicas, tours e novidades do mercado imobiliário.</div>
+                </div>
+                <a href="https://www.youtube.com/@LimaRibeiroImoveis" target="_blank" class="btn-canal-youtube">
+                    <i class="fab fa-youtube"></i> Ver canal no YouTube
+                </a>
+            </div>
+            <div class="videos-grid" id="videosGrid">
+                <!-- Injetado via JS -->
+            </div>
+        </section>
 
         <!-- ===== BADGE TECNOLOGIA ===== -->
         <div class="tech-badge">
@@ -1553,7 +1635,7 @@
         </div>
     </div>
 
-    <!-- ===== MODAL CONTATO COMPLETO (todos os contatos juntos) ===== -->
+    <!-- ===== MODAL CONTATO COMPLETO ===== -->
     <div class="modal-overlay" id="contatoCompletoModal">
         <div class="modal-box">
             <h3><i class="fas fa-address-book" style="color: var(--azul-quinto);"></i> Contato</h3>
@@ -1657,7 +1739,7 @@
         </div>
     </div>
 
-    <!-- ===== MODAL AGENDAR VISITA (somente agendamento) ===== -->
+    <!-- ===== MODAL AGENDAR VISITA ===== -->
     <div class="modal-overlay" id="agendarVisitaModal">
         <div class="modal-box">
             <h3><i class="fas fa-calendar-check" style="color: var(--azul-quinto);"></i> Agendar Visita</h3>
@@ -1707,7 +1789,7 @@
         <div class="modal-box" style="max-width: 400px;">
             <h3><i class="fas fa-bars" style="color: var(--azul-quinto);"></i> Menu</h3>
             <div style="display:flex; flex-direction:column; gap:12px; margin:16px 0;">
-                <a href="#" onclick="alert('Página de Imóveis (em breve)')" style="padding:12px 16px; background:var(--cinza-claro); border-radius:12px; text-decoration:none; color:var(--texto-escuro); font-weight:500;">🏠 Imóveis</a>
+                <a href="imoveis.html" style="padding:12px 16px; background:var(--azul-quinto); border-radius:12px; text-decoration:none; color:#fff; font-weight:600; text-align:center;">🏠 Catálogo de Imóveis</a>
                 <a href="#" onclick="openModal('sobre'); closeMenuMobileModal();" style="padding:12px 16px; background:var(--cinza-claro); border-radius:12px; text-decoration:none; color:var(--texto-escuro); font-weight:500;">ℹ️ Sobre</a>
                 <a href="#" onclick="openModal('contatoCompleto'); closeMenuMobileModal();" style="padding:12px 16px; background:var(--cinza-claro); border-radius:12px; text-decoration:none; color:var(--texto-escuro); font-weight:500;">📞 Contato</a>
                 <a href="#" onclick="openModal('informativos'); closeMenuMobileModal();" style="padding:12px 16px; background:var(--cinza-claro); border-radius:12px; text-decoration:none; color:var(--texto-escuro); font-weight:500;">📄 Informativos</a>
@@ -1727,109 +1809,44 @@
         </div>
     </div>
 
-    <!-- ===== MODAL QPRECO ===== -->
-    <div class="modal-overlay" id="qprecoModal">
-        <div class="modal-box" style="max-width: 520px;">
-            <h3><i class="fas fa-calculator" style="color: var(--azul-quinto);"></i> QPreço</h3>
-            <p class="sub">Descubra o valor ideal do seu imóvel em poucos passos.</p>
-            <div id="qprecoContainer">
-                <!-- injetado via JS -->
-            </div>
-            <button class="modal-close" onclick="closeQprecoModal()">Fechar</button>
-        </div>
-    </div>
-
-    <!-- ===== MODAL OPÇÕES QPRECO ===== -->
-    <div class="modal-overlay" id="qprecoOptionsModal">
-        <div class="modal-box" style="max-width: 420px;">
-            <h3><i class="fas fa-calculator" style="color: var(--azul-quinto);"></i> QPreço</h3>
-            <p class="sub">Escolha uma das opções abaixo:</p>
-            <div class="contact-list">
-                <a href="#" onclick="closeQprecoOptionsModal(); openQprecoModal(); return false;" class="contact-item">
-                    <div class="avatar-icon"><i class="fas fa-home"></i></div>
-                    <div class="info">
-                        <div class="name">Quanto vale meu imóvel?</div>
-                        <div class="role">Calcule o valor de mercado</div>
-                    </div>
-                    <i class="fas fa-arrow-right icon-right"></i>
-                </a>
-                <a href="https://limaribeiroimoveis.com.br/gastoscompra.html" target="_blank" class="contact-item" onclick="closeQprecoOptionsModal()">
-                    <div class="avatar-icon"><i class="fas fa-file-invoice-dollar"></i></div>
-                    <div class="info">
-                        <div class="name">Gastos Compra 2026</div>
-                        <div class="role">Simule os custos da compra</div>
-                    </div>
-                    <i class="fas fa-arrow-right icon-right"></i>
-                </a>
-            </div>
-            <button class="modal-close" onclick="closeQprecoOptionsModal()">Fechar</button>
-        </div>
-    </div>
-
 
     <script>
         // ============================================================
         // ★★★ CONFIGURAÇÃO CENTRAL DAS FOTOS DOS CORRETORES ★★★
-        // ------------------------------------------------------------
-        // ➤ Para atualizar a foto de um corretor, basta trocar o link
-        //   aqui embaixo. TODOS os lugares do site que mostram a foto
-        //   serão atualizados automaticamente.
-        //
-        // ➤ Aceita QUALQUER um destes formatos de link:
-        //   1) Link normal do Google Drive:
-        //      https://drive.google.com/file/d/ID_DO_ARQUIVO/view?usp=sharing
-        //   2) Link direto (qualquer URL de imagem .jpg/.png/etc)
         // ============================================================
         const FOTOS_CORRETORES = {
             carolina: 'https://drive.google.com/file/d/1ODYDixXOwn46BKdogBVVngLFDW30G0wE/view?usp=sharing',
             hugo:     'https://drive.google.com/file/d/1j9XTOWiRQc6WbSa5ydsGXXlkaqYHYdCL/view?usp=sharing'
         };
 
-        // ------------------------------------------------------------
-        // Função que converte QUALQUER link do Google Drive para um
-        // link de imagem que funciona em <img src="...">.
-        // Se não for link do Google Drive, retorna o próprio link.
-        // ------------------------------------------------------------
         function converterLinkImagem(url) {
             if (!url) return '';
-            // Link do tipo: https://drive.google.com/file/d/ID/view?...
             if (url.includes('drive.google.com/file/d/')) {
                 const match = url.match(/\/d\/([^\/]+)/);
                 if (match && match[1]) {
                     return `https://drive.google.com/thumbnail?id=${match[1]}&sz=w800`;
                 }
             }
-            // Link do tipo: https://drive.google.com/open?id=ID
             if (url.includes('drive.google.com/open?id=')) {
                 const match = url.match(/id=([^&]+)/);
                 if (match && match[1]) {
                     return `https://drive.google.com/thumbnail?id=${match[1]}&sz=w800`;
                 }
             }
-            // Link do tipo: https://drive.google.com/uc?id=ID
             if (url.includes('drive.google.com/uc')) {
                 const match = url.match(/id=([^&]+)/);
                 if (match && match[1]) {
                     return `https://drive.google.com/thumbnail?id=${match[1]}&sz=w800`;
                 }
             }
-            // Qualquer outro link é retornado como está
             return url;
         }
 
-        // ------------------------------------------------------------
-        // Função para obter a URL final pronta para usar no <img src>
-        // Ex.: getFotoCorretor('carolina')
-        // ------------------------------------------------------------
         function getFotoCorretor(nome) {
             const link = FOTOS_CORRETORES[nome];
             return converterLinkImagem(link);
         }
 
-        // ------------------------------------------------------------
-        // Aplica as fotos em TODOS os elementos <img data-corretor="...">
-        // do site. É chamada automaticamente no carregamento da página.
-        // ------------------------------------------------------------
         function aplicarFotosCorretores() {
             document.querySelectorAll('img[data-corretor]').forEach(img => {
                 const nome = img.getAttribute('data-corretor');
@@ -1841,144 +1858,152 @@
         }
 
         // ============================================================
-        // 0. FUNÇÃO PARA CONVERTER LINK DO GOOGLE DRIVE (IMÓVEIS)
+        // ★★★ CONFIGURAÇÃO DOS IMÓVEIS EM DESTAQUE ★★★
+        // ------------------------------------------------------------
+        // ➤ Aqui você define os 4 imóveis que aparecem na home.
+        //   Depois, quando criar o site imoveis.html, esses dados
+        //   podem ser sincronizados automaticamente.
+        // ➤ Para trocar, basta editar os campos abaixo.
         // ============================================================
-        function converterLinkGoogleDrive(url) {
-            return converterLinkImagem(url);
-        }
-
-        // ============================================================
-        // 1. CARROSSEL HORIZONTAL
-        // ============================================================
-        const imoveis = [
+        const IMOVEIS_DESTAQUE = [
             {
-                img: 'https://drive.google.com/file/d/1LILRfrJgeeMFe-Zr5ji-I4XlpCROrdeq/view?usp=sharing',
-                link: '',
-                mensagem: 'Olá! Quero vender meu imóvel. Podem me ajudar?'
+                titulo: 'Apartamento no Gutierrez',
+                detalhe: '2 quartos · 1 suíte · 1 vaga',
+                preco: 'R$ 450.000',
+                badge: 'Destaque',
+                img: 'https://via.placeholder.com/400x300/001EF0/ffffff?text=Imovel+1',
+                link: 'imoveis.html'
             },
             {
-                img: 'https://drive.google.com/file/d/1ZsijdtbL4q1DWHqoKQvpUUhDki2zEEzq/view?usp=sharing',
-                link: 'https://limaribeiroimoveis.com.br/ate590',
-                mensagem: 'Olá! Quero ver imóveis de 290 a 590 mil reais.'
+                titulo: 'Casa na Savassi',
+                detalhe: '3 quartos · 2 suítes · 2 vagas',
+                preco: 'R$ 890.000',
+                badge: 'Novo',
+                img: 'https://via.placeholder.com/400x300/0044ff/ffffff?text=Imovel+2',
+                link: 'imoveis.html'
             },
             {
-                img: 'https://drive.google.com/file/d/1etfiJNpBZx6D0JuGH7yf7yiNAeLswx1M/view?usp=sharing',
-                link: '',
-                mensagem: 'Olá! Quero ver imóveis de 600 mil a 1 milhão.'
+                titulo: 'Studio Santo Antônio',
+                detalhe: '1 quarto · 1 banheiro · 1 vaga',
+                preco: 'R$ 320.000',
+                badge: 'Oportunidade',
+                img: 'https://via.placeholder.com/400x300/0011a0/ffffff?text=Imovel+3',
+                link: 'imoveis.html'
             },
             {
-                img: 'https://drive.google.com/file/d/1PhEvZdMqzJuE_u_LCEi8Yu0RitOLHdt4/view?usp=sharing',
-                link: '',
-                mensagem: 'Olá! Quero ver imóveis acima de 1 milhão.'
-            },
-            {
-                img: 'https://drive.google.com/file/d/1oxnmSg_OFiJVtlmTAjgc5PLUe8xfNYX_/view?usp=sharing',
-                link: '',
-                mensagem: 'Olá! Quero ver imóveis no Gutierrez em BH.'
-            },
-            {
-                img: 'https://drive.google.com/file/d/1uUH3x5rHKCo3dB7YV5JuNOedIiUPxliY/view?usp=sharing',
-                link: '',
-                mensagem: 'Olá! Quero ver imóveis na região da Savassi, Santo Antônio e imediações.'
+                titulo: 'Cobertura no Lourdes',
+                detalhe: '4 quartos · 3 suítes · 3 vagas',
+                preco: 'R$ 1.500.000',
+                badge: 'Alto padrão',
+                img: 'https://via.placeholder.com/400x300/001EF0/ffffff?text=Imovel+4',
+                link: 'imoveis.html'
             }
         ];
 
-        let currentIndex = 0;
-        let autoInterval = null;
-        const track = document.getElementById('carouselTrack');
-        const indicators = document.getElementById('carouselIndicators');
+        function renderImoveisDestaque() {
+            const grid = document.getElementById('imoveisDestaqueGrid');
+            if (!grid) return;
+            grid.innerHTML = '';
 
-        function renderCarousel() {
-            track.innerHTML = '';
-            imoveis.forEach((item, index) => {
-                const slide = document.createElement('div');
-                slide.className = 'carousel-slide';
-                const imgUrl = converterLinkGoogleDrive(item.img);
-                slide.innerHTML = `
-                    <div class="carousel-card" style="background-image: url('${imgUrl}');">
+            if (IMOVEIS_DESTAQUE.length === 0) {
+                grid.innerHTML = `
+                    <div class="imoveis-destaque-placeholder">
+                        <i class="fas fa-building"></i>
+                        <p>Em breve, nossos imóveis em destaque aparecerão aqui. Enquanto isso, fale com um de nossos consultores!</p>
                     </div>
                 `;
-                
-                if (item.link && item.link.trim() !== '') {
-                    slide.addEventListener('click', () => {
-                        window.open(item.link, '_blank');
-                    });
-                } else {
-                    slide.style.cursor = 'pointer';
-                    slide.addEventListener('click', () => {
-                        openWhatsAppComMensagem(item.mensagem);
-                    });
-                }
-                track.appendChild(slide);
-            });
-
-            const totalPairs = Math.ceil(imoveis.length / 2);
-            indicators.innerHTML = '';
-            for (let i = 0; i < totalPairs; i++) {
-                const dot = document.createElement('span');
-                dot.dataset.index = i;
-                dot.addEventListener('click', () => goToSlide(i));
-                indicators.appendChild(dot);
+                return;
             }
-            goToSlide(0);
-        }
 
-        function goToSlide(index) {
-            const totalPairs = Math.ceil(imoveis.length / 2);
-            if (index >= totalPairs) index = 0;
-            if (index < 0) index = totalPairs - 1;
-            currentIndex = index;
-            const offset = -index * 100;
-            track.style.transform = `translateX(${offset}%)`;
-
-            document.querySelectorAll('#carouselIndicators span').forEach((dot, i) => {
-                dot.classList.toggle('active', i === index);
+            IMOVEIS_DESTAQUE.forEach(imovel => {
+                const a = document.createElement('a');
+                a.className = 'imovel-card';
+                a.href = imovel.link || 'imoveis.html';
+                a.innerHTML = `
+                    <div class="imovel-img" style="background-image: url('${imovel.img}');">
+                        <span class="imovel-badge">${imovel.badge || ''}</span>
+                    </div>
+                    <div class="imovel-info">
+                        <div class="imovel-titulo">${imovel.titulo}</div>
+                        <div class="imovel-detalhe">${imovel.detalhe}</div>
+                        <div class="imovel-preco">${imovel.preco}</div>
+                    </div>
+                `;
+                grid.appendChild(a);
             });
         }
 
-        function nextSlide() {
-            goToSlide(currentIndex + 1);
+        // ============================================================
+        // ★★★ CONFIGURAÇÃO DOS VÍDEOS DO YOUTUBE ★★★
+        // ------------------------------------------------------------
+        // ➤ Para cada vídeo, informe:
+        //   - titulo: o texto que aparece embaixo do vídeo
+        //   - videoId: o ID do vídeo no YouTube (a parte depois de v=)
+        //   - thumb: (opcional) URL da miniatura. Se não informar,
+        //            usamos a miniatura automática do YouTube.
+        //   - link: (opcional) link direto do vídeo. Se não informar,
+        //           montamos automaticamente com o videoId.
+        // ============================================================
+        const VIDEOS_YOUTUBE = [
+            {
+                titulo: 'Tour completo: Apartamento no Gutierrez',
+                videoId: 'dQw4w9WgXcQ',
+                thumb: '',
+                link: ''
+            },
+            {
+                titulo: 'Dicas para comprar seu primeiro imóvel',
+                videoId: 'dQw4w9WgXcQ',
+                thumb: '',
+                link: ''
+            },
+            {
+                titulo: 'Como funciona o financiamento imobiliário',
+                videoId: 'dQw4w9WgXcQ',
+                thumb: '',
+                link: ''
+            },
+            {
+                titulo: 'Documentação necessária para vender seu imóvel',
+                videoId: 'dQw4w9WgXcQ',
+                thumb: '',
+                link: ''
+            }
+        ];
+
+        // Link do seu canal no YouTube (troque pelo link real depois)
+        const CANAL_YOUTUBE_URL = 'https://www.youtube.com/@LimaRibeiroImoveis';
+
+        function renderVideos() {
+            const grid = document.getElementById('videosGrid');
+            if (!grid) return;
+            grid.innerHTML = '';
+
+            VIDEOS_YOUTUBE.forEach(video => {
+                const thumbUrl = video.thumb && video.thumb.trim() !== ''
+                    ? video.thumb
+                    : `https://img.youtube.com/vi/${video.videoId}/hqdefault.jpg`;
+                const linkUrl = video.link && video.link.trim() !== ''
+                    ? video.link
+                    : `https://www.youtube.com/watch?v=${video.videoId}`;
+
+                const card = document.createElement('a');
+                card.className = 'video-card';
+                card.href = linkUrl;
+                card.target = '_blank';
+                card.rel = 'noopener noreferrer';
+                card.innerHTML = `
+                    <div class="video-thumb" style="background-image: url('${thumbUrl}');">
+                        <div class="play-icon"><i class="fas fa-play"></i></div>
+                    </div>
+                    <div class="video-title">${video.titulo}</div>
+                `;
+                grid.appendChild(card);
+            });
         }
 
-        function startAutoSlide() {
-            if (autoInterval) clearInterval(autoInterval);
-            autoInterval = setInterval(nextSlide, 3000);
-        }
-
-        const wrapper = document.querySelector('.carousel-wrapper');
-        wrapper.addEventListener('mouseenter', () => clearInterval(autoInterval));
-        wrapper.addEventListener('mouseleave', startAutoSlide);
-
         // ============================================================
-        // FUNÇÃO PARA ABRIR WHATSAPP COM MENSAGEM PERSONALIZADA
-        // ============================================================
-        function openWhatsAppComMensagem(mensagem) {
-            const modal = document.getElementById('whatsappModal');
-            const sub = document.getElementById('whatsappModalSub');
-            
-            if (mensagem) {
-                sub.textContent = `"${mensagem}" - Escolha um especialista para continuar:`;
-            } else {
-                sub.textContent = 'Escolha um de nossos especialistas para atendimento personalizado.';
-            }
-            
-            const mensagemEncoded = encodeURIComponent(mensagem || 'Olá! Gostaria de saber mais sobre os imóveis da Lima Ribeiro.');
-            
-            const linkCarolina = document.getElementById('whatsappCarolina');
-            const linkHugo = document.getElementById('whatsappHugo');
-            
-            if (linkCarolina) {
-                linkCarolina.href = `https://wa.me/5531996273985?text=${mensagemEncoded}`;
-            }
-            if (linkHugo) {
-                linkHugo.href = `https://wa.me/5531996070930?text=${mensagemEncoded}`;
-            }
-            
-            modal.classList.add('active');
-        }
-
-        // ============================================================
-        // 2. INFORMATIVOS
+        // INFORMATIVOS
         // ============================================================
         const informativosData = [{
             titulo: '📋 FLUXO DA VENDA À VISTA',
@@ -2160,267 +2185,7 @@
         }
 
         // ============================================================
-        // 3. QPRECO - Formulário em etapas
-        // ============================================================
-        let qprecoData = {};
-
-        function renderQprecoStep(step) {
-            const container = document.getElementById('qprecoContainer');
-            let html = `
-                <div class="step-counter"></div>
-                <div class="step-indicator">
-                    ${[1,2,3,4,5].map(i => `<span class="dot ${i === step ? 'active' : ''}"></span>`).join('')}
-                </div>
-                <div class="qpreco-step" id="qprecoStep${step}">
-            `;
-
-            if (step === 1) {
-                html += `
-                    <div class="form-group">
-                        <label>Rua / Avenida *</label>
-                        <input type="text" id="qRua" placeholder="Ex: Rua das Flores" required>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Número *</label>
-                            <input type="text" id="qNumero" placeholder="123" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Complemento</label>
-                            <input type="text" id="qComplemento" placeholder="Apto 101">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>CEP *</label>
-                        <input type="text" id="qCep" placeholder="00000-000" required>
-                    </div>
-                    <button class="btn-next" onclick="nextQprecoStep(2)">Calcular o valor da venda →</button>
-                `;
-            } else if (step === 2) {
-                html += `
-                    <div class="form-group">
-                        <label>Qual o tipo do imóvel? *</label>
-                        <select id="qTipo" required>
-                            <option value="">Selecione</option>
-                            <option value="Apartamento">Apartamento</option>
-                            <option value="Casa">Casa</option>
-                            <option value="Studio">Studio</option>
-                            <option value="Cobertura">Cobertura</option>
-                            <option value="Casa de condomínio">Casa de condomínio</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Em qual andar ele está? *</label>
-                        <input type="text" id="qAndar" placeholder="Ex: 5º andar, Térreo" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Qual a área útil em m²? *</label>
-                        <input type="number" id="qArea" placeholder="Ex: 85" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Qual sua relação com o imóvel? *</label>
-                        <select id="qRelacao" required onchange="toggleDisponibilidade()">
-                            <option value="">Selecione</option>
-                            <option value="Proprietário">Proprietário</option>
-                            <option value="Corretor / Representante">Corretor / Representante</option>
-                            <option value="Interessado">Interessado</option>
-                            <option value="Outro">Outro</option>
-                        </select>
-                    </div>
-                    <div id="disponibilidadeGroup" style="display:none;">
-                        <div class="form-group">
-                            <label>Quando o imóvel estará disponível? *</label>
-                            <select id="qDisponibilidade" required>
-                                <option value="">Selecione</option>
-                                <option value="Disponível (vazio)">Disponível (vazio)</option>
-                                <option value="Estará em até 1 mês">Estará em até 1 mês</option>
-                                <option value="Estará em até 3 meses">Estará em até 3 meses</option>
-                                <option value="Estará em até 6 meses">Estará em até 6 meses</option>
-                                <option value="Em um ano ou mais">Em um ano ou mais</option>
-                            </select>
-                        </div>
-                    </div>
-                    <button class="btn-next" onclick="nextQprecoStep(3)">Próximo →</button>
-                `;
-            } else if (step === 3) {
-                html += `
-                    <p style="color: var(--texto-cinza); margin-bottom:16px; font-weight:500;">Falta pouco, só preciso de mais detalhes para achar o preço perfeito pra você.</p>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Quantos banheiros? *</label>
-                            <input type="number" id="qBanheiros" placeholder="0" min="0" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Quantas suítes? *</label>
-                            <input type="number" id="qSuites" placeholder="0" min="0" required>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Quantos quartos? *</label>
-                            <input type="number" id="qQuartos" placeholder="0" min="0" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Quantas vagas de garagem? *</label>
-                            <input type="number" id="qGaragem" placeholder="0" min="0" required>
-                        </div>
-                    </div>
-                    <button class="btn-next" onclick="nextQprecoStep(4)">Próximo →</button>
-                `;
-            } else if (step === 4) {
-                html += `
-                    <p style="color: var(--texto-cinza); margin-bottom:16px; font-weight:500;">Esse é nosso último passo.</p>
-                    <div class="form-group">
-                        <label>Qual o valor do condomínio? *</label>
-                        <input type="number" id="qCondominio" placeholder="0" min="0" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Qual o valor do IPTU? *</label>
-                        <input type="number" id="qIptu" placeholder="0" min="0" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Informações adicionais que valorizam seu imóvel</label>
-                        <input type="text" id="qInfoExtra" placeholder="Ex: vista para o mar, piscina, área gourmet...">
-                    </div>
-                    <button class="btn-next" onclick="nextQprecoStep(5)">Próximo →</button>
-                `;
-            } else if (step === 5) {
-                html += `
-                    <p style="color: var(--texto-cinza); margin-bottom:16px; font-weight:500;">Quase lá! Deixe seu WhatsApp para receber o valor ideal.</p>
-                    <div class="form-group">
-                        <label>Seu WhatsApp com DDD *</label>
-                        <input type="tel" id="qWhatsapp" placeholder="(31) 99999-9999" required>
-                    </div>
-                    <button class="btn-next" onclick="submitQpreco()">Enviar e receber valor →</button>
-                `;
-            }
-
-            html += `</div>`;
-            container.innerHTML = html;
-        }
-
-        let currentQprecoStep = 1;
-
-        function nextQprecoStep(step) {
-            if (step === 2) {
-                const rua = document.getElementById('qRua');
-                const numero = document.getElementById('qNumero');
-                const cep = document.getElementById('qCep');
-                if (!rua.value.trim() || !numero.value.trim() || !cep.value.trim()) {
-                    alert('Por favor, preencha todos os campos obrigatórios.');
-                    return;
-                }
-            }
-            if (step === 3) {
-                const tipo = document.getElementById('qTipo');
-                const andar = document.getElementById('qAndar');
-                const area = document.getElementById('qArea');
-                const relacao = document.getElementById('qRelacao');
-                if (!tipo.value || !andar.value.trim() || !area.value.trim() || !relacao.value) {
-                    alert('Por favor, preencha todos os campos obrigatórios.');
-                    return;
-                }
-                if (relacao.value === 'Proprietário') {
-                    const disp = document.getElementById('qDisponibilidade');
-                    if (!disp.value) {
-                        alert('Por favor, informe a disponibilidade do imóvel.');
-                        return;
-                    }
-                }
-            }
-            if (step === 4) {
-                const banheiros = document.getElementById('qBanheiros');
-                const suites = document.getElementById('qSuites');
-                const quartos = document.getElementById('qQuartos');
-                const garagem = document.getElementById('qGaragem');
-                if (!banheiros.value || !suites.value || !quartos.value || !garagem.value) {
-                    alert('Por favor, preencha todos os campos obrigatórios.');
-                    return;
-                }
-            }
-            if (step === 5) {
-                const cond = document.getElementById('qCondominio');
-                const iptu = document.getElementById('qIptu');
-                if (!cond.value || !iptu.value) {
-                    alert('Por favor, preencha todos os campos obrigatórios.');
-                    return;
-                }
-            }
-
-            currentQprecoStep = step;
-            renderQprecoStep(step);
-            setTimeout(() => {
-                if (document.getElementById('qRelacao')) {
-                    document.getElementById('qRelacao').addEventListener('change', toggleDisponibilidade);
-                }
-            }, 50);
-        }
-
-        function toggleDisponibilidade() {
-            const relacao = document.getElementById('qRelacao');
-            const group = document.getElementById('disponibilidadeGroup');
-            if (relacao.value === 'Proprietário') {
-                group.style.display = 'block';
-                document.getElementById('qDisponibilidade').required = true;
-            } else {
-                group.style.display = 'none';
-                document.getElementById('qDisponibilidade').required = false;
-            }
-        }
-
-        function submitQpreco() {
-            const whatsapp = document.getElementById('qWhatsapp');
-            if (!whatsapp.value.trim() || whatsapp.value.trim().length < 10) {
-                alert('Por favor, insira um número de WhatsApp válido.');
-                return;
-            }
-
-            const data = {
-                endereco: document.getElementById('qRua')?.value || '',
-                numero: document.getElementById('qNumero')?.value || '',
-                complemento: document.getElementById('qComplemento')?.value || '',
-                cep: document.getElementById('qCep')?.value || '',
-                tipo: document.getElementById('qTipo')?.value || '',
-                andar: document.getElementById('qAndar')?.value || '',
-                area: document.getElementById('qArea')?.value || '',
-                relacao: document.getElementById('qRelacao')?.value || '',
-                disponibilidade: document.getElementById('qDisponibilidade')?.value || '',
-                banheiros: document.getElementById('qBanheiros')?.value || '0',
-                suites: document.getElementById('qSuites')?.value || '0',
-                quartos: document.getElementById('qQuartos')?.value || '0',
-                garagem: document.getElementById('qGaragem')?.value || '0',
-                condominio: document.getElementById('qCondominio')?.value || '0',
-                iptu: document.getElementById('qIptu')?.value || '0',
-                infoExtra: document.getElementById('qInfoExtra')?.value || '',
-                whatsapp: whatsapp.value.trim()
-            };
-
-            let msg = `📊 *QPreço - Avaliação de Imóvel*%0A%0A`;
-            msg += `📍 Endereço: ${data.endereco}, ${data.numero}${data.complemento ? ', ' + data.complemento : ''}%0A`;
-            msg += `📮 CEP: ${data.cep}%0A`;
-            msg += `🏠 Tipo: ${data.tipo}%0A`;
-            msg += `📌 Andar: ${data.andar}%0A`;
-            msg += `📐 Área útil: ${data.area} m²%0A`;
-            msg += `👤 Relação: ${data.relacao}%0A`;
-            if (data.disponibilidade) msg += `📅 Disponibilidade: ${data.disponibilidade}%0A`;
-            msg += `🚿 Banheiros: ${data.banheiros}%0A`;
-            msg += `🛏️ Suítes: ${data.suites}%0A`;
-            msg += `🛌 Quartos: ${data.quartos}%0A`;
-            msg += `🚗 Garagem: ${data.garagem}%0A`;
-            msg += `💰 Condomínio: R$ ${data.condominio}%0A`;
-            msg += `🏷️ IPTU: R$ ${data.iptu}%0A`;
-            if (data.infoExtra) msg += `✨ Informações extras: ${data.infoExtra}%0A`;
-            msg += `%0A📱 WhatsApp: ${data.whatsapp}`;
-
-            const url = `https://wa.me/5531996070930?text=${msg}`;
-            window.open(url, '_blank');
-
-            closeQprecoModal();
-            alert('✅ Seus dados foram enviados! Em breve você receberá uma mensagem com o valor ideal.');
-        }
-
-        // ============================================================
-        // 4. MODAIS
+        // MODAIS
         // ============================================================
         function openWhatsAppModal() {
             const modal = document.getElementById('whatsappModal');
@@ -2481,24 +2246,6 @@
             document.getElementById('menuMobileModal').classList.remove('active');
         }
 
-        function openQprecoModal() {
-            document.getElementById('qprecoModal').classList.add('active');
-            currentQprecoStep = 1;
-            renderQprecoStep(1);
-        }
-
-        function closeQprecoModal() {
-            document.getElementById('qprecoModal').classList.remove('active');
-        }
-
-        function openQprecoOptionsModal() {
-            document.getElementById('qprecoOptionsModal').classList.add('active');
-        }
-
-        function closeQprecoOptionsModal() {
-            document.getElementById('qprecoOptionsModal').classList.remove('active');
-        }
-
         function openModal(type) {
             if (type === 'contatoCompleto') {
                 openContatoCompletoModal();
@@ -2514,10 +2261,6 @@
             }
             if (type === 'menuMobile') {
                 openMenuMobileModal();
-                return;
-            }
-            if (type === 'qpreco') {
-                openQprecoModal();
                 return;
             }
 
@@ -2553,12 +2296,12 @@
         });
 
         // ============================================================
-        // 5. INICIALIZAÇÃO
+        // INICIALIZAÇÃO
         // ============================================================
         document.addEventListener('DOMContentLoaded', () => {
-            aplicarFotosCorretores(); // ★ aplica as fotos dos corretores
-            renderCarousel();
-            startAutoSlide();
+            aplicarFotosCorretores();
+            renderImoveisDestaque();
+            renderVideos();
             renderInformativos();
         });
 
@@ -2573,16 +2316,8 @@
         window.closeInformativosModal = closeInformativosModal;
         window.openMenuMobileModal = openMenuMobileModal;
         window.closeMenuMobileModal = closeMenuMobileModal;
-        window.openQprecoModal = openQprecoModal;
-        window.closeQprecoModal = closeQprecoModal;
-        window.openQprecoOptionsModal = openQprecoOptionsModal;
-        window.closeQprecoOptionsModal = closeQprecoOptionsModal;
         window.openModal = openModal;
         window.closeGenericModal = closeGenericModal;
-        window.nextQprecoStep = nextQprecoStep;
-        window.submitQpreco = submitQpreco;
-        window.toggleDisponibilidade = toggleDisponibilidade;
-        window.openWhatsAppComMensagem = openWhatsAppComMensagem;
         window.getFotoCorretor = getFotoCorretor;
         window.aplicarFotosCorretores = aplicarFotosCorretores;
 
@@ -2592,7 +2327,8 @@
         console.log('📱 WhatsApp: Carolina (31) 99627-3985 | Hugo (31) 99607-0930');
         console.log('📸 Instagram: @carollimaimoveisbh | @hugoribeiro.imoveis');
         console.log('💰 Indique e Ganhe: www.limaribeiroimoveis.com.br/indiqueeganhe');
-        console.log('🖼️  Para trocar fotos dos corretores: edite FOTOS_CORRETORES no topo do <script>.');
+        console.log('🎬 YouTube: edite VIDEOS_YOUTUBE no <script> para adicionar seus vídeos.');
+        console.log('🏢 Imóveis em destaque: edite IMOVEIS_DESTAQUE no <script>.');
     </script>
 
 </body>
