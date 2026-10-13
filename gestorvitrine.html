@@ -595,9 +595,7 @@
   }
 
   /* ================================================
-     ✅ CUTUCADA — NOVO LAYOUT
-     Linha 1: CUTUCADA + data/hora à direita
-     Linha 2-3: texto em 2 linhas com ...
+     CUTUCADA — NOVO LAYOUT
      ================================================ */
   .cutucada-wrap{
     display: flex;
@@ -621,7 +619,6 @@
     box-shadow: 0 2px 8px rgba(14,165,233,.25);
     transform: translateY(-1px);
   }
-
   .cutucada-wrap .cutucada-head{
     display: flex;
     align-items: center;
@@ -1182,45 +1179,227 @@
   }
   .btn-evento:hover:not(:disabled){ background: #5b21b6; }
 
-  /* ===== CAPTAÇÕES ===== */
-  .captacao-contato-wrap{
+  /* ============================================
+     CAPTAÇÕES — NOVO LAYOUT COMPACTO
+     ============================================ */
+  .modal-captacoes{
+    max-width: 1400px !important;
+    width: 96vw !important;
+    height: 92vh !important;
+    max-height: 92vh !important;
+    display: flex !important;
+    flex-direction: column;
+    padding: 20px 22px 0 !important;
+    overflow: hidden !important;
+  }
+
+  .capt-head{
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px; flex-wrap: wrap;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+  .capt-head h2{
+    font-size: 1.05rem; font-weight: 700;
+    display: flex; align-items: center; gap: 9px;
+    margin: 0;
+  }
+  .capt-head h2 .ico{ color: var(--primary); }
+  .capt-resumo{
+    font-size: .75rem; color: var(--text-soft);
+    font-weight: 600;
+    background: var(--bg);
+    padding: 4px 10px;
+    border-radius: 999px;
+  }
+
+  .capt-filtros{
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+  .capt-filtros-linha{
+    display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+  }
+  .capt-filtros-grupo{
+    display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+  }
+  .capt-lbl{
+    font-size: .66rem; font-weight: 700;
+    color: var(--muted); text-transform: uppercase;
+    letter-spacing: .5px;
+  }
+  .capt-filtros .chip{
+    font-size: .74rem;
+    padding: 5px 11px;
+  }
+  .capt-filtros .chip .dot{
+    display: inline-block;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .capt-filtros .chip .dot-warn{ background: var(--warn); }
+  .capt-filtros .chip .dot-danger{ background: var(--danger); }
+  .capt-filtros .chip .dot-success{ background: var(--success); }
+  .capt-filtros .chip.active .dot{ background: #fff !important; opacity: .9; }
+
+  .capt-lista{
+    flex: 1;
+    overflow-y: auto;
+    padding: 14px 4px 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 12px;
+    align-content: start;
+  }
+  @media(max-width:700px){
+    .capt-lista{
+      grid-template-columns: 1fr;
+      padding: 10px 2px 16px;
+    }
+  }
+
+  /* CARD COMPACTO */
+  .capt-card{
+    background: #fff;
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--warn);
+    border-radius: var(--radius);
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    transition: all .15s;
+    position: relative;
+  }
+  .capt-card:hover{ border-color: var(--border-strong); box-shadow: var(--shadow-sm); }
+  .capt-card.status-pendente{ border-left-color: var(--warn); }
+  .capt-card.status-sem-retorno{ border-left-color: var(--danger); }
+  .capt-card.status-concluida{ border-left-color: var(--success); opacity: .82; }
+
+  .capt-card .cc-l1{
+    display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+  }
+  .capt-card .cc-nome{
+    font-size: .85rem; font-weight: 700; color: var(--text);
+    flex: 1; min-width: 0;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .capt-card .cc-tel{
+    font-size: .7rem; color: var(--text-soft);
+    font-family: var(--mono);
+    white-space: nowrap;
+  }
+
+  .capt-card .cc-l2{
+    font-size: .72rem; color: var(--text-soft);
+    display: flex; align-items: center; gap: 5px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .capt-card .cc-l2 strong{ color: var(--primary); }
+
+  .capt-card .cc-l3{
+    display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+    padding-top: 6px;
+    border-top: 1px dashed var(--border);
+  }
+  .capt-card .cc-data{
+    font-size: .66rem; color: var(--muted);
+    font-family: var(--mono);
+    margin-right: auto;
+  }
+
+  .capt-card .cc-acoes{
+    display: flex; gap: 4px; align-items: center;
+  }
+  .capt-card .cc-btn{
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 28px; height: 28px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: #fff; color: var(--text-soft);
+    cursor: pointer; transition: all .15s;
+    text-decoration: none;
+    font-size: 0;
+    padding: 0;
+  }
+  .capt-card .cc-btn:hover{ background: var(--bg); border-color: var(--border-strong); color: var(--text); }
+  .capt-card .cc-btn .ico{ width: 14px; height: 14px; }
+  .capt-card .cc-btn.btn-zap:hover{ background: #e7f6ed; border-color: #b8dfc7; color: #1e7a3f; }
+  .capt-card .cc-btn.btn-concluir:hover{ background: var(--success-soft); border-color: #b8dfc7; color: var(--success); }
+  .capt-card .cc-btn.btn-desmarcar:hover{ background: var(--warn-soft); border-color: #e2d3a8; color: var(--warn); }
+  .capt-card .cc-btn.btn-expandir.ativo{ background: var(--primary-soft); border-color: var(--primary); color: var(--primary); }
+
+  .capt-card .cc-selects{
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-top: 10px;
+    gap: 6px;
   }
-  @media(max-width:640px){
-    .captacao-contato-wrap{ grid-template-columns: 1fr; }
+  .capt-card .cc-selects .cc-campo{
+    display: flex; flex-direction: column; gap: 2px;
   }
-  .captacao-contato-wrap .campo{
-    display: flex; flex-direction: column; gap: 4px;
+  .capt-card .cc-selects label{
+    font-size: .58rem; font-weight: 700;
+    color: var(--muted); text-transform: uppercase;
+    letter-spacing: .3px; margin: 0;
   }
-  .captacao-contato-wrap .campo label{
-    font-size: .68rem; margin-bottom: 0;
+  .capt-card .cc-selects select{
+    padding: 5px 8px;
+    font-size: .72rem;
+    border-radius: 6px;
+    border: 1px solid var(--border-strong);
+    background: #fff;
+    height: auto;
+    min-height: 28px;
   }
-  .captacao-obs-wrap{
-    margin-top: 10px;
-    display: flex; flex-direction: column; gap: 4px;
+
+  .capt-card .cc-obs-wrap{
+    display: none;
+    flex-direction: column; gap: 4px;
+    padding-top: 6px;
+    border-top: 1px dashed var(--border);
   }
-  .captacao-obs-wrap label{
-    font-size: .68rem; margin-bottom: 0;
+  .capt-card.obs-aberta .cc-obs-wrap{ display: flex; }
+  .capt-card .cc-obs-wrap label{
+    font-size: .6rem; font-weight: 700;
+    color: var(--muted); text-transform: uppercase;
+    letter-spacing: .3px; margin: 0;
   }
-  .captacao-obs-wrap textarea{
+  .capt-card .cc-obs-wrap textarea{
     min-height: 60px;
-    font-size: .82rem;
-    padding: 8px 10px;
+    font-size: .76rem;
+    padding: 6px 8px;
+    border-radius: 6px;
+    border: 1px solid var(--border-strong);
     resize: vertical;
+    font-family: inherit;
   }
-  .captacao-status-tag{
-    font-size: .62rem; font-weight: 700;
-    padding: 2px 8px; border-radius: 999px;
+
+  .capt-card .cc-status-tag{
+    font-size: .58rem; font-weight: 800;
+    padding: 2px 7px; border-radius: 999px;
     text-transform: uppercase; letter-spacing: .3px;
     white-space: nowrap;
   }
-  .captacao-status-tag.pendente{ background: var(--warn-soft); color: var(--warn); }
-  .captacao-status-tag.concluida{ background: var(--success-soft); color: var(--success); }
-  .captacao-status-tag.sem-retorno{ background: var(--danger-soft); color: var(--danger); }
-  .captacao-status-tag.contatado{ background: var(--info-soft); color: var(--info); }
+  .capt-card .cc-status-tag.pendente{ background: var(--warn-soft); color: var(--warn); }
+  .capt-card .cc-status-tag.sem-retorno{ background: var(--danger-soft); color: var(--danger); }
+  .capt-card .cc-status-tag.concluida{ background: var(--success-soft); color: var(--success); }
+
+  @media(max-width:700px){
+    .modal-captacoes{
+      width: 100vw !important;
+      height: 100vh !important;
+      max-height: 100vh !important;
+      border-radius: 0 !important;
+      padding: 14px 12px 0 !important;
+    }
+    .capt-filtros-linha{ gap: 8px; }
+    .capt-filtros .chip{ font-size: .68rem; padding: 4px 9px; }
+    .capt-lista{ padding: 10px 0 16px; gap: 8px; }
+    .capt-card{ padding: 9px 10px; }
+  }
 </style>
 </head>
 <body>
@@ -1854,41 +2033,48 @@
   </div>
 </div>
 
-<!-- Modal Captações QPreço -->
+<!-- Modal Captações QPreço — NOVO LAYOUT -->
 <div class="modal-backdrop" id="captacoesBackdrop">
-  <div class="modal" style="max-width:880px;">
-    <button class="modal-close" onclick="fecharCaptacoes()"><svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-    <h2>
-      <svg class="ico" viewBox="0 0 24 24" style="stroke:#16a34a;">
-        <path d="M12 2v20"/>
-        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
-      </svg>
-      Captações QPreço
-      <span id="captacoesResumo" style="color:var(--text-soft);font-weight:600;font-size:.85rem;margin-left:6px;"></span>
-    </h2>
-    <p class="text-muted" style="margin-bottom:14px; font-size:.78rem;">
-      Pessoas que preencheram o formulário da calculadora do QuintoAndar. Marque como <strong>concluída</strong> após entrar em contato.
-    </p>
+  <div class="modal modal-captacoes">
+    <button class="modal-close" onclick="fecharCaptacoes()">
+      <svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
 
-    <div class="filtros-wrap" style="margin-bottom:14px;">
-      <div class="filtro-grupo">
-        <span class="lbl">Status:</span>
-        <button class="chip active" data-capt-filter="pendentes" onclick="setFiltroCaptacoes('pendentes', this)">⏳ Pendentes</button>
-        <button class="chip" data-capt-filter="concluidas" onclick="setFiltroCaptacoes('concluidas', this)">✅ Concluídas</button>
-        <button class="chip" data-capt-filter="todas" onclick="setFiltroCaptacoes('todas', this)">📋 Todas</button>
-      </div>
-      <div class="filtro-grupo">
-        <span class="lbl">Contato:</span>
-        <button class="chip active" data-capt-contato="todos" onclick="setFiltroCaptacoesContato('todos', this)">Todos</button>
-        <button class="chip" data-capt-contato="sem-retorno" onclick="setFiltroCaptacoesContato('sem-retorno', this)">❌ Sem retorno</button>
-        <button class="chip" data-capt-contato="nao-contatado" onclick="setFiltroCaptacoesContato('nao-contatado', this)">⚪ Não contatado</button>
-      </div>
-      <div class="filtro-grupo" id="captacoesFiltroCorretores">
-        <span class="lbl">Corretor:</span>
+    <div class="capt-head">
+      <h2>
+        <svg class="ico" viewBox="0 0 24 24" style="stroke:#16a34a;">
+          <path d="M12 2v20"/>
+          <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+        </svg>
+        Captações QPreço
+      </h2>
+      <span class="capt-resumo" id="captacoesResumo"></span>
+    </div>
+
+    <div class="capt-filtros">
+      <div class="capt-filtros-linha">
+        <div class="capt-filtros-grupo">
+          <span class="capt-lbl">Status:</span>
+          <button class="chip active" data-capt-filter="pendentes" onclick="setFiltroCaptacoes('pendentes', this)">
+            <span class="dot dot-warn"></span> Pendentes <span class="cnt" id="cntPendentes">0</span>
+          </button>
+          <button class="chip" data-capt-filter="sem-retorno" onclick="setFiltroCaptacoes('sem-retorno', this)">
+            <span class="dot dot-danger"></span> Sem retorno <span class="cnt" id="cntSemRetorno">0</span>
+          </button>
+          <button class="chip" data-capt-filter="concluidas" onclick="setFiltroCaptacoes('concluidas', this)">
+            <span class="dot dot-success"></span> Concluídas <span class="cnt" id="cntConcluidas">0</span>
+          </button>
+          <button class="chip" data-capt-filter="todas" onclick="setFiltroCaptacoes('todas', this)">
+            📋 Todas <span class="cnt" id="cntTodas">0</span>
+          </button>
+        </div>
+        <div class="capt-filtros-grupo" id="captacoesFiltroCorretores">
+          <span class="capt-lbl">Corretor:</span>
+        </div>
       </div>
     </div>
 
-    <div id="captacoesLista" style="max-height:60vh; overflow-y:auto; display:flex; flex-direction:column; gap:10px;">
+    <div id="captacoesLista" class="capt-lista">
       <div class="loading-inline"><span class="loader loader-lg"></span><p>Carregando captações...</p></div>
     </div>
   </div>
@@ -1925,7 +2111,7 @@ const CORRETORES_CACHE_KEY = 'vitrine_corretores_v11';
 const BUSCAR_BASE = 'https://corretor.quintoandar.com.br/informacoes-de-entrada';
 const VITRINE_URL_BASE = 'https://limaribeiroimoveis.com.br/vitrine.html';
 const VITRINE_ADMIN_URL = 'vitrineadmin.html';
-const IMOVEIS_ADMIN_URL = 'https://limaribeiroimoveis.com.br/imoveis.html?admin=1';
+const IMOVEIS_ADMIN_URL = 'https://limaribeiroimoveis.com.br/imoveis.html?admin=1&senha=Cal%40562938';
 const TIMEOUT_API = 90000;
 const TIMEOUT_LOGIN = 60000;
 
@@ -1973,7 +2159,8 @@ const state = {
   _cutucadaTelAtual: null,
   _cutucadasAtuais: [],
   _gruposAbertosGostei: new Set(),
-  _gruposAbertosVisitar: new Set()
+  _gruposAbertosVisitar: new Set(),
+  _captObsAbertas: new Set()
 };
 
 const $ = id => document.getElementById(id);
@@ -2030,15 +2217,6 @@ function fmtData(d){
   const ano = dt.getFullYear();
   const ds = DIAS_SEMANA[dt.getDay()];
   return `${dia}/${mes}/${ano} - ${ds}`;
-}
-function fmtDataCurta(d){
-  if(!d) return '';
-  const dt = new Date(d);
-  if(isNaN(dt.getTime())) return '';
-  const dia = String(dt.getDate()).padStart(2,'0');
-  const mes = String(dt.getMonth()+1).padStart(2,'0');
-  const ds = DIAS_SEMANA_CURTO[dt.getDay()];
-  return `${dia}/${mes} - ${ds}`;
 }
 function fmtDataHora(d){
   if(!d) return '';
@@ -2109,16 +2287,7 @@ function corDoCorretor(nome){
   const c = state.corretores.find(x => x.nome === nome);
   return c ? c.cor : '#64748b';
 }
-function chaveCorretorExata_(nome){
-  return String(nome || '').trim();
-}
-function chaveCorretorGrupo_(nome){
-  const s = String(nome || '').trim();
-  if(!s) return '';
-  const idx = s.indexOf('/');
-  if(idx > 0) return s.slice(0, idx).trim();
-  return s;
-}
+function chaveCorretorExata_(nome){ return String(nome || '').trim(); }
 function nomeCompletoCliente_(nome, telefone){
   const n = String(nome || '').trim() || 'Sem nome';
   const tel = normalizaTel(telefone);
@@ -2358,7 +2527,6 @@ function alternarConcluidas(painel){
   }
   renderizarNotificacoes();
 }
-
 function abrirLinkTQC(){ window.open(LINK_TQC, '_blank', 'noopener'); }
 function abrirImoveisAdmin(){ window.open(IMOVEIS_ADMIN_URL, '_blank', 'noopener'); }
 
@@ -2614,20 +2782,8 @@ async function onClickCheckTarefa(id, jaConcluida){
   marcarSalvando(false);
   if(!res.ok){ toast(res.error || 'Erro', 'error'); return; }
   toast('Tarefa concluída', 'success');
-  setTimeout(async () => {
-    const apagar = await confirmarAcao({
-      titulo: 'Apagar tarefa?', texto: 'Deseja excluir essa tarefa da lista de concluídas?',
-      btnSim: 'Sim, apagar', btnNao: 'Não, manter', tipo: 'danger'
-    });
-    if(apagar){
-      marcarSalvando(true);
-      const r2 = await api('excluirTarefa', { senha: state.adminSenha, id });
-      marcarSalvando(false);
-      if(r2.ok) toast('Tarefa apagada', 'success');
-    }
-    state.carregado.tarefas = false;
-    await carregarTarefas(false);
-  }, 400);
+  state.carregado.tarefas = false;
+  await carregarTarefas(false);
 }
 async function reabrirTarefa(id){
   marcarSalvando(true);
@@ -2821,16 +2977,12 @@ function renderizarClientes(){
     if(ordem === 'cutucada-recente'){
       const ca = parseCutucada_(a.cutucada);
       const cb = parseCutucada_(b.cutucada);
-      const ta = ca ? ca.timestamp : 0;
-      const tb = cb ? cb.timestamp : 0;
-      return tb - ta;
+      return (cb ? cb.timestamp : 0) - (ca ? ca.timestamp : 0);
     }
     if(ordem === 'cutucada-antiga'){
       const ca = parseCutucada_(a.cutucada);
       const cb = parseCutucada_(b.cutucada);
-      const ta = ca ? ca.timestamp : Number.MAX_SAFE_INTEGER;
-      const tb = cb ? cb.timestamp : Number.MAX_SAFE_INTEGER;
-      return ta - tb;
+      return (ca ? ca.timestamp : Number.MAX_SAFE_INTEGER) - (cb ? cb.timestamp : Number.MAX_SAFE_INTEGER);
     }
     if(ordem === 'sem-cutucada'){
       const ca = parseCutucada_(a.cutucada);
@@ -2950,8 +3102,7 @@ async function abrirCutucadas(telefone){
     $('cutucadaLista').innerHTML = '<div class="empty-state"><p>Erro ao carregar cutucadas</p></div>';
     return;
   }
-  const lista = res.data || [];
-  renderizarListaCutucadas_(lista);
+  renderizarListaCutucadas_(res.data || []);
 }
 function renderizarListaCutucadas_(lista){
   window._cutucadasAtuais = lista || [];
@@ -4848,11 +4999,19 @@ function fallbackCopy(texto){
   document.body.removeChild(ta);
 }
 
-/* CAPTAÇÕES QPREÇO */
+/* =====================================================
+   CAPTAÇÕES QPREÇO — LÓGICA SIMPLIFICADA
+   
+   Status:
+   - ""            → Pendente (não contatado)
+   - "sem-retorno" → Contatado, mas não respondeu
+   - "concluida"   → Cliente respondeu / finalizado
+   
+   Corretor: campo único (AtendidoPor)
+   ===================================================== */
 const CAPTACOES_STATE = {
   lista: [],
   filtro: 'pendentes',
-  filtroContato: 'todos',
   filtrosCorretores: new Set(),
   carregado: false
 };
@@ -4871,32 +5030,36 @@ async function atualizarBadgeCaptar(){
     console.warn('[atualizarBadgeCaptar] erro:', e);
   }
 }
+
 async function abrirCaptacoes(){
   $('captacoesBackdrop').classList.add('show');
   $('captacoesLista').innerHTML = '<div class="loading-inline"><span class="loader loader-lg"></span><p>Carregando captações...</p></div>';
   await carregarCaptacoes(true);
 }
+
 function fecharCaptacoes(){
   $('captacoesBackdrop').classList.remove('show');
 }
+
+/* Normaliza status */
+function statusCaptacao_(c){
+  const v = String(c.contatoFeito || '').trim().toLowerCase();
+  if(v === 'sem-retorno' || v === 'sem retorno') return 'sem-retorno';
+  if(v === 'concluida') return 'concluida';
+  if(String(c.concluida || '').trim().toLowerCase() === 'sim') return 'concluida';
+  return 'pendente';
+}
+
 function setFiltroCaptacoes(filtro, btn){
   CAPTACOES_STATE.filtro = filtro;
-  const wrap = btn ? btn.closest('.filtro-grupo') : null;
+  const wrap = btn ? btn.closest('.capt-filtros-grupo') : null;
   if(wrap){
     wrap.querySelectorAll('.chip').forEach(b => b.classList.remove('active'));
     if(btn) btn.classList.add('active');
   }
   renderizarCaptacoes();
 }
-function setFiltroCaptacoesContato(filtro, btn){
-  CAPTACOES_STATE.filtroContato = filtro;
-  const wrap = btn ? btn.closest('.filtro-grupo') : null;
-  if(wrap){
-    wrap.querySelectorAll('.chip').forEach(b => b.classList.remove('active'));
-    if(btn) btn.classList.add('active');
-  }
-  renderizarCaptacoes();
-}
+
 function toggleFiltroCaptacaoCorretor(nome){
   if(CAPTACOES_STATE.filtrosCorretores.has(nome)) CAPTACOES_STATE.filtrosCorretores.delete(nome);
   else CAPTACOES_STATE.filtrosCorretores.add(nome);
@@ -4908,6 +5071,7 @@ function limparFiltroCaptacaoCorretores(){
   renderizarFiltroCaptacoesCorretores();
   renderizarCaptacoes();
 }
+
 function renderizarFiltroCaptacoesCorretores(){
   const wrap = $('captacoesFiltroCorretores');
   if(!wrap) return;
@@ -4931,11 +5095,12 @@ function renderizarFiltroCaptacoesCorretores(){
             </button>`;
   }).join('');
   wrap.innerHTML = `
-    <span class="lbl">Corretor:</span>
+    <span class="capt-lbl">Corretor:</span>
     <button class="chip ${CAPTACOES_STATE.filtrosCorretores.size === 0 ? 'active' : ''}" onclick="limparFiltroCaptacaoCorretores()">Todos</button>
     ${chips}
   `;
 }
+
 async function carregarCaptacoes(mostrarLoading){
   if(mostrarLoading){
     $('captacoesLista').innerHTML = '<div class="loading-inline"><span class="loader loader-lg"></span><p>Carregando captações...</p></div>';
@@ -4949,169 +5114,260 @@ async function carregarCaptacoes(mostrarLoading){
   }
   CAPTACOES_STATE.lista = res.data || [];
   CAPTACOES_STATE.carregado = true;
+  atualizarContadoresCaptacoes();
   renderizarFiltroCaptacoesCorretores();
   renderizarCaptacoes();
   atualizarBadgeCaptar();
 }
+
+function atualizarContadoresCaptacoes(){
+  const lista = CAPTACOES_STATE.lista || [];
+  const pendentes = lista.filter(c => statusCaptacao_(c) === 'pendente').length;
+  const semRetorno = lista.filter(c => statusCaptacao_(c) === 'sem-retorno').length;
+  const concluidas = lista.filter(c => statusCaptacao_(c) === 'concluida').length;
+  const total = lista.length;
+
+  const elP = $('cntPendentes'); if(elP) elP.textContent = pendentes;
+  const elS = $('cntSemRetorno'); if(elS) elS.textContent = semRetorno;
+  const elC = $('cntConcluidas'); if(elC) elC.textContent = concluidas;
+  const elT = $('cntTodas'); if(elT) elT.textContent = total;
+
+  const resumo = $('captacoesResumo');
+  if(resumo){
+    resumo.textContent = `${pendentes} pendente${pendentes === 1 ? '' : 's'} · ${semRetorno} sem retorno · ${concluidas} concluída${concluidas === 1 ? '' : 's'}`;
+  }
+}
+
 function renderizarCaptacoes(){
   const container = $('captacoesLista');
-  const resumo = $('captacoesResumo');
   if(!container) return;
-  const todas = CAPTACOES_STATE.lista || [];
-  const pendentes = todas.filter(c => String(c.concluida || '').trim().toLowerCase() !== 'sim');
-  const concluidas = todas.filter(c => String(c.concluida || '').trim().toLowerCase() === 'sim');
-  if(resumo){
-    resumo.textContent = `(${pendentes.length} pendente${pendentes.length === 1 ? '' : 's'} · ${concluidas.length} concluída${concluidas.length === 1 ? '' : 's'})`;
-  }
-  let arr = todas;
-  if(CAPTACOES_STATE.filtro === 'pendentes') arr = pendentes;
-  else if(CAPTACOES_STATE.filtro === 'concluidas') arr = concluidas;
-  if(CAPTACOES_STATE.filtroContato === 'sem-retorno'){
-    arr = arr.filter(c => String(c.contatoFeito || '').trim().toLowerCase() === 'sem-retorno');
-  } else if(CAPTACOES_STATE.filtroContato === 'nao-contatado'){
-    arr = arr.filter(c => !String(c.contatoFeito || '').trim());
+
+  let arr = [...(CAPTACOES_STATE.lista || [])];
+
+  if(CAPTACOES_STATE.filtro !== 'todas'){
+    arr = arr.filter(c => statusCaptacao_(c) === CAPTACOES_STATE.filtro);
   }
   if(CAPTACOES_STATE.filtrosCorretores.size > 0){
     arr = arr.filter(c => CAPTACOES_STATE.filtrosCorretores.has(String(c.atendidoPor || '').trim()));
   }
+
   if(arr.length === 0){
+    const msg = CAPTACOES_STATE.filtro === 'pendentes'
+      ? 'Nenhuma captação pendente 🎉'
+      : 'Nenhuma captação nesse filtro';
     container.innerHTML = `
-      <div class="empty-state" style="padding:40px 20px;">
-        <h3>${CAPTACOES_STATE.filtro === 'pendentes' ? 'Nenhuma captação pendente 🎉' : 'Nenhuma captação nesse filtro'}</h3>
+      <div class="empty-state" style="grid-column: 1 / -1; padding:40px 20px;">
+        <h3>${msg}</h3>
         <p>${CAPTACOES_STATE.filtro === 'pendentes' ? 'Você está em dia!' : 'Tente outro filtro.'}</p>
       </div>`;
     return;
   }
-  container.innerHTML = arr.map(c => captacaoRowHTML(c)).join('');
+
+  container.innerHTML = arr.map(c => captacaoCardHTML(c)).join('');
 }
-function captacaoRowHTML(c){
-  const isConcluida = String(c.concluida || '').trim().toLowerCase() === 'sim';
+
+function captacaoCardHTML(c){
+  const status = statusCaptacao_(c);
+  const isConcluida = status === 'concluida';
   const tel = normalizaTel(c.telefone);
   const telFmt = fmtTel(tel);
   const telZap = tel.startsWith('55') ? tel : '55' + tel;
-  const endereco = [c.rua, c.numero, c.complemento].filter(Boolean).join(', ');
+  const endereco = [c.rua, c.numero].filter(Boolean).join(', ');
   const dataHora = c.dataHora ? fmtDataHora(c.dataHora) : '—';
-  const contatoFeito = String(c.contatoFeito || '').trim();
-  let statusContato = 'nao-contatado';
-  if(contatoFeito.toLowerCase() === 'sem-retorno') statusContato = 'sem-retorno';
-  else if(contatoFeito) statusContato = 'contatado';
   const atendidoPor = String(c.atendidoPor || '').trim();
-  const opcoesContato = [
-    { v: '', l: '— Não contatado —' },
-    ...state.corretores.map(cr => ({ v: cr.nome, l: '✅ ' + cr.nome + ' (contatou)' })),
-    { v: 'sem-retorno', l: '❌ Sem retorno' }
-  ];
-  const selectContatoHTML = opcoesContato.map(op => 
-    `<option value="${esc(op.v)}" ${contatoFeito === op.v ? 'selected' : ''}>${esc(op.l)}</option>`
-  ).join('');
+  const obsAberta = state._captObsAbertas && state._captObsAbertas.has(String(c.id));
+
+  const statusTag = status === 'pendente'
+    ? '<span class="cc-status-tag pendente">⏳ Pendente</span>'
+    : status === 'sem-retorno'
+      ? '<span class="cc-status-tag sem-retorno">❌ Sem retorno</span>'
+      : '<span class="cc-status-tag concluida">✅ Concluída</span>';
+
+  const selectStatusOpts = `
+    <option value="" ${status === 'pendente' ? 'selected' : ''}>⏳ Pendente</option>
+    <option value="sem-retorno" ${status === 'sem-retorno' ? 'selected' : ''}>❌ Sem retorno</option>
+    <option value="concluida" ${status === 'concluida' ? 'selected' : ''}>✅ Concluída</option>
+  `;
+
   return `
-    <div class="agenda-row-v2" data-id="${esc(c.id)}" style="border-left-color:${isConcluida ? 'var(--success)' : statusContato === 'sem-retorno' ? 'var(--danger)' : statusContato === 'contatado' ? 'var(--info)' : 'var(--warn)'}; ${isConcluida ? 'opacity:.75;' : ''}">
-      <div class="cabecalho">
-        <div class="quando ${isConcluida ? 'semana' : 'amanha'}" style="font-size:.68rem;">
-          ${isConcluida ? '✅ Concluída' : '⏳ Pendente'}
-        </div>
-        <div class="info">
-          <div class="cliente">
-            ${esc(c.nome || '(sem nome)')}
-            <span class="tel">
-              <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-              ${esc(telFmt)}
-            </span>
-            ${atendidoPor ? `<span class="corretor-badge" style="background:${corDoCorretor(atendidoPor) || '#64748b'}">${esc(atendidoPor)}</span>` : ''}
-            <span class="captacao-status-tag ${statusContato}">
-              ${statusContato === 'sem-retorno' ? '❌ Sem retorno' : statusContato === 'contatado' ? '✅ Contatado' : '⚪ Não contatado'}
-            </span>
-          </div>
-          <div class="detalhe">
-            <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-            ${esc(endereco || '(endereço incompleto)')}
-            ${c.bairro ? ` · <strong>${esc(c.bairro)}</strong>` : ''}
-          </div>
-          <div class="detalhe" style="font-size:.68rem; color:var(--muted);">
-            📅 ${esc(dataHora)} ${c.navegador ? `· ${esc(c.navegador)}` : ''}
-          </div>
-        </div>
+    <div class="capt-card status-${status} ${obsAberta ? 'obs-aberta' : ''}" data-id="${esc(c.id)}">
+      <div class="cc-l1">
+        <span class="cc-nome" title="${esc(c.nome || '(sem nome)')}">${esc(c.nome || '(sem nome)')}</span>
+        <span class="cc-tel">${esc(telFmt)}</span>
+        ${statusTag}
       </div>
-      <div class="captacao-contato-wrap">
-        <div class="campo">
-          <label>Quem entrou em contato</label>
-          <select data-cap-id="${esc(c.id)}" data-cap-field="contatoFeito" onchange="onChangeCaptacaoField(this)">
-            ${selectContatoHTML}
+
+      <div class="cc-l2">
+        <svg class="ico ico-sm" viewBox="0 0 24 24" style="flex-shrink:0;">
+          <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+        <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+          ${esc(endereco || '(endereço)')}
+          ${c.bairro ? ` · <strong>${esc(c.bairro)}</strong>` : ''}
+        </span>
+      </div>
+
+      <div class="cc-selects">
+        <div class="cc-campo">
+          <label>Status</label>
+          <select data-cap-id="${esc(c.id)}" data-cap-field="contatoFeito" onchange="onChangeCaptacaoStatus(this)">
+            ${selectStatusOpts}
           </select>
         </div>
-        <div class="campo">
-          <label>Atendido por (corretor)</label>
-          <select data-cap-id="${esc(c.id)}" data-cap-field="atendidoPor" onchange="onChangeCaptacaoField(this)">
+        <div class="cc-campo">
+          <label>Corretor</label>
+          <select data-cap-id="${esc(c.id)}" data-cap-field="atendidoPor" onchange="onChangeCaptacaoCorretor(this)">
             <option value="">— Não atribuído —</option>
-            ${state.corretores.map(cr => 
+            ${state.corretores.map(cr =>
               `<option value="${esc(cr.nome)}" ${atendidoPor === cr.nome ? 'selected' : ''}>${esc(cr.nome)}</option>`
             ).join('')}
           </select>
         </div>
       </div>
-      <div class="captacao-obs-wrap">
+
+      <div class="cc-obs-wrap">
         <label>Observações</label>
-        <textarea data-cap-id="${esc(c.id)}" data-cap-field="observacoes" placeholder="Digite aqui observações sobre esse contato..." onchange="onChangeCaptacaoField(this)">${esc(c.observacoes || '')}</textarea>
+        <textarea data-cap-id="${esc(c.id)}" data-cap-field="observacoes"
+                  placeholder="Digite observações..." onblur="onChangeCaptacaoObs(this)">${esc(c.observacoes || '')}</textarea>
       </div>
-      <div class="barra-acoes" style="justify-content:flex-end;">
-        <a class="acao-btn btn-zap" href="https://wa.me/${telZap}" target="_blank" rel="noopener" title="Abrir WhatsApp">
-          <svg class="ico" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
-          <span class="lbl-btn">WhatsApp</span>
-        </a>
-        <button class="acao-btn ${isConcluida ? 'btn-tratar' : 'btn-chave'}"
-                onclick="toggleConcluidaCaptacao('${esc(c.id)}', ${isConcluida})"
-                title="${isConcluida ? 'Desmarcar (volta para pendente)' : 'Marcar como concluída'}">
-          <svg class="ico" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-          <span class="lbl-btn">${isConcluida ? 'Desmarcar' : 'Concluir'}</span>
-        </button>
+
+      <div class="cc-l3">
+        <span class="cc-data">📅 ${esc(dataHora)}</span>
+        <div class="cc-acoes">
+          <a class="cc-btn btn-zap" href="https://wa.me/${telZap}" target="_blank" rel="noopener" title="Abrir WhatsApp">
+            <svg class="ico" viewBox="0 0 24 24">
+              <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+            </svg>
+          </a>
+          <button class="cc-btn btn-expandir ${obsAberta ? 'ativo' : ''}"
+                  onclick="toggleObsCaptacao('${esc(c.id)}')" title="Observações">
+            <svg class="ico" viewBox="0 0 24 24">
+              <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+              <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+            </svg>
+          </button>
+          <button class="cc-btn ${isConcluida ? 'btn-desmarcar' : 'btn-concluir'}"
+                  onclick="toggleConcluidaCaptacao('${esc(c.id)}', ${isConcluida})"
+                  title="${isConcluida ? 'Desmarcar (volta para pendente)' : 'Marcar como concluída'}">
+            <svg class="ico" viewBox="0 0 24 24">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+          </button>
+        </div>
       </div>
     </div>
   `;
 }
-async function onChangeCaptacaoField(el){
+
+function toggleObsCaptacao(id){
+  if(!state._captObsAbertas) state._captObsAbertas = new Set();
+  if(state._captObsAbertas.has(id)) state._captObsAbertas.delete(id);
+  else state._captObsAbertas.add(id);
+  const card = document.querySelector(`.capt-card[data-id="${id}"]`);
+  if(card){
+    card.classList.toggle('obs-aberta');
+    const btn = card.querySelector('.btn-expandir');
+    if(btn) btn.classList.toggle('ativo');
+  }
+}
+
+async function onChangeCaptacaoStatus(el){
   const id = el.dataset.capId;
-  const field = el.dataset.capField;
   const valor = el.value;
-  if(!id || !field) return;
+  if(!id) return;
   const item = CAPTACOES_STATE.lista.find(x => String(x.id) === String(id));
-  if(item) item[field] = valor;
-  const payload = { senha: state.adminSenha, id: id };
-  payload[field] = valor;
+  if(item) item.contatoFeito = valor;
+
   marcarSalvando(true);
-  const res = await api('atualizarCaptacao', payload);
+  const res = await api('atualizarCaptacao', {
+    senha: state.adminSenha,
+    id: id,
+    contatoFeito: valor
+  });
   marcarSalvando(false);
+
   if(!res.ok){ toast(res.error || 'Erro ao salvar', 'error'); return; }
-  toast('Salvo ✅', 'success');
+  toast('Status atualizado ✅', 'success');
+
+  atualizarContadoresCaptacoes();
   renderizarCaptacoes();
+  atualizarBadgeCaptar();
+}
+
+async function onChangeCaptacaoCorretor(el){
+  const id = el.dataset.capId;
+  const valor = el.value;
+  if(!id) return;
+  const item = CAPTACOES_STATE.lista.find(x => String(x.id) === String(id));
+  if(item) item.atendidoPor = valor;
+
+  marcarSalvando(true);
+  const res = await api('atualizarCaptacao', {
+    senha: state.adminSenha,
+    id: id,
+    atendidoPor: valor
+  });
+  marcarSalvando(false);
+
+  if(!res.ok){ toast(res.error || 'Erro ao salvar', 'error'); return; }
+  toast('Corretor atualizado ✅', 'success');
   renderizarFiltroCaptacoesCorretores();
 }
-async function toggleConcluidaCaptacao(id, isConcluida){
-  const acao = isConcluida ? 'desmarcar (voltar para pendente)' : 'marcar como concluída';
-  const ok = await confirmarAcao({
-    titulo: `Confirmar ${acao}?`,
-    texto: isConcluida
-      ? 'A captação voltará a aparecer na lista de pendentes.'
-      : 'A captação sairá da lista de pendentes e o balão será atualizado.',
-    btnSim: isConcluida ? 'Desmarcar' : 'Marcar concluída',
-    tipo: isConcluida ? 'warn' : 'success'
-  });
-  if(!ok) return;
+
+async function onChangeCaptacaoObs(el){
+  const id = el.dataset.capId;
+  const valor = el.value;
+  if(!id) return;
+  const item = CAPTACOES_STATE.lista.find(x => String(x.id) === String(id));
+  if(!item) return;
+  if(String(item.observacoes || '') === String(valor || '')) return;
+  item.observacoes = valor;
+
   marcarSalvando(true);
-  const res = await api('marcarCaptacaoConcluida', {
-    senha: state.adminSenha, id: id, concluida: !isConcluida
+  const res = await api('atualizarCaptacao', {
+    senha: state.adminSenha,
+    id: id,
+    observacoes: valor
   });
   marcarSalvando(false);
-  if(!res.ok){ toast(res.error || 'Erro ao marcar', 'error'); return; }
-  toast(isConcluida ? 'Captação reaberta' : 'Captação concluída ✅', 'success');
+
+  if(!res.ok){ toast(res.error || 'Erro ao salvar observação', 'error'); return; }
+  toast('Observação salva ✅', 'success');
+}
+
+async function toggleConcluidaCaptacao(id, isConcluida){
   const item = CAPTACOES_STATE.lista.find(x => String(x.id) === String(id));
-  if(item) item.concluida = isConcluida ? '' : 'Sim';
+  if(!item) return;
+
+  const novoStatus = isConcluida ? '' : 'concluida';
+  item.contatoFeito = novoStatus;
+  if(!isConcluida) item.concluida = 'Sim';
+  else item.concluida = '';
+
+  marcarSalvando(true);
+  const res = await api('atualizarCaptacao', {
+    senha: state.adminSenha,
+    id: id,
+    contatoFeito: novoStatus
+  });
+  const res2 = await api('marcarCaptacaoConcluida', {
+    senha: state.adminSenha,
+    id: id,
+    concluida: !isConcluida
+  });
+  marcarSalvando(false);
+
+  if(!res.ok){ toast(res.error || 'Erro', 'error'); return; }
+  toast(isConcluida ? 'Captação reaberta' : 'Captação concluída ✅', 'success');
+
+  atualizarContadoresCaptacoes();
   renderizarCaptacoes();
   atualizarBadgeCaptar();
 }
 
 /* =====================================================
    INIT — CORRIGIDO
-   Aguarda DOMContentLoaded para evitar tela em branco
 ===================================================== */
 window.addEventListener('DOMContentLoaded', async function(){
   try {
