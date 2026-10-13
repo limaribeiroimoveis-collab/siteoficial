@@ -2305,13 +2305,20 @@ function abrirModalEditarImovel(id){
   state.imovelEditando = im;
   state._corretorEscolhido = '';
 
+  // ✅ Reset do botão salvar (evita ficar "Salvando..." infinito)
+  const btnSalvar = $('btnSalvarImovel');
+  btnSalvar.disabled = false;
+  btnSalvar.innerHTML = '<i class="fas fa-save"></i> Salvar em todos os clientes';
+
   // ✅ Busca na lista completa (admin) porque a pública não retorna todos os campos
   const imCompleto = (state.todosImoveis || []).find(x =>
     String(x.codigo || '').trim() === String(im.codigo || '').trim()
   ) || {};
 
-  // Preenche todos os campos (usa imCompleto quando disponível)
-  $('editLink').value       = imCompleto.link       || im.link       || '';
+  const linkSalvo = imCompleto.link || im.link || '';
+
+  // Preenche todos os campos
+  $('editLink').value       = linkSalvo;
   $('editRua').value        = imCompleto.rua        || im.rua        || '';
   $('editNumero').value     = imCompleto.numero     || im.numero     || '';
   $('editBairro').value     = imCompleto.bairro     || im.bairro     || '';
@@ -2322,21 +2329,31 @@ function abrirModalEditarImovel(id){
   $('editChave').value      = imCompleto.chaveTexto || im.chaveTexto || '';
   $('editImagem').value     = imCompleto.imagem     || im.imagem     || '';
 
+  // ✅ Detecta qual corretor está no link e marca o botão
+  let corretorDetectado = '';
+  if(linkSalvo){
+    for(const [nome, sufixo] of Object.entries(FINAIS_LINK)){
+      if(linkSalvo.includes(sufixo)){
+        corretorDetectado = nome;
+        break;
+      }
+    }
+  }
+  state._corretorEscolhido = corretorDetectado;
+  atualizarBtnsCorretor(corretorDetectado);
+
   // Atualiza código de busca + preview
   if(im.codigo){
     state._codigoLinkAtual = im.codigo;
     $('btnBuscarEntrada').disabled = false;
     $('codigoBadge').textContent = '#' + im.codigo;
   } else {
-    const cod = extrairCodigoDoLink(im.link || '');
+    const cod = extrairCodigoDoLink(linkSalvo);
     state._codigoLinkAtual = cod;
     $('btnBuscarEntrada').disabled = !cod;
     $('codigoBadge').textContent = cod ? '#' + cod : 'sem código';
   }
   atualizarPreview(imCompleto.imagem || im.imagem || '');
-
-  // Reset botões corretor
-  atualizarBtnsCorretor('');
 
   const total = contarClientesVinculados(im.codigo);
   $('editarSubInfo').textContent = `#${im.codigo || '---'} · ${im.bairro || ''} — ${total} cliente(s) vinculado(s)`;
@@ -2459,6 +2476,7 @@ async function salvarEdicaoImovel(){
     const res = await apiGet('atualizarImovelPorCodigo', params);
     if(!res.ok){
       toast(res.error || 'Erro ao salvar', 'error');
+      // ✅ Restaura botão em caso de erro
       btn.disabled = false;
       btn.innerHTML = '<i class="fas fa-save"></i> Salvar em todos os clientes';
       return;
@@ -2469,6 +2487,7 @@ async function salvarEdicaoImovel(){
     if(state.modoAdmin) await carregarTodosImoveisAdmin();
   } catch(e){
     toast('Erro ao salvar: ' + e.message, 'error');
+    // ✅ Restaura botão em caso de exceção
     btn.disabled = false;
     btn.innerHTML = '<i class="fas fa-save"></i> Salvar em todos os clientes';
   }
