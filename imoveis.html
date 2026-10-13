@@ -1508,8 +1508,9 @@ function extrairTipoImovel(descricao){
   if(!matches) return '';
   for(const m of matches){
     const texto = m.replace(/\*/g, '').trim().toLowerCase();
+    if(texto.includes('vendido')) continue; // Vendido é tratado separadamente
     if(texto.includes('cobertura')) return 'Cobertura';
-    if(texto.includes('area privativa') || texto.includes('área privativa')) return 'Área privativa';
+    if(texto.includes('area privativa') || texto.includes('área privativa')) return 'Área Privativa';
   }
   return '';
 }
@@ -1525,12 +1526,31 @@ function isVendido(descricao){
   return false;
 }
 
+// Retorna SOMENTE a 1ª linha da descrição, sem asteriscos
+function primeiraLinhaDescricao(descricao){
+  if(!descricao) return '';
+  // Pega a 1ª linha não vazia
+  const linhas = String(descricao).split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
+  if(linhas.length === 0) return '';
+  // Remove QUALQUER coisa entre asteriscos (ex: *Área privativa*, *Vendido*)
+  let linha = linhas[0].replace(/\*+[^*]*\*+/g, '').replace(/\s{2,}/g, ' ').trim();
+  // Remove " · " sobrando no começo/fim
+  linha = linha.replace(/^\s*·\s*|\s*·\s*$/g, '').trim();
+  return linha;
+}
+
+// Retorna as 2 primeiras linhas da descrição, sem asteriscos
 function duasLinhasDescricao(descricao){
   if(!descricao) return '';
   const linhas = String(descricao).split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
   if(linhas.length === 0) return '';
-  if(linhas.length === 1) return linhas[0];
-  return linhas[0] + ' · ' + linhas[1];
+  // Remove asteriscos de cada linha
+  const limpas = linhas.map(l => 
+    l.replace(/\*+[^*]*\*+/g, '').replace(/\s{2,}/g, ' ').replace(/^\s*·\s*|\s*·\s*$/g, '').trim()
+  ).filter(l => l.length > 0);
+  if(limpas.length === 0) return '';
+  if(limpas.length === 1) return limpas[0];
+  return limpas[0] + ' · ' + limpas[1];
 }
 
 function normalizaTexto(s){
@@ -1811,9 +1831,16 @@ function cardHTML(im){
   const rua = im.rua || im.titulo || 'Endereço não informado';
   const bairro = im.bairro || '';
 
-  const descTopo = duasLinhasDescricao(im.descricao) || im.titulo || '';
+  // ✅ Badge azul: SOMENTE 1ª linha, sem asteriscos
+  const descTopo = primeiraLinhaDescricao(im.descricao);
+  
+  // ✅ Descrição no corpo: 2 primeiras linhas sem asteriscos
   const descDuasLinhas = duasLinhasDescricao(im.descricao);
+  
+  // ✅ Tipo (Cobertura / Área privativa): extrai dos asteriscos
   const tipo = extrairTipoImovel(im.descricao);
+  
+  // ✅ Vendido: detecta *Vendido* / **Vendido** / etc
   const vendido = isVendido(im.descricao);
 
   const adminAcoes = state.modoAdmin ? `
