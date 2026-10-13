@@ -2418,6 +2418,96 @@ function parseOrigem_(origemBruta){
   return out;
 }
 
+ /* =====================================================
+   RESOLVER CORRETOR — descobre o corretor responsável
+   por um agendamento / notificação / imóvel
+===================================================== */
+function resolverCorretor_(item){
+  if(!item) return '';
+
+  // 1) Já veio preenchido?
+  if(item.corretor) return String(item.corretor).trim();
+
+  // 2) Tem no mapa por imovelId?
+  const idIm = String(item.id || '');
+  if(idIm && state._corretorPorImovelId && state._corretorPorImovelId[idIm]){
+    return String(state._corretorPorImovelId[idIm]).trim();
+  }
+
+  // 3) Procura pelo telefone do cliente
+  const tel = normalizaTel(item.telefone || '');
+  if(tel && tel !== '00000000000'){
+    const cli = state.clientes.find(c => normalizaTel(c.telefone) === tel);
+    if(cli && cli.corretor) return String(cli.corretor).trim();
+  }
+
+  // 4) Procura pelo nome do cliente
+  const nome = String(item.clienteNome || '').trim().toLowerCase();
+  if(nome){
+    const cli = state.clientes.find(c => (c.nome || '').trim().toLowerCase() === nome);
+    if(cli && cli.corretor) return String(cli.corretor).trim();
+  }
+
+  return '';
+}
+
+/* =====================================================
+   IS EVENTO — identifica eventos neutros (não são visitas)
+===================================================== */
+function isEvento_(a){
+  if(!a) return false;
+  if(a._isEventoNeutro) return true;
+  const id = String(a.id || '');
+  if(id.startsWith(PREFIXO_EVENTO)) return true;
+  const cod = String(a.codigo || '');
+  if(cod.startsWith(PREFIXO_EVENTO)) return true;
+  const tel = normalizaTel(a.telefone || '');
+  if(!tel || tel === '00000000000') return true;
+  return false;
+}
+
+/* =====================================================
+   TÍTULO LIMPO DO EVENTO — remove "S/N" e afins
+===================================================== */
+function tituloEventoLimpo_(a){
+  let t = String(a.rua || a.titulo || a.clienteNome || 'Evento').trim();
+  t = t.replace(/,?\s*(000|S\/N|s\/n|-|\.)\s*/g, ' ').replace(/\s+/g, ' ').trim();
+  const desc = String(a.bairro || '').trim();
+  if(desc){
+    const idx = t.toLowerCase().lastIndexOf(' - ' + desc.toLowerCase());
+    if(idx > 0) t = t.slice(0, idx).trim();
+  }
+  return t || 'Evento';
+}
+
+/* =====================================================
+   CAMPOS ENDEREÇO — extrai rua/numero/bairro/chave
+===================================================== */
+function camposEndereco_(im){
+  if(!im) return { rua: '', numero: '', bairro: '', chave: '' };
+  return {
+    rua:    String(im.rua        || '').trim(),
+    numero: String(im.numero     || '').trim(),
+    bairro: String(im.bairro     || '').trim(),
+    chave:  String(im.chaveTexto || '').trim()
+  };
+}
+
+/* =====================================================
+   CLASSIFICAR AGENDAMENTO — hoje / amanhã / semana / distante
+===================================================== */
+function classificarAgendamento(iso){
+  if(!iso) return { label: '—', classe: 'distante' };
+  const d = new Date(iso);
+  if(isNaN(d.getTime())) return { label: '—', classe: 'distante' };
+  const hoje = new Date();
+  const diff = Math.floor((d - hoje) / 86400000);
+  let classe = 'distante';
+  if(d.toDateString() === hoje.toDateString()) classe = 'hoje';
+  else if(diff === 1) classe = 'amanha';
+  else if(diff >= 2 && diff <= 7) classe = 'semana';
+  return { label: fmtDataHoraCurta(d), classe };
+}
 /* =====================================================
    CUTUCADA / DATA / HELPERS (mantidos)
 ===================================================== */
