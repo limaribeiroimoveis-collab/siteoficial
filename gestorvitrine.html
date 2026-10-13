@@ -5061,17 +5061,17 @@ function statusCaptacao_(c){
   const v = String(c.contatoFeito || '').trim().toLowerCase();
   if(v === 'sem-retorno' || v === 'sem retorno') return 'sem-retorno';
   if(v === 'concluida') return 'concluida';
-  if(String(c.concluida || '').trim().toLowerCase() === 'sim') return 'concluida';
   return 'pendente';
 }
 
 function setFiltroCaptacoes(filtro, btn){
   CAPTACOES_STATE.filtro = filtro;
-  const wrap = btn ? btn.closest('.capt-filtros-grupo') : null;
-  if(wrap){
-    wrap.querySelectorAll('.chip').forEach(b => b.classList.remove('active'));
-    if(btn) btn.classList.add('active');
-  }
+
+  // Atualiza visualmente TODOS os chips de status no modal de captações
+  document.querySelectorAll('#captacoesBackdrop .capt-filtros-grupo .chip[data-capt-filter]').forEach(b => {
+    b.classList.toggle('active', b.dataset.captFilter === filtro);
+  });
+
   renderizarCaptacoes();
 }
 
@@ -5151,21 +5151,41 @@ function renderizarCaptacoes(){
 
   let arr = [...(CAPTACOES_STATE.lista || [])];
 
+  // Filtro de status
   if(CAPTACOES_STATE.filtro !== 'todas'){
     arr = arr.filter(c => statusCaptacao_(c) === CAPTACOES_STATE.filtro);
   }
+
+  // Filtro de corretores
   if(CAPTACOES_STATE.filtrosCorretores.size > 0){
-    arr = arr.filter(c => CAPTACOES_STATE.filtrosCorretores.has(String(c.atendidoPor || '').trim()));
+    arr = arr.filter(c => {
+      const ap = String(c.atendidoPor || '').trim();
+      return CAPTACOES_STATE.filtrosCorretores.has(ap);
+    });
   }
 
   if(arr.length === 0){
-    const msg = CAPTACOES_STATE.filtro === 'pendentes'
-      ? 'Nenhuma captação pendente 🎉'
-      : 'Nenhuma captação nesse filtro';
+    let msg = 'Nenhuma captação nesse filtro';
+    let sub = 'Tente outro filtro.';
+
+    if(CAPTACOES_STATE.filtro === 'pendentes'){
+      msg = 'Nenhuma captação pendente 🎉';
+      sub = 'Você está em dia!';
+    } else if(CAPTACOES_STATE.filtro === 'sem-retorno'){
+      msg = 'Nenhuma captação sem retorno';
+      sub = 'Tudo sob controle.';
+    } else if(CAPTACOES_STATE.filtro === 'concluidas'){
+      msg = 'Nenhuma captação concluída ainda';
+      sub = 'Marque uma captação como concluída para vê-la aqui.';
+    } else if(CAPTACOES_STATE.filtro === 'todas'){
+      msg = 'Nenhuma captação cadastrada';
+      sub = 'Aguardando novos leads.';
+    }
+
     container.innerHTML = `
       <div class="empty-state" style="grid-column: 1 / -1; padding:40px 20px;">
         <h3>${msg}</h3>
-        <p>${CAPTACOES_STATE.filtro === 'pendentes' ? 'Você está em dia!' : 'Tente outro filtro.'}</p>
+        <p>${sub}</p>
       </div>`;
     return;
   }
