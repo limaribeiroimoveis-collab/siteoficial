@@ -5231,8 +5231,8 @@ function fecharCaptacoes(){
 function statusCaptacao_(c){
   const v = String(c.contatoFeito || '').trim().toLowerCase();
   if(v === 'sem-retorno' || v === 'sem retorno') return 'sem-retorno';
-  if(v === 'concluida') return 'concluida';
-  return 'pendente';
+  if(v === 'concluida') return 'concluidas';
+  return 'pendentes';
 }
 
 function setFiltroCaptacoes(filtro, btn){
@@ -5300,10 +5300,11 @@ async function carregarCaptacoes(mostrarLoading){
 
 function atualizarContadoresCaptacoes(){
   const lista = CAPTACOES_STATE.lista || [];
-  const pendentes = lista.filter(c => statusCaptacao_(c) === 'pendente').length;
+  const pendentes = lista.filter(c => statusCaptacao_(c) === 'pendentes').length;
   const semRetorno = lista.filter(c => statusCaptacao_(c) === 'sem-retorno').length;
-  const concluidas = lista.filter(c => statusCaptacao_(c) === 'concluida').length;
+  const concluidas = lista.filter(c => statusCaptacao_(c) === 'concluidas').length;
   const total = lista.length;
+  
 
   const elP = $('cntPendentes'); if(elP) elP.textContent = pendentes;
   const elS = $('cntSemRetorno'); if(elS) elS.textContent = semRetorno;
@@ -5368,8 +5369,14 @@ function renderizarCaptacoes(){
    🆕 CARD DA CAPTAÇÃO COM DADOS COMPLETOS
 ===================================================== */
 function captacaoCardHTML(c){
-  const status = statusCaptacao_(c);
-  const isConcluida = status === 'concluida';
+  const status = statusCaptacao_(c);                     // 'pendentes' | 'sem-retorno' | 'concluidas'
+  const isConcluida = status === 'concluidas';
+
+  // CSS só entende singular:
+  const statusClasse = status === 'pendentes'  ? 'pendente'
+                     : status === 'concluidas' ? 'concluida'
+                     : status;                          // 'sem-retorno' continua igual
+
   const tel = normalizaTel(c.telefone);
   const telFmt = fmtTel(tel);
   const telZap = tel.startsWith('55') ? tel : '55' + tel;
@@ -5391,19 +5398,19 @@ function captacaoCardHTML(c){
     (complementoFinal ? ' - ' + complementoFinal : '') +
     (bairroFinal ? ' - ' + bairroFinal : '');
 
-  const statusTag = status === 'pendente'
+  const statusTag = status === 'pendentes'
     ? '<span class="cc-status-tag pendente">⏳ Pendente</span>'
     : status === 'sem-retorno'
       ? '<span class="cc-status-tag sem-retorno">❌ Sem retorno</span>'
       : '<span class="cc-status-tag concluida">✅ Concluída</span>';
 
   const selectStatusOpts = `
-    <option value="" ${status === 'pendente' ? 'selected' : ''}>⏳ Pendente</option>
+    <option value="" ${status === 'pendentes' ? 'selected' : ''}>⏳ Pendente</option>
     <option value="sem-retorno" ${status === 'sem-retorno' ? 'selected' : ''}>❌ Sem retorno</option>
-    <option value="concluida" ${status === 'concluida' ? 'selected' : ''}>✅ Concluída</option>
+    <option value="concluida" ${status === 'concluidas' ? 'selected' : ''}>✅ Concluída</option>
   `;
 
-  /* 🆕 Monta os "chips" com os dados do imóvel (fase 2) */
+  /* Monta os "chips" com os dados do imóvel (fase 2) */
   let chipsImovel = '';
   const temDadosImovel =
     origem.tipo || origem.area || origem.quartos || origem.suites ||
@@ -5445,7 +5452,7 @@ function captacaoCardHTML(c){
   }
 
   return `
-    <div class="capt-card status-${status} ${obsAberta ? 'obs-aberta' : ''}" data-id="${esc(c.id)}">
+    <div class="capt-card status-${statusClasse} ${obsAberta ? 'obs-aberta' : ''}" data-id="${esc(c.id)}">
       <div class="cc-l1">
         <span class="cc-nome" title="${esc(nomeFinal)}">${esc(nomeFinal)}</span>
         <span class="cc-tel">${esc(telFmt)}</span>
@@ -5596,21 +5603,16 @@ async function toggleConcluidaCaptacao(id, isConcluida){
   const item = CAPTACOES_STATE.lista.find(x => String(x.id) === String(id));
   if(!item) return;
 
+  // Valor salvo na planilha continua sendo SINGULAR ('concluida' ou '')
+  // statusCaptacao_() traduz isso para plural na hora de exibir
   const novoStatus = isConcluida ? '' : 'concluida';
   item.contatoFeito = novoStatus;
-  if(!isConcluida) item.concluida = 'Sim';
-  else item.concluida = '';
 
   marcarSalvando(true);
   const res = await api('atualizarCaptacao', {
     senha: state.adminSenha,
     id: id,
     contatoFeito: novoStatus
-  });
-  const res2 = await api('marcarCaptacaoConcluida', {
-    senha: state.adminSenha,
-    id: id,
-    concluida: !isConcluida
   });
   marcarSalvando(false);
 
