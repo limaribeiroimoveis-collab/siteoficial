@@ -363,7 +363,7 @@
     z-index: 3;
   }
 
-  /* ✅ TARJA VENDIDO - MAIS FINA / ELEGANTE */
+  /* TARJA VENDIDO - FINA / ELEGANTE */
   .imovel-card .tarja-vendido {
     position: absolute;
     inset: 0;
@@ -405,7 +405,6 @@
   .cards-grid.admin-mode .imovel-card .corpo { padding: 10px 10px 8px; gap: 5px; }
   .cards-grid.admin-mode .imovel-card .foto { aspect-ratio: 16 / 11; }
 
-  /* ✅ Badge código */
   .imovel-card .codigo-linha {
     display: flex; align-items: center; gap: 6px;
     margin-bottom: 2px; flex-wrap: wrap;
@@ -725,7 +724,7 @@
   }
   .modal-detalhes .acoes .btn-share:hover { background: #e0e4ef; }
 
-  /* ===== MODAL EDITOR (IGUAL AO VITRINEADMIN) ===== */
+  /* ===== MODAL EDITOR (IDÊNTICO AO VITRINEADMIN) ===== */
   .modal-editor {
     background: #fff; border-radius: var(--radius-lg);
     max-width: 900px; width: 100%; max-height: 92vh;
@@ -751,7 +750,6 @@
   }
   .modal-editor h3 i { color: var(--roxo); }
 
-  /* Grid do editor (mesmo do vitrineadmin) */
   .form-row-4 {
     display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
     gap: 12px; margin-bottom: 14px;
@@ -797,7 +795,6 @@
   }
   .form-group-modal textarea { resize: vertical; min-height: 76px; line-height: 1.5; }
 
-  /* Preview da imagem (igual ao vitrineadmin) */
   .img-preview-box {
     width: 100%; aspect-ratio: 4/3;
     background: var(--cinza-claro);
@@ -814,7 +811,6 @@
     text-align: center; padding: 10px; line-height: 1.4;
   }
 
-  /* Botão buscar entrada (igual vitrineadmin) */
   .btn-buscar-entrada {
     width: 100%; margin-bottom: 14px;
     display: inline-flex; align-items: center; justify-content: center; gap: 8px;
@@ -836,7 +832,6 @@
     border: 1px solid var(--borda);
   }
 
-  /* Ações do editor (Hugo/Carol/Salvar) */
   .form-actions-row {
     display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
     margin-top: 14px;
@@ -899,7 +894,7 @@
     line-height: 1.5;
   }
 
-  /* ===== MODAIS SIMPLES (senha/clonar/clientes) ===== */
+  /* ===== MODAIS SIMPLES ===== */
   .modal-admin {
     background: #fff; border-radius: var(--radius-lg);
     max-width: 500px; width: 100%; max-height: 92vh;
@@ -1339,7 +1334,7 @@
     </div>
 
     <button type="button" class="btn-buscar-entrada" id="btnBuscarEntrada" onclick="abrirBuscarEntradaForm()" disabled>
-      <svg class="ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
       Buscar entrada <span class="codigo-badge" id="codigoBadge">sem código</span>
     </button>
 
@@ -1431,7 +1426,6 @@ const GEOCODE_CACHE_KEY = 'lr_geocode_cache_v3';
 const ADMIN_SENHA = 'Cal@562938';
 const BUSCAR_BASE = 'https://corretor.quintoandar.com.br/informacoes-de-entrada';
 
-// ✅ Finais de link por corretor (definem o sufixo do link do corretor)
 const FINAIS_LINK = {
   'Hugo':     'HugoFelipePereiraRibeiro-3M2K',
   'Carolina': 'CarolinaLima-ZADT'
@@ -2274,7 +2268,7 @@ function atualizarAdminInfo(){
 }
 
 /* =====================================================
-   EDITOR DE IMÓVEL (IGUAL AO VITRINEADMIN)
+   EDITOR DE IMÓVEL (IDÊNTICO AO VITRINEADMIN)
 ===================================================== */
 function abrirModalEditarImovel(id){
   const im = state.imoveisFiltrados.find(x => String(x.id) === String(id))
@@ -2284,17 +2278,22 @@ function abrirModalEditarImovel(id){
   state.imovelEditando = im;
   state._corretorEscolhido = '';
 
-  // Preenche todos os campos
-  $('editLink').value = im.link || '';
-  $('editRua').value = im.rua || '';
-  $('editNumero').value = im.numero || '';
-  $('editBairro').value = im.bairro || '';
-  $('editPreco').value = im.preco || '';
-  $('editCondominio').value = im.condominio || '';
-  $('editIptu').value = im.iptu || '';
-  $('editDescricao').value = im.descricao || '';
-  $('editChave').value = im.chaveTexto || '';
-  $('editImagem').value = im.imagem || '';
+  // ✅ Busca na lista completa (admin) porque a pública não retorna todos os campos
+  const imCompleto = (state.todosImoveis || []).find(x =>
+    String(x.codigo || '').trim() === String(im.codigo || '').trim()
+  ) || {};
+
+  // Preenche todos os campos (usa imCompleto quando disponível)
+  $('editLink').value       = imCompleto.link       || im.link       || '';
+  $('editRua').value        = imCompleto.rua        || im.rua        || '';
+  $('editNumero').value     = imCompleto.numero     || im.numero     || '';
+  $('editBairro').value     = imCompleto.bairro     || im.bairro     || '';
+  $('editPreco').value      = imCompleto.preco      || im.preco      || '';
+  $('editCondominio').value = imCompleto.condominio || im.condominio || '';
+  $('editIptu').value       = imCompleto.iptu       || im.iptu       || '';
+  $('editDescricao').value  = imCompleto.descricao  || im.descricao  || '';
+  $('editChave').value      = imCompleto.chaveTexto || im.chaveTexto || '';
+  $('editImagem').value     = imCompleto.imagem     || im.imagem     || '';
 
   // Atualiza código de busca + preview
   if(im.codigo){
@@ -2307,7 +2306,7 @@ function abrirModalEditarImovel(id){
     $('btnBuscarEntrada').disabled = !cod;
     $('codigoBadge').textContent = cod ? '#' + cod : 'sem código';
   }
-  atualizarPreview(im.imagem || '');
+  atualizarPreview(imCompleto.imagem || im.imagem || '');
 
   // Reset botões corretor
   atualizarBtnsCorretor('');
@@ -2362,7 +2361,6 @@ function onLinkImovelChanged(){
     $('btnBuscarEntrada').disabled = false;
     $('codigoBadge').textContent = '#' + codigo;
   }
-  // Busca imagem do link após 900ms
   if(!/^https?:\/\//.test(url)) return;
   state._linkDebounce = setTimeout(async () => {
     const res = await apiGet('buscarImagem', { url });
@@ -2403,7 +2401,6 @@ async function salvarEdicaoImovel(){
   btn.disabled = true;
   btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Salvando...';
 
-  // Aplica o sufixo do corretor no link
   let linkFinal = $('editLink').value.trim();
   if(linkFinal && state._corretorEscolhido){
     const sufixo = FINAIS_LINK[state._corretorEscolhido] || '';
@@ -2546,7 +2543,6 @@ function contarClientesVinculados(codigo){
 async function abrirModalClientesVinculados(codigo){
   if(!codigo){ toast('Imóvel sem código', 'error'); return; }
 
-  // ✅ Carrega na hora se ainda não tiver
   if(state.todosImoveis.length === 0){
     $('clientesVinculadosLista').innerHTML = '<div style="text-align:center;padding:20px;color:var(--texto-cinza);"><i class="fas fa-spinner fa-spin"></i> Carregando...</div>';
     await carregarTodosImoveisAdmin();
