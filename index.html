@@ -306,16 +306,18 @@
             max-width: 280px;
         }
 
-        /* ===== BANNERS FIXOS ===== */
+        /* ===== BANNERS FIXOS — 3 na mesma linha ===== */
         .banners-fixos {
-            display: grid; grid-template-columns: 1fr 1fr;
-            gap: 24px; padding: 16px 0 36px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+            padding: 16px 0 36px;
         }
         .banner-fixo-img {
             display: block; width: 100%; border-radius: var(--border-radius-lg);
             box-shadow: var(--sombra-media); border: 1px solid rgba(0, 30, 240, 0.06);
             transition: 0.3s; cursor: pointer; overflow: hidden;
-            background: var(--branco); object-fit: cover; aspect-ratio: 16 / 6;
+            background: var(--branco); object-fit: cover; aspect-ratio: 16 / 8;
         }
         .banner-fixo-img:hover {
             transform: translateY(-4px); border-color: var(--azul-quinto);
@@ -533,9 +535,14 @@
             cursor: pointer; display: flex; flex-direction: column;
             text-decoration: none; color: inherit;
         }
-        .video-card:hover {
+        .video-card:hover:not([data-tocando="sim"]) {
             transform: translateY(-4px); border-color: var(--azul-quinto);
             box-shadow: var(--sombra-media);
+        }
+        .video-card[data-tocando="sim"] {
+            cursor: default;
+            transform: none !important;
+            box-shadow: var(--sombra-suave) !important;
         }
         .video-card .video-thumb {
             width: 100%; aspect-ratio: 16 / 9; position: relative;
@@ -547,7 +554,7 @@
             content: ''; position: absolute; inset: 0;
             background: rgba(0, 0, 0, 0.2); transition: 0.3s;
         }
-        .video-card:hover .video-thumb::after { background: rgba(0, 0, 0, 0.05); }
+        .video-card:hover:not([data-tocando="sim"]) .video-thumb::after { background: rgba(0, 0, 0, 0.05); }
         .video-card .play-icon {
             position: relative; z-index: 2;
             width: 48px; height: 48px; border-radius: 50%;
@@ -556,12 +563,25 @@
             font-size: 1.3rem; color: #ff0000; transition: 0.3s;
             box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
         }
-        .video-card:hover .play-icon { transform: scale(1.12); background: #fff; }
+        .video-card:hover:not([data-tocando="sim"]) .play-icon { transform: scale(1.12); background: #fff; }
         .video-card .video-title {
             padding: 12px 14px; font-size: 0.82rem; font-weight: 600;
             color: var(--texto-escuro); line-height: 1.35;
             display: -webkit-box; -webkit-line-clamp: 2;
             -webkit-box-orient: vertical; overflow: hidden; flex: 1;
+        }
+        /* ✅ Embed do vídeo tocando inline */
+        .video-card .video-embed {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background: #000;
+            overflow: hidden;
+        }
+        .video-card .video-embed iframe {
+            width: 100%;
+            height: 100%;
+            display: block;
+            border: 0;
         }
 
         /* ===== DIFERENCIAIS ===== */
@@ -766,6 +786,7 @@
             .lancamentos-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
             .lancamentos-header-texto h2 { font-size: 1.5rem; }
             .videos-header-texto h2 { font-size: 1.5rem; }
+            .banners-fixos { grid-template-columns: repeat(2, 1fr); gap: 14px; }
         }
 
         @media (max-width: 768px) {
@@ -803,6 +824,7 @@
             .imoveis-destaque-header h3 { font-size: 0.95rem; }
             .btn-ver-todos { font-size: 0.72rem; padding: 6px 14px; }
 
+            /* Banners: 1 coluna no mobile */
             .banners-fixos { grid-template-columns: 1fr; gap: 16px; padding: 12px 0 24px; }
 
             .lancamentos-section { padding: 28px 0 24px; }
@@ -907,7 +929,7 @@
 
             .videos-grid { grid-template-columns: 1fr; gap: 12px; }
 
-            .banner-fixo-img { aspect-ratio: 16 / 6; }
+            .banner-fixo-img { aspect-ratio: 16 / 8; }
             .differentials { grid-template-columns: 1fr; }
 
             .btn-indique-nav { font-size: 0.65rem; padding: 5px 12px; }
@@ -1005,18 +1027,25 @@
             </div>
         </section>
 
-        <!-- ===== BANNERS FIXOS ===== -->
+        <!-- ===== BANNERS FIXOS — 3 na mesma linha ===== -->
         <div class="banners-fixos">
             <a href="precoimovel.html">
                 <img 
-                    src="https://via.placeholder.com/800x300/001EF0/ffffff?text=Banner+QPreco" 
+                    src="https://via.placeholder.com/800x400/001EF0/ffffff?text=Banner+QPreco" 
                     alt="QPreço - Calcule o valor do seu imóvel" 
+                    class="banner-fixo-img"
+                />
+            </a>
+            <a href="#" onclick="openModal('anuncieImovel'); return false;">
+                <img 
+                    src="https://via.placeholder.com/800x400/16a34a/ffffff?text=Anuncie+seu+Imovel" 
+                    alt="Anuncie seu imóvel - Lima Ribeiro Imóveis" 
                     class="banner-fixo-img"
                 />
             </a>
             <a href="https://www.limaribeiroimoveis.com.br/indiqueeganhe" target="_blank">
                 <img 
-                    src="https://via.placeholder.com/800x300/f5a623/ffffff?text=Banner+Indique+e+Ganhe" 
+                    src="https://via.placeholder.com/800x400/f5a623/ffffff?text=Banner+Indique+e+Ganhe" 
                     alt="Indique e Ganhe - Lima Ribeiro Imóveis" 
                     class="banner-fixo-img"
                 />
@@ -1131,6 +1160,36 @@
     <button class="whatsapp-float" onclick="openWhatsAppModal()" aria-label="WhatsApp">
         <i class="fab fa-whatsapp"></i>
     </button>
+
+    <!-- ===== MODAL ANUNCIE SEU IMÓVEL ===== -->
+    <div class="modal-overlay" id="anuncieImovelModal">
+        <div class="modal-box" style="max-width: 520px;">
+            <h3><i class="fas fa-home" style="color: var(--azul-quinto);"></i> Anuncie seu imóvel com a gente</h3>
+            <p class="sub">
+                Quer vender ou alugar seu imóvel? A Lima Ribeiro tem a tecnologia do QuintoAndar
+                e o atendimento personalizado que você merece. Fale direto com um de nossos corretores!
+            </p>
+            <div class="contact-list">
+                <a href="https://wa.me/5531996273985?text=Olá!%20Quero%20anunciar%20meu%20imóvel%20com%20a%20Lima%20Ribeiro." target="_blank" class="contact-item">
+                    <div class="avatar"><img data-corretor="carolina" alt="Carolina" /></div>
+                    <div class="info">
+                        <div class="name">Carolina Lima</div>
+                        <div class="role">Quero anunciar com a Carolina</div>
+                    </div>
+                    <i class="fab fa-whatsapp icon-right whatsapp"></i>
+                </a>
+                <a href="https://wa.me/5531996070930?text=Olá!%20Quero%20anunciar%20meu%20imóvel%20com%20a%20Lima%20Ribeiro." target="_blank" class="contact-item">
+                    <div class="avatar"><img data-corretor="hugo" alt="Hugo" /></div>
+                    <div class="info">
+                        <div class="name">Hugo Ribeiro</div>
+                        <div class="role">Quero anunciar com o Hugo</div>
+                    </div>
+                    <i class="fab fa-whatsapp icon-right whatsapp"></i>
+                </a>
+            </div>
+            <button class="modal-close" onclick="closeAnuncieImovelModal()">Fechar</button>
+        </div>
+    </div>
 
     <!-- Modais -->
     <div class="modal-overlay" id="whatsappModal">
@@ -1584,14 +1643,14 @@
         }
 
         // ============================================================
-        // VÍDEOS
+        // VÍDEOS — tocam direto no site (embed inline)
         // ============================================================
         function renderizarVideos(){
             const grid = $('videosGrid');
             if(!grid) return;
             grid.innerHTML = '';
 
-            VIDEOS_YOUTUBE.forEach(video => {
+            VIDEOS_YOUTUBE.forEach((video) => {
                 const thumbUrl = video.thumb && video.thumb.trim() !== ''
                     ? video.thumb
                     : `https://img.youtube.com/vi/${video.videoId}/hqdefault.jpg`;
@@ -1599,19 +1658,45 @@
                     ? video.link
                     : `https://www.youtube.com/watch?v=${video.videoId}`;
 
-                const card = document.createElement('a');
+                const card = document.createElement('div');
                 card.className = 'video-card';
-                card.href = linkUrl;
-                card.target = '_blank';
-                card.rel = 'noopener noreferrer';
+                card.dataset.videoId = video.videoId;
+                card.dataset.link = linkUrl;
+                card.dataset.thumb = thumbUrl;
+                card.dataset.titulo = video.titulo;
                 card.innerHTML = `
                     <div class="video-thumb" style="background-image: url('${thumbUrl}');">
                         <div class="play-icon"><i class="fas fa-play"></i></div>
                     </div>
                     <div class="video-title">${esc(video.titulo)}</div>
                 `;
+                card.addEventListener('click', () => tocarVideoInline(card));
                 grid.appendChild(card);
             });
+        }
+
+        function tocarVideoInline(card){
+            const videoId = card.dataset.videoId;
+            const link = card.dataset.link;
+            if(!videoId) { window.open(link, '_blank'); return; }
+
+            // Bloqueia re-clique
+            if(card.dataset.tocando === 'sim') return;
+            card.dataset.tocando = 'sim';
+
+            // Substitui o conteúdo por um iframe do YouTube
+            card.innerHTML = `
+                <div class="video-embed">
+                    <iframe
+                        src="https://www.youtube.com/embed/${encodeURIComponent(videoId)}?autoplay=1&rel=0"
+                        title="YouTube video player"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowfullscreen>
+                    </iframe>
+                </div>
+                <div class="video-title">${esc(card.dataset.titulo || '')}</div>
+            `;
         }
 
         // ============================================================
@@ -1750,6 +1835,10 @@ O sinal (arras) é uma garantia para as duas partes e já faz parte do valor do 
             modal.classList.add('active');
         }
         function closeWhatsAppModal() { document.getElementById('whatsappModal').classList.remove('active'); }
+
+        function openAnuncieImovelModal() { document.getElementById('anuncieImovelModal').classList.add('active'); }
+        function closeAnuncieImovelModal() { document.getElementById('anuncieImovelModal').classList.remove('active'); }
+
         function openContatoCompletoModal() { document.getElementById('contatoCompletoModal').classList.add('active'); }
         function closeContatoCompletoModal() { document.getElementById('contatoCompletoModal').classList.remove('active'); }
         function openAgendarVisitaModal() { document.getElementById('agendarVisitaModal').classList.add('active'); }
@@ -1760,6 +1849,7 @@ O sinal (arras) é uma garantia para as duas partes e já faz parte do valor do 
         function closeMenuMobileModal() { document.getElementById('menuMobileModal').classList.remove('active'); }
 
         function openModal(type) {
+            if (type === 'anuncieImovel') { openAnuncieImovelModal(); return; }
             if (type === 'contatoCompleto') { openContatoCompletoModal(); return; }
             if (type === 'agendarVisita') { openAgendarVisitaModal(); return; }
             if (type === 'informativos') { openInformativosModal(); return; }
@@ -1796,6 +1886,8 @@ O sinal (arras) é uma garantia para as duas partes e já faz parte do valor do 
 
         window.openWhatsAppModal = openWhatsAppModal;
         window.closeWhatsAppModal = closeWhatsAppModal;
+        window.openAnuncieImovelModal = openAnuncieImovelModal;
+        window.closeAnuncieImovelModal = closeAnuncieImovelModal;
         window.openContatoCompletoModal = openContatoCompletoModal;
         window.closeContatoCompletoModal = closeContatoCompletoModal;
         window.openAgendarVisitaModal = openAgendarVisitaModal;
