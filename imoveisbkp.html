@@ -1,0 +1,1964 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<title>Imóveis · Lima Ribeiro Imóveis</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23001EF0'/><text x='50' y='68' font-family='sans-serif' font-size='48' font-weight='800' fill='white' text-anchor='middle'>LR</text></svg>">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
+
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --azul-quinto: #001EF0;
+    --azul-escuro: #0011a0;
+    --azul-claro: #e8edff;
+    --cinza-claro: #f0f2f8;
+    --branco: #ffffff;
+    --texto-escuro: #1a1a2e;
+    --texto-cinza: #5a5a72;
+    --muted: #94a3b8;
+    --borda: #e2e8f0;
+    --borda-forte: #cbd5e1;
+    --verde: #16a34a;
+    --vermelho: #dc2626;
+    --laranja: #ea580c;
+    --roxo: #7c3aed;
+    --sombra-suave: 0 8px 32px rgba(0, 30, 240, 0.06);
+    --sombra-media: 0 12px 48px rgba(0, 30, 240, 0.10);
+    --sombra-forte: 0 20px 60px rgba(0, 30, 240, 0.18);
+    --radius: 14px;
+    --radius-lg: 20px;
+  }
+
+  body {
+    background: #f5f7fc;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: var(--texto-escuro);
+    line-height: 1.5;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ===== HEADER ===== */
+  .navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 20px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    border-bottom: 1px solid rgba(0, 30, 240, 0.06);
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .navbar .logo-link { display: flex; align-items: center; text-decoration: none; }
+  .navbar .logo-img { height: 44px; width: auto; }
+  .navbar .nav-links { display: flex; gap: 20px; align-items: center; flex-wrap: wrap; }
+  .navbar .nav-links a {
+    color: var(--texto-escuro);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.88rem;
+    transition: 0.2s;
+    white-space: nowrap;
+  }
+  .navbar .nav-links a:hover { color: var(--azul-quinto); }
+  .navbar .nav-links a.destaque {
+    background: var(--azul-quinto);
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 40px;
+    font-weight: 600;
+  }
+  .navbar .nav-links a.destaque:hover { background: var(--azul-escuro); }
+
+  /* ===== HERO ===== */
+  .hero-imoveis {
+    background: linear-gradient(135deg, #001EF0 0%, #0044ff 100%);
+    color: #fff;
+    padding: 28px 20px 32px;
+    text-align: center;
+  }
+  .hero-imoveis h1 { font-size: 1.8rem; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 6px; }
+  .hero-imoveis p { font-size: 0.92rem; opacity: 0.9; }
+  .hero-imoveis .contador {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.15);
+    padding: 4px 14px;
+    border-radius: 40px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    margin-top: 10px;
+    backdrop-filter: blur(6px);
+  }
+
+  .container { max-width: 1400px; margin: 0 auto; padding: 0 20px; }
+
+  /* ===== SELETOR DE MODO ===== */
+  .modo-selector {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 20px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+  }
+  .modo-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    background: #fff;
+    border: 2px solid var(--borda);
+    border-radius: var(--radius);
+    padding: 18px 32px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.18s;
+    min-width: 160px;
+    box-shadow: var(--sombra-suave);
+  }
+  .modo-btn i {
+    font-size: 1.6rem;
+    color: var(--texto-cinza);
+    transition: 0.18s;
+  }
+  .modo-btn .titulo {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--texto-escuro);
+  }
+  .modo-btn .sub {
+    font-size: 0.72rem;
+    color: var(--muted);
+    font-weight: 500;
+  }
+  .modo-btn:hover {
+    border-color: var(--azul-claro);
+    transform: translateY(-2px);
+    box-shadow: var(--sombra-media);
+  }
+  .modo-btn.ativo {
+    border-color: var(--azul-quinto);
+    background: linear-gradient(180deg, #fff 0%, var(--azul-claro) 100%);
+  }
+  .modo-btn.ativo i { color: var(--azul-quinto); transform: scale(1.1); }
+  .modo-btn.ativo .titulo { color: var(--azul-quinto); }
+
+  /* ===== FILTROS — GRID ALINHADO ===== */
+  .filtros-wrap {
+    background: #fff;
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-top: 16px;
+    box-shadow: var(--sombra-suave);
+    border: 1px solid var(--borda);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    position: sticky;
+    top: 68px;
+    z-index: 900;
+  }
+
+  /* Grid principal: linha 1 = busca + bairro */
+  .filtros-grid-1 {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 12px;
+    align-items: end;
+  }
+  /* Grid linha 2: preço + condomínio + tipo + ordenar + limpar */
+  .filtros-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr auto;
+    gap: 12px;
+    align-items: end;
+  }
+
+  .filtro-grupo {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    min-width: 0;
+  }
+  .filtro-grupo label {
+    font-size: 0.66rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    color: var(--muted);
+    height: 14px;
+    line-height: 14px;
+  }
+  .filtro-grupo input,
+  .filtro-grupo select {
+    width: 100%;
+    padding: 9px 12px;
+    border: 1.5px solid var(--borda-forte);
+    border-radius: 10px;
+    font-size: 0.86rem;
+    font-family: inherit;
+    background: #fff;
+    color: var(--texto-escuro);
+    transition: 0.15s;
+    height: 40px;
+  }
+  .filtro-grupo input:focus,
+  .filtro-grupo select:focus {
+    outline: none;
+    border-color: var(--azul-quinto);
+    box-shadow: 0 0 0 3px rgba(0, 30, 240, 0.1);
+  }
+
+  .busca-wrap {
+    position: relative;
+  }
+  .busca-wrap i {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted);
+    font-size: 0.9rem;
+    pointer-events: none;
+    margin-top: 7px;
+  }
+  .busca-wrap input {
+    padding-left: 34px;
+  }
+
+  .btn-limpar {
+    background: transparent;
+    border: 1.5px dashed var(--borda-forte);
+    color: var(--texto-cinza);
+    padding: 9px 18px;
+    border-radius: 10px;
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 0.82rem;
+    cursor: pointer;
+    transition: 0.15s;
+    white-space: nowrap;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .btn-limpar:hover { background: var(--cinza-claro); color: var(--texto-escuro); border-style: solid; }
+
+  .bairros-rapidos {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    padding-top: 10px;
+    border-top: 1px dashed var(--borda);
+  }
+  .bairros-rapidos .lbl-rapido {
+    font-size: 0.66rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    color: var(--muted);
+    align-self: center;
+    margin-right: 4px;
+  }
+  .bairro-chip {
+    padding: 5px 12px;
+    background: var(--cinza-claro);
+    border: 1px solid transparent;
+    border-radius: 999px;
+    font-size: 0.74rem;
+    font-weight: 600;
+    cursor: pointer;
+    color: var(--texto-cinza);
+    transition: 0.15s;
+    font-family: inherit;
+    white-space: nowrap;
+  }
+  .bairro-chip:hover { background: var(--azul-claro); color: var(--azul-quinto); }
+  .bairro-chip.ativo {
+    background: var(--azul-quinto);
+    color: #fff;
+  }
+
+  /* ===== ÁREA PRINCIPAL ===== */
+  .conteudo-principal {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 20px 0 60px;
+    position: relative;
+  }
+  .conteudo-principal.modo-mapa {
+    grid-template-columns: 340px 1fr;
+    height: calc(100vh - 300px);
+    min-height: 500px;
+    padding-bottom: 20px;
+  }
+
+  /* ===== GRID DE CARDS (modo lista) ===== */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+    align-content: start;
+  }
+
+  /* ===== MODO MAPA: lista compacta à esquerda ===== */
+  .conteudo-principal.modo-mapa .cards-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    max-height: 100%;
+    overflow-y: auto;
+    padding: 10px;
+    background: #fff;
+    border: 1px solid var(--borda);
+    border-radius: var(--radius);
+    box-shadow: var(--sombra-suave);
+  }
+  .conteudo-principal.modo-mapa .cards-grid::-webkit-scrollbar { width: 8px; }
+  .conteudo-principal.modo-mapa .cards-grid::-webkit-scrollbar-thumb {
+    background: var(--borda-forte);
+    border-radius: 4px;
+  }
+
+  /* Card horizontal no modo mapa */
+  .card-mapa {
+    display: grid;
+    grid-template-columns: 92px 1fr;
+    gap: 10px;
+    background: #fff;
+    border: 1px solid var(--borda);
+    border-radius: 10px;
+    padding: 8px;
+    cursor: pointer;
+    transition: 0.15s;
+    align-items: center;
+  }
+  .card-mapa:hover {
+    border-color: var(--azul-quinto);
+    box-shadow: 0 2px 10px rgba(0,30,240,0.08);
+    transform: translateX(2px);
+  }
+  .card-mapa .thumb {
+    width: 92px;
+    height: 92px;
+    border-radius: 8px;
+    background-size: cover;
+    background-position: center;
+    background-color: var(--cinza-claro);
+    flex-shrink: 0;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted);
+    font-size: 1.2rem;
+  }
+  .card-mapa .thumb .badge-tipo {
+    position: absolute;
+    bottom: 4px;
+    left: 4px;
+    right: 4px;
+    background: rgba(124, 58, 237, 0.9);
+    color: #fff;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.55rem;
+    font-weight: 700;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+  .card-mapa .info {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+  }
+  .card-mapa .preco {
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: var(--azul-quinto);
+    line-height: 1.1;
+    letter-spacing: -0.3px;
+  }
+  .card-mapa .rua {
+    font-size: 0.74rem;
+    font-weight: 600;
+    color: var(--texto-escuro);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .card-mapa .bairro-txt {
+    font-size: 0.68rem;
+    color: var(--azul-quinto);
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .card-mapa .desc-linha {
+    font-size: 0.66rem;
+    color: var(--texto-cinza);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* ===== CARD PADRÃO (modo lista) ===== */
+  .imovel-card {
+    background: #fff;
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--sombra-suave);
+    border: 1px solid var(--borda);
+    transition: 0.25s;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+  .imovel-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--sombra-media);
+    border-color: rgba(0, 30, 240, 0.15);
+  }
+
+  .imovel-card .foto {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    background: var(--cinza-claro);
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted);
+    font-size: 1.6rem;
+  }
+  .imovel-card .foto .badge-descricao {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    background: rgba(0, 30, 240, 0.92);
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+    backdrop-filter: blur(4px);
+    line-height: 1.3;
+    text-align: center;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .imovel-card .foto .badge-tipo {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    background: rgba(124, 58, 237, 0.95);
+    color: #fff;
+    padding: 3px 10px;
+    border-radius: 6px;
+    font-size: 0.62rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    backdrop-filter: blur(4px);
+  }
+
+  .imovel-card .corpo {
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .imovel-card .preco {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--azul-quinto);
+    letter-spacing: -0.5px;
+    line-height: 1.1;
+  }
+  .imovel-card .preco .tipo {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  /* ✅ Endereço: Rua + Bairro destacado */
+  .imovel-card .endereco-linha {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    flex-wrap: wrap;
+    line-height: 1.35;
+  }
+  .imovel-card .endereco-linha .rua {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--texto-escuro);
+  }
+  .imovel-card .endereco-linha .bairro-destaque {
+    font-size: 0.74rem;
+    font-weight: 800;
+    color: var(--azul-quinto);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+
+  .imovel-card .descricao-2linhas {
+    font-size: 0.76rem;
+    color: var(--texto-cinza);
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .imovel-card .condo-info {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    padding-top: 8px;
+    border-top: 1px solid var(--borda);
+    font-size: 0.74rem;
+    color: var(--texto-cinza);
+  }
+  .imovel-card .condo-info .feat {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-weight: 500;
+  }
+  .imovel-card .condo-info .feat i { color: var(--azul-quinto); font-size: 0.78rem; }
+
+  /* ===== MAPA ===== */
+  .mapa-wrap {
+    background: #fff;
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--sombra-suave);
+    border: 1px solid var(--borda);
+    position: relative;
+    height: 100%;
+    min-height: 400px;
+    display: none;
+  }
+  .conteudo-principal.modo-mapa .mapa-wrap { display: block; }
+  #mapa { width: 100%; height: 100%; min-height: 400px; }
+
+  .mapa-loading {
+    position: absolute;
+    inset: 0;
+    background: rgba(255,255,255,0.95);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    z-index: 500;
+    font-size: 0.85rem;
+    color: var(--texto-cinza);
+    font-weight: 500;
+    padding: 20px;
+    text-align: center;
+  }
+  .mapa-loading .spinner {
+    width: 38px;
+    height: 38px;
+    border: 3px solid var(--azul-claro);
+    border-top-color: var(--azul-quinto);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  .mapa-loading .ico-grande {
+    font-size: 3rem;
+    color: var(--azul-claro);
+    margin-bottom: 8px;
+  }
+  .mapa-loading h3 {
+    color: var(--texto-escuro);
+    font-weight: 700;
+    font-size: 1rem;
+    margin-bottom: 4px;
+  }
+  .mapa-loading p {
+    font-size: 0.82rem;
+    color: var(--texto-cinza);
+    max-width: 300px;
+    line-height: 1.5;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .popup-imovel {
+    min-width: 200px;
+    font-family: 'Inter', sans-serif;
+  }
+  .popup-imovel .popup-foto {
+    width: calc(100% + 40px);
+    height: 110px;
+    background-size: cover;
+    background-position: center;
+    background-color: var(--cinza-claro);
+    border-radius: 8px 8px 0 0;
+    margin: -14px -20px 10px;
+  }
+  .popup-imovel .popup-preco {
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--azul-quinto);
+    margin-bottom: 4px;
+  }
+  .popup-imovel .popup-end {
+    font-size: 0.78rem;
+    color: var(--texto-escuro);
+    font-weight: 600;
+    margin-bottom: 3px;
+    line-height: 1.3;
+  }
+  .popup-imovel .popup-bairro {
+    font-size: 0.7rem;
+    color: var(--azul-quinto);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    margin-bottom: 8px;
+  }
+  .popup-imovel .popup-btn {
+    display: block;
+    width: 100%;
+    background: var(--azul-quinto);
+    color: #fff;
+    border: none;
+    padding: 8px;
+    border-radius: 8px;
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 0.76rem;
+    cursor: pointer;
+    text-align: center;
+  }
+  .popup-imovel .popup-btn:hover { background: var(--azul-escuro); }
+
+  .leaflet-popup-content-wrapper {
+    border-radius: 12px !important;
+    padding: 0 !important;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.15) !important;
+  }
+  .leaflet-popup-content { margin: 14px 20px !important; }
+  .leaflet-container a.leaflet-popup-close-button {
+    color: #fff !important;
+    background: rgba(0,0,0,0.3) !important;
+    border-radius: 50% !important;
+    width: 22px !important;
+    height: 22px !important;
+    line-height: 20px !important;
+    font-size: 16px !important;
+    top: 8px !important;
+    right: 8px !important;
+    z-index: 10;
+  }
+
+  .cluster-icon {
+    background: rgba(0, 30, 240, 0.9);
+    color: #fff;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.82rem;
+    border: 3px solid #fff;
+    box-shadow: 0 4px 12px rgba(0, 30, 240, 0.4);
+  }
+
+  /* ===== MODAL DETALHES ===== */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    backdrop-filter: blur(4px);
+    z-index: 2000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    overflow-y: auto;
+  }
+  .modal-backdrop.show { display: flex; }
+
+  .modal-detalhes {
+    background: #fff;
+    border-radius: var(--radius-lg);
+    max-width: 860px;
+    width: 100%;
+    max-height: 92vh;
+    overflow-y: auto;
+    box-shadow: var(--sombra-forte);
+    position: relative;
+    animation: fadeUp 0.25s ease;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .modal-detalhes .btn-fechar {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    background: rgba(255, 255, 255, 0.95);
+    border: none;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1rem;
+    color: var(--texto-escuro);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+    transition: 0.15s;
+  }
+  .modal-detalhes .btn-fechar:hover { background: #fff; transform: scale(1.05); }
+
+  .modal-detalhes .galeria {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: var(--cinza-claro);
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted);
+    font-size: 2rem;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  }
+
+  .modal-detalhes .conteudo {
+    padding: 24px 28px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .modal-detalhes .topo {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .modal-detalhes .topo .codigo-linha {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .modal-detalhes .topo .codigo-badge {
+    background: var(--azul-claro);
+    color: var(--azul-quinto);
+    padding: 4px 12px;
+    border-radius: 8px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    font-family: 'SF Mono', Menlo, monospace;
+    letter-spacing: 0.5px;
+  }
+  .modal-detalhes .topo .tipo-badge {
+    background: var(--roxo);
+    color: #fff;
+    padding: 4px 12px;
+    border-radius: 8px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .modal-detalhes .topo h2 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--azul-quinto);
+    letter-spacing: -0.5px;
+    line-height: 1.1;
+  }
+  .modal-detalhes .topo .endereco-completo {
+    font-size: 0.95rem;
+    color: var(--texto-escuro);
+    font-weight: 500;
+    line-height: 1.5;
+  }
+  .modal-detalhes .topo .endereco-completo i {
+    color: var(--azul-quinto);
+    margin-right: 6px;
+  }
+  .modal-detalhes .topo .endereco-completo .bairro-destaque {
+    color: var(--azul-quinto);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    font-size: 0.85rem;
+    margin-left: 6px;
+  }
+
+  .modal-detalhes .descricao {
+    font-size: 0.9rem;
+    line-height: 1.65;
+    color: var(--texto-cinza);
+    white-space: pre-wrap;
+  }
+
+  .modal-detalhes .gastos {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    font-size: 0.82rem;
+    color: var(--texto-cinza);
+    padding: 12px 16px;
+    background: #fef3c7;
+    border-left: 3px solid var(--laranja);
+    border-radius: 8px;
+  }
+  .modal-detalhes .gastos strong { color: var(--texto-escuro); }
+
+  .modal-detalhes .acoes {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    padding-top: 8px;
+  }
+  .modal-detalhes .acoes .btn {
+    flex: 1;
+    min-width: 160px;
+    padding: 13px 18px;
+    border-radius: 12px;
+    border: none;
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 0.88rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-decoration: none;
+    transition: 0.15s;
+  }
+  .modal-detalhes .acoes .btn-zap {
+    background: #25d366;
+    color: #fff;
+  }
+  .modal-detalhes .acoes .btn-zap:hover { background: #1eb955; transform: translateY(-1px); }
+  .modal-detalhes .acoes .btn-anuncio {
+    background: var(--azul-quinto);
+    color: #fff;
+  }
+  .modal-detalhes .acoes .btn-anuncio:hover { background: var(--azul-escuro); transform: translateY(-1px); }
+  .modal-detalhes .acoes .btn-share {
+    background: var(--cinza-claro);
+    color: var(--texto-escuro);
+    flex: 0 0 auto;
+    min-width: auto;
+    padding: 13px 16px;
+  }
+  .modal-detalhes .acoes .btn-share:hover { background: #e0e4ef; }
+
+  /* ===== ESTADOS ===== */
+  .loading-principal {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--texto-cinza);
+    grid-column: 1 / -1;
+  }
+  .loading-principal .spinner {
+    width: 44px;
+    height: 44px;
+    border: 4px solid var(--azul-claro);
+    border-top-color: var(--azul-quinto);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto 16px;
+  }
+  .loading-principal p { font-size: 0.9rem; font-weight: 500; }
+
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--muted);
+    grid-column: 1 / -1;
+  }
+  .empty-state i {
+    font-size: 3rem;
+    color: var(--borda-forte);
+    margin-bottom: 14px;
+    display: block;
+  }
+  .empty-state h3 {
+    font-size: 1.05rem;
+    color: var(--texto-cinza);
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .empty-state p { font-size: 0.85rem; }
+
+  .btn-topo {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--azul-quinto);
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 20px rgba(0, 30, 240, 0.35);
+    z-index: 800;
+    transition: 0.2s;
+  }
+  .btn-topo.show { display: flex; }
+  .btn-topo:hover { transform: scale(1.08); background: var(--azul-escuro); }
+
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translate(-50%, 30px);
+    background: #1a1a2e;
+    color: #fff;
+    padding: 12px 22px;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    opacity: 0;
+    transition: 0.3s;
+    z-index: 3000;
+    pointer-events: none;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+  }
+  .toast.show { opacity: 1; transform: translate(-50%, 0); }
+  .toast.success { background: var(--verde); }
+  .toast.error { background: var(--vermelho); }
+
+  /* ===== RESPONSIVO ===== */
+  @media (max-width: 900px) {
+    .filtros-grid-1 {
+      grid-template-columns: 1fr;
+    }
+    .filtros-grid-2 {
+      grid-template-columns: 1fr 1fr;
+    }
+    .filtros-grid-2 .btn-limpar {
+      grid-column: 1 / -1;
+      justify-content: center;
+    }
+
+    .conteudo-principal.modo-mapa {
+      grid-template-columns: 1fr;
+      height: auto;
+    }
+    .conteudo-principal.modo-mapa .cards-grid {
+      max-height: 420px;
+    }
+    .mapa-wrap { height: 60vh; min-height: 400px; }
+  }
+
+  @media (max-width: 640px) {
+    .navbar { padding: 10px 14px; }
+    .navbar .nav-links { display: none; }
+    .hero-imoveis { padding: 20px 14px 24px; }
+    .hero-imoveis h1 { font-size: 1.4rem; }
+    .container { padding: 0 12px; }
+
+    .modo-btn { padding: 14px 20px; min-width: 130px; flex: 1; }
+    .modo-btn i { font-size: 1.3rem; }
+    .modo-btn .titulo { font-size: 0.9rem; }
+    .modo-btn .sub { font-size: 0.66rem; }
+
+    .filtros-wrap { padding: 12px; gap: 10px; top: 60px; }
+    .filtros-grid-2 {
+      grid-template-columns: 1fr;
+    }
+
+    .cards-grid { grid-template-columns: 1fr; gap: 12px; }
+    .imovel-card .preco { font-size: 1.15rem; }
+    .imovel-card .foto .badge-descricao { font-size: 0.66rem; padding: 5px 10px; }
+
+    .modal-detalhes .conteudo { padding: 18px; }
+    .modal-detalhes .topo h2 { font-size: 1.2rem; }
+    .modal-detalhes .acoes .btn { min-width: 100%; }
+
+    .btn-topo { bottom: 16px; right: 16px; width: 44px; height: 44px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== NAVBAR ===== -->
+<nav class="navbar">
+  <a href="index.html" class="logo-link">
+    <img src="https://cdn.awsli.com.br/1608/1608652/arquivos/logo-lr-imoveis.jpg" alt="Lima Ribeiro Imóveis" class="logo-img">
+  </a>
+  <div class="nav-links">
+    <a href="index.html">Início</a>
+    <a href="imoveis.html" class="destaque"><i class="fas fa-home"></i> Catálogo de Imóveis</a>
+    <a href="https://www.limaribeiroimoveis.com.br/indiqueeganhe" target="_blank"><i class="fas fa-dollar-sign"></i> Indique e Ganhe</a>
+  </div>
+</nav>
+
+<!-- ===== HERO ===== -->
+<section class="hero-imoveis">
+  <h1><i class="fas fa-search"></i> Encontre seu imóvel ideal</h1>
+  <p>Busque por região e preço — encontre o lar perfeito para você.</p>
+  <div class="contador" id="contadorImoveis">
+    <i class="fas fa-spinner fa-spin"></i> Carregando imóveis...
+  </div>
+</section>
+
+<!-- ===== SELETOR DE MODO ===== -->
+<div class="container">
+  <div class="modo-selector">
+    <button class="modo-btn ativo" id="modoLista">
+      <i class="fas fa-th-large"></i>
+      <span class="titulo">Ver em lista</span>
+      <span class="sub">Cards com todos os detalhes</span>
+    </button>
+    <button class="modo-btn" id="modoMapa">
+      <i class="fas fa-map-marked-alt"></i>
+      <span class="titulo">Ver no mapa</span>
+      <span class="sub">Escolha um filtro para carregar</span>
+    </button>
+  </div>
+</div>
+
+<!-- ===== FILTROS ===== -->
+<div class="container">
+  <div class="filtros-wrap">
+    <div class="filtros-grid-1">
+      <div class="filtro-grupo busca-wrap">
+        <label for="filtroBusca">&nbsp;</label>
+        <i class="fas fa-search"></i>
+        <input type="text" id="filtroBusca" placeholder="Buscar por código, rua ou bairro...">
+      </div>
+      <div class="filtro-grupo">
+        <label for="filtroBairro">Região / Bairro</label>
+        <select id="filtroBairro">
+          <option value="">Todos os bairros</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="filtros-grid-2">
+      <div class="filtro-grupo">
+        <label for="filtroPreco">Faixa de preço</label>
+        <select id="filtroPreco">
+          <option value="">Qualquer valor</option>
+          <option value="0-300000">Até R$ 300 mil</option>
+          <option value="300000-500000">R$ 300 mil a R$ 500 mil</option>
+          <option value="500000-800000">R$ 500 mil a R$ 800 mil</option>
+          <option value="800000-1200000">R$ 800 mil a R$ 1,2 mi</option>
+          <option value="1200000-999999999">Acima de R$ 1,2 mi</option>
+        </select>
+      </div>
+      <div class="filtro-grupo">
+        <label for="filtroCondominio">Condomínio</label>
+        <select id="filtroCondominio">
+          <option value="">Qualquer</option>
+          <option value="com">Com condomínio</option>
+          <option value="sem">Sem condomínio (isento)</option>
+        </select>
+      </div>
+      <div class="filtro-grupo">
+        <label for="filtroTipo">Tipo</label>
+        <select id="filtroTipo">
+          <option value="">Todos os tipos</option>
+          <option value="cobertura">Cobertura</option>
+          <option value="area-privativa">Área privativa</option>
+        </select>
+      </div>
+      <div class="filtro-grupo">
+        <label for="filtroOrdenacao">Ordenar por</label>
+        <select id="filtroOrdenacao">
+          <option value="recentes">Mais recentes</option>
+          <option value="menor-preco">Menor preço</option>
+          <option value="maior-preco">Maior preço</option>
+        </select>
+      </div>
+      <button class="btn-limpar" id="btnLimparFiltros"><i class="fas fa-times"></i> Limpar</button>
+    </div>
+
+    <div class="bairros-rapidos" id="bairrosRapidos"></div>
+  </div>
+</div>
+
+<!-- ===== CONTEÚDO PRINCIPAL ===== -->
+<div class="container">
+  <div class="conteudo-principal" id="conteudoPrincipal">
+    <div class="cards-grid" id="cardsGrid">
+      <div class="loading-principal">
+        <div class="spinner"></div>
+        <p>Carregando imóveis disponíveis...</p>
+      </div>
+    </div>
+    <div class="mapa-wrap">
+      <div id="mapa"></div>
+      <div class="mapa-loading" id="mapaLoading">
+        <i class="fas fa-map-marked-alt ico-grande"></i>
+        <h3>Escolha um filtro para ver no mapa</h3>
+        <p>Selecione um bairro, uma faixa de preço ou busque por texto para carregar os imóveis no mapa.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button class="btn-topo" id="btnTopo" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+  <i class="fas fa-arrow-up"></i>
+</button>
+
+<!-- ===== MODAL DETALHES ===== -->
+<div class="modal-backdrop" id="modalDetalhes">
+  <div class="modal-detalhes" id="modalDetalhesBox">
+    <button class="btn-fechar" onclick="fecharDetalhes()"><i class="fas fa-times"></i></button>
+    <div class="galeria" id="detalheFoto"></div>
+    <div class="conteudo">
+      <div class="topo">
+        <div class="codigo-linha">
+          <span class="codigo-badge" id="detalheCodigo">#---</span>
+          <span class="tipo-badge" id="detalheTipo" style="display:none;">Tipo</span>
+        </div>
+        <h2 id="detalhePreco">R$ ---</h2>
+        <div class="endereco-completo" id="detalheEndereco">
+          <i class="fas fa-map-marker-alt"></i> ---
+        </div>
+      </div>
+      <div class="descricao" id="detalheDescricao"></div>
+      <div class="gastos" id="detalheGastos" style="display:none;"></div>
+      <div class="acoes">
+        <a href="#" target="_blank" class="btn btn-zap" id="detalheZap">
+          <i class="fab fa-whatsapp"></i> Falar com corretor
+        </a>
+        <a href="#" target="_blank" class="btn btn-anuncio" id="detalheAnuncio">
+          <i class="fas fa-external-link-alt"></i> Ver anúncio completo
+        </a>
+        <button class="btn btn-share" onclick="compartilharImovel()"><i class="fas fa-share-alt"></i></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+
+<script>
+/* =====================================================
+   CONFIG
+===================================================== */
+const API_URL = 'https://script.google.com/macros/s/AKfycbzuCjg_5ZJDMWWKmjYp1ThW34iWS0YouviWFdiMGx8W3yApv0F1fdUcjeZdjm0s6Mg/exec';
+const WHATSAPP_FALLBACK = '5531996070930';
+const CENTRO_BH = [-19.9191, -43.9386];
+const ZOOM_INICIAL = 12;
+const GEOCODE_CACHE_KEY = 'lr_geocode_cache_v3';
+
+const state = {
+  imoveisUnicos: [],
+  imoveisFiltrados: [],
+  geocodeCache: {},
+  mapa: null,
+  markerCluster: null,
+  markersPorId: {},
+  modoView: 'lista',
+  imovelAtual: null,
+  filtroAtivo: false
+};
+
+const $ = id => document.getElementById(id);
+
+function toast(msg, tipo=''){
+  const t = $('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + tipo;
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+function esc(s){
+  return String(s == null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+/* =====================================================
+   PARSE DE PREÇO
+===================================================== */
+function parseNumeroBR(valor){
+  if(valor === null || valor === undefined || valor === '') return 0;
+  if(typeof valor === 'number') return valor;
+  let str = String(valor).trim();
+  if(!str) return 0;
+  str = str.replace(/R\$\s*/gi, '').trim().replace(/\s/g, '');
+  if(str.includes(',')){
+    str = str.replace(/\./g, '').replace(',', '.');
+    const n = parseFloat(str);
+    return isNaN(n) ? 0 : n;
+  }
+  if(str.includes('.')){
+    const partes = str.split('.');
+    if(partes[partes.length - 1].length === 3){
+      str = str.replace(/\./g, '');
+      const n = parseInt(str, 10);
+      return isNaN(n) ? 0 : n;
+    } else {
+      const n = parseFloat(str);
+      return isNaN(n) ? 0 : n;
+    }
+  }
+  const n = parseInt(str.replace(/\D/g, ''), 10);
+  return isNaN(n) ? 0 : n;
+}
+
+function fmtPreco(valor){
+  const n = parseNumeroBR(valor);
+  if(!n || n <= 0) return 'Consulte';
+  return n.toLocaleString('pt-BR', {
+    style: 'currency',
+    currency: 'BRL',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
+}
+
+/* =====================================================
+   ✅ EXTRAIR TIPO DO IMÓVEL (do ** na descrição)
+===================================================== */
+function extrairTipoImovel(descricao){
+  if(!descricao) return '';
+  const str = String(descricao);
+
+  // Procura por *texto* ou **texto**
+  const matches = str.match(/\*+([^*\n]+)\*+/g);
+  if(!matches) return '';
+
+  for(const m of matches){
+    const texto = m.replace(/\*/g, '').trim().toLowerCase();
+    if(texto.includes('cobertura')) return 'Cobertura';
+    if(texto.includes('area privativa') || texto.includes('área privativa')) return 'Área privativa';
+  }
+  return '';
+}
+
+/* =====================================================
+   ✅ 2 PRIMEIRAS LINHAS DA DESCRIÇÃO
+===================================================== */
+function duasLinhasDescricao(descricao){
+  if(!descricao) return '';
+  const linhas = String(descricao)
+    .split(/\r?\n/)
+    .map(l => l.trim())
+    .filter(l => l.length > 0);
+  if(linhas.length === 0) return '';
+  if(linhas.length === 1) return linhas[0];
+  return linhas[0] + ' · ' + linhas[1];
+}
+
+function normalizaTexto(s){
+  return String(s || '').toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .trim();
+}
+
+function urlImagem(im){
+  const img = String(im.imagem || '').trim();
+  if(!img) return '';
+  const m = img.match(/\/d\/([^\/]+)/);
+  if(m && m[1]) return `https://drive.google.com/thumbnail?id=${m[1]}&sz=w800`;
+  const m2 = img.match(/[?&]id=([^&]+)/);
+  if(m2 && m2[1]) return `https://drive.google.com/thumbnail?id=${m2[1]}&sz=w800`;
+  return img;
+}
+
+/* =====================================================
+   API
+===================================================== */
+async function apiGet(action, params = {}){
+  const qs = new URLSearchParams({ action, _t: Date.now(), ...params }).toString();
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 30000);
+  try {
+    const resp = await fetch(API_URL + '?' + qs, {
+      method: 'GET',
+      mode: 'cors',
+      headers: { 'Accept': 'application/json' },
+      redirect: 'follow',
+      signal: controller.signal
+    });
+    clearTimeout(timer);
+    if(!resp.ok) throw new Error('HTTP ' + resp.status);
+    return await resp.json();
+  } catch(e){
+    clearTimeout(timer);
+    throw e;
+  }
+}
+
+async function carregarImoveis(){
+  try {
+    const res = await apiGet('listarImoveisPublicos');
+    if(!res.ok){
+      console.error('API erro:', res.error);
+      mostrarErroCarregamento(res.error || 'Erro ao carregar imóveis');
+      return;
+    }
+    state.imoveisUnicos = res.data || [];
+    finalizarCarregamento();
+  } catch(e){
+    console.error(e);
+    mostrarErroCarregamento(e.message);
+  }
+}
+
+function mostrarErroCarregamento(msg){
+  $('contadorImoveis').innerHTML = '<i class="fas fa-exclamation-triangle"></i> Erro ao carregar';
+  $('cardsGrid').innerHTML = `
+    <div class="empty-state">
+      <i class="fas fa-exclamation-triangle"></i>
+      <h3>Não foi possível carregar os imóveis</h3>
+      <p>${esc(msg)}</p>
+      <p style="margin-top:16px; font-size:0.78rem;">Verifique a conexão ou tente novamente em instantes.</p>
+    </div>
+  `;
+}
+
+function finalizarCarregamento(){
+  $('contadorImoveis').innerHTML = `<i class="fas fa-home"></i> ${state.imoveisUnicos.length} ${state.imoveisUnicos.length === 1 ? 'imóvel disponível' : 'imóveis disponíveis'}`;
+  popularFiltroBairros();
+  aplicarFiltros();
+}
+
+/* =====================================================
+   FILTROS
+===================================================== */
+function popularFiltroBairros(){
+  const bairros = {};
+  state.imoveisUnicos.forEach(im => {
+    const b = im.bairro;
+    if(b) bairros[b] = (bairros[b] || 0) + 1;
+  });
+  const ordenados = Object.keys(bairros).sort((a,b) => a.localeCompare(b, 'pt-BR'));
+
+  const sel = $('filtroBairro');
+  sel.innerHTML = '<option value="">Todos os bairros</option>' +
+    ordenados.map(b => `<option value="${esc(b)}">${esc(b)} (${bairros[b]})</option>`).join('');
+
+  const top = Object.entries(bairros)
+    .sort((a,b) => b[1] - a[1])
+    .slice(0, 8);
+  $('bairrosRapidos').innerHTML = '<span class="lbl-rapido">Mais buscados:</span>' +
+    top.map(([b, n]) =>
+      `<button class="bairro-chip" data-bairro="${esc(b)}">${esc(b)} <span style="opacity:0.6;">(${n})</span></button>`
+    ).join('');
+
+  document.querySelectorAll('.bairro-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      const b = chip.dataset.bairro;
+      const sel = $('filtroBairro');
+      if(sel.value === b){
+        sel.value = '';
+        chip.classList.remove('ativo');
+      } else {
+        sel.value = b;
+        document.querySelectorAll('.bairro-chip').forEach(c => c.classList.remove('ativo'));
+        chip.classList.add('ativo');
+      }
+      aplicarFiltros();
+    });
+  });
+}
+
+function temFiltroAtivo(){
+  const busca = $('filtroBusca').value.trim();
+  const bairro = $('filtroBairro').value;
+  const preco = $('filtroPreco').value;
+  const cond = $('filtroCondominio').value;
+  const tipo = $('filtroTipo').value;
+  return !!(busca || bairro || preco || cond || tipo);
+}
+
+function aplicarFiltros(){
+  const busca = normalizaTexto($('filtroBusca').value);
+  const bairro = $('filtroBairro').value;
+  const precoRange = $('filtroPreco').value;
+  const condominio = $('filtroCondominio').value;
+  const tipoFiltro = $('filtroTipo').value;
+  const ordenacao = $('filtroOrdenacao').value;
+
+  state.filtroAtivo = temFiltroAtivo();
+
+  let arr = [...state.imoveisUnicos];
+
+  if(busca){
+    arr = arr.filter(im => {
+      const alvo = normalizaTexto(
+        (im.codigo || '') + ' ' + (im.rua || '') + ' ' + (im.bairro || '') + ' ' +
+        (im.titulo || '') + ' ' + (im.descricao || '')
+      );
+      return alvo.includes(busca);
+    });
+  }
+
+  if(bairro){
+    arr = arr.filter(im => normalizaTexto(im.bairro) === normalizaTexto(bairro));
+  }
+
+  if(precoRange){
+    const [min, max] = precoRange.split('-').map(Number);
+    arr = arr.filter(im => {
+      const p = parseNumeroBR(im.preco);
+      return p >= min && p <= max;
+    });
+  }
+
+  if(condominio === 'com'){
+    arr = arr.filter(im => parseNumeroBR(im.condominio) > 0);
+  } else if(condominio === 'sem'){
+    arr = arr.filter(im => parseNumeroBR(im.condominio) === 0);
+  }
+
+  // ✅ Filtro por tipo (Cobertura / Área privativa)
+  if(tipoFiltro === 'cobertura'){
+    arr = arr.filter(im => extrairTipoImovel(im.descricao) === 'Cobertura');
+  } else if(tipoFiltro === 'area-privativa'){
+    arr = arr.filter(im => extrairTipoImovel(im.descricao) === 'Área privativa');
+  }
+
+  arr.sort((a, b) => {
+    if(ordenacao === 'menor-preco') return parseNumeroBR(a.preco) - parseNumeroBR(b.preco);
+    if(ordenacao === 'maior-preco') return parseNumeroBR(b.preco) - parseNumeroBR(a.preco);
+    return new Date(b.dataCadastro||0) - new Date(a.dataCadastro||0);
+  });
+
+  state.imoveisFiltrados = arr;
+  renderizarCards();
+
+  if(state.modoView === 'mapa'){
+    if(!state.filtroAtivo){
+      mostrarAvisoMapaSemFiltro();
+    } else if(arr.length === 0){
+      mostrarMapaVazio();
+    } else {
+      renderizarMapa();
+    }
+  }
+}
+
+function limparFiltros(){
+  $('filtroBusca').value = '';
+  $('filtroBairro').value = '';
+  $('filtroPreco').value = '';
+  $('filtroCondominio').value = '';
+  $('filtroTipo').value = '';
+  $('filtroOrdenacao').value = 'recentes';
+  document.querySelectorAll('.bairro-chip').forEach(c => c.classList.remove('ativo'));
+  aplicarFiltros();
+}
+
+/* =====================================================
+   RENDER CARDS
+===================================================== */
+function renderizarCards(){
+  const grid = $('cardsGrid');
+  const arr = state.imoveisFiltrados;
+
+  if(arr.length === 0){
+    grid.innerHTML = `
+      <div class="empty-state">
+        <i class="fas fa-search"></i>
+        <h3>Nenhum imóvel encontrado</h3>
+        <p>Tente ajustar os filtros ou limpar a busca.</p>
+      </div>
+    `;
+    return;
+  }
+
+  // Modo mapa → card compacto horizontal
+  if(state.modoView === 'mapa'){
+    grid.innerHTML = arr.map(im => cardMapaHTML(im)).join('');
+  } else {
+    grid.innerHTML = arr.map(im => cardHTML(im)).join('');
+  }
+
+  document.querySelectorAll('.imovel-card, .card-mapa').forEach(card => {
+    card.addEventListener('click', () => abrirDetalhes(card.dataset.id));
+  });
+}
+
+/* ===== Card padrão (lista) ===== */
+function cardHTML(im){
+  const extras = [];
+  const c = parseNumeroBR(im.condominio);
+  const i = parseNumeroBR(im.iptu);
+  if(c > 0) extras.push(`<span class="feat"><i class="fas fa-building"></i> Cond. ${esc(fmtPreco(im.condominio))}</span>`);
+  if(i > 0) extras.push(`<span class="feat"><i class="fas fa-file-invoice-dollar"></i> IPTU ${esc(fmtPreco(im.iptu))}</span>`);
+
+  const fotoStyle = im.imagem
+    ? `background-image: url('${esc(urlImagem(im))}');`
+    : 'background: linear-gradient(135deg, #e8edff, #d0d7e6);';
+  const fotoIcone = im.imagem ? '' : '<i class="fas fa-image"></i>';
+
+  const rua = im.rua || im.titulo || 'Endereço não informado';
+  const bairro = im.bairro || '';
+
+  const descTopo = duasLinhasDescricao(im.descricao) || im.titulo || '';
+  const descDuasLinhas = duasLinhasDescricao(im.descricao);
+  const tipo = extrairTipoImovel(im.descricao);
+
+  return `
+    <div class="imovel-card" data-id="${esc(im.id)}">
+      <div class="foto" style="${fotoStyle}">
+        ${fotoIcone}
+        ${descTopo ? `<span class="badge-descricao" title="${esc(descTopo)}">${esc(descTopo)}</span>` : ''}
+        ${tipo ? `<span class="badge-tipo">${esc(tipo)}</span>` : ''}
+      </div>
+      <div class="corpo">
+        <div class="preco">
+          <span class="tipo">Venda</span>
+          ${esc(fmtPreco(im.preco))}
+        </div>
+        <div class="endereco-linha">
+          <span class="rua">${esc(rua)}</span>
+          ${bairro ? `<span class="bairro-destaque">· ${esc(bairro)}</span>` : ''}
+        </div>
+        ${descDuasLinhas ? `<div class="descricao-2linhas">${esc(descDuasLinhas)}</div>` : ''}
+        ${extras.length ? `<div class="condo-info">${extras.join('')}</div>` : ''}
+      </div>
+    </div>
+  `;
+}
+
+/* ===== Card compacto (mapa) ===== */
+function cardMapaHTML(im){
+  const fotoStyle = im.imagem
+    ? `background-image: url('${esc(urlImagem(im))}');`
+    : 'background: linear-gradient(135deg, #e8edff, #d0d7e6);';
+  const fotoIcone = im.imagem ? '' : '<i class="fas fa-image"></i>';
+
+  const rua = im.rua || im.titulo || 'Endereço não informado';
+  const bairro = im.bairro || '';
+  const descLinha = duasLinhasDescricao(im.descricao);
+  const tipo = extrairTipoImovel(im.descricao);
+
+  return `
+    <div class="card-mapa" data-id="${esc(im.id)}">
+      <div class="thumb" style="${fotoStyle}">
+        ${fotoIcone}
+        ${tipo ? `<span class="badge-tipo">${esc(tipo)}</span>` : ''}
+      </div>
+      <div class="info">
+        <div class="preco">${esc(fmtPreco(im.preco))}</div>
+        <div class="rua">${esc(rua)}</div>
+        ${bairro ? `<div class="bairro-txt">${esc(bairro)}</div>` : ''}
+        ${descLinha ? `<div class="desc-linha">${esc(descLinha)}</div>` : ''}
+      </div>
+    </div>
+  `;
+}
+
+/* =====================================================
+   MODAL DETALHES
+===================================================== */
+function abrirDetalhes(id){
+  const im = state.imoveisFiltrados.find(x => String(x.id) === String(id))
+    || state.imoveisUnicos.find(x => String(x.id) === String(id));
+  if(!im) return;
+  state.imovelAtual = im;
+
+  if(im.imagem){
+    $('detalheFoto').style.backgroundImage = `url('${urlImagem(im)}')`;
+    $('detalheFoto').innerHTML = '';
+  } else {
+    $('detalheFoto').style.backgroundImage = '';
+    $('detalheFoto').innerHTML = '<i class="fas fa-image"></i>';
+  }
+
+  $('detalheCodigo').textContent = '#' + (im.codigo || '---');
+
+  // ✅ Tipo (Cobertura / Área privativa)
+  const tipo = extrairTipoImovel(im.descricao);
+  if(tipo){
+    $('detalheTipo').textContent = tipo;
+    $('detalheTipo').style.display = 'inline-flex';
+  } else {
+    $('detalheTipo').style.display = 'none';
+  }
+
+  $('detalhePreco').textContent = fmtPreco(im.preco);
+
+  // ✅ Endereço: rua + bairro destacado (sem número)
+  const rua = im.rua || im.titulo || 'Endereço não informado';
+  const bairro = im.bairro || '';
+  $('detalheEndereco').innerHTML = `
+    <i class="fas fa-map-marker-alt"></i> ${esc(rua)}
+    ${bairro ? `<span class="bairro-destaque">· ${esc(bairro)}</span>` : ''}
+  `;
+
+  $('detalheDescricao').textContent = im.descricao || 'Sem descrição disponível.';
+
+  const gastos = [];
+  const c = parseNumeroBR(im.condominio);
+  const ip = parseNumeroBR(im.iptu);
+  if(c > 0) gastos.push(`<span><strong>Condomínio:</strong> ${esc(fmtPreco(im.condominio))}/mês</span>`);
+  if(ip > 0) gastos.push(`<span><strong>IPTU:</strong> ${esc(fmtPreco(im.iptu))}/mês</span>`);
+  if(gastos.length){
+    $('detalheGastos').style.display = 'flex';
+    $('detalheGastos').innerHTML = gastos.join('');
+  } else {
+    $('detalheGastos').style.display = 'none';
+  }
+
+  const msg = encodeURIComponent(`Olá! Tenho interesse no imóvel #${im.codigo}${bairro ? ' no ' + bairro : ''}. Podem me passar mais informações?`);
+  $('detalheZap').href = `https://wa.me/${WHATSAPP_FALLBACK}?text=${msg}`;
+
+  if(im.link){
+    $('detalheAnuncio').href = im.link;
+    $('detalheAnuncio').style.display = 'inline-flex';
+  } else if(im.codigo){
+    $('detalheAnuncio').href = `https://www.quintoandar.com.br/imovel/${im.codigo}`;
+    $('detalheAnuncio').style.display = 'inline-flex';
+  } else {
+    $('detalheAnuncio').style.display = 'none';
+  }
+
+  $('modalDetalhes').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+
+function fecharDetalhes(){
+  $('modalDetalhes').classList.remove('show');
+  document.body.style.overflow = '';
+  state.imovelAtual = null;
+}
+
+function compartilharImovel(){
+  const im = state.imovelAtual;
+  if(!im) return;
+  const url = window.location.origin + window.location.pathname + '?codigo=' + encodeURIComponent(im.codigo);
+  const texto = `Olha esse imóvel: #${im.codigo}${im.bairro ? ' no ' + im.bairro : ''} — ${fmtPreco(im.preco)}\n${url}`;
+  if(navigator.share){
+    navigator.share({ title: 'Imóvel Lima Ribeiro', text: texto, url: url }).catch(()=>{});
+  } else {
+    copiarTexto(texto);
+  }
+}
+
+function copiarTexto(txt){
+  if(navigator.clipboard && window.isSecureContext){
+    navigator.clipboard.writeText(txt)
+      .then(() => toast('Link copiado!', 'success'))
+      .catch(() => fallbackCopy(txt));
+  } else fallbackCopy(txt);
+}
+function fallbackCopy(txt){
+  const ta = document.createElement('textarea');
+  ta.value = txt;
+  ta.style.position = 'fixed'; ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.select();
+  try { document.execCommand('copy'); toast('Link copiado!', 'success'); }
+  catch(e){ toast('Não foi possível copiar', 'error'); }
+  document.body.removeChild(ta);
+}
+
+/* =====================================================
+   MAPA
+===================================================== */
+function inicializarMapa(){
+  if(state.mapa) return;
+  state.mapa = L.map('mapa', {
+    center: CENTRO_BH,
+    zoom: ZOOM_INICIAL,
+    zoomControl: true,
+    scrollWheelZoom: true
+  });
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap',
+    maxZoom: 19
+  }).addTo(state.mapa);
+
+  state.markerCluster = L.markerClusterGroup({
+    iconCreateFunction: function(cluster) {
+      const count = cluster.getChildCount();
+      return L.divIcon({
+        html: `<div class="cluster-icon">${count}</div>`,
+        className: '',
+        iconSize: [40, 40]
+      });
+    },
+    maxClusterRadius: 50,
+    spiderfyOnMaxZoom: true,
+    showCoverageOnHover: false,
+    zoomToBoundsOnClick: true
+  });
+  state.mapa.addLayer(state.markerCluster);
+}
+
+function carregarCacheGeocode(){
+  try {
+    const raw = localStorage.getItem(GEOCODE_CACHE_KEY);
+    if(raw) state.geocodeCache = JSON.parse(raw);
+  } catch(e){ state.geocodeCache = {}; }
+}
+function salvarCacheGeocode(){
+  try {
+    localStorage.setItem(GEOCODE_CACHE_KEY, JSON.stringify(state.geocodeCache));
+  } catch(e){}
+}
+
+async function geocodificar(endereco){
+  if(!endereco) return null;
+  const chave = normalizaTexto(endereco);
+  if(state.geocodeCache[chave]) return state.geocodeCache[chave];
+
+  const url = `https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(endereco + ', Belo Horizonte, MG, Brasil')}`;
+  try {
+    const resp = await fetch(url, { headers: { 'Accept': 'application/json' } });
+    if(!resp.ok) return null;
+    const json = await resp.json();
+    if(!json || !json.length) return null;
+    const r = json[0];
+    const coords = { lat: parseFloat(r.lat), lng: parseFloat(r.lon) };
+    state.geocodeCache[chave] = coords;
+    salvarCacheGeocode();
+    return coords;
+  } catch(e){
+    return null;
+  }
+}
+
+function delay(ms){ return new Promise(r => setTimeout(r, ms)); }
+
+function mostrarAvisoMapaSemFiltro(){
+  const loading = $('mapaLoading');
+  loading.style.display = 'flex';
+  loading.innerHTML = `
+    <i class="fas fa-map-marked-alt ico-grande"></i>
+    <h3>Escolha um filtro para ver no mapa</h3>
+    <p>Selecione um bairro, uma faixa de preço ou busque por texto para carregar os imóveis no mapa.</p>
+  `;
+  if(state.markerCluster) state.markerCluster.clearLayers();
+}
+
+function mostrarMapaVazio(){
+  const loading = $('mapaLoading');
+  loading.style.display = 'flex';
+  loading.innerHTML = `
+    <i class="fas fa-search ico-grande"></i>
+    <h3>Nenhum imóvel encontrado</h3>
+    <p>Tente ajustar os filtros para ver imóveis no mapa.</p>
+  `;
+  if(state.markerCluster) state.markerCluster.clearLayers();
+}
+
+async function renderizarMapa(){
+  inicializarMapa();
+  const loading = $('mapaLoading');
+  const arr = state.imoveisFiltrados;
+
+  if(!state.filtroAtivo){
+    mostrarAvisoMapaSemFiltro();
+    return;
+  }
+
+  if(arr.length === 0){
+    mostrarMapaVazio();
+    return;
+  }
+
+  if(state.markerCluster) state.markerCluster.clearLayers();
+  state.markersPorId = {};
+
+  loading.style.display = 'flex';
+  loading.innerHTML = `<div class="spinner"></div><p>Localizando imóveis no mapa... (0/${arr.length})</p>`;
+
+  let geocodificados = 0;
+  const bounds = [];
+
+  for(let i = 0; i < arr.length; i++){
+    const im = arr[i];
+    const enderecoCompleto = [im.rua, im.bairro].filter(Boolean).join(', ');
+    if(!enderecoCompleto) continue;
+
+    const chaveCache = normalizaTexto(enderecoCompleto);
+    const estavaEmCache = !!state.geocodeCache[chaveCache];
+
+    const coords = await geocodificar(enderecoCompleto);
+    if(coords){
+      adicionarMarker(im, coords);
+      bounds.push([coords.lat, coords.lng]);
+      geocodificados++;
+      loading.innerHTML = `<div class="spinner"></div><p>Localizando imóveis no mapa... (${geocodificados}/${arr.length})</p>`;
+    }
+
+    if(!estavaEmCache && i < arr.length - 1) await delay(1100);
+  }
+
+  loading.style.display = 'none';
+
+  if(bounds.length > 0){
+    try {
+      state.mapa.fitBounds(bounds, { padding: [40, 40], maxZoom: 15 });
+    } catch(e){}
+  } else {
+    state.mapa.setView(CENTRO_BH, ZOOM_INICIAL);
+  }
+}
+
+function adicionarMarker(im, coords){
+  const fotoStyle = im.imagem
+    ? `background-image: url('${esc(urlImagem(im))}');`
+    : 'background: linear-gradient(135deg, #e8edff, #d0d7e6);';
+
+  const rua = im.rua || im.titulo || '';
+  const bairro = im.bairro || '';
+
+  const popupHTML = `
+    <div class="popup-imovel">
+      <div class="popup-foto" style="${fotoStyle}"></div>
+      <div class="popup-preco">${esc(fmtPreco(im.preco))}</div>
+      <div class="popup-end">${esc(rua)}</div>
+      ${bairro ? `<div class="popup-bairro">${esc(bairro)}</div>` : ''}
+      <button class="popup-btn" onclick="abrirDetalhes('${esc(im.id)}')">Ver detalhes</button>
+    </div>
+  `;
+
+  const marker = L.marker([coords.lat, coords.lng], {
+    title: `${im.codigo} - ${bairro}`
+  }).bindPopup(popupHTML, {
+    maxWidth: 260,
+    minWidth: 220,
+    closeButton: true,
+    autoPan: true
+  });
+
+  state.markerCluster.addLayer(marker);
+  state.markersPorId[im.id] = marker;
+}
+
+/* =====================================================
+   TROCA DE MODO
+===================================================== */
+function trocarModo(modo){
+  state.modoView = modo;
+  const cont = $('conteudoPrincipal');
+
+  $('modoLista').classList.toggle('ativo', modo === 'lista');
+  $('modoMapa').classList.toggle('ativo', modo === 'mapa');
+
+  if(modo === 'mapa'){
+    cont.classList.add('modo-mapa');
+    renderizarCards(); // re-renderiza no formato compacto
+    setTimeout(() => {
+      if(state.mapa) state.mapa.invalidateSize();
+      aplicarFiltros();
+    }, 100);
+  } else {
+    cont.classList.remove('modo-mapa');
+    renderizarCards(); // volta ao formato grande
+  }
+}
+
+/* =====================================================
+   INIT
+===================================================== */
+async function init(){
+  carregarCacheGeocode();
+
+  $('filtroBusca').addEventListener('input', debounce(aplicarFiltros, 250));
+  $('filtroBairro').addEventListener('change', () => {
+    document.querySelectorAll('.bairro-chip').forEach(c => {
+      c.classList.toggle('ativo', c.dataset.bairro === $('filtroBairro').value);
+    });
+    aplicarFiltros();
+  });
+  $('filtroPreco').addEventListener('change', aplicarFiltros);
+  $('filtroCondominio').addEventListener('change', aplicarFiltros);
+  $('filtroTipo').addEventListener('change', aplicarFiltros);
+  $('filtroOrdenacao').addEventListener('change', aplicarFiltros);
+  $('btnLimparFiltros').addEventListener('click', limparFiltros);
+
+  $('modoLista').addEventListener('click', () => trocarModo('lista'));
+  $('modoMapa').addEventListener('click', () => trocarModo('mapa'));
+
+  $('modalDetalhes').addEventListener('click', (e) => {
+    if(e.target === $('modalDetalhes')) fecharDetalhes();
+  });
+  document.addEventListener('keydown', (e) => {
+    if(e.key === 'Escape' && $('modalDetalhes').classList.contains('show')) fecharDetalhes();
+  });
+
+  window.addEventListener('scroll', () => {
+    $('btnTopo').classList.toggle('show', window.scrollY > 400);
+  });
+
+  const params = new URLSearchParams(window.location.search);
+  const codigoParams = params.get('codigo');
+
+  await carregarImoveis();
+
+  if(codigoParams){
+    const im = state.imoveisUnicos.find(x => x.codigo === codigoParams);
+    if(im) setTimeout(() => abrirDetalhes(im.id), 500);
+  }
+}
+
+function debounce(fn, ms){
+  let t;
+  return function(...args){
+    clearTimeout(t);
+    t = setTimeout(() => fn.apply(this, args), ms);
+  };
+}
+
+window.abrirDetalhes = abrirDetalhes;
+window.fecharDetalhes = fecharDetalhes;
+window.compartilharImovel = compartilharImovel;
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
