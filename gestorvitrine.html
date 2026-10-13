@@ -1250,7 +1250,7 @@
     overflow-y: auto;
     padding: 14px 4px 20px;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
     gap: 12px;
     align-content: start;
   }
@@ -1267,23 +1267,23 @@
     border: 1px solid var(--border);
     border-left: 3px solid var(--warn);
     border-radius: var(--radius);
-    padding: 10px 12px;
+    padding: 12px 14px;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 9px;
     transition: all .15s;
     position: relative;
   }
   .capt-card:hover{ border-color: var(--border-strong); box-shadow: var(--shadow-sm); }
   .capt-card.status-pendente{ border-left-color: var(--warn); }
   .capt-card.status-sem-retorno{ border-left-color: var(--danger); }
-  .capt-card.status-concluida{ border-left-color: var(--success); opacity: .82; }
+  .capt-card.status-concluida{ border-left-color: var(--success); opacity: .85; }
 
   .capt-card .cc-l1{
     display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
   }
   .capt-card .cc-nome{
-    font-size: .85rem; font-weight: 700; color: var(--text);
+    font-size: .88rem; font-weight: 700; color: var(--text);
     flex: 1; min-width: 0;
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
@@ -1299,6 +1299,36 @@
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
   .capt-card .cc-l2 strong{ color: var(--primary); }
+
+  /* DADOS DO IMÓVEL (fase 2) */
+  .capt-card .cc-imovel{
+    display: flex; flex-wrap: wrap; gap: 4px;
+    padding: 7px 8px;
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    border: 1px solid #bae6fd;
+    border-radius: var(--radius-sm);
+  }
+  .capt-card .cc-imovel .cc-tag{
+    display: inline-flex; align-items: center; gap: 3px;
+    font-size: .66rem; font-weight: 700;
+    padding: 2px 7px; border-radius: 4px;
+    background: #fff; color: #0c4a6e;
+    border: 1px solid #7dd3fc;
+    white-space: nowrap;
+  }
+  .capt-card .cc-imovel .cc-tag .lbl{
+    font-weight: 500; color: #0369a1; opacity: .8;
+  }
+  .capt-card .cc-imovel .cc-tag.valor{
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    border-color: #fbbf24;
+    color: #78350f;
+  }
+  .capt-card .cc-imovel .cc-tag.tipo{
+    background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%);
+    border-color: #c4b5fd;
+    color: #5b21b6;
+  }
 
   .capt-card .cc-l3{
     display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
@@ -2115,6 +2145,12 @@ const IMOVEIS_ADMIN_URL = 'https://limaribeiroimoveis.com.br/imoveis.html?admin=
 const TIMEOUT_API = 90000;
 const TIMEOUT_LOGIN = 60000;
 
+/* 🔒 CORRETORES OFICIAIS — apenas Hugo e Carolina */
+const CORRETORES_OFICIAIS = [
+  { nome: 'Hugo',     cor: '#1e40af' },
+  { nome: 'Carolina', cor: '#9333ea' }
+];
+
 const LINK_TQC = 'https://corretor.quintoandar.com.br/traz-quem-compra/?origin=home';
 const PREFIXO_EVENTO = 'evento_';
 
@@ -2266,25 +2302,14 @@ function hojeISO(){
   const local = new Date(d.getTime() - off * 60000);
   return local.toISOString().slice(0,10);
 }
-function classificarAgendamento(iso){
-  if(!iso) return { label: '—', classe: 'distante' };
-  const d = new Date(iso);
-  if(isNaN(d.getTime())) return { label: '—', classe: 'distante' };
-  const hoje = new Date();
-  const diff = Math.floor((d - hoje) / 86400000);
-  let classe = 'distante';
-  if(d.toDateString() === hoje.toDateString()) classe = 'hoje';
-  else if(diff === 1) classe = 'amanha';
-  else if(diff >= 2 && diff <= 7) classe = 'semana';
-  return { label: fmtDataHoraCurta(d), classe };
-}
 function emojiTemperatura(temp){
   if(temp === 'quente') return '🔥';
   if(temp === 'morno') return '🌡️';
   return '❄️';
 }
 function corDoCorretor(nome){
-  const c = state.corretores.find(x => x.nome === nome);
+  const c = CORRETORES_OFICIAIS.find(x => x.nome === nome) ||
+            state.corretores.find(x => x.nome === nome);
   return c ? c.cor : '#64748b';
 }
 function chaveCorretorExata_(nome){ return String(nome || '').trim(); }
@@ -2296,55 +2321,6 @@ function nomeCompletoCliente_(nome, telefone){
 }
 function primeiroNome_(nome){
   return String(nome || '').trim().split(/\s+/)[0] || 'Cliente';
-}
-function camposEndereco_(im){
-  if(!im) return { rua: '', numero: '', bairro: '', chave: '' };
-  return {
-    rua:    String(im.rua        || '').trim(),
-    numero: String(im.numero     || '').trim(),
-    bairro: String(im.bairro     || '').trim(),
-    chave:  String(im.chaveTexto || '').trim()
-  };
-}
-function isEvento_(a){
-  if(!a) return false;
-  if(a._isEventoNeutro) return true;
-  const id = String(a.id || '');
-  if(id.startsWith(PREFIXO_EVENTO)) return true;
-  const cod = String(a.codigo || '');
-  if(cod.startsWith(PREFIXO_EVENTO)) return true;
-  const tel = normalizaTel(a.telefone || '');
-  if(!tel || tel === '00000000000') return true;
-  return false;
-}
-function resolverCorretor_(item){
-  if(!item) return '';
-  if(item.corretor) return String(item.corretor).trim();
-  const idIm = String(item.id || '');
-  if(idIm && state._corretorPorImovelId && state._corretorPorImovelId[idIm]){
-    return String(state._corretorPorImovelId[idIm]).trim();
-  }
-  const tel = normalizaTel(item.telefone || '');
-  if(tel && tel !== '00000000000'){
-    const cli = state.clientes.find(c => normalizaTel(c.telefone) === tel);
-    if(cli && cli.corretor) return String(cli.corretor).trim();
-  }
-  const nome = String(item.clienteNome || '').trim().toLowerCase();
-  if(nome){
-    const cli = state.clientes.find(c => (c.nome||'').trim().toLowerCase() === nome);
-    if(cli && cli.corretor) return String(cli.corretor).trim();
-  }
-  return '';
-}
-function tituloEventoLimpo_(a){
-  let t = String(a.rua || a.titulo || a.clienteNome || 'Evento').trim();
-  t = t.replace(/,?\s*(000|S\/N|s\/n|-|\.)\s*/g, ' ').replace(/\s+/g, ' ').trim();
-  const desc = String(a.bairro || '').trim();
-  if(desc){
-    const idx = t.toLowerCase().lastIndexOf(' - ' + desc.toLowerCase());
-    if(idx > 0) t = t.slice(0, idx).trim();
-  }
-  return t || 'Evento';
 }
 
 function parseCutucada_(valor){
@@ -2375,6 +2351,76 @@ function formatarDataHoraCurta_(d){
   return `${dia}/${mes}/${ano}   ${h}:${m}`;
 }
 
+/* =====================================================
+   🆕 PARSE DA COLUNA "ORIGEM" (dados da fase 1/2 do QPreço)
+   
+   Formatos aceitos:
+   FASE1-PARCIAL | nome:X | telefone:Y | endereco:... | aguardando complemento
+   FASE2-COMPLETA | nome:X | telefone:Y | endereco:... | tipo:... | area:...
+                 | quartos:N | suites:N | banheiros:N | vagas:N
+                 | condominio:N | iptu:N | valor_estimado:N
+===================================================== */
+function parseOrigem_(origemBruta){
+  const out = {
+    fase: '',
+    nome: '', telefone: '', endereco: '',
+    rua: '', numero: '', complemento: '', bairro: '',
+    tipo: '', area: '', quartos: '', suites: '', banheiros: '',
+    vagas: '', condominio: '', iptu: '', valorEstimado: '',
+    completa: false,
+    _raw: String(origemBruta || '').trim()
+  };
+  if(!out._raw) return out;
+
+  // Extrai fase
+  if(/^FASE2-COMPLETA/i.test(out._raw)) { out.fase = 'FASE2-COMPLETA'; out.completa = true; }
+  else if(/^FASE1-PARCIAL/i.test(out._raw)) { out.fase = 'FASE1-PARCIAL'; }
+
+  // Divide por " | "
+  const partes = out._raw.split('|').map(p => p.trim()).filter(Boolean);
+
+  partes.forEach(parte => {
+    // Formato "chave:valor" (ignora o rótulo "FASE1-..." ou "FASE2-...")
+    const idxDoisPontos = parte.indexOf(':');
+    if(idxDoisPontos < 0) return;
+    const chave = parte.slice(0, idxDoisPontos).trim().toLowerCase();
+    const valor = parte.slice(idxDoisPontos + 1).trim();
+
+    switch(chave){
+      case 'nome':            out.nome        = valor; break;
+      case 'telefone':        out.telefone    = valor; break;
+      case 'endereco':
+        out.endereco = valor;
+        // tenta quebrar "Rua X, 123 - Apto 101 - Bairro"
+        // padrão usado no form: "rua, numero - complemento - bairro"
+        const m = valor.match(/^([^,]+),\s*([^\s-]+)?\s*-?\s*([^-]+)?\s*-?\s*([^-]+)?$/);
+        if(m){
+          out.rua         = (m[1] || '').trim();
+          out.numero      = (m[2] || '').trim();
+          out.complemento = (m[3] || '').trim();
+          out.bairro      = (m[4] || '').trim();
+        } else {
+          out.rua = valor;
+        }
+        break;
+      case 'tipo':            out.tipo        = valor; break;
+      case 'area':            out.area        = valor; break;
+      case 'quartos':         out.quartos     = valor; break;
+      case 'suites':          out.suites      = valor; break;
+      case 'banheiros':       out.banheiros   = valor; break;
+      case 'vagas':           out.vagas       = valor; break;
+      case 'condominio':      out.condominio  = valor; break;
+      case 'iptu':            out.iptu        = valor; break;
+      case 'valor_estimado':  out.valorEstimado = valor; break;
+    }
+  });
+
+  return out;
+}
+
+/* =====================================================
+   CUTUCADA / DATA / HELPERS (mantidos)
+===================================================== */
 function calcularConflitos_(agendamentos){
   const conflitos = {};
   const lista = (agendamentos || []).filter(a => a.dataVisitaAgendada && !isEvento_(a));
@@ -2405,7 +2451,6 @@ function calcularConflitos_(agendamentos){
   });
   return conflitos;
 }
-
 function marcarSalvando(inicio){
   if(inicio) state.salvando++;
   else state.salvando = Math.max(0, state.salvando - 1);
@@ -2606,26 +2651,29 @@ function sair(){
   setTimeout(() => $('inputAdminSenha').focus(), 200);
 }
 
+/* 🔒 carregarCorretores — limitado a Hugo e Carolina */
 async function carregarCorretores(){
+  // Sempre começa com os 2 oficiais
+  state.corretores = CORRETORES_OFICIAIS.map(c => ({ ...c }));
+
+  // Tenta pegar cores atualizadas do backend (sem incluir outros)
   try {
-    const cache = JSON.parse(localStorage.getItem(CORRETORES_CACHE_KEY) || 'null');
-    if(cache && Array.isArray(cache.data) && cache.data.length > 0){
-      state.corretores = cache.data;
+    const res = await api('listarCorretores', { senha: state.adminSenha });
+    if(res.ok && Array.isArray(res.data)){
+      const oficiaisNomes = CORRETORES_OFICIAIS.map(c => c.nome);
+      const filtrados = res.data.filter(c => oficiaisNomes.includes(c.nome));
+      // Se o backend tem cores para Hugo/Carolina, usa
+      if(filtrados.length > 0){
+        // Atualiza cores mantendo a estrutura oficial
+        filtrados.forEach(f => {
+          const item = state.corretores.find(c => c.nome === f.nome);
+          if(item) item.cor = f.cor || item.cor;
+        });
+      }
     }
-  } catch(e){}
-  const res = await api('listarCorretores', { senha: state.adminSenha });
-  if(res.ok && res.data){
-    state.corretores = res.data;
-    try {
-      localStorage.setItem(CORRETORES_CACHE_KEY, JSON.stringify({ data: res.data, ts: Date.now() }));
-    } catch(e){}
-  }
-  if(!state.corretores.length){
-    state.corretores = [
-      { nome: 'Hugo', cor: '#1e40af' },
-      { nome: 'Carolina', cor: '#9333ea' }
-    ];
-  }
+  } catch(e){ /* mantém padrão */ }
+
+  // Popula selects
   const selTar = $('novaTarefaCorretor');
   if(selTar){
     selTar.innerHTML = '<option value="">— Escolha o corretor —</option>' +
@@ -2828,16 +2876,7 @@ function atualizarBalClientes(){
 function renderizarFiltrosClientes(){
   const wrap = $('filtrosClientes');
   if(!wrap) return;
-  const corretoresEncontrados = new Set();
-  state.clientes.forEach(cl => {
-    const c = chaveCorretorExata_(cl.corretor);
-    if(c) corretoresEncontrados.add(c);
-  });
-  if(corretoresEncontrados.size === 0){
-    corretoresEncontrados.add('Hugo');
-    corretoresEncontrados.add('Carolina');
-  }
-  const listaCorretores = [...corretoresEncontrados].sort((a,b) => a.localeCompare(b,'pt-BR'));
+  const listaCorretores = state.corretores.map(c => c.nome);
   const corretoresChips = listaCorretores.map(nome => {
     const cnt = state.clientes.filter(cl => chaveCorretorExata_(cl.corretor) === nome).length;
     const ativo = state.filtrosClientes.corretores.has(nome);
@@ -3474,12 +3513,7 @@ function renderizarFiltrosAgenda(){
   const todos = [...state.agendamentos, ...state.eventosNeutros];
   const total = todos.length;
   const todosAtivo = state.filtrosAgenda.size === 0 ? 'active' : '';
-  const corretoresEncontrados = new Set();
-  todos.forEach(a => {
-    const c = chaveCorretorExata_(resolverCorretor_(a));
-    if(c) corretoresEncontrados.add(c);
-  });
-  const listaCorretores = [...corretoresEncontrados].sort((a,b) => a.localeCompare(b,'pt-BR'));
+  const listaCorretores = state.corretores.map(c => c.nome);
   const chips = listaCorretores.map(nome => {
     const cnt = todos.filter(a => chaveCorretorExata_(resolverCorretor_(a)) === nome).length;
     const ativo = state.filtrosAgenda.has(nome);
@@ -4073,20 +4107,13 @@ function renderizarFiltrosVisitar(){
   const wrap = $('filtrosVisitarCorretores');
   if(!wrap) return;
   const lista = state.notificacoes.visita || [];
-  const encontrados = new Set();
-  lista.forEach(item => {
-    const c = chaveCorretorExata_(resolverCorretor_(item));
-    if(c) encontrados.add(c);
-  });
-  const listaCorretores = [...encontrados].sort((a,b) => a.localeCompare(b,'pt-BR'));
-  const chips = listaCorretores.map(nome => {
-    const cnt = lista.filter(item => chaveCorretorExata_(resolverCorretor_(item)) === nome).length;
-    const ativo = state.filtrosVisitarCorretores.has(nome);
-    const cor = corDoCorretor(nome) || '#64748b';
+  const chips = state.corretores.map(c => {
+    const cnt = lista.filter(item => chaveCorretorExata_(resolverCorretor_(item)) === c.nome).length;
+    const ativo = state.filtrosVisitarCorretores.has(c.nome);
     return `<button class="chip chip-corretor ${ativo ? 'active' : ''}"
-              style="background:${ativo ? cor : '#fff'}; color:${ativo ? '#fff' : cor}; border-color:${cor}"
-              onclick="toggleFiltroVisitar('${esc(nome)}')">
-              ${esc(nome)} <span class="cnt">${cnt}</span>
+              style="background:${ativo ? c.cor : '#fff'}; color:${ativo ? '#fff' : c.cor}; border-color:${c.cor}"
+              onclick="toggleFiltroVisitar('${esc(c.nome)}')">
+              ${esc(c.nome)} <span class="cnt">${cnt}</span>
             </button>`;
   }).join('');
   wrap.innerHTML = `
@@ -4099,20 +4126,13 @@ function renderizarFiltrosGostei(){
   const wrap = $('filtrosGosteiCorretores');
   if(!wrap) return;
   const lista = state.notificacoes.gostei || [];
-  const encontrados = new Set();
-  lista.forEach(item => {
-    const c = chaveCorretorExata_(resolverCorretor_(item));
-    if(c) encontrados.add(c);
-  });
-  const listaCorretores = [...encontrados].sort((a,b) => a.localeCompare(b,'pt-BR'));
-  const chips = listaCorretores.map(nome => {
-    const cnt = lista.filter(item => chaveCorretorExata_(resolverCorretor_(item)) === nome).length;
-    const ativo = state.filtrosGosteiCorretores.has(nome);
-    const cor = corDoCorretor(nome) || '#64748b';
+  const chips = state.corretores.map(c => {
+    const cnt = lista.filter(item => chaveCorretorExata_(resolverCorretor_(item)) === c.nome).length;
+    const ativo = state.filtrosGosteiCorretores.has(c.nome);
     return `<button class="chip chip-corretor ${ativo ? 'active' : ''}"
-              style="background:${ativo ? cor : '#fff'}; color:${ativo ? '#fff' : cor}; border-color:${cor}"
-              onclick="toggleFiltroGostei('${esc(nome)}')">
-              ${esc(nome)} <span class="cnt">${cnt}</span>
+              style="background:${ativo ? c.cor : '#fff'}; color:${ativo ? '#fff' : c.cor}; border-color:${c.cor}"
+              onclick="toggleFiltroGostei('${esc(c.nome)}')">
+              ${esc(c.nome)} <span class="cnt">${cnt}</span>
             </button>`;
   }).join('');
   wrap.innerHTML = `
@@ -5000,15 +5020,11 @@ function fallbackCopy(texto){
 }
 
 /* =====================================================
-   CAPTAÇÕES QPREÇO — LÓGICA SIMPLIFICADA
-   
-   Status:
-   - ""            → Pendente (não contatado)
-   - "sem-retorno" → Contatado, mas não respondeu
-   - "concluida"   → Cliente respondeu / finalizado
-   
-   Corretor: campo único (AtendidoPor)
-   ===================================================== */
+   CAPTAÇÕES QPREÇO
+   - Filtro de corretores: apenas Hugo e Carolina
+   - Mostra TUDO que veio da coluna "origem" (fase 1 + fase 2)
+   - Observações continuam na coluna Observacoes
+===================================================== */
 const CAPTACOES_STATE = {
   lista: [],
   filtro: 'pendentes',
@@ -5041,7 +5057,6 @@ function fecharCaptacoes(){
   $('captacoesBackdrop').classList.remove('show');
 }
 
-/* Normaliza status */
 function statusCaptacao_(c){
   const v = String(c.contatoFeito || '').trim().toLowerCase();
   if(v === 'sem-retorno' || v === 'sem retorno') return 'sem-retorno';
@@ -5076,22 +5091,14 @@ function renderizarFiltroCaptacoesCorretores(){
   const wrap = $('captacoesFiltroCorretores');
   if(!wrap) return;
   const lista = CAPTACOES_STATE.lista || [];
-  const encontrados = new Set();
-  lista.forEach(c => {
-    const nome = String(c.atendidoPor || '').trim();
-    if(nome) encontrados.add(nome);
-  });
-  const listaCorretores = encontrados.size > 0
-    ? [...encontrados].sort((a,b) => a.localeCompare(b,'pt-BR'))
-    : state.corretores.map(c => c.nome);
-  const chips = listaCorretores.map(nome => {
-    const cnt = lista.filter(c => String(c.atendidoPor || '').trim() === nome).length;
-    const ativo = CAPTACOES_STATE.filtrosCorretores.has(nome);
-    const cor = corDoCorretor(nome) || '#64748b';
+  /* 🔒 Apenas Hugo e Carolina */
+  const chips = CORRETORES_OFICIAIS.map(c => {
+    const cnt = lista.filter(x => String(x.atendidoPor || '').trim() === c.nome).length;
+    const ativo = CAPTACOES_STATE.filtrosCorretores.has(c.nome);
     return `<button class="chip chip-corretor ${ativo ? 'active' : ''}"
-              style="background:${ativo ? cor : '#fff'}; color:${ativo ? '#fff' : cor}; border-color:${cor}"
-              onclick="toggleFiltroCaptacaoCorretor('${esc(nome)}')">
-              ${esc(nome)} <span class="cnt">${cnt}</span>
+              style="background:${ativo ? c.cor : '#fff'}; color:${ativo ? '#fff' : c.cor}; border-color:${c.cor}"
+              onclick="toggleFiltroCaptacaoCorretor('${esc(c.nome)}')">
+              ${esc(c.nome)} <span class="cnt">${cnt}</span>
             </button>`;
   }).join('');
   wrap.innerHTML = `
@@ -5166,16 +5173,32 @@ function renderizarCaptacoes(){
   container.innerHTML = arr.map(c => captacaoCardHTML(c)).join('');
 }
 
+/* =====================================================
+   🆕 CARD DA CAPTAÇÃO COM DADOS COMPLETOS
+===================================================== */
 function captacaoCardHTML(c){
   const status = statusCaptacao_(c);
   const isConcluida = status === 'concluida';
   const tel = normalizaTel(c.telefone);
   const telFmt = fmtTel(tel);
   const telZap = tel.startsWith('55') ? tel : '55' + tel;
-  const endereco = [c.rua, c.numero].filter(Boolean).join(', ');
   const dataHora = c.dataHora ? fmtDataHora(c.dataHora) : '—';
   const atendidoPor = String(c.atendidoPor || '').trim();
   const obsAberta = state._captObsAbertas && state._captObsAbertas.has(String(c.id));
+
+  /* Parse da coluna "origem" */
+  const origem = parseOrigem_(c.origem);
+
+  /* Melhor nome/endereço: usa o que veio do cadastro (nome/rua/numero/bairro)
+     ou o parseado da origem */
+  const nomeFinal = c.nome || origem.nome || '(sem nome)';
+  const ruaFinal = c.rua || origem.rua || '';
+  const numeroFinal = c.numero || origem.numero || '';
+  const complementoFinal = c.complemento || origem.complemento || '';
+  const bairroFinal = c.bairro || origem.bairro || '';
+  const enderecoCompleto = [ruaFinal, numeroFinal].filter(Boolean).join(', ') +
+    (complementoFinal ? ' - ' + complementoFinal : '') +
+    (bairroFinal ? ' - ' + bairroFinal : '');
 
   const statusTag = status === 'pendente'
     ? '<span class="cc-status-tag pendente">⏳ Pendente</span>'
@@ -5189,10 +5212,51 @@ function captacaoCardHTML(c){
     <option value="concluida" ${status === 'concluida' ? 'selected' : ''}>✅ Concluída</option>
   `;
 
+  /* 🆕 Monta os "chips" com os dados do imóvel (fase 2) */
+  let chipsImovel = '';
+  const temDadosImovel =
+    origem.tipo || origem.area || origem.quartos || origem.suites ||
+    origem.banheiros || origem.vagas || origem.condominio ||
+    origem.iptu || origem.valorEstimado;
+
+  if(temDadosImovel){
+    const tags = [];
+    if(origem.tipo){
+      tags.push(`<span class="cc-tag tipo"><span class="lbl">Tipo:</span> ${esc(origem.tipo)}</span>`);
+    }
+    if(origem.area){
+      tags.push(`<span class="cc-tag"><span class="lbl">Área:</span> ${esc(origem.area)} m²</span>`);
+    }
+    if(origem.quartos && origem.quartos !== '0'){
+      tags.push(`<span class="cc-tag"><span class="lbl">🛏</span> ${esc(origem.quartos)}</span>`);
+    }
+    if(origem.suites && origem.suites !== '0'){
+      tags.push(`<span class="cc-tag"><span class="lbl">🛁</span> ${esc(origem.suites)} suíte${origem.suites === '1' ? '' : 's'}</span>`);
+    }
+    if(origem.banheiros && origem.banheiros !== '0'){
+      tags.push(`<span class="cc-tag"><span class="lbl">🚿</span> ${esc(origem.banheiros)}</span>`);
+    }
+    if(origem.vagas && origem.vagas !== '0'){
+      tags.push(`<span class="cc-tag"><span class="lbl">🚗</span> ${esc(origem.vagas)}</span>`);
+    }
+    if(origem.condominio && origem.condominio !== '0'){
+      tags.push(`<span class="cc-tag"><span class="lbl">Cond.:</span> R$ ${esc(origem.condominio)}</span>`);
+    }
+    if(origem.iptu && origem.iptu !== '0'){
+      tags.push(`<span class="cc-tag"><span class="lbl">IPTU:</span> R$ ${esc(origem.iptu)}</span>`);
+    }
+    if(origem.valorEstimado){
+      tags.push(`<span class="cc-tag valor"><span class="lbl">💰 Dono acha:</span> R$ ${esc(origem.valorEstimado)}</span>`);
+    }
+    chipsImovel = `<div class="cc-imovel">${tags.join('')}</div>`;
+  } else if(origem.fase === 'FASE1-PARCIAL'){
+    chipsImovel = `<div class="cc-imovel"><span class="cc-tag" style="background:#fef3c7;border-color:#fbbf24;color:#78350f;">⏳ Aguardando complemento (fase 2)</span></div>`;
+  }
+
   return `
     <div class="capt-card status-${status} ${obsAberta ? 'obs-aberta' : ''}" data-id="${esc(c.id)}">
       <div class="cc-l1">
-        <span class="cc-nome" title="${esc(c.nome || '(sem nome)')}">${esc(c.nome || '(sem nome)')}</span>
+        <span class="cc-nome" title="${esc(nomeFinal)}">${esc(nomeFinal)}</span>
         <span class="cc-tel">${esc(telFmt)}</span>
         ${statusTag}
       </div>
@@ -5203,10 +5267,11 @@ function captacaoCardHTML(c){
           <polyline points="9 22 9 12 15 12 15 22"/>
         </svg>
         <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
-          ${esc(endereco || '(endereço)')}
-          ${c.bairro ? ` · <strong>${esc(c.bairro)}</strong>` : ''}
+          ${esc(enderecoCompleto || '(endereço não informado)')}
         </span>
       </div>
+
+      ${chipsImovel}
 
       <div class="cc-selects">
         <div class="cc-campo">
@@ -5219,7 +5284,7 @@ function captacaoCardHTML(c){
           <label>Corretor</label>
           <select data-cap-id="${esc(c.id)}" data-cap-field="atendidoPor" onchange="onChangeCaptacaoCorretor(this)">
             <option value="">— Não atribuído —</option>
-            ${state.corretores.map(cr =>
+            ${CORRETORES_OFICIAIS.map(cr =>
               `<option value="${esc(cr.nome)}" ${atendidoPor === cr.nome ? 'selected' : ''}>${esc(cr.nome)}</option>`
             ).join('')}
           </select>
@@ -5367,7 +5432,7 @@ async function toggleConcluidaCaptacao(id, isConcluida){
 }
 
 /* =====================================================
-   INIT — CORRIGIDO
+   INIT
 ===================================================== */
 window.addEventListener('DOMContentLoaded', async function(){
   try {
@@ -5414,7 +5479,6 @@ window.addEventListener('DOMContentLoaded', async function(){
   }
 });
 
-// Fecha modal com ESC
 document.addEventListener('keydown', (e) => {
   if(e.key === 'Escape'){
     document.querySelectorAll('.modal-backdrop.show').forEach(m => m.classList.remove('show'));
