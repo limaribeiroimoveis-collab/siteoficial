@@ -2145,11 +2145,11 @@ const IMOVEIS_ADMIN_URL = 'https://limaribeiroimoveis.com.br/imoveis.html?admin=
 const TIMEOUT_API = 90000;
 const TIMEOUT_LOGIN = 60000;
 
-/* 🔒 CORRETORES OFICIAIS — apenas Hugo e Carolina */
-const CORRETORES_OFICIAIS = [
-  { nome: 'Hugo',     cor: '#1e40af' },
-  { nome: 'Carolina', cor: '#9333ea' }
-];
+/* 🎨 Cores padrão conhecidas (fallback se backend não mandar) */
+const CORES_PADRAO = {
+  'Hugo':     '#1e40af',
+  'Carolina': '#9333ea'
+};
 
 const LINK_TQC = 'https://corretor.quintoandar.com.br/traz-quem-compra/?origin=home';
 const PREFIXO_EVENTO = 'evento_';
@@ -2201,26 +2201,21 @@ const state = {
 
 /* =====================================================
    UTILITÁRIOS — funções auxiliares usadas em várias partes
-   Cole este bloco UMA VEZ, logo depois do `state`.
 ===================================================== */
 
 /* ---- Resolve o corretor responsável por um item ---- */
 function resolverCorretor_(item){
   if(!item) return '';
-  // 1) Já veio preenchido?
   if(item.corretor) return String(item.corretor).trim();
-  // 2) Tem no mapa por imovelId?
   const idIm = String(item.id || '');
   if(idIm && state._corretorPorImovelId && state._corretorPorImovelId[idIm]){
     return String(state._corretorPorImovelId[idIm]).trim();
   }
-  // 3) Procura pelo telefone do cliente
   const tel = normalizaTel(item.telefone || '');
   if(tel && tel !== '00000000000'){
     const cli = state.clientes.find(c => normalizaTel(c.telefone) === tel);
     if(cli && cli.corretor) return String(cli.corretor).trim();
   }
-  // 4) Procura pelo nome do cliente
   const nome = String(item.clienteNome || '').trim().toLowerCase();
   if(nome){
     const cli = state.clientes.find(c => (c.nome || '').trim().toLowerCase() === nome);
@@ -2279,7 +2274,6 @@ function classificarAgendamento(iso){
   return { label: fmtDataHoraCurta(d), classe };
 }
 
- 
 const $ = id => document.getElementById(id);
 
 function mascaraTelefone(input){
@@ -2388,10 +2382,13 @@ function emojiTemperatura(temp){
   if(temp === 'morno') return '🌡️';
   return '❄️';
 }
+
+/* 🎨 Cor do corretor — olha SEMPRE state.corretores primeiro */
 function corDoCorretor(nome){
-  const c = CORRETORES_OFICIAIS.find(x => x.nome === nome) ||
-            state.corretores.find(x => x.nome === nome);
-  return c ? c.cor : '#64748b';
+  if(!nome) return '#64748b';
+  const c = state.corretores.find(x => x.nome === nome);
+  if(c && c.cor) return c.cor;
+  return CORES_PADRAO[nome] || '#64748b';
 }
 function chaveCorretorExata_(nome){ return String(nome || '').trim(); }
 function nomeCompletoCliente_(nome, telefone){
@@ -2433,13 +2430,7 @@ function formatarDataHoraCurta_(d){
 }
 
 /* =====================================================
-   🆕 PARSE DA COLUNA "ORIGEM" (dados da fase 1/2 do QPreço)
-   
-   Formatos aceitos:
-   FASE1-PARCIAL | nome:X | telefone:Y | endereco:... | aguardando complemento
-   FASE2-COMPLETA | nome:X | telefone:Y | endereco:... | tipo:... | area:...
-                 | quartos:N | suites:N | banheiros:N | vagas:N
-                 | condominio:N | iptu:N | valor_estimado:N
+   PARSE DA COLUNA "ORIGEM"
 ===================================================== */
 function parseOrigem_(origemBruta){
   const out = {
@@ -2453,15 +2444,12 @@ function parseOrigem_(origemBruta){
   };
   if(!out._raw) return out;
 
-  // Extrai fase
   if(/^FASE2-COMPLETA/i.test(out._raw)) { out.fase = 'FASE2-COMPLETA'; out.completa = true; }
   else if(/^FASE1-PARCIAL/i.test(out._raw)) { out.fase = 'FASE1-PARCIAL'; }
 
-  // Divide por " | "
   const partes = out._raw.split('|').map(p => p.trim()).filter(Boolean);
 
   partes.forEach(parte => {
-    // Formato "chave:valor" (ignora o rótulo "FASE1-..." ou "FASE2-...")
     const idxDoisPontos = parte.indexOf(':');
     if(idxDoisPontos < 0) return;
     const chave = parte.slice(0, idxDoisPontos).trim().toLowerCase();
@@ -2472,8 +2460,6 @@ function parseOrigem_(origemBruta){
       case 'telefone':        out.telefone    = valor; break;
       case 'endereco':
         out.endereco = valor;
-        // tenta quebrar "Rua X, 123 - Apto 101 - Bairro"
-        // padrão usado no form: "rua, numero - complemento - bairro"
         const m = valor.match(/^([^,]+),\s*([^\s-]+)?\s*-?\s*([^-]+)?\s*-?\s*([^-]+)?$/);
         if(m){
           out.rua         = (m[1] || '').trim();
@@ -2499,98 +2485,8 @@ function parseOrigem_(origemBruta){
   return out;
 }
 
- /* =====================================================
-   RESOLVER CORRETOR — descobre o corretor responsável
-   por um agendamento / notificação / imóvel
-===================================================== */
-function resolverCorretor_(item){
-  if(!item) return '';
-
-  // 1) Já veio preenchido?
-  if(item.corretor) return String(item.corretor).trim();
-
-  // 2) Tem no mapa por imovelId?
-  const idIm = String(item.id || '');
-  if(idIm && state._corretorPorImovelId && state._corretorPorImovelId[idIm]){
-    return String(state._corretorPorImovelId[idIm]).trim();
-  }
-
-  // 3) Procura pelo telefone do cliente
-  const tel = normalizaTel(item.telefone || '');
-  if(tel && tel !== '00000000000'){
-    const cli = state.clientes.find(c => normalizaTel(c.telefone) === tel);
-    if(cli && cli.corretor) return String(cli.corretor).trim();
-  }
-
-  // 4) Procura pelo nome do cliente
-  const nome = String(item.clienteNome || '').trim().toLowerCase();
-  if(nome){
-    const cli = state.clientes.find(c => (c.nome || '').trim().toLowerCase() === nome);
-    if(cli && cli.corretor) return String(cli.corretor).trim();
-  }
-
-  return '';
-}
-
 /* =====================================================
-   IS EVENTO — identifica eventos neutros (não são visitas)
-===================================================== */
-function isEvento_(a){
-  if(!a) return false;
-  if(a._isEventoNeutro) return true;
-  const id = String(a.id || '');
-  if(id.startsWith(PREFIXO_EVENTO)) return true;
-  const cod = String(a.codigo || '');
-  if(cod.startsWith(PREFIXO_EVENTO)) return true;
-  const tel = normalizaTel(a.telefone || '');
-  if(!tel || tel === '00000000000') return true;
-  return false;
-}
-
-/* =====================================================
-   TÍTULO LIMPO DO EVENTO — remove "S/N" e afins
-===================================================== */
-function tituloEventoLimpo_(a){
-  let t = String(a.rua || a.titulo || a.clienteNome || 'Evento').trim();
-  t = t.replace(/,?\s*(000|S\/N|s\/n|-|\.)\s*/g, ' ').replace(/\s+/g, ' ').trim();
-  const desc = String(a.bairro || '').trim();
-  if(desc){
-    const idx = t.toLowerCase().lastIndexOf(' - ' + desc.toLowerCase());
-    if(idx > 0) t = t.slice(0, idx).trim();
-  }
-  return t || 'Evento';
-}
-
-/* =====================================================
-   CAMPOS ENDEREÇO — extrai rua/numero/bairro/chave
-===================================================== */
-function camposEndereco_(im){
-  if(!im) return { rua: '', numero: '', bairro: '', chave: '' };
-  return {
-    rua:    String(im.rua        || '').trim(),
-    numero: String(im.numero     || '').trim(),
-    bairro: String(im.bairro     || '').trim(),
-    chave:  String(im.chaveTexto || '').trim()
-  };
-}
-
-/* =====================================================
-   CLASSIFICAR AGENDAMENTO — hoje / amanhã / semana / distante
-===================================================== */
-function classificarAgendamento(iso){
-  if(!iso) return { label: '—', classe: 'distante' };
-  const d = new Date(iso);
-  if(isNaN(d.getTime())) return { label: '—', classe: 'distante' };
-  const hoje = new Date();
-  const diff = Math.floor((d - hoje) / 86400000);
-  let classe = 'distante';
-  if(d.toDateString() === hoje.toDateString()) classe = 'hoje';
-  else if(diff === 1) classe = 'amanha';
-  else if(diff >= 2 && diff <= 7) classe = 'semana';
-  return { label: fmtDataHoraCurta(d), classe };
-}
-/* =====================================================
-   CUTUCADA / DATA / HELPERS (mantidos)
+   CONFLITOS
 ===================================================== */
 function calcularConflitos_(agendamentos){
   const conflitos = {};
@@ -2822,29 +2718,34 @@ function sair(){
   setTimeout(() => $('inputAdminSenha').focus(), 200);
 }
 
-/* 🔒 carregarCorretores — limitado a Hugo e Carolina */
+/* ✅ carregarCorretores — agora pega TODOS do backend */
 async function carregarCorretores(){
-  // Sempre começa com os 2 oficiais
-  state.corretores = CORRETORES_OFICIAIS.map(c => ({ ...c }));
-
-  // Tenta pegar cores atualizadas do backend (sem incluir outros)
+  // 1) Cache
   try {
-    const res = await api('listarCorretores', { senha: state.adminSenha });
-    if(res.ok && Array.isArray(res.data)){
-      const oficiaisNomes = CORRETORES_OFICIAIS.map(c => c.nome);
-      const filtrados = res.data.filter(c => oficiaisNomes.includes(c.nome));
-      // Se o backend tem cores para Hugo/Carolina, usa
-      if(filtrados.length > 0){
-        // Atualiza cores mantendo a estrutura oficial
-        filtrados.forEach(f => {
-          const item = state.corretores.find(c => c.nome === f.nome);
-          if(item) item.cor = f.cor || item.cor;
-        });
-      }
+    const cache = JSON.parse(localStorage.getItem(CORRETORES_CACHE_KEY) || 'null');
+    if(cache && Array.isArray(cache.data) && cache.data.length > 0){
+      state.corretores = cache.data;
     }
-  } catch(e){ /* mantém padrão */ }
+  } catch(e){}
 
-  // Popula selects
+  // 2) Backend
+  const res = await api('listarCorretores', { senha: state.adminSenha });
+  if(res.ok && Array.isArray(res.data) && res.data.length > 0){
+    state.corretores = res.data;
+    try {
+      localStorage.setItem(CORRETORES_CACHE_KEY, JSON.stringify({ data: res.data, ts: Date.now() }));
+    } catch(e){}
+  }
+
+  // 3) Fallback
+  if(!state.corretores || state.corretores.length === 0){
+    state.corretores = [
+      { nome: 'Hugo',     cor: '#1e40af' },
+      { nome: 'Carolina', cor: '#9333ea' }
+    ];
+  }
+
+  // 4) Popula selects
   const selTar = $('novaTarefaCorretor');
   if(selTar){
     selTar.innerHTML = '<option value="">— Escolha o corretor —</option>' +
@@ -2885,18 +2786,41 @@ function abrirTarefas(){
   setTimeout(() => $('novaTarefaTexto').focus(), 150);
 }
 function fecharTarefas(){ $('tarefasBackdrop').classList.remove('show'); }
+
+/* ✅ renderizarFiltrosTarefas — só mostra corretores com tarefas pendentes */
 function renderizarFiltrosTarefas(){
   const wrap = $('filtrosTarefasCorretores');
   if(!wrap) return;
-  const chips = state.corretores.map(c => {
-    const cnt = state.tarefas.filter(t =>
-      t.status === 'pendente' && chaveCorretorExata_(t.corretor) === c.nome
-    ).length;
-    const ativo = state.filtrosTarefasCorretores.has(c.nome);
+
+  const listaPendentes = state.tarefas.filter(t => t.status === 'pendente');
+  const comTarefa = new Set();
+  listaPendentes.forEach(t => {
+    const c = chaveCorretorExata_(t.corretor);
+    if(c) comTarefa.add(c);
+  });
+
+  const btn = $('btnVerConcluidasTarefas');
+  if(btn){
+    btn.textContent = state.visaoPainel.tarefas === 'concluidas' ? 'Ver ativas' : 'Ver concluídas';
+    btn.classList.toggle('ativo', state.visaoPainel.tarefas === 'concluidas');
+  }
+
+  if(comTarefa.size === 0){
+    wrap.innerHTML = `
+      <span class="lbl">Corretor:</span>
+      <span style="font-size:.72rem; color:var(--muted); font-style:italic;">Nenhuma tarefa atribuída</span>
+    `;
+    return;
+  }
+
+  const chips = [...comTarefa].sort((a,b) => a.localeCompare(b,'pt-BR')).map(nome => {
+    const cnt = listaPendentes.filter(t => chaveCorretorExata_(t.corretor) === nome).length;
+    const ativo = state.filtrosTarefasCorretores.has(nome);
+    const cor = corDoCorretor(nome);
     return `<button class="chip chip-corretor ${ativo ? 'active' : ''}"
-              style="background:${ativo ? c.cor : '#fff'}; color:${ativo ? '#fff' : c.cor}; border-color:${c.cor}"
-              onclick="toggleFiltroTarefaCorretor('${esc(c.nome)}')">
-              ${esc(c.nome)} <span class="cnt">${cnt}</span>
+              style="background:${ativo ? cor : '#fff'}; color:${ativo ? '#fff' : cor}; border-color:${cor}"
+              onclick="toggleFiltroTarefaCorretor('${esc(nome)}')">
+              ${esc(nome)} <span class="cnt">${cnt}</span>
             </button>`;
   }).join('');
   wrap.innerHTML = `
@@ -2904,11 +2828,6 @@ function renderizarFiltrosTarefas(){
     <button class="chip ${state.filtrosTarefasCorretores.size === 0 ? 'active' : ''}" onclick="limparFiltroTarefasCorretor()">Todos</button>
     ${chips}
   `;
-  const btn = $('btnVerConcluidasTarefas');
-  if(btn){
-    btn.textContent = state.visaoPainel.tarefas === 'concluidas' ? 'Ver ativas' : 'Ver concluídas';
-    btn.classList.toggle('ativo', state.visaoPainel.tarefas === 'concluidas');
-  }
 }
 function toggleFiltroTarefaCorretor(nome){
   if(state.filtrosTarefasCorretores.has(nome)) state.filtrosTarefasCorretores.delete(nome);
@@ -3044,10 +2963,19 @@ function atualizarBalClientes(){
   const el = $('balClientes');
   if(el) el.textContent = state.clientes.length;
 }
+
+/* ✅ renderizarFiltrosClientes — dinâmico: só corretores com cliente cadastrado */
 function renderizarFiltrosClientes(){
   const wrap = $('filtrosClientes');
   if(!wrap) return;
-  const listaCorretores = state.corretores.map(c => c.nome);
+
+  const encontrados = new Set();
+  state.clientes.forEach(cl => {
+    const c = chaveCorretorExata_(cl.corretor);
+    if(c) encontrados.add(c);
+  });
+  const listaCorretores = [...encontrados].sort((a,b) => a.localeCompare(b,'pt-BR'));
+
   const corretoresChips = listaCorretores.map(nome => {
     const cnt = state.clientes.filter(cl => chaveCorretorExata_(cl.corretor) === nome).length;
     const ativo = state.filtrosClientes.corretores.has(nome);
@@ -3058,6 +2986,7 @@ function renderizarFiltrosClientes(){
               ${esc(nome)} <span class="cnt">${cnt}</span>
             </button>`;
   }).join('');
+
   const t = state.filtrosClientes.temperaturas;
   const s = state.filtrosClientes.status;
   const tp = state.filtrosClientes.tipos;
@@ -3076,7 +3005,7 @@ function renderizarFiltrosClientes(){
     <div class="filtro-grupo">
       <span class="lbl">Corretor:</span>
       ${corretoresChips}
-      <button class="chip ${state.filtrosClientes.corretores.size === 0 ? 'active' : ''}" onclick="limparFiltroClienteCorretores()">Todos</button>
+      ${listaCorretores.length > 0 ? `<button class="chip ${state.filtrosClientes.corretores.size === 0 ? 'active' : ''}" onclick="limparFiltroClienteCorretores()">Todos</button>` : ''}
     </div>
     <div class="filtro-grupo">
       <span class="lbl">Temp:</span>
@@ -3678,13 +3607,23 @@ function atualizarBalAgenda(){
   el.textContent = total > 99 ? '99+' : total;
   el.classList.toggle('zero', total === 0);
 }
+
+/* ✅ renderizarFiltrosAgenda — dinâmico: só corretores com agendamento */
 function renderizarFiltrosAgenda(){
   const wrap = $('filtrosAgenda');
   if(!wrap) return;
+
   const todos = [...state.agendamentos, ...state.eventosNeutros];
   const total = todos.length;
   const todosAtivo = state.filtrosAgenda.size === 0 ? 'active' : '';
-  const listaCorretores = state.corretores.map(c => c.nome);
+
+  const encontrados = new Set();
+  todos.forEach(a => {
+    const c = chaveCorretorExata_(resolverCorretor_(a));
+    if(c) encontrados.add(c);
+  });
+  const listaCorretores = [...encontrados].sort((a,b) => a.localeCompare(b,'pt-BR'));
+
   const chips = listaCorretores.map(nome => {
     const cnt = todos.filter(a => chaveCorretorExata_(resolverCorretor_(a)) === nome).length;
     const ativo = state.filtrosAgenda.has(nome);
@@ -3695,6 +3634,7 @@ function renderizarFiltrosAgenda(){
               ${esc(nome)} <span class="cnt">${cnt}</span>
             </button>`;
   }).join('');
+
   wrap.innerHTML = `
     <div class="filtro-grupo">
       <button class="chip ${todosAtivo}" onclick="limparFiltroAgenda()">Todos <span class="cnt">${total}</span></button>
@@ -4274,17 +4214,35 @@ function atualizarBalGostei(){
   el.textContent = total > 99 ? '99+' : total;
   el.classList.toggle('zero', total === 0);
 }
+
+/* ✅ renderizarFiltrosVisitar — dinâmico */
 function renderizarFiltrosVisitar(){
   const wrap = $('filtrosVisitarCorretores');
   if(!wrap) return;
   const lista = state.notificacoes.visita || [];
-  const chips = state.corretores.map(c => {
-    const cnt = lista.filter(item => chaveCorretorExata_(resolverCorretor_(item)) === c.nome).length;
-    const ativo = state.filtrosVisitarCorretores.has(c.nome);
+  const encontrados = new Set();
+  lista.forEach(item => {
+    const c = chaveCorretorExata_(resolverCorretor_(item));
+    if(c) encontrados.add(c);
+  });
+  const listaCorretores = [...encontrados].sort((a,b) => a.localeCompare(b,'pt-BR'));
+
+  if(listaCorretores.length === 0){
+    wrap.innerHTML = `
+      <span class="lbl">Corretor:</span>
+      <span style="font-size:.72rem; color:var(--muted); font-style:italic;">Nenhum corretor com solicitação</span>
+    `;
+    return;
+  }
+
+  const chips = listaCorretores.map(nome => {
+    const cnt = lista.filter(item => chaveCorretorExata_(resolverCorretor_(item)) === nome).length;
+    const ativo = state.filtrosVisitarCorretores.has(nome);
+    const cor = corDoCorretor(nome);
     return `<button class="chip chip-corretor ${ativo ? 'active' : ''}"
-              style="background:${ativo ? c.cor : '#fff'}; color:${ativo ? '#fff' : c.cor}; border-color:${c.cor}"
-              onclick="toggleFiltroVisitar('${esc(c.nome)}')">
-              ${esc(c.nome)} <span class="cnt">${cnt}</span>
+              style="background:${ativo ? cor : '#fff'}; color:${ativo ? '#fff' : cor}; border-color:${cor}"
+              onclick="toggleFiltroVisitar('${esc(nome)}')">
+              ${esc(nome)} <span class="cnt">${cnt}</span>
             </button>`;
   }).join('');
   wrap.innerHTML = `
@@ -4293,17 +4251,35 @@ function renderizarFiltrosVisitar(){
     ${chips}
   `;
 }
+
+/* ✅ renderizarFiltrosGostei — dinâmico */
 function renderizarFiltrosGostei(){
   const wrap = $('filtrosGosteiCorretores');
   if(!wrap) return;
   const lista = state.notificacoes.gostei || [];
-  const chips = state.corretores.map(c => {
-    const cnt = lista.filter(item => chaveCorretorExata_(resolverCorretor_(item)) === c.nome).length;
-    const ativo = state.filtrosGosteiCorretores.has(c.nome);
+  const encontrados = new Set();
+  lista.forEach(item => {
+    const c = chaveCorretorExata_(resolverCorretor_(item));
+    if(c) encontrados.add(c);
+  });
+  const listaCorretores = [...encontrados].sort((a,b) => a.localeCompare(b,'pt-BR'));
+
+  if(listaCorretores.length === 0){
+    wrap.innerHTML = `
+      <span class="lbl">Corretor:</span>
+      <span style="font-size:.72rem; color:var(--muted); font-style:italic;">Nenhum corretor com "Gostei"</span>
+    `;
+    return;
+  }
+
+  const chips = listaCorretores.map(nome => {
+    const cnt = lista.filter(item => chaveCorretorExata_(resolverCorretor_(item)) === nome).length;
+    const ativo = state.filtrosGosteiCorretores.has(nome);
+    const cor = corDoCorretor(nome);
     return `<button class="chip chip-corretor ${ativo ? 'active' : ''}"
-              style="background:${ativo ? c.cor : '#fff'}; color:${ativo ? '#fff' : c.cor}; border-color:${c.cor}"
-              onclick="toggleFiltroGostei('${esc(c.nome)}')">
-              ${esc(c.nome)} <span class="cnt">${cnt}</span>
+              style="background:${ativo ? cor : '#fff'}; color:${ativo ? '#fff' : cor}; border-color:${cor}"
+              onclick="toggleFiltroGostei('${esc(nome)}')">
+              ${esc(nome)} <span class="cnt">${cnt}</span>
             </button>`;
   }).join('');
   wrap.innerHTML = `
@@ -5192,7 +5168,7 @@ function fallbackCopy(texto){
 
 /* =====================================================
    CAPTAÇÕES QPREÇO
-   - Filtro de corretores: apenas Hugo e Carolina
+   - Filtro de corretores: só mostra quem tem captação atribuída
    - Mostra TUDO que veio da coluna "origem" (fase 1 + fase 2)
    - Observações continuam na coluna Observacoes
 ===================================================== */
@@ -5258,20 +5234,39 @@ function limparFiltroCaptacaoCorretores(){
   renderizarCaptacoes();
 }
 
+/* ✅ renderizarFiltroCaptacoesCorretores — dinâmico: só quem tem captação atribuída */
 function renderizarFiltroCaptacoesCorretores(){
   const wrap = $('captacoesFiltroCorretores');
   if(!wrap) return;
   const lista = CAPTACOES_STATE.lista || [];
-  /* 🔒 Apenas Hugo e Carolina */
-  const chips = CORRETORES_OFICIAIS.map(c => {
-    const cnt = lista.filter(x => String(x.atendidoPor || '').trim() === c.nome).length;
-    const ativo = CAPTACOES_STATE.filtrosCorretores.has(c.nome);
+
+  // Descobre quem REALMENTE tem captação atribuída
+  const corretoresComCaptacao = new Set();
+  lista.forEach(c => {
+    const ap = String(c.atendidoPor || '').trim();
+    if(ap) corretoresComCaptacao.add(ap);
+  });
+
+  // Se ninguém foi atribuído ainda, esconde o filtro
+  if(corretoresComCaptacao.size === 0){
+    wrap.innerHTML = `
+      <span class="capt-lbl">Corretor:</span>
+      <span style="font-size:.72rem; color:var(--muted); font-style:italic;">Nenhum corretor atribuído</span>
+    `;
+    return;
+  }
+
+  const chips = [...corretoresComCaptacao].sort((a,b) => a.localeCompare(b,'pt-BR')).map(nome => {
+    const cnt = lista.filter(x => String(x.atendidoPor || '').trim() === nome).length;
+    const ativo = CAPTACOES_STATE.filtrosCorretores.has(nome);
+    const cor = corDoCorretor(nome);
     return `<button class="chip chip-corretor ${ativo ? 'active' : ''}"
-              style="background:${ativo ? c.cor : '#fff'}; color:${ativo ? '#fff' : c.cor}; border-color:${c.cor}"
-              onclick="toggleFiltroCaptacaoCorretor('${esc(c.nome)}')">
-              ${esc(c.nome)} <span class="cnt">${cnt}</span>
+              style="background:${ativo ? cor : '#fff'}; color:${ativo ? '#fff' : cor}; border-color:${cor}"
+              onclick="toggleFiltroCaptacaoCorretor('${esc(nome)}')">
+              ${esc(nome)} <span class="cnt">${cnt}</span>
             </button>`;
   }).join('');
+
   wrap.innerHTML = `
     <span class="capt-lbl">Corretor:</span>
     <button class="chip ${CAPTACOES_STATE.filtrosCorretores.size === 0 ? 'active' : ''}" onclick="limparFiltroCaptacaoCorretores()">Todos</button>
@@ -5304,7 +5299,6 @@ function atualizarContadoresCaptacoes(){
   const semRetorno = lista.filter(c => statusCaptacao_(c) === 'sem-retorno').length;
   const concluidas = lista.filter(c => statusCaptacao_(c) === 'concluidas').length;
   const total = lista.length;
-  
 
   const elP = $('cntPendentes'); if(elP) elP.textContent = pendentes;
   const elS = $('cntSemRetorno'); if(elS) elS.textContent = semRetorno;
@@ -5323,12 +5317,10 @@ function renderizarCaptacoes(){
 
   let arr = [...(CAPTACOES_STATE.lista || [])];
 
-  // Filtro de status
   if(CAPTACOES_STATE.filtro !== 'todas'){
     arr = arr.filter(c => statusCaptacao_(c) === CAPTACOES_STATE.filtro);
   }
 
-  // Filtro de corretores
   if(CAPTACOES_STATE.filtrosCorretores.size > 0){
     arr = arr.filter(c => {
       const ap = String(c.atendidoPor || '').trim();
@@ -5365,17 +5357,13 @@ function renderizarCaptacoes(){
   container.innerHTML = arr.map(c => captacaoCardHTML(c)).join('');
 }
 
-/* =====================================================
-   🆕 CARD DA CAPTAÇÃO COM DADOS COMPLETOS
-===================================================== */
 function captacaoCardHTML(c){
   const status = statusCaptacao_(c);                     // 'pendentes' | 'sem-retorno' | 'concluidas'
   const isConcluida = status === 'concluidas';
 
-  // CSS só entende singular:
   const statusClasse = status === 'pendentes'  ? 'pendente'
                      : status === 'concluidas' ? 'concluida'
-                     : status;                          // 'sem-retorno' continua igual
+                     : status;
 
   const tel = normalizaTel(c.telefone);
   const telFmt = fmtTel(tel);
@@ -5384,11 +5372,8 @@ function captacaoCardHTML(c){
   const atendidoPor = String(c.atendidoPor || '').trim();
   const obsAberta = state._captObsAbertas && state._captObsAbertas.has(String(c.id));
 
-  /* Parse da coluna "origem" */
   const origem = parseOrigem_(c.origem);
 
-  /* Melhor nome/endereço: usa o que veio do cadastro (nome/rua/numero/bairro)
-     ou o parseado da origem */
   const nomeFinal = c.nome || origem.nome || '(sem nome)';
   const ruaFinal = c.rua || origem.rua || '';
   const numeroFinal = c.numero || origem.numero || '';
@@ -5410,7 +5395,6 @@ function captacaoCardHTML(c){
     <option value="concluida" ${status === 'concluidas' ? 'selected' : ''}>✅ Concluída</option>
   `;
 
-  /* Monta os "chips" com os dados do imóvel (fase 2) */
   let chipsImovel = '';
   const temDadosImovel =
     origem.tipo || origem.area || origem.quartos || origem.suites ||
@@ -5451,6 +5435,11 @@ function captacaoCardHTML(c){
     chipsImovel = `<div class="cc-imovel"><span class="cc-tag" style="background:#fef3c7;border-color:#fbbf24;color:#78350f;">⏳ Aguardando complemento (fase 2)</span></div>`;
   }
 
+  /* Select de corretores — usa TODOS os state.corretores */
+  const corretoresOpts = state.corretores.map(cr =>
+    `<option value="${esc(cr.nome)}" ${atendidoPor === cr.nome ? 'selected' : ''}>${esc(cr.nome)}</option>`
+  ).join('');
+
   return `
     <div class="capt-card status-${statusClasse} ${obsAberta ? 'obs-aberta' : ''}" data-id="${esc(c.id)}">
       <div class="cc-l1">
@@ -5482,9 +5471,7 @@ function captacaoCardHTML(c){
           <label>Corretor</label>
           <select data-cap-id="${esc(c.id)}" data-cap-field="atendidoPor" onchange="onChangeCaptacaoCorretor(this)">
             <option value="">— Não atribuído —</option>
-            ${CORRETORES_OFICIAIS.map(cr =>
-              `<option value="${esc(cr.nome)}" ${atendidoPor === cr.nome ? 'selected' : ''}>${esc(cr.nome)}</option>`
-            ).join('')}
+            ${corretoresOpts}
           </select>
         </div>
       </div>
@@ -5603,8 +5590,6 @@ async function toggleConcluidaCaptacao(id, isConcluida){
   const item = CAPTACOES_STATE.lista.find(x => String(x.id) === String(id));
   if(!item) return;
 
-  // Valor salvo na planilha continua sendo SINGULAR ('concluida' ou '')
-  // statusCaptacao_() traduz isso para plural na hora de exibir
   const novoStatus = isConcluida ? '' : 'concluida';
   item.contatoFeito = novoStatus;
 
