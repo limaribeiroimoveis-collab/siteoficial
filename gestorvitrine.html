@@ -586,6 +586,17 @@
     font-family: var(--font); font-size: .72rem;
   }
 
+.cliente-row-v2 .acesso-cell .acesso-disp{
+  font-size: .68rem;
+  color: var(--text-soft);
+  font-weight: 600;
+  letter-spacing: -.1px;
+  margin-top: 1px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+ 
   .cliente-row-v2 .cutucada-cell{
     display: flex;
     align-items: stretch;
@@ -2330,26 +2341,46 @@ function formatarDataHoraCurta_(d){
   return `${dia}/${mes}/${ano}   ${h}:${m}`;
 }
 
+
 /* ✅ Último acesso — pega o mais recente entre ação e acesso (se existir) */
-function ultimoAcessoCliente_(c){
-  const candidatos = [];
-  if(c.dataUltimoAcesso){
-    const d = new Date(c.dataUltimoAcesso);
-    if(!isNaN(d.getTime())){
-      candidatos.push({ data: d, tipo: 'acesso', label: 'Último acesso' });
-    }
+  // ✅ Bloco de último acesso (só cliente)
+  const ult = ultimoAcessoCliente_(c);
+  let acessoHTML = '';
+  if(!ult){
+    acessoHTML = `
+      <div class="acesso-cell sem-acesso" title="Sem registro de acesso ou ação">
+        <div class="acesso-head">
+          <svg class="ico ico-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          Sem acesso
+        </div>
+        <div class="acesso-data">Nunca acessou</div>
+      </div>`;
+  } else {
+    const dtFmt = formatarDataHoraCliente_(ult.data);
+    const icoSvg = ult.tipo === 'acesso'
+      ? '<svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>'
+      : '<svg class="ico ico-sm" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>';
+    const cls = ult.tipo === 'acesso' ? 'tipo-acesso' : 'tipo-acao';
+    acessoHTML = `
+      <div class="acesso-cell ${cls}" title="${esc(ult.label)}${ult.dispositivo ? ' · ' + esc(ult.dispositivo) : ''}">
+        <div class="acesso-head">${icoSvg}${esc(ult.label)}</div>
+        <div class="acesso-data">${esc(dtFmt)}</div>
+        ${ult.dispositivo ? `<div class="acesso-disp">${esc(ult.dispositivo)}</div>` : ''}
+      </div>`;
   }
-  if(c.dataUltimaAcaoCliente){
-    const d = new Date(c.dataUltimaAcaoCliente);
-    if(!isNaN(d.getTime())){
-      candidatos.push({ data: d, tipo: 'acao', label: 'Última ação' });
-    }
-  }
-  if(candidatos.length === 0) return null;
-  candidatos.sort((a, b) => b.data - a.data);
-  return candidatos[0];
+
+/* ✅ Formata data+hora com 2 espaços entre elas (pro bloco de último acesso) */
+function formatarDataHoraCliente_(d){
+  if(!(d instanceof Date) || isNaN(d.getTime())) return '';
+  const dia = String(d.getDate()).padStart(2,'0');
+  const mes = String(d.getMonth()+1).padStart(2,'0');
+  const ano = d.getFullYear();
+  const h = String(d.getHours()).padStart(2,'0');
+  const m = String(d.getMinutes()).padStart(2,'0');
+  return `${dia}/${mes}/${ano}  ${h}:${m}`;
 }
 
+ 
 /* =====================================================
    PARSE DA COLUNA "ORIGEM" (mantido — usado pelo iframe Captar depois)
 ===================================================== */
