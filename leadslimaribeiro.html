@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title>Leads · Lima Ribeiro Imóveis</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%231e3a5f'/><text x='50' y='68' font-family='-apple-system,sans-serif' font-size='48' font-weight='800' fill='white' text-anchor='middle'>LR</text></svg>">
+<title>Leads VIP · Lima Ribeiro Imóveis</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%237c3aed'/><text x='50' y='68' font-family='-apple-system,sans-serif' font-size='48' font-weight='800' fill='white' text-anchor='middle'>LR</text></svg>">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   :root{
@@ -19,8 +19,15 @@
     --vip:#7c3aed;
     --vip-hover:#5b21b6;
     --vip-soft:#ede9fe;
-    --preco:#0891b2;
-    --preco-soft:#cffafe;
+    --cad:#0891b2;
+    --cad-hover:#0e7490;
+    --cad-soft:#cffafe;
+    --vit:#16a34a;
+    --vit-hover:#15803d;
+    --vit-soft:#dcfce7;
+    --nao:#64748b;
+    --nao-hover:#475569;
+    --nao-soft:#f1f5f9;
     --bg:#f4f6f8; --bg-alt:#e8ecf0;
     --card:#ffffff;
     --text:#0f172a; --text-soft:#475569; --muted:#94a3b8;
@@ -104,14 +111,17 @@
     display: inline-flex; align-items: center; gap: 5px;
     padding: 6px 12px; border-radius: 999px;
     background: #fff; border: 1px solid var(--border-strong);
-    font-size: .74rem; font-weight: 600; cursor: pointer;
+    font-size: .72rem; font-weight: 600; cursor: pointer;
     transition: all .15s; font-family: inherit; color: var(--text-soft);
     white-space: nowrap;
   }
   .chip:hover{ border-color: var(--primary); color: var(--primary); }
   .chip.active{ background: var(--primary); color: #fff; border-color: var(--primary); }
-  .chip.chip-vip.active{ background: var(--vip); border-color: var(--vip); }
-  .chip.chip-preco.active{ background: var(--preco); border-color: var(--preco); }
+  .chip.chip-todos.active{ background: var(--primary); border-color: var(--primary); }
+  .chip.chip-pendente.active{ background: var(--warn); border-color: var(--warn); }
+  .chip.chip-cadastrado.active{ background: var(--cad); border-color: var(--cad); }
+  .chip.chip-vitrine.active{ background: var(--vit); border-color: var(--vit); }
+  .chip.chip-nao-atendemos.active{ background: var(--nao); border-color: var(--nao); }
   .chip.chip-corretor{ color: #fff; }
   .chip.chip-corretor:not(.active){ background: #fff !important; color: var(--text-soft) !important; }
   .chip .cnt{
@@ -125,8 +135,9 @@
     border-radius: 50%; flex-shrink: 0;
   }
   .chip .dot-warn{ background: var(--warn); }
-  .chip .dot-danger{ background: var(--danger); }
-  .chip .dot-success{ background: var(--success); }
+  .chip .dot-cad{ background: var(--cad); }
+  .chip .dot-vit{ background: var(--vit); }
+  .chip .dot-nao{ background: var(--nao); }
   .chip.active .dot{ background: #fff !important; opacity: .9; }
 
   /* ============ BUSCA ============ */
@@ -181,7 +192,7 @@
   .lead-card{
     background: #fff;
     border: 1px solid var(--border);
-    border-left: 4px solid var(--vip);
+    border-left: 4px solid var(--warn);
     border-radius: var(--radius);
     padding: 14px 16px;
     display: flex; flex-direction: column; gap: 10px;
@@ -193,35 +204,28 @@
     box-shadow: var(--shadow-md);
     transform: translateY(-1px);
   }
-  .lead-card.tipo-vip{ border-left-color: var(--vip); }
-  .lead-card.tipo-preco{ border-left-color: var(--preco); }
-
-  .lead-card.status-pendente{ background: #fff; }
-  .lead-card.status-sem-retorno{
-    background: linear-gradient(180deg, #fdf7f7 0%, #fbeaea 100%);
+  .lead-card.status-pendente{
+    border-left-color: var(--warn);
+    background: #fff;
   }
-  .lead-card.status-concluida{
+  .lead-card.status-cadastrado{
+    border-left-color: var(--cad);
+    background: linear-gradient(180deg, #f0fdff 0%, #e0f7fa 100%);
+  }
+  .lead-card.status-vitrine{
+    border-left-color: var(--vit);
     background: linear-gradient(180deg, #f5faf7 0%, #e6efe9 100%);
     opacity: .92;
   }
+  .lead-card.status-nao-atendemos{
+    border-left-color: var(--nao);
+    background: linear-gradient(180deg, #f8fafc 0%, #eef2f6 100%);
+    opacity: .75;
+  }
 
-  /* Linha 1: nome + telefone + status + tipo */
+  /* Linha 1 */
   .lc-l1{
     display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
-  }
-  .lc-tipo-tag{
-    font-size: .56rem; font-weight: 800;
-    padding: 3px 7px; border-radius: 4px;
-    text-transform: uppercase; letter-spacing: .4px;
-    white-space: nowrap;
-  }
-  .lc-tipo-tag.vip{
-    background: var(--vip-soft); color: var(--vip);
-    border: 1px solid #c4b5fd;
-  }
-  .lc-tipo-tag.preco{
-    background: var(--preco-soft); color: var(--preco);
-    border: 1px solid #67e8f9;
   }
   .lc-nome{
     font-size: .92rem; font-weight: 700; color: var(--text);
@@ -235,16 +239,17 @@
     white-space: nowrap;
   }
   .lc-status-tag{
-    font-size: .6rem; font-weight: 800;
-    padding: 3px 8px; border-radius: 999px;
+    font-size: .58rem; font-weight: 800;
+    padding: 3px 9px; border-radius: 999px;
     text-transform: uppercase; letter-spacing: .3px;
     white-space: nowrap;
   }
   .lc-status-tag.pendente{ background: var(--warn-soft); color: var(--warn); }
-  .lc-status-tag.sem-retorno{ background: var(--danger-soft); color: var(--danger); }
-  .lc-status-tag.concluida{ background: var(--success-soft); color: var(--success); }
+  .lc-status-tag.cadastrado{ background: var(--cad-soft); color: var(--cad); }
+  .lc-status-tag.vitrine{ background: var(--vit-soft); color: var(--vit); }
+  .lc-status-tag.nao-atendemos{ background: var(--nao-soft); color: var(--nao); }
 
-  /* Linha 2: idade */
+  /* Linha 2 */
   .lc-l2{
     font-size: .72rem; color: var(--text-soft);
     display: flex; align-items: center; gap: 8px;
@@ -260,15 +265,15 @@
   .lc-l2 .idade.recente{ color: var(--success); }
   .lc-l2 .idade.antigo{ color: var(--danger); }
 
-  /* Perfil VIP (grid de preferências) */
-  .lc-perfil-vip{
+  /* Perfil VIP */
+  .lc-perfil{
     display: flex; flex-wrap: wrap; gap: 4px;
     padding: 10px;
     background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%);
     border: 1px solid #e9d5ff;
     border-radius: var(--radius-sm);
   }
-  .lc-perfil-vip .tagv{
+  .lc-perfil .tagv{
     display: inline-flex; align-items: center; gap: 4px;
     font-size: .68rem; font-weight: 700;
     padding: 3px 9px; border-radius: 4px;
@@ -276,48 +281,24 @@
     border: 1px solid #ddd6fe;
     white-space: nowrap;
   }
-  .lc-perfil-vip .tagv .lbl{
+  .lc-perfil .tagv .lbl{
     font-weight: 500; color: #7c3aed; opacity: .8;
   }
-  .lc-perfil-vip .tagv.destaque{
+  .lc-perfil .tagv.destaque{
     background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
     border-color: #fbbf24; color: #78350f;
   }
-  .lc-perfil-vip .tagv.bairro{
+  .lc-perfil .tagv.bairro{
     background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%);
     border-color: #c4b5fd; color: #5b21b6;
   }
-  .lc-perfil-vip .tagv.tanto-faz{
+  .lc-perfil .tagv.tanto-faz{
     background: #f1f5f9; color: var(--muted);
     border-color: var(--border);
     font-style: italic; font-weight: 500;
   }
 
-  /* Fallback pra leads QPreço (imóvel do cliente) */
-  .lc-perfil-preco{
-    display: flex; flex-wrap: wrap; gap: 4px;
-    padding: 8px 10px;
-    background: #f0f9ff;
-    border: 1px solid #bae6fd;
-    border-radius: var(--radius-sm);
-  }
-  .lc-perfil-preco .tagp{
-    display: inline-flex; align-items: center; gap: 3px;
-    font-size: .66rem; font-weight: 700;
-    padding: 3px 8px; border-radius: 4px;
-    background: #fff; color: #0c4a6e;
-    border: 1px solid #7dd3fc;
-    white-space: nowrap;
-  }
-  .lc-perfil-preco .tagp .lbl{
-    font-weight: 500; color: #0369a1; opacity: .8;
-  }
-  .lc-perfil-preco .tagp.valor{
-    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-    border-color: #fbbf24; color: #78350f;
-  }
-
-  /* Detalhes extras */
+  /* Detalhes */
   .lc-detalhes{
     font-size: .74rem; color: var(--text-soft);
     padding: 8px 10px;
@@ -365,6 +346,15 @@
   .lc-campo select:disabled{
     opacity: .6; cursor: not-allowed;
   }
+  .lc-campo select.corretor-obrigatorio{
+    border-color: var(--warn);
+    background: #fdfaf3;
+    animation: pulse-warn 1.5s ease-in-out infinite;
+  }
+  @keyframes pulse-warn{
+    0%, 100%{ box-shadow: 0 0 0 0 rgba(139,111,58,.3); }
+    50%{ box-shadow: 0 0 0 4px rgba(139,111,58,.1); }
+  }
 
   /* Observações */
   .lc-obs-wrap{
@@ -404,6 +394,19 @@
     font-size: .64rem; color: var(--muted);
     font-family: var(--mono);
     margin-right: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .lc-data .corretor-badge{
+    display: inline-flex;
+    align-items: center;
+    font-size: .62rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 999px;
+    color: #fff;
+    letter-spacing: .2px;
   }
   .lc-acoes{
     display: flex; gap: 4px; align-items: center;
@@ -514,9 +517,7 @@
   }
 
   /* Modal de mensagens */
-  .modal-msgs{
-    max-width: 720px;
-  }
+  .modal-msgs{ max-width: 720px; }
   .msgs-intro{
     font-size: .8rem; color: var(--text-soft);
     margin-bottom: 18px; line-height: 1.5;
@@ -593,12 +594,8 @@
   }
 
   /* Modal Detalhes */
-  .modal-detalhes{
-    max-width: 640px;
-  }
-  .det-secao{
-    margin-bottom: 16px;
-  }
+  .modal-detalhes{ max-width: 640px; }
+  .det-secao{ margin-bottom: 16px; }
   .det-secao:last-child{ margin-bottom: 0; }
   .det-secao-titulo{
     font-size: .68rem; font-weight: 800;
@@ -672,6 +669,43 @@
     margin-top: 18px; flex-wrap: wrap;
   }
 
+  /* Modal Editar */
+  .edit-campo{
+    display: flex; flex-direction: column; gap: 4px;
+    margin-bottom: 12px;
+  }
+  .edit-campo label{
+    font-size: .68rem; font-weight: 700;
+    color: var(--text-soft);
+    text-transform: uppercase; letter-spacing: .3px;
+  }
+  .edit-campo input,
+  .edit-campo textarea{
+    padding: 9px 11px;
+    border: 1px solid var(--border-strong);
+    border-radius: 6px;
+    font-size: .86rem;
+    font-family: inherit;
+    color: var(--text);
+    background: #fff;
+    transition: all .15s;
+  }
+  .edit-campo input:focus,
+  .edit-campo textarea:focus{
+    outline: none; border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(30,58,95,.1);
+  }
+  .edit-campo textarea{
+    min-height: 70px;
+    resize: vertical;
+    line-height: 1.5;
+  }
+  .edit-grid-2{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
   .btn{
     display: inline-flex; align-items: center; justify-content: center; gap: 7px;
     padding: 9px 16px; border-radius: var(--radius-sm);
@@ -689,6 +723,12 @@
   .btn-ghost:hover:not(:disabled){ background: var(--bg-alt); color: var(--text); border-color: var(--muted); }
   .btn-vip{ background: var(--vip); color: #fff; }
   .btn-vip:hover:not(:disabled){ background: var(--vip-hover); }
+  .btn-cad{ background: var(--cad); color: #fff; }
+  .btn-cad:hover:not(:disabled){ background: var(--cad-hover); }
+  .btn-vit{ background: var(--vit); color: #fff; }
+  .btn-vit:hover:not(:disabled){ background: var(--vit-hover); }
+  .btn-nao{ background: var(--nao); color: #fff; }
+  .btn-nao:hover:not(:disabled){ background: var(--nao-hover); }
   .btn-sm{ padding: 6px 12px; font-size: .78rem; gap: 5px; }
 
   /* ============ TOAST ============ */
@@ -716,7 +756,7 @@
   .loader-lg{ width: 34px; height: 34px; border-width: 3px; }
   @keyframes spin{ to{ transform: rotate(360deg); } }
   .loading-inline{
-    text-align: center; padding: 50px 20px; color: var(--primary);
+    text-align: center; padding: 50px 20px; color: var(--vip);
     grid-column: 1 / -1;
   }
   .loading-inline p{ margin-top: 10px; font-size: .85rem; color: var(--text-soft); }
@@ -748,17 +788,14 @@
 </head>
 <body>
 
-<!-- HEADER -->
+<!-- ============ HEADER ============ -->
 <header class="lead-header">
   <div class="lead-header-inner">
     <div class="lead-title">
       <svg class="ico" viewBox="0 0 24 24">
-        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-        <circle cx="9" cy="7" r="4"/>
-        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        <path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/>
       </svg>
-      Leads
+      Leads VIP
     </div>
     <span class="lead-resumo" id="leadResumo">Carregando...</span>
     <div class="lead-spacer"></div>
@@ -771,35 +808,27 @@
   </div>
 </header>
 
-<!-- FILTROS -->
+<!-- ============ FILTROS ============ -->
 <div class="lead-filtros">
   <div class="lead-filtros-inner">
-
-    <!-- TIPO -->
-    <div class="lead-filtros-grupo">
-      <span class="lead-lbl">Origem:</span>
-      <button class="chip active" data-lead-filter="todos" onclick="setFiltroLeads('todos', this)">
-        📋 Todos <span class="cnt" id="cntTodos">0</span>
-      </button>
-      <button class="chip chip-vip" data-lead-filter="vip" onclick="setFiltroLeads('vip', this)">
-        ⭐ Seleção VIP <span class="cnt" id="cntVip">0</span>
-      </button>
-      <button class="chip chip-preco" data-lead-filter="preco" onclick="setFiltroLeads('preco', this)">
-        💰 QPreço <span class="cnt" id="cntPreco">0</span>
-      </button>
-    </div>
 
     <!-- STATUS -->
     <div class="lead-filtros-grupo">
       <span class="lead-lbl">Status:</span>
-      <button class="chip active" data-lead-status="pendentes" onclick="setStatusLeads('pendentes', this)">
-        <span class="dot dot-warn"></span> Pendentes <span class="cnt" id="cntPendentes">0</span>
+      <button class="chip chip-todos active" data-lead-status="todos" onclick="setStatusLeads('todos', this)">
+        📋 Todos <span class="cnt" id="cntTodos">0</span>
       </button>
-      <button class="chip" data-lead-status="sem-retorno" onclick="setStatusLeads('sem-retorno', this)">
-        <span class="dot dot-danger"></span> Sem retorno <span class="cnt" id="cntSemRetorno">0</span>
+      <button class="chip chip-pendente" data-lead-status="pendente" onclick="setStatusLeads('pendente', this)">
+        <span class="dot dot-warn"></span> Pendente <span class="cnt" id="cntPendente">0</span>
       </button>
-      <button class="chip" data-lead-status="concluidas" onclick="setStatusLeads('concluidas', this)">
-        <span class="dot dot-success"></span> Concluídas <span class="cnt" id="cntConcluidas">0</span>
+      <button class="chip chip-cadastrado" data-lead-status="cadastrado" onclick="setStatusLeads('cadastrado', this)">
+        <span class="dot dot-cad"></span> Cliente cadastrado <span class="cnt" id="cntCadastrado">0</span>
+      </button>
+      <button class="chip chip-vitrine" data-lead-status="vitrine" onclick="setStatusLeads('vitrine', this)">
+        <span class="dot dot-vit"></span> Vitrine enviada <span class="cnt" id="cntVitrine">0</span>
+      </button>
+      <button class="chip chip-nao-atendemos" data-lead-status="nao-atendemos" onclick="setStatusLeads('nao-atendemos', this)">
+        <span class="dot dot-nao"></span> Área não atendida <span class="cnt" id="cntNaoAtendemos">0</span>
       </button>
     </div>
 
@@ -827,7 +856,7 @@
   </div>
 </div>
 
-<!-- LISTA -->
+<!-- ============ LISTA ============ -->
 <main class="lead-lista-wrap">
   <div id="leadLista" class="lead-lista">
     <div class="loading-inline"><span class="loader loader-lg"></span><p>Carregando leads...</p></div>
@@ -870,7 +899,7 @@
 </div>
 
 <!-- ============================================ -->
-<!-- MODAL DETALHES DO LEAD -->
+<!-- MODAL DETALHES -->
 <!-- ============================================ -->
 <div class="backdrop" id="detBackdrop">
   <div class="modal modal-detalhes">
@@ -893,7 +922,7 @@
 </div>
 
 <!-- ============================================ -->
-<!-- MODAL EDITAR DADOS -->
+<!-- MODAL EDITAR -->
 <!-- ============================================ -->
 <div class="backdrop" id="editBackdrop">
   <div class="modal">
@@ -906,28 +935,25 @@
     </h2>
     <input type="hidden" id="editLeadId">
 
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
-      <div class="lc-campo">
+    <div class="edit-grid-2">
+      <div class="edit-campo">
         <label>Nome *</label>
-        <input type="text" id="editNome" style="padding:9px 11px; border:1px solid var(--border-strong); border-radius:6px; font-size:.86rem; font-family:inherit;">
+        <input type="text" id="editNome">
       </div>
-      <div class="lc-campo">
+      <div class="edit-campo">
         <label>Telefone *</label>
-        <input type="tel" id="editTelefone" inputmode="numeric" maxlength="16" oninput="mascaraTelefone(this)"
-               style="padding:9px 11px; border:1px solid var(--border-strong); border-radius:6px; font-size:.86rem; font-family:inherit;">
+        <input type="tel" id="editTelefone" inputmode="numeric" maxlength="16" oninput="mascaraTelefone(this)">
       </div>
     </div>
 
-    <div class="lc-campo" style="margin-top:12px;">
+    <div class="edit-campo">
       <label>Bairros (separados por vírgula)</label>
-      <input type="text" id="editBairros" placeholder="Ex: Savassi, Lourdes, Sion"
-             style="padding:9px 11px; border:1px solid var(--border-strong); border-radius:6px; font-size:.86rem; font-family:inherit;">
+      <input type="text" id="editBairros" placeholder="Ex: Savassi, Lourdes, Sion">
     </div>
 
-    <div class="lc-campo" style="margin-top:12px;">
+    <div class="edit-campo">
       <label>Detalhes extras</label>
-      <textarea id="editDetalhes" placeholder="Ex: elevador, varanda gourmet, sem escada..."
-                style="padding:9px 11px; border:1px solid var(--border-strong); border-radius:6px; font-size:.86rem; font-family:inherit; min-height:70px; resize:vertical; line-height:1.5;"></textarea>
+      <textarea id="editDetalhes" placeholder="Ex: elevador, varanda gourmet, sem escada..."></textarea>
     </div>
 
     <div style="display:flex; gap:8px; justify-content:flex-end; margin-top:16px;">
@@ -941,7 +967,7 @@
 </div>
 
 <!-- ============================================ -->
-<!-- MODAL CONFIRMAÇÃO (custom) -->
+<!-- MODAL CONFIRMAÇÃO -->
 <!-- ============================================ -->
 <div class="backdrop" id="confirmBackdrop">
   <div class="modal" style="max-width:400px; text-align:center;">
@@ -980,11 +1006,33 @@ const CORES_PADRAO = {
 };
 
 const CORRETORES_INFO = {
-  'Hugo':     { nomeCompleto: 'Hugo Ribeiro',    funcao: 'Corretor',    genero: 'M' },
-  'Carolina': { nomeCompleto: 'Carolina Lima',   funcao: 'Corretora',   genero: 'F' }
+  'Hugo':     { nomeCompleto: 'Hugo Ribeiro',  funcao: 'Corretor',  genero: 'M' },
+  'Carolina': { nomeCompleto: 'Carolina Lima', funcao: 'Corretora', genero: 'F' }
 };
 
-const $ = id => document.getElementById(id);
+/* =====================================================
+   STATUS — os 4 estados + "Todos"
+===================================================== */
+const STATUS_LABEL = {
+  '':               'Pendente',
+  'cadastrado':     'Cliente cadastrado',
+  'vitrine':        'Vitrine enviada',
+  'nao-atendemos':  'Área não atendida'
+};
+
+const STATUS_CLASSE = {
+  '':               'pendente',
+  'cadastrado':     'cadastrado',
+  'vitrine':        'vitrine',
+  'nao-atendemos':  'nao-atendemos'
+};
+
+const STATUS_ICONE = {
+  '':               '⏳',
+  'cadastrado':     '📝',
+  'vitrine':        '✅',
+  'nao-atendemos':  '🚫'
+};
 
 /* =====================================================
    STATE
@@ -993,8 +1041,7 @@ const state = {
   adminSenha: null,
   corretores: [],
   lista: [],
-  filtro: 'todos',              // todos | vip | preco
-  filtroStatus: 'pendentes',    // pendentes | sem-retorno | concluidas
+  filtroStatus: 'todos',  // todos | pendente | cadastrado | vitrine | nao-atendemos
   filtrosCorretores: new Set(),
   busca: '',
   obsAbertas: new Set(),
@@ -1067,6 +1114,15 @@ function doisPrimeirosNomes_(nomeCompleto){
   const significativas = partes.filter(p => p && !preposicoes.has(p.toLowerCase()));
   return significativas.slice(0, 2).join(' ');
 }
+function fmtValorBR_(v){
+  const n = parseInt(String(v).replace(/\D/g,''), 10);
+  if(isNaN(n) || n <= 0) return '—';
+  if(n >= 1000000){
+    const mi = n / 1000000;
+    return 'R$ ' + (mi % 1 === 0 ? mi : mi.toFixed(1)).toString().replace('.', ',') + ' mi';
+  }
+  return 'R$ ' + Math.round(n / 1000) + ' mil';
+}
 function toast(msg, type=''){
   const t = $('toast');
   if(!t) return;
@@ -1083,46 +1139,7 @@ function marcarSalvando(inicio){
   if(ov) ov.classList.toggle('show', state.salvando > 0);
 }
 
-/* =====================================================
-   PARSER — identifica VIP x QPreço e extrai dados
-===================================================== */
-function parseLead_(lead){
-  const origem = String(lead.origem || '').trim();
-  const out = {
-    tipo: 'preco',      // 'vip' ou 'preco'
-    vip: {},
-    preco: {}
-  };
-
-  // === Seleção VIP ===
-  if(/^VIP-SELECAO/i.test(origem)){
-    out.tipo = 'vip';
-    const partes = origem.split('|').map(p => p.trim()).filter(Boolean);
-    partes.forEach(p => {
-      const idx = p.indexOf(':');
-      if(idx < 0) return;
-      const chave = p.slice(0, idx).trim().toLowerCase();
-      const valor = p.slice(idx + 1).trim();
-      out.vip[chave] = valor;
-    });
-    return out;
-  }
-
-  // === QPreço antigo (FASE1 ou FASE2) ===
-  if(/^FASE1|^FASE2/i.test(origem)){
-    out.tipo = 'preco';
-    const partes = origem.split('|').map(p => p.trim()).filter(Boolean);
-    partes.forEach(p => {
-      const idx = p.indexOf(':');
-      if(idx < 0) return;
-      const chave = p.slice(0, idx).trim().toLowerCase();
-      const valor = p.slice(idx + 1).trim();
-      out.preco[chave] = valor;
-    });
-  }
-
-  return out;
-}
+const $ = id => document.getElementById(id);
 
 /* =====================================================
    API
@@ -1161,15 +1178,14 @@ async function api(action, params = {}, timeoutMs = TIMEOUT_API, retries = 2) {
 }
 
 /* =====================================================
-   COMUNICAÇÃO COM O PAI (iframe)
+   POST MESSAGE (iframe → Gestor)
 ===================================================== */
 const EH_IFRAME = window.parent !== window;
-
-function avisarPai(tipo, dados = {}) {
-  if (!EH_IFRAME) return;
+function avisarPai(tipo, dados = {}){
+  if(!EH_IFRAME) return;
   try {
-    window.parent.postMessage({ origem: 'leads', tipo: tipo, ...dados }, '*');
-  } catch(e) { /* silencioso */ }
+    window.parent.postMessage({ origem: 'leads', tipo, ...dados }, '*');
+  } catch(e){ /* silencioso */ }
 }
 
 /* =====================================================
@@ -1199,16 +1215,24 @@ async function carregarCorretores(){
 }
 
 /* =====================================================
-   STATUS DO LEAD
+   NORMALIZA STATUS — do backend vem '' | 'cadastrado' | 'vitrine' | 'nao-atendemos'
 ===================================================== */
-function statusLead_(c){
-  const v = String(c.contatoFeito || '').trim().toLowerCase();
-  if(v === 'sem-retorno' || v === 'sem retorno') return 'sem-retorno';
-  if(v === 'concluida') return 'concluidas';
-  return 'pendentes';
+function normalizaStatus_(s){
+  const v = String(s || '').trim().toLowerCase();
+  if(v === '') return '';
+  if(v === 'cadastrado') return 'cadastrado';
+  if(v === 'vitrine' || v === 'vitrine-enviada' || v === 'concluida') return 'vitrine';
+  if(v === 'nao-atendemos' || v === 'nao_atendemos' || v === 'nao') return 'nao-atendemos';
+  return '';
 }
-function tipoLead_(c){
-  return parseLead_(c).tipo; // 'vip' ou 'preco'
+function statusLead_(lead){
+  return normalizaStatus_(lead.status);
+}
+function statusLabel_(lead){
+  return STATUS_LABEL[statusLead_(lead)] || 'Pendente';
+}
+function statusClasse_(lead){
+  return STATUS_CLASSE[statusLead_(lead)] || 'pendente';
 }
 
 /* =====================================================
@@ -1219,7 +1243,7 @@ async function carregarLeads(mostrarLoading){
     $('leadLista').innerHTML = '<div class="loading-inline"><span class="loader loader-lg"></span><p>Carregando leads...</p></div>';
   }
   marcarSalvando(true);
-  const res = await api('listarCaptacoesQPrecoV2', { senha: state.adminSenha });
+  const res = await api('listarLeadsVIP', { senha: state.adminSenha });
   marcarSalvando(false);
   if(!res.ok){
     $('leadLista').innerHTML = '<div class="empty-state"><h3>Erro ao carregar leads</h3><p>' + esc(res.error || '') + '</p></div>';
@@ -1232,46 +1256,33 @@ async function carregarLeads(mostrarLoading){
   avisarPai('badge', { valor: contarPendentesVip_() });
 }
 
-/* Conta pendentes VIP puros (para o badge do gestor) */
 function contarPendentesVip_(){
-  return (state.lista || []).filter(c =>
-    tipoLead_(c) === 'vip' && statusLead_(c) === 'pendentes'
-  ).length;
+  return (state.lista || []).filter(l => statusLead_(l) === '').length;
 }
 
 function atualizarContadores(){
   const lista = state.lista || [];
-  const pendentes  = lista.filter(c => statusLead_(c) === 'pendentes').length;
-  const semRetorno = lista.filter(c => statusLead_(c) === 'sem-retorno').length;
-  const concluidas = lista.filter(c => statusLead_(c) === 'concluidas').length;
-  const vip        = lista.filter(c => tipoLead_(c) === 'vip').length;
-  const preco      = lista.filter(c => tipoLead_(c) === 'preco').length;
-  const total      = lista.length;
+  const total = lista.length;
+  const pendente = lista.filter(l => statusLead_(l) === '').length;
+  const cadastrado = lista.filter(l => statusLead_(l) === 'cadastrado').length;
+  const vitrine = lista.filter(l => statusLead_(l) === 'vitrine').length;
+  const naoAtendemos = lista.filter(l => statusLead_(l) === 'nao-atendemos').length;
 
-  const elP = $('cntPendentes'); if(elP) elP.textContent = pendentes;
-  const elS = $('cntSemRetorno'); if(elS) elS.textContent = semRetorno;
-  const elC = $('cntConcluidas'); if(elC) elC.textContent = concluidas;
-  const elT = $('cntTodos'); if(elT) elT.textContent = total;
-  const elV = $('cntVip'); if(elV) elV.textContent = vip;
-  const elPr = $('cntPreco'); if(elPr) elPr.textContent = preco;
+  if($('cntTodos')) $('cntTodos').textContent = total;
+  if($('cntPendente')) $('cntPendente').textContent = pendente;
+  if($('cntCadastrado')) $('cntCadastrado').textContent = cadastrado;
+  if($('cntVitrine')) $('cntVitrine').textContent = vitrine;
+  if($('cntNaoAtendemos')) $('cntNaoAtendemos').textContent = naoAtendemos;
 
   const resumo = $('leadResumo');
   if(resumo){
-    resumo.textContent = `${total} lead${total===1?'':'s'} · ${vip} VIP · ${preco} QPreço · ${pendentes} pendente${pendentes===1?'':'s'}`;
+    resumo.textContent = `${total} lead${total===1?'':'s'} · ${pendente} pendente${pendente===1?'':'s'} · ${cadastrado} em cadastro · ${vitrine} concluído${vitrine===1?'':'s'}`;
   }
 }
 
 /* =====================================================
    FILTROS
 ===================================================== */
-function setFiltroLeads(filtro, btn){
-  state.filtro = filtro;
-  document.querySelectorAll('.lead-filtros-grupo .chip[data-lead-filter]').forEach(b => {
-    b.classList.toggle('active', b.dataset.leadFilter === filtro);
-  });
-  renderizarFiltroCorretores();
-  renderizarLeads();
-}
 function setStatusLeads(status, btn){
   state.filtroStatus = status;
   document.querySelectorAll('.lead-filtros-grupo .chip[data-lead-status]').forEach(b => {
@@ -1285,19 +1296,19 @@ function renderizarFiltroCorretores(){
   const wrap = $('leadFiltroCorretores');
   if(!wrap) return;
 
-  // Base considerando filtros ativos (tipo + status)
+  // Base após aplicar filtro de status
   let base = state.lista || [];
-  if(state.filtro !== 'todos'){
-    base = base.filter(c => tipoLead_(c) === state.filtro);
+  if(state.filtroStatus !== 'todos'){
+    base = base.filter(l => statusLead_(l) === state.filtroStatus);
   }
-  base = base.filter(c => statusLead_(c) === state.filtroStatus);
 
   const corretoresDoStatus = new Set();
-  base.forEach(c => {
-    const ap = String(c.atendidoPor || '').trim();
+  base.forEach(l => {
+    const ap = String(l.atendidoPor || '').trim();
     if(ap) corretoresDoStatus.add(ap);
   });
 
+  // Remove filtros que não existem mais
   const paraRemover = [];
   state.filtrosCorretores.forEach(nome => {
     if(!corretoresDoStatus.has(nome)) paraRemover.push(nome);
@@ -1362,35 +1373,27 @@ function renderizarLeads(){
 
   let arr = [...(state.lista || [])];
 
-  // Filtro tipo
-  if(state.filtro !== 'todos'){
-    arr = arr.filter(c => tipoLead_(c) === state.filtro);
-  }
-
   // Filtro status
-  arr = arr.filter(c => statusLead_(c) === state.filtroStatus);
+  if(state.filtroStatus !== 'todos'){
+    arr = arr.filter(l => statusLead_(l) === state.filtroStatus);
+  }
 
   // Filtro corretor
   if(state.filtrosCorretores.size > 0){
-    arr = arr.filter(c => state.filtrosCorretores.has(String(c.atendidoPor || '').trim()));
+    arr = arr.filter(l => state.filtrosCorretores.has(String(l.atendidoPor || '').trim()));
   }
 
   // Busca
   if(state.busca){
     const b = state.busca;
     const bNum = normalizaTel(state.busca);
-    arr = arr.filter(c => {
-      const parsed = parseLead_(c);
-      const nome = String(c.nome || '').toLowerCase();
-      const tel = normalizaTel(c.telefone);
-      const bairros = String(c.bairro || '').toLowerCase();
+    arr = arr.filter(l => {
+      const nome = String(l.nome || '').toLowerCase();
+      const tel = normalizaTel(l.telefone);
+      const bairros = String(l.bairros || '').toLowerCase();
       if(nome.includes(b)) return true;
       if(bNum && tel.includes(bNum)) return true;
       if(bairros.includes(b)) return true;
-      if(parsed.tipo === 'vip'){
-        const vBairros = String(parsed.vip.bairros || '').toLowerCase();
-        if(vBairros.includes(b)) return true;
-      }
       return false;
     });
   }
@@ -1414,15 +1417,21 @@ function renderizarLeads(){
   if(arr.length === 0){
     let msg = 'Nenhum lead nesse filtro';
     let sub = 'Tente outro filtro ou limpe a busca.';
-    if(state.filtroStatus === 'pendentes'){
+    if(state.filtroStatus === 'pendente'){
       msg = 'Nenhum lead pendente 🎉';
       sub = 'Você está em dia!';
-    } else if(state.filtroStatus === 'sem-retorno'){
-      msg = 'Nenhum lead sem retorno';
-      sub = 'Tudo sob controle.';
-    } else if(state.filtroStatus === 'concluidas'){
-      msg = 'Nenhum lead concluído ainda';
-      sub = 'Mude o status para "Concluída" para vê-lo aqui.';
+    } else if(state.filtroStatus === 'cadastrado'){
+      msg = 'Nenhum lead em cadastro';
+      sub = 'Sem clientes aguardando imóveis.';
+    } else if(state.filtroStatus === 'vitrine'){
+      msg = 'Nenhuma vitrine enviada ainda';
+      sub = 'Os leads concluídos aparecem aqui.';
+    } else if(state.filtroStatus === 'nao-atendemos'){
+      msg = 'Nenhum lead em área não atendida';
+      sub = 'Todos os leads são da nossa região.';
+    } else if(state.filtroStatus === 'todos'){
+      msg = 'Nenhum lead cadastrado ainda';
+      sub = 'Aguardando novos leads da Seleção VIP.';
     }
     container.innerHTML = `<div class="empty-state"><h3>${msg}</h3><p>${sub}</p></div>`;
     return;
@@ -1434,69 +1443,64 @@ function renderizarLeads(){
 /* =====================================================
    RENDER — CARD
 ===================================================== */
-function leadCardHTML(c){
-  const parsed = parseLead_(c);
-  const status = statusLead_(c);
-  const statusClasse = status === 'pendentes' ? 'pendente'
-                     : status === 'concluidas' ? 'concluida'
-                     : status;
+function leadCardHTML(l){
+  const status = statusLead_(l);
+  const statusClasse = STATUS_CLASSE[status];
+  const statusLabel = STATUS_LABEL[status];
+  const statusIcone = STATUS_ICONE[status];
 
-  const tel = normalizaTel(c.telefone);
+  const tel = normalizaTel(l.telefone);
   const telFmt = fmtTel(tel);
   const telZap = tel.startsWith('55') ? tel : '55' + tel;
-  const atendidoPor = String(c.atendidoPor || '').trim();
+  const atendidoPor = String(l.atendidoPor || '').trim();
   const temCorretor = !!atendidoPor;
-  const obsAberta = state.obsAbertas.has(String(c.id));
-  const obsTemConteudo = String(c.observacoes || '').trim().length > 0;
+  const obsAberta = state.obsAbertas.has(String(l.id));
+  const obsTemConteudo = String(l.observacoes || '').trim().length > 0;
 
-  const idade = idadeLead(c.dataHora);
-  const nome = String(c.nome || '(sem nome)').trim();
+  const idade = idadeLead(l.dataHora);
+  const nome = String(l.nome || '(sem nome)').trim();
 
   // Status tag
-  const statusTag = status === 'pendentes'
-    ? '<span class="lc-status-tag pendente">⏳ Pendente</span>'
-    : status === 'sem-retorno'
-      ? '<span class="lc-status-tag sem-retorno">❌ Sem retorno</span>'
-      : '<span class="lc-status-tag concluida">✅ Concluída</span>';
+  const statusTag = `<span class="lc-status-tag ${statusClasse}">${statusIcone} ${esc(statusLabel)}</span>`;
 
-  // Tipo tag
-  const tipoTag = parsed.tipo === 'vip'
-    ? '<span class="lc-tipo-tag vip">⭐ VIP</span>'
-    : '<span class="lc-tipo-tag preco">💰 QPreço</span>';
+  // Perfil (grid de tags)
+  const perfilHTML = montarPerfilHTML(l);
 
-  // Bloco de perfil (VIP ou QPreço)
-  const blocoPerfil = parsed.tipo === 'vip'
-    ? montarPerfilVipHTML(parsed.vip)
-    : montarPerfilPrecoHTML(parsed.preco, c);
-
-  // Detalhes extras (só pra VIP, é onde faz sentido)
-  const detalhesExtras = parsed.tipo === 'vip'
-    ? String(parsed.vip.detalhes || '').trim()
-    : '';
-  const detalhesHTML = (detalhesExtras && detalhesExtras !== 'nenhum')
-    ? `<div class="lc-detalhes"><strong>📝 Detalhes:</strong> ${esc(detalhesExtras)}</div>`
+  // Detalhes extras
+  const detalhes = String(l.detalhes || '').trim();
+  const detalhesHTML = detalhes
+    ? `<div class="lc-detalhes"><strong>📝 Detalhes:</strong> ${esc(detalhes)}</div>`
     : '';
 
   // Selects
-  const selectStatusOpts = `
-    <option value="" ${status === 'pendentes' ? 'selected' : ''}>⏳ Pendente</option>
-    <option value="sem-retorno" ${status === 'sem-retorno' ? 'selected' : ''}>❌ Sem retorno</option>
-    <option value="concluida" ${status === 'concluidas' ? 'selected' : ''}>✅ Concluída</option>
+  const statusOpts = `
+    <option value="" ${status === '' ? 'selected' : ''}>⏳ Pendente</option>
+    <option value="cadastrado" ${status === 'cadastrado' ? 'selected' : ''}>📝 Cliente cadastrado</option>
+    <option value="vitrine" ${status === 'vitrine' ? 'selected' : ''}>✅ Vitrine enviada</option>
+    <option value="nao-atendemos" ${status === 'nao-atendemos' ? 'selected' : ''}>🚫 Área não atendida</option>
   `;
   const corretoresOpts = state.corretores.map(cr =>
     `<option value="${esc(cr.nome)}" ${atendidoPor === cr.nome ? 'selected' : ''}>${esc(cr.nome)}</option>`
   ).join('');
+
+  // Verifica se precisa destacar o select de corretor
+  const corretorObrigatorio = (status === 'cadastrado' || status === 'vitrine') && !temCorretor;
 
   const btnMsgClass = temCorretor ? '' : 'desabilitado';
   const btnMsgTitle = temCorretor
     ? 'Ver mensagens prontas para WhatsApp'
     : 'Atribua um corretor antes de ver as mensagens';
 
+  // Badge de corretor no rodapé
+  const corCorr = atendidoPor ? corDoCorretor(atendidoPor) : '';
+  const corretorBadgeHTML = atendidoPor
+    ? `<span class="corretor-badge" style="background:${corCorr}">${esc(atendidoPor)}</span>`
+    : `<span style="color:var(--muted); font-style:italic;">Sem corretor</span>`;
+
   return `
-    <div class="lead-card tipo-${parsed.tipo} status-${statusClasse} ${obsAberta ? 'obs-aberta' : ''}" data-id="${esc(c.id)}">
+    <div class="lead-card status-${statusClasse} ${obsAberta ? 'obs-aberta' : ''}" data-id="${esc(l.id)}">
 
       <div class="lc-l1">
-        ${tipoTag}
         <span class="lc-nome" title="${esc(nome)}">${esc(nome)}</span>
         <span class="lc-tel">${esc(telFmt)}</span>
         ${statusTag}
@@ -1506,23 +1510,24 @@ function leadCardHTML(c){
         <svg class="ico" viewBox="0 0 24 24">
           <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
         </svg>
-        <span>Recebido em ${esc(fmtDataHora(c.dataHora))}</span>
+        <span>Recebido em ${esc(fmtDataHora(l.dataHora))}</span>
         ${idade.txt ? `<span class="idade ${idade.classe}">${esc(idade.txt)}</span>` : ''}
       </div>
 
-      ${blocoPerfil}
+      ${perfilHTML}
       ${detalhesHTML}
 
       <div class="lc-selects">
         <div class="lc-campo">
           <label>Status</label>
-          <select data-lead-id="${esc(c.id)}" data-lead-field="contatoFeito" onchange="onChangeStatus(this)">
-            ${selectStatusOpts}
+          <select data-lead-id="${esc(l.id)}" data-lead-field="status" onchange="onChangeStatus(this)">
+            ${statusOpts}
           </select>
         </div>
         <div class="lc-campo">
-          <label>Corretor</label>
-          <select data-lead-id="${esc(c.id)}" data-lead-field="atendidoPor" onchange="onChangeCorretor(this)">
+          <label>Corretor ${corretorObrigatorio ? '<span style="color:var(--danger);">*</span>' : ''}</label>
+          <select data-lead-id="${esc(l.id)}" data-lead-field="atendidoPor" onchange="onChangeCorretor(this)"
+                  class="${corretorObrigatorio ? 'corretor-obrigatorio' : ''}">
             <option value="">— Não atribuído —</option>
             ${corretoresOpts}
           </select>
@@ -1531,20 +1536,20 @@ function leadCardHTML(c){
 
       <div class="lc-obs-wrap">
         <label>Observações internas</label>
-        <textarea data-lead-id="${esc(c.id)}" data-lead-field="observacoes"
+        <textarea data-lead-id="${esc(l.id)}" data-lead-field="observacoes"
                   placeholder="Digite observações... (Ctrl+Enter para salvar)"
                   onblur="onChangeObs(this)"
-                  onkeydown="if((event.ctrlKey||event.metaKey)&&event.key==='Enter'){this.blur();}">${esc(c.observacoes || '')}</textarea>
+                  onkeydown="if((event.ctrlKey||event.metaKey)&&event.key==='Enter'){this.blur();}">${esc(l.observacoes || '')}</textarea>
       </div>
 
       <div class="lc-l3">
         <span class="lc-data">
-          ${atendidoPor ? '👤 ' + esc(atendidoPor) : '👤 sem corretor'}
+          ${corretorBadgeHTML}
         </span>
         <div class="lc-acoes">
 
           <button class="lc-btn btn-msg ${btnMsgClass}"
-                  onclick="abrirMsgModal('${esc(c.id)}')"
+                  onclick="abrirMsgModal('${esc(l.id)}')"
                   title="${esc(btnMsgTitle)}">
             <svg class="ico" viewBox="0 0 24 24">
               <circle cx="12" cy="12" r="10"/>
@@ -1554,7 +1559,7 @@ function leadCardHTML(c){
           </button>
 
           <button class="lc-btn btn-edit"
-                  onclick="abrirDetalhes('${esc(c.id)}')"
+                  onclick="abrirDetalhes('${esc(l.id)}')"
                   title="Ver detalhes completos">
             <svg class="ico" viewBox="0 0 24 24">
               <circle cx="11" cy="11" r="8"/>
@@ -1563,7 +1568,7 @@ function leadCardHTML(c){
           </button>
 
           <button class="lc-btn btn-edit"
-                  onclick="abrirEditModal('${esc(c.id)}')"
+                  onclick="abrirEditModal('${esc(l.id)}')"
                   title="Editar dados">
             <svg class="ico" viewBox="0 0 24 24">
               <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
@@ -1581,7 +1586,7 @@ function leadCardHTML(c){
           </a>
 
           <button class="lc-btn btn-expandir ${obsAberta ? 'ativo' : ''} ${obsTemConteudo ? 'tem-conteudo' : ''}"
-                  onclick="toggleObsLead('${esc(c.id)}')"
+                  onclick="toggleObsLead('${esc(l.id)}')"
                   title="${obsTemConteudo ? 'Observações (há conteúdo salvo)' : 'Observações'}">
             <svg class="ico" viewBox="0 0 24 24">
               <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
@@ -1595,55 +1600,44 @@ function leadCardHTML(c){
   `;
 }
 
-/* ============================================ */
-/* BLOCOS DE PERFIL                             */
-/* ============================================ */
-
-function montarPerfilVipHTML(vip){
+/* =====================================================
+   PERFIL (tags)
+===================================================== */
+function montarPerfilHTML(l){
   const tags = [];
 
-  // Tipo
-  if(vip.tipo){
-    tags.push(`<span class="tagv"><span class="lbl">Tipo:</span> ${esc(vip.tipo)}</span>`);
+  if(l.tipo){
+    tags.push(`<span class="tagv"><span class="lbl">Tipo:</span> ${esc(l.tipo)}</span>`);
   }
 
-  // Quartos / Banheiros / Suítes / Vagas
-  const quartos = vip.quartos;
-  const banheiros = vip.banheiros;
-  const suites = vip.suites;
-  const vagas = vip.vagas;
-
-  if(quartos && quartos !== 'tanto-faz'){
-    tags.push(`<span class="tagv"><span class="lbl">🛏</span> ${esc(quartos)}+ quartos</span>`);
+  if(l.quartos && l.quartos !== 'tanto-faz'){
+    tags.push(`<span class="tagv"><span class="lbl">🛏</span> ${esc(l.quartos)}+ quartos</span>`);
   } else {
     tags.push(`<span class="tagv tanto-faz">🛏 Quartos: tanto faz</span>`);
   }
-  if(banheiros && banheiros !== 'tanto-faz'){
-    tags.push(`<span class="tagv"><span class="lbl">🚿</span> ${esc(banheiros)}+ banh.</span>`);
+
+  if(l.banheiros && l.banheiros !== 'tanto-faz'){
+    tags.push(`<span class="tagv"><span class="lbl">🚿</span> ${esc(l.banheiros)}+ banh.</span>`);
   }
-  if(suites && suites !== 'tanto-faz'){
-    tags.push(`<span class="tagv"><span class="lbl">🛁</span> ${esc(suites)}+ suítes</span>`);
+  if(l.suites && l.suites !== 'tanto-faz'){
+    tags.push(`<span class="tagv"><span class="lbl">🛁</span> ${esc(l.suites)}+ suítes</span>`);
   }
-  if(vagas && vagas !== 'tanto-faz'){
-    tags.push(`<span class="tagv"><span class="lbl">🚗</span> ${esc(vagas)}+ vagas</span>`);
+
+  if(l.vagas && l.vagas !== 'tanto-faz'){
+    tags.push(`<span class="tagv"><span class="lbl">🚗</span> ${esc(l.vagas)}+ vagas</span>`);
   } else {
     tags.push(`<span class="tagv tanto-faz">🚗 Vagas: tanto faz</span>`);
   }
 
-  // Metragem
-  if(vip.metragem){
-    const [m1, m2] = vip.metragem.split('-');
-    tags.push(`<span class="tagv"><span class="lbl">📐</span> ${esc(m1)} a ${esc(m2)} m²</span>`);
+  if(l.metragemMin && l.metragemMax){
+    tags.push(`<span class="tagv"><span class="lbl">📐</span> ${esc(l.metragemMin)} a ${esc(l.metragemMax)} m²</span>`);
   }
 
-  // Valor
-  if(vip.valor){
-    const [v1, v2] = vip.valor.split('-');
-    tags.push(`<span class="tagv destaque"><span class="lbl">💰</span> ${fmtValorBR_(v1)} a ${fmtValorBR_(v2)}</span>`);
+  if(l.valorMin && l.valorMax){
+    tags.push(`<span class="tagv destaque"><span class="lbl">💰</span> ${fmtValorBR_(l.valorMin)} a ${fmtValorBR_(l.valorMax)}</span>`);
   }
 
-  // Bairros
-  const bairros = String(vip.bairros || '').trim();
+  const bairros = String(l.bairros || '').trim();
   if(bairros && bairros !== 'tanto-faz'){
     const lista = bairros.split(',').map(s => s.trim()).filter(Boolean).slice(0, 5);
     lista.forEach(b => {
@@ -1655,37 +1649,7 @@ function montarPerfilVipHTML(vip){
     }
   }
 
-  return `<div class="lc-perfil-vip">${tags.join('')}</div>`;
-}
-
-function fmtValorBR_(v){
-  const n = parseInt(String(v).replace(/\D/g,''), 10);
-  if(isNaN(n) || n <= 0) return '—';
-  if(n >= 1000000){
-    const mi = n / 1000000;
-    return 'R$ ' + (mi % 1 === 0 ? mi : mi.toFixed(1)).toString().replace('.', ',') + ' mi';
-  }
-  return 'R$ ' + Math.round(n / 1000) + ' mil';
-}
-
-function montarPerfilPrecoHTML(preco, c){
-  const tags = [];
-  if(preco.tipo) tags.push(`<span class="tagp"><span class="lbl">Tipo:</span> ${esc(preco.tipo)}</span>`);
-  if(preco.area) tags.push(`<span class="tagp"><span class="lbl">Área:</span> ${esc(preco.area)} m²</span>`);
-  if(preco.quartos && preco.quartos !== '0') tags.push(`<span class="tagp"><span class="lbl">🛏</span> ${esc(preco.quartos)}</span>`);
-  if(preco.banheiros && preco.banheiros !== '0') tags.push(`<span class="tagp"><span class="lbl">🚿</span> ${esc(preco.banheiros)}</span>`);
-  if(preco.suites && preco.suites !== '0') tags.push(`<span class="tagp"><span class="lbl">🛁</span> ${esc(preco.suites)}</span>`);
-  if(preco.vagas && preco.vagas !== '0') tags.push(`<span class="tagp"><span class="lbl">🚗</span> ${esc(preco.vagas)}</span>`);
-  if(preco.valor_estimado) tags.push(`<span class="tagp valor"><span class="lbl">💰 Dono acha:</span> ${esc(preco.valor_estimado)}</span>`);
-
-  // Endereço (se tiver)
-  const end = [c.rua, c.numero, c.bairro].filter(Boolean).join(', ');
-  if(end) tags.push(`<span class="tagp"><span class="lbl">📍</span> ${esc(end)}</span>`);
-
-  if(tags.length === 0){
-    return '<div class="lc-perfil-preco"><span class="tagp">Sem dados do imóvel</span></div>';
-  }
-  return `<div class="lc-perfil-preco">${tags.join('')}</div>`;
+  return `<div class="lc-perfil">${tags.join('')}</div>`;
 }
 
 /* =====================================================
@@ -1710,29 +1674,38 @@ async function onChangeStatus(el){
   const item = state.lista.find(x => String(x.id) === String(id));
   if(!item) return;
 
-  // Validação: sem-retorno e concluida exigem corretor
-  if((valor === 'sem-retorno' || valor === 'concluida') && !String(item.atendidoPor || '').trim()){
-    toast('Escolha o corretor antes de marcar como "' + (valor === 'sem-retorno' ? 'Sem retorno' : 'Concluída') + '".', 'warn');
-    el.value = String(item.contatoFeito || '').trim() === 'sem-retorno' ? 'sem-retorno'
-             : String(item.contatoFeito || '').trim() === 'concluida' ? 'concluida'
-             : '';
+  // ✅ Regra: cadastrado e vitrine exigem corretor
+  if((valor === 'cadastrado' || valor === 'vitrine') && !String(item.atendidoPor || '').trim()){
+    toast('Escolha o corretor antes de marcar como "' + STATUS_LABEL[valor] + '".', 'warn');
+    // Reverte o select
+    el.value = statusLead_(item);
+    // Destaca o select de corretor
+    const card = document.querySelector(`.lead-card[data-id="${id}"]`);
+    if(card){
+      const selCorretor = card.querySelector(`select[data-lead-field="atendidoPor"]`);
+      if(selCorretor){
+        selCorretor.classList.add('corretor-obrigatorio');
+        selCorretor.focus();
+        selCorretor.scrollIntoView({ behavior:'smooth', block:'center' });
+      }
+    }
     return;
   }
 
-  const anterior = item.contatoFeito || '';
-  item.contatoFeito = valor;
+  const anterior = item.status || '';
+  item.status = valor;
 
   marcarSalvando(true);
-  const res = await api('atualizarCaptacao', {
+  const res = await api('atualizarLeadVIP', {
     senha: state.adminSenha,
     id: id,
-    contatoFeito: valor
+    status: valor
   });
   marcarSalvando(false);
 
   if(!res.ok){
     toast(res.error || 'Erro ao salvar', 'error');
-    item.contatoFeito = anterior;
+    item.status = anterior;
     renderizarLeads();
     return;
   }
@@ -1752,11 +1725,20 @@ async function onChangeCorretor(el){
   const item = state.lista.find(x => String(x.id) === String(id));
   if(!item) return;
 
+  const statusAtual = statusLead_(item);
+
+  // ✅ Se está tirando o corretor mas status atual exige, bloqueia
+  if(!valor && (statusAtual === 'cadastrado' || statusAtual === 'vitrine')){
+    toast('Não é possível remover o corretor com status "' + STATUS_LABEL[statusAtual] + '". Mude o status antes.', 'warn');
+    el.value = item.atendidoPor || '';
+    return;
+  }
+
   const anterior = item.atendidoPor || '';
   item.atendidoPor = valor;
 
   marcarSalvando(true);
-  const res = await api('atualizarCaptacao', {
+  const res = await api('atualizarLeadVIP', {
     senha: state.adminSenha,
     id: id,
     atendidoPor: valor
@@ -1791,7 +1773,7 @@ async function onChangeObs(el){
   clearTimeout(_obsTimers[id]);
   _obsTimers[id] = setTimeout(async () => {
     marcarSalvando(true);
-    const res = await api('atualizarCaptacao', {
+    const res = await api('atualizarLeadVIP', {
       senha: state.adminSenha,
       id: id,
       observacoes: valor
@@ -1831,14 +1813,16 @@ function abrirDetalhes(id){
   if(!item){ toast('Lead não encontrado', 'error'); return; }
   state._detLeadAtual = item;
 
-  const parsed = parseLead_(item);
   const nome = String(item.nome || '(sem nome)').trim();
   $('detNomeCliente').textContent = nome;
+
+  const status = statusLead_(item);
+  const statusLabel = STATUS_LABEL[status];
 
   const corpo = $('detCorpo');
   let html = '';
 
-  // ===== Info de contato =====
+  // Contato
   html += `
     <div class="det-secao">
       <div class="det-secao-titulo">
@@ -1859,149 +1843,94 @@ function abrirDetalhes(id){
           <div class="val">${esc(fmtDataHora(item.dataHora))}</div>
         </div>
         <div class="det-item">
-          <div class="lbl">Origem</div>
-          <div class="val">${parsed.tipo === 'vip' ? '⭐ Seleção VIP' : '💰 QPreço'}</div>
+          <div class="lbl">Status atual</div>
+          <div class="val">${STATUS_ICONE[status]} ${esc(statusLabel)}</div>
         </div>
       </div>
     </div>
   `;
 
-  // ===== Perfil VIP =====
-  if(parsed.tipo === 'vip'){
-    const vip = parsed.vip;
-    html += `
-      <div class="det-secao">
-        <div class="det-secao-titulo">
-          <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg>
-          Preferências do cliente
+  // Preferências
+  html += `
+    <div class="det-secao">
+      <div class="det-secao-titulo">
+        <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg>
+        Preferências do cliente
+      </div>
+      <div class="det-grid">
+        <div class="det-item destaque">
+          <div class="lbl">Tipo de imóvel</div>
+          <div class="val">${esc(item.tipo || '—')}</div>
         </div>
-        <div class="det-grid">
-          <div class="det-item destaque">
-            <div class="lbl">Tipo de imóvel</div>
-            <div class="val">${esc(vip.tipo || '—')}</div>
-          </div>
-          <div class="det-item">
-            <div class="lbl">Quartos</div>
-            <div class="val ${vip.quartos === 'tanto-faz' || !vip.quartos ? 'muted' : ''}">${vip.quartos === 'tanto-faz' || !vip.quartos ? 'Tanto faz' : esc(vip.quartos) + '+'}</div>
-          </div>
-          <div class="det-item">
-            <div class="lbl">Banheiros</div>
-            <div class="val ${vip.banheiros === 'tanto-faz' || !vip.banheiros ? 'muted' : ''}">${vip.banheiros === 'tanto-faz' || !vip.banheiros ? 'Tanto faz' : esc(vip.banheiros) + '+'}</div>
-          </div>
-          <div class="det-item">
-            <div class="lbl">Suítes</div>
-            <div class="val ${vip.suites === 'tanto-faz' || !vip.suites ? 'muted' : ''}">${vip.suites === 'tanto-faz' || !vip.suites ? 'Tanto faz' : esc(vip.suites) + '+'}</div>
-          </div>
-          <div class="det-item">
-            <div class="lbl">Vagas de garagem</div>
-            <div class="val ${vip.vagas === 'tanto-faz' || !vip.vagas ? 'muted' : ''}">${vip.vagas === 'tanto-faz' || !vip.vagas ? 'Tanto faz' : esc(vip.vagas) + '+'}</div>
-          </div>
-          <div class="det-item">
-            <div class="lbl">Metragem</div>
-            <div class="val">${vip.metragem ? esc(vip.metragem.replace('-', ' a ')) + ' m²' : '—'}</div>
-          </div>
+        <div class="det-item">
+          <div class="lbl">Quartos</div>
+          <div class="val ${!item.quartos || item.quartos === 'tanto-faz' ? 'muted' : ''}">${!item.quartos || item.quartos === 'tanto-faz' ? 'Tanto faz' : esc(item.quartos) + '+'}</div>
+        </div>
+        <div class="det-item">
+          <div class="lbl">Banheiros</div>
+          <div class="val ${!item.banheiros || item.banheiros === 'tanto-faz' ? 'muted' : ''}">${!item.banheiros || item.banheiros === 'tanto-faz' ? 'Tanto faz' : esc(item.banheiros) + '+'}</div>
+        </div>
+        <div class="det-item">
+          <div class="lbl">Suítes</div>
+          <div class="val ${!item.suites || item.suites === 'tanto-faz' ? 'muted' : ''}">${!item.suites || item.suites === 'tanto-faz' ? 'Tanto faz' : esc(item.suites) + '+'}</div>
+        </div>
+        <div class="det-item">
+          <div class="lbl">Vagas de garagem</div>
+          <div class="val ${!item.vagas || item.vagas === 'tanto-faz' ? 'muted' : ''}">${!item.vagas || item.vagas === 'tanto-faz' ? 'Tanto faz' : esc(item.vagas) + '+'}</div>
+        </div>
+        <div class="det-item">
+          <div class="lbl">Metragem</div>
+          <div class="val">${item.metragemMin && item.metragemMax ? esc(item.metragemMin) + ' a ' + esc(item.metragemMax) + ' m²' : '—'}</div>
         </div>
       </div>
+    </div>
+  `;
 
-      <div class="det-secao">
-        <div class="det-secao-titulo">
-          <svg class="ico ico-sm" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-          Faixa de valor
-        </div>
-        <div class="det-grid">
-          <div class="det-item destaque" style="grid-column: 1 / -1;">
-            <div class="lbl">Valor pretendido</div>
-            <div class="val">${vip.valor ? fmtValorBR_(vip.valor.split('-')[0]) + ' a ' + fmtValorBR_(vip.valor.split('-')[1]) : '—'}</div>
-          </div>
+  // Faixa de valor
+  html += `
+    <div class="det-secao">
+      <div class="det-secao-titulo">
+        <svg class="ico ico-sm" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        Faixa de valor
+      </div>
+      <div class="det-grid">
+        <div class="det-item destaque" style="grid-column: 1 / -1;">
+          <div class="lbl">Valor pretendido</div>
+          <div class="val">${item.valorMin && item.valorMax ? fmtValorBR_(item.valorMin) + ' a ' + fmtValorBR_(item.valorMax) : '—'}</div>
         </div>
       </div>
+    </div>
+  `;
 
-      <div class="det-secao">
-        <div class="det-secao-titulo">
-          <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-          Bairros de interesse
-        </div>
-        ${(vip.bairros && vip.bairros !== 'tanto-faz')
-          ? `<div class="det-bairros">${vip.bairros.split(',').map(b => `<span class="det-bairro">${esc(b.trim())}</span>`).join('')}</div>`
-          : '<div class="det-item"><div class="val muted">Sem preferência de bairro</div></div>'
-        }
+  // Bairros
+  html += `
+    <div class="det-secao">
+      <div class="det-secao-titulo">
+        <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        Bairros de interesse
       </div>
+      ${(item.bairros && item.bairros !== 'tanto-faz')
+        ? `<div class="det-bairros">${item.bairros.split(',').map(b => `<span class="det-bairro">${esc(b.trim())}</span>`).join('')}</div>`
+        : '<div class="det-item"><div class="val muted">Sem preferência de bairro</div></div>'
+      }
+    </div>
+  `;
 
-      <div class="det-secao">
-        <div class="det-secao-titulo">
-          <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-          Detalhes extras pedidos
-        </div>
-        ${(vip.detalhes && vip.detalhes !== 'nenhum')
-          ? `<div class="det-detalhes-box">${esc(vip.detalhes)}</div>`
-          : '<div class="det-detalhes-box vazio">Nenhum detalhe extra informado</div>'
-        }
+  // Detalhes extras
+  html += `
+    <div class="det-secao">
+      <div class="det-secao-titulo">
+        <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        Detalhes extras pedidos
       </div>
-    `;
-  } else {
-    // ===== Perfil QPreço =====
-    const preco = parsed.preco;
-    html += `
-      <div class="det-secao">
-        <div class="det-secao-titulo">
-          <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-          Imóvel do cliente
-        </div>
-        <div class="det-grid">
-          <div class="det-item">
-            <div class="lbl">Tipo</div>
-            <div class="val">${esc(preco.tipo || '—')}</div>
-          </div>
-          <div class="det-item">
-            <div class="lbl">Área</div>
-            <div class="val">${esc(preco.area || '—')} ${preco.area ? 'm²' : ''}</div>
-          </div>
-          <div class="det-item">
-            <div class="lbl">Quartos</div>
-            <div class="val">${esc(preco.quartos || '—')}</div>
-          </div>
-          <div class="det-item">
-            <div class="lbl">Banheiros</div>
-            <div class="val">${esc(preco.banheiros || '—')}</div>
-          </div>
-          <div class="det-item">
-            <div class="lbl">Suítes</div>
-            <div class="val">${esc(preco.suites || '—')}</div>
-          </div>
-          <div class="det-item">
-            <div class="lbl">Vagas</div>
-            <div class="val">${esc(preco.vagas || '—')}</div>
-          </div>
-          <div class="det-item">
-            <div class="lbl">Condomínio</div>
-            <div class="val">${esc(preco.condominio || '—')}</div>
-          </div>
-          <div class="det-item">
-            <div class="lbl">IPTU</div>
-            <div class="val">${esc(preco.iptu || '—')}</div>
-          </div>
-          <div class="det-item destaque" style="grid-column: 1 / -1;">
-            <div class="lbl">💰 Valor estimado pelo dono</div>
-            <div class="val">${esc(preco.valor_estimado || '—')}</div>
-          </div>
-        </div>
-      </div>
+      ${(item.detalhes && item.detalhes !== 'nenhum')
+        ? `<div class="det-detalhes-box">${esc(item.detalhes)}</div>`
+        : '<div class="det-detalhes-box vazio">Nenhum detalhe extra informado</div>'
+      }
+    </div>
+  `;
 
-      <div class="det-secao">
-        <div class="det-secao-titulo">
-          <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-          Endereço
-        </div>
-        <div class="det-grid cols-1">
-          <div class="det-item">
-            <div class="val">${esc([item.rua, item.numero, item.bairro].filter(Boolean).join(', ') || '—')}</div>
-          </div>
-        </div>
-      </div>
-    `;
-  }
-
-  // Rodapé com botão de mensagem
+  // Rodapé com botão
   const btnMsg = $('detBtnMsg');
   if(btnMsg){
     const temCorretor = !!String(item.atendidoPor || '').trim();
@@ -2030,9 +1959,6 @@ function abrirMsgDoDetalhe(){
   fecharDetalhes();
   abrirMsgModal(item.id);
 }
-window.abrirDetalhes = abrirDetalhes;
-window.fecharDetalhes = fecharDetalhes;
-window.abrirMsgDoDetalhe = abrirMsgDoDetalhe;
 
 /* =====================================================
    MODAL EDITAR
@@ -2041,19 +1967,11 @@ function abrirEditModal(id){
   const item = state.lista.find(x => String(x.id) === String(id));
   if(!item){ toast('Lead não encontrado', 'error'); return; }
 
-  const parsed = parseLead_(item);
-
   $('editLeadId').value = id;
   $('editNome').value = item.nome || '';
   $('editTelefone').value = fmtTel(item.telefone || '');
-
-  if(parsed.tipo === 'vip'){
-    $('editBairros').value = String(parsed.vip.bairros || '').replace(/tanto-faz/gi, '');
-    $('editDetalhes').value = String(parsed.vip.detalhes || '').replace(/^nenhum$/i, '');
-  } else {
-    $('editBairros').value = item.bairro || '';
-    $('editDetalhes').value = '';
-  }
+  $('editBairros').value = String(item.bairros || '').replace(/tanto-faz/gi, '');
+  $('editDetalhes').value = String(item.detalhes || '').replace(/^nenhum$/i, '');
 
   $('editBackdrop').classList.add('show');
   setTimeout(() => $('editNome').focus(), 120);
@@ -2078,30 +1996,14 @@ async function salvarEdicaoLead(){
   btn.disabled = true;
   btn.innerHTML = '<span class="loader"></span> Salvando...';
 
-  const item = state.lista.find(x => String(x.id) === String(id));
-  const parsed = parseLead_(item);
-
-  // Reconstrói o pacote de origem se for VIP (mantém formato)
-  let novaOrigem = item.origem;
-  if(parsed.tipo === 'vip'){
-    const vip = { ...parsed.vip };
-    vip.bairros = bairros || 'tanto-faz';
-    vip.detalhes = detalhes || 'nenhum';
-    const partes = ['VIP-SELECAO'];
-    ['tipo','quartos','banheiros','suites','vagas','metragem','valor','bairros','detalhes'].forEach(k => {
-      if(vip[k] !== undefined) partes.push(k + ':' + vip[k]);
-    });
-    novaOrigem = partes.join(' | ');
-  }
-
   marcarSalvando(true);
-  const res = await api('atualizarCaptacao', {
+  const res = await api('atualizarLeadVIP', {
     senha: state.adminSenha,
     id: id,
     nome: nome,
     telefone: telefone,
-    bairro: bairros,
-    origem: novaOrigem
+    bairros: bairros || '',
+    detalhes: detalhes || ''
   });
   marcarSalvando(false);
 
@@ -2113,11 +2015,12 @@ async function salvarEdicaoLead(){
     return;
   }
 
+  const item = state.lista.find(x => String(x.id) === String(id));
   if(item){
     item.nome = nome;
     item.telefone = telefone;
-    item.bairro = bairros;
-    item.origem = novaOrigem;
+    item.bairros = bairros;
+    item.detalhes = detalhes;
   }
 
   toast('Lead atualizado ✅', 'success');
@@ -2136,81 +2039,45 @@ function montarMensagens_(item){
   const nomeCompletoCorretor = info?.nomeCompleto || atendidoPor;
   const funcaoCorretor = info?.funcao || 'Corretor(a)';
 
-  const parsed = parseLead_(item);
   const nomeCliente = String(item.nome || '').trim();
   const doisNomes = doisPrimeirosNomes_(nomeCliente);
 
-  // ================== VIP ==================
-  if(parsed.tipo === 'vip'){
-    const vip = parsed.vip;
-    const tipo = vip.tipo || 'imóvel';
-    const bairros = String(vip.bairros || '').trim();
-    const bairrosList = bairros && bairros !== 'tanto-faz'
-      ? bairros.split(',').map(s => s.trim()).filter(Boolean)
-      : [];
+  const tipo = item.tipo || 'imóvel';
+  const bairros = String(item.bairros || '').trim();
+  const bairrosList = bairros && bairros !== 'tanto-faz'
+    ? bairros.split(',').map(s => s.trim()).filter(Boolean)
+    : [];
 
-    const saud = doisNomes ? `Oi, ${doisNomes}, tudo bem?` : 'Oi, tudo bem?';
+  const saud = doisNomes ? `Oi, ${doisNomes}, tudo bem?` : 'Oi, tudo bem?';
 
-    const msg1 = `${saud}
+  const msg1 = `${saud}
 
 Sou ${nomeCompletoCorretor}, ${funcaoCorretor} da Lima Ribeiro Imóveis. Recebi sua seleção VIP e já separei algumas opções de ${tipo} que combinam com o que você procura.
 
 Vou te enviar em instantes!`;
 
-    let detalhesList = [];
-    if(vip.quartos && vip.quartos !== 'tanto-faz') detalhesList.push(`${vip.quartos}+ quartos`);
-    if(vip.banheiros && vip.banheiros !== 'tanto-faz') detalhesList.push(`${vip.banheiros}+ banheiros`);
-    if(vip.suites && vip.suites !== 'tanto-faz') detalhesList.push(`${vip.suites}+ suítes`);
-    if(vip.vagas && vip.vagas !== 'tanto-faz') detalhesList.push(`${vip.vagas}+ vagas`);
-    if(vip.metragem){
-      const [m1, m2] = vip.metragem.split('-');
-      detalhesList.push(`${m1} a ${m2} m²`);
-    }
+  let detalhesList = [];
+  if(item.quartos && item.quartos !== 'tanto-faz') detalhesList.push(`${item.quartos}+ quartos`);
+  if(item.banheiros && item.banheiros !== 'tanto-faz') detalhesList.push(`${item.banheiros}+ banheiros`);
+  if(item.suites && item.suites !== 'tanto-faz') detalhesList.push(`${item.suites}+ suítes`);
+  if(item.vagas && item.vagas !== 'tanto-faz') detalhesList.push(`${item.vagas}+ vagas`);
+  if(item.metragemMin && item.metragemMax) detalhesList.push(`${item.metragemMin} a ${item.metragemMax} m²`);
 
-    let msg2 = `Pelo que você me passou, você busca:`;
-    if(detalhesList.length > 0){
-      msg2 += '\n' + detalhesList.map(d => '• ' + d).join('\n');
-    }
-    if(bairrosList.length > 0){
-      msg2 += '\n• Bairros: ' + bairrosList.join(', ');
-    }
-    if(vip.valor){
-      const [v1, v2] = vip.valor.split('-');
-      msg2 += `\n• Valor: entre ${fmtValorBR_(v1)} e ${fmtValorBR_(v2)}`;
-    }
-    msg2 += `\n\nVou fazer uma seleção caprichada e te mando as melhores opções. 👍`;
+  let msg2 = `Pelo que você me passou, você busca:`;
+  if(detalhesList.length > 0){
+    msg2 += '\n' + detalhesList.map(d => '• ' + d).join('\n');
+  }
+  if(bairrosList.length > 0){
+    msg2 += '\n• Bairros: ' + bairrosList.join(', ');
+  }
+  if(item.valorMin && item.valorMax){
+    msg2 += `\n• Valor: entre ${fmtValorBR_(item.valorMin)} e ${fmtValorBR_(item.valorMax)}`;
+  }
+  msg2 += `\n\nVou fazer uma seleção caprichada e te mando as melhores opções. 👍`;
 
-    let msg3 = `Enquanto isso, se você quiser adiantar, me conta: tem alguma coisa que é *essencial* pro seu novo imóvel? Tipo varanda, elevador, andar alto, vaga coberta, etc.
+  const msg3 = `Enquanto isso, se você quiser adiantar, me conta: tem alguma coisa que é *essencial* pro seu novo imóvel? Tipo varanda, elevador, andar alto, vaga coberta, etc.
 
 Assim eu já refino ainda mais a busca pra você.`;
-
-    return {
-      nomeCliente,
-      mensagens: [msg1, msg2, msg3]
-    };
-  }
-
-  // ================== QPreço ==================
-  const preco = parsed.preco;
-  const msg1 = doisNomes
-    ? `Oi, ${doisNomes}, tudo bem?
-
-Sou ${nomeCompletoCorretor}, ${funcaoCorretor} da Lima Ribeiro Imóveis. Vi que você acessou nossa calculadora de preços de imóveis e fiz uma simulação com base nos dados que você nos informou, considerando também outros imóveis da sua região.
-
-Vou te enviar o print da sua simulação.`
-    : `Oi, tudo bem?
-
-Sou ${nomeCompletoCorretor}, ${funcaoCorretor} da Lima Ribeiro Imóveis. Vi que você acessou nossa calculadora de preços de imóveis e fiz uma simulação com base nos dados que você nos informou, considerando também outros imóveis da sua região.
-
-Vou te enviar o print da sua simulação.`;
-
-  const msg2 = `Essa análise nos permite chegar a uma estimativa mais próxima da realidade do mercado, ajudando a definir um valor competitivo para a venda do seu imóvel.
-
-*É importante ressaltar*: quem define o preço de venda é você, proprietário. Essa é apenas uma estimativa de mercado. Nosso papel é orientar com base na realidade, para que possamos trabalhar com uma estratégia que traga ótimos resultados.`;
-
-  const msg3 = `Esse seu imóvel está à venda? Posso fazer a avaliação e agendar fotos para colocar no nosso sistema do Quinto Andar. Será um prazer colocar seu imóvel em nossa pasta e trabalhar essa venda com todo o nosso suporte.
-
-Lembrando: toda a divulgação é 100% sem custos.`;
 
   return {
     nomeCliente,
@@ -2237,11 +2104,7 @@ function abrirMsgModal(id){
   state._msgLeadAtual = id;
   $('msgNomeCliente').textContent = dados.nomeCliente || '(sem nome)';
 
-  const parsed = parseLead_(item);
-  const isVip = parsed.tipo === 'vip';
-  const rotulos = isVip
-    ? ['Abordagem inicial', 'Resumo do perfil', 'Pergunta final']
-    : ['Abordagem inicial', 'Explicação técnica', 'Convite à ação'];
+  const rotulos = ['Abordagem inicial', 'Resumo do perfil', 'Pergunta final'];
 
   const blocos = dados.mensagens.map((texto, idx) => {
     const rotulo = rotulos[idx] || `Mensagem ${idx + 1}`;
@@ -2318,13 +2181,8 @@ function fallbackCopy(texto, msgSucesso){
   document.body.removeChild(ta);
 }
 
-window.abrirMsgModal = abrirMsgModal;
-window.fecharMsgModal = fecharMsgModal;
-window.copiarBloco = copiarBloco;
-window.copiarTodasMensagens = copiarTodasMensagens;
-
 /* =====================================================
-   CONFIRMAÇÃO
+   CONFIRMAÇÃO (uso interno)
 ===================================================== */
 function confirmarAcao(opts){
   return new Promise((resolve) => {
@@ -2366,7 +2224,7 @@ let _ultimoRefreshTs = Date.now();
 
 function podeAtualizarAgora_(){
   if(state.salvando > 0) return false;
-  const modais = ['editBackdrop', 'msgBackdrop', 'detBackdrop'];
+  const modais = ['editBackdrop', 'msgBackdrop', 'detBackdrop', 'confirmBackdrop'];
   for(const id of modais){
     const el = $(id);
     if(el && el.classList.contains('show')) return false;
@@ -2385,7 +2243,7 @@ function podeAtualizarAgora_(){
 async function refreshSilencioso_(){
   if(!podeAtualizarAgora_()) return false;
   try {
-    const res = await api('listarCaptacoesQPrecoV2', { senha: state.adminSenha });
+    const res = await api('listarLeadsVIP', { senha: state.adminSenha });
     if(!res.ok) return false;
     if(!podeAtualizarAgora_()) return false;
     state.lista = res.data || [];
@@ -2466,7 +2324,7 @@ document.addEventListener('visibilitychange', () => {
   }
 })();
 
-/* Fecha modal com ESC */
+/* ESC */
 document.addEventListener('keydown', (e) => {
   if(e.key === 'Escape'){
     fecharEditModal();
@@ -2475,7 +2333,7 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
-/* Previne sair com salvamento pendente */
+/* Antes de sair */
 window.addEventListener('beforeunload', function(e){
   if(state.salvando > 0){
     e.preventDefault();
@@ -2484,14 +2342,21 @@ window.addEventListener('beforeunload', function(e){
   }
 });
 
+/* Expor globais */
+window.abrirDetalhes = abrirDetalhes;
+window.fecharDetalhes = fecharDetalhes;
+window.abrirMsgDoDetalhe = abrirMsgDoDetalhe;
 window.abrirEditModal = abrirEditModal;
 window.fecharEditModal = fecharEditModal;
 window.salvarEdicaoLead = salvarEdicaoLead;
+window.abrirMsgModal = abrirMsgModal;
+window.fecharMsgModal = fecharMsgModal;
+window.copiarBloco = copiarBloco;
+window.copiarTodasMensagens = copiarTodasMensagens;
 window.toggleObsLead = toggleObsLead;
 window.onChangeStatus = onChangeStatus;
 window.onChangeCorretor = onChangeCorretor;
 window.onChangeObs = onChangeObs;
-window.setFiltroLeads = setFiltroLeads;
 window.setStatusLeads = setStatusLeads;
 window.toggleFiltroCorretor = toggleFiltroCorretor;
 window.limparFiltroCorretor = limparFiltroCorretor;
