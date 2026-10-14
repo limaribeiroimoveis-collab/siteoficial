@@ -14,6 +14,8 @@
     --danger:#8b3a3a; --danger-hover:#6f2d2d; --danger-soft:#f4e6e6;
     --warn:#8b6f3a; --warn-hover:#6f582d; --warn-soft:#f5efe0;
     --info:#2c5a8c; --info-soft:#e6eef7;
+    --whatsapp:#25d366;
+    --msg:#7c3aed;
     --bg:#f4f6f8; --bg-alt:#e8ecf0;
     --card:#ffffff;
     --text:#0f172a; --text-soft:#475569; --muted:#94a3b8;
@@ -42,6 +44,7 @@
   }
   .ico-sm{ width: 14px; height: 14px; vertical-align: -3px; }
   .ico-lg{ width: 20px; height: 20px; }
+  .ico-fill{ fill: currentColor; stroke: none; }
 
   /* ------------ HEADER ------------ */
   .capt-header{
@@ -372,14 +375,32 @@
     transform: translateY(-1px);
   }
   .cc-btn .ico{ width: 15px; height: 15px; }
-  .cc-btn.btn-zap:hover{ background: #e7f6ed; border-color: #b8dfc7; color: #1e7a3f; }
+
+  /* WhatsApp — verde oficial */
+  .cc-btn.btn-zap{ color: #25d366; }
+  .cc-btn.btn-zap:hover{ background: #e7f6ed; border-color: #25d366; color: #128c7e; }
+
+  /* Editar */
   .cc-btn.btn-edit:hover{ background: var(--primary-soft); border-color: #c9d6e4; color: var(--primary); }
+
+  /* Mensagem — roxo / ajuda */
+  .cc-btn.btn-msg{ color: var(--msg); }
+  .cc-btn.btn-msg:hover{ background: #ede9fe; border-color: var(--msg); color: #5b21b6; }
+  .cc-btn.btn-msg.desabilitado{
+    opacity: .35; cursor: not-allowed;
+    color: var(--muted) !important;
+  }
+  .cc-btn.btn-msg.desabilitado:hover{
+    background: #fff; border-color: var(--border);
+    transform: none;
+  }
+
+  /* Observações */
   .cc-btn.btn-expandir.ativo{
     background: var(--primary-soft);
     border-color: var(--primary);
     color: var(--primary);
   }
-  /* ✅ Observações com conteúdo → azul */
   .cc-btn.btn-expandir.tem-conteudo{
     background: #dbeafe;
     border-color: #3b82f6;
@@ -394,7 +415,6 @@
     border-color: #2563eb;
     color: #fff;
   }
-  /* badge de conteúdo */
   .cc-btn.btn-expandir{ position: relative; }
   .cc-btn.btn-expandir .dot-obs{
     position: absolute; top: 3px; right: 3px;
@@ -403,7 +423,7 @@
     border: 1.5px solid #fff;
   }
 
-  /* ------------ MODAL EDITAR ------------ */
+  /* ------------ BACKDROP / MODAL ------------ */
   .backdrop{
     position: fixed; inset: 0; background: rgba(15,23,42,.6);
     z-index: 1000;
@@ -431,6 +451,86 @@
     font-size: 1.05rem; font-weight: 700; letter-spacing: -.01em;
     margin-bottom: 18px; display: flex; align-items: center; gap: 9px;
   }
+
+  /* Modal de mensagens */
+  .modal-msgs{
+    max-width: 720px;
+  }
+  .msgs-intro{
+    font-size: .8rem; color: var(--text-soft);
+    margin-bottom: 18px; line-height: 1.5;
+  }
+  .msgs-bloco{
+    position: relative;
+    padding: 16px 18px 14px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 12px;
+  }
+  .msgs-bloco-head{
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 10px;
+    gap: 12px;
+  }
+  .msgs-bloco-num{
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: .72rem; font-weight: 800;
+    color: var(--msg);
+    text-transform: uppercase; letter-spacing: .5px;
+  }
+  .msgs-bloco-num .num{
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--msg); color: #fff;
+    font-size: .7rem; font-weight: 800;
+  }
+  .msgs-bloco-copiar{
+    background: #fff;
+    border: 1px solid var(--border-strong);
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-size: .7rem; font-weight: 700;
+    color: var(--text-soft);
+    cursor: pointer; font-family: inherit;
+    transition: all .15s;
+    display: inline-flex; align-items: center; gap: 5px;
+  }
+  .msgs-bloco-copiar:hover{
+    background: var(--msg);
+    border-color: var(--msg);
+    color: #fff;
+  }
+  .msgs-bloco-texto{
+    font-size: .84rem;
+    color: var(--text);
+    line-height: 1.65;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .msgs-bloco-texto strong{
+    font-weight: 800;
+    color: #0f172a;
+    background: #fef3c7;
+    padding: 0 3px;
+    border-radius: 2px;
+  }
+  .msgs-aviso{
+    font-size: .72rem; color: var(--text-soft);
+    background: #fef9c3;
+    border: 1px solid #fde68a;
+    border-radius: var(--radius-sm);
+    padding: 10px 12px;
+    line-height: 1.5;
+    margin-top: 4px;
+  }
+  .msgs-aviso strong{ color: #78350f; }
+  .msgs-rodape{
+    display: flex; gap: 8px; justify-content: flex-end;
+    margin-top: 18px;
+    flex-wrap: wrap;
+  }
+
   .form-group{ margin-bottom: 14px; }
   .form-row{ display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   .form-row-3{ display: grid; grid-template-columns: 2fr 1fr 2fr; gap: 12px; }
@@ -471,6 +571,8 @@
   .btn-success:hover:not(:disabled){ background: var(--success-hover); }
   .btn-ghost{ background: #fff; color: var(--text-soft); border: 1px solid var(--border-strong); }
   .btn-ghost:hover:not(:disabled){ background: var(--bg-alt); color: var(--text); border-color: var(--muted); }
+  .btn-msg{ background: var(--msg); color: #fff; }
+  .btn-msg:hover:not(:disabled){ background: #5b21b6; }
   .btn-sm{ padding: 6px 12px; font-size: .78rem; gap: 5px; }
 
   /* ------------ TOAST ------------ */
@@ -663,6 +765,39 @@
   </div>
 </div>
 
+<!-- MODAL MENSAGENS -->
+<div class="backdrop" id="msgBackdrop">
+  <div class="modal modal-msgs">
+    <button class="modal-close" onclick="fecharMsgModal()">
+      <svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <h2>
+      <svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      Mensagens — <span id="msgNomeCliente" style="color:var(--text-soft); font-weight:600;"></span>
+    </h2>
+    <p class="msgs-intro">
+      Textos prontos para enviar via WhatsApp. Use o botão <strong>Copiar</strong> de cada bloco ou copie tudo de uma vez.
+    </p>
+
+    <div id="msgBlocos"></div>
+
+    <div class="msgs-aviso">
+      💡 <strong>Dica:</strong> o trecho entre asteriscos (<code>*texto*</code>) fica <strong>em negrito</strong> automaticamente quando você cola no WhatsApp.
+    </div>
+
+    <div class="msgs-rodape">
+      <button class="btn btn-ghost" onclick="fecharMsgModal()">Fechar</button>
+      <button class="btn btn-msg" onclick="copiarTodasMensagens()">
+        <svg class="ico ico-sm" viewBox="0 0 24 24">
+          <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+        </svg>
+        Copiar todas as mensagens
+      </button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 <div class="saving-overlay" id="savingOverlay">
   <div class="spinner"></div>
@@ -671,7 +806,7 @@
 
 <script>
 /* =====================================================
-   CONFIG — reaproveitado do código original
+   CONFIG
 ===================================================== */
 const API_URL = 'https://script.google.com/macros/s/AKfycbzuCjg_5ZJDMWWKmjYp1ThW34iWS0YouviWFdiMGx8W3yApv0F1fdUcjeZdjm0s6Mg/exec';
 const ADMIN_KEY = 'vitrine_admin_v11';
@@ -681,6 +816,22 @@ const TIMEOUT_API = 90000;
 const CORES_PADRAO = {
   'Hugo':     '#1e40af',
   'Carolina': '#9333ea'
+};
+
+/* =====================================================
+   ✅ DADOS DOS CORRETORES (edite aqui quando entrar alguém novo)
+===================================================== */
+const CORRETORES_INFO = {
+  'Hugo': {
+    nomeCompleto: 'Hugo Ribeiro',
+    funcao: 'Corretor',
+    genero: 'M'
+  },
+  'Carolina': {
+    nomeCompleto: 'Carolina Lima',
+    funcao: 'Corretora',
+    genero: 'F'
+  }
 };
 
 const $ = id => document.getElementById(id);
@@ -696,7 +847,8 @@ const state = {
   filtrosCorretores: new Set(),
   busca: '',
   obsAbertas: new Set(),
-  salvando: 0
+  salvando: 0,
+  _msgClienteTelAtual: null
 };
 
 /* =====================================================
@@ -758,6 +910,14 @@ function corDoCorretor(nome){
   return CORES_PADRAO[nome] || '#64748b';
 }
 
+/* Extrai até 2 nomes, ignorando preposições */
+function doisPrimeirosNomes_(nomeCompleto){
+  const preposicoes = new Set(['de','da','do','das','dos','e']);
+  const partes = String(nomeCompleto || '').trim().split(/\s+/);
+  const significativas = partes.filter(p => p && !preposicoes.has(p.toLowerCase()));
+  return significativas.slice(0, 2).join(' ');
+}
+
 /* Parse da coluna "origem" (fase 1 + fase 2) */
 function parseOrigem_(origemBruta){
   const out = {
@@ -811,6 +971,8 @@ function toast(msg, type=''){
   t.className = 'toast show ' + type;
   clearTimeout(t._timer);
   t._timer = setTimeout(() => t.classList.remove('show'), 3200);
+  // Avisa o pai (iframe) quando for sucesso
+  if(type === 'success') avisarPai('atualizado');
 }
 function marcarSalvando(inicio){
   if(inicio) state.salvando++;
@@ -856,6 +1018,21 @@ async function api(action, params = {}, timeoutMs = TIMEOUT_API, retries = 2) {
 }
 
 /* =====================================================
+   COMUNICAÇÃO COM O PAI (iframe)
+===================================================== */
+const EH_IFRAME = window.parent !== window;
+
+function avisarPai(tipo, dados = {}) {
+  if (!EH_IFRAME) return;
+  try {
+    window.parent.postMessage(
+      { origem: 'captar', tipo: tipo, ...dados },
+      '*'
+    );
+  } catch(e) { /* silencioso */ }
+}
+
+/* =====================================================
    CORRETORES
 ===================================================== */
 async function carregarCorretores(){
@@ -889,11 +1066,6 @@ function statusCaptacao_(c){
   if(v === 'sem-retorno' || v === 'sem retorno') return 'sem-retorno';
   if(v === 'concluida') return 'concluidas';
   return 'pendentes';
-}
-function labelStatus(status){
-  if(status === 'sem-retorno') return 'Sem retorno';
-  if(status === 'concluidas')  return 'Concluída';
-  return 'Pendente';
 }
 
 /* =====================================================
@@ -942,21 +1114,37 @@ function setFiltroCaptacoes(filtro, btn){
   document.querySelectorAll('.capt-filtros-grupo .chip[data-capt-filter]').forEach(b => {
     b.classList.toggle('active', b.dataset.captFilter === filtro);
   });
+  renderizarFiltroCorretores(); // recalcula os chips disponíveis no novo status
   renderizarCaptacoes();
 }
 
 function renderizarFiltroCorretores(){
   const wrap = $('captFiltroCorretores');
   if(!wrap) return;
-  const lista = state.lista || [];
 
-  const corretoresComCaptacao = new Set();
-  lista.forEach(c => {
+  // Base: TODAS as captações do status atual (não só as que passam em outros filtros)
+  let baseStatus = state.lista || [];
+  if(state.filtro !== 'todas'){
+    baseStatus = baseStatus.filter(c => statusCaptacao_(c) === state.filtro);
+  }
+
+  const corretoresDoStatus = new Set();
+  baseStatus.forEach(c => {
     const ap = String(c.atendidoPor || '').trim();
-    if(ap) corretoresComCaptacao.add(ap);
+    if(ap) corretoresDoStatus.add(ap);
   });
 
-  if(corretoresComCaptacao.size === 0){
+  // Limpa filtros de corretor que não fazem mais sentido no novo status
+  // (mas mantém os que continuam válidos — melhora a UX ao trocar filtros)
+  const paraRemover = [];
+  state.filtrosCorretores.forEach(nome => {
+    if(!corretoresDoStatus.has(nome)) paraRemover.push(nome);
+  });
+  // Não remove automaticamente — deixa o usuário ver que o chip sumiu mas
+  // o filtro continua invisível? Não. Vamos remover pra não confundir.
+  paraRemover.forEach(nome => state.filtrosCorretores.delete(nome));
+
+  if(corretoresDoStatus.size === 0){
     wrap.innerHTML = `
       <span class="capt-lbl">Corretor:</span>
       <span style="font-size:.72rem; color:var(--muted); font-style:italic;">Nenhum atribuído</span>
@@ -964,8 +1152,8 @@ function renderizarFiltroCorretores(){
     return;
   }
 
-  const chips = [...corretoresComCaptacao].sort((a,b) => a.localeCompare(b,'pt-BR')).map(nome => {
-    const cnt = lista.filter(x => String(x.atendidoPor || '').trim() === nome).length;
+  const chips = [...corretoresDoStatus].sort((a,b) => a.localeCompare(b,'pt-BR')).map(nome => {
+    const cnt = baseStatus.filter(x => String(x.atendidoPor || '').trim() === nome).length;
     const ativo = state.filtrosCorretores.has(nome);
     const cor = corDoCorretor(nome);
     return `<button class="chip chip-corretor ${ativo ? 'active' : ''}"
@@ -1043,7 +1231,6 @@ function renderizarCaptacoes(){
     });
   }
 
-  // Ordenação
   const ordem = $('captOrdem')?.value || 'recentes';
   arr.sort((a, b) => {
     if(ordem === 'alfabetica'){
@@ -1057,7 +1244,7 @@ function renderizarCaptacoes(){
       return new Date(b.dataHora||0) - new Date(a.dataHora||0);
     }
     if(ordem === 'antigos') return new Date(a.dataHora||0) - new Date(b.dataHora||0);
-    return new Date(b.dataHora||0) - new Date(a.dataHora||0); // recentes
+    return new Date(b.dataHora||0) - new Date(a.dataHora||0);
   });
 
   if(arr.length === 0){
@@ -1087,6 +1274,7 @@ function captacaoCardHTML(c){
   const telFmt = fmtTel(tel);
   const telZap = tel.startsWith('55') ? tel : '55' + tel;
   const atendidoPor = String(c.atendidoPor || '').trim();
+  const temCorretor = !!atendidoPor;
   const obsAberta = state.obsAbertas.has(String(c.id));
   const obsTemConteudo = String(c.observacoes || '').trim().length > 0;
 
@@ -1141,6 +1329,23 @@ function captacaoCardHTML(c){
     `<option value="${esc(cr.nome)}" ${atendidoPor === cr.nome ? 'selected' : ''}>${esc(cr.nome)}</option>`
   ).join('');
 
+  // Botão mensagem
+  const btnMsgClass = temCorretor ? '' : 'desabilitado';
+  const btnMsgTitle = temCorretor
+    ? 'Ver mensagens prontas para WhatsApp'
+    : 'Escolha o corretor antes de ver as mensagens';
+  const btnMsg = `
+    <button class="cc-btn btn-msg ${btnMsgClass}"
+            onclick="abrirMsgModal('${esc(c.id)}')"
+            title="${esc(btnMsgTitle)}">
+      <svg class="ico" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="10"/>
+        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+        <line x1="12" y1="17" x2="12.01" y2="17"/>
+      </svg>
+    </button>
+  `;
+
   return `
     <div class="capt-card status-${statusClasse} ${obsAberta ? 'obs-aberta' : ''}" data-id="${esc(c.id)}">
       <div class="cc-l1">
@@ -1189,6 +1394,8 @@ function captacaoCardHTML(c){
       <div class="cc-l3">
         <span class="cc-data">📅 ${esc(fmtDataHora(c.dataHora))}</span>
         <div class="cc-acoes">
+          ${btnMsg}
+
           <button class="cc-btn btn-edit"
                   onclick="abrirEditModal('${esc(c.id)}')"
                   title="Editar dados">
@@ -1202,8 +1409,8 @@ function captacaoCardHTML(c){
              href="https://wa.me/${telZap}"
              target="_blank" rel="noopener"
              title="Abrir WhatsApp">
-            <svg class="ico" viewBox="0 0 24 24">
-              <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+            <svg class="ico ico-fill" viewBox="0 0 24 24">
+              <path d="M19.05 4.91A10.46 10.46 0 0 0 12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38c1.45.79 3.08 1.21 4.79 1.21h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.91-7.01zM12.05 20.15h-.01c-1.5 0-2.98-.4-4.27-1.17l-.31-.18-3.12.82.83-3.04-.2-.32a8.24 8.24 0 0 1-1.26-4.39c0-4.54 3.7-8.24 8.25-8.24 2.2 0 4.27.86 5.83 2.42a8.19 8.19 0 0 1 2.41 5.83c0 4.54-3.7 8.24-8.15 8.24zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.17.25-.64.81-.79.97-.14.17-.29.19-.54.06-.25-.12-1.05-.39-2.01-1.24-.74-.66-1.24-1.48-1.39-1.73-.14-.25-.02-.39.11-.51.11-.11.25-.29.37-.43.12-.14.17-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.41-.42-.56-.42-.14 0-.31-.02-.47-.02-.17 0-.43.06-.66.31-.23.25-.86.85-.86 2.07 0 1.22.89 2.4 1.01 2.56.12.17 1.75 2.67 4.23 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.55.1.47-.07 1.47-.6 1.68-1.18.21-.58.21-1.08.14-1.18-.06-.11-.22-.17-.47-.29z"/>
             </svg>
           </a>
 
@@ -1236,7 +1443,6 @@ function toggleObsCaptacao(id){
   }
 }
 
-/* ✅ Mudar status — vai para o filtro correspondente */
 async function onChangeStatus(el){
   const id = el.dataset.capId;
   const valor = el.value;
@@ -1275,7 +1481,7 @@ async function onChangeStatus(el){
   toast('Status atualizado ✅', 'success');
   atualizarContadores();
 
-  // ✅ Vai para o filtro do novo status
+  // Vai para o filtro do novo status
   const statusNovo = statusCaptacao_({ contatoFeito: valor });
   const filtroDestino = statusNovo === 'sem-retorno' ? 'sem-retorno'
                      : statusNovo === 'concluidas' ? 'concluidas'
@@ -1284,6 +1490,7 @@ async function onChangeStatus(el){
   if(state.filtro !== filtroDestino && state.filtro !== 'todas'){
     setFiltroCaptacoes(filtroDestino, document.querySelector(`.chip[data-capt-filter="${filtroDestino}"]`));
   } else {
+    renderizarFiltroCorretores();
     renderizarCaptacoes();
   }
 
@@ -1299,7 +1506,6 @@ async function onChangeStatus(el){
   }, 100);
 }
 
-/* ✅ Mudar corretor */
 async function onChangeCorretor(el){
   const id = el.dataset.capId;
   const valor = el.value;
@@ -1331,7 +1537,6 @@ async function onChangeCorretor(el){
   renderizarCaptacoes();
 }
 
-/* ✅ Observações — debounce para não salvar a cada tecla */
 let _obsTimers = {};
 async function onChangeObs(el){
   const id = el.dataset.capId;
@@ -1343,7 +1548,6 @@ async function onChangeObs(el){
 
   if(String(item.observacoes || '') === String(valor || '')) return;
 
-  // Atualiza local imediatamente para o botão ficar azul
   item.observacoes = valor;
 
   clearTimeout(_obsTimers[id]);
@@ -1362,7 +1566,6 @@ async function onChangeObs(el){
     }
     toast('Observação salva ✅', 'success');
 
-    // Atualiza o botão de observações (azul se tem conteúdo)
     const card = document.querySelector(`.capt-card[data-id="${id}"]`);
     if(card){
       const btn = card.querySelector('.btn-expandir');
@@ -1454,7 +1657,6 @@ async function salvarEdicaoCaptacao(){
     return;
   }
 
-  // Atualiza local
   const item = state.lista.find(x => String(x.id) === String(id));
   if(item){
     item.nome = nome;
@@ -1471,6 +1673,156 @@ async function salvarEdicaoCaptacao(){
   toast('Dados atualizados ✅', 'success');
   fecharEditModal();
   renderizarCaptacoes();
+}
+
+/* =====================================================
+   MENSAGENS PRONTAS
+===================================================== */
+function montarMensagens_(item){
+  const atendidoPor = String(item.atendidoPor || '').trim();
+  if(!atendidoPor){
+    return null;
+  }
+  const info = CORRETORES_INFO[atendidoPor];
+  const nomeCompletoCorretor = info?.nomeCompleto || atendidoPor;
+  const funcaoCorretor = info?.funcao || 'Corretor(a)';
+
+  const origem = parseOrigem_(item.origem);
+  const nomeCliente = String(item.nome || origem.nome || '').trim();
+  const doisNomes = doisPrimeirosNomes_(nomeCliente);
+
+  const msg1 = doisNomes
+    ? `Oi, ${doisNomes}, tudo bem com você?
+
+Sou ${nomeCompletoCorretor}, ${funcaoCorretor} da Lima Ribeiro Imóveis. Vi que você acessou nossa calculadora de preços de imóveis e fiz uma simulação com base nos dados que você nos informou, considerando também outros imóveis da sua região.
+
+Vou te enviar o print da sua simulação.`
+    : `Oi, tudo bem com você?
+
+Sou ${nomeCompletoCorretor}, ${funcaoCorretor} da Lima Ribeiro Imóveis. Vi que você acessou nossa calculadora de preços de imóveis e fiz uma simulação com base nos dados que você nos informou, considerando também outros imóveis da sua região.
+
+Vou te enviar o print da sua simulação.`;
+
+  const msg2 = `Essa análise nos permite chegar a uma estimativa mais próxima da realidade do mercado, ajudando a definir um valor competitivo para a venda do seu imóvel.
+
+*É importante ressaltar*: quem define o preço de venda é você, proprietário. Essa é apenas uma estimativa de mercado. Nosso papel é orientar com base na realidade, para que possamos trabalhar com uma estratégia que traga ótimos resultados.`;
+
+  const msg3 = `Esse seu imóvel está à venda? Posso fazer a avaliação e agendar fotos para colocar no nosso sistema do Quinto Andar. Será um prazer colocar seu imóvel em nossa pasta e trabalhar essa venda com todo o nosso suporte.
+
+Lembrando: toda a divulgação é 100% sem custos.`;
+
+  return {
+    nomeCliente: nomeCliente,
+    nomeCorretor: nomeCompletoCorretor,
+    funcaoCorretor: funcaoCorretor,
+    mensagens: [msg1, msg2, msg3]
+  };
+}
+
+function abrirMsgModal(id){
+  const item = state.lista.find(x => String(x.id) === String(id));
+  if(!item){ toast('Captação não encontrada', 'error'); return; }
+
+  const atendidoPor = String(item.atendidoPor || '').trim();
+  if(!atendidoPor){
+    toast('Escolha o corretor antes de ver as mensagens.', 'warn');
+    return;
+  }
+
+  const dados = montarMensagens_(item);
+  if(!dados){
+    toast('Não foi possível montar as mensagens.', 'error');
+    return;
+  }
+
+  state._msgClienteTelAtual = normalizaTel(item.telefone);
+
+  const nomeCompleto = nomeCompletoCliente_(item.nome || parseOrigem_(item.origem).nome, item.telefone);
+  $('msgNomeCliente').textContent = nomeCompleto;
+
+  // Renderiza os 3 blocos
+  const blocos = dados.mensagens.map((texto, idx) => {
+    const rotulos = ['Abordagem inicial', 'Explicação técnica', 'Convite à ação'];
+    const rotulo = rotulos[idx] || `Mensagem ${idx + 1}`;
+    const htmlTexto = esc(texto)
+      .replace(/\*([^*]+)\*/g, '<strong>$1</strong>');
+    return `
+      <div class="msgs-bloco">
+        <div class="msgs-bloco-head">
+          <span class="msgs-bloco-num">
+            <span class="num">${idx + 1}</span>
+            ${esc(rotulo)}
+          </span>
+          <button class="msgs-bloco-copiar" onclick="copiarBloco(${idx})">
+            <svg class="ico ico-sm" viewBox="0 0 24 24">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+            </svg>
+            Copiar
+          </button>
+        </div>
+        <div class="msgs-bloco-texto">${htmlTexto}</div>
+      </div>
+    `;
+  }).join('');
+
+  $('msgBlocos').innerHTML = blocos;
+  state._msgAtuais = dados.mensagens;
+
+  $('msgBackdrop').classList.add('show');
+}
+
+function fecharMsgModal(){
+  $('msgBackdrop').classList.remove('show');
+  state._msgClienteTelAtual = null;
+  state._msgAtuais = null;
+}
+
+function nomeCompletoCliente_(nome, telefone){
+  const n = String(nome || '').trim() || 'Sem nome';
+  const tel = normalizaTel(telefone);
+  if(tel.length >= 4) return n + ' ' + tel.slice(-4);
+  return n;
+}
+
+function copiarBloco(idx){
+  const lista = state._msgAtuais || [];
+  const texto = lista[idx];
+  if(!texto){ toast('Mensagem indisponível', 'error'); return; }
+  copiarTextoSimples(texto, 'Mensagem ' + (idx + 1) + ' copiada');
+}
+
+function copiarTodasMensagens(){
+  const lista = state._msgAtuais || [];
+  if(lista.length === 0){ toast('Nada para copiar', 'error'); return; }
+  const texto = lista.join('\n\n---\n\n');
+  copiarTextoSimples(texto, 'Todas as mensagens copiadas');
+}
+
+function copiarTextoSimples(texto, msgSucesso){
+  if(navigator.clipboard && window.isSecureContext){
+    navigator.clipboard.writeText(texto)
+      .then(() => toast(msgSucesso + ' ✅', 'success'))
+      .catch(() => fallbackCopy(texto, msgSucesso));
+  } else {
+    fallbackCopy(texto, msgSucesso);
+  }
+}
+
+function fallbackCopy(texto, msgSucesso){
+  const ta = document.createElement('textarea');
+  ta.value = texto;
+  ta.style.position = 'fixed';
+  ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.select();
+  try {
+    document.execCommand('copy');
+    toast(msgSucesso + ' ✅', 'success');
+  } catch(e){
+    toast('Não foi possível copiar', 'error');
+  }
+  document.body.removeChild(ta);
 }
 
 /* =====================================================
@@ -1491,6 +1843,25 @@ async function salvarEdicaoCaptacao(){
 
     await carregarCorretores();
     await carregarCaptacoes(true);
+
+    // Se estiver dentro de iframe, adiciona botão "Fechar" no header
+    if (EH_IFRAME) {
+      const header = document.querySelector('.capt-header-actions');
+      if (header) {
+        const btnFechar = document.createElement('button');
+        btnFechar.className = 'btn btn-ghost btn-sm';
+        btnFechar.style.marginLeft = '8px';
+        btnFechar.innerHTML = `
+          <svg class="ico ico-sm" viewBox="0 0 24 24">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+          Fechar
+        `;
+        btnFechar.onclick = () => avisarPai('fechar');
+        header.appendChild(btnFechar);
+      }
+    }
   } catch(err){
     console.error('Erro no init:', err);
     $('captLista').innerHTML = '<div class="empty-state"><h3>Erro ao iniciar</h3><p>' + esc(err.message) + '</p></div>';
@@ -1499,50 +1870,12 @@ async function salvarEdicaoCaptacao(){
 
 /* Fecha modal com ESC */
 document.addEventListener('keydown', (e) => {
-  if(e.key === 'Escape') fecharEditModal();
-});
-/* =====================================================
-   COMUNICAÇÃO COM O PAI (quando dentro de iframe)
-===================================================== */
-const EH_IFRAME = window.parent !== window;
-
-function avisarPai(tipo, dados = {}) {
-  if (!EH_IFRAME) return;
-  try {
-    window.parent.postMessage(
-      { origem: 'captar', tipo: tipo, ...dados },
-      '*'
-    );
-  } catch(e) { /* silencioso */ }
-}
-
-// Reaproveita o toast pra também avisar o pai quando salvar
-const _toastOriginal = toast;
-window.toast = function(msg, type='') {
-  _toastOriginal(msg, type);
-  if (type === 'success') avisarPai('atualizado');
-};
-
-// Adiciona botão "Fechar" no header quando estiver dentro de iframe
-document.addEventListener('DOMContentLoaded', () => {
-  if (!EH_IFRAME) return;
-  const header = document.querySelector('.capt-header-actions');
-  if (!header) return;
-  const btnFechar = document.createElement('button');
-  btnFechar.className = 'btn btn-ghost btn-sm';
-  btnFechar.style.marginLeft = '8px';
-  btnFechar.innerHTML = `
-    <svg class="ico ico-sm" viewBox="0 0 24 24">
-      <line x1="18" y1="6" x2="6" y2="18"/>
-      <line x1="6" y1="6" x2="18" y2="18"/>
-    </svg>
-    Fechar
-  `;
-  btnFechar.onclick = () => avisarPai('fechar');
-  header.appendChild(btnFechar);
+  if(e.key === 'Escape'){
+    fecharEditModal();
+    fecharMsgModal();
+  }
 });
 
- 
 /* Previne sair com salvamento pendente */
 window.addEventListener('beforeunload', function(e){
   if(state.salvando > 0){
