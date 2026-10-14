@@ -9,7 +9,8 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
 <style>
   * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
@@ -31,7 +32,6 @@
     --sombra-card: 0 4px 20px rgba(0,30,240,0.06);
     --sombra-forte: 0 20px 50px rgba(0,30,240,0.15);
     --radius: 16px;
-    --radius-sm: 12px;
   }
 
   html, body { height:100%; }
@@ -42,10 +42,10 @@
     line-height:1.5;
     min-height:100vh;
     -webkit-font-smoothing:antialiased;
-    padding-bottom: 96px; /* espaço pro rodapé fixo */
+    padding-bottom: 100px;
   }
 
-  /* HEADER */
+  /* ============ HEADER ============ */
   .header{
     padding: 14px 18px;
     display:flex; align-items:center; justify-content:space-between;
@@ -53,72 +53,48 @@
     backdrop-filter: blur(12px);
     border-bottom:1px solid rgba(0,30,240,0.06);
     position:sticky; top:0; z-index:100;
+    gap:10px;
   }
-  .header .logo{ height:38px; width:auto; display:block; }
+  .header .logo{ height:38px; width:auto; display:block; flex-shrink:0; }
   .header .tag{
     display:inline-flex; align-items:center; gap:6px;
-    padding: 6px 12px;
-    background: linear-gradient(135deg, var(--azul), #0044ff);
+    padding: 7px 14px;
+    background: linear-gradient(135deg, #16a34a, #15803d);
     color:#fff; border-radius:40px;
     font-size:0.68rem; font-weight:800;
-    letter-spacing:0.4px; text-transform:uppercase;
-    box-shadow:0 4px 12px rgba(0,30,240,0.25);
+    letter-spacing:0.3px;
+    box-shadow:0 4px 12px rgba(22,163,74,0.25);
+    white-space:nowrap;
   }
-  .header .tag i{ font-size:0.75rem; }
+  .header .tag i{ font-size:0.72rem; }
 
-  /* CONTAINER */
+  /* ============ CONTAINER ============ */
   .container{
     max-width:720px; margin:0 auto;
     padding: 20px 16px 40px;
   }
 
-  /* HERO */
+  /* ============ HERO ============ */
   .hero{ text-align:center; margin-bottom:22px; padding: 8px 0; }
   .hero h1{
-    font-size:1.65rem; font-weight:800;
+    font-size:1.6rem; font-weight:800;
     letter-spacing:-0.8px; line-height:1.15;
-    color:var(--texto); margin-bottom:10px;
+    color:var(--texto); margin-bottom:12px;
   }
-  .hero h1 .destaque{ color:var(--azul); }
+  .hero h1 .destaque{
+    background: linear-gradient(135deg, var(--azul), #0044ff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
   .hero p{
-    font-size:0.9rem; color:var(--texto-cinza);
-    max-width:480px; margin:0 auto;
-    line-height:1.55;
+    font-size:0.92rem; color:var(--texto-cinza);
+    max-width:520px; margin:0 auto;
+    line-height:1.6;
   }
-  .hero .badge-tempo{
-    display:inline-flex; align-items:center; gap:6px;
-    margin-top:12px; padding: 6px 14px;
-    background: rgba(0,30,240,0.08);
-    color: var(--azul); border-radius:40px;
-    font-size:0.74rem; font-weight:700;
-  }
+  .hero p strong{ color:var(--texto); font-weight:700; }
 
-  /* PROGRESSO */
-  .progresso{
-    display:flex; align-items:center; gap:8px;
-    margin-bottom:20px;
-    padding: 10px 14px;
-    background:#fff; border-radius: 12px;
-    box-shadow: var(--sombra-card);
-    border:1px solid rgba(0,30,240,0.05);
-  }
-  .progresso .barra{
-    flex:1; height:6px;
-    background: var(--azul-claro);
-    border-radius:40px; overflow:hidden;
-  }
-  .progresso .barra-inner{
-    height:100%; width:20%;
-    background: linear-gradient(90deg, var(--azul), #0044ff);
-    border-radius:40px;
-    transition: width 0.35s ease;
-  }
-  .progresso .txt{
-    font-size:0.72rem; font-weight:700;
-    color:var(--texto-cinza); white-space:nowrap;
-  }
-
-  /* SEÇÕES */
+  /* ============ SEÇÕES ============ */
   .secao{
     background:#fff; border-radius:var(--radius);
     padding: 20px 18px;
@@ -147,7 +123,7 @@
     margin-top:2px; line-height:1.45;
   }
 
-  /* CHIPS DE TIPO */
+  /* ============ CHIPS DE TIPO ============ */
   .chips-tipo{
     display:grid; grid-template-columns: repeat(2, 1fr); gap:10px;
   }
@@ -170,7 +146,7 @@
     transform: translateY(-2px);
   }
 
-  /* GRID DE OPÇÕES (quartos, suites, etc) */
+  /* ============ GRID DE OPÇÕES ============ */
   .grid-opcoes{
     display:grid; grid-template-columns: repeat(3, 1fr); gap:8px;
   }
@@ -192,9 +168,7 @@
     color:#fff; border-color: var(--azul);
     box-shadow: 0 4px 14px rgba(0,30,240,0.25);
   }
-  .opt-btn.tanto-faz{
-    font-size:0.78rem; font-weight:800;
-  }
+  .opt-btn.tanto-faz{ font-size:0.78rem; font-weight:800; }
   .opt-btn.tanto-faz.ativo{
     background: linear-gradient(135deg, #64748b, #475569);
     border-color:#475569;
@@ -204,38 +178,32 @@
   .campo-label{
     font-size:0.82rem; font-weight:800;
     color:var(--texto); margin-bottom:10px;
-    display:block;
-    letter-spacing:-0.1px;
+    display:block; letter-spacing:-0.1px;
   }
   .campo-label .opc{
     font-weight:600; color:var(--muted);
     font-size:0.72rem; margin-left:6px;
   }
-
   .campo-bloco{ margin-bottom:20px; }
   .campo-bloco:last-child{ margin-bottom:0; }
 
-  /* SLIDER */
-  .slider-wrap{
-    position:relative;
-    padding: 8px 4px 4px;
-  }
+  /* ============ SLIDER ============ */
+  .slider-wrap{ position:relative; padding: 8px 4px 4px; }
   .slider-valores{
     display:flex; justify-content:space-between;
     margin-bottom:14px;
     font-size:0.78rem; font-weight:700;
+    gap:8px;
   }
   .slider-valores .val{
     background: var(--azul-claro); color: var(--azul);
     padding: 6px 12px; border-radius:8px;
     font-family:'Inter',sans-serif;
-    min-width:80px; text-align:center;
+    min-width:90px; text-align:center;
+    font-variant-numeric: tabular-nums;
   }
-  .slider-valores .val.zero{ background: var(--bg-alt); color: var(--muted); }
   .range-container{
-    position:relative;
-    height: 40px;
-    margin: 0 8px;
+    position:relative; height: 40px; margin: 0 8px;
   }
   .range-track{
     position:absolute; top:50%; left:0; right:0;
@@ -273,7 +241,7 @@
     cursor:grab; pointer-events:auto;
   }
 
-  /* BAIRROS */
+  /* ============ BAIRROS ============ */
   .bairros-input{
     display:flex; gap:8px; margin-bottom:10px;
   }
@@ -299,7 +267,6 @@
     transition: all 0.15s;
   }
   .bairros-input button:hover{ background: var(--azul-escuro); }
-  .bairros-input button:disabled{ opacity:0.4; cursor:not-allowed; }
 
   .bairros-lista{
     display:flex; flex-wrap:wrap; gap:6px;
@@ -328,10 +295,8 @@
     to{ opacity:1; transform: scale(1); }
   }
 
-  /* TEXTAREA */
-  .textarea-wrap{
-    position:relative;
-  }
+  /* ============ TEXTAREA / SUGESTÕES ============ */
+  .textarea-wrap{ position:relative; }
   .textarea-wrap textarea{
     width:100%;
     padding: 14px 14px;
@@ -351,19 +316,27 @@
     display:flex; flex-wrap:wrap; gap:6px; margin-top:10px;
   }
   .sugestao{
-    padding: 6px 11px;
-    background: #f8fafc; border:1px solid var(--borda);
+    padding: 8px 13px;
+    background: #f8fafc; border:1.5px solid var(--borda);
     border-radius:40px;
-    font-size:0.72rem; font-weight:600;
+    font-size:0.76rem; font-weight:600;
     color: var(--texto-cinza); cursor:pointer;
     transition: all 0.15s; font-family:inherit;
+    display:inline-flex; align-items:center; gap:5px;
   }
   .sugestao:hover{ background: var(--azul-claro); border-color: var(--azul); color: var(--azul); }
-
-  /* CONTATO FINAL */
-  .contato-final .campo{
-    margin-bottom:12px;
+  .sugestao.ativa{
+    background: linear-gradient(135deg, var(--azul), #0044ff);
+    border-color: var(--azul); color:#fff;
+    box-shadow: 0 4px 12px rgba(0,30,240,0.25);
   }
+  .sugestao.ativa::before{
+    content:'✓';
+    font-weight:900;
+  }
+
+  /* ============ CONTATO ============ */
+  .contato-final .campo{ margin-bottom:12px; }
   .contato-final input{
     width:100%;
     padding: 14px 14px;
@@ -382,7 +355,7 @@
     background: #fef2f2;
   }
 
-  /* BOTÃO ENVIAR */
+  /* ============ BOTÃO ENVIAR ============ */
   .btn-enviar{
     width:100%;
     padding: 18px 22px;
@@ -406,8 +379,9 @@
   .btn-enviar:hover:not(:disabled){ transform:translateY(-2px); box-shadow: 0 14px 36px rgba(0,30,240,0.45); }
   .btn-enviar:active:not(:disabled){ transform:translateY(0); }
   .btn-enviar:disabled{ opacity:0.6; cursor:not-allowed; }
+  .btn-enviar i{ font-size:1.05rem; }
 
-  /* RODAPÉ FIXO WHATSAPP */
+  /* ============ RODAPÉ FIXO WHATSAPP ============ */
   .rodape-fixo{
     position:fixed; bottom:0; left:0; right:0;
     background: rgba(255,255,255,0.97);
@@ -415,21 +389,23 @@
     border-top:1px solid rgba(0,30,240,0.08);
     padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
     z-index:200;
-    display:flex; align-items:center; gap:12px;
+    display:flex; align-items:center; gap:10px;
     box-shadow: 0 -4px 20px rgba(0,30,240,0.08);
   }
   .rodape-fixo .txt-rodape{
-    flex:1; font-size:0.74rem;
-    font-weight:700; color:var(--texto-cinza);
+    flex:1; font-size:0.72rem;
+    font-weight:600; color:var(--texto-cinza);
     line-height:1.3;
   }
-  .rodape-fixo .txt-rodape strong{ color: var(--texto); display:block; font-size:0.78rem; }
+  .rodape-fixo .txt-rodape strong{
+    color: var(--texto); display:block;
+    font-size:0.78rem; font-weight:800;
+  }
   .btn-whats-rodape{
     display:inline-flex; align-items:center; gap:8px;
     padding: 12px 18px;
     background: linear-gradient(135deg, var(--whatsapp), var(--whatsapp-escuro));
     color:#fff; border-radius:40px;
-    text-decoration:none;
     font-weight:800; font-size:0.82rem;
     box-shadow: 0 6px 20px rgba(37,211,102,0.4);
     transition: all 0.2s;
@@ -439,7 +415,7 @@
   .btn-whats-rodape:hover{ transform:translateY(-2px); box-shadow: 0 10px 28px rgba(37,211,102,0.5); }
   .btn-whats-rodape i{ font-size:1.05rem; }
 
-  /* RESULTADO FINAL */
+  /* ============ RESULTADO FINAL ============ */
   .resultado{
     display:none;
     text-align:center;
@@ -493,7 +469,7 @@
   .btn-zap-final:hover{ transform:translateY(-2px); box-shadow: 0 14px 36px rgba(37,211,102,0.5); }
   .btn-zap-final i{ font-size:1.15rem; }
 
-  /* LOADING */
+  /* ============ LOADING ============ */
   .loading{
     display:none;
     text-align:center;
@@ -517,26 +493,102 @@
     line-height:1.55;
   }
 
-  /* ÍCONES SVG inline (sem fontawesome) */
-  .ico-svg{
-    width:1em; height:1em;
-    display:inline-block;
-    vertical-align:-0.125em;
-    fill:currentColor;
+  /* ============ MODAL WHATSAPP ============ */
+  .modal-overlay{
+    position:fixed; inset:0;
+    background: rgba(15,23,42,0.55);
+    backdrop-filter: blur(6px);
+    display:none; align-items:center; justify-content:center;
+    z-index:1000; padding: 20px;
+    animation: fadeIn 0.2s ease;
   }
+  .modal-overlay.active{ display:flex; }
+  .modal-box{
+    background:#fff;
+    max-width:440px; width:100%;
+    border-radius:24px;
+    padding: 28px 24px;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.25);
+    animation: fadeUp 0.3s ease;
+    max-height: 90vh; overflow-y: auto;
+  }
+  @keyframes fadeUp {
+    from { opacity:0; transform: translateY(30px); }
+    to { opacity:1; transform: translateY(0); }
+  }
+  .modal-box h3{
+    font-size:1.2rem; font-weight:800;
+    color: var(--texto); margin-bottom:6px;
+    display:flex; align-items:center; gap:8px;
+  }
+  .modal-box h3 i{ color: var(--whatsapp); font-size:1.3rem; }
+  .modal-box .sub{
+    color: var(--texto-cinza); margin-bottom:20px;
+    font-size:0.88rem; line-height:1.55;
+  }
+  .contact-list{ display:flex; flex-direction:column; gap:10px; }
+  .contact-item{
+    display:flex; align-items:center; gap:14px;
+    padding: 12px 14px; border-radius:14px;
+    background: #f5f7fc; text-decoration:none;
+    color: var(--texto); transition: 0.2s;
+    border: 1.5px solid transparent;
+  }
+  .contact-item:hover{
+    border-color: var(--whatsapp);
+    background: #f0fdf4;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(37,211,102,0.15);
+  }
+  .contact-item .avatar{
+    width: 48px; height: 48px; border-radius:50%;
+    overflow: hidden; flex-shrink: 0;
+    background: var(--azul-claro);
+    border: 2px solid #fff;
+    box-shadow: 0 2px 8px rgba(0,30,240,0.1);
+  }
+  .contact-item .avatar img{
+    width:100%; height:100%; object-fit:cover;
+  }
+  .contact-item .info{ flex:1; min-width:0; }
+  .contact-item .info .name{
+    font-weight:800; font-size:0.95rem;
+    color: var(--texto); margin-bottom:2px;
+  }
+  .contact-item .info .role{
+    font-size:0.78rem; color: var(--texto-cinza);
+  }
+  .contact-item .icon-right{
+    width: 36px; height: 36px; border-radius:50%;
+    background: var(--whatsapp); color:#fff;
+    display:flex; align-items:center; justify-content:center;
+    font-size:1.1rem; flex-shrink:0;
+  }
+  .modal-close{
+    margin-top:20px; width:100%;
+    padding: 14px; border:none;
+    background: #f0f2f8; color: var(--texto);
+    border-radius:40px; font-weight:700;
+    cursor:pointer; font-family:inherit;
+    font-size:0.88rem;
+    transition: 0.2s;
+  }
+  .modal-close:hover{ background: #e2e8f0; }
 
-  /* RESPONSIVO */
+  /* ============ RESPONSIVO ============ */
   @media (max-width:420px){
-    .hero h1{ font-size:1.4rem; }
+    .hero h1{ font-size:1.35rem; }
+    .hero p{ font-size:0.86rem; }
     .chip-tipo{ padding:14px 8px; font-size:0.85rem; }
     .chip-tipo .ico{ font-size:1.25rem; }
     .grid-opcoes.cols-5{ grid-template-columns: repeat(3, 1fr); }
     .grid-opcoes.cols-4{ grid-template-columns: repeat(3, 1fr); }
     .opt-btn{ font-size:0.78rem; padding:10px 4px; }
     .secao{ padding:16px 14px; }
-    .rodape-fixo .txt-rodape{ font-size:0.68rem; }
+    .rodape-fixo .txt-rodape{ font-size:0.66rem; }
+    .rodape-fixo .txt-rodape strong{ font-size:0.72rem; }
     .btn-whats-rodape{ padding:10px 14px; font-size:0.76rem; }
-    .btn-whats-rodape .txt-long{ display:none; }
+    .header .tag{ font-size:0.62rem; padding:6px 10px; }
   }
 </style>
 </head>
@@ -548,34 +600,23 @@
     <img src="https://cdn.awsli.com.br/1608/1608652/arquivos/logo-lr-imoveis.jpg" alt="Lima Ribeiro Imóveis" class="logo">
   </a>
   <span class="tag">
-    <svg class="ico-svg" viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg>
-    Seleção VIP
+    <i class="fas fa-bolt"></i>
+    Rápido · Fácil · Grátis
   </span>
 </header>
 
 <div class="container">
 
-  <!-- FORM -->
   <form id="formVip" novalidate onsubmit="enviarSelecao(event)">
 
     <!-- HERO -->
     <div class="hero">
-      <h1>Encontre o <span class="destaque">imóvel ideal</span> para você</h1>
-      <p>Responda algumas perguntas rápidas e nossa equipe vai selecionar imóveis que combinam exatamente com o que você procura.</p>
-      <div class="badge-tempo">
-        <svg class="ico-svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 6v6l4 2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-        Leva menos de 1 minuto
-      </div>
+      <h1>Deixe que a gente <span class="destaque">encontra o imóvel certo</span> para você</h1>
+      <p><strong>Pare de vasculhar a internet.</strong> Responda algumas perguntas rápidas e nós selecionamos as <strong>melhores opções</strong> para você. Simples assim.</p>
     </div>
 
-    <!-- PROGRESSO -->
-    <div class="progresso">
-      <div class="barra"><div class="barra-inner" id="barraProgresso"></div></div>
-      <div class="txt" id="txtProgresso">Passo 1 de 5</div>
-    </div>
-
-    <!-- SEÇÃO 1: TIPO DE IMÓVEL -->
-    <div class="secao" data-step="1">
+    <!-- SEÇÃO 1: TIPO -->
+    <div class="secao">
       <div class="secao-head">
         <div class="secao-num">1</div>
         <div>
@@ -599,8 +640,8 @@
       </div>
     </div>
 
-    <!-- SEÇÃO 2: QUARTOS / SUÍTES / BANHEIROS -->
-    <div class="secao" data-step="2">
+    <!-- SEÇÃO 2: CÔMODOS -->
+    <div class="secao">
       <div class="secao-head">
         <div class="secao-num">2</div>
         <div>
@@ -621,10 +662,10 @@
         </div>
       </div>
 
-      <!-- SUÍTES -->
+      <!-- BANHEIROS (agora ANTES de suítes) -->
       <div class="campo-bloco">
-        <label class="campo-label">Suítes</label>
-        <div class="grid-opcoes cols-5" data-campo="suites">
+        <label class="campo-label">Banheiros</label>
+        <div class="grid-opcoes cols-5" data-campo="banheiros">
           <button type="button" class="opt-btn tanto-faz ativo" data-val="">Tanto Faz</button>
           <button type="button" class="opt-btn" data-val="1">1+</button>
           <button type="button" class="opt-btn" data-val="2">2+</button>
@@ -633,10 +674,10 @@
         </div>
       </div>
 
-      <!-- BANHEIROS -->
+      <!-- SUÍTES -->
       <div class="campo-bloco">
-        <label class="campo-label">Banheiros</label>
-        <div class="grid-opcoes cols-5" data-campo="banheiros">
+        <label class="campo-label">Suítes</label>
+        <div class="grid-opcoes cols-5" data-campo="suites">
           <button type="button" class="opt-btn tanto-faz ativo" data-val="">Tanto Faz</button>
           <button type="button" class="opt-btn" data-val="1">1+</button>
           <button type="button" class="opt-btn" data-val="2">2+</button>
@@ -659,7 +700,7 @@
     </div>
 
     <!-- SEÇÃO 3: METRAGEM E VALOR -->
-    <div class="secao" data-step="3">
+    <div class="secao">
       <div class="secao-head">
         <div class="secao-num">3</div>
         <div>
@@ -687,8 +728,8 @@
       <div class="campo-bloco">
         <label class="campo-label">Valor do imóvel</label>
         <div class="slider-valores">
-          <span class="val" id="valValorMin">R$ 150 mil</span>
-          <span class="val" id="valValorMax">R$ 20 mi</span>
+          <span class="val" id="valValorMin">R$ 150.000</span>
+          <span class="val" id="valValorMax">R$ 10.000.000</span>
         </div>
         <div class="range-container" id="rangeValor">
           <div class="range-track"></div>
@@ -700,69 +741,74 @@
     </div>
 
     <!-- SEÇÃO 4: REGIÕES -->
-    <div class="secao" data-step="4">
+    <div class="secao">
       <div class="secao-head">
         <div class="secao-num">4</div>
         <div>
           <div class="secao-titulo">Quais regiões ou bairros?</div>
-          <div class="secao-sub">Digite quantos quiser. Toque em + para adicionar.</div>
+          <div class="secao-sub">Digite quantos quiser ou toque nas sugestões</div>
         </div>
       </div>
 
       <div class="bairros-input">
-        <input type="text" id="inputBairro" placeholder="Ex: Gutierrez, Savassi, Buritis..." autocomplete="off"
+        <input type="text" id="inputBairro" placeholder="Ex: Savassi, Gutierrez, Buritis..." autocomplete="off"
                onkeydown="if(event.key==='Enter'){event.preventDefault(); adicionarBairro();}">
         <button type="button" onclick="adicionarBairro()">
-          <svg class="ico-svg" viewBox="0 0 24 24" style="width:14px;height:14px;"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>
+          <i class="fas fa-plus" style="font-size:0.8rem;"></i>
           Add
         </button>
       </div>
       <div class="bairros-lista" id="bairrosLista"></div>
-      <div id="bairrosSugestoes" style="margin-top:10px;">
-        <div style="font-size:0.7rem; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:0.4px; margin-bottom:6px;">Sugestões rápidas</div>
-        <div class="sugestoes">
-          <button type="button" class="sugestao" onclick="adicionarBairroRapido('Savassi')">Savassi</button>
-          <button type="button" class="sugestao" onclick="adicionarBairroRapido('Gutierrez')">Gutierrez</button>
-          <button type="button" class="sugestao" onclick="adicionarBairroRapido('Buritis')">Buritis</button>
-          <button type="button" class="sugestao" onclick="adicionarBairroRapido('Pampulha')">Pampulha</button>
-          <button type="button" class="sugestao" onclick="adicionarBairroRapido('Belvedere')">Belvedere</button>
-          <button type="button" class="sugestao" onclick="adicionarBairroRapido('Centro')">Centro</button>
-          <button type="button" class="sugestao" onclick="adicionarBairroRapido('Funcionários')">Funcionários</button>
-          <button type="button" class="sugestao" onclick="adicionarBairroRapido('Sion')">Sion</button>
+
+      <div style="margin-top:14px;">
+        <div style="font-size:0.7rem; font-weight:800; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:8px;">Mais procurados · Centro-Sul de BH</div>
+        <div class="sugestoes" id="sugestoesBairros">
+          <button type="button" class="sugestao" onclick="toggleBairroRapido('Savassi')">Savassi</button>
+          <button type="button" class="sugestao" onclick="toggleBairroRapido('Lourdes')">Lourdes</button>
+          <button type="button" class="sugestao" onclick="toggleBairroRapido('Funcionários')">Funcionários</button>
+          <button type="button" class="sugestao" onclick="toggleBairroRapido('Serra')">Serra</button>
+          <button type="button" class="sugestao" onclick="toggleBairroRapido('Sion')">Sion</button>
+          <button type="button" class="sugestao" onclick="toggleBairroRapido('Cruzeiro')">Cruzeiro</button>
+          <button type="button" class="sugestao" onclick="toggleBairroRapido('Anchieta')">Anchieta</button>
+          <button type="button" class="sugestao" onclick="toggleBairroRapido('Gutierrez')">Gutierrez</button>
+          <button type="button" class="sugestao" onclick="toggleBairroRapido('Pampulha')">Pampulha</button>
+          <button type="button" class="sugestao" onclick="toggleBairroRapido('Centro')">Centro</button>
         </div>
       </div>
     </div>
 
-    <!-- SEÇÃO 5: DETALHES EXTRAS -->
-    <div class="secao" data-step="5">
+    <!-- SEÇÃO 5: DETALHES -->
+    <div class="secao">
       <div class="secao-head">
         <div class="secao-num">5</div>
         <div>
           <div class="secao-titulo">O que mais precisa ter? <span class="opc">(opcional)</span></div>
-          <div class="secao-sub">Toque nas sugestões ou escreva do seu jeito</div>
+          <div class="secao-sub">Toque nas opções ou escreva do seu jeito</div>
         </div>
       </div>
       <div class="textarea-wrap">
-        <textarea id="detalhesExtras" placeholder="Ex: preciso de elevador, não pode ter escadas, quero varanda gourmet, aceito reforma, precisa ter área de lazer..." maxlength="600"></textarea>
+        <textarea id="detalhesExtras" placeholder="Ex: preciso de elevador, não pode ter escadas, quero varanda gourmet..." maxlength="600"></textarea>
       </div>
-      <div class="sugestoes" style="margin-top:12px;">
-        <button type="button" class="sugestao" onclick="addSugestao('Elevador')">Elevador</button>
-        <button type="button" class="sugestao" onclick="addSugestao('Sem escadas')">Sem escadas</button>
-        <button type="button" class="sugestao" onclick="addSugestao('Varanda gourmet')">Varanda gourmet</button>
-        <button type="button" class="sugestao" onclick="addSugestao('Aceito reforma')">Aceito reforma</button>
-        <button type="button" class="sugestao" onclick="addSugestao('Área de lazer')">Área de lazer</button>
-        <button type="button" class="sugestao" onclick="addSugestao('Piscina')">Piscina</button>
-        <button type="button" class="sugestao" onclick="addSugestao('Academia')">Academia</button>
-        <button type="button" class="sugestao" onclick="addSugestao('Pet friendly')">Pet friendly</button>
-        <button type="button" class="sugestao" onclick="addSugestao('Portaria 24h')">Portaria 24h</button>
-        <button type="button" class="sugestao" onclick="addSugestao('Próximo ao metrô')">Próximo ao metrô</button>
+      <div class="sugestoes" id="sugestoesDetalhes" style="margin-top:12px;">
+        <button type="button" class="sugestao" data-det="Elevador" onclick="toggleDetalhe('Elevador')">Elevador</button>
+        <button type="button" class="sugestao" data-det="Sem escada" onclick="toggleDetalhe('Sem escada')">Sem escada</button>
+        <button type="button" class="sugestao" data-det="Varanda" onclick="toggleDetalhe('Varanda')">Varanda</button>
+        <button type="button" class="sugestao" data-det="Pronto para morar" onclick="toggleDetalhe('Pronto para morar')">Pronto para morar</button>
+        <button type="button" class="sugestao" data-det="Área de lazer" onclick="toggleDetalhe('Área de lazer')">Área de lazer</button>
+        <button type="button" class="sugestao" data-det="Piscina" onclick="toggleDetalhe('Piscina')">Piscina</button>
+        <button type="button" class="sugestao" data-det="Portaria 24h" onclick="toggleDetalhe('Portaria 24h')">Portaria 24h</button>
+        <button type="button" class="sugestao" data-det="Academia" onclick="toggleDetalhe('Academia')">Academia</button>
+        <button type="button" class="sugestao" data-det="Salão de festas" onclick="toggleDetalhe('Salão de festas')">Salão de festas</button>
+        <button type="button" class="sugestao" data-det="Cozinha americana" onclick="toggleDetalhe('Cozinha americana')">Cozinha americana</button>
       </div>
     </div>
 
     <!-- SEÇÃO 6: CONTATO -->
     <div class="secao contato-final">
       <div class="secao-head">
-        <div class="secao-num" style="background: linear-gradient(135deg, var(--whatsapp), var(--whatsapp-escuro)); color:#fff;">✓</div>
+        <div class="secao-num" style="background: linear-gradient(135deg, var(--whatsapp), var(--whatsapp-escuro)); color:#fff;">
+          <i class="fas fa-check" style="font-size:0.75rem;"></i>
+        </div>
         <div>
           <div class="secao-titulo">Como podemos te chamar?</div>
           <div class="secao-sub">Vamos enviar sua seleção personalizada</div>
@@ -780,8 +826,8 @@
       </div>
 
       <button type="submit" class="btn-enviar" id="btnEnviar">
-        <svg class="ico-svg" viewBox="0 0 24 24" style="width:18px;height:18px;"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        Quero receber minha seleção VIP
+        <i class="fas fa-paper-plane"></i>
+        Quero receber minha seleção
       </button>
     </div>
 
@@ -797,19 +843,17 @@
   <!-- RESULTADO -->
   <div class="resultado" id="resultadoWrap">
     <div class="ico-final">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="width:42px;height:42px;">
-        <polyline points="20 6 9 17 4 12"/>
-      </svg>
+      <i class="fas fa-check"></i>
     </div>
     <h2>Recebemos sua seleção! 🎯</h2>
     <p>Nossa equipe já está trabalhando para encontrar imóveis que combinam exatamente com o que você procura. Em instantes você receberá no WhatsApp.</p>
 
     <div class="resumo-perfil" id="resumoPerfil"></div>
 
-    <a href="https://wa.me/5531996070930?text=Ol%C3%A1!%20Acabei%20de%20preencher%20a%20Sele%C3%A7%C3%A3o%20VIP%20e%20quero%20adiantar%20meu%20atendimento." target="_blank" rel="noopener" class="btn-zap-final">
-      <svg viewBox="0 0 24 24" fill="currentColor" style="width:18px;height:18px;"><path d="M19.05 4.91A10.46 10.46 0 0 0 12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38c1.45.79 3.08 1.21 4.79 1.21h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.91-7.01zM12.05 20.15h-.01c-1.5 0-2.98-.4-4.27-1.17l-.31-.18-3.12.82.83-3.04-.2-.32a8.24 8.24 0 0 1-1.26-4.39c0-4.54 3.7-8.24 8.25-8.24 2.2 0 4.27.86 5.83 2.42a8.19 8.19 0 0 1 2.41 5.83c0 4.54-3.7 8.24-8.15 8.24zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.17.25-.64.81-.79.97-.14.17-.29.19-.54.06-.25-.12-1.05-.39-2.01-1.24-.74-.66-1.24-1.48-1.39-1.73-.14-.25-.02-.39.11-.51.11-.11.25-.29.37-.43.12-.14.17-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.41-.42-.56-.42-.14 0-.31-.02-.47-.02-.17 0-.43.06-.66.31-.23.25-.86.85-.86 2.07 0 1.22.89 2.4 1.01 2.56.12.17 1.75 2.67 4.23 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.55.1.47-.07 1.47-.6 1.68-1.18.21-.58.21-1.08.14-1.18-.06-.11-.22-.17-.47-.29z"/></svg>
-      Já quero conversar com um corretor
-    </a>
+    <button type="button" class="btn-zap-final" onclick="abrirModalWhatsApp()">
+      <i class="fab fa-whatsapp"></i>
+      Quero atendimento VIP
+    </button>
   </div>
 
 </div>
@@ -817,14 +861,44 @@
 <!-- RODAPÉ FIXO -->
 <div class="rodape-fixo">
   <div class="txt-rodape">
-    <strong>Quer atendimento personalizado?</strong>
+    <strong>Atendimento personalizado</strong>
     Fale agora com um corretor exclusivo
   </div>
-  <a href="https://wa.me/5531996070930?text=Ol%C3%A1!%20Quero%20atendimento%20personalizado%20para%20encontrar%20meu%20im%C3%B3vel." target="_blank" rel="noopener" class="btn-whats-rodape">
-    <svg viewBox="0 0 24 24" fill="currentColor" style="width:18px;height:18px;"><path d="M19.05 4.91A10.46 10.46 0 0 0 12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38c1.45.79 3.08 1.21 4.79 1.21h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.91-7.01zM12.05 20.15h-.01c-1.5 0-2.98-.4-4.27-1.17l-.31-.18-3.12.82.83-3.04-.2-.32a8.24 8.24 0 0 1-1.26-4.39c0-4.54 3.7-8.24 8.25-8.24 2.2 0 4.27.86 5.83 2.42a8.19 8.19 0 0 1 2.41 5.83c0 4.54-3.7 8.24-8.15 8.24z"/></svg>
-    <span class="txt-long">Falar com corretor</span>
-    <span style="display:none;" class="txt-curto">WhatsApp</span>
-  </a>
+  <button type="button" class="btn-whats-rodape" onclick="abrirModalWhatsApp()">
+    <i class="fab fa-whatsapp"></i>
+    Quero ser VIP
+  </button>
+</div>
+
+<!-- MODAL WHATSAPP -->
+<div class="modal-overlay" id="waModal">
+  <div class="modal-box">
+    <h3><i class="fab fa-whatsapp"></i> Atendimento VIP</h3>
+    <p class="sub">Escolha um dos nossos especialistas para atendimento personalizado e exclusivo.</p>
+    <div class="contact-list">
+      <a href="https://wa.me/5531996273985?text=Ol%C3%A1!%20Quero%20atendimento%20VIP%20para%20encontrar%20meu%20im%C3%B3vel." target="_blank" rel="noopener" class="contact-item">
+        <div class="avatar">
+          <img src="https://cdn.awsli.com.br/1608/1608652/arquivos/carolina-lima-lima-ribeiro-im-veis.jpg" alt="Carolina Lima">
+        </div>
+        <div class="info">
+          <div class="name">Carolina Lima</div>
+          <div class="role">Consultora de Imóveis</div>
+        </div>
+        <div class="icon-right"><i class="fab fa-whatsapp"></i></div>
+      </a>
+      <a href="https://wa.me/5531996070930?text=Ol%C3%A1!%20Quero%20atendimento%20VIP%20para%20encontrar%20meu%20im%C3%B3vel." target="_blank" rel="noopener" class="contact-item">
+        <div class="avatar">
+          <img src="https://cdn.awsli.com.br/1608/1608652/arquivos/hugo-riberio-lima-ribeiro-im-veis.jpg" alt="Hugo Ribeiro">
+        </div>
+        <div class="info">
+          <div class="name">Hugo Ribeiro</div>
+          <div class="role">Consultor de Imóveis</div>
+        </div>
+        <div class="icon-right"><i class="fab fa-whatsapp"></i></div>
+      </a>
+    </div>
+    <button type="button" class="modal-close" onclick="fecharModalWhatsApp()">Fechar</button>
+  </div>
 </div>
 
 <script>
@@ -832,7 +906,6 @@
    CONFIG
 ===================================================== */
 const API_URL = 'https://script.google.com/macros/s/AKfycbzuCjg_5ZJDMWWKmjYp1ThW34iWS0YouviWFdiMGx8W3yApv0F1fdUcjeZdjm0s6Mg/exec';
-
 const $ = id => document.getElementById(id);
 
 /* =====================================================
@@ -841,14 +914,15 @@ const $ = id => document.getElementById(id);
 const state = {
   tipo: '',
   quartos: '',
-  suites: '',
   banheiros: '',
+  suites: '',
   vagas: '',
   metragemMin: 40,
   metragemMax: 1000,
   valorMin: 150000,
-  valorMax: 20000000,
-  bairros: []
+  valorMax: 10000000,
+  bairros: [],
+  detalhes: new Set()
 };
 
 /* =====================================================
@@ -875,12 +949,11 @@ document.querySelectorAll('.chip-tipo').forEach(btn => {
     document.querySelectorAll('.chip-tipo').forEach(b => b.classList.remove('ativo'));
     btn.classList.add('ativo');
     state.tipo = btn.dataset.tipo;
-    atualizarProgresso();
   });
 });
 
 /* =====================================================
-   BOTÕES DE OPÇÃO (quartos, suites, banheiros, vagas)
+   BOTÕES DE OPÇÃO
 ===================================================== */
 document.querySelectorAll('.grid-opcoes').forEach(grid => {
   const campo = grid.dataset.campo;
@@ -889,21 +962,17 @@ document.querySelectorAll('.grid-opcoes').forEach(grid => {
       grid.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('ativo'));
       btn.classList.add('ativo');
       state[campo] = btn.dataset.val;
-      atualizarProgresso();
     });
   });
 });
 
 /* =====================================================
-   SLIDERS (range duplo)
+   SLIDERS
 ===================================================== */
 function setupRange(minId, maxId, fillId, valMinId, valMaxId, opts){
-  const minEl = $(minId);
-  const maxEl = $(maxId);
+  const minEl = $(minId), maxEl = $(maxId);
   const fill = $(fillId);
-  const valMin = $(valMinId);
-  const valMax = $(valMaxId);
-  const container = minEl.parentElement;
+  const valMin = $(valMinId), valMax = $(valMaxId);
 
   function atualizar(){
     let min = Number(minEl.value);
@@ -923,7 +992,6 @@ function setupRange(minId, maxId, fillId, valMinId, valMaxId, opts){
     const pctMax = ((max - opts.min) / range) * 100;
     fill.style.left = pctMin + '%';
     fill.style.width = (pctMax - pctMin) + '%';
-    atualizarProgresso();
   }
 
   minEl.addEventListener('input', atualizar);
@@ -931,7 +999,7 @@ function setupRange(minId, maxId, fillId, valMinId, valMaxId, opts){
   atualizar();
 }
 
-/* Formatação metragem */
+/* Metragem */
 setupRange('rangeMetragemMin', 'rangeMetragemMax', 'fillMetragem',
   'valMetragemMin', 'valMetragemMax', {
     min: 40, max: 1000, minGap: 20,
@@ -939,42 +1007,32 @@ setupRange('rangeMetragemMin', 'rangeMetragemMax', 'fillMetragem',
     format: v => v + ' m²'
   });
 
-/* Valor — converte 0-100 para 150k-20M com curva exponencial */
+/* Valor — 150.000 a 10.000.000 */
 function valorParaRange(v){
-  // 0-100 → 150.000 a 20.000.000 (curva)
+  // v = 0..100 → 150.000 a 10.000.000 (curva exponencial suave)
   const t = v / 100;
   const exp = Math.pow(t, 1.8);
-  return Math.round((150000 + exp * (20000000 - 150000)) / 50000) * 50000;
-}
-function rangeParaValor(v){
-  // inversa
-  const t = (v - 150000) / (20000000 - 150000);
-  return Math.round(Math.pow(t, 1/1.8) * 100);
+  const val = 150000 + exp * (10000000 - 150000);
+  // Arredonda para múltiplos de 10.000 abaixo de 1M, 50.000 acima
+  if(val < 1000000) return Math.round(val / 10000) * 10000;
+  return Math.round(val / 50000) * 50000;
 }
 function fmtValor(v){
-  if(v >= 1000000) {
-    const mi = v / 1000000;
-    return 'R$ ' + (mi % 1 === 0 ? mi : mi.toFixed(1)) + ' mi';
-  }
-  return 'R$ ' + Math.round(v / 1000) + ' mil';
+  return 'R$ ' + v.toLocaleString('pt-BR');
 }
-
 setupRange('rangeValorMin', 'rangeValorMax', 'fillValor',
   'valValorMin', 'valValorMax', {
-    min: 0, max: 100, minGap: 3,
-    stateMin: 'valorMin', stateMax: 'valorMax',
+    min: 0, max: 100, minGap: 4,
+    stateMin: 'valorMinRaw', stateMax: 'valorMaxRaw',
     format: v => fmtValor(valorParaRange(v))
   });
 
-// Sobrescreve o state para guardar valores reais e não o range 0-100
-const _origAtualizarRange = state.valorMin;
+// Converte o raw (0-100) para valor real
 Object.defineProperty(state, 'valorMin', {
-  get(){ return valorParaRange(Number($('rangeValorMin').value)); },
-  set(v){}
+  get(){ return valorParaRange(Number($('rangeValorMin').value)); }
 });
 Object.defineProperty(state, 'valorMax', {
-  get(){ return valorParaRange(Number($('rangeValorMax').value)); },
-  set(v){}
+  get(){ return valorParaRange(Number($('rangeValorMax').value)); }
 });
 
 /* =====================================================
@@ -985,26 +1043,28 @@ function adicionarBairro(){
   const val = input.value.trim();
   if(!val) return;
   if(state.bairros.length >= 20){ alert('Máximo de 20 bairros.'); return; }
-  if(state.bairros.find(b => b.toLowerCase() === val.toLowerCase())) {
-    input.value = ''; return;
-  }
+  if(state.bairros.find(b => b.toLowerCase() === val.toLowerCase())) { input.value = ''; return; }
   state.bairros.push(val);
   input.value = '';
   input.focus();
   renderizarBairros();
-  atualizarProgresso();
+  marcarSugestoesBairros();
 }
-function adicionarBairroRapido(nome){
-  if(state.bairros.find(b => b.toLowerCase() === nome.toLowerCase())) return;
-  if(state.bairros.length >= 20){ alert('Máximo de 20 bairros.'); return; }
-  state.bairros.push(nome);
+function toggleBairroRapido(nome){
+  const idx = state.bairros.findIndex(b => b.toLowerCase() === nome.toLowerCase());
+  if(idx >= 0){
+    state.bairros.splice(idx, 1);
+  } else {
+    if(state.bairros.length >= 20){ alert('Máximo de 20 bairros.'); return; }
+    state.bairros.push(nome);
+  }
   renderizarBairros();
-  atualizarProgresso();
+  marcarSugestoesBairros();
 }
 function removerBairro(nome){
   state.bairros = state.bairros.filter(b => b !== nome);
   renderizarBairros();
-  atualizarProgresso();
+  marcarSugestoesBairros();
 }
 function renderizarBairros(){
   const wrap = $('bairrosLista');
@@ -1015,6 +1075,13 @@ function renderizarBairros(){
     </span>
   `).join('');
 }
+function marcarSugestoesBairros(){
+  document.querySelectorAll('#sugestoesBairros .sugestao').forEach(btn => {
+    const nome = btn.textContent.trim();
+    const ativo = state.bairros.some(b => b.toLowerCase() === nome.toLowerCase());
+    btn.classList.toggle('ativa', ativo);
+  });
+}
 function esc(s){
   return String(s || '')
     .replace(/&/g,'&amp;').replace(/</g,'&lt;')
@@ -1022,38 +1089,50 @@ function esc(s){
     .replace(/'/g,'&#39;');
 }
 window.adicionarBairro = adicionarBairro;
-window.adicionarBairroRapido = adicionarBairroRapido;
+window.toggleBairroRapido = toggleBairroRapido;
 window.removerBairro = removerBairro;
 
 /* =====================================================
-   SUGESTÕES DE DETALHES
+   DETALHES EXTRAS (toggle)
 ===================================================== */
-function addSugestao(txt){
+function toggleDetalhe(txt){
   const ta = $('detalhesExtras');
-  const atual = ta.value.trim();
-  if(atual.toLowerCase().includes(txt.toLowerCase())) return;
-  ta.value = atual ? atual + ', ' + txt : txt;
-  ta.focus();
+  let atual = ta.value.split(',').map(s => s.trim()).filter(Boolean);
+
+  if(state.detalhes.has(txt)){
+    state.detalhes.delete(txt);
+    atual = atual.filter(t => t.toLowerCase() !== txt.toLowerCase());
+  } else {
+    state.detalhes.add(txt);
+    if(!atual.some(t => t.toLowerCase() === txt.toLowerCase())){
+      atual.push(txt);
+    }
+  }
+  ta.value = atual.join(', ');
+
+  document.querySelectorAll('#sugestoesDetalhes .sugestao').forEach(btn => {
+    const d = btn.dataset.det;
+    btn.classList.toggle('ativa', state.detalhes.has(d));
+  });
 }
-window.addSugestao = addSugestao;
+window.toggleDetalhe = toggleDetalhe;
 
 /* =====================================================
-   PROGRESSO
+   MODAL WHATSAPP
 ===================================================== */
-function atualizarProgresso(){
-  let pontos = 0;
-  if(state.tipo) pontos++;
-  if(state.quartos || state.suites || state.banheiros || state.vagas) pontos++;
-  if(state.metragemMin > 40 || state.metragemMax < 1000 || true) pontos++; // sempre conta (tem default)
-  if(state.bairros.length > 0) pontos++;
-  if($('nomeContato').value.trim() && $('telContato').value.trim()) pontos++;
-
-  const pct = Math.max(20, (pontos / 5) * 100);
-  $('barraProgresso').style.width = pct + '%';
-  $('txtProgresso').textContent = 'Passo ' + Math.min(pontos + 1, 5) + ' de 5';
+function abrirModalWhatsApp(){
+  $('waModal').classList.add('active');
+  document.body.style.overflow = 'hidden';
 }
-document.addEventListener('input', (e) => {
-  if(e.target.id === 'nomeContato' || e.target.id === 'telContato') atualizarProgresso();
+function fecharModalWhatsApp(){
+  $('waModal').classList.remove('active');
+  document.body.style.overflow = '';
+}
+window.abrirModalWhatsApp = abrirModalWhatsApp;
+window.fecharModalWhatsApp = fecharModalWhatsApp;
+
+$('waModal').addEventListener('click', (e) => {
+  if(e.target === $('waModal')) fecharModalWhatsApp();
 });
 
 /* =====================================================
@@ -1062,12 +1141,12 @@ document.addEventListener('input', (e) => {
 async function enviarSelecao(ev){
   ev.preventDefault();
 
-  // Validações
   if(!state.tipo){
     alert('Escolha o tipo de imóvel que você procura.');
     document.querySelector('.chips-tipo').scrollIntoView({behavior:'smooth', block:'center'});
     return;
   }
+
   const nome = $('nomeContato').value.trim();
   const tel = $('telContato').value.replace(/\D/g, '');
   if(nome.length < 2){
@@ -1083,14 +1162,13 @@ async function enviarSelecao(ev){
   const btn = $('btnEnviar');
   btn.disabled = true;
 
-  // Monta o pacote
   const detalhes = $('detalhesExtras').value.trim();
   const pacote =
     'VIP-SELECAO' +
     ' | tipo:' + state.tipo +
     ' | quartos:' + (state.quartos || 'tanto-faz') +
-    ' | suites:' + (state.suites || 'tanto-faz') +
     ' | banheiros:' + (state.banheiros || 'tanto-faz') +
+    ' | suites:' + (state.suites || 'tanto-faz') +
     ' | vagas:' + (state.vagas || 'tanto-faz') +
     ' | metragem:' + state.metragemMin + '-' + state.metragemMax +
     ' | valor:' + state.valorMin + '-' + state.valorMax +
@@ -1111,7 +1189,6 @@ async function enviarSelecao(ev){
     _t: Date.now()
   };
 
-  // Mostra loading
   $('formVip').style.display = 'none';
   $('loadingWrap').style.display = 'block';
   window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1129,16 +1206,13 @@ async function enviarSelecao(ev){
     console.warn('Erro de rede:', err);
   }
 
-  // Aguarda um tempo mínimo pra UX
   await new Promise(r => setTimeout(r, 1600));
 
-  // Mostra resultado
   $('loadingWrap').style.display = 'none';
   $('resultadoWrap').style.display = 'block';
   $('resumoPerfil').innerHTML = montarResumo();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 
-  // Dispara evento de conversão se quiser
   if(typeof fbq !== 'undefined') fbq('track', 'Lead');
 }
 window.enviarSelecao = enviarSelecao;
@@ -1158,8 +1232,8 @@ function montarResumo(){
   const l = [];
   l.push('<div>🏢 <strong>Tipo:</strong> ' + esc(state.tipo) + '</div>');
   l.push('<div>🛏 <strong>Quartos:</strong> ' + esc(state.quartos || 'Tanto faz') +
-         ' · 🛁 <strong>Suítes:</strong> ' + esc(state.suites || 'Tanto faz') +
-         ' · 🚿 <strong>Banheiros:</strong> ' + esc(state.banheiros || 'Tanto faz') + '</div>');
+         ' · 🚿 <strong>Banheiros:</strong> ' + esc(state.banheiros || 'Tanto faz') +
+         ' · 🛁 <strong>Suítes:</strong> ' + esc(state.suites || 'Tanto faz') + '</div>');
   l.push('<div>🚗 <strong>Vagas:</strong> ' + esc(state.vagas || 'Tanto faz') + '</div>');
   l.push('<div>📐 <strong>Metragem:</strong> ' + state.metragemMin + ' a ' + state.metragemMax + ' m²</div>');
   l.push('<div>💰 <strong>Valor:</strong> ' + fmtValor(state.valorMin) + ' a ' + fmtValor(state.valorMax) + '</div>');
@@ -1168,11 +1242,6 @@ function montarResumo(){
   if(det) l.push('<div>📝 <strong>Detalhes:</strong> ' + esc(det) + '</div>');
   return l.join('');
 }
-
-/* =====================================================
-   INICIALIZA PROGRESSO
-===================================================== */
-atualizarProgresso();
 </script>
 
 </body>
