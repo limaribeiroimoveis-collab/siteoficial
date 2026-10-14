@@ -383,16 +383,32 @@
   /* Editar */
   .cc-btn.btn-edit:hover{ background: var(--primary-soft); border-color: #c9d6e4; color: var(--primary); }
 
-  /* Mensagem — roxo / ajuda */
-  .cc-btn.btn-msg{ color: var(--msg); }
-  .cc-btn.btn-msg:hover{ background: #ede9fe; border-color: var(--msg); color: #5b21b6; }
+  /* Mensagem — botão roxo com ícone branco */
+  .cc-btn.btn-msg{
+    background: var(--msg);
+    border-color: var(--msg);
+    color: #ffffff;
+  }
+  .cc-btn.btn-msg:hover{
+    background: #5b21b6;
+    border-color: #5b21b6;
+    color: #ffffff;
+    transform: translateY(-1px);
+  }
   .cc-btn.btn-msg.desabilitado{
-    opacity: .35; cursor: not-allowed;
-    color: var(--muted) !important;
+    background: #e2e8f0;
+    border-color: #cbd5e1;
+    color: #94a3b8 !important;
+    opacity: 1;
+    cursor: not-allowed;
   }
   .cc-btn.btn-msg.desabilitado:hover{
-    background: #fff; border-color: var(--border);
+    background: #e2e8f0;
+    border-color: #cbd5e1;
     transform: none;
+  }
+  .cc-btn.btn-msg .ico{
+    stroke-width: 2.5;
   }
 
   /* Observações */
@@ -812,6 +828,7 @@ const API_URL = 'https://script.google.com/macros/s/AKfycbzuCjg_5ZJDMWWKmjYp1ThW
 const ADMIN_KEY = 'vitrine_admin_v11';
 const CORRETORES_CACHE_KEY = 'vitrine_corretores_v11';
 const TIMEOUT_API = 90000;
+const AUTO_REFRESH_MS = 5 * 60 * 1000; // 5 minutos
 
 const CORES_PADRAO = {
   'Hugo':     '#1e40af',
@@ -848,7 +865,8 @@ const state = {
   busca: '',
   obsAbertas: new Set(),
   salvando: 0,
-  _msgClienteTelAtual: null
+  _msgClienteTelAtual: null,
+  _msgAtuais: null
 };
 
 /* =====================================================
@@ -902,23 +920,26 @@ function mascaraTelefone(input){
   else out = '(' + v.slice(0,2) + ') ' + v.slice(2,3) + ' ' + v.slice(3,7) + '-' + v.slice(7);
   input.value = out;
 }
-
 function corDoCorretor(nome){
   if(!nome) return '#64748b';
   const c = state.corretores.find(x => x.nome === nome);
   if(c && c.cor) return c.cor;
   return CORES_PADRAO[nome] || '#64748b';
 }
-
-/* Extrai até 2 nomes, ignorando preposições */
 function doisPrimeirosNomes_(nomeCompleto){
   const preposicoes = new Set(['de','da','do','das','dos','e']);
   const partes = String(nomeCompleto || '').trim().split(/\s+/);
   const significativas = partes.filter(p => p && !preposicoes.has(p.toLowerCase()));
   return significativas.slice(0, 2).join(' ');
 }
+function nomeCompletoCliente_(nome, telefone){
+  const n = String(nome || '').trim() || 'Sem nome';
+  const tel = normalizaTel(telefone);
+  if(tel.length >= 4) return n + ' ' + tel.slice(-4);
+  return n;
+}
 
-/* Parse da coluna "origem" (fase 1 + fase 2) */
+/* Parse da coluna "origem" */
 function parseOrigem_(origemBruta){
   const out = {
     fase: '', nome: '', telefone: '', endereco: '',
@@ -971,7 +992,6 @@ function toast(msg, type=''){
   t.className = 'toast show ' + type;
   clearTimeout(t._timer);
   t._timer = setTimeout(() => t.classList.remove('show'), 3200);
-  // Avisa o pai (iframe) quando for sucesso
   if(type === 'success') avisarPai('atualizado');
 }
 function marcarSalvando(inicio){
@@ -1114,7 +1134,7 @@ function setFiltroCaptacoes(filtro, btn){
   document.querySelectorAll('.capt-filtros-grupo .chip[data-capt-filter]').forEach(b => {
     b.classList.toggle('active', b.dataset.captFilter === filtro);
   });
-  renderizarFiltroCorretores(); // recalcula os chips disponíveis no novo status
+  renderizarFiltroCorretores();
   renderizarCaptacoes();
 }
 
@@ -1122,7 +1142,6 @@ function renderizarFiltroCorretores(){
   const wrap = $('captFiltroCorretores');
   if(!wrap) return;
 
-  // Base: TODAS as captações do status atual (não só as que passam em outros filtros)
   let baseStatus = state.lista || [];
   if(state.filtro !== 'todas'){
     baseStatus = baseStatus.filter(c => statusCaptacao_(c) === state.filtro);
@@ -1134,14 +1153,11 @@ function renderizarFiltroCorretores(){
     if(ap) corretoresDoStatus.add(ap);
   });
 
-  // Limpa filtros de corretor que não fazem mais sentido no novo status
-  // (mas mantém os que continuam válidos — melhora a UX ao trocar filtros)
+  // Remove filtros que não existem mais nesse status
   const paraRemover = [];
   state.filtrosCorretores.forEach(nome => {
     if(!corretoresDoStatus.has(nome)) paraRemover.push(nome);
   });
-  // Não remove automaticamente — deixa o usuário ver que o chip sumiu mas
-  // o filtro continua invisível? Não. Vamos remover pra não confundir.
   paraRemover.forEach(nome => state.filtrosCorretores.delete(nome));
 
   if(corretoresDoStatus.size === 0){
@@ -1329,7 +1345,6 @@ function captacaoCardHTML(c){
     `<option value="${esc(cr.nome)}" ${atendidoPor === cr.nome ? 'selected' : ''}>${esc(cr.nome)}</option>`
   ).join('');
 
-  // Botão mensagem
   const btnMsgClass = temCorretor ? '' : 'desabilitado';
   const btnMsgTitle = temCorretor
     ? 'Ver mensagens prontas para WhatsApp'
@@ -1451,7 +1466,6 @@ async function onChangeStatus(el){
   const item = state.lista.find(x => String(x.id) === String(id));
   if(!item) return;
 
-  // Validação: Sem retorno ou Concluída exigem corretor
   if((valor === 'sem-retorno' || valor === 'concluida') && !String(item.atendidoPor || '').trim()){
     toast('Escolha o corretor antes de marcar como "' + (valor === 'sem-retorno' ? 'Sem retorno' : 'Concluída') + '".', 'warn');
     el.value = String(item.contatoFeito || '').trim() === 'sem-retorno' ? 'sem-retorno'
@@ -1481,7 +1495,6 @@ async function onChangeStatus(el){
   toast('Status atualizado ✅', 'success');
   atualizarContadores();
 
-  // Vai para o filtro do novo status
   const statusNovo = statusCaptacao_({ contatoFeito: valor });
   const filtroDestino = statusNovo === 'sem-retorno' ? 'sem-retorno'
                      : statusNovo === 'concluidas' ? 'concluidas'
@@ -1494,7 +1507,6 @@ async function onChangeStatus(el){
     renderizarCaptacoes();
   }
 
-  // Pisca o card pra chamar atenção
   setTimeout(() => {
     const card = document.querySelector(`.capt-card[data-id="${id}"]`);
     if(card){
@@ -1680,9 +1692,8 @@ async function salvarEdicaoCaptacao(){
 ===================================================== */
 function montarMensagens_(item){
   const atendidoPor = String(item.atendidoPor || '').trim();
-  if(!atendidoPor){
-    return null;
-  }
+  if(!atendidoPor) return null;
+
   const info = CORRETORES_INFO[atendidoPor];
   const nomeCompletoCorretor = info?.nomeCompleto || atendidoPor;
   const funcaoCorretor = info?.funcao || 'Corretor(a)';
@@ -1740,7 +1751,6 @@ function abrirMsgModal(id){
   const nomeCompleto = nomeCompletoCliente_(item.nome || parseOrigem_(item.origem).nome, item.telefone);
   $('msgNomeCliente').textContent = nomeCompleto;
 
-  // Renderiza os 3 blocos
   const blocos = dados.mensagens.map((texto, idx) => {
     const rotulos = ['Abordagem inicial', 'Explicação técnica', 'Convite à ação'];
     const rotulo = rotulos[idx] || `Mensagem ${idx + 1}`;
@@ -1776,13 +1786,6 @@ function fecharMsgModal(){
   $('msgBackdrop').classList.remove('show');
   state._msgClienteTelAtual = null;
   state._msgAtuais = null;
-}
-
-function nomeCompletoCliente_(nome, telefone){
-  const n = String(nome || '').trim() || 'Sem nome';
-  const tel = normalizaTel(telefone);
-  if(tel.length >= 4) return n + ' ' + tel.slice(-4);
-  return n;
 }
 
 function copiarBloco(idx){
@@ -1826,6 +1829,75 @@ function fallbackCopy(texto, msgSucesso){
 }
 
 /* =====================================================
+   AUTO-REFRESH — a cada 5 minutos, com proteções
+===================================================== */
+let _autoRefreshTimer = null;
+let _ultimoRefreshTs = Date.now();
+
+function podeAtualizarAgora_(){
+  if(state.salvando > 0) return false;
+
+  const modais = ['editBackdrop', 'msgBackdrop'];
+  for(const id of modais){
+    const el = $(id);
+    if(el && el.classList.contains('show')) return false;
+  }
+
+  const ativo = document.activeElement;
+  if(ativo){
+    const tag = ativo.tagName;
+    if(tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return false;
+    if(ativo.isContentEditable) return false;
+  }
+
+  if(state.obsAbertas && state.obsAbertas.size > 0) return false;
+  if(document.hidden) return false;
+
+  return true;
+}
+
+async function refreshSilencioso_(){
+  if(!podeAtualizarAgora_()) return false;
+
+  try {
+    const res = await api('listarCaptacoesQPrecoV2', { senha: state.adminSenha });
+    if(!res.ok) return false;
+    if(!podeAtualizarAgora_()) return false;
+
+    state.lista = res.data || [];
+    atualizarContadores();
+    renderizarFiltroCorretores();
+    renderizarCaptacoes();
+    _ultimoRefreshTs = Date.now();
+    return true;
+  } catch(e){
+    console.warn('[auto-refresh] falha silenciosa:', e);
+    return false;
+  }
+}
+
+function agendarAutoRefresh_(){
+  clearTimeout(_autoRefreshTimer);
+  _autoRefreshTimer = setTimeout(async () => {
+    if(!state.adminSenha){
+      agendarAutoRefresh_();
+      return;
+    }
+    await refreshSilencioso_();
+    agendarAutoRefresh_();
+  }, AUTO_REFRESH_MS);
+}
+
+/* Atualiza ao voltar pra aba, se passou tempo suficiente */
+document.addEventListener('visibilitychange', () => {
+  if(document.hidden) return;
+  const agora = Date.now();
+  if(agora - _ultimoRefreshTs > AUTO_REFRESH_MS){
+    refreshSilencioso_().then(() => { _ultimoRefreshTs = Date.now(); });
+  }
+});
+
+/* =====================================================
    INIT
 ===================================================== */
 (async function init(){
@@ -1843,6 +1915,8 @@ function fallbackCopy(texto, msgSucesso){
 
     await carregarCorretores();
     await carregarCaptacoes(true);
+    agendarAutoRefresh_();
+    _ultimoRefreshTs = Date.now();
 
     // Se estiver dentro de iframe, adiciona botão "Fechar" no header
     if (EH_IFRAME) {
