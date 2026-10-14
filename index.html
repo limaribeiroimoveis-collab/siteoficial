@@ -38,6 +38,7 @@
             --roxo: #7c3aed;
             --verde: #16a34a;
             --vermelho: #dc2626;
+            --whatsapp: #25d366;
             --sombra-suave: 0 8px 32px rgba(0, 30, 240, 0.06);
             --sombra-media: 0 12px 48px rgba(0, 30, 240, 0.10);
             --border-radius: 16px;
@@ -63,14 +64,21 @@
         }
         .nav-links a:hover { color: var(--azul-quinto); border-bottom-color: var(--azul-quinto); }
 
+        /* ✅ Botão Indique e Ganhe: fundo preto, letra amarela */
         .btn-indique-nav {
-            background: linear-gradient(135deg, #001EF0, #0044ff);
-            color: #fff !important; padding: 8px 20px; border-radius: 40px;
-            font-weight: 600; font-size: 0.85rem; text-decoration: none;
+            background: #000000;
+            color: #FFD700 !important;
+            padding: 8px 20px; border-radius: 40px;
+            font-weight: 700; font-size: 0.85rem; text-decoration: none;
             transition: 0.25s; display: inline-flex; align-items: center; gap: 6px;
             border: none; cursor: pointer; white-space: nowrap;
+            border: 1.5px solid #FFD700;
         }
-        .btn-indique-nav:hover { transform: scale(1.05); box-shadow: 0 6px 20px rgba(0, 30, 240, 0.3); }
+        .btn-indique-nav:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+            background: #1a1a1a;
+        }
 
         /* ===== MENU INFERIOR ===== */
         .bottom-menu {
@@ -112,26 +120,20 @@
         }
         .hero-buttons { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 20px; }
 
+        /* ✅ Botão Conversar com especialista: fundo branco, letras verde WhatsApp */
         .btn-primary-blue {
-            background: var(--azul-quinto); border: none; color: #fff;
-            padding: 14px 32px; border-radius: 60px; font-weight: 600;
-            font-size: 0.95rem; display: inline-flex; align-items: center; gap: 10px;
-            cursor: pointer; transition: 0.2s; text-decoration: none;
-            box-shadow: 0 4px 16px rgba(0, 30, 240, 0.2);
-        }
-        .btn-primary-blue:hover {
-            background: var(--azul-escuro); transform: scale(1.02);
-            box-shadow: 0 8px 24px rgba(0, 30, 240, 0.3);
-        }
-        .btn-secondary-light {
-            background: var(--branco); border: 1.5px solid #d0d7e6;
-            color: var(--texto-escuro); padding: 14px 28px; border-radius: 60px;
-            font-weight: 500; font-size: 0.95rem; display: inline-flex;
+            background: var(--branco); border: 2px solid var(--whatsapp);
+            color: var(--whatsapp); padding: 14px 32px; border-radius: 60px;
+            font-weight: 700; font-size: 0.95rem; display: inline-flex;
             align-items: center; gap: 10px; cursor: pointer; transition: 0.2s;
             text-decoration: none;
+            box-shadow: 0 4px 16px rgba(37, 211, 102, 0.15);
         }
-        .btn-secondary-light i { color: var(--azul-quinto); }
-        .btn-secondary-light:hover { border-color: var(--azul-quinto); background: var(--azul-claro); transform: scale(1.02); }
+        .btn-primary-blue:hover {
+            background: var(--whatsapp); color: #fff;
+            transform: scale(1.02);
+            box-shadow: 0 8px 24px rgba(37, 211, 102, 0.3);
+        }
 
         /* ============================================================ */
         /* ✅ IMÓVEIS EM DESTAQUE — Grid 3x2 (6 imóveis) */
@@ -147,6 +149,8 @@
             flex-direction: column;
             padding: 20px;
             gap: 14px;
+            position: relative;
+            overflow: hidden;
         }
 
         .imoveis-destaque-header {
@@ -168,6 +172,7 @@
             margin-right: 6px;
         }
 
+        /* ✅ Botão Ver todos: branco com borda azul, hover azul */
         .btn-ver-todos {
             background: transparent;
             color: var(--azul-quinto);
@@ -190,14 +195,55 @@
             transform: scale(1.04);
         }
 
-        /* ✅ Grid 3 colunas x 2 linhas = 6 cards */
-        .imoveis-destaque-grid {
+        /* ✅ Carrossel de imóveis em destaque */
+        .imoveis-destaque-viewport {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+            border-radius: 12px;
+        }
+
+        .imoveis-destaque-slides {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .imoveis-destaque-slide {
+            min-width: 100%;
+            width: 100%;
+            height: 100%;
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             grid-template-rows: 1fr 1fr;
             gap: 12px;
-            flex: 1;
-            height: 100%;
+            padding: 2px;
+        }
+
+        .imoveis-destaque-indicadores {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            padding-top: 4px;
+            flex-shrink: 0;
+        }
+
+        .imoveis-destaque-indicadores .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #cbd5e1;
+            cursor: pointer;
+            transition: 0.3s;
+            border: none;
+            padding: 0;
+        }
+
+        .imoveis-destaque-indicadores .dot.active {
+            background: var(--azul-quinto);
+            width: 24px;
+            border-radius: 4px;
         }
 
         .imovel-card {
@@ -299,10 +345,11 @@
             text-overflow: ellipsis;
         }
 
+        /* ✅ Preço em PRETO (não azul) */
         .imovel-card .imovel-info .imovel-preco {
             font-size: 0.78rem;
             font-weight: 800;
-            color: var(--azul-quinto);
+            color: var(--texto-escuro);
             margin-top: 2px;
         }
 
@@ -374,21 +421,35 @@
             color: var(--texto-cinza); font-size: 0.95rem; max-width: 520px;
         }
 
+        /* ✅ Botão Ver todos os imóveis: branco com borda azul, hover azul (igual ao Ver todos) */
         .btn-ver-todos-destaque {
-            background: linear-gradient(135deg, #001EF0, #0044ff);
-            color: #fff; border: none; padding: 14px 28px; border-radius: 60px;
-            font-weight: 700; font-size: 0.95rem; cursor: pointer;
-            transition: 0.25s; display: inline-flex; align-items: center; gap: 10px;
-            text-decoration: none; box-shadow: 0 6px 24px rgba(0, 30, 240, 0.3);
+            background: transparent;
+            color: var(--azul-quinto);
+            border: 1.5px solid var(--azul-quinto);
+            padding: 14px 28px;
+            border-radius: 60px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: 0.25s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
             white-space: nowrap;
         }
         .btn-ver-todos-destaque:hover {
-            transform: translateY(-2px) scale(1.03);
-            box-shadow: 0 10px 32px rgba(0, 30, 240, 0.4);
+            background: var(--azul-quinto);
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 30, 240, 0.3);
         }
 
+        /* ✅ Grid de lançamentos: 4 colunas no desktop (3 linhas x 4 = 12 imóveis) */
         .lancamentos-grid {
-            display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
         }
 
         .lancamento-card {
@@ -455,8 +516,9 @@
             padding: 14px; display: flex; flex-direction: column;
             gap: 8px; flex: 1;
         }
+        /* ✅ Preço em PRETO (não azul) */
         .lancamento-card .preco {
-            font-size: 1.2rem; font-weight: 800; color: var(--azul-quinto);
+            font-size: 1.2rem; font-weight: 800; color: var(--texto-escuro);
             letter-spacing: -0.4px; line-height: 1.1;
         }
         .lancamento-card .preco .tipo {
@@ -567,18 +629,21 @@
             color: var(--texto-cinza); font-size: 0.95rem; max-width: 520px;
         }
 
+        /* ✅ Botão Ver mais vídeos: fundo preto, letras brancas */
         .btn-canal-youtube {
-            background: #ff0000; color: #fff; border: none;
+            background: #000000;
+            color: #ffffff;
+            border: none;
             padding: 14px 28px; border-radius: 60px;
             font-weight: 700; font-size: 0.95rem; cursor: pointer;
             transition: 0.25s; display: inline-flex; align-items: center; gap: 10px;
-            text-decoration: none; box-shadow: 0 6px 24px rgba(255, 0, 0, 0.25);
+            text-decoration: none;
             white-space: nowrap;
         }
         .btn-canal-youtube:hover {
-            background: #cc0000;
+            background: #1a1a1a;
             transform: translateY(-2px) scale(1.03);
-            box-shadow: 0 10px 32px rgba(255, 0, 0, 0.35);
+            box-shadow: 0 10px 32px rgba(0, 0, 0, 0.3);
         }
         .btn-canal-youtube i { font-size: 1.1rem; }
 
@@ -627,7 +692,6 @@
             display: -webkit-box; -webkit-line-clamp: 2;
             -webkit-box-orient: vertical; overflow: hidden; flex: 1;
         }
-        /* ✅ Embed do vídeo tocando inline */
         .video-card .video-embed {
             width: 100%;
             aspect-ratio: 16 / 9;
@@ -871,7 +935,7 @@
 
             /* Imóveis em destaque: continua 3 colunas no mobile */
             .imoveis-destaque-wrapper { min-height: 300px; padding: 14px; gap: 10px; }
-            .imoveis-destaque-grid { gap: 8px; }
+            .imoveis-destaque-slide { gap: 8px; }
             .imovel-card { min-height: 90px; }
             .imovel-card .imovel-img { min-height: 55px; }
             .imovel-card .imovel-info { padding: 6px 8px; }
@@ -881,7 +945,6 @@
             .imoveis-destaque-header h3 { font-size: 0.95rem; }
             .btn-ver-todos { font-size: 0.72rem; padding: 6px 14px; }
 
-            /* Banners: 1 coluna no mobile */
             .banners-fixos {
                 grid-template-columns: 1fr;
                 gap: 16px;
@@ -902,6 +965,7 @@
                 padding: 13px 20px; font-size: 0.9rem;
             }
 
+            /* ✅ 2 colunas no mobile */
             .lancamentos-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
 
             .lancamento-card .foto .badge-descricao {
@@ -973,7 +1037,7 @@
 
             /* Imóveis em destaque: 3 colunas, cards bem compactos */
             .imoveis-destaque-wrapper { min-height: 240px; padding: 10px; gap: 8px; }
-            .imoveis-destaque-grid { gap: 6px; }
+            .imoveis-destaque-slide { gap: 6px; }
             .imovel-card { min-height: 70px; }
             .imovel-card .imovel-img { min-height: 40px; padding: 4px; }
             .imovel-card .imovel-badge { font-size: 0.5rem; padding: 1px 6px; }
@@ -983,9 +1047,17 @@
             .imoveis-destaque-header h3 { font-size: 0.85rem; }
             .btn-ver-todos { font-size: 0.65rem; padding: 5px 12px; }
 
-            .lancamentos-grid { grid-template-columns: 1fr; gap: 12px; }
-            .lancamento-card .foto { aspect-ratio: 16/9; }
-            .lancamento-card .preco { font-size: 1.15rem; }
+            /* ✅ Lançamentos: 2 colunas no mobile pequeno */
+            .lancamentos-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+            .lancamento-card .foto { aspect-ratio: 16/10; }
+            .lancamento-card .preco { font-size: 0.9rem; }
+            .lancamento-card .corpo { padding: 8px; gap: 5px; }
+            .lancamento-card .endereco-linha .rua { font-size: 0.7rem; }
+            .lancamento-card .endereco-linha .bairro-destaque { font-size: 0.58rem; }
+            .lancamento-card .descricao-2linhas { font-size: 0.6rem; }
+            .lancamento-card .condo-info { font-size: 0.58rem; gap: 6px; }
+            .lancamento-card .foto .badge-descricao { font-size: 0.55rem; padding: 4px 6px; }
+            .lancamento-card .foto .badge-tipo { font-size: 0.5rem; padding: 2px 6px; }
 
             .videos-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
 
@@ -1069,7 +1141,7 @@
                 </div>
             </div>
 
-            <!-- ✅ IMÓVEIS EM DESTAQUE — 6 no grid 3×2 -->
+            <!-- ✅ IMÓVEIS EM DESTAQUE — Carrossel 3x2 -->
             <div class="imoveis-destaque-wrapper">
                 <div class="imoveis-destaque-header">
                     <h3><i class="fas fa-building"></i> Imóveis em destaque</h3>
@@ -1077,9 +1149,12 @@
                         <i class="fas fa-th-large"></i> Ver todos
                     </a>
                 </div>
-                <div class="imoveis-destaque-grid" id="imoveisDestaqueGrid">
-                    <!-- Injetado via JS -->
+                <div class="imoveis-destaque-viewport">
+                    <div class="imoveis-destaque-slides" id="imoveisDestaqueSlides">
+                        <!-- Injetado via JS -->
+                    </div>
                 </div>
+                <div class="imoveis-destaque-indicadores" id="imoveisDestaqueIndicadores"></div>
             </div>
         </section>
 
@@ -1124,6 +1199,9 @@
             </div>
 
             <div class="lancamentos-grid" id="lancamentosGrid">
+                <!-- Skeletons -->
+                <div class="lancamento-skeleton"><div class="sk-foto"></div><div class="sk-corpo"><div class="sk-linha curta"></div><div class="sk-linha media"></div><div class="sk-linha curta"></div></div></div>
+                <div class="lancamento-skeleton"><div class="sk-foto"></div><div class="sk-corpo"><div class="sk-linha curta"></div><div class="sk-linha media"></div><div class="sk-linha curta"></div></div></div>
                 <div class="lancamento-skeleton"><div class="sk-foto"></div><div class="sk-corpo"><div class="sk-linha curta"></div><div class="sk-linha media"></div><div class="sk-linha curta"></div></div></div>
                 <div class="lancamento-skeleton"><div class="sk-foto"></div><div class="sk-corpo"><div class="sk-linha curta"></div><div class="sk-linha media"></div><div class="sk-linha curta"></div></div></div>
                 <div class="lancamento-skeleton"><div class="sk-foto"></div><div class="sk-corpo"><div class="sk-linha curta"></div><div class="sk-linha media"></div><div class="sk-linha curta"></div></div></div>
@@ -1376,8 +1454,9 @@
         // CONFIG
         // ============================================================
         const API_URL = 'https://script.google.com/macros/s/AKfycbzuCjg_5ZJDMWWKmjYp1ThW34iWS0YouviWFdiMGx8W3yApv0F1fdUcjeZdjm0s6Mg/exec';
-        const QTD_LANCAMENTOS = 6;
-        const QTD_DESTAQUE = 6;
+        const QTD_DESTAQUE_POR_SLIDE = 6; // 6 imóveis por slide (3x2)
+        const QTD_DESTAQUE_TOTAL = 18;    // 3 slides = 18 imóveis
+        const QTD_LANCAMENTOS = 12;       // 3 linhas x 4 colunas = 12 imóveis
         const CANAL_YOUTUBE_URL = 'https://www.youtube.com/@LimaRibeiroImoveis';
 
         const VIDEOS_YOUTUBE = [
@@ -1487,7 +1566,7 @@
             return /\*\s*[Vv][Ee][Nn][Dd][Ii][Dd][Oo]\s*\*/i.test(String(descricao));
         }
 
-        // ✅ Extrai tipo de imóvel das definições entre asteriscos (*Cobertura*, *Área privativa*, etc.)
+        // ✅ Extrai tipo de imóvel das definições entre asteriscos
         function extrairTipoImovel(descricao){
             if(!descricao) return '';
             const matches = String(descricao).match(/\*+([^*\n]+)\*+/g);
@@ -1495,13 +1574,12 @@
             for(const m of matches){
                 const texto = m.replace(/\*/g, '').trim();
                 const lower = texto.toLowerCase();
-                if(lower === 'vendido') continue; // não mostrar como tipo
+                if(lower === 'vendido') continue;
                 if(lower.includes('cobertura')) return 'Cobertura';
                 if(lower.includes('area privativa') || lower.includes('área privativa')) return 'Área privativa';
                 if(lower.includes('lancamento') || lower.includes('lançamento')) return 'Lançamento';
                 if(lower.includes('mobiliado')) return 'Mobiliado';
                 if(lower.includes('aceita pet') || lower.includes('pet friendly')) return 'Aceita Pet';
-                // Retorna o próprio texto para outros tipos não mapeados
                 return texto;
             }
             return '';
@@ -1524,11 +1602,19 @@
         }
 
         // ============================================================
-        // IMÓVEIS EM DESTAQUE — Grid 3x2 com 6 imóveis
+        // IMÓVEIS EM DESTAQUE — Carrossel 3x2 (6 por slide)
         // ============================================================
+        let carrosselDestaque = {
+            slides: [],
+            atual: 0,
+            total: 0,
+            timer: null
+        };
+
         async function carregarImoveisDestaque(){
-            const grid = $('imoveisDestaqueGrid');
-            if(!grid) return;
+            const slidesEl = $('imoveisDestaqueSlides');
+            const indicadoresEl = $('imoveisDestaqueIndicadores');
+            if(!slidesEl || !indicadoresEl) return;
 
             try {
                 const res = await apiGet('listarImoveisPublicos');
@@ -1541,23 +1627,79 @@
                     new Date(b.dataCadastro || 0) - new Date(a.dataCadastro || 0)
                 );
 
-                const top6 = ordenados.slice(0, QTD_DESTAQUE);
-                grid.innerHTML = top6.map(im => imovelDestaqueHTML(im)).join('');
+                const selecionados = ordenados.slice(0, QTD_DESTAQUE_TOTAL);
+                const slides = [];
+                for(let i = 0; i < selecionados.length; i += QTD_DESTAQUE_POR_SLIDE){
+                    slides.push(selecionados.slice(i, i + QTD_DESTAQUE_POR_SLIDE));
+                }
+
+                carrosselDestaque.slides = slides;
+                carrosselDestaque.total = slides.length;
+                carrosselDestaque.atual = 0;
+
+                // Renderiza slides
+                slidesEl.innerHTML = slides.map(slideImoveis => `
+                    <div class="imoveis-destaque-slide">
+                        ${slideImoveis.map(im => imovelDestaqueHTML(im)).join('')}
+                    </div>
+                `).join('');
+
+                // Renderiza indicadores
+                indicadoresEl.innerHTML = slides.map((_, idx) => `
+                    <button class="dot ${idx === 0 ? 'active' : ''}" data-index="${idx}" aria-label="Slide ${idx + 1}"></button>
+                `).join('');
+
+                // Eventos dos indicadores
+                indicadoresEl.querySelectorAll('.dot').forEach(dot => {
+                    dot.addEventListener('click', () => {
+                        irParaSlide(parseInt(dot.dataset.index));
+                    });
+                });
+
+                // Inicia rotação automática
+                iniciarRotacaoAutomatica();
+
             } catch(e){
                 console.error('Erro destaque:', e);
                 renderPlaceholderDestaque();
             }
         }
 
+        function irParaSlide(index){
+            if(index < 0) index = carrosselDestaque.total - 1;
+            if(index >= carrosselDestaque.total) index = 0;
+            carrosselDestaque.atual = index;
+
+            const slidesEl = $('imoveisDestaqueSlides');
+            slidesEl.style.transform = `translateX(-${index * 100}%)`;
+
+            const indicadoresEl = $('imoveisDestaqueIndicadores');
+            indicadoresEl.querySelectorAll('.dot').forEach((dot, i) => {
+                dot.classList.toggle('active', i === index);
+            });
+        }
+
+        function iniciarRotacaoAutomatica(){
+            if(carrosselDestaque.timer) clearInterval(carrosselDestaque.timer);
+            if(carrosselDestaque.total <= 1) return;
+            carrosselDestaque.timer = setInterval(() => {
+                irParaSlide(carrosselDestaque.atual + 1);
+            }, 6000);
+        }
+
         function renderPlaceholderDestaque(){
-            const grid = $('imoveisDestaqueGrid');
-            if(!grid) return;
-            grid.innerHTML = `
-                <div class="imoveis-destaque-placeholder">
-                    <i class="fas fa-building"></i>
-                    <p>Em breve, nossos imóveis em destaque aparecerão aqui.</p>
+            const slidesEl = $('imoveisDestaqueSlides');
+            const indicadoresEl = $('imoveisDestaqueIndicadores');
+            if(!slidesEl) return;
+            slidesEl.innerHTML = `
+                <div class="imoveis-destaque-slide">
+                    <div class="imoveis-destaque-placeholder">
+                        <i class="fas fa-building"></i>
+                        <p>Em breve, nossos imóveis em destaque aparecerão aqui.</p>
+                    </div>
                 </div>
             `;
+            if(indicadoresEl) indicadoresEl.innerHTML = '';
         }
 
         function imovelDestaqueHTML(im){
@@ -1567,7 +1709,6 @@
                 : 'background: linear-gradient(135deg, #e8edff, #d0d7e6);';
             const fotoIcone = im.imagem ? '' : '<i class="fas fa-image"></i>';
             const titulo = im.rua || im.titulo || 'Endereço';
-            // ✅ Apenas a primeira linha da descrição
             const detalhe = primeiraLinhaDescricao(im.descricao) || im.bairro || '';
             const url = 'imoveis.html?codigo=' + encodeURIComponent(im.codigo || '');
 
@@ -1588,7 +1729,7 @@
         }
 
         // ============================================================
-        // ÚLTIMOS LANÇAMENTOS
+        // ÚLTIMOS LANÇAMENTOS — 12 imóveis (3 linhas x 4 colunas)
         // ============================================================
         async function carregarUltimosLancamentos(){
             const grid = $('lancamentosGrid');
@@ -1601,10 +1742,10 @@
                 const ordenados = [...res.data].sort((a, b) =>
                     new Date(b.dataCadastro || 0) - new Date(a.dataCadastro || 0)
                 );
-                const top6 = ordenados.slice(0, QTD_LANCAMENTOS);
+                const top12 = ordenados.slice(0, QTD_LANCAMENTOS);
 
-                if(top6.length === 0){ renderLancamentosVazio(); return; }
-                grid.innerHTML = top6.map(im => lancamentoHTML(im)).join('');
+                if(top12.length === 0){ renderLancamentosVazio(); return; }
+                grid.innerHTML = top12.map(im => lancamentoHTML(im)).join('');
             } catch(e){
                 console.error(e);
                 renderLancamentosVazio();
@@ -1632,7 +1773,6 @@
 
             const rua = im.rua || im.titulo || 'Endereço não informado';
             const bairro = im.bairro || '';
-            // ✅ Apenas a primeira linha da descrição para o badge
             const descTopo = primeiraLinhaDescricao(im.descricao) || im.titulo || '';
             const tipo = extrairTipoImovel(im.descricao);
 
@@ -1669,7 +1809,7 @@
         }
 
         // ============================================================
-        // VÍDEOS — tocam direto no site (embed inline)
+        // VÍDEOS
         // ============================================================
         function renderizarVideos(){
             const grid = $('videosGrid');
