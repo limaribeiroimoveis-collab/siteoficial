@@ -9,8 +9,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
 
 <style>
   * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
@@ -45,6 +44,19 @@
     padding-bottom: 100px;
   }
 
+  /* ============ ÍCONES SVG ============ */
+  .ico-svg{
+    width:1em; height:1em;
+    display:inline-block;
+    vertical-align:-0.125em;
+    stroke:currentColor;
+    fill:none;
+    stroke-width:2;
+    stroke-linecap:round;
+    stroke-linejoin:round;
+    flex-shrink:0;
+  }
+
   /* ============ HEADER ============ */
   .header{
     padding: 14px 18px;
@@ -66,7 +78,7 @@
     box-shadow:0 4px 12px rgba(22,163,74,0.25);
     white-space:nowrap;
   }
-  .header .tag i{ font-size:0.72rem; }
+  .header .tag .ico-svg{ font-size:0.8rem; }
 
   /* ============ CONTAINER ============ */
   .container{
@@ -75,11 +87,20 @@
   }
 
   /* ============ HERO ============ */
-  .hero{ text-align:center; margin-bottom:22px; padding: 8px 0; }
+  .hero{ text-align:center; margin-bottom:24px; padding: 8px 0; }
   .hero h1{
-    font-size:1.6rem; font-weight:800;
-    letter-spacing:-0.8px; line-height:1.15;
-    color:var(--texto); margin-bottom:12px;
+    font-size:1.55rem; font-weight:800;
+    letter-spacing:-0.6px; line-height:1.25;
+    color:var(--texto); margin-bottom:14px;
+  }
+  .hero h1 .impacto{
+    display:block;
+    font-size:1.15rem;
+    font-weight:800;
+    color:#dc2626;
+    letter-spacing:-0.3px;
+    margin-bottom:8px;
+    line-height:1.3;
   }
   .hero h1 .destaque{
     background: linear-gradient(135deg, var(--azul), #0044ff);
@@ -88,7 +109,7 @@
     -webkit-text-fill-color: transparent;
   }
   .hero p{
-    font-size:0.92rem; color:var(--texto-cinza);
+    font-size:0.9rem; color:var(--texto-cinza);
     max-width:520px; margin:0 auto;
     line-height:1.6;
   }
@@ -131,13 +152,18 @@
     padding: 16px 10px;
     border:2px solid var(--borda-forte);
     background:#fff; border-radius:14px;
-    font-family:inherit; font-size:0.92rem; font-weight:700;
+    font-family:inherit; font-size:0.88rem; font-weight:700;
     color:var(--texto); cursor:pointer;
     transition: all 0.15s;
     display:flex; flex-direction:column;
-    align-items:center; gap:6px;
+    align-items:center; gap:8px;
   }
-  .chip-tipo .ico{ font-size:1.4rem; line-height:1; }
+  .chip-tipo .ico-svg{
+    width:28px; height:28px;
+    stroke-width:1.6;
+    color: var(--azul);
+    transition: color 0.15s;
+  }
   .chip-tipo:hover{ border-color: var(--azul); }
   .chip-tipo.ativo{
     background: linear-gradient(135deg, var(--azul), #0044ff);
@@ -145,6 +171,7 @@
     box-shadow: 0 6px 20px rgba(0,30,240,0.25);
     transform: translateY(-2px);
   }
+  .chip-tipo.ativo .ico-svg{ color:#fff; }
 
   /* ============ GRID DE OPÇÕES ============ */
   .grid-opcoes{
@@ -192,14 +219,14 @@
   .slider-valores{
     display:flex; justify-content:space-between;
     margin-bottom:14px;
-    font-size:0.78rem; font-weight:700;
+    font-size:0.76rem; font-weight:700;
     gap:8px;
   }
   .slider-valores .val{
     background: var(--azul-claro); color: var(--azul);
-    padding: 6px 12px; border-radius:8px;
+    padding: 6px 10px; border-radius:8px;
     font-family:'Inter',sans-serif;
-    min-width:90px; text-align:center;
+    min-width:100px; text-align:center;
     font-variant-numeric: tabular-nums;
   }
   .range-container{
@@ -267,6 +294,7 @@
     transition: all 0.15s;
   }
   .bairros-input button:hover{ background: var(--azul-escuro); }
+  .bairros-input button .ico-svg{ font-size:0.9rem; }
 
   .bairros-lista{
     display:flex; flex-wrap:wrap; gap:6px;
@@ -333,6 +361,7 @@
   .sugestao.ativa::before{
     content:'✓';
     font-weight:900;
+    margin-right:2px;
   }
 
   /* ============ CONTATO ============ */
@@ -379,7 +408,7 @@
   .btn-enviar:hover:not(:disabled){ transform:translateY(-2px); box-shadow: 0 14px 36px rgba(0,30,240,0.45); }
   .btn-enviar:active:not(:disabled){ transform:translateY(0); }
   .btn-enviar:disabled{ opacity:0.6; cursor:not-allowed; }
-  .btn-enviar i{ font-size:1.05rem; }
+  .btn-enviar .ico-svg{ font-size:1.1rem; }
 
   /* ============ RODAPÉ FIXO WHATSAPP ============ */
   .rodape-fixo{
@@ -413,7 +442,7 @@
     border:none; cursor:pointer; font-family:inherit;
   }
   .btn-whats-rodape:hover{ transform:translateY(-2px); box-shadow: 0 10px 28px rgba(37,211,102,0.5); }
-  .btn-whats-rodape i{ font-size:1.05rem; }
+  .btn-whats-rodape .ico-svg{ font-size:1.1rem; }
 
   /* ============ RESULTADO FINAL ============ */
   .resultado{
@@ -430,9 +459,10 @@
     background: linear-gradient(135deg, var(--azul), #0044ff);
     color:#fff;
     display:flex; align-items:center; justify-content:center;
-    font-size:2.2rem; margin:0 auto 22px;
+    margin:0 auto 22px;
     box-shadow: 0 10px 30px rgba(0,30,240,0.3);
   }
+  .resultado .ico-final .ico-svg{ width:38px; height:38px; stroke-width:3; }
   .resultado h2{
     font-size:1.35rem; font-weight:800;
     color:var(--texto); margin-bottom:12px;
@@ -467,7 +497,7 @@
     border:none; cursor:pointer; font-family:inherit;
   }
   .btn-zap-final:hover{ transform:translateY(-2px); box-shadow: 0 14px 36px rgba(37,211,102,0.5); }
-  .btn-zap-final i{ font-size:1.15rem; }
+  .btn-zap-final .ico-svg{ font-size:1.15rem; }
 
   /* ============ LOADING ============ */
   .loading{
@@ -521,7 +551,7 @@
     color: var(--texto); margin-bottom:6px;
     display:flex; align-items:center; gap:8px;
   }
-  .modal-box h3 i{ color: var(--whatsapp); font-size:1.3rem; }
+  .modal-box h3 .ico-svg{ color: var(--whatsapp); font-size:1.35rem; stroke-width:2.2; }
   .modal-box .sub{
     color: var(--texto-cinza); margin-bottom:20px;
     font-size:0.88rem; line-height:1.55;
@@ -562,7 +592,7 @@
     width: 36px; height: 36px; border-radius:50%;
     background: var(--whatsapp); color:#fff;
     display:flex; align-items:center; justify-content:center;
-    font-size:1.1rem; flex-shrink:0;
+    font-size:1.15rem; flex-shrink:0;
   }
   .modal-close{
     margin-top:20px; width:100%;
@@ -577,17 +607,18 @@
 
   /* ============ RESPONSIVO ============ */
   @media (max-width:420px){
-    .hero h1{ font-size:1.35rem; }
-    .hero p{ font-size:0.86rem; }
-    .chip-tipo{ padding:14px 8px; font-size:0.85rem; }
-    .chip-tipo .ico{ font-size:1.25rem; }
+    .hero h1{ font-size:1.3rem; }
+    .hero h1 .impacto{ font-size:1.02rem; }
+    .hero p{ font-size:0.84rem; }
+    .chip-tipo{ padding:14px 8px; font-size:0.82rem; gap:6px; }
+    .chip-tipo .ico-svg{ width:24px; height:24px; }
     .grid-opcoes.cols-5{ grid-template-columns: repeat(3, 1fr); }
     .grid-opcoes.cols-4{ grid-template-columns: repeat(3, 1fr); }
     .opt-btn{ font-size:0.78rem; padding:10px 4px; }
     .secao{ padding:16px 14px; }
     .rodape-fixo .txt-rodape{ font-size:0.66rem; }
     .rodape-fixo .txt-rodape strong{ font-size:0.72rem; }
-    .btn-whats-rodape{ padding:10px 14px; font-size:0.76rem; }
+    .btn-whats-rodape{ padding:10px 12px; font-size:0.74rem; }
     .header .tag{ font-size:0.62rem; padding:6px 10px; }
   }
 </style>
@@ -600,7 +631,7 @@
     <img src="https://cdn.awsli.com.br/1608/1608652/arquivos/logo-lr-imoveis.jpg" alt="Lima Ribeiro Imóveis" class="logo">
   </a>
   <span class="tag">
-    <i class="fas fa-bolt"></i>
+    <svg class="ico-svg" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
     Rápido · Fácil · Grátis
   </span>
 </header>
@@ -611,8 +642,11 @@
 
     <!-- HERO -->
     <div class="hero">
-      <h1>Deixe que a gente <span class="destaque">encontra o imóvel certo</span> para você</h1>
-      <p><strong>Pare de vasculhar a internet.</strong> Responda algumas perguntas rápidas e nós selecionamos as <strong>melhores opções</strong> para você. Simples assim.</p>
+      <h1>
+        <span class="impacto">Pare de vasculhar a internet e perder tempo com buscas.</span>
+        Deixe que a gente <span class="destaque">encontra o imóvel certo</span> para você.
+      </h1>
+      <p>Preencha o que você quer no seu imóvel e nós <strong>selecionamos as melhores opções</strong> para você.</p>
     </div>
 
     <!-- SEÇÃO 1: TIPO -->
@@ -626,16 +660,42 @@
       </div>
       <div class="chips-tipo">
         <button type="button" class="chip-tipo" data-tipo="Apartamento">
-          <span class="ico">🏢</span> Apartamento
+          <svg class="ico-svg" viewBox="0 0 24 24">
+            <rect x="4" y="2" width="16" height="20" rx="1"/>
+            <line x1="9" y1="6" x2="9" y2="6.01"/>
+            <line x1="15" y1="6" x2="15" y2="6.01"/>
+            <line x1="9" y1="10" x2="9" y2="10.01"/>
+            <line x1="15" y1="10" x2="15" y2="10.01"/>
+            <line x1="9" y1="14" x2="9" y2="14.01"/>
+            <line x1="15" y1="14" x2="15" y2="14.01"/>
+            <line x1="9" y1="18" x2="15" y2="18"/>
+          </svg>
+          Apartamento
         </button>
         <button type="button" class="chip-tipo" data-tipo="Casa">
-          <span class="ico">🏠</span> Casa
+          <svg class="ico-svg" viewBox="0 0 24 24">
+            <path d="M3 11l9-7 9 7v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+            <path d="M9 22V14h6v8"/>
+          </svg>
+          Casa
         </button>
         <button type="button" class="chip-tipo" data-tipo="Cobertura">
-          <span class="ico">🌆</span> Cobertura
+          <svg class="ico-svg" viewBox="0 0 24 24">
+            <path d="M2 12l5-5 5 5 5-5 5 5"/>
+            <rect x="4" y="12" width="16" height="9" rx="1"/>
+            <line x1="9" y1="21" x2="9" y2="15"/>
+            <line x1="15" y1="21" x2="15" y2="15"/>
+            <line x1="9" y1="15" x2="15" y2="15"/>
+          </svg>
+          Cobertura
         </button>
         <button type="button" class="chip-tipo" data-tipo="Área Privativa">
-          <span class="ico">🌳</span> Área Privativa
+          <svg class="ico-svg" viewBox="0 0 24 24">
+            <path d="M3 20h18"/>
+            <path d="M5 20V9l4-3 4 3 4-3 4 3v11"/>
+            <circle cx="12" cy="12" r="2"/>
+          </svg>
+          Área Privativa
         </button>
       </div>
     </div>
@@ -662,7 +722,7 @@
         </div>
       </div>
 
-      <!-- BANHEIROS (agora ANTES de suítes) -->
+      <!-- BANHEIROS (antes de suítes) -->
       <div class="campo-bloco">
         <label class="campo-label">Banheiros</label>
         <div class="grid-opcoes cols-5" data-campo="banheiros">
@@ -754,14 +814,14 @@
         <input type="text" id="inputBairro" placeholder="Ex: Savassi, Gutierrez, Buritis..." autocomplete="off"
                onkeydown="if(event.key==='Enter'){event.preventDefault(); adicionarBairro();}">
         <button type="button" onclick="adicionarBairro()">
-          <i class="fas fa-plus" style="font-size:0.8rem;"></i>
+          <svg class="ico-svg" viewBox="0 0 24 24" style="width:14px;height:14px;"><path d="M12 5v14M5 12h14"/></svg>
           Add
         </button>
       </div>
       <div class="bairros-lista" id="bairrosLista"></div>
 
       <div style="margin-top:14px;">
-        <div style="font-size:0.7rem; font-weight:800; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:8px;">Mais procurados · Centro-Sul de BH</div>
+        <div style="font-size:0.7rem; font-weight:800; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:8px;">Mais procurados</div>
         <div class="sugestoes" id="sugestoesBairros">
           <button type="button" class="sugestao" onclick="toggleBairroRapido('Savassi')">Savassi</button>
           <button type="button" class="sugestao" onclick="toggleBairroRapido('Lourdes')">Lourdes</button>
@@ -771,6 +831,8 @@
           <button type="button" class="sugestao" onclick="toggleBairroRapido('Cruzeiro')">Cruzeiro</button>
           <button type="button" class="sugestao" onclick="toggleBairroRapido('Anchieta')">Anchieta</button>
           <button type="button" class="sugestao" onclick="toggleBairroRapido('Gutierrez')">Gutierrez</button>
+          <button type="button" class="sugestao" onclick="toggleBairroRapido('Buritis')">Buritis</button>
+          <button type="button" class="sugestao" onclick="toggleBairroRapido('Belvedere')">Belvedere</button>
           <button type="button" class="sugestao" onclick="toggleBairroRapido('Pampulha')">Pampulha</button>
           <button type="button" class="sugestao" onclick="toggleBairroRapido('Centro')">Centro</button>
         </div>
@@ -807,7 +869,7 @@
     <div class="secao contato-final">
       <div class="secao-head">
         <div class="secao-num" style="background: linear-gradient(135deg, var(--whatsapp), var(--whatsapp-escuro)); color:#fff;">
-          <i class="fas fa-check" style="font-size:0.75rem;"></i>
+          <svg class="ico-svg" viewBox="0 0 24 24" style="width:14px;height:14px;"><polyline points="20 6 9 17 4 12"/></svg>
         </div>
         <div>
           <div class="secao-titulo">Como podemos te chamar?</div>
@@ -826,7 +888,7 @@
       </div>
 
       <button type="submit" class="btn-enviar" id="btnEnviar">
-        <i class="fas fa-paper-plane"></i>
+        <svg class="ico-svg" viewBox="0 0 24 24"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4z"/></svg>
         Quero receber minha seleção
       </button>
     </div>
@@ -843,7 +905,7 @@
   <!-- RESULTADO -->
   <div class="resultado" id="resultadoWrap">
     <div class="ico-final">
-      <i class="fas fa-check"></i>
+      <svg class="ico-svg" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
     </div>
     <h2>Recebemos sua seleção! 🎯</h2>
     <p>Nossa equipe já está trabalhando para encontrar imóveis que combinam exatamente com o que você procura. Em instantes você receberá no WhatsApp.</p>
@@ -851,7 +913,7 @@
     <div class="resumo-perfil" id="resumoPerfil"></div>
 
     <button type="button" class="btn-zap-final" onclick="abrirModalWhatsApp()">
-      <i class="fab fa-whatsapp"></i>
+      <svg class="ico-svg" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
       Quero atendimento VIP
     </button>
   </div>
@@ -865,15 +927,18 @@
     Fale agora com um corretor exclusivo
   </div>
   <button type="button" class="btn-whats-rodape" onclick="abrirModalWhatsApp()">
-    <i class="fab fa-whatsapp"></i>
-    Quero ser VIP
+    <svg class="ico-svg" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+    Quero atendimento VIP
   </button>
 </div>
 
 <!-- MODAL WHATSAPP -->
 <div class="modal-overlay" id="waModal">
   <div class="modal-box">
-    <h3><i class="fab fa-whatsapp"></i> Atendimento VIP</h3>
+    <h3>
+      <svg class="ico-svg" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+      Atendimento VIP
+    </h3>
     <p class="sub">Escolha um dos nossos especialistas para atendimento personalizado e exclusivo.</p>
     <div class="contact-list">
       <a href="https://wa.me/5531996273985?text=Ol%C3%A1!%20Quero%20atendimento%20VIP%20para%20encontrar%20meu%20im%C3%B3vel." target="_blank" rel="noopener" class="contact-item">
@@ -884,7 +949,9 @@
           <div class="name">Carolina Lima</div>
           <div class="role">Consultora de Imóveis</div>
         </div>
-        <div class="icon-right"><i class="fab fa-whatsapp"></i></div>
+        <div class="icon-right">
+          <svg class="ico-svg" viewBox="0 0 24 24" style="width:18px;height:18px;stroke-width:2.2;"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+        </div>
       </a>
       <a href="https://wa.me/5531996070930?text=Ol%C3%A1!%20Quero%20atendimento%20VIP%20para%20encontrar%20meu%20im%C3%B3vel." target="_blank" rel="noopener" class="contact-item">
         <div class="avatar">
@@ -894,7 +961,9 @@
           <div class="name">Hugo Ribeiro</div>
           <div class="role">Consultor de Imóveis</div>
         </div>
-        <div class="icon-right"><i class="fab fa-whatsapp"></i></div>
+        <div class="icon-right">
+          <svg class="ico-svg" viewBox="0 0 24 24" style="width:18px;height:18px;stroke-width:2.2;"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+        </div>
       </a>
     </div>
     <button type="button" class="modal-close" onclick="fecharModalWhatsApp()">Fechar</button>
@@ -919,8 +988,8 @@ const state = {
   vagas: '',
   metragemMin: 40,
   metragemMax: 1000,
-  valorMin: 150000,
-  valorMax: 10000000,
+  valorMinRaw: 0,
+  valorMaxRaw: 100,
   bairros: [],
   detalhes: new Set()
 };
@@ -1009,11 +1078,9 @@ setupRange('rangeMetragemMin', 'rangeMetragemMax', 'fillMetragem',
 
 /* Valor — 150.000 a 10.000.000 */
 function valorParaRange(v){
-  // v = 0..100 → 150.000 a 10.000.000 (curva exponencial suave)
   const t = v / 100;
   const exp = Math.pow(t, 1.8);
   const val = 150000 + exp * (10000000 - 150000);
-  // Arredonda para múltiplos de 10.000 abaixo de 1M, 50.000 acima
   if(val < 1000000) return Math.round(val / 10000) * 10000;
   return Math.round(val / 50000) * 50000;
 }
@@ -1027,7 +1094,6 @@ setupRange('rangeValorMin', 'rangeValorMax', 'fillValor',
     format: v => fmtValor(valorParaRange(v))
   });
 
-// Converte o raw (0-100) para valor real
 Object.defineProperty(state, 'valorMin', {
   get(){ return valorParaRange(Number($('rangeValorMin').value)); }
 });
@@ -1093,7 +1159,7 @@ window.toggleBairroRapido = toggleBairroRapido;
 window.removerBairro = removerBairro;
 
 /* =====================================================
-   DETALHES EXTRAS (toggle)
+   DETALHES EXTRAS
 ===================================================== */
 function toggleDetalhe(txt){
   const ta = $('detalhesExtras');
