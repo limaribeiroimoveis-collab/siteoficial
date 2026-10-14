@@ -2331,15 +2331,6 @@ function parseCutucada_(valor){
     timestamp: d.getTime()
   };
 }
-function formatarDataHoraCurta_(d){
-  if(!(d instanceof Date) || isNaN(d.getTime())) return '';
-  const dia = String(d.getDate()).padStart(2,'0');
-  const mes = String(d.getMonth()+1).padStart(2,'0');
-  const ano = d.getFullYear();
-  const h = String(d.getHours()).padStart(2,'0');
-  const m = String(d.getMinutes()).padStart(2,'0');
-  return `${dia}/${mes}/${ano}   ${h}:${m}`;
-}
 
 
 /* ✅ Último acesso — pega o mais recente entre ação e acesso (se existir) */
@@ -2368,6 +2359,15 @@ function formatarDataHoraCurta_(d){
         ${ult.dispositivo ? `<div class="acesso-disp">${esc(ult.dispositivo)}</div>` : ''}
       </div>`;
   }
+function formatarDataHoraCurta_(d){
+  if(!(d instanceof Date) || isNaN(d.getTime())) return '';
+  const dia = String(d.getDate()).padStart(2,'0');
+  const mes = String(d.getMonth()+1).padStart(2,'0');
+  const ano = d.getFullYear();
+  const h = String(d.getHours()).padStart(2,'0');
+  const m = String(d.getMinutes()).padStart(2,'0');
+  return `${dia}/${mes}/${ano}   ${h}:${m}`;
+}
 
 /* ✅ Formata data+hora com 2 espaços entre elas (pro bloco de último acesso) */
 function formatarDataHoraCliente_(d){
