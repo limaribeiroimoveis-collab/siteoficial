@@ -1179,6 +1179,113 @@
   }
   .btn-evento:hover:not(:disabled){ background: #5b21b6; }
 
+
+   /* ============================================
+     IFRAME CAPTAÇÕES — tela cheia responsiva
+  ============================================ */
+  .iframe-captar-backdrop{
+    position: fixed; inset: 0;
+    background: rgba(15,23,42,.75);
+    z-index: 1500;
+    display: none;
+    align-items: center; justify-content: center;
+    padding: 24px;
+    backdrop-filter: blur(4px);
+  }
+  .iframe-captar-backdrop.show{ display: flex; }
+
+  .iframe-captar-wrap{
+    background: #fff;
+    border-radius: 14px;
+    width: 100%;
+    height: 100%;
+    max-width: 1500px;
+    max-height: 95vh;
+    display: flex; flex-direction: column;
+    box-shadow: 0 20px 60px rgba(0,0,0,.35);
+    overflow: hidden;
+    position: relative;
+  }
+
+  .iframe-captar-head{
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 18px;
+    background: #0f2942;
+    color: #fff;
+    flex-shrink: 0;
+    gap: 12px;
+  }
+  .iframe-captar-head .titulo-iframe{
+    display: flex; align-items: center; gap: 9px;
+    font-size: .92rem; font-weight: 700;
+    letter-spacing: -.01em;
+  }
+  .iframe-captar-head .titulo-iframe .ico{
+    color: #4ade80; width: 18px; height: 18px;
+  }
+  .iframe-captar-head .btn-fechar-iframe{
+    background: rgba(255,255,255,.1);
+    border: 1px solid rgba(255,255,255,.15);
+    color: #fff;
+    padding: 6px 14px; border-radius: 6px;
+    cursor: pointer; font-family: inherit;
+    font-size: .78rem; font-weight: 700;
+    display: inline-flex; align-items: center; gap: 6px;
+    transition: all .15s;
+  }
+  .iframe-captar-head .btn-fechar-iframe:hover{
+    background: rgba(255,255,255,.2);
+    border-color: rgba(255,255,255,.3);
+  }
+
+  .iframe-captar-body{
+    flex: 1; min-height: 0;
+    position: relative;
+    background: #f4f6f8;
+  }
+  .iframe-captar-body iframe{
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    border: 0; display: block;
+  }
+
+  .iframe-captar-loader{
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column; gap: 14px;
+    color: var(--primary); background: #f4f6f8;
+    z-index: 2;
+  }
+  .iframe-captar-loader.hidden{ display: none; }
+
+  @media (max-width: 900px){
+    .iframe-captar-backdrop{
+      padding: 0;
+      align-items: stretch;
+    }
+    .iframe-captar-wrap{
+      border-radius: 0;
+      max-height: 100vh;
+      max-width: 100vw;
+      height: 100vh;
+    }
+    .iframe-captar-head{
+      padding: 10px 12px;
+    }
+    .iframe-captar-head .titulo-iframe{
+      font-size: .82rem;
+      gap: 6px;
+    }
+    .iframe-captar-head .btn-fechar-iframe{
+      padding: 6px 10px; font-size: .72rem;
+    }
+    .iframe-captar-head .btn-fechar-iframe .txt-btn{ display: none; }
+  }
+
+  @media (max-width: 480px){
+    .iframe-captar-head .titulo-iframe span{ display: none; }
+    .iframe-captar-head .titulo-iframe .ico{ width: 22px; height: 22px; }
+  }
   /* ============================================
      CAPTAÇÕES — NOVO LAYOUT COMPACTO
      ============================================ */
@@ -2125,6 +2232,41 @@
   </div>
 </div>
 
+
+ <!-- IFRAME CAPTAÇÕES -->
+<div class="iframe-captar-backdrop" id="iframeCaptarBackdrop">
+  <div class="iframe-captar-wrap">
+    <div class="iframe-captar-head">
+      <div class="titulo-iframe">
+        <svg class="ico" viewBox="0 0 24 24">
+          <path d="M12 2v20"/>
+          <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+        </svg>
+        <span>Captações QPreço</span>
+      </div>
+      <button class="btn-fechar-iframe" onclick="fecharIframeCaptar()" title="Fechar">
+        <svg class="ico ico-sm" viewBox="0 0 24 24">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+        <span class="txt-btn">Fechar</span>
+      </button>
+    </div>
+    <div class="iframe-captar-body" id="iframeCaptarBody">
+      <div class="iframe-captar-loader" id="iframeCaptarLoader">
+        <span class="loader loader-lg"></span>
+        <p style="font-size:.85rem; color:var(--text-soft);">Carregando captações...</p>
+      </div>
+      <iframe id="iframeCaptar" 
+              src="about:blank"
+              title="Captações QPreço"
+              allow="clipboard-write; clipboard-read"
+              sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-modals"></iframe>
+    </div>
+  </div>
+</div>
+
+ 
 <div class="toast" id="toast"></div>
 <div class="saving-overlay" id="savingOverlay">
   <div class="spinner"></div>
@@ -5194,15 +5336,62 @@ async function atualizarBadgeCaptar(){
   }
 }
 
-async function abrirCaptacoes(){
-  $('captacoesBackdrop').classList.add('show');
-  $('captacoesLista').innerHTML = '<div class="loading-inline"><span class="loader loader-lg"></span><p>Carregando captações...</p></div>';
-  await carregarCaptacoes(true);
+/* =====================================================
+   CAPTAÇÕES — agora em IFRAME
+===================================================== */
+let _iframeCaptarCarregado = false;
+
+function abrirCaptacoes(){
+  const backdrop = $('iframeCaptarBackdrop');
+  const iframe = $('iframeCaptar');
+  const loader = $('iframeCaptarLoader');
+  if(!backdrop || !iframe) return;
+
+  // Só carrega o iframe na primeira vez (evita re-fetch desnecessário)
+  if(!_iframeCaptarCarregado){
+    loader.classList.remove('hidden');
+    iframe.src = 'captarcalculadora.html';
+    iframe.onload = () => {
+      loader.classList.add('hidden');
+      _iframeCaptarCarregado = true;
+    };
+  }
+
+  backdrop.classList.add('show');
+  document.body.style.overflow = 'hidden';
 }
 
-function fecharCaptacoes(){
-  $('captacoesBackdrop').classList.remove('show');
+function fecharIframeCaptar(){
+  const backdrop = $('iframeCaptarBackdrop');
+  if(!backdrop) return;
+  backdrop.classList.remove('show');
+  document.body.style.overflow = '';
+  // Ao fechar, atualiza o badge (caso algo tenha mudado lá dentro)
+  setTimeout(atualizarBadgeCaptar, 200);
 }
+
+/* Escuta mensagens vindas do iframe */
+window.addEventListener('message', (ev) => {
+  const dados = ev.data || {};
+  if(dados.origem !== 'captar') return;
+
+  if(dados.tipo === 'fechar'){
+    fecharIframeCaptar();
+    return;
+  }
+  if(dados.tipo === 'atualizado'){
+    atualizarBadgeCaptar();
+    return;
+  }
+});
+
+/* ESC também fecha o iframe */
+document.addEventListener('keydown', (e) => {
+  if(e.key === 'Escape'){
+    const bd = $('iframeCaptarBackdrop');
+    if(bd && bd.classList.contains('show')) fecharIframeCaptar();
+  }
+});
 
 function statusCaptacao_(c){
   const v = String(c.contatoFeito || '').trim().toLowerCase();
