@@ -1501,7 +1501,48 @@ async function salvarEdicaoCaptacao(){
 document.addEventListener('keydown', (e) => {
   if(e.key === 'Escape') fecharEditModal();
 });
+/* =====================================================
+   COMUNICAÇÃO COM O PAI (quando dentro de iframe)
+===================================================== */
+const EH_IFRAME = window.parent !== window;
 
+function avisarPai(tipo, dados = {}) {
+  if (!EH_IFRAME) return;
+  try {
+    window.parent.postMessage(
+      { origem: 'captar', tipo: tipo, ...dados },
+      '*'
+    );
+  } catch(e) { /* silencioso */ }
+}
+
+// Reaproveita o toast pra também avisar o pai quando salvar
+const _toastOriginal = toast;
+window.toast = function(msg, type='') {
+  _toastOriginal(msg, type);
+  if (type === 'success') avisarPai('atualizado');
+};
+
+// Adiciona botão "Fechar" no header quando estiver dentro de iframe
+document.addEventListener('DOMContentLoaded', () => {
+  if (!EH_IFRAME) return;
+  const header = document.querySelector('.capt-header-actions');
+  if (!header) return;
+  const btnFechar = document.createElement('button');
+  btnFechar.className = 'btn btn-ghost btn-sm';
+  btnFechar.style.marginLeft = '8px';
+  btnFechar.innerHTML = `
+    <svg class="ico ico-sm" viewBox="0 0 24 24">
+      <line x1="18" y1="6" x2="6" y2="18"/>
+      <line x1="6" y1="6" x2="18" y2="18"/>
+    </svg>
+    Fechar
+  `;
+  btnFechar.onclick = () => avisarPai('fechar');
+  header.appendChild(btnFechar);
+});
+
+ 
 /* Previne sair com salvamento pendente */
 window.addEventListener('beforeunload', function(e){
   if(state.salvando > 0){
