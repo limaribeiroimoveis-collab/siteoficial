@@ -549,6 +549,20 @@
   .cliente-row-v2 .linha2 .muted,
   .cliente-row-v2 .linha3 .muted{ color: var(--muted); }
 
+ .cliente-row-v2 .linha2 .item-tel-click{
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: all .15s;
+}
+.cliente-row-v2 .linha2 .item-tel-click:hover{
+  background: #dcfce7;
+  color: #15803d;
+}
+.cliente-row-v2 .linha2 .item-tel-click:hover svg{
+  stroke: #15803d;
+}
+
   /* ===== BLOCO DE ÚLTIMO ACESSO (novo) ===== */
   .cliente-row-v2 .acesso-cell{
     display: flex;
@@ -2243,6 +2257,17 @@ function fmtData(d){
   const ds = DIAS_SEMANA[dt.getDay()];
   return `${dia}/${mes}/${ano} - ${ds}`;
 }
+/* ✅ Data sem dia da semana (ex: 13/10/2026) */
+function fmtDataSimples(d){
+  if(!d) return '';
+  const dt = new Date(d);
+  if(isNaN(dt.getTime())) return '';
+  const dia = String(dt.getDate()).padStart(2,'0');
+  const mes = String(dt.getMonth()+1).padStart(2,'0');
+  const ano = dt.getFullYear();
+  return `${dia}/${mes}/${ano}`;
+}
+ 
 function fmtDataHora(d){
   if(!d) return '';
   const dt = new Date(d);
@@ -2961,14 +2986,13 @@ function clienteRowHTML(c){
           ${tqc ? '<span class="tag tag-tqc"><strong>TQC</strong></span>' : ''}
           ${investidor ? '<span class="tag tag-car"><strong>INVESTIDOR</strong></span>' : ''}
         </div>
-        <div class="linha2">
-          <span class="item">
+                <div class="linha2">
+          <span class="item item-tel-click" onclick="abrirWhatsAppCliente('${tel}')" title="Abrir WhatsApp de ${esc(c.nome || 'cliente')}">
             <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
             ${esc(fmtTel(c.telefone))}
           </span>
           ${c.corretor ? `<span class="item"><span class="corretor-badge" style="background:${corCorr}">${esc(c.corretor)}</span></span>` : ''}
-          <span class="item ult-admin">Admin: ${c.dataUltimaAcaoAdmin ? fmtData(c.dataUltimaAcaoAdmin) : '—'}</span>
-          <span class="item ult-acao">Cliente: ${c.dataUltimaAcaoCliente ? fmtData(c.dataUltimaAcaoCliente) : '—'}</span>
+          <span class="item ult-admin">Admin: ${c.dataUltimaAcaoAdmin ? fmtDataSimples(c.dataUltimaAcaoAdmin) : '—'}</span>
         </div>
         <div class="linha3">
           <span class="item data-cad">📅 Cadastro: ${c.dataCadastro ? fmtData(c.dataCadastro) : '—'}</span>
@@ -4744,6 +4768,14 @@ function abrirTempModal(telefone){
   $('tempModalSub').textContent = nomeCompletoCliente_(nome, tel) + ' — atual: ' + emojiTemperatura(tempAtual) + ' ' + tempAtual + (manual ? ' (manual)' : ' (automático)');
   $('tempModalBackdrop').classList.add('show');
 }
+/* ✅ Abre WhatsApp do cliente ao clicar no telefone */
+function abrirWhatsAppCliente(telefone){
+  const tel = normalizaTel(telefone);
+  if(!tel){ toast('Telefone inválido', 'error'); return; }
+  const telZap = tel.startsWith('55') ? tel : '55' + tel;
+  window.open(`https://wa.me/${telZap}`, '_blank', 'noopener');
+}
+ 
 function fecharTempModal(){ $('tempModalBackdrop').classList.remove('show'); }
 async function escolherTemperatura(valor){
   if(!_tempClienteTel){ fecharTempModal(); return; }
