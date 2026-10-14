@@ -1229,29 +1229,22 @@ async function enviarSelecao(ev){
   btn.disabled = true;
 
   const detalhes = $('detalhesExtras').value.trim();
-  const pacote =
-    'VIP-SELECAO' +
-    ' | tipo:' + state.tipo +
-    ' | quartos:' + (state.quartos || 'tanto-faz') +
-    ' | banheiros:' + (state.banheiros || 'tanto-faz') +
-    ' | suites:' + (state.suites || 'tanto-faz') +
-    ' | vagas:' + (state.vagas || 'tanto-faz') +
-    ' | metragem:' + state.metragemMin + '-' + state.metragemMax +
-    ' | valor:' + state.valorMin + '-' + state.valorMax +
-    ' | bairros:' + (state.bairros.join(', ') || 'tanto-faz') +
-    ' | detalhes:' + (detalhes || 'nenhum');
-
-  const payload = {
-    action: 'salvarCaptacaoQPreco',
+   const payload = {
+    action: 'salvarLeadVIP',
     nome: nome,
     telefone: tel,
-    rua: '',
-    numero: '',
-    complemento: '',
-    bairro: state.bairros.join(', '),
-    origem: pacote,
+    tipo: state.tipo,
+    quartos: state.quartos || 'tanto-faz',
+    banheiros: state.banheiros || 'tanto-faz',
+    suites: state.suites || 'tanto-faz',
+    vagas: state.vagas || 'tanto-faz',
+    metragemMin: state.metragemMin,
+    metragemMax: state.metragemMax,
+    valorMin: state.valorMin,
+    valorMax: state.valorMax,
+    bairros: state.bairros.join(', ') || 'tanto-faz',
+    detalhes: detalhes || 'nenhum',
     navegador: detectarNavegador(),
-    ip: '',
     _t: Date.now()
   };
 
