@@ -2652,7 +2652,7 @@ async function carregarResto_(){
     await Promise.all([
       carregarNotificacoes(false),
       carregarCorrecoes(false),
-      carregarTarefas(false)
+      atualizarBadgeLeads()          // ✅ novo — badge dos leads VIP
     ]);
   } catch(e){
     console.warn('[carregarResto_] erro:', e);
@@ -5115,14 +5115,22 @@ async function atualizarBadgeCaptar(){
   }
 }
 
-function atualizarBadgeLeads(){
-  const num = $('leadsBadgeNum');
-  const pendentes = state.tarefas.filter(t => t.status === 'pendente').length;
-  if(num){
-    num.textContent = pendentes > 99 ? '99+' : pendentes;
-    num.style.display = pendentes > 0 ? 'inline-block' : 'none';
+async function atualizarBadgeLeads(){
+  try {
+    const res = await api('contarLeadsVipPendentes', {});
+    if(res && res.ok){
+      const pendentes = res.pendentes || 0;
+      state._leadsPendentes = pendentes;
+      const num = $('leadsBadgeNum');
+      if(num){
+        num.textContent = pendentes > 99 ? '99+' : pendentes;
+        num.style.display = pendentes > 0 ? 'inline-block' : 'none';
+      }
+      atualizarBadgeApp_();
+    }
+  } catch(e){
+    console.warn('[atualizarBadgeLeads] erro:', e);
   }
-  atualizarBadgeApp_();
 }
 
 /* ✅ Badge no ícone do app (PWA) — soma captações + leads */
@@ -5151,17 +5159,23 @@ function limparBadgeApp_(){
 /* Escuta mensagens vindas dos iframes */
 window.addEventListener('message', (ev) => {
   const dados = ev.data || {};
+
   if(dados.origem === 'captar'){
     if(dados.tipo === 'fechar'){ fecharIframeCaptar(); return; }
     if(dados.tipo === 'atualizado'){ atualizarBadgeCaptar(); return; }
     return;
   }
+
   if(dados.origem === 'leads'){
     if(dados.tipo === 'fechar'){ fecharIframeLeads(); return; }
+
+    // ✅ 'atualizado' agora só refaz a contagem se o valor não veio pronto
     if(dados.tipo === 'atualizado'){
       atualizarBadgeLeads();
       return;
     }
+
+    // ✅ 'badge' já traz o valor — não precisa bater na API de novo
     if(dados.tipo === 'badge'){
       state._leadsPendentes = Number(dados.valor) || 0;
       const num = $('leadsBadgeNum');
@@ -5172,6 +5186,7 @@ window.addEventListener('message', (ev) => {
       atualizarBadgeApp_();
       return;
     }
+
     return;
   }
 });
