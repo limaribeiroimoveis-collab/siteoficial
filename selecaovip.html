@@ -380,6 +380,33 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
     font-family:'Inter',sans-serif;
     min-width:100px; text-align:center;
     font-variant-numeric: tabular-nums;
+    cursor: pointer;
+    transition: all 0.15s;
+    position: relative;
+    border: 2px solid transparent;
+  }
+  .slider-valores .val:hover{
+    background: #dce4ff;
+  }
+  .slider-valores .val.editando{
+    border-color: var(--azul);
+    background: #fff;
+    box-shadow: 0 0 0 4px rgba(0,30,240,0.08);
+  }
+  .slider-valores .val .input-inline{
+    width: 100%;
+    border: none;
+    background: transparent;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    color: inherit;
+    text-align: center;
+    outline: none;
+    font-variant-numeric: tabular-nums;
+  }
+  .slider-valores .val .input-inline::placeholder{
+    color: var(--muted);
   }
   .range-container{
     position:relative; height: 40px; margin: 0 8px;
@@ -787,6 +814,7 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
     .rodape-fixo .txt-rodape strong{ font-size:0.72rem; }
     .btn-whats-rodape{ padding:10px 12px; font-size:0.74rem; }
     .header .tag{ font-size:0.62rem; padding:6px 10px; }
+    .slider-valores .val{ min-width:80px; font-size:0.7rem; padding:5px 6px; }
   }
 </style>
 </head>
@@ -958,7 +986,7 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
         <div class="secao-num">3</div>
         <div>
           <div class="secao-titulo">Tamanho e valor do imóvel</div>
-          <div class="secao-sub">Arraste as bolinhas para escolher o intervalo</div>
+          <div class="secao-sub">Arraste as bolinhas ou toque nos números para digitar</div>
         </div>
       </div>
 
@@ -966,8 +994,8 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
       <div class="campo-bloco">
         <label class="campo-label">Metragem (m²)</label>
         <div class="slider-valores">
-          <span class="val" id="valMetragemMin">40 m²</span>
-          <span class="val" id="valMetragemMax">1000 m²</span>
+          <span class="val" id="valMetragemMin" data-tipo="metragem" data-bound="min" contenteditable="true" spellcheck="false">40 m²</span>
+          <span class="val" id="valMetragemMax" data-tipo="metragem" data-bound="max" contenteditable="true" spellcheck="false">1000 m²</span>
         </div>
         <div class="range-container" id="rangeMetragem">
           <div class="range-track"></div>
@@ -981,8 +1009,8 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
       <div class="campo-bloco">
         <label class="campo-label">Valor do imóvel</label>
         <div class="slider-valores">
-          <span class="val" id="valValorMin">R$ 150.000</span>
-          <span class="val" id="valValorMax">R$ 10.000.000</span>
+          <span class="val" id="valValorMin" data-tipo="valor" data-bound="min" contenteditable="true" spellcheck="false">R$ 280.000</span>
+          <span class="val" id="valValorMax" data-tipo="valor" data-bound="max" contenteditable="true" spellcheck="false">R$ 10.000.000</span>
         </div>
         <div class="range-container" id="rangeValor">
           <div class="range-track"></div>
@@ -998,8 +1026,8 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
       <div class="secao-head">
         <div class="secao-num">4</div>
         <div>
-          <div class="secao-titulo">Quais regiões ou bairros?</div>
-          <div class="secao-sub">Digite quantos quiser ou toque nas sugestões</div>
+          <div class="secao-titulo">Quais regiões ou bairros? <span class="opc" style="color:var(--vermelho);font-weight:800;">*</span></div>
+          <div class="secao-sub">Digite ou toque nas sugestões. Pelo menos 1 é obrigatório.</div>
         </div>
       </div>
 
@@ -1030,6 +1058,9 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
           <button type="button" class="sugestao" onclick="toggleBairroRapido('Centro')">Centro</button>
         </div>
       </div>
+      <p id="erroBairro" style="display:none; color:var(--vermelho); font-size:0.78rem; font-weight:700; margin-top:10px;">
+        Selecione ou digite pelo menos uma região/bairro.
+      </p>
     </div>
 
     <!-- SEÇÃO 5: DETALHES -->
@@ -1229,7 +1260,7 @@ document.querySelectorAll('.comodo-col').forEach(col => {
 });
 
 /* =====================================================
-   SLIDERS
+   SLIDERS — com edição direta nos valores
 ===================================================== */
 function setupRange(minId, maxId, fillId, valMinId, valMaxId, opts){
   const minEl = $(minId), maxEl = $(maxId);
@@ -1259,28 +1290,31 @@ function setupRange(minId, maxId, fillId, valMinId, valMaxId, opts){
   minEl.addEventListener('input', atualizar);
   maxEl.addEventListener('input', atualizar);
   atualizar();
+
+  // Retorna função para atualizar sliders manualmente
+  return { atualizar, minEl, maxEl, valMin, valMax };
 }
 
-/* Metragem */
-setupRange('rangeMetragemMin', 'rangeMetragemMax', 'fillMetragem',
+/* Metragem — valores mínimo 40, máximo 1000, passo 10 */
+const rangeMetragem = setupRange('rangeMetragemMin', 'rangeMetragemMax', 'fillMetragem',
   'valMetragemMin', 'valMetragemMax', {
     min: 40, max: 1000, minGap: 20,
     stateMin: 'metragemMin', stateMax: 'metragemMax',
     format: v => v + ' m²'
   });
 
-/* Valor — 150.000 a 10.000.000 */
+/* Valor — mínimo 280.000, máximo 10.000.000 */
 function valorParaRange(v){
   const t = v / 100;
   const exp = Math.pow(t, 1.8);
-  const val = 150000 + exp * (10000000 - 150000);
+  const val = 280000 + exp * (10000000 - 280000);
   if(val < 1000000) return Math.round(val / 10000) * 10000;
   return Math.round(val / 50000) * 50000;
 }
 function fmtValor(v){
   return 'R$ ' + v.toLocaleString('pt-BR');
 }
-setupRange('rangeValorMin', 'rangeValorMax', 'fillValor',
+const rangeValor = setupRange('rangeValorMin', 'rangeValorMax', 'fillValor',
   'valValorMin', 'valValorMax', {
     min: 0, max: 100, minGap: 4,
     stateMin: 'valorMinRaw', stateMax: 'valorMaxRaw',
@@ -1293,6 +1327,112 @@ Object.defineProperty(state, 'valorMin', {
 Object.defineProperty(state, 'valorMax', {
   get(){ return valorParaRange(Number($('rangeValorMax').value)); }
 });
+
+/* =====================================================
+   EDIÇÃO DIRETA DOS VALORES (METRAGEM E VALOR)
+===================================================== */
+function configurarEdicaoValor(elemento, tipo, bound){
+  let valorAntes = elemento.textContent;
+
+  elemento.addEventListener('focus', function(){
+    valorAntes = this.textContent;
+    this.classList.add('editando');
+    // Remove formatação para facilitar edição
+    if(tipo === 'metragem'){
+      const num = this.textContent.replace(/\D/g, '');
+      this.textContent = num;
+    } else {
+      const num = this.textContent.replace(/\D/g, '');
+      this.textContent = num;
+    }
+  });
+
+  elemento.addEventListener('blur', function(){
+    this.classList.remove('editando');
+    aplicarValorEditado(this, tipo, bound);
+  });
+
+  elemento.addEventListener('keydown', function(e){
+    if(e.key === 'Enter'){
+      e.preventDefault();
+      this.blur();
+    }
+    // Permitir apenas números
+    if(!/[\d]/.test(e.key) && !['Backspace','Delete','ArrowLeft','ArrowRight','Tab','Home','End'].includes(e.key)){
+      e.preventDefault();
+    }
+  });
+
+  // Impede colar texto não numérico
+  elemento.addEventListener('paste', function(e){
+    e.preventDefault();
+    const texto = (e.clipboardData || window.clipboardData).getData('text');
+    const num = texto.replace(/\D/g, '');
+    document.execCommand('insertText', false, num);
+  });
+}
+
+function aplicarValorEditado(el, tipo, bound){
+  let num = el.textContent.replace(/\D/g, '');
+  if(num === '') num = '0';
+  let valor = Number(num);
+
+  if(tipo === 'metragem'){
+    // Limites metragem: 40 a 1000
+    if(valor < 40) valor = 40;
+    if(valor > 1000) valor = 1000;
+
+    const minEl = $('rangeMetragemMin');
+    const maxEl = $('rangeMetragemMax');
+
+    if(bound === 'min'){
+      let maxVal = Number(maxEl.value);
+      if(valor > maxVal - 20) valor = Math.max(40, maxVal - 20);
+      minEl.value = valor;
+    } else {
+      let minVal = Number(minEl.value);
+      if(valor < minVal + 20) valor = Math.min(1000, minVal + 20);
+      maxEl.value = valor;
+    }
+    rangeMetragem.atualizar();
+
+  } else if(tipo === 'valor'){
+    // Limites valor: 280.000 a 10.000.000
+    if(valor < 280000) valor = 280000;
+    if(valor > 10000000) valor = 10000000;
+
+    // Converte valor real para posição do range (0-100)
+    function realParaRange(v){
+      const min = 280000, max = 10000000;
+      if(v <= min) return 0;
+      if(v >= max) return 100;
+      // Inverso da função: val = min + (t^1.8) * (max - min)
+      const t = Math.pow((v - min) / (max - min), 1 / 1.8);
+      return Math.round(t * 100);
+    }
+
+    let pos = realParaRange(valor);
+    const minEl = $('rangeValorMin');
+    const maxEl = $('rangeValorMax');
+
+    if(bound === 'min'){
+      let maxPos = Number(maxEl.value);
+      if(pos > maxPos - 4) pos = Math.max(0, maxPos - 4);
+      minEl.value = pos;
+    } else {
+      let minPos = Number(minEl.value);
+      if(pos < minPos + 4) pos = Math.min(100, minPos + 4);
+      maxEl.value = pos;
+    }
+    rangeValor.atualizar();
+  }
+}
+
+// Configurar os 4 elementos editáveis
+configurarEdicaoValor($('valMetragemMin'), 'metragem', 'min');
+configurarEdicaoValor($('valMetragemMax'), 'metragem', 'max');
+configurarEdicaoValor($('valValorMin'), 'valor', 'min');
+configurarEdicaoValor($('valValorMax'), 'valor', 'max');
 
 /* =====================================================
    BAIRROS
@@ -1308,6 +1448,7 @@ function adicionarBairro(){
   input.focus();
   renderizarBairros();
   marcarSugestoesBairros();
+  esconderErroBairro();
 }
 function toggleBairroRapido(nome){
   const idx = state.bairros.findIndex(b => b.toLowerCase() === nome.toLowerCase());
@@ -1319,6 +1460,7 @@ function toggleBairroRapido(nome){
   }
   renderizarBairros();
   marcarSugestoesBairros();
+  esconderErroBairro();
 }
 function removerBairro(nome){
   state.bairros = state.bairros.filter(b => b !== nome);
@@ -1340,6 +1482,14 @@ function marcarSugestoesBairros(){
     const ativo = state.bairros.some(b => b.toLowerCase() === nome.toLowerCase());
     btn.classList.toggle('ativa', ativo);
   });
+}
+function esconderErroBairro(){
+  const el = $('erroBairro');
+  if(el) el.style.display = 'none';
+}
+function mostrarErroBairro(){
+  const el = $('erroBairro');
+  if(el) el.style.display = 'block';
 }
 function esc(s){
   return String(s || '')
@@ -1406,6 +1556,15 @@ async function enviarSelecao(ev){
     return;
   }
 
+  // Validação de bairro obrigatório
+  if(state.bairros.length === 0){
+    mostrarErroBairro();
+    alert('Informe pelo menos uma região ou bairro de interesse.');
+    document.querySelector('.secao:nth-of-type(4)').scrollIntoView({behavior:'smooth', block:'center'});
+    return;
+  }
+  esconderErroBairro();
+
   const nome = $('nomeContato').value.trim();
   const tel = $('telContato').value.replace(/\D/g, '');
   if(nome.length < 2){
@@ -1435,7 +1594,7 @@ async function enviarSelecao(ev){
     metragemMax: state.metragemMax,
     valorMin: state.valorMin,
     valorMax: state.valorMax,
-    bairros: state.bairros.join(', ') || 'tanto-faz',
+    bairros: state.bairros.join(', '),
     detalhes: detalhes || 'nenhum',
     navegador: detectarNavegador(),
     _t: Date.now()
