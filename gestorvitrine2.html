@@ -17,6 +17,7 @@
     --warn:#8b6f3a; --warn-hover:#6f582d; --warn-soft:#f5efe0;
     --info:#2c5a8c; --info-soft:#e6eef7;
     --purple:#6d28d9; --purple-soft:#ede9fe;
+    --leads:#0d9488; --leads-soft:#ccfbf1;
     --bg:#f4f6f8; --bg-alt:#e8ecf0;
     --card:#ffffff;
     --text:#0f172a; --text-soft:#475569; --muted:#94a3b8;
@@ -84,15 +85,15 @@
   .btn-header:hover{ background: rgba(255,255,255,.08); color: #fff; border-color: rgba(255,255,255,.2); }
   .btn-header.correcoes{ color: #fecaca; border-color: rgba(220,38,38,.3); }
   .btn-header.correcoes:hover{ background: rgba(220,38,38,.15); color: #fff; }
-  .btn-header.tarefas{ color: #ddd6fe; border-color: rgba(139,92,246,.35); }
-  .btn-header.tarefas:hover{ background: rgba(139,92,246,.18); color: #fff; }
+  .btn-header.leads{ color: #99f6e4; border-color: rgba(13,148,136,.35); }
+  .btn-header.leads:hover{ background: rgba(13,148,136,.18); color: #fff; }
   .btn-header .badge-num{
     background: #dc2626; color: #fff;
     padding: 1px 6px; border-radius: 4px;
     font-size: .62rem; font-weight: 800;
     min-width: 18px; text-align: center;
   }
-  .btn-header.tarefas .badge-num{ background: #7c3aed; }
+  .btn-header.leads .badge-num{ background: #0d9488; }
 
   @media(max-width:820px){
     .brand-text{ display: none; }
@@ -219,6 +220,11 @@
     border-bottom: 1px dashed var(--border);
   }
   .agenda-corretores-lista .linha-corr:last-child{ border-bottom: none; }
+  .agenda-corretores-lista .linha-corr.mais-itens{
+    border-bottom: none;
+    color: var(--muted); font-style: italic; font-weight: 500;
+    justify-content: center;
+  }
   .agenda-corretores-lista .nome-corr{ display: inline-flex; align-items: center; gap: 5px; }
   .agenda-corretores-lista .dot-corr{
     width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
@@ -499,7 +505,7 @@
 
   .cliente-row-v2{
     display: grid;
-    grid-template-columns: 32px minmax(0, 1fr) 240px auto;
+    grid-template-columns: 32px minmax(0, 1fr) 180px 240px auto;
     gap: 12px;
     align-items: center;
     padding: 10px 14px;
@@ -542,6 +548,69 @@
   }
   .cliente-row-v2 .linha2 .muted,
   .cliente-row-v2 .linha3 .muted{ color: var(--muted); }
+
+ .cliente-row-v2 .linha2 .item-tel-click{
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: all .15s;
+}
+.cliente-row-v2 .linha2 .item-tel-click:hover{
+  background: #dcfce7;
+  color: #15803d;
+}
+.cliente-row-v2 .linha2 .item-tel-click:hover svg{
+  stroke: #15803d;
+}
+
+  /* ===== BLOCO DE ÚLTIMO ACESSO (novo) ===== */
+  .cliente-row-v2 .acesso-cell{
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding: 8px 10px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--muted);
+    border-radius: var(--radius);
+    font-size: .68rem;
+    color: var(--text-soft);
+    min-height: 60px;
+    justify-content: center;
+  }
+  .cliente-row-v2 .acesso-cell.tipo-acesso{ border-left-color: var(--success); background: #f0f9f4; }
+  .cliente-row-v2 .acesso-cell.tipo-acao{ border-left-color: var(--info); background: #f0f6fc; }
+  .cliente-row-v2 .acesso-cell.sem-acesso{ border-left-color: var(--border-strong); background: var(--bg); }
+  .cliente-row-v2 .acesso-cell .acesso-head{
+    display: flex; align-items: center; gap: 5px;
+    font-size: .58rem; font-weight: 800;
+    text-transform: uppercase; letter-spacing: .4px;
+    color: var(--muted);
+  }
+  .cliente-row-v2 .acesso-cell.tipo-acesso .acesso-head{ color: var(--success); }
+  .cliente-row-v2 .acesso-cell.tipo-acao .acesso-head{ color: var(--info); }
+  .cliente-row-v2 .acesso-cell .acesso-data{
+    font-family: var(--mono);
+    font-size: .76rem; font-weight: 700;
+    color: var(--text);
+    letter-spacing: -.2px;
+  }
+  .cliente-row-v2 .acesso-cell.sem-acesso .acesso-data{
+    color: var(--muted); font-weight: 500;
+    font-family: var(--font); font-size: .72rem;
+  }
+
+.cliente-row-v2 .acesso-cell .acesso-disp{
+  font-size: .68rem;
+  color: var(--text-soft);
+  font-weight: 600;
+  letter-spacing: -.1px;
+  margin-top: 1px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+ 
   .cliente-row-v2 .cutucada-cell{
     display: flex;
     align-items: stretch;
@@ -560,14 +629,19 @@
       grid-template-rows: auto auto;
     }
     .cliente-row-v2 .temp{ grid-row: span 2; }
-    .cliente-row-v2 .cutucada-cell{
+    .cliente-row-v2 .acesso-cell{
       grid-column: 2 / 3;
       grid-row: 3;
       width: 100%;
     }
+    .cliente-row-v2 .cutucada-cell{
+      grid-column: 2 / 3;
+      grid-row: 4;
+      width: 100%;
+    }
     .cliente-row-v2 .tags{
       grid-column: 1 / -1;
-      grid-row: 4;
+      grid-row: 5;
       justify-content: flex-start;
       margin-top: 8px;
       padding-top: 8px;
@@ -588,6 +662,10 @@
     .cliente-row-v2 .linha2 .item.ult-admin,
     .cliente-row-v2 .linha2 .item.ult-acao,
     .cliente-row-v2 .linha3 .item.data-cad{ display: none; }
+    .cliente-row-v2 .acesso-cell{
+      grid-column: 2 / 3;
+      width: 100%;
+    }
     .cliente-row-v2 .cutucada-cell{
       grid-column: 2 / 3;
       width: 100%;
@@ -1179,7 +1257,6 @@
   }
   .btn-evento:hover:not(:disabled){ background: #5b21b6; }
 
-
    /* ============================================
      IFRAME CAPTAÇÕES — tela cheia responsiva
   ============================================ */
@@ -1222,6 +1299,9 @@
   }
   .iframe-captar-head .titulo-iframe .ico{
     color: #4ade80; width: 18px; height: 18px;
+  }
+  .iframe-captar-head.leads-theme .titulo-iframe .ico{
+    color: #5eead4;
   }
   .iframe-captar-head .btn-fechar-iframe{
     background: rgba(255,255,255,.1);
@@ -1286,260 +1366,10 @@
     .iframe-captar-head .titulo-iframe span{ display: none; }
     .iframe-captar-head .titulo-iframe .ico{ width: 22px; height: 22px; }
   }
-  /* ============================================
-     CAPTAÇÕES — NOVO LAYOUT COMPACTO
-     ============================================ */
-  .modal-captacoes{
-    max-width: 1400px !important;
-    width: 96vw !important;
-    height: 92vh !important;
-    max-height: 92vh !important;
-    display: flex !important;
-    flex-direction: column;
-    padding: 20px 22px 0 !important;
-    overflow: hidden !important;
-  }
-
-  .capt-head{
-    display: flex; align-items: center; justify-content: space-between;
-    gap: 12px; flex-wrap: wrap;
-    padding-bottom: 12px;
-    border-bottom: 1px solid var(--border);
-    flex-shrink: 0;
-  }
-  .capt-head h2{
-    font-size: 1.05rem; font-weight: 700;
-    display: flex; align-items: center; gap: 9px;
-    margin: 0;
-  }
-  .capt-head h2 .ico{ color: var(--primary); }
-  .capt-resumo{
-    font-size: .75rem; color: var(--text-soft);
-    font-weight: 600;
-    background: var(--bg);
-    padding: 4px 10px;
-    border-radius: 999px;
-  }
-
-  .capt-filtros{
-    padding: 12px 0;
-    border-bottom: 1px solid var(--border);
-    flex-shrink: 0;
-  }
-  .capt-filtros-linha{
-    display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
-  }
-  .capt-filtros-grupo{
-    display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
-  }
-  .capt-lbl{
-    font-size: .66rem; font-weight: 700;
-    color: var(--muted); text-transform: uppercase;
-    letter-spacing: .5px;
-  }
-  .capt-filtros .chip{
-    font-size: .74rem;
-    padding: 5px 11px;
-  }
-  .capt-filtros .chip .dot{
-    display: inline-block;
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-  .capt-filtros .chip .dot-warn{ background: var(--warn); }
-  .capt-filtros .chip .dot-danger{ background: var(--danger); }
-  .capt-filtros .chip .dot-success{ background: var(--success); }
-  .capt-filtros .chip.active .dot{ background: #fff !important; opacity: .9; }
-
-  .capt-lista{
-    flex: 1;
-    overflow-y: auto;
-    padding: 14px 4px 20px;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
-    gap: 12px;
-    align-content: start;
-  }
-  @media(max-width:700px){
-    .capt-lista{
-      grid-template-columns: 1fr;
-      padding: 10px 2px 16px;
-    }
-  }
-
-  /* CARD COMPACTO */
-  .capt-card{
-    background: #fff;
-    border: 1px solid var(--border);
-    border-left: 3px solid var(--warn);
-    border-radius: var(--radius);
-    padding: 12px 14px;
-    display: flex;
-    flex-direction: column;
-    gap: 9px;
-    transition: all .15s;
-    position: relative;
-  }
-  .capt-card:hover{ border-color: var(--border-strong); box-shadow: var(--shadow-sm); }
-  .capt-card.status-pendente{ border-left-color: var(--warn); }
-  .capt-card.status-sem-retorno{ border-left-color: var(--danger); }
-  .capt-card.status-concluida{ border-left-color: var(--success); opacity: .85; }
-
-  .capt-card .cc-l1{
-    display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
-  }
-  .capt-card .cc-nome{
-    font-size: .88rem; font-weight: 700; color: var(--text);
-    flex: 1; min-width: 0;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  }
-  .capt-card .cc-tel{
-    font-size: .7rem; color: var(--text-soft);
-    font-family: var(--mono);
-    white-space: nowrap;
-  }
-
-  .capt-card .cc-l2{
-    font-size: .72rem; color: var(--text-soft);
-    display: flex; align-items: center; gap: 5px;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  }
-  .capt-card .cc-l2 strong{ color: var(--primary); }
-
-  /* DADOS DO IMÓVEL (fase 2) */
-  .capt-card .cc-imovel{
-    display: flex; flex-wrap: wrap; gap: 4px;
-    padding: 7px 8px;
-    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-    border: 1px solid #bae6fd;
-    border-radius: var(--radius-sm);
-  }
-  .capt-card .cc-imovel .cc-tag{
-    display: inline-flex; align-items: center; gap: 3px;
-    font-size: .66rem; font-weight: 700;
-    padding: 2px 7px; border-radius: 4px;
-    background: #fff; color: #0c4a6e;
-    border: 1px solid #7dd3fc;
-    white-space: nowrap;
-  }
-  .capt-card .cc-imovel .cc-tag .lbl{
-    font-weight: 500; color: #0369a1; opacity: .8;
-  }
-  .capt-card .cc-imovel .cc-tag.valor{
-    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-    border-color: #fbbf24;
-    color: #78350f;
-  }
-  .capt-card .cc-imovel .cc-tag.tipo{
-    background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%);
-    border-color: #c4b5fd;
-    color: #5b21b6;
-  }
-
-  .capt-card .cc-l3{
-    display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
-    padding-top: 6px;
-    border-top: 1px dashed var(--border);
-  }
-  .capt-card .cc-data{
-    font-size: .66rem; color: var(--muted);
-    font-family: var(--mono);
-    margin-right: auto;
-  }
-
-  .capt-card .cc-acoes{
-    display: flex; gap: 4px; align-items: center;
-  }
-  .capt-card .cc-btn{
-    display: inline-flex; align-items: center; justify-content: center;
-    width: 28px; height: 28px;
-    border-radius: 6px;
-    border: 1px solid var(--border);
-    background: #fff; color: var(--text-soft);
-    cursor: pointer; transition: all .15s;
-    text-decoration: none;
-    font-size: 0;
-    padding: 0;
-  }
-  .capt-card .cc-btn:hover{ background: var(--bg); border-color: var(--border-strong); color: var(--text); }
-  .capt-card .cc-btn .ico{ width: 14px; height: 14px; }
-  .capt-card .cc-btn.btn-zap:hover{ background: #e7f6ed; border-color: #b8dfc7; color: #1e7a3f; }
-  .capt-card .cc-btn.btn-concluir:hover{ background: var(--success-soft); border-color: #b8dfc7; color: var(--success); }
-  .capt-card .cc-btn.btn-desmarcar:hover{ background: var(--warn-soft); border-color: #e2d3a8; color: var(--warn); }
-  .capt-card .cc-btn.btn-expandir.ativo{ background: var(--primary-soft); border-color: var(--primary); color: var(--primary); }
-
-  .capt-card .cc-selects{
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 6px;
-  }
-  .capt-card .cc-selects .cc-campo{
-    display: flex; flex-direction: column; gap: 2px;
-  }
-  .capt-card .cc-selects label{
-    font-size: .58rem; font-weight: 700;
-    color: var(--muted); text-transform: uppercase;
-    letter-spacing: .3px; margin: 0;
-  }
-  .capt-card .cc-selects select{
-    padding: 5px 8px;
-    font-size: .72rem;
-    border-radius: 6px;
-    border: 1px solid var(--border-strong);
-    background: #fff;
-    height: auto;
-    min-height: 28px;
-  }
-
-  .capt-card .cc-obs-wrap{
-    display: none;
-    flex-direction: column; gap: 4px;
-    padding-top: 6px;
-    border-top: 1px dashed var(--border);
-  }
-  .capt-card.obs-aberta .cc-obs-wrap{ display: flex; }
-  .capt-card .cc-obs-wrap label{
-    font-size: .6rem; font-weight: 700;
-    color: var(--muted); text-transform: uppercase;
-    letter-spacing: .3px; margin: 0;
-  }
-  .capt-card .cc-obs-wrap textarea{
-    min-height: 60px;
-    font-size: .76rem;
-    padding: 6px 8px;
-    border-radius: 6px;
-    border: 1px solid var(--border-strong);
-    resize: vertical;
-    font-family: inherit;
-  }
-
-  .capt-card .cc-status-tag{
-    font-size: .58rem; font-weight: 800;
-    padding: 2px 7px; border-radius: 999px;
-    text-transform: uppercase; letter-spacing: .3px;
-    white-space: nowrap;
-  }
-  .capt-card .cc-status-tag.pendente{ background: var(--warn-soft); color: var(--warn); }
-  .capt-card .cc-status-tag.sem-retorno{ background: var(--danger-soft); color: var(--danger); }
-  .capt-card .cc-status-tag.concluida{ background: var(--success-soft); color: var(--success); }
-
-  @media(max-width:700px){
-    .modal-captacoes{
-      width: 100vw !important;
-      height: 100vh !important;
-      max-height: 100vh !important;
-      border-radius: 0 !important;
-      padding: 14px 12px 0 !important;
-    }
-    .capt-filtros-linha{ gap: 8px; }
-    .capt-filtros .chip{ font-size: .68rem; padding: 4px 9px; }
-    .capt-lista{ padding: 10px 0 16px; gap: 8px; }
-    .capt-card{ padding: 9px 10px; }
-  }
 </style>
 </head>
-<body>
+
+ <body>
 
 <header class="app-header">
   <div class="header-inner">
@@ -1559,10 +1389,15 @@
         <span class="lbl-txt">Captar</span>
         <span class="badge-num" id="captarBadgeNum">0</span>
       </button>
-      <button class="btn-header tarefas" id="btnTarefas" onclick="abrirTarefas()" title="Tarefas / Lembretes">
-        <svg class="ico" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
-        <span class="lbl-txt">Tarefas</span>
-        <span class="badge-num" id="tarefasBadgeNum">0</span>
+      <button class="btn-header leads" id="btnLeads" onclick="abrirLeads()" title="Leads">
+        <svg class="ico" viewBox="0 0 24 24">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+          <circle cx="9" cy="7" r="4"/>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        </svg>
+        <span class="lbl-txt">Leads</span>
+        <span class="badge-num" id="leadsBadgeNum">0</span>
       </button>
       <button class="btn-header" onclick="abrirImoveisAdmin()" title="Abrir catálogo de imóveis em modo admin">
         <svg class="ico" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
@@ -1622,9 +1457,10 @@
       <div class="card-ico-wrap" style="background:var(--warn-soft); color:var(--warn);">
         <svg class="ico ico-lg" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><polyline points="9 16 12 19 16 14"/></svg>
       </div>
-      <div>
+      <div style="width:100%;">
         <div class="titulo">Querem Visitar</div>
         <div class="sub">Solicitações dos clientes</div>
+        <div class="agenda-corretores-lista" id="visitarCorretoresLista"></div>
       </div>
     </div>
     <div class="big-card" id="cardGostei" onclick="abrirPainel('gostei')">
@@ -1632,9 +1468,10 @@
       <div class="card-ico-wrap" style="background:var(--success-soft); color:var(--success);">
         <svg class="ico ico-lg" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
       </div>
-      <div>
+      <div style="width:100%;">
         <div class="titulo">Gostei</div>
         <div class="sub">Clientes interessados</div>
+        <div class="agenda-corretores-lista" id="gosteiCorretoresLista"></div>
       </div>
     </div>
     <div class="big-card" id="cardClientes" onclick="abrirPainel('clientes')">
@@ -1642,9 +1479,10 @@
       <div class="card-ico-wrap">
         <svg class="ico ico-lg" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
       </div>
-      <div>
+      <div style="width:100%;">
         <div class="titulo">Clientes</div>
         <div class="sub">Cadastro e gestão</div>
+        <div class="agenda-corretores-lista" id="clientesCorretoresLista"></div>
       </div>
     </div>
   </div>
@@ -1749,6 +1587,8 @@
           <option value="data">Cadastro (mais novo)</option>
           <option value="acao-cliente">Última ação do cliente</option>
           <option value="acao-admin">Última ação do admin</option>
+          <option value="acesso-recente">Último acesso (mais recente)</option>
+          <option value="acesso-antigo">Último acesso (mais antigo)</option>
           <option value="cutucada-recente">Cutucadas (mais recentes)</option>
           <option value="cutucada-antiga">Cutucadas (mais antigas)</option>
           <option value="sem-cutucada">Sem cutucada</option>
@@ -1808,35 +1648,6 @@
           </button>
         </div>
       </div>
-    </div>
-  </div>
-</div>
-
-<!-- Modal Tarefas -->
-<div class="modal-backdrop" id="tarefasBackdrop">
-  <div class="modal" style="max-width:760px;">
-    <button class="modal-close" onclick="fecharTarefas()"><svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-    <h2><svg class="ico" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg> Tarefas / Lembretes</h2>
-    <div class="tarefa-nova-wrap">
-      <textarea id="novaTarefaTexto" placeholder="Escreva aqui a tarefa ou lembrete..." maxlength="500"></textarea>
-      <div class="tarefa-nova-row">
-        <select id="novaTarefaCorretor">
-          <option value="">— Escolha o corretor —</option>
-        </select>
-        <button class="btn btn-primary" onclick="criarTarefa()">
-          <svg class="ico ico-sm" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          Adicionar tarefa
-        </button>
-      </div>
-    </div>
-    <div class="filtros-wrap" id="filtrosTarefasWrap">
-      <div class="filtro-grupo" id="filtrosTarefasCorretores">
-        <span class="lbl">Corretor:</span>
-      </div>
-      <button class="chip chip-concluidas" id="btnVerConcluidasTarefas" onclick="alternarConcluidasTarefas()">Ver concluídas</button>
-    </div>
-    <div class="tarefas-lista" id="tarefasLista">
-      <div class="loading-inline"><span class="loader loader-lg"></span><p>Carregando tarefas...</p></div>
     </div>
   </div>
 </div>
@@ -2170,53 +1981,6 @@
   </div>
 </div>
 
-<!-- Modal Captações QPreço — NOVO LAYOUT -->
-<div class="modal-backdrop" id="captacoesBackdrop">
-  <div class="modal modal-captacoes">
-    <button class="modal-close" onclick="fecharCaptacoes()">
-      <svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-    </button>
-
-    <div class="capt-head">
-      <h2>
-        <svg class="ico" viewBox="0 0 24 24" style="stroke:#16a34a;">
-          <path d="M12 2v20"/>
-          <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
-        </svg>
-        Captações QPreço
-      </h2>
-      <span class="capt-resumo" id="captacoesResumo"></span>
-    </div>
-
-    <div class="capt-filtros">
-      <div class="capt-filtros-linha">
-        <div class="capt-filtros-grupo">
-          <span class="capt-lbl">Status:</span>
-          <button class="chip active" data-capt-filter="pendentes" onclick="setFiltroCaptacoes('pendentes', this)">
-            <span class="dot dot-warn"></span> Pendentes <span class="cnt" id="cntPendentes">0</span>
-          </button>
-          <button class="chip" data-capt-filter="sem-retorno" onclick="setFiltroCaptacoes('sem-retorno', this)">
-            <span class="dot dot-danger"></span> Sem retorno <span class="cnt" id="cntSemRetorno">0</span>
-          </button>
-          <button class="chip" data-capt-filter="concluidas" onclick="setFiltroCaptacoes('concluidas', this)">
-            <span class="dot dot-success"></span> Concluídas <span class="cnt" id="cntConcluidas">0</span>
-          </button>
-          <button class="chip" data-capt-filter="todas" onclick="setFiltroCaptacoes('todas', this)">
-            📋 Todas <span class="cnt" id="cntTodas">0</span>
-          </button>
-        </div>
-        <div class="capt-filtros-grupo" id="captacoesFiltroCorretores">
-          <span class="capt-lbl">Corretor:</span>
-        </div>
-      </div>
-    </div>
-
-    <div id="captacoesLista" class="capt-lista">
-      <div class="loading-inline"><span class="loader loader-lg"></span><p>Carregando captações...</p></div>
-    </div>
-  </div>
-</div>
-
 <!-- Confirm -->
 <div class="confirm-backdrop" id="confirmBackdrop">
   <div class="confirm-box">
@@ -2232,8 +1996,7 @@
   </div>
 </div>
 
-
- <!-- IFRAME CAPTAÇÕES -->
+<!-- IFRAME CAPTAÇÕES -->
 <div class="iframe-captar-backdrop" id="iframeCaptarBackdrop">
   <div class="iframe-captar-wrap">
     <div class="iframe-captar-head">
@@ -2266,13 +2029,46 @@
   </div>
 </div>
 
- 
+<!-- IFRAME LEADS -->
+<div class="iframe-captar-backdrop" id="iframeLeadsBackdrop">
+  <div class="iframe-captar-wrap">
+    <div class="iframe-captar-head leads-theme">
+      <div class="titulo-iframe">
+        <svg class="ico" viewBox="0 0 24 24">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+          <circle cx="9" cy="7" r="4"/>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        </svg>
+        <span>Leads</span>
+      </div>
+      <button class="btn-fechar-iframe" onclick="fecharIframeLeads()" title="Fechar">
+        <svg class="ico ico-sm" viewBox="0 0 24 24">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+        <span class="txt-btn">Fechar</span>
+      </button>
+    </div>
+    <div class="iframe-captar-body" id="iframeLeadsBody">
+      <div class="iframe-captar-loader" id="iframeLeadsLoader">
+        <span class="loader loader-lg"></span>
+        <p style="font-size:.85rem; color:var(--text-soft);">Carregando leads...</p>
+      </div>
+      <iframe id="iframeLeads" 
+              src="about:blank"
+              title="Leads"
+              allow="clipboard-write; clipboard-read"
+              sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-modals"></iframe>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 <div class="saving-overlay" id="savingOverlay">
   <div class="spinner"></div>
   <div class="msg">Aguarde, estamos salvando...</div>
 </div>
-
 <script>
 /* =====================================================
    CONFIG
@@ -2287,7 +2083,6 @@ const IMOVEIS_ADMIN_URL = 'https://limaribeiroimoveis.com.br/imoveis.html?admin=
 const TIMEOUT_API = 90000;
 const TIMEOUT_LOGIN = 60000;
 
-/* 🎨 Cores padrão conhecidas (fallback se backend não mandar) */
 const CORES_PADRAO = {
   'Hugo':     '#1e40af',
   'Carolina': '#9333ea'
@@ -2338,14 +2133,14 @@ const state = {
   _cutucadasAtuais: [],
   _gruposAbertosGostei: new Set(),
   _gruposAbertosVisitar: new Set(),
-  _captObsAbertas: new Set()
+  _captObsAbertas: new Set(),
+  _leadsPendentes: 0,       // enviado pelo iframe Leads via postMessage
+  _captacoesPendentes: 0    // enviado pela API contarCaptacoesPendentes
 };
 
 /* =====================================================
-   UTILITÁRIOS — funções auxiliares usadas em várias partes
+   UTILITÁRIOS
 ===================================================== */
-
-/* ---- Resolve o corretor responsável por um item ---- */
 function resolverCorretor_(item){
   if(!item) return '';
   if(item.corretor) return String(item.corretor).trim();
@@ -2365,8 +2160,6 @@ function resolverCorretor_(item){
   }
   return '';
 }
-
-/* ---- Identifica eventos neutros (não são visitas) ---- */
 function isEvento_(a){
   if(!a) return false;
   if(a._isEventoNeutro) return true;
@@ -2378,8 +2171,6 @@ function isEvento_(a){
   if(!tel || tel === '00000000000') return true;
   return false;
 }
-
-/* ---- Limpa o título do evento ---- */
 function tituloEventoLimpo_(a){
   let t = String(a.rua || a.titulo || a.clienteNome || 'Evento').trim();
   t = t.replace(/,?\s*(000|S\/N|s\/n|-|\.)\s*/g, ' ').replace(/\s+/g, ' ').trim();
@@ -2390,8 +2181,6 @@ function tituloEventoLimpo_(a){
   }
   return t || 'Evento';
 }
-
-/* ---- Extrai rua/numero/bairro/chave de um imóvel ---- */
 function camposEndereco_(im){
   if(!im) return { rua: '', numero: '', bairro: '', chave: '' };
   return {
@@ -2401,8 +2190,6 @@ function camposEndereco_(im){
     chave:  String(im.chaveTexto || '').trim()
   };
 }
-
-/* ---- Classifica agendamento por proximidade ---- */
 function classificarAgendamento(iso){
   if(!iso) return { label: '—', classe: 'distante' };
   const d = new Date(iso);
@@ -2440,7 +2227,6 @@ function toggleSenhaAdmin(btn){
     btn.innerHTML = '<svg class="ico" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
   }
 }
-
 function toast(msg, type=''){
   const t = $('toast');
   if(!t) return;
@@ -2471,6 +2257,17 @@ function fmtData(d){
   const ds = DIAS_SEMANA[dt.getDay()];
   return `${dia}/${mes}/${ano} - ${ds}`;
 }
+/* ✅ Data sem dia da semana (ex: 13/10/2026) */
+function fmtDataSimples(d){
+  if(!d) return '';
+  const dt = new Date(d);
+  if(isNaN(dt.getTime())) return '';
+  const dia = String(dt.getDate()).padStart(2,'0');
+  const mes = String(dt.getMonth()+1).padStart(2,'0');
+  const ano = dt.getFullYear();
+  return `${dia}/${mes}/${ano}`;
+}
+ 
 function fmtDataHora(d){
   if(!d) return '';
   const dt = new Date(d);
@@ -2524,8 +2321,6 @@ function emojiTemperatura(temp){
   if(temp === 'morno') return '🌡️';
   return '❄️';
 }
-
-/* 🎨 Cor do corretor — olha SEMPRE state.corretores primeiro */
 function corDoCorretor(nome){
   if(!nome) return '#64748b';
   const c = state.corretores.find(x => x.nome === nome);
@@ -2571,59 +2366,91 @@ function formatarDataHoraCurta_(d){
   return `${dia}/${mes}/${ano}   ${h}:${m}`;
 }
 
+/* ✅ Formata data+hora com 2 espaços entre elas (pro bloco de último acesso) */
+function formatarDataHoraCliente_(d){
+  if(!(d instanceof Date) || isNaN(d.getTime())) return '';
+  const dia = String(d.getDate()).padStart(2,'0');
+  const mes = String(d.getMonth()+1).padStart(2,'0');
+  const ano = d.getFullYear();
+  const h = String(d.getHours()).padStart(2,'0');
+  const m = String(d.getMinutes()).padStart(2,'0');
+  return `${dia}/${mes}/${ano}  ${h}:${m}`;
+}
+
+/* ✅ Retorna o mais recente entre acesso e ação do CLIENTE */
+function ultimoAcessoCliente_(c){
+  const candidatos = [];
+  if(c.dataUltimoAcesso){
+    const d = new Date(c.dataUltimoAcesso);
+    if(!isNaN(d.getTime())){
+      candidatos.push({
+        data: d,
+        tipo: 'acesso',
+        label: 'Último acesso',
+        dispositivo: c.dispositivoAcesso || ''
+      });
+    }
+  }
+  if(c.dataUltimaAcaoCliente){
+    const d = new Date(c.dataUltimaAcaoCliente);
+    if(!isNaN(d.getTime())){
+      candidatos.push({
+        data: d,
+        tipo: 'acao',
+        label: 'Última ação',
+        dispositivo: c.dispositivoAcao || c.dispositivoAcesso || ''
+      });
+    }
+  }
+  if(candidatos.length === 0) return null;
+  candidatos.sort((a, b) => b.data - a.data);
+  return candidatos[0];
+}
+
 /* =====================================================
-   PARSE DA COLUNA "ORIGEM"
+   PARSE DA COLUNA "ORIGEM" (mantido — usado pelo iframe Captar depois)
 ===================================================== */
 function parseOrigem_(origemBruta){
   const out = {
-    fase: '',
-    nome: '', telefone: '', endereco: '',
+    fase: '', nome: '', telefone: '', endereco: '',
     rua: '', numero: '', complemento: '', bairro: '',
     tipo: '', area: '', quartos: '', suites: '', banheiros: '',
     vagas: '', condominio: '', iptu: '', valorEstimado: '',
-    completa: false,
-    _raw: String(origemBruta || '').trim()
+    completa: false, _raw: String(origemBruta || '').trim()
   };
   if(!out._raw) return out;
-
   if(/^FASE2-COMPLETA/i.test(out._raw)) { out.fase = 'FASE2-COMPLETA'; out.completa = true; }
   else if(/^FASE1-PARCIAL/i.test(out._raw)) { out.fase = 'FASE1-PARCIAL'; }
-
   const partes = out._raw.split('|').map(p => p.trim()).filter(Boolean);
-
   partes.forEach(parte => {
-    const idxDoisPontos = parte.indexOf(':');
-    if(idxDoisPontos < 0) return;
-    const chave = parte.slice(0, idxDoisPontos).trim().toLowerCase();
-    const valor = parte.slice(idxDoisPontos + 1).trim();
-
+    const idx = parte.indexOf(':');
+    if(idx < 0) return;
+    const chave = parte.slice(0, idx).trim().toLowerCase();
+    const valor = parte.slice(idx + 1).trim();
     switch(chave){
-      case 'nome':            out.nome        = valor; break;
-      case 'telefone':        out.telefone    = valor; break;
+      case 'nome': out.nome = valor; break;
+      case 'telefone': out.telefone = valor; break;
       case 'endereco':
         out.endereco = valor;
         const m = valor.match(/^([^,]+),\s*([^\s-]+)?\s*-?\s*([^-]+)?\s*-?\s*([^-]+)?$/);
         if(m){
-          out.rua         = (m[1] || '').trim();
-          out.numero      = (m[2] || '').trim();
+          out.rua = (m[1] || '').trim();
+          out.numero = (m[2] || '').trim();
           out.complemento = (m[3] || '').trim();
-          out.bairro      = (m[4] || '').trim();
-        } else {
-          out.rua = valor;
-        }
+          out.bairro = (m[4] || '').trim();
+        } else { out.rua = valor; }
         break;
-      case 'tipo':            out.tipo        = valor; break;
-      case 'area':            out.area        = valor; break;
-      case 'quartos':         out.quartos     = valor; break;
-      case 'suites':          out.suites      = valor; break;
-      case 'banheiros':       out.banheiros   = valor; break;
-      case 'vagas':           out.vagas       = valor; break;
-      case 'condominio':      out.condominio  = valor; break;
-      case 'iptu':            out.iptu        = valor; break;
-      case 'valor_estimado':  out.valorEstimado = valor; break;
+      case 'tipo': out.tipo = valor; break;
+      case 'area': out.area = valor; break;
+      case 'quartos': out.quartos = valor; break;
+      case 'suites': out.suites = valor; break;
+      case 'banheiros': out.banheiros = valor; break;
+      case 'vagas': out.vagas = valor; break;
+      case 'condominio': out.condominio = valor; break;
+      case 'iptu': out.iptu = valor; break;
+      case 'valor_estimado': out.valorEstimado = valor; break;
     }
   });
-
   return out;
 }
 
@@ -2638,9 +2465,7 @@ function calcularConflitos_(agendamentos){
     const chave = chaveCorretorExata_(a.corretor) || '(sem corretor)';
     if(!porCorretor[chave]) porCorretor[chave] = [];
     porCorretor[chave].push({
-      id: a.id,
-      quando: new Date(a.dataVisitaAgendada).getTime(),
-      clienteNome: a.clienteNome
+      id: a.id, quando: new Date(a.dataVisitaAgendada).getTime(), clienteNome: a.clienteNome
     });
   });
   Object.keys(porCorretor).forEach(chave => {
@@ -2806,6 +2631,7 @@ async function carregarHomeAdmin(){
   mostrarView('homeView');
   $('btnSair').classList.remove('hidden');
   atualizarBadgeCaptar();
+  atualizarBadgeLeads();
   state.carregado = { agenda: false, visitar: false, gostei: false, clientes: false, geral: false, tarefas: false };
   await carregarCorretores();
   state.painelAtivo = 'agenda';
@@ -2826,7 +2652,7 @@ async function carregarResto_(){
     await Promise.all([
       carregarNotificacoes(false),
       carregarCorrecoes(false),
-      carregarTarefas(false)
+      atualizarBadgeLeads()          // ✅ novo — badge dos leads VIP
     ]);
   } catch(e){
     console.warn('[carregarResto_] erro:', e);
@@ -2857,20 +2683,17 @@ function sair(){
   $('inputAdminSenha').value = '';
   mostrarView('adminLoginView');
   pararRefreshSilencioso();
+  limparBadgeApp_();
   setTimeout(() => $('inputAdminSenha').focus(), 200);
 }
 
-/* ✅ carregarCorretores — agora pega TODOS do backend */
 async function carregarCorretores(){
-  // 1) Cache
   try {
     const cache = JSON.parse(localStorage.getItem(CORRETORES_CACHE_KEY) || 'null');
     if(cache && Array.isArray(cache.data) && cache.data.length > 0){
       state.corretores = cache.data;
     }
   } catch(e){}
-
-  // 2) Backend
   const res = await api('listarCorretores', { senha: state.adminSenha });
   if(res.ok && Array.isArray(res.data) && res.data.length > 0){
     state.corretores = res.data;
@@ -2878,16 +2701,12 @@ async function carregarCorretores(){
       localStorage.setItem(CORRETORES_CACHE_KEY, JSON.stringify({ data: res.data, ts: Date.now() }));
     } catch(e){}
   }
-
-  // 3) Fallback
   if(!state.corretores || state.corretores.length === 0){
     state.corretores = [
       { nome: 'Hugo',     cor: '#1e40af' },
       { nome: 'Carolina', cor: '#9333ea' }
     ];
   }
-
-  // 4) Popula selects
   const selTar = $('novaTarefaCorretor');
   if(selTar){
     selTar.innerHTML = '<option value="">— Escolha o corretor —</option>' +
@@ -2900,196 +2719,22 @@ async function carregarCorretores(){
   }
 }
 
-/* TAREFAS */
+/* =====================================================
+   TAREFAS — carregamento/contagem
+   (o modal foi removido, mas o backend pode continuar
+    usando essas funções e o badge precisa contar)
+===================================================== */
 async function carregarTarefas(mostrarLoading){
-  if(mostrarLoading){
-    const lista = $('tarefasLista');
-    if(lista && $('tarefasBackdrop').classList.contains('show')){
-      lista.innerHTML = '<div class="loading-inline"><span class="loader loader-lg"></span><p>Carregando tarefas...</p></div>';
-    }
-  }
   const res = await api('listarTarefas', { senha: state.adminSenha });
   state.tarefas = (res.ok && res.data) ? res.data : [];
   state.carregado.tarefas = true;
-  atualizarBadgeTarefas();
-  renderizarFiltrosTarefas();
-  renderizarTarefas();
-}
-function atualizarBadgeTarefas(){
-  const num = $('tarefasBadgeNum');
-  if(!num) return;
-  const pendentes = state.tarefas.filter(t => t.status === 'pendente').length;
-  num.textContent = pendentes > 99 ? '99+' : pendentes;
-}
-function abrirTarefas(){
-  $('tarefasBackdrop').classList.add('show');
-  if(!state.carregado.tarefas) carregarTarefas(true);
-  else { renderizarFiltrosTarefas(); renderizarTarefas(); }
-  setTimeout(() => $('novaTarefaTexto').focus(), 150);
-}
-function fecharTarefas(){ $('tarefasBackdrop').classList.remove('show'); }
-
-/* ✅ renderizarFiltrosTarefas — só mostra corretores com tarefas pendentes */
-function renderizarFiltrosTarefas(){
-  const wrap = $('filtrosTarefasCorretores');
-  if(!wrap) return;
-
-  const listaPendentes = state.tarefas.filter(t => t.status === 'pendente');
-  const comTarefa = new Set();
-  listaPendentes.forEach(t => {
-    const c = chaveCorretorExata_(t.corretor);
-    if(c) comTarefa.add(c);
-  });
-
-  const btn = $('btnVerConcluidasTarefas');
-  if(btn){
-    btn.textContent = state.visaoPainel.tarefas === 'concluidas' ? 'Ver ativas' : 'Ver concluídas';
-    btn.classList.toggle('ativo', state.visaoPainel.tarefas === 'concluidas');
-  }
-
-  if(comTarefa.size === 0){
-    wrap.innerHTML = `
-      <span class="lbl">Corretor:</span>
-      <span style="font-size:.72rem; color:var(--muted); font-style:italic;">Nenhuma tarefa atribuída</span>
-    `;
-    return;
-  }
-
-  const chips = [...comTarefa].sort((a,b) => a.localeCompare(b,'pt-BR')).map(nome => {
-    const cnt = listaPendentes.filter(t => chaveCorretorExata_(t.corretor) === nome).length;
-    const ativo = state.filtrosTarefasCorretores.has(nome);
-    const cor = corDoCorretor(nome);
-    return `<button class="chip chip-corretor ${ativo ? 'active' : ''}"
-              style="background:${ativo ? cor : '#fff'}; color:${ativo ? '#fff' : cor}; border-color:${cor}"
-              onclick="toggleFiltroTarefaCorretor('${esc(nome)}')">
-              ${esc(nome)} <span class="cnt">${cnt}</span>
-            </button>`;
-  }).join('');
-  wrap.innerHTML = `
-    <span class="lbl">Corretor:</span>
-    <button class="chip ${state.filtrosTarefasCorretores.size === 0 ? 'active' : ''}" onclick="limparFiltroTarefasCorretor()">Todos</button>
-    ${chips}
-  `;
-}
-function toggleFiltroTarefaCorretor(nome){
-  if(state.filtrosTarefasCorretores.has(nome)) state.filtrosTarefasCorretores.delete(nome);
-  else state.filtrosTarefasCorretores.add(nome);
-  renderizarFiltrosTarefas();
-  renderizarTarefas();
-}
-function limparFiltroTarefasCorretor(){
-  state.filtrosTarefasCorretores.clear();
-  renderizarFiltrosTarefas();
-  renderizarTarefas();
-}
-function alternarConcluidasTarefas(){
-  state.visaoPainel.tarefas = state.visaoPainel.tarefas === 'concluidas' ? 'ativas' : 'concluidas';
-  renderizarFiltrosTarefas();
-  renderizarTarefas();
-}
-function renderizarTarefas(){
-  const lista = $('tarefasLista');
-  if(!lista) return;
-  let arr = [...state.tarefas];
-  if(state.visaoPainel.tarefas === 'concluidas'){
-    arr = arr.filter(t => t.status === 'concluida');
-  } else {
-    arr = arr.filter(t => t.status === 'pendente');
-  }
-  if(state.filtrosTarefasCorretores.size > 0){
-    arr = arr.filter(t => state.filtrosTarefasCorretores.has(chaveCorretorExata_(t.corretor)));
-  }
-  if(arr.length === 0){
-    lista.innerHTML = `<div class="tarefas-empty">
-      ${state.visaoPainel.tarefas === 'concluidas' ? 'Nenhuma tarefa concluída ainda.' : 'Nenhuma tarefa pendente. Tudo em dia! 🎉'}
-    </div>`;
-    return;
-  }
-  lista.innerHTML = arr.map(t => tarefaRowHTML(t)).join('');
-}
-function tarefaRowHTML(t){
-  const concluida = t.status === 'concluida';
-  const cor = t.corretor ? corDoCorretor(t.corretor) : '#64748b';
-  const quando = concluida
-    ? 'Concluída em ' + fmtDataHora(t.dataConclusao)
-    : 'Criada em ' + fmtDataHora(t.dataCriacao);
-  return `
-    <div class="tarefa-item ${concluida ? 'concluida' : ''}">
-      <button class="tarefa-check ${concluida ? 'marcada' : ''}" onclick="onClickCheckTarefa('${esc(t.id)}', ${concluida})">
-        <svg class="ico" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-      </button>
-      <div class="tarefa-corpo">
-        <div class="tarefa-texto">${esc(t.texto)}</div>
-        <div class="tarefa-meta">
-          ${t.corretor ? `<span class="autor-badge" style="background:${cor}">${esc(t.corretor)}</span>` : ''}
-          <span>${esc(quando)}</span>
-        </div>
-      </div>
-      <div class="tarefa-acoes">
-        ${concluida ? `<button class="btn btn-ghost btn-xs" onclick="reabrirTarefa('${esc(t.id)}')">
-          <svg class="ico ico-sm" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
-        </button>` : ''}
-        <button class="btn btn-ghost btn-xs" onclick="excluirTarefa('${esc(t.id)}')">
-          <svg class="ico ico-sm" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
-        </button>
-      </div>
-    </div>
-  `;
-}
-async function criarTarefa(){
-  const texto = $('novaTarefaTexto').value.trim();
-  const corretor = $('novaTarefaCorretor').value;
-  if(!texto){ toast('Escreva a tarefa', 'error'); return; }
-  if(!corretor){ toast('Escolha o corretor', 'error'); return; }
-  marcarSalvando(true);
-  const res = await api('criarTarefa', { senha: state.adminSenha, texto, corretor });
-  marcarSalvando(false);
-  if(!res.ok){ toast(res.error || 'Erro', 'error'); return; }
-  $('novaTarefaTexto').value = '';
-  toast('Tarefa criada', 'success');
-  state.carregado.tarefas = false;
-  await carregarTarefas(false);
-}
-async function onClickCheckTarefa(id, jaConcluida){
-  if(jaConcluida){ await reabrirTarefa(id); return; }
-  const ok = await confirmarAcao({
-    titulo: 'Concluir tarefa?', texto: 'A tarefa sai da lista de pendentes.',
-    btnSim: 'Concluir', tipo: 'success'
-  });
-  if(!ok) return;
-  marcarSalvando(true);
-  const res = await api('concluirTarefa', { senha: state.adminSenha, id });
-  marcarSalvando(false);
-  if(!res.ok){ toast(res.error || 'Erro', 'error'); return; }
-  toast('Tarefa concluída', 'success');
-  state.carregado.tarefas = false;
-  await carregarTarefas(false);
-}
-async function reabrirTarefa(id){
-  marcarSalvando(true);
-  const res = await api('reabrirTarefa', { senha: state.adminSenha, id });
-  marcarSalvando(false);
-  if(!res.ok){ toast(res.error || 'Erro', 'error'); return; }
-  toast('Tarefa reaberta', 'success');
-  state.carregado.tarefas = false;
-  await carregarTarefas(false);
-}
-async function excluirTarefa(id){
-  const ok = await confirmarAcao({
-    titulo: 'Apagar tarefa?', texto: 'Essa ação não pode ser desfeita.',
-    btnSim: 'Apagar', tipo: 'danger'
-  });
-  if(!ok) return;
-  marcarSalvando(true);
-  const res = await api('excluirTarefa', { senha: state.adminSenha, id });
-  marcarSalvando(false);
-  if(!res.ok){ toast(res.error || 'Erro', 'error'); return; }
-  toast('Tarefa apagada', 'success');
-  state.carregado.tarefas = false;
-  await carregarTarefas(false);
+  atualizarBadgeLeads();
+  atualizarBadgeApp_();
 }
 
-/* CLIENTES */
+/* =====================================================
+   CLIENTES
+===================================================== */
 async function carregarClientes(mostrarLoading){
   if(mostrarLoading){
     $('clientesLista').innerHTML = '<div class="loading-inline"><span class="loader loader-lg"></span><p>Carregando clientes...</p></div>';
@@ -3098,6 +2743,7 @@ async function carregarClientes(mostrarLoading){
   state.clientes = (res.ok && res.data) ? res.data : [];
   state.carregado.clientes = true;
   atualizarBalClientes();
+  renderizarCorretoresNoCardClientes_();
   renderizarFiltrosClientes();
   renderizarClientes();
 }
@@ -3106,18 +2752,15 @@ function atualizarBalClientes(){
   if(el) el.textContent = state.clientes.length;
 }
 
-/* ✅ renderizarFiltrosClientes — dinâmico: só corretores com cliente cadastrado */
 function renderizarFiltrosClientes(){
   const wrap = $('filtrosClientes');
   if(!wrap) return;
-
   const encontrados = new Set();
   state.clientes.forEach(cl => {
     const c = chaveCorretorExata_(cl.corretor);
     if(c) encontrados.add(c);
   });
   const listaCorretores = [...encontrados].sort((a,b) => a.localeCompare(b,'pt-BR'));
-
   const corretoresChips = listaCorretores.map(nome => {
     const cnt = state.clientes.filter(cl => chaveCorretorExata_(cl.corretor) === nome).length;
     const ativo = state.filtrosClientes.corretores.has(nome);
@@ -3128,7 +2771,6 @@ function renderizarFiltrosClientes(){
               ${esc(nome)} <span class="cnt">${cnt}</span>
             </button>`;
   }).join('');
-
   const t = state.filtrosClientes.temperaturas;
   const s = state.filtrosClientes.status;
   const tp = state.filtrosClientes.tipos;
@@ -3255,6 +2897,16 @@ function renderizarClientes(){
       const db = b.dataUltimaAcaoCliente ? new Date(b.dataUltimaAcaoCliente).getTime() : 0;
       return db - da;
     }
+    if(ordem === 'acesso-recente'){
+      const ua = ultimoAcessoCliente_(a);
+      const ub = ultimoAcessoCliente_(b);
+      return (ub ? ub.data.getTime() : 0) - (ua ? ua.data.getTime() : 0);
+    }
+    if(ordem === 'acesso-antigo'){
+      const ua = ultimoAcessoCliente_(a);
+      const ub = ultimoAcessoCliente_(b);
+      return (ua ? ua.data.getTime() : Number.MAX_SAFE_INTEGER) - (ub ? ub.data.getTime() : Number.MAX_SAFE_INTEGER);
+    }
     if(ordem === 'cutucada-recente'){
       const ca = parseCutucada_(a.cutucada);
       const cb = parseCutucada_(b.cutucada);
@@ -3297,6 +2949,32 @@ function clienteRowHTML(c){
   const tel = esc(c.telefone);
   const cut = parseCutucada_(c.cutucada);
 
+  // ✅ Bloco de último acesso (só cliente)
+  const ult = ultimoAcessoCliente_(c);
+  let acessoHTML = '';
+  if(!ult){
+    acessoHTML = `
+      <div class="acesso-cell sem-acesso" title="Sem registro de acesso ou ação">
+        <div class="acesso-head">
+          <svg class="ico ico-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          Sem acesso
+        </div>
+        <div class="acesso-data">Nunca acessou</div>
+      </div>`;
+  } else {
+    const dtFmt = formatarDataHoraCliente_(ult.data);
+    const icoSvg = ult.tipo === 'acesso'
+      ? '<svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>'
+      : '<svg class="ico ico-sm" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>';
+    const cls = ult.tipo === 'acesso' ? 'tipo-acesso' : 'tipo-acao';
+    acessoHTML = `
+      <div class="acesso-cell ${cls}" title="${esc(ult.label)}${ult.dispositivo ? ' · ' + esc(ult.dispositivo) : ''}">
+        <div class="acesso-head">${icoSvg}${esc(ult.label)}</div>
+        <div class="acesso-data">${esc(dtFmt)}</div>
+        ${ult.dispositivo ? `<div class="acesso-disp">${esc(ult.dispositivo)}</div>` : ''}
+      </div>`;
+  }
+
   return `
     <div class="cliente-row-v2 ${inativo ? 'inativo' : ''}">
       <div class="temp ${manual}" title="${temp}${c.temperaturaManual ? ' (manual)' : ''} - clique para alterar" onclick="abrirTempModal('${tel}')">${emoji}</div>
@@ -3308,14 +2986,13 @@ function clienteRowHTML(c){
           ${tqc ? '<span class="tag tag-tqc"><strong>TQC</strong></span>' : ''}
           ${investidor ? '<span class="tag tag-car"><strong>INVESTIDOR</strong></span>' : ''}
         </div>
-        <div class="linha2">
-          <span class="item">
+                <div class="linha2">
+          <span class="item item-tel-click" onclick="abrirWhatsAppCliente('${tel}')" title="Abrir WhatsApp de ${esc(c.nome || 'cliente')}">
             <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
             ${esc(fmtTel(c.telefone))}
           </span>
           ${c.corretor ? `<span class="item"><span class="corretor-badge" style="background:${corCorr}">${esc(c.corretor)}</span></span>` : ''}
-          <span class="item ult-admin">Admin: ${c.dataUltimaAcaoAdmin ? fmtData(c.dataUltimaAcaoAdmin) : '—'}</span>
-          <span class="item ult-acao">Cliente: ${c.dataUltimaAcaoCliente ? fmtData(c.dataUltimaAcaoCliente) : '—'}</span>
+          <span class="item ult-admin">Admin: ${c.dataUltimaAcaoAdmin ? fmtDataSimples(c.dataUltimaAcaoAdmin) : '—'}</span>
         </div>
         <div class="linha3">
           <span class="item data-cad">📅 Cadastro: ${c.dataCadastro ? fmtData(c.dataCadastro) : '—'}</span>
@@ -3323,6 +3000,8 @@ function clienteRowHTML(c){
           <span class="item muted">👁️ Visitas: ${totalVi}</span>
         </div>
       </div>
+
+      ${acessoHTML}
 
       <div class="cutucada-cell">
         <div class="cutucada-wrap" onclick="abrirCutucadas('${tel}')" title="Clique para ver todas as cutucadas">
@@ -3364,7 +3043,86 @@ function clienteRowHTML(c){
   `;
 }
 
-/* CUTUCADAS */
+/* =====================================================
+   PRÉVIA POR CORRETOR NOS CARDS (novo)
+===================================================== */
+function montarPreviaCorretores_(contagem, maxItens){
+  const limite = maxItens || 5;
+  const entradas = Object.entries(contagem).sort((a, b) => b[1] - a[1]);
+  if(entradas.length === 0) return '';
+  const visiveis = entradas.slice(0, limite);
+  const restantes = entradas.length - visiveis.length;
+  let html = visiveis.map(([nome, qtd]) => {
+    const cor = corDoCorretor(nome) || '#94a3b8';
+    return `
+      <div class="linha-corr">
+        <span class="nome-corr">
+          <span class="dot-corr" style="background:${cor};"></span>
+          ${esc(nome)}
+        </span>
+        <span class="num-corr">${qtd}</span>
+      </div>`;
+  }).join('');
+  if(restantes > 0){
+    html += `<div class="linha-corr mais-itens">+ ${restantes} corretor${restantes === 1 ? '' : 'es'}...</div>`;
+  }
+  return html;
+}
+
+function renderizarCorretoresNoCardAgenda_(){
+  const wrap = $('agendaCorretoresLista');
+  if(!wrap) return;
+  const lista = [...state.agendamentos, ...state.eventosNeutros];
+  const contagem = {};
+  lista.forEach(a => {
+    const corr = resolverCorretor_(a) || '(sem corretor)';
+    if(!contagem[corr]) contagem[corr] = 0;
+    contagem[corr]++;
+  });
+  wrap.innerHTML = montarPreviaCorretores_(contagem, 5);
+}
+
+function renderizarCorretoresNoCardVisitar_(){
+  const wrap = $('visitarCorretoresLista');
+  if(!wrap) return;
+  const lista = state.notificacoes.visita || [];
+  const contagem = {};
+  lista.forEach(item => {
+    const corr = resolverCorretor_(item) || '(sem corretor)';
+    if(!contagem[corr]) contagem[corr] = 0;
+    contagem[corr]++;
+  });
+  wrap.innerHTML = montarPreviaCorretores_(contagem, 5);
+}
+
+function renderizarCorretoresNoCardGostei_(){
+  const wrap = $('gosteiCorretoresLista');
+  if(!wrap) return;
+  const lista = state.notificacoes.gostei || [];
+  const contagem = {};
+  lista.forEach(item => {
+    const corr = resolverCorretor_(item) || '(sem corretor)';
+    if(!contagem[corr]) contagem[corr] = 0;
+    contagem[corr]++;
+  });
+  wrap.innerHTML = montarPreviaCorretores_(contagem, 5);
+}
+
+function renderizarCorretoresNoCardClientes_(){
+  const wrap = $('clientesCorretoresLista');
+  if(!wrap) return;
+  const contagem = {};
+  state.clientes.forEach(c => {
+    const corr = chaveCorretorExata_(c.corretor) || '(sem corretor)';
+    if(!contagem[corr]) contagem[corr] = 0;
+    contagem[corr]++;
+  });
+  wrap.innerHTML = montarPreviaCorretores_(contagem, 5);
+}
+
+/* =====================================================
+   CUTUCADAS
+===================================================== */
 async function abrirCutucadas(telefone){
   const tel = normalizaTel(telefone);
   if(!tel){ toast('Telefone inválido', 'error'); return; }
@@ -3488,7 +3246,9 @@ async function salvarNovaCutucada(){
   renderizarClientes();
 }
 
-/* VITRINE / LINK */
+/* =====================================================
+   VITRINE / LINK
+===================================================== */
 function abrirVitrineCliente(telefone){
   const tel = normalizaTel(telefone);
   if(!tel){ toast('Telefone inválido', 'error'); return; }
@@ -3571,7 +3331,9 @@ function abrirVitrineComoAdmin(){
   window.open(c.admin.link, '_blank', 'noopener');
 }
 
-/* ATIVIDADE */
+/* =====================================================
+   ATIVIDADE
+===================================================== */
 async function abrirAtividadeClienteDoCard(telefone){
   const tel = normalizaTel(telefone);
   if(!tel){ toast('Telefone inválido', 'error'); return; }
@@ -3692,7 +3454,9 @@ function fecharAtividade(){
   state._atividadeEventos = null;
 }
 
-/* AGENDA */
+/* =====================================================
+   AGENDA
+===================================================== */
 async function carregarAgenda(mostrarLoading){
   if(mostrarLoading){
     $('agendaLista').innerHTML = '<div class="loading-inline"><span class="loader loader-lg"></span><p>Carregando agenda...</p></div>';
@@ -3717,31 +3481,6 @@ async function carregarAgenda(mostrarLoading){
   renderizarAgenda();
   renderizarCorretoresNoCardAgenda_();
 }
-function renderizarCorretoresNoCardAgenda_(){
-  const wrap = $('agendaCorretoresLista');
-  if(!wrap) return;
-  const lista = [...state.agendamentos, ...state.eventosNeutros];
-  const contagem = {};
-  lista.forEach(a => {
-    const corr = resolverCorretor_(a) || '(sem corretor)';
-    if(!contagem[corr]) contagem[corr] = 0;
-    contagem[corr]++;
-  });
-  const entradas = Object.entries(contagem).sort((a, b) => b[1] - a[1]);
-  if(entradas.length === 0){ wrap.innerHTML = ''; return; }
-  wrap.innerHTML = entradas.map(([nome, qtd]) => {
-    const cor = corDoCorretor(nome) || '#94a3b8';
-    return `
-      <div class="linha-corr">
-        <span class="nome-corr">
-          <span class="dot-corr" style="background:${cor};"></span>
-          ${esc(nome)}
-        </span>
-        <span class="num-corr">${qtd}</span>
-      </div>
-    `;
-  }).join('');
-}
 function atualizarBalAgenda(){
   const el = $('balAgenda');
   if(!el) return;
@@ -3749,23 +3488,18 @@ function atualizarBalAgenda(){
   el.textContent = total > 99 ? '99+' : total;
   el.classList.toggle('zero', total === 0);
 }
-
-/* ✅ renderizarFiltrosAgenda — dinâmico: só corretores com agendamento */
 function renderizarFiltrosAgenda(){
   const wrap = $('filtrosAgenda');
   if(!wrap) return;
-
   const todos = [...state.agendamentos, ...state.eventosNeutros];
   const total = todos.length;
   const todosAtivo = state.filtrosAgenda.size === 0 ? 'active' : '';
-
   const encontrados = new Set();
   todos.forEach(a => {
     const c = chaveCorretorExata_(resolverCorretor_(a));
     if(c) encontrados.add(c);
   });
   const listaCorretores = [...encontrados].sort((a,b) => a.localeCompare(b,'pt-BR'));
-
   const chips = listaCorretores.map(nome => {
     const cnt = todos.filter(a => chaveCorretorExata_(resolverCorretor_(a)) === nome).length;
     const ativo = state.filtrosAgenda.has(nome);
@@ -3776,7 +3510,6 @@ function renderizarFiltrosAgenda(){
               ${esc(nome)} <span class="cnt">${cnt}</span>
             </button>`;
   }).join('');
-
   wrap.innerHTML = `
     <div class="filtro-grupo">
       <button class="chip ${todosAtivo}" onclick="limparFiltroAgenda()">Todos <span class="cnt">${total}</span></button>
@@ -3989,15 +3722,9 @@ async function salvarEvento(ev){
   const iso = dataEscolhida.toISOString();
   let res;
   if(idEvento){
-    res = await api('atualizarEventoNeutro', {
-      senha: state.adminSenha, id: idEvento,
-      titulo, descricao, dataHora: iso, corretor
-    });
+    res = await api('atualizarEventoNeutro', { senha: state.adminSenha, id: idEvento, titulo, descricao, dataHora: iso, corretor });
   } else {
-    res = await api('criarEventoNeutro', {
-      senha: state.adminSenha,
-      titulo, descricao, dataHora: iso, corretor
-    });
+    res = await api('criarEventoNeutro', { senha: state.adminSenha, titulo, descricao, dataHora: iso, corretor });
   }
   marcarSalvando(false);
   if(btn) btn.disabled = false;
@@ -4009,8 +3736,7 @@ async function salvarEvento(ev){
 }
 async function excluirEvento(id){
   const ok = await confirmarAcao({
-    titulo: 'Excluir evento?',
-    texto: 'Esse evento será removido da agenda.',
+    titulo: 'Excluir evento?', texto: 'Esse evento será removido da agenda.',
     btnSim: 'Excluir', tipo: 'danger'
   });
   if(!ok) return;
@@ -4193,10 +3919,7 @@ async function salvarAgendamento(ev){
   const btn = ev?.target; if(btn) btn.disabled = true;
   marcarSalvando(true);
   const iso = dataEscolhida.toISOString();
-  const res = await api('agendarVisita', {
-    senha: state.adminSenha, id, dataAgendada: iso,
-    rua, numero, bairro
-  });
+  const res = await api('agendarVisita', { senha: state.adminSenha, id, dataAgendada: iso, rua, numero, bairro });
   marcarSalvando(false);
   if(btn) btn.disabled = false;
   if(!res.ok){ toast(res.error || 'Erro', 'error'); return; }
@@ -4322,7 +4045,9 @@ function gerarCartaoVisitaDataURL(im){
   return canvas.toDataURL('image/png');
 }
 
-/* NOTIFICAÇÕES */
+/* =====================================================
+   NOTIFICAÇÕES
+===================================================== */
 async function carregarNotificacoes(mostrarLoading){
   if(mostrarLoading){
     if(state.painelAtivo === 'visitar'){
@@ -4338,6 +4063,8 @@ async function carregarNotificacoes(mostrarLoading){
   state.carregado.gostei = true;
   atualizarBalVisitar();
   atualizarBalGostei();
+  renderizarCorretoresNoCardVisitar_();
+  renderizarCorretoresNoCardGostei_();
   renderizarFiltrosVisitar();
   renderizarFiltrosGostei();
   renderizarNotificacoes();
@@ -4356,8 +4083,6 @@ function atualizarBalGostei(){
   el.textContent = total > 99 ? '99+' : total;
   el.classList.toggle('zero', total === 0);
 }
-
-/* ✅ renderizarFiltrosVisitar — dinâmico */
 function renderizarFiltrosVisitar(){
   const wrap = $('filtrosVisitarCorretores');
   if(!wrap) return;
@@ -4368,15 +4093,10 @@ function renderizarFiltrosVisitar(){
     if(c) encontrados.add(c);
   });
   const listaCorretores = [...encontrados].sort((a,b) => a.localeCompare(b,'pt-BR'));
-
   if(listaCorretores.length === 0){
-    wrap.innerHTML = `
-      <span class="lbl">Corretor:</span>
-      <span style="font-size:.72rem; color:var(--muted); font-style:italic;">Nenhum corretor com solicitação</span>
-    `;
+    wrap.innerHTML = `<span class="lbl">Corretor:</span><span style="font-size:.72rem; color:var(--muted); font-style:italic;">Nenhum corretor com solicitação</span>`;
     return;
   }
-
   const chips = listaCorretores.map(nome => {
     const cnt = lista.filter(item => chaveCorretorExata_(resolverCorretor_(item)) === nome).length;
     const ativo = state.filtrosVisitarCorretores.has(nome);
@@ -4393,8 +4113,6 @@ function renderizarFiltrosVisitar(){
     ${chips}
   `;
 }
-
-/* ✅ renderizarFiltrosGostei — dinâmico */
 function renderizarFiltrosGostei(){
   const wrap = $('filtrosGosteiCorretores');
   if(!wrap) return;
@@ -4405,15 +4123,10 @@ function renderizarFiltrosGostei(){
     if(c) encontrados.add(c);
   });
   const listaCorretores = [...encontrados].sort((a,b) => a.localeCompare(b,'pt-BR'));
-
   if(listaCorretores.length === 0){
-    wrap.innerHTML = `
-      <span class="lbl">Corretor:</span>
-      <span style="font-size:.72rem; color:var(--muted); font-style:italic;">Nenhum corretor com "Gostei"</span>
-    `;
+    wrap.innerHTML = `<span class="lbl">Corretor:</span><span style="font-size:.72rem; color:var(--muted); font-style:italic;">Nenhum corretor com "Gostei"</span>`;
     return;
   }
-
   const chips = listaCorretores.map(nome => {
     const cnt = lista.filter(item => chaveCorretorExata_(resolverCorretor_(item)) === nome).length;
     const ativo = state.filtrosGosteiCorretores.has(nome);
@@ -4671,9 +4384,7 @@ async function marcarTratado(imovelId, tipo){
   });
   if(!ok) return;
   marcarSalvando(true);
-  const res = await api('marcarAtendido', {
-    senha: state.adminSenha, id: imovelId, tipo: tipo, atendido: true
-  });
+  const res = await api('marcarAtendido', { senha: state.adminSenha, id: imovelId, tipo: tipo, atendido: true });
   marcarSalvando(false);
   if(!res.ok){ toast(res.error || 'Erro', 'error'); return; }
   toast('Marcado como tratado', 'success');
@@ -4683,7 +4394,9 @@ async function marcarTratado(imovelId, tipo){
   await carregarNotificacoes(false);
 }
 
-/* REFRESH SILENCIOSO */
+/* =====================================================
+   REFRESH SILENCIOSO
+===================================================== */
 function iniciarRefreshSilencioso(){
   pararRefreshSilencioso();
   const resetTimer = () => {
@@ -4727,15 +4440,19 @@ async function executarRefreshSilencioso(){
     if(resTar.ok && resTar.data) state.tarefas = resTar.data;
     if(resEv.ok && resEv.data) state.eventosNeutros = resEv.data;
     const emModal = document.querySelector('.modal-backdrop.show, .modal-obs');
-    atualizarBadgeTarefas();
     atualizarBadgeCorrecoes();
     atualizarBadgeCaptar();
+    atualizarBadgeLeads();
+    atualizarBadgeApp_();
     if(!emModal){
       atualizarBalClientes();
       atualizarBalVisitar();
       atualizarBalGostei();
       atualizarBalAgenda();
       renderizarCorretoresNoCardAgenda_();
+      renderizarCorretoresNoCardVisitar_();
+      renderizarCorretoresNoCardGostei_();
+      renderizarCorretoresNoCardClientes_();
       if(state.painelAtivo === 'agenda') renderizarAgenda();
       if(state.painelAtivo === 'visitar' || state.painelAtivo === 'gostei') renderizarNotificacoes();
       if(state.painelAtivo === 'clientes') renderizarClientes();
@@ -4747,7 +4464,9 @@ async function executarRefreshSilencioso(){
   }
 }
 
-/* CORREÇÕES */
+/* =====================================================
+   CORREÇÕES
+===================================================== */
 async function carregarCorrecoes(){
   const res = await api('listarCorrecoes', { senha: state.adminSenha });
   state.correcoes = (res.ok && res.data) ? res.data : [];
@@ -4850,7 +4569,9 @@ async function marcarCorrecaoResolvida(idx){
   abrirCorrecoes();
 }
 
-/* CLIENTE MODAL */
+/* =====================================================
+   CLIENTE MODAL
+===================================================== */
 function abrirNovoCliente(){
   $('clienteModalTitle').textContent = 'Cadastrar cliente';
   $('cliTelefone').value = '';
@@ -5047,6 +4768,14 @@ function abrirTempModal(telefone){
   $('tempModalSub').textContent = nomeCompletoCliente_(nome, tel) + ' — atual: ' + emojiTemperatura(tempAtual) + ' ' + tempAtual + (manual ? ' (manual)' : ' (automático)');
   $('tempModalBackdrop').classList.add('show');
 }
+/* ✅ Abre WhatsApp do cliente ao clicar no telefone */
+function abrirWhatsAppCliente(telefone){
+  const tel = normalizaTel(telefone);
+  if(!tel){ toast('Telefone inválido', 'error'); return; }
+  const telZap = tel.startsWith('55') ? tel : '55' + tel;
+  window.open(`https://wa.me/${telZap}`, '_blank', 'noopener');
+}
+ 
 function fecharTempModal(){ $('tempModalBackdrop').classList.remove('show'); }
 async function escolherTemperatura(valor){
   if(!_tempClienteTel){ fecharTempModal(); return; }
@@ -5145,8 +4874,7 @@ async function abrirListaGeralImoveis(){
       grupos[chave] = {
         codigo: cod, link: link, titulo: im.titulo, preco: im.preco,
         rua: im.rua, numero: im.numero, bairro: im.bairro,
-        status: im.status, desativado: false,
-        clientes: []
+        status: im.status, desativado: false, clientes: []
       };
     }
     const cli = state.clientes.find(c => normalizaTel(c.telefone) === normalizaTel(im.telefone));
@@ -5309,494 +5037,125 @@ function fallbackCopy(texto){
 }
 
 /* =====================================================
-   CAPTAÇÕES QPREÇO
-   - Filtro de corretores: só mostra quem tem captação atribuída
-   - Mostra TUDO que veio da coluna "origem" (fase 1 + fase 2)
-   - Observações continuam na coluna Observacoes
+   CAPTAÇÕES — IFRAME
 ===================================================== */
-const CAPTACOES_STATE = {
-  lista: [],
-  filtro: 'pendentes',
-  filtrosCorretores: new Set(),
-  carregado: false
-};
+function abrirCaptacoes(){
+  window.open('captarcalculadora.html', '_blank', 'noopener');
+}
 
+/* =====================================================
+   LEADS — IFRAME (novo, substitui modal Tarefas)
+===================================================== */
+function abrirLeads(){
+  window.open('leadslimaribeiro.html', '_blank', 'noopener');
+}
+
+/* =====================================================
+   BADGES (header + ícone do app)
+===================================================== */
 async function atualizarBadgeCaptar(){
   try {
     const res = await api('contarCaptacoesPendentes', {});
     if(res && res.ok){
-      const num = $('captarBadgeNum');
-      if(!num) return;
       const pendentes = res.pendentes || 0;
-      num.textContent = pendentes > 99 ? '99+' : pendentes;
-      num.style.display = pendentes > 0 ? 'inline-block' : 'none';
+      state._captacoesPendentes = pendentes;
+      const num = $('captarBadgeNum');
+      if(num){
+        num.textContent = pendentes > 99 ? '99+' : pendentes;
+        num.style.display = pendentes > 0 ? 'inline-block' : 'none';
+      }
+      atualizarBadgeApp_();
     }
   } catch(e){
     console.warn('[atualizarBadgeCaptar] erro:', e);
   }
 }
 
-/* =====================================================
-   CAPTAÇÕES — agora em IFRAME
-===================================================== */
-let _iframeCaptarCarregado = false;
-
-function abrirCaptacoes(){
-  const backdrop = $('iframeCaptarBackdrop');
-  const iframe = $('iframeCaptar');
-  const loader = $('iframeCaptarLoader');
-  if(!backdrop || !iframe) return;
-
-  // Só carrega o iframe na primeira vez (evita re-fetch desnecessário)
-  if(!_iframeCaptarCarregado){
-    loader.classList.remove('hidden');
-    iframe.src = 'captarcalculadora.html';
-    iframe.onload = () => {
-      loader.classList.add('hidden');
-      _iframeCaptarCarregado = true;
-    };
+async function atualizarBadgeLeads(){
+  try {
+    const res = await api('contarLeadsVipPendentes', {});
+    if(res && res.ok){
+      const pendentes = res.pendentes || 0;
+      state._leadsPendentes = pendentes;
+      const num = $('leadsBadgeNum');
+      if(num){
+        num.textContent = pendentes > 99 ? '99+' : pendentes;
+        num.style.display = pendentes > 0 ? 'inline-block' : 'none';
+      }
+      atualizarBadgeApp_();
+    }
+  } catch(e){
+    console.warn('[atualizarBadgeLeads] erro:', e);
   }
-
-  backdrop.classList.add('show');
-  document.body.style.overflow = 'hidden';
 }
 
-function fecharIframeCaptar(){
-  const backdrop = $('iframeCaptarBackdrop');
-  if(!backdrop) return;
-  backdrop.classList.remove('show');
-  document.body.style.overflow = '';
-  // Ao fechar, atualiza o badge (caso algo tenha mudado lá dentro)
-  setTimeout(atualizarBadgeCaptar, 200);
+/* ✅ Badge no ícone do app (PWA) — soma captações + leads */
+function atualizarBadgeApp_(){
+  if(!('setAppBadge' in navigator)) return;
+  const total = (state._captacoesPendentes || 0) + (state._leadsPendentes || 0);
+  try {
+    if(total > 0){
+      if(typeof navigator.setAppBadge === 'function'){
+        navigator.setAppBadge(total).catch(() => {});
+      }
+    } else {
+      if(typeof navigator.clearAppBadge === 'function'){
+        navigator.clearAppBadge().catch(() => {});
+      }
+    }
+  } catch(e){ /* silencioso */ }
+}
+function limparBadgeApp_(){
+  if(!('setAppBadge' in navigator)) return;
+  try {
+    if(typeof navigator.clearAppBadge === 'function') navigator.clearAppBadge().catch(() => {});
+  } catch(e){}
 }
 
-/* Escuta mensagens vindas do iframe */
+/* Escuta mensagens vindas dos iframes */
 window.addEventListener('message', (ev) => {
   const dados = ev.data || {};
-  if(dados.origem !== 'captar') return;
 
-  if(dados.tipo === 'fechar'){
-    fecharIframeCaptar();
+  if(dados.origem === 'captar'){
+    if(dados.tipo === 'fechar'){ fecharIframeCaptar(); return; }
+    if(dados.tipo === 'atualizado'){ atualizarBadgeCaptar(); return; }
     return;
   }
-  if(dados.tipo === 'atualizado'){
-    atualizarBadgeCaptar();
+
+  if(dados.origem === 'leads'){
+    if(dados.tipo === 'fechar'){ fecharIframeLeads(); return; }
+
+    // ✅ 'atualizado' agora só refaz a contagem se o valor não veio pronto
+    if(dados.tipo === 'atualizado'){
+      atualizarBadgeLeads();
+      return;
+    }
+
+    // ✅ 'badge' já traz o valor — não precisa bater na API de novo
+    if(dados.tipo === 'badge'){
+      state._leadsPendentes = Number(dados.valor) || 0;
+      const num = $('leadsBadgeNum');
+      if(num){
+        num.textContent = state._leadsPendentes > 99 ? '99+' : state._leadsPendentes;
+        num.style.display = state._leadsPendentes > 0 ? 'inline-block' : 'none';
+      }
+      atualizarBadgeApp_();
+      return;
+    }
+
     return;
   }
 });
 
-/* ESC também fecha o iframe */
+/* ESC também fecha iframes */
 document.addEventListener('keydown', (e) => {
   if(e.key === 'Escape'){
-    const bd = $('iframeCaptarBackdrop');
-    if(bd && bd.classList.contains('show')) fecharIframeCaptar();
+    const bdC = $('iframeCaptarBackdrop');
+    if(bdC && bdC.classList.contains('show')) fecharIframeCaptar();
+    const bdL = $('iframeLeadsBackdrop');
+    if(bdL && bdL.classList.contains('show')) fecharIframeLeads();
   }
 });
-
-function statusCaptacao_(c){
-  const v = String(c.contatoFeito || '').trim().toLowerCase();
-  if(v === 'sem-retorno' || v === 'sem retorno') return 'sem-retorno';
-  if(v === 'concluida') return 'concluidas';
-  return 'pendentes';
-}
-
-function setFiltroCaptacoes(filtro, btn){
-  CAPTACOES_STATE.filtro = filtro;
-
-  // Atualiza visualmente TODOS os chips de status no modal de captações
-  document.querySelectorAll('#captacoesBackdrop .capt-filtros-grupo .chip[data-capt-filter]').forEach(b => {
-    b.classList.toggle('active', b.dataset.captFilter === filtro);
-  });
-
-  renderizarCaptacoes();
-}
-
-function toggleFiltroCaptacaoCorretor(nome){
-  if(CAPTACOES_STATE.filtrosCorretores.has(nome)) CAPTACOES_STATE.filtrosCorretores.delete(nome);
-  else CAPTACOES_STATE.filtrosCorretores.add(nome);
-  renderizarFiltroCaptacoesCorretores();
-  renderizarCaptacoes();
-}
-function limparFiltroCaptacaoCorretores(){
-  CAPTACOES_STATE.filtrosCorretores.clear();
-  renderizarFiltroCaptacoesCorretores();
-  renderizarCaptacoes();
-}
-
-/* ✅ renderizarFiltroCaptacoesCorretores — dinâmico: só quem tem captação atribuída */
-function renderizarFiltroCaptacoesCorretores(){
-  const wrap = $('captacoesFiltroCorretores');
-  if(!wrap) return;
-  const lista = CAPTACOES_STATE.lista || [];
-
-  // Descobre quem REALMENTE tem captação atribuída
-  const corretoresComCaptacao = new Set();
-  lista.forEach(c => {
-    const ap = String(c.atendidoPor || '').trim();
-    if(ap) corretoresComCaptacao.add(ap);
-  });
-
-  // Se ninguém foi atribuído ainda, esconde o filtro
-  if(corretoresComCaptacao.size === 0){
-    wrap.innerHTML = `
-      <span class="capt-lbl">Corretor:</span>
-      <span style="font-size:.72rem; color:var(--muted); font-style:italic;">Nenhum corretor atribuído</span>
-    `;
-    return;
-  }
-
-  const chips = [...corretoresComCaptacao].sort((a,b) => a.localeCompare(b,'pt-BR')).map(nome => {
-    const cnt = lista.filter(x => String(x.atendidoPor || '').trim() === nome).length;
-    const ativo = CAPTACOES_STATE.filtrosCorretores.has(nome);
-    const cor = corDoCorretor(nome);
-    return `<button class="chip chip-corretor ${ativo ? 'active' : ''}"
-              style="background:${ativo ? cor : '#fff'}; color:${ativo ? '#fff' : cor}; border-color:${cor}"
-              onclick="toggleFiltroCaptacaoCorretor('${esc(nome)}')">
-              ${esc(nome)} <span class="cnt">${cnt}</span>
-            </button>`;
-  }).join('');
-
-  wrap.innerHTML = `
-    <span class="capt-lbl">Corretor:</span>
-    <button class="chip ${CAPTACOES_STATE.filtrosCorretores.size === 0 ? 'active' : ''}" onclick="limparFiltroCaptacaoCorretores()">Todos</button>
-    ${chips}
-  `;
-}
-
-async function carregarCaptacoes(mostrarLoading){
-  if(mostrarLoading){
-    $('captacoesLista').innerHTML = '<div class="loading-inline"><span class="loader loader-lg"></span><p>Carregando captações...</p></div>';
-  }
-  marcarSalvando(true);
-  const res = await api('listarCaptacoesQPrecoV2', { senha: state.adminSenha });
-  marcarSalvando(false);
-  if(!res.ok){
-    $('captacoesLista').innerHTML = '<div class="empty-state"><p>Erro ao carregar captações</p></div>';
-    return;
-  }
-  CAPTACOES_STATE.lista = res.data || [];
-  CAPTACOES_STATE.carregado = true;
-  atualizarContadoresCaptacoes();
-  renderizarFiltroCaptacoesCorretores();
-  renderizarCaptacoes();
-  atualizarBadgeCaptar();
-}
-
-function atualizarContadoresCaptacoes(){
-  const lista = CAPTACOES_STATE.lista || [];
-  const pendentes = lista.filter(c => statusCaptacao_(c) === 'pendentes').length;
-  const semRetorno = lista.filter(c => statusCaptacao_(c) === 'sem-retorno').length;
-  const concluidas = lista.filter(c => statusCaptacao_(c) === 'concluidas').length;
-  const total = lista.length;
-
-  const elP = $('cntPendentes'); if(elP) elP.textContent = pendentes;
-  const elS = $('cntSemRetorno'); if(elS) elS.textContent = semRetorno;
-  const elC = $('cntConcluidas'); if(elC) elC.textContent = concluidas;
-  const elT = $('cntTodas'); if(elT) elT.textContent = total;
-
-  const resumo = $('captacoesResumo');
-  if(resumo){
-    resumo.textContent = `${pendentes} pendente${pendentes === 1 ? '' : 's'} · ${semRetorno} sem retorno · ${concluidas} concluída${concluidas === 1 ? '' : 's'}`;
-  }
-}
-
-function renderizarCaptacoes(){
-  const container = $('captacoesLista');
-  if(!container) return;
-
-  let arr = [...(CAPTACOES_STATE.lista || [])];
-
-  if(CAPTACOES_STATE.filtro !== 'todas'){
-    arr = arr.filter(c => statusCaptacao_(c) === CAPTACOES_STATE.filtro);
-  }
-
-  if(CAPTACOES_STATE.filtrosCorretores.size > 0){
-    arr = arr.filter(c => {
-      const ap = String(c.atendidoPor || '').trim();
-      return CAPTACOES_STATE.filtrosCorretores.has(ap);
-    });
-  }
-
-  if(arr.length === 0){
-    let msg = 'Nenhuma captação nesse filtro';
-    let sub = 'Tente outro filtro.';
-
-    if(CAPTACOES_STATE.filtro === 'pendentes'){
-      msg = 'Nenhuma captação pendente 🎉';
-      sub = 'Você está em dia!';
-    } else if(CAPTACOES_STATE.filtro === 'sem-retorno'){
-      msg = 'Nenhuma captação sem retorno';
-      sub = 'Tudo sob controle.';
-    } else if(CAPTACOES_STATE.filtro === 'concluidas'){
-      msg = 'Nenhuma captação concluída ainda';
-      sub = 'Marque uma captação como concluída para vê-la aqui.';
-    } else if(CAPTACOES_STATE.filtro === 'todas'){
-      msg = 'Nenhuma captação cadastrada';
-      sub = 'Aguardando novos leads.';
-    }
-
-    container.innerHTML = `
-      <div class="empty-state" style="grid-column: 1 / -1; padding:40px 20px;">
-        <h3>${msg}</h3>
-        <p>${sub}</p>
-      </div>`;
-    return;
-  }
-
-  container.innerHTML = arr.map(c => captacaoCardHTML(c)).join('');
-}
-
-function captacaoCardHTML(c){
-  const status = statusCaptacao_(c);                     // 'pendentes' | 'sem-retorno' | 'concluidas'
-  const isConcluida = status === 'concluidas';
-
-  const statusClasse = status === 'pendentes'  ? 'pendente'
-                     : status === 'concluidas' ? 'concluida'
-                     : status;
-
-  const tel = normalizaTel(c.telefone);
-  const telFmt = fmtTel(tel);
-  const telZap = tel.startsWith('55') ? tel : '55' + tel;
-  const dataHora = c.dataHora ? fmtDataHora(c.dataHora) : '—';
-  const atendidoPor = String(c.atendidoPor || '').trim();
-  const obsAberta = state._captObsAbertas && state._captObsAbertas.has(String(c.id));
-
-  const origem = parseOrigem_(c.origem);
-
-  const nomeFinal = c.nome || origem.nome || '(sem nome)';
-  const ruaFinal = c.rua || origem.rua || '';
-  const numeroFinal = c.numero || origem.numero || '';
-  const complementoFinal = c.complemento || origem.complemento || '';
-  const bairroFinal = c.bairro || origem.bairro || '';
-  const enderecoCompleto = [ruaFinal, numeroFinal].filter(Boolean).join(', ') +
-    (complementoFinal ? ' - ' + complementoFinal : '') +
-    (bairroFinal ? ' - ' + bairroFinal : '');
-
-  const statusTag = status === 'pendentes'
-    ? '<span class="cc-status-tag pendente">⏳ Pendente</span>'
-    : status === 'sem-retorno'
-      ? '<span class="cc-status-tag sem-retorno">❌ Sem retorno</span>'
-      : '<span class="cc-status-tag concluida">✅ Concluída</span>';
-
-  const selectStatusOpts = `
-    <option value="" ${status === 'pendentes' ? 'selected' : ''}>⏳ Pendente</option>
-    <option value="sem-retorno" ${status === 'sem-retorno' ? 'selected' : ''}>❌ Sem retorno</option>
-    <option value="concluida" ${status === 'concluidas' ? 'selected' : ''}>✅ Concluída</option>
-  `;
-
-  let chipsImovel = '';
-  const temDadosImovel =
-    origem.tipo || origem.area || origem.quartos || origem.suites ||
-    origem.banheiros || origem.vagas || origem.condominio ||
-    origem.iptu || origem.valorEstimado;
-
-  if(temDadosImovel){
-    const tags = [];
-    if(origem.tipo){
-      tags.push(`<span class="cc-tag tipo"><span class="lbl">Tipo:</span> ${esc(origem.tipo)}</span>`);
-    }
-    if(origem.area){
-      tags.push(`<span class="cc-tag"><span class="lbl">Área:</span> ${esc(origem.area)} m²</span>`);
-    }
-    if(origem.quartos && origem.quartos !== '0'){
-      tags.push(`<span class="cc-tag"><span class="lbl">🛏</span> ${esc(origem.quartos)}</span>`);
-    }
-    if(origem.suites && origem.suites !== '0'){
-      tags.push(`<span class="cc-tag"><span class="lbl">🛁</span> ${esc(origem.suites)} suíte${origem.suites === '1' ? '' : 's'}</span>`);
-    }
-    if(origem.banheiros && origem.banheiros !== '0'){
-      tags.push(`<span class="cc-tag"><span class="lbl">🚿</span> ${esc(origem.banheiros)}</span>`);
-    }
-    if(origem.vagas && origem.vagas !== '0'){
-      tags.push(`<span class="cc-tag"><span class="lbl">🚗</span> ${esc(origem.vagas)}</span>`);
-    }
-    if(origem.condominio && origem.condominio !== '0'){
-      tags.push(`<span class="cc-tag"><span class="lbl">Cond.:</span> R$ ${esc(origem.condominio)}</span>`);
-    }
-    if(origem.iptu && origem.iptu !== '0'){
-      tags.push(`<span class="cc-tag"><span class="lbl">IPTU:</span> R$ ${esc(origem.iptu)}</span>`);
-    }
-    if(origem.valorEstimado){
-      tags.push(`<span class="cc-tag valor"><span class="lbl">💰 Dono acha:</span> R$ ${esc(origem.valorEstimado)}</span>`);
-    }
-    chipsImovel = `<div class="cc-imovel">${tags.join('')}</div>`;
-  } else if(origem.fase === 'FASE1-PARCIAL'){
-    chipsImovel = `<div class="cc-imovel"><span class="cc-tag" style="background:#fef3c7;border-color:#fbbf24;color:#78350f;">⏳ Aguardando complemento (fase 2)</span></div>`;
-  }
-
-  /* Select de corretores — usa TODOS os state.corretores */
-  const corretoresOpts = state.corretores.map(cr =>
-    `<option value="${esc(cr.nome)}" ${atendidoPor === cr.nome ? 'selected' : ''}>${esc(cr.nome)}</option>`
-  ).join('');
-
-  return `
-    <div class="capt-card status-${statusClasse} ${obsAberta ? 'obs-aberta' : ''}" data-id="${esc(c.id)}">
-      <div class="cc-l1">
-        <span class="cc-nome" title="${esc(nomeFinal)}">${esc(nomeFinal)}</span>
-        <span class="cc-tel">${esc(telFmt)}</span>
-        ${statusTag}
-      </div>
-
-      <div class="cc-l2">
-        <svg class="ico ico-sm" viewBox="0 0 24 24" style="flex-shrink:0;">
-          <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
-          <polyline points="9 22 9 12 15 12 15 22"/>
-        </svg>
-        <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
-          ${esc(enderecoCompleto || '(endereço não informado)')}
-        </span>
-      </div>
-
-      ${chipsImovel}
-
-      <div class="cc-selects">
-        <div class="cc-campo">
-          <label>Status</label>
-          <select data-cap-id="${esc(c.id)}" data-cap-field="contatoFeito" onchange="onChangeCaptacaoStatus(this)">
-            ${selectStatusOpts}
-          </select>
-        </div>
-        <div class="cc-campo">
-          <label>Corretor</label>
-          <select data-cap-id="${esc(c.id)}" data-cap-field="atendidoPor" onchange="onChangeCaptacaoCorretor(this)">
-            <option value="">— Não atribuído —</option>
-            ${corretoresOpts}
-          </select>
-        </div>
-      </div>
-
-      <div class="cc-obs-wrap">
-        <label>Observações</label>
-        <textarea data-cap-id="${esc(c.id)}" data-cap-field="observacoes"
-                  placeholder="Digite observações..." onblur="onChangeCaptacaoObs(this)">${esc(c.observacoes || '')}</textarea>
-      </div>
-
-      <div class="cc-l3">
-        <span class="cc-data">📅 ${esc(dataHora)}</span>
-        <div class="cc-acoes">
-          <a class="cc-btn btn-zap" href="https://wa.me/${telZap}" target="_blank" rel="noopener" title="Abrir WhatsApp">
-            <svg class="ico" viewBox="0 0 24 24">
-              <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
-            </svg>
-          </a>
-          <button class="cc-btn btn-expandir ${obsAberta ? 'ativo' : ''}"
-                  onclick="toggleObsCaptacao('${esc(c.id)}')" title="Observações">
-            <svg class="ico" viewBox="0 0 24 24">
-              <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
-              <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
-            </svg>
-          </button>
-          <button class="cc-btn ${isConcluida ? 'btn-desmarcar' : 'btn-concluir'}"
-                  onclick="toggleConcluidaCaptacao('${esc(c.id)}', ${isConcluida})"
-                  title="${isConcluida ? 'Desmarcar (volta para pendente)' : 'Marcar como concluída'}">
-            <svg class="ico" viewBox="0 0 24 24">
-              <polyline points="20 6 9 17 4 12"/>
-            </svg>
-          </button>
-        </div>
-      </div>
-    </div>
-  `;
-}
-
-function toggleObsCaptacao(id){
-  if(!state._captObsAbertas) state._captObsAbertas = new Set();
-  if(state._captObsAbertas.has(id)) state._captObsAbertas.delete(id);
-  else state._captObsAbertas.add(id);
-  const card = document.querySelector(`.capt-card[data-id="${id}"]`);
-  if(card){
-    card.classList.toggle('obs-aberta');
-    const btn = card.querySelector('.btn-expandir');
-    if(btn) btn.classList.toggle('ativo');
-  }
-}
-
-async function onChangeCaptacaoStatus(el){
-  const id = el.dataset.capId;
-  const valor = el.value;
-  if(!id) return;
-  const item = CAPTACOES_STATE.lista.find(x => String(x.id) === String(id));
-  if(item) item.contatoFeito = valor;
-
-  marcarSalvando(true);
-  const res = await api('atualizarCaptacao', {
-    senha: state.adminSenha,
-    id: id,
-    contatoFeito: valor
-  });
-  marcarSalvando(false);
-
-  if(!res.ok){ toast(res.error || 'Erro ao salvar', 'error'); return; }
-  toast('Status atualizado ✅', 'success');
-
-  atualizarContadoresCaptacoes();
-  renderizarCaptacoes();
-  atualizarBadgeCaptar();
-}
-
-async function onChangeCaptacaoCorretor(el){
-  const id = el.dataset.capId;
-  const valor = el.value;
-  if(!id) return;
-  const item = CAPTACOES_STATE.lista.find(x => String(x.id) === String(id));
-  if(item) item.atendidoPor = valor;
-
-  marcarSalvando(true);
-  const res = await api('atualizarCaptacao', {
-    senha: state.adminSenha,
-    id: id,
-    atendidoPor: valor
-  });
-  marcarSalvando(false);
-
-  if(!res.ok){ toast(res.error || 'Erro ao salvar', 'error'); return; }
-  toast('Corretor atualizado ✅', 'success');
-  renderizarFiltroCaptacoesCorretores();
-}
-
-async function onChangeCaptacaoObs(el){
-  const id = el.dataset.capId;
-  const valor = el.value;
-  if(!id) return;
-  const item = CAPTACOES_STATE.lista.find(x => String(x.id) === String(id));
-  if(!item) return;
-  if(String(item.observacoes || '') === String(valor || '')) return;
-  item.observacoes = valor;
-
-  marcarSalvando(true);
-  const res = await api('atualizarCaptacao', {
-    senha: state.adminSenha,
-    id: id,
-    observacoes: valor
-  });
-  marcarSalvando(false);
-
-  if(!res.ok){ toast(res.error || 'Erro ao salvar observação', 'error'); return; }
-  toast('Observação salva ✅', 'success');
-}
-
-async function toggleConcluidaCaptacao(id, isConcluida){
-  const item = CAPTACOES_STATE.lista.find(x => String(x.id) === String(id));
-  if(!item) return;
-
-  const novoStatus = isConcluida ? '' : 'concluida';
-  item.contatoFeito = novoStatus;
-
-  marcarSalvando(true);
-  const res = await api('atualizarCaptacao', {
-    senha: state.adminSenha,
-    id: id,
-    contatoFeito: novoStatus
-  });
-  marcarSalvando(false);
-
-  if(!res.ok){ toast(res.error || 'Erro', 'error'); return; }
-  toast(isConcluida ? 'Captação reaberta' : 'Captação concluída ✅', 'success');
-
-  atualizarContadoresCaptacoes();
-  renderizarCaptacoes();
-  atualizarBadgeCaptar();
-}
 
 /* =====================================================
    INIT
@@ -5805,7 +5164,6 @@ window.addEventListener('DOMContentLoaded', async function(){
   try {
     const senhaSalva = localStorage.getItem(ADMIN_KEY);
     const inputSenha = $('inputAdminSenha');
-    
     if(senhaSalva){
       if(inputSenha) inputSenha.value = senhaSalva;
       state.isAdmin = true;
@@ -5813,12 +5171,10 @@ window.addEventListener('DOMContentLoaded', async function(){
       mostrarView('homeView');
       const btnSair = $('btnSair');
       if(btnSair) btnSair.classList.remove('hidden');
-      
       try {
         marcarSalvando(true);
         const res = await api('adminListar', { senha: senhaSalva }, TIMEOUT_LOGIN, 1);
         marcarSalvando(false);
-        
         if(!res.ok){
           localStorage.removeItem(ADMIN_KEY);
           state.isAdmin = false;
@@ -5837,7 +5193,6 @@ window.addEventListener('DOMContentLoaded', async function(){
       }
       return;
     }
-    
     mostrarView('adminLoginView');
     if(inputSenha) setTimeout(() => inputSenha.focus(), 200);
   } catch(err){
@@ -5863,3 +5218,5 @@ window.addEventListener('beforeunload', function(e){
 </script>
 </body>
 </html>
+
+  
