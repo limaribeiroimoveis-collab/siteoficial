@@ -1478,33 +1478,29 @@
     letter-spacing: -.1px;
     display: block;
   }
-  .cliente-row-v2 .prefs-bar .prefs-texto .pref-item-outros{
-    display: inline;
-    margin-right: 0;
-  }
+  /* ✅ O último item pode ser truncado com … — o resto fica visível */
+  .cliente-row-v2 .prefs-bar .prefs-texto .pref-item-outros,
   .cliente-row-v2 .prefs-bar .prefs-texto .pref-item-outros strong{
+    display: inline;
     white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: inline-block;
-    max-width: 100%;
-    vertical-align: bottom;
   }
-  .cliente-row-v2 .prefs-bar .prefs-texto .pref-item{
-    display: inline-flex;
-    align-items: center;
-    gap: 3px;
-    margin-right: 10px;
+    .cliente-row-v2 .prefs-bar .prefs-texto .pref-item{
+    display: inline;
+    margin-right: 12px;
     white-space: nowrap;
+  }
+  .cliente-row-v2 .prefs-bar .prefs-texto .pref-item:last-child{
+    margin-right: 0;
   }
   .cliente-row-v2 .prefs-bar .prefs-texto .pref-item strong{
     color: var(--primary);
     font-weight: 700;
   }
-  .cliente-row-v2 .prefs-bar .prefs-chevron{
+   .cliente-row-v2 .prefs-bar .prefs-chevron{
     flex-shrink: 0;
     color: var(--muted);
     transition: transform .2s;
+    margin-left: 4px;
   }
   .cliente-row-v2 .prefs-bar.aberto .prefs-chevron{
     transform: rotate(180deg);
@@ -4178,14 +4174,24 @@ function montarPrefsBarHTML(tel, pref){
   if(pref.bairros && pref.bairros.length > 0){
     partes.push(`<span class="pref-item">📍 <strong>${pref.bairros.slice(0,2).join(', ')}</strong>${pref.bairros.length > 2 ? ` +${pref.bairros.length-2}` : ''}</span>`);
   }
-  if(pref.precoMin || pref.precoMax){
-    const p1 = pref.precoMin ? 'R$' + pref.precoMin : '';
-    const p2 = pref.precoMax ? 'R$' + pref.precoMax : '';
-    partes.push(`<span class="pref-item">💰 <strong>${p1}${p1 && p2 ? ' → ' : ''}${p2}</strong></span>`);
+    if(pref.precoMin || pref.precoMax){
+    const p1 = formatarValorCompacto(pref.precoMin);
+    const p2 = formatarValorCompacto(pref.precoMax);
+    let txt;
+    if(p1 && p2) txt = p1 + ' – ' + p2;
+    else if(p1) txt = 'acima ' + p1;
+    else txt = 'até ' + p2;
+    partes.push(`<span class="pref-item">💰 <strong>${txt}</strong></span>`);
   }
   if(pref.quartos) partes.push(`<span class="pref-item">🛏️ <strong>${pref.quartos} quarto${pref.quartos !== '1' ? 's' : ''}</strong></span>`);
   if(pref.suites)  partes.push(`<span class="pref-item">🚿 <strong>${pref.suites} suíte${pref.suites !== '1' ? 's' : ''}</strong></span>`);
   if(pref.vagas)   partes.push(`<span class="pref-item">🚗 <strong>${pref.vagas} vaga${pref.vagas !== '1' ? 's' : ''}</strong></span>`);
+    if(pref.acessibilidade && pref.acessibilidade !== 'tanto faz'){
+    partes.push(`<span class="pref-item">♿ <strong>${pref.acessibilidade === 'sim' ? 'Acessível' : 'Sem acessibilidade'}</strong></span>`);
+  }
+  if(pref.elevador && pref.elevador !== 'tanto faz'){
+    partes.push(`<span class="pref-item">🛗 <strong>${pref.elevador === 'sim' ? 'Com elevador' : 'Sem elevador'}</strong></span>`);
+  }
   if(pref.tipo && pref.tipo !== 'tanto faz') partes.push(`<span class="pref-item">🏠 <strong>${esc(pref.tipo)}</strong></span>`);
     if(pref.outros) partes.push(`<span class="pref-item pref-item-outros">📝 <strong>${esc(pref.outros)}</strong></span>`);
   return `
@@ -4388,6 +4394,24 @@ function formatarValorMoedaInput(input){
   const v = String(valor).replace(/\D/g, '');
   if(!v) return '';
   return v.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+}
+ /* ✅ Formata valor pra exibição compacta: 700000 → "700mil" | 1350000 → "1.35milhão" */
+function formatarValorCompacto(valor){
+  if(valor === null || valor === undefined || valor === '') return '';
+  const num = parseFloat(String(valor).replace(/\D/g, ''));
+  if(!num || isNaN(num) || num === 0) return '';
+  if(num >= 1000000){
+    const v = num / 1000000;
+    // 1.35 → "1.35milhão" | 2 → "2milhões"
+    const dec = (v % 1 === 0) ? v.toFixed(0) : v.toFixed(2).replace(/0+$/,'').replace(/\.$/,'');
+    return dec + (v >= 2 ? 'milhões' : 'milhão');
+  }
+  if(num >= 1000){
+    const v = num / 1000;
+    const dec = (v % 1 === 0) ? v.toFixed(0) : v.toFixed(1).replace(/\.0$/,'');
+    return dec + 'mil';
+  }
+  return String(num);
 }
 function configurarInputMoeda(idInput){
   const input = $(idInput);
