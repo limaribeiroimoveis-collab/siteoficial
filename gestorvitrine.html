@@ -3698,6 +3698,82 @@ async function carregarCorretores(){
       state.corretores.map(c => `<option value="${esc(c.nome)}">${esc(c.nome)}</option>`).join('');
   }
 }
+/* =====================================================
+   PRÉVIA POR CORRETOR NOS CARDS
+===================================================== */
+function montarPreviaCorretores_(contagem, maxItens){
+  const limite = maxItens || 5;
+  const entradas = Object.entries(contagem).sort((a, b) => b[1] - a[1]);
+  if(entradas.length === 0) return '';
+  const visiveis = entradas.slice(0, limite);
+  const restantes = entradas.length - visiveis.length;
+  let html = visiveis.map(([nome, qtd]) => {
+    const cor = corDoCorretor(nome) || '#94a3b8';
+    return `
+      <div class="linha-corr">
+        <span class="nome-corr">
+          <span class="dot-corr" style="background:${cor};"></span>
+          ${esc(nome)}
+        </span>
+        <span class="num-corr">${qtd}</span>
+      </div>`;
+  }).join('');
+  if(restantes > 0){
+    html += `<div class="linha-corr mais-itens">+ ${restantes} corretor${restantes === 1 ? '' : 'es'}...</div>`;
+  }
+  return html;
+}
+
+function renderizarCorretoresNoCardAgenda_(){
+  const wrap = $('agendaCorretoresLista');
+  if(!wrap) return;
+  const lista = [...state.agendamentos, ...state.eventosNeutros];
+  const contagem = {};
+  lista.forEach(a => {
+    const corr = resolverCorretor_(a) || '(sem corretor)';
+    if(!contagem[corr]) contagem[corr] = 0;
+    contagem[corr]++;
+  });
+  wrap.innerHTML = montarPreviaCorretores_(contagem, 5);
+}
+
+function renderizarCorretoresNoCardVisitar_(){
+  const wrap = $('visitarCorretoresLista');
+  if(!wrap) return;
+  const lista = state.notificacoes.visita || [];
+  const contagem = {};
+  lista.forEach(item => {
+    const corr = resolverCorretor_(item) || '(sem corretor)';
+    if(!contagem[corr]) contagem[corr] = 0;
+    contagem[corr]++;
+  });
+  wrap.innerHTML = montarPreviaCorretores_(contagem, 5);
+}
+
+function renderizarCorretoresNoCardGostei_(){
+  const wrap = $('gosteiCorretoresLista');
+  if(!wrap) return;
+  const lista = state.notificacoes.gostei || [];
+  const contagem = {};
+  lista.forEach(item => {
+    const corr = resolverCorretor_(item) || '(sem corretor)';
+    if(!contagem[corr]) contagem[corr] = 0;
+    contagem[corr]++;
+  });
+  wrap.innerHTML = montarPreviaCorretores_(contagem, 5);
+}
+
+function renderizarCorretoresNoCardClientes_(){
+  const wrap = $('clientesCorretoresLista');
+  if(!wrap) return;
+  const contagem = {};
+  state.clientes.forEach(c => {
+    const corr = chaveCorretorExata_(c.corretor) || '(sem corretor)';
+    if(!contagem[corr]) contagem[corr] = 0;
+    contagem[corr]++;
+  });
+  wrap.innerHTML = montarPreviaCorretores_(contagem, 5);
+}
 
 async function carregarTarefas(mostrarLoading){
   const res = await api('listarTarefas', { senha: state.adminSenha });
