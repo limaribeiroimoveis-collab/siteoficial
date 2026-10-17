@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Painel do Gestor · Lima Ribeiro</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --azul:#001EF0; --azul-esc:#0011a0; --azul-claro:#e8edff;
+  --cinza:#f5f7fc; --branco:#fff; --texto:#1a1a2e; --texto-cinza:#5a5a72; --muted:#94a3b8;
+  --borda:#e2e8f0; --verde:#16a34a; --vermelho:#dc2626; --amarelo:#f59e0b;
+  --roxo:#7c3aed; --whatsapp:#25d366;
+  --sombra:0 8px 32px rgba(0,30,240,.06); --sombra-md:0 12px 48px rgba(0,30,240,.10);
+  --r:16px; --r-lg:24px; --trans:.25s cubic-bezier(.4,0,.2,1);
+}
+body{background:var(--cinza);font-family:'Inter',sans-serif;color:var(--texto);line-height:1.55;overflow-x:hidden;padding-bottom:40px}
+.container{max-width:1400px;margin:0 auto;padding:0 24px}
+
+/* HEADER */
+.navbar{display:flex;justify-content:space-between;align-items:center;padding:12px 24px;background:rgba(255,255,255,.95);backdrop-filter:blur(10px);position:sticky;top:0;z-index:100;border-bottom:1px solid rgba(0,30,240,.06);flex-wrap:wrap;gap:10px}
+.logo-link{display:flex;align-items:center;text-decoration:none;gap:12px}
+.logo-img{height:42px;width:auto}
+.logo-txt{font-weight:800;font-size:1rem;color:var(--texto)}
+.logo-txt small{display:block;font-size:.68rem;font-weight:600;color:var(--texto-cinza);text-transform:uppercase;letter-spacing:.5px}
+.nav-right{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.user-chip{display:flex;align-items:center;gap:8px;background:var(--azul-claro);color:var(--azul);padding:6px 14px;border-radius:40px;font-weight:700;font-size:.82rem}
+.btn-sair{background:transparent;color:var(--texto-cinza);border:1.5px solid var(--borda);padding:8px 16px;border-radius:40px;font-weight:600;font-size:.8rem;cursor:pointer;font-family:'Inter',sans-serif;display:inline-flex;align-items:center;gap:6px;transition:var(--trans)}
+.btn-sair:hover{border-color:var(--vermelho);color:var(--vermelho)}
+.btn-azul{background:var(--azul);color:#fff;border:none;padding:10px 22px;border-radius:40px;font-weight:700;font-size:.85rem;cursor:pointer;font-family:'Inter',sans-serif;display:inline-flex;align-items:center;gap:8px;transition:var(--trans)}
+.btn-azul:hover{background:var(--azul-esc);transform:translateY(-1px);box-shadow:0 6px 20px rgba(0,30,240,.25)}
+.btn-azul:disabled{opacity:.6;cursor:not-allowed;transform:none}
+.btn-outline{background:transparent;color:var(--azul);border:1.5px solid var(--azul);padding:9px 18px;border-radius:40px;font-weight:700;font-size:.82rem;cursor:pointer;font-family:'Inter',sans-serif;display:inline-flex;align-items:center;gap:6px;transition:var(--trans)}
+.btn-outline:hover{background:var(--azul);color:#fff}
+.btn-verde{background:var(--verde)}
+.btn-verde:hover{background:#15803d}
+.btn-vermelho{background:var(--vermelho)}
+.btn-vermelho:hover{background:#b91c1c}
+.btn-amarelo{background:var(--amarelo);color:#000}
+.btn-amarelo:hover{background:#d97706}
+
+/* LOGIN GESTOR */
+.login-view{min-height:100vh;display:none;align-items:center;justify-content:center;padding:20px;background:linear-gradient(135deg,var(--azul-claro),#fff)}
+.login-view.active{display:flex}
+.login-box{background:#fff;border-radius:var(--r-lg);padding:40px 36px;box-shadow:var(--sombra-md);max-width:420px;width:100%;border:1px solid var(--borda);text-align:center}
+.login-box .icone{width:72px;height:72px;margin:0 auto 20px;background:var(--azul);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2rem;color:#fff}
+.login-box h2{font-size:1.6rem;font-weight:800;letter-spacing:-.5px;margin-bottom:6px}
+.login-box p{color:var(--texto-cinza);font-size:.9rem;margin-bottom:26px}
+.login-box .form-group{text-align:left;margin-bottom:18px}
+.login-box label{display:block;font-weight:600;font-size:.85rem;margin-bottom:6px}
+.login-box input{width:100%;padding:13px 14px;border:1.5px solid var(--borda);border-radius:10px;background:var(--cinza);font-family:'Inter',sans-serif;font-size:.95rem;color:var(--texto);transition:var(--trans)}
+.login-box input:focus{outline:none;border-color:var(--azul);background:#fff;box-shadow:0 0 0 3px rgba(0,30,240,.08)}
+.login-error{background:#fef2f2;color:var(--vermelho);border-left:3px solid var(--vermelho);padding:10px 14px;border-radius:8px;font-size:.85rem;margin-bottom:14px;display:none}
+.login-error.show{display:block}
+
+/* APP VIEW */
+.app-view{display:none;padding:24px 0}
+.app-view.active{display:block}
+
+/* HEADER APP */
+.app-header{margin-bottom:24px}
+.app-header h1{font-size:1.9rem;font-weight:800;letter-spacing:-.6px;margin-bottom:4px}
+.app-header p{color:var(--texto-cinza);font-size:.92rem}
+
+/* STATS */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:24px}
+.stat-card{background:#fff;border:1px solid var(--borda);border-radius:var(--r);padding:18px 16px;position:relative;overflow:hidden;transition:var(--trans)}
+.stat-card:hover{border-color:var(--azul);box-shadow:var(--sombra-md)}
+.stat-card .n{font-size:1.9rem;font-weight:800;color:var(--texto);line-height:1;letter-spacing:-.8px}
+.stat-card .l{font-size:.75rem;color:var(--texto-cinza);text-transform:uppercase;letter-spacing:.5px;font-weight:700;margin-top:6px}
+.stat-card .ico{position:absolute;top:12px;right:12px;width:36px;height:36px;border-radius:10px;background:var(--azul-claro);color:var(--azul);display:flex;align-items:center;justify-content:center;font-size:.95rem}
+.stat-card.pendente .n{color:var(--amarelo)}
+.stat-card.pendente .ico{background:#fff8e1;color:var(--amarelo)}
+.stat-card.captado .n{color:var(--azul)}
+.stat-card.ativo .n{color:var(--verde)}
+.stat-card.ativo .ico{background:#e8faf0;color:var(--verde)}
+.stat-card.negociacao .n{color:var(--roxo)}
+.stat-card.negociacao .ico{background:#f3e8ff;color:var(--roxo)}
+.stat-card.venda .n{color:var(--verde)}
+.stat-card.venda .ico{background:#e8faf0;color:var(--verde)}
+.stat-card.dinheiro .n{color:var(--azul);font-size:1.5rem}
+.stat-card.dinheiro .ico{background:var(--azul-claro);color:var(--azul)}
+
+/* FILA PENDENTES */
+.section-title{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.section-title h2{font-size:1.25rem;font-weight:800;letter-spacing:-.4px;display:flex;align-items:center;gap:10px}
+.section-title h2 .badge-count{background:var(--amarelo);color:#000;font-size:.75rem;font-weight:800;padding:2px 10px;border-radius:20px}
+.section-title .sub{color:var(--texto-cinza);font-size:.85rem}
+
+.pendentes-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:14px;margin-bottom:32px}
+.pend-card{background:#fff;border:1px solid var(--borda);border-left:4px solid var(--amarelo);border-radius:var(--r);padding:18px;transition:var(--trans);position:relative}
+.pend-card:hover{border-color:var(--amarelo);box-shadow:var(--sombra-md);transform:translateY(-2px)}
+.pend-card .head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:10px}
+.pend-card .head h4{font-size:.95rem;font-weight:800;flex:1;line-height:1.3}
+.pend-card .tipo-badge{font-size:.65rem;font-weight:800;padding:3px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:.4px;white-space:nowrap}
+.pend-card .tipo-badge.imovel{background:var(--azul-claro);color:var(--azul)}
+.pend-card .tipo-badge.comprador{background:#e8faf0;color:var(--verde)}
+.pend-card .row{font-size:.83rem;color:var(--texto-cinza);display:flex;align-items:flex-start;gap:8px;margin-bottom:5px}
+.pend-card .row i{color:var(--azul);width:14px;font-size:.78rem;margin-top:3px;flex-shrink:0}
+.pend-card .row strong{color:var(--texto);font-weight:600}
+.pend-card .actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;padding-top:12px;border-top:1px solid var(--borda)}
+.pend-card .actions button{padding:6px 12px;border:none;border-radius:30px;font-size:.72rem;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:var(--trans);display:inline-flex;align-items:center;gap:4px}
+.pend-card .actions button:hover{transform:scale(1.05)}
+.pend-card .actions .b-azul{background:var(--azul);color:#fff}
+.pend-card .actions .b-verde{background:var(--verde);color:#fff}
+.pend-card .actions .b-roxo{background:var(--roxo);color:#fff}
+.pend-card .actions .b-vermelho{background:var(--vermelho);color:#fff}
+.pend-card .actions .b-cinza{background:var(--borda);color:var(--texto)}
+.pend-card .actions .b-wsp{background:var(--whatsapp);color:#fff}
+
+.empty-state{grid-column:1/-1;text-align:center;padding:40px 20px;color:var(--muted);background:#fff;border-radius:var(--r);border:1px dashed var(--borda)}
+.empty-state i{font-size:2.4rem;color:var(--azul-claro);margin-bottom:10px;display:block}
+.empty-state p{font-size:.9rem;color:var(--texto-cinza)}
+
+/* FILTROS / TABELA */
+.tabela-wrap{background:#fff;border-radius:var(--r-lg);border:1px solid var(--borda);box-shadow:var(--sombra);overflow:hidden;margin-bottom:24px}
+.tabela-header{padding:20px 20px 14px;border-bottom:1px solid var(--borda)}
+.tabela-header h2{font-size:1.2rem;font-weight:800;letter-spacing:-.4px;margin-bottom:12px}
+.filtros-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;align-items:center}
+.filtros-row input{flex:1;min-width:200px;padding:9px 14px;border:1.5px solid var(--borda);border-radius:30px;background:var(--cinza);font-family:'Inter',sans-serif;font-size:.85rem}
+.filtros-row input:focus{outline:none;border-color:var(--azul);background:#fff}
+.filtro-btn{background:#fff;border:1.5px solid var(--borda);color:var(--texto-cinza);padding:7px 16px;border-radius:30px;font-weight:600;font-size:.78rem;cursor:pointer;transition:var(--trans);font-family:'Inter',sans-serif;white-space:nowrap}
+.filtro-btn.active{background:var(--azul);color:#fff;border-color:var(--azul)}
+.filtro-btn:hover:not(.active){border-color:var(--azul);color:var(--azul)}
+
+.table-scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:.83rem;min-width:1000px}
+thead{background:var(--cinza)}
+thead th{padding:12px 14px;text-align:left;color:var(--texto-cinza);font-weight:700;font-size:.72rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--borda);white-space:nowrap}
+tbody tr{border-bottom:1px solid var(--borda);transition:var(--trans)}
+tbody tr:hover{background:var(--cinza)}
+tbody tr:last-child{border-bottom:none}
+tbody td{padding:11px 14px;vertical-align:middle}
+
+.badge{display:inline-block;padding:4px 10px;border-radius:20px;font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.4px;white-space:nowrap}
+.badge.pendente{background:#fff3cd;color:#856404}
+.badge.captado{background:#d1ecf1;color:#0c5460}
+.badge.ativo{background:#d4edda;color:#155724}
+.badge.negociacao{background:#e9d5ff;color:var(--roxo)}
+.badge.venda{background:#d4edda;color:var(--verde)}
+.badge.nao{background:#f8d7da;color:#721c24}
+.badge.tipo-imovel{background:var(--azul-claro);color:var(--azul)}
+.badge.tipo-comprador{background:#e8faf0;color:var(--verde)}
+
+.actions-cell{display:flex;gap:4px;flex-wrap:wrap}
+.actions-cell button{width:30px;height:30px;border:none;border-radius:8px;cursor:pointer;transition:var(--trans);display:inline-flex;align-items:center;justify-content:center;font-size:.75rem;color:#fff}
+.actions-cell button:hover{transform:scale(1.1)}
+.actions-cell .b-azul{background:var(--azul)}
+.actions-cell .b-verde{background:var(--verde)}
+.actions-cell .b-roxo{background:var(--roxo)}
+.actions-cell .b-vermelho{background:var(--vermelho)}
+.actions-cell .b-cinza{background:var(--borda);color:var(--texto)}
+.actions-cell .b-wsp{background:var(--whatsapp)}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;z-index:1000;padding:16px}
+.modal-overlay.active{display:flex}
+.modal-box{background:#fff;max-width:640px;width:100%;border-radius:var(--r-lg);padding:30px 26px;max-height:92vh;overflow-y:auto;position:relative;animation:fadeUp .3s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.modal-box .close{position:absolute;top:14px;right:18px;font-size:26px;color:var(--muted);cursor:pointer;background:none;border:none;line-height:1}
+.modal-box .close:hover{color:var(--texto)}
+.modal-box h3{font-size:1.35rem;font-weight:800;letter-spacing:-.4px;margin-bottom:6px;padding-right:32px}
+.modal-box .sub{color:var(--texto-cinza);font-size:.88rem;margin-bottom:20px}
+
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-weight:600;font-size:.82rem;color:var(--texto);margin-bottom:5px}
+.form-group input,.form-group textarea,.form-group select{width:100%;padding:10px 13px;border:1.5px solid var(--borda);border-radius:10px;background:var(--cinza);font-family:'Inter',sans-serif;font-size:.9rem;color:var(--texto);transition:var(--trans)}
+.form-group input:focus,.form-group textarea:focus,.form-group select:focus{outline:none;border-color:var(--azul);background:#fff;box-shadow:0 0 0 3px rgba(0,30,240,.08)}
+.form-group textarea{resize:vertical;min-height:70px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-hint{font-size:.73rem;color:var(--muted);margin-top:4px}
+
+.calc-box{background:var(--azul-claro);border-radius:12px;padding:14px 16px;margin:14px 0;border-left:4px solid var(--azul)}
+.calc-box .linha{display:flex;justify-content:space-between;align-items:center;font-size:.85rem;color:var(--texto-cinza);margin-bottom:4px}
+.calc-box .linha.total{margin-top:8px;padding-top:8px;border-top:1px solid rgba(0,30,240,.15);font-weight:800;font-size:1rem;color:var(--azul)}
+.calc-box .linha strong{color:var(--texto)}
+
+.btn-submit{width:100%;background:var(--azul);color:#fff;border:none;padding:13px;border-radius:40px;font-weight:700;font-size:.92rem;cursor:pointer;font-family:'Inter',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;transition:var(--trans);margin-top:10px}
+.btn-submit:hover:not(:disabled){background:var(--azul-esc);transform:translateY(-1px)}
+.btn-submit:disabled{opacity:.6;cursor:not-allowed}
+.btn-submit.verde{background:var(--verde)}
+.btn-submit.verde:hover:not(:disabled){background:#15803d}
+.btn-submit.vermelho{background:var(--vermelho)}
+.btn-submit.vermelho:hover:not(:disabled){background:#b91c1c}
+.btn-submit.cinza{background:var(--borda);color:var(--texto)}
+
+.form-error{background:#fef2f2;color:var(--vermelho);border-left:3px solid var(--vermelho);padding:10px 14px;border-radius:8px;font-size:.83rem;margin-bottom:12px;display:none}
+.form-error.show{display:block}
+
+.aviso{background:#fff8e1;color:#856404;border-left:4px solid var(--amarelo);padding:10px 14px;border-radius:8px;font-size:.82rem;margin-bottom:14px;line-height:1.6}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;right:24px;padding:14px 20px;background:#fff;border-radius:12px;box-shadow:var(--sombra-md);border-left:4px solid var(--azul);font-size:.9rem;z-index:3000;transform:translateX(140%);transition:transform .4s cubic-bezier(.4,0,.2,1);max-width:340px;word-break:break-word}
+.toast.show{transform:translateX(0)}
+.toast.success{border-left-color:var(--verde)}
+.toast.error{border-left-color:var(--vermelho)}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .stats-grid{grid-template-columns:repeat(2,1fr)}
+  .pendentes-grid{grid-template-columns:1fr}
+}
+@media(max-width:600px){
+  .container{padding:0 16px}
+  .navbar{padding:10px 16px}
+  .logo-img{height:34px}
+  .logo-txt{font-size:.85rem}
+  .logo-txt small{font-size:.6rem}
+  .login-box{padding:28px 22px}
+  .modal-box{padding:22px 18px}
+  .form-row{grid-template-columns:1fr}
+  .app-header h1{font-size:1.4rem}
+  .stat-card .n{font-size:1.5rem}
+  .stat-card.dinheiro .n{font-size:1.2rem}
+}
+</style>
+</head>
+<body>
+
+<!-- ==================== LOGIN ==================== -->
+<div class="login-view active" id="loginView">
+  <div class="login-box">
+    <div class="icone"><i class="fas fa-lock"></i></div>
+    <h2>Painel do Gestor</h2>
+    <p>Área restrita · Lima Ribeiro Imóveis</p>
+    <form onsubmit="fazerLoginGestor(event)">
+      <div class="form-group">
+        <label>Senha do gestor</label>
+        <input type="password" id="gestorSenha" placeholder="Digite a senha" required autofocus>
+      </div>
+      <div class="login-error" id="loginError"></div>
+      <button type="submit" class="btn-azul" style="width:100%;justify-content:center;padding:14px;" id="loginBtn">
+        <i class="fas fa-sign-in-alt"></i> Entrar
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- ==================== APP ==================== -->
+<div class="app-view" id="appView">
+
+  <div class="container">
+
+    <div class="app-header">
+      <h1>📊 Painel do Gestor</h1>
+      <p>Gerencie todas as indicações, atualize status e conclua vendas com cálculo automático de prêmio.</p>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-grid">
+      <div class="stat-card pendente">
+        <div class="ico"><i class="fas fa-clock"></i></div>
+        <div class="n" id="stPendentes">0</div>
+        <div class="l">Pendentes</div>
+      </div>
+      <div class="stat-card captado">
+        <div class="ico"><i class="fas fa-home"></i></div>
+        <div class="n" id="stCaptados">0</div>
+        <div class="l">Imóveis captados</div>
+      </div>
+      <div class="stat-card ativo">
+        <div class="ico"><i class="fas fa-user-check"></i></div>
+        <div class="n" id="stAtivos">0</div>
+        <div class="l">Clientes ativos</div>
+      </div>
+      <div class="stat-card negociacao">
+        <div class="ico"><i class="fas fa-handshake"></i></div>
+        <div class="n" id="stNegociacao">0</div>
+        <div class="l">Em negociação</div>
+      </div>
+      <div class="stat-card venda">
+        <div class="ico"><i class="fas fa-check-circle"></i></div>
+        <div class="n" id="stVendas">0</div>
+        <div class="l">Vendas concluídas</div>
+      </div>
+      <div class="stat-card dinheiro">
+        <div class="ico"><i class="fas fa-trophy"></i></div>
+        <div class="n" id="stAPagar">R$ 0</div>
+        <div class="l">Total a pagar</div>
+      </div>
+    </div>
+
+    <!-- FILA PENDENTES -->
+    <div class="section-title">
+      <h2>🆕 Fila de pendentes <span class="badge-count" id="filaCount">0</span></h2>
+      <span class="sub">Indicações que acabaram de chegar</span>
+    </div>
+    <div class="pendentes-grid" id="filaPendentes"></div>
+
+    <!-- TABELA COMPLETA -->
+    <div class="tabela-wrap">
+      <div class="tabela-header">
+        <h2>📋 Todas as indicações</h2>
+        <div class="filtros-row">
+          <input type="text" id="busca" placeholder="🔍 Buscar por nome, telefone ou endereço..." oninput="aplicarFiltros()">
+          <button class="filtro-btn active" data-f="all" onclick="setFiltro('all')">Todas</button>
+          <button class="filtro-btn" data-f="Pendente" onclick="setFiltro('Pendente')">Pendentes</button>
+          <button class="filtro-btn" data-f="Imovel Captado" onclick="setFiltro('Imovel Captado')">Captados</button>
+          <button class="filtro-btn" data-f="Cliente Ativo" onclick="setFiltro('Cliente Ativo')">Ativos</button>
+          <button class="filtro-btn" data-f="Em Negociacao" onclick="setFiltro('Em Negociacao')">Negociação</button>
+          <button class="filtro-btn" data-f="Venda Concluida" onclick="setFiltro('Venda Concluida')">Vendas</button>
+          <button class="filtro-btn" data-f="Imovel" onclick="setFiltroTipo('Imovel')">Imóveis</button>
+          <button class="filtro-btn" data-f="Comprador" onclick="setFiltroTipo('Comprador')">Compradores</button>
+        </div>
+      </div>
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Indicador</th>
+              <th>Tipo</th>
+              <th>Detalhes</th>
+              <th>Status</th>
+              <th>Prêmio</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="tabelaBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- NAV (aparece só logado) -->
+<nav class="navbar" id="navBar" style="display:none">
+  <a href="#" class="logo-link">
+    <img src="https://cdn.awsli.com.br/1608/1608652/arquivos/logo-lr-imoveis.jpg" alt="Lima Ribeiro" class="logo-img"/>
+    <div class="logo-txt">Painel do Gestor<small>Lima Ribeiro Imóveis</small></div>
+  </a>
+  <div class="nav-right">
+    <span class="user-chip"><i class="fas fa-user-cog"></i> Gestor</span>
+    <button class="btn-sair" onclick="logoutGestor()"><i class="fas fa-sign-out-alt"></i> Sair</button>
+  </div>
+</nav>
+
+<!-- ==================== MODAL EDITAR ==================== -->
+<div class="modal-overlay" id="mEditar">
+  <div class="modal-box">
+    <button class="close" onclick="closeModal('mEditar')">&times;</button>
+    <h3 id="editarTitulo">Editar indicação</h3>
+    <p class="sub">Altere os dados e o status. O prêmio é recalculado automaticamente ao salvar.</p>
+    <form id="editarForm" onsubmit="salvarEdicao(event)">
+      <input type="hidden" id="editId">
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Status</label>
+          <select id="editStatus" onchange="previewCalc()">
+            <option value="Pendente">Pendente (em análise)</option>
+            <option value="Imovel Captado">Imóvel captado</option>
+            <option value="Cliente Ativo">Cliente ativo</option>
+            <option value="Em Negociacao">Em negociação</option>
+            <option value="Venda Concluida">Venda concluída</option>
+            <option value="Nao Efetivado">Não efetivado</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Valor da venda (R$)</label>
+          <input type="number" id="editValorVenda" placeholder="650000" min="0" step="1000" oninput="previewCalc()">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Corretor responsável</label>
+          <input type="text" id="editCorretor" placeholder="Nome do corretor">
+        </div>
+        <div class="form-group">
+          <label>Origem da venda</label>
+          <select id="editOrigem">
+            <option value="">Selecione...</option>
+            <option value="Nossa equipe">Nossa equipe</option>
+            <option value="Terceiros">Terceiros</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Nome do indicador</label>
+          <input type="text" id="editIndicadorNome" placeholder="Nome completo">
+        </div>
+        <div class="form-group">
+          <label>Telefone do indicador</label>
+          <input type="tel" id="editIndicadorTel" placeholder="(31) 99999-9999" maxlength="15">
+        </div>
+      </div>
+
+      <!-- Campos para IMÓVEL -->
+      <div id="blocoImovel">
+        <div class="form-group">
+          <label>Endereço do imóvel</label>
+          <input type="text" id="editEndereco" placeholder="Rua, número">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Bairro</label>
+            <input type="text" id="editBairro" placeholder="Bairro">
+          </div>
+          <div class="form-group">
+            <label>Cidade</label>
+            <input type="text" id="editCidade" placeholder="Belo Horizonte">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Proprietário</label>
+            <input type="text" id="editProprietario" placeholder="Nome do proprietário">
+          </div>
+          <div class="form-group">
+            <label>Telefone do proprietário</label>
+            <input type="tel" id="editProprietarioTel" placeholder="(31) 99999-9999" maxlength="15">
+          </div>
+        </div>
+      </div>
+
+      <!-- Campos para COMPRADOR -->
+      <div id="blocoComprador" style="display:none">
+        <div class="form-group">
+          <label>Nome do comprador</label>
+          <input type="text" id="editCompradorNome" placeholder="Nome do comprador">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Telefone do comprador</label>
+            <input type="tel" id="editCompradorTel" placeholder="(31) 99999-9999" maxlength="15">
+          </div>
+          <div class="form-group">
+            <label>Observação do comprador</label>
+            <input type="text" id="editCompradorObs" placeholder="O que procura...">
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Observações gerais</label>
+        <textarea id="editObs" placeholder="Anotações internas..."></textarea>
+      </div>
+
+      <!-- PREVIEW CÁLCULO -->
+      <div class="calc-box" id="calcBox">
+        <div class="linha"><span>Prêmio indicação:</span><strong id="calcIndicacao">R$ 0,00</strong></div>
+        <div class="linha"><span>Prêmio venda:</span><strong id="calcVenda">R$ 0,00</strong></div>
+        <div class="linha total"><span>Total a pagar:</span><span id="calcTotal">R$ 0,00</span></div>
+      </div>
+
+      <div class="form-error" id="editError"></div>
+      <button type="submit" class="btn-submit" id="editBtn"><i class="fas fa-save"></i> Salvar alterações</button>
+    </form>
+  </div>
+</div>
+
+<!-- ==================== MODAL CONCLUIR VENDA ==================== -->
+<div class="modal-overlay" id="mConcluir">
+  <div class="modal-box">
+    <button class="close" onclick="closeModal('mConcluir')">&times;</button>
+    <h3>🎉 Concluir venda</h3>
+    <p class="sub">Informe o valor final e o corretor responsável. O prêmio do indicador será calculado automaticamente.</p>
+    <form onsubmit="concluirVenda(event)">
+      <input type="hidden" id="cvId">
+
+      <div class="aviso" id="cvInfo"></div>
+
+      <div class="form-group">
+        <label>Valor final da venda (R$) *</label>
+        <input type="number" id="cvValor" placeholder="650000" required min="1" step="1000" oninput="cvPreview()">
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Corretor responsável</label>
+          <input type="text" id="cvCorretor" placeholder="Nome do corretor">
+        </div>
+        <div class="form-group">
+          <label>Origem da venda</label>
+          <select id="cvOrigem">
+            <option value="Nossa equipe">Nossa equipe</option>
+            <option value="Terceiros">Terceiros</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="calc-box">
+        <div class="linha"><span>Prêmio indicação:</span><strong id="cvCalcInd">R$ 0,00</strong></div>
+        <div class="linha"><span>Prêmio venda:</span><strong id="cvCalcVenda">R$ 0,00</strong></div>
+        <div class="linha total"><span>Total a pagar:</span><span id="cvCalcTotal">R$ 0,00</span></div>
+      </div>
+
+      <div class="form-error" id="cvError"></div>
+      <button type="submit" class="btn-submit verde" id="cvBtn"><i class="fas fa-check-circle"></i> Confirmar venda e calcular prêmio</button>
+    </form>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ============================================================
+// CONFIG
+// ============================================================
+const API_URL = 'https://script.google.com/macros/s/AKfycbx39tA1um2e37ksFXUeo8cKKdRaZtIPcHl_NhI_hexm64NFA_UexVZADeTpQg8UdSoi_g/exec';
+const GESTOR_KEY = 'lr_gestor_logged';
+let autenticado = false;
+let todasIndicacoes = [];
+let filtroStatus = 'all';
+let filtroTipo = 'all';
+let busca = '';
+
+// ============================================================
+// HELPERS
+// ============================================================
+const $ = id => document.getElementById(id);
+const apenasNum = v => String(v || '').replace(/\D/g, '');
+
+function fmtTel(v){
+  const n = apenasNum(v);
+  if(n.length <= 2) return n ? '('+n : '';
+  if(n.length <= 6) return '('+n.slice(0,2)+') '+n.slice(2);
+  if(n.length <= 10) return '('+n.slice(0,2)+') '+n.slice(2,6)+'-'+n.slice(6);
+  return '('+n.slice(0,2)+') '+n.slice(2,7)+'-'+n.slice(7,11);
+}
+function fmtBRL(v){
+  const n = Number(v) || 0;
+  return n.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+}
+function fmtData(iso){
+  if(!iso) return '—';
+  try {
+    const d = new Date(iso);
+    if(isNaN(d)) return iso;
+    return d.toLocaleDateString('pt-BR') + ' ' + d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  } catch{ return iso; }
+}
+function toast(msg, tipo='info'){
+  const t = $('toast');
+  t.className = 'toast show ' + (tipo==='success'?'success':tipo==='error'?'error':'');
+  t.textContent = msg;
+  setTimeout(()=>t.classList.remove('show'), 4500);
+}
+
+// ============================================================
+// API
+// ============================================================
+async function apiGet(action, params={}){
+  const qs = new URLSearchParams({action, _t:Date.now(), ...params}).toString();
+  const controller = new AbortController();
+  const timer = setTimeout(()=>controller.abort(), 25000);
+  try {
+    const r = await fetch(API_URL+'?'+qs, {method:'GET', redirect:'follow', signal:controller.signal});
+    clearTimeout(timer);
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    return await r.json();
+  } catch(e){ clearTimeout(timer); throw e; }
+}
+async function apiPost(action, body){
+  const url = API_URL + '?action=' + encodeURIComponent(action) + '&_t=' + Date.now();
+  try {
+    const r = await fetch(url, {
+      method:'POST',
+      headers:{'Content-Type':'text/plain;charset=utf-8'},
+      body: JSON.stringify(body),
+      redirect:'follow'
+    });
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    return await r.json();
+  } catch(e){ console.error('apiPost', action, e); throw e; }
+}
+
+// ============================================================
+// LOGIN GESTOR
+// ============================================================
+async function fazerLoginGestor(ev){
+  ev.preventDefault();
+  const senha = $('gestorSenha').value.trim();
+  if(!senha){ return; }
+  const btn = $('loginBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verificando...';
+  $('loginError').classList.remove('show');
+
+  try {
+    const res = await apiPost('loginGestor', {senha});
+    if(res.status === 'success' && res.role === 'gestor'){
+      localStorage.setItem(GESTOR_KEY, 'true');
+      autenticado = true;
+      entrarApp();
+    } else {
+      $('loginError').textContent = res.error || 'Senha incorreta.';
+      $('loginError').classList.add('show');
+    }
+  } catch(e){
+    $('loginError').textContent = 'Erro de conexão. Tente novamente.';
+    $('loginError').classList.add('show');
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Entrar';
+  }
+}
+
+function entrarApp(){
+  $('loginView').classList.remove('active');
+  $('appView').classList.add('active');
+  $('navBar').style.display = 'flex';
+  document.body.insertBefore($('navBar'), document.body.firstChild);
+  carregarDados();
+}
+
+function logoutGestor(){
+  localStorage.removeItem(GESTOR_KEY);
+  autenticado = false;
+  todasIndicacoes = [];
+  $('appView').classList.remove('active');
+  $('navBar').style.display = 'none';
+  $('loginView').classList.add('active');
+  $('gestorSenha').value = '';
+}
+
+// ============================================================
+// CARREGAR DADOS
+// ============================================================
+async function carregarDados(){
+  try {
+    const res = await apiGet('listAll');
+    if(res.status === 'success' && Array.isArray(res.data)){
+      todasIndicacoes = res.data;
+      renderTudo();
+    } else {
+      toast('Não foi possível carregar dados.', 'error');
+    }
+  } catch(e){
+    console.error(e);
+    toast('Erro de conexão.', 'error');
+  }
+}
+
+function renderTudo(){
+  renderStats();
+  renderFila();
+  renderTabela();
+}
+
+// ============================================================
+// STATS
+// ============================================================
+function renderStats(){
+  const pendentes = todasIndicacoes.filter(i => i.Status === 'Pendente').length;
+  const captados = todasIndicacoes.filter(i => i.Status === 'Imovel Captado').length;
+  const ativos = todasIndicacoes.filter(i => i.Status === 'Cliente Ativo').length;
+  const negociacao = todasIndicacoes.filter(i => i.Status === 'Em Negociacao').length;
+  const vendas = todasIndicacoes.filter(i => i.Status === 'Venda Concluida').length;
+  const totalPagar = todasIndicacoes.reduce((a, i) => a + (Number(i.PremioTotal) || 0), 0);
+
+  $('stPendentes').textContent = pendentes;
+  $('stCaptados').textContent = captados;
+  $('stAtivos').textContent = ativos;
+  $('stNegociacao').textContent = negociacao;
+  $('stVendas').textContent = vendas;
+  $('stAPagar').textContent = fmtBRL(totalPagar);
+}
+
+// ============================================================
+// FILA PENDENTES
+// ============================================================
+function renderFila(){
+  const pendentes = todasIndicacoes.filter(i => i.Status === 'Pendente').sort((a,b)=>
+    new Date(b.DataIndicacao||0) - new Date(a.DataIndicacao||0)
+  );
+  $('filaCount').textContent = pendentes.length;
+  const cont = $('filaPendentes');
+
+  if(pendentes.length === 0){
+    cont.innerHTML = `<div class="empty-state"><i class="fas fa-check-circle" style="color:var(--verde)"></i><p>Nenhuma indicação pendente. Tudo em dia! 🎉</p></div>`;
+    return;
+  }
+
+  cont.innerHTML = pendentes.map(i => {
+    const isImovel = i.Tipo === 'Imovel';
+    const titulo = isImovel
+      ? (i.EnderecoImovel || 'Endereço não informado')
+      : (i.CompradorNome || 'Comprador');
+    const telIndic = i.IndicadorTelefone || '';
+    const indicNome = i.IndicadorNome || '—';
+    const telAlvo = isImovel ? i.ProprietarioTelefone : i.CompradorTelefone;
+
+    return `
+      <div class="pend-card">
+        <div class="head">
+          <h4>${isImovel ? '🏠' : '👤'} ${escapar(titulo)}</h4>
+          <span class="tipo-badge ${isImovel?'imovel':'comprador'}">${isImovel?'Imóvel':'Comprador'}</span>
+        </div>
+        <div class="row"><i class="fas fa-user"></i> Indicador: <strong>${escapar(indicNome)}</strong></div>
+        <div class="row"><i class="fas fa-phone"></i> ${escapar(telIndic)}</div>
+        ${isImovel
+          ? `<div class="row"><i class="fas fa-user-tie"></i> Proprietário: <strong>${escapar(i.ProprietarioNome||'—')}</strong></div>
+             <div class="row"><i class="fas fa-phone"></i> ${escapar(i.ProprietarioTelefone||'')}</div>`
+          : `<div class="row"><i class="fas fa-user-tie"></i> Comprador: <strong>${escapar(i.CompradorNome||'—')}</strong></div>
+             <div class="row"><i class="fas fa-phone"></i> ${escapar(i.CompradorTelefone||'')}</div>`}
+        <div class="row"><i class="fas fa-calendar"></i> ${fmtData(i.DataIndicacao)}</div>
+        <div class="actions">
+          ${isImovel
+            ? `<button class="b-azul" onclick="mudarStatus(${i.ID},'Imovel Captado')" title="Marcar imóvel captado"><i class="fas fa-home"></i> Captado</button>`
+            : `<button class="b-verde" onclick="mudarStatus(${i.ID},'Cliente Ativo')" title="Marcar cliente ativo"><i class="fas fa-user-check"></i> Ativo</button>`}
+          <button class="b-roxo" onclick="mudarStatus(${i.ID},'Em Negociacao')" title="Em negociação"><i class="fas fa-handshake"></i> Negociação</button>
+          <button class="b-verde" onclick="abrirConcluir(${i.ID})" title="Concluir venda"><i class="fas fa-check-circle"></i> Venda</button>
+          <button class="b-vermelho" onclick="mudarStatus(${i.ID},'Nao Efetivado')" title="Não efetivado"><i class="fas fa-times"></i> Não</button>
+          <button class="b-cinza" onclick="abrirEditar(${i.ID})" title="Editar tudo"><i class="fas fa-edit"></i> Editar</button>
+          ${telIndic ? `<button class="b-wsp" onclick="wspIndicador('${escapar(telIndic)}')" title="WhatsApp do indicador"><i class="fab fa-whatsapp"></i></button>` : ''}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+// ============================================================
+// TABELA
+// ============================================================
+function setFiltro(f){
+  filtroStatus = f; filtroTipo = 'all';
+  document.querySelectorAll('.filtro-btn').forEach(b=>b.classList.toggle('active', b.dataset.f===f));
+  renderTabela();
+}
+function setFiltroTipo(t){
+  filtroTipo = t; filtroStatus = 'all';
+  document.querySelectorAll('.filtro-btn').forEach(b=>b.classList.toggle('active', b.dataset.f===t));
+  renderTabela();
+}
+function aplicarFiltros(){
+  busca = ($('busca').value || '').toLowerCase().trim();
+  renderTabela();
+}
+
+function renderTabela(){
+  let lista = [...todasIndicacoes];
+
+  if(filtroStatus !== 'all') lista = lista.filter(i => i.Status === filtroStatus);
+  if(filtroTipo !== 'all') lista = lista.filter(i => i.Tipo === filtroTipo);
+
+  if(busca){
+    lista = lista.filter(i => {
+      const campos = [
+        i.IndicadorNome, i.IndicadorTelefone,
+        i.ProprietarioNome, i.ProprietarioTelefone,
+        i.CompradorNome, i.CompradorTelefone,
+        i.EnderecoImovel, i.Bairro, i.Cidade
+      ].map(c => String(c||'').toLowerCase());
+      return campos.some(c => c.includes(busca));
+    });
+  }
+
+  lista.sort((a,b)=> new Date(b.DataIndicacao||0) - new Date(a.DataIndicacao||0));
+
+  const tbody = $('tabelaBody');
+  if(lista.length === 0){
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--muted)"><i class="fas fa-inbox" style="font-size:2rem;display:block;margin-bottom:8px"></i>Nenhuma indicação encontrada</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = lista.map(i => {
+    const isImovel = i.Tipo === 'Imovel';
+    const detalhes = isImovel
+      ? `<div><strong>${escapar(i.EnderecoImovel||'—')}</strong></div><div style="font-size:.72rem;color:var(--muted)">${escapar(i.Bairro||'')} ${i.Cidade?'· '+escapar(i.Cidade):''}</div>`
+      : `<div><strong>${escapar(i.CompradorNome||'—')}</strong></div><div style="font-size:.72rem;color:var(--muted)">${escapar(i.CompradorTelefone||'')}</div>`;
+
+    const premio = Number(i.PremioTotal) || 0;
+    const valorVenda = Number(i.ValorVenda) || 0;
+
+    return `
+      <tr>
+        <td><strong>#${i.ID}</strong></td>
+        <td>
+          <div>${escapar(i.IndicadorNome||'—')}</div>
+          <div style="font-size:.72rem;color:var(--muted)">${escapar(i.IndicadorTelefone||'')}</div>
+        </td>
+        <td><span class="badge ${isImovel?'tipo-imovel':'tipo-comprador'}">${isImovel?'Imóvel':'Comprador'}</span></td>
+        <td>${detalhes}</td>
+        <td><span class="badge ${badgeStatus(i.Status)}">${escapar(i.Status||'Pendente')}</span></td>
+        <td>
+          ${premio > 0
+            ? `<strong style="color:var(--verde)">${fmtBRL(premio)}</strong>
+               ${valorVenda > 0 ? `<div style="font-size:.7rem;color:var(--muted)">Venda: ${fmtBRL(valorVenda)}</div>` : ''}`
+            : '<span style="color:var(--muted);font-size:.78rem">—</span>'}
+        </td>
+        <td>
+          <div class="actions-cell">
+            <button class="b-cinza" onclick="abrirEditar(${i.ID})" title="Editar"><i class="fas fa-edit"></i></button>
+            <button class="b-verde" onclick="abrirConcluir(${i.ID})" title="Concluir venda"><i class="fas fa-check-circle"></i></button>
+            ${i.IndicadorTelefone ? `<button class="b-wsp" onclick="wspIndicador('${escapar(i.IndicadorTelefone)}')" title="WhatsApp"><i class="fab fa-whatsapp"></i></button>` : ''}
+          </div>
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
+
+function badgeStatus(s){
+  const map = {
+    'Pendente':'pendente', 'Imovel Captado':'captado', 'Cliente Ativo':'ativo',
+    'Em Negociacao':'negociacao', 'Venda Concluida':'venda', 'Nao Efetivado':'nao'
+  };
+  return map[s] || 'pendente';
+}
+
+function escapar(s){
+  return String(s == null ? '' : s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+// ============================================================
+// MUDAR STATUS (rápido)
+// ============================================================
+async function mudarStatus(id, novoStatus){
+  if(novoStatus === 'Nao Efetivado'){
+    const motivo = prompt('Motivo da não efetivação (opcional):');
+    if(motivo === null) return;
+  }
+  if(novoStatus === 'Venda Concluida'){
+    abrirConcluir(id);
+    return;
+  }
+  try {
+    const body = {id, status: novoStatus};
+    if(novoStatus === 'Imovel Captado') body.dataCaptacao = new Date().toISOString();
+    const res = await apiPost('update', body);
+    if(res.status === 'success'){
+      toast('Status atualizado!', 'success');
+      await carregarDados();
+    } else {
+      toast(res.error || 'Erro ao atualizar.', 'error');
+    }
+  } catch(e){ toast('Erro de conexão.', 'error'); }
+}
+
+// ============================================================
+// EDITAR
+// ============================================================
+function abrirEditar(id){
+  const i = todasIndicacoes.find(x => Number(x.ID) === Number(id));
+  if(!i){ toast('Não encontrado', 'error'); return; }
+
+  $('editId').value = i.ID;
+  $('editarTitulo').textContent = 'Editar indicação #' + i.ID;
+  $('editStatus').value = i.Status || 'Pendente';
+  $('editValorVenda').value = Number(i.ValorVenda) || '';
+  $('editCorretor').value = i.CorretorResponsavel || '';
+  $('editOrigem').value = i.OrigemVenda || '';
+  $('editIndicadorNome').value = i.IndicadorNome || '';
+  $('editIndicadorTel').value = fmtTel(i.IndicadorTelefone||'');
+  $('editObs').value = i.Observacoes || '';
+
+  if(i.Tipo === 'Imovel'){
+    $('blocoImovel').style.display = 'block';
+    $('blocoComprador').style.display = 'none';
+    $('editEndereco').value = i.EnderecoImovel || '';
+    $('editBairro').value = i.Bairro || '';
+    $('editCidade').value = i.Cidade || '';
+    $('editProprietario').value = i.ProprietarioNome || '';
+    $('editProprietarioTel').value = fmtTel(i.ProprietarioTelefone||'');
+  } else {
+    $('blocoImovel').style.display = 'none';
+    $('blocoComprador').style.display = 'block';
+    $('editCompradorNome').value = i.CompradorNome || '';
+    $('editCompradorTel').value = fmtTel(i.CompradorTelefone||'');
+    $('editCompradorObs').value = i.CompradorObservacao || '';
+  }
+
+  $('editError').classList.remove('show');
+  previewCalc();
+  openModal('mEditar');
+}
+
+function previewCalc(){
+  const id = Number($('editId').value) || 0;
+  const i = todasIndicacoes.find(x => Number(x.ID) === id);
+  const tipo = i ? i.Tipo : '';
+  const status = $('editStatus').value;
+  const valor = Number($('editValorVenda').value) || 0;
+
+  const pi = tipo === 'Imovel' ? 50 : 0;
+  let pv = 0;
+  if(status === 'Venda Concluida' && valor > 0){
+    pv = Math.floor(valor / 100000) * 100;
+  }
+  $('calcIndicacao').textContent = fmtBRL(pi);
+  $('calcVenda').textContent = fmtBRL(pv);
+  $('calcTotal').textContent = fmtBRL(pi + pv);
+}
+
+async function salvarEdicao(ev){
+  ev.preventDefault();
+  const id = Number($('editId').value);
+  const i = todasIndicacoes.find(x => Number(x.ID) === id);
+  if(!i) return;
+
+  const btn = $('editBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Salvando...';
+  $('editError').classList.remove('show');
+
+  const body = {
+    id: id,
+    status: $('editStatus').value,
+    valorVenda: Number($('editValorVenda').value) || 0,
+    corretorResponsavel: $('editCorretor').value.trim(),
+    origemVenda: $('editOrigem').value,
+    observacoes: $('editObs').value.trim()
+  };
+
+  if(i.Tipo === 'Imovel'){
+    body.enderecoImovel = $('editEndereco').value.trim();
+    body.bairro = $('editBairro').value.trim();
+    body.cidade = $('editCidade').value.trim();
+    body.proprietarioNome = $('editProprietario').value.trim();
+    body.proprietarioTelefone = apenasNum($('editProprietarioTel').value);
+  } else {
+    body.compradorNome = $('editCompradorNome').value.trim();
+    body.compradorTelefone = apenasNum($('editCompradorTel').value);
+    body.compradorObservacao = $('editCompradorObs').value.trim();
+  }
+
+  try {
+    const res = await apiPost('update', body);
+    if(res.status === 'success'){
+      closeModal('mEditar');
+      toast('Indicação atualizada!', 'success');
+      await carregarDados();
+    } else {
+      $('editError').textContent = res.error || 'Erro ao salvar.';
+      $('editError').classList.add('show');
+    }
+  } catch(e){
+    $('editError').textContent = 'Erro de conexão.';
+    $('editError').classList.add('show');
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-save"></i> Salvar alterações';
+  }
+}
+
+// ============================================================
+// CONCLUIR VENDA
+// ============================================================
+function abrirConcluir(id){
+  const i = todasIndicacoes.find(x => Number(x.ID) === Number(id));
+  if(!i){ toast('Não encontrado', 'error'); return; }
+
+  $('cvId').value = i.ID;
+  $('cvValor').value = Number(i.ValorVenda) || '';
+  $('cvCorretor').value = i.CorretorResponsavel || '';
+  $('cvOrigem').value = i.OrigemVenda || 'Nossa equipe';
+  $('cvError').classList.remove('show');
+
+  const info = i.Tipo === 'Imovel'
+    ? `🏠 <strong>Imóvel:</strong> ${escapar(i.EnderecoImovel||'—')}<br>Indicador: ${escapar(i.IndicadorNome||'—')}`
+    : `👤 <strong>Comprador:</strong> ${escapar(i.CompradorNome||'—')}<br>Indicador: ${escapar(i.IndicadorNome||'—')}`;
+  $('cvInfo').innerHTML = info;
+
+  cvPreview();
+  openModal('mConcluir');
+}
+
+function cvPreview(){
+  const id = Number($('cvId').value);
+  const i = todasIndicacoes.find(x => Number(x.ID) === id);
+  const tipo = i ? i.Tipo : '';
+  const valor = Number($('cvValor').value) || 0;
+  const pi = tipo === 'Imovel' ? 50 : 0;
+  const pv = valor > 0 ? Math.floor(valor / 100000) * 100 : 0;
+
+  $('cvCalcInd').textContent = fmtBRL(pi);
+  $('cvCalcVenda').textContent = fmtBRL(pv);
+  $('cvCalcTotal').textContent = fmtBRL(pi + pv);
+}
+
+async function concluirVenda(ev){
+  ev.preventDefault();
+  const id = Number($('cvId').value);
+  const valor = Number($('cvValor').value) || 0;
+  if(!valor || valor <= 0){
+    $('cvError').textContent = 'Informe o valor da venda.';
+    $('cvError').classList.add('show');
+    return;
+  }
+  const btn = $('cvBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Concluindo...';
+  $('cvError').classList.remove('show');
+
+  try {
+    const res = await apiPost('concludeSale', {
+      id,
+      valorVenda: valor,
+      corretorResponsavel: $('cvCorretor').value.trim(),
+      origemVenda: $('cvOrigem').value
+    });
+    if(res.status === 'success'){
+      closeModal('mConcluir');
+      toast(`🎉 Venda concluída! Prêmio total: ${fmtBRL(res.premioTotal)}`, 'success');
+      await carregarDados();
+    } else {
+      $('cvError').textContent = res.error || 'Erro ao concluir.';
+      $('cvError').classList.add('show');
+    }
+  } catch(e){
+    $('cvError').textContent = 'Erro de conexão.';
+    $('cvError').classList.add('show');
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-check-circle"></i> Confirmar venda e calcular prêmio';
+  }
+}
+
+// ============================================================
+// WHATSAPP
+// ============================================================
+function wspIndicador(tel){
+  const num = apenasNum(tel);
+  if(!num) return;
+  const full = num.startsWith('55') ? num : '55' + num;
+  window.open('https://wa.me/' + full + '?text=' + encodeURIComponent('Olá! Falo da Lima Ribeiro Imóveis sobre a sua indicação no programa Indique e Ganhe.'), '_blank');
+}
+
+// ============================================================
+// MODAIS
+// ============================================================
+function openModal(id){ const el = $(id); if(el) el.classList.add('active'); }
+function closeModal(id){ const el = $(id); if(el) el.classList.remove('active'); }
+document.querySelectorAll('.modal-overlay').forEach(m=>{
+  m.addEventListener('click', e => { if(e.target===m) m.classList.remove('active'); });
+});
+document.addEventListener('keydown', e => {
+  if(e.key === 'Escape'){
+    document.querySelectorAll('.modal-overlay.active').forEach(m => m.classList.remove('active'));
+  }
+});
+
+// máscara de telefone nos inputs
+document.querySelectorAll('input[type="tel"]').forEach(inp=>{
+  inp.addEventListener('input', ()=>{
+    const pos = inp.selectionStart;
+    const old = inp.value.length;
+    inp.value = fmtTel(inp.value);
+    const diff = inp.value.length - old;
+    try { inp.setSelectionRange(pos+diff, pos+diff); } catch(e){}
+  });
+});
+
+// ============================================================
+// INIT
+// ============================================================
+function init(){
+  if(localStorage.getItem(GESTOR_KEY) === 'true'){
+    autenticado = true;
+    entrarApp();
+  }
+}
+
+document.addEventListener('DOMContentLoaded', init);
+
+window.fazerLoginGestor = fazerLoginGestor;
+window.logoutGestor = logoutGestor;
+window.mudarStatus = mudarStatus;
+window.abrirEditar = abrirEditar;
+window.abrirConcluir = abrirConcluir;
+window.salvarEdicao = salvarEdicao;
+window.concluirVenda = concluirVenda;
+window.previewCalc = previewCalc;
+window.cvPreview = cvPreview;
+window.setFiltro = setFiltro;
+window.setFiltroTipo = setFiltroTipo;
+window.aplicarFiltros = aplicarFiltros;
+window.wspIndicador = wspIndicador;
+window.openModal = openModal;
+window.closeModal = closeModal;
+</script>
+
+</body>
+</html>
