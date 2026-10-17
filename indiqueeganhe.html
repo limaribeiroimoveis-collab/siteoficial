@@ -1,2831 +1,1010 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>Indique e Ganhe - Lima Ribeiro Imóveis</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
-    <style>
-        /* ============================================
-           RESET E VARIÁVEIS
-           ============================================ */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --azul-primary: #001EF0;
-            --azul-dark: #0011a0;
-            --azul-light: #e8edff;
-            --azul-gradient: linear-gradient(135deg, #001EF0, #0044ff);
-            --azul-card: #f5f8ff;
-            --gold: #d4af37;
-            --gold-light: #f5d76e;
-            --white: #ffffff;
-            --gray-100: #f0f2f8;
-            --gray-200: #e0e4ec;
-            --gray-300: #c0c4ce;
-            --gray-400: #8a8fa0;
-            --gray-500: #5a5f72;
-            --gray-600: #3a3f52;
-            --dark: #1a1a2e;
-            --shadow: 0 8px 32px rgba(0, 30, 240, 0.10);
-            --shadow-hover: 0 12px 48px rgba(0, 30, 240, 0.18);
-            --radius: 16px;
-            --radius-lg: 24px;
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            --success: #2ed573;
-            --warning: #ffc107;
-            --danger: #ff4757;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: var(--gray-100);
-            color: var(--dark);
-            line-height: 1.6;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        /* ============================================
-           SCROLLBAR
-           ============================================ */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: var(--gray-100);
-        }
-        ::-webkit-scrollbar-thumb {
-            background: var(--azul-primary);
-            border-radius: 4px;
-        }
-
-        /* ============================================
-           UTILITY
-           ============================================ */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        .azul-text {
-            color: var(--azul-primary);
-        }
-
-        .gold-text {
-            color: var(--gold);
-        }
-
-        .btn-primary {
-            background: var(--azul-gradient);
-            color: var(--white);
-            border: none;
-            padding: 14px 32px;
-            border-radius: 50px;
-            font-weight: 600;
-            font-size: 16px;
-            cursor: pointer;
-            transition: var(--transition);
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            text-decoration: none;
-            font-family: 'Inter', sans-serif;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 40px rgba(0, 30, 240, 0.3);
-            background: var(--azul-dark);
-        }
-
-        .btn-primary:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none !important;
-        }
-
-        .btn-outline {
-            background: transparent;
-            color: var(--azul-primary);
-            border: 2px solid var(--azul-primary);
-            padding: 12px 28px;
-            border-radius: 50px;
-            font-weight: 600;
-            font-size: 16px;
-            cursor: pointer;
-            transition: var(--transition);
-            font-family: 'Inter', sans-serif;
-        }
-
-        .btn-outline:hover {
-            background: var(--azul-primary);
-            color: var(--white);
-        }
-
-        .btn-whatsapp {
-            background: #25d366;
-            color: white;
-            border: none;
-            padding: 14px 32px;
-            border-radius: 50px;
-            font-weight: 600;
-            font-size: 16px;
-            cursor: pointer;
-            transition: var(--transition);
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            text-decoration: none;
-            font-family: 'Inter', sans-serif;
-        }
-
-        .btn-whatsapp:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 40px rgba(37, 211, 102, 0.3);
-        }
-
-        .card {
-            background: var(--white);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            padding: 24px;
-            transition: var(--transition);
-            border: 1px solid rgba(0, 30, 240, 0.06);
-        }
-
-        .card:hover {
-            box-shadow: var(--shadow-hover);
-            transform: translateY(-4px);
-            border-color: var(--azul-light);
-        }
-
-        .section-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 16px;
-            color: var(--dark);
-        }
-
-        .section-title .azul {
-            color: var(--azul-primary);
-        }
-
-        .section-subtitle {
-            color: var(--gray-500);
-            font-size: 1.1rem;
-            max-width: 600px;
-            margin: 0 auto 40px;
-        }
-
-        .loading-spinner {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            border-top-color: var(--white);
-            animation: spin 0.8s ease-in-out infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .badge-success {
-            background: rgba(46, 213, 115, 0.12);
-            color: #1a9e4a;
-            border: 1px solid rgba(46, 213, 115, 0.2);
-        }
-
-        .badge-warning {
-            background: rgba(255, 193, 7, 0.12);
-            color: #b8960a;
-            border: 1px solid rgba(255, 193, 7, 0.2);
-        }
-
-        .badge-info {
-            background: rgba(0, 30, 240, 0.08);
-            color: var(--azul-primary);
-            border: 1px solid rgba(0, 30, 240, 0.12);
-        }
-
-        .badge-danger {
-            background: rgba(255, 71, 87, 0.12);
-            color: #cc2233;
-            border: 1px solid rgba(255, 71, 87, 0.2);
-        }
-
-        /* ============================================
-           HEADER
-           ============================================ */
-        header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(0, 30, 240, 0.06);
-            padding: 12px 0;
-            transition: var(--transition);
-        }
-
-        header.scrolled {
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
-        }
-
-        .nav-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            text-decoration: none;
-            cursor: pointer;
-        }
-
-        .logo-img {
-            height: 48px;
-            width: auto;
-            object-fit: contain;
-        }
-
-        .logo-text {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: var(--dark);
-        }
-
-        .logo-text span {
-            color: var(--azul-primary);
-        }
-
-        .nav-links {
-            display: flex;
-            align-items: center;
-            gap: 24px;
-            list-style: none;
-        }
-
-        .nav-links a {
-            color: var(--gray-500);
-            text-decoration: none;
-            font-size: 0.95rem;
-            transition: var(--transition);
-            font-weight: 500;
-            cursor: pointer;
-        }
-
-        .nav-links a:hover {
-            color: var(--azul-primary);
-        }
-
-        .nav-btn {
-            background: var(--azul-gradient);
-            color: var(--white);
-            border: none;
-            padding: 10px 24px;
-            border-radius: 50px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-            font-family: 'Inter', sans-serif;
-            font-size: 0.9rem;
-        }
-
-        .nav-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 30px rgba(0, 30, 240, 0.25);
-        }
-
-        .nav-btn-outline {
-            background: transparent;
-            color: var(--azul-primary);
-            border: 2px solid var(--azul-primary);
-            padding: 8px 20px;
-            border-radius: 50px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-            font-family: 'Inter', sans-serif;
-            font-size: 0.9rem;
-        }
-
-        .nav-btn-outline:hover {
-            background: var(--azul-primary);
-            color: var(--white);
-        }
-
-        .hamburger {
-            display: none;
-            flex-direction: column;
-            gap: 5px;
-            cursor: pointer;
-            background: none;
-            border: none;
-            padding: 5px;
-        }
-
-        .hamburger span {
-            width: 28px;
-            height: 2px;
-            background: var(--dark);
-            transition: var(--transition);
-            border-radius: 2px;
-        }
-
-        .hamburger.active span:nth-child(1) {
-            transform: rotate(45deg) translate(5px, 5px);
-        }
-        .hamburger.active span:nth-child(2) {
-            opacity: 0;
-        }
-        .hamburger.active span:nth-child(3) {
-            transform: rotate(-45deg) translate(5px, -5px);
-        }
-
-        /* ============================================
-           HERO
-           ============================================ */
-        .hero {
-            padding: 120px 0 60px;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            position: relative;
-            overflow: hidden;
-            background: var(--azul-light);
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: -40%;
-            right: -20%;
-            width: 700px;
-            height: 700px;
-            background: radial-gradient(circle, rgba(0, 30, 240, 0.04) 0%, transparent 70%);
-            border-radius: 50%;
-            pointer-events: none;
-        }
-
-        .hero::after {
-            content: '';
-            position: absolute;
-            bottom: -30%;
-            left: -10%;
-            width: 500px;
-            height: 500px;
-            background: radial-gradient(circle, rgba(212, 175, 55, 0.04) 0%, transparent 70%);
-            border-radius: 50%;
-            pointer-events: none;
-        }
-
-        .hero-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 60px;
-            align-items: center;
-            position: relative;
-            z-index: 1;
-        }
-
-        .hero-text h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: 3.2rem;
-            line-height: 1.1;
-            margin-bottom: 20px;
-            color: var(--dark);
-        }
-
-        .hero-text h1 .highlight {
-            color: var(--azul-primary);
-        }
-
-        .hero-text h1 .gold-highlight {
-            color: var(--gold);
-        }
-
-        .hero-text p {
-            color: var(--gray-500);
-            font-size: 1.1rem;
-            margin-bottom: 24px;
-            max-width: 500px;
-        }
-
-        .hero-text p strong {
-            color: var(--azul-primary);
-        }
-
-        .hero-buttons {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 16px;
-            margin-bottom: 32px;
-        }
-
-        .hero-stats {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 16px;
-            max-width: 500px;
-        }
-
-        .stat-item {
-            text-align: center;
-            padding: 18px 14px;
-            background: var(--white);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            border: 1px solid rgba(0, 30, 240, 0.06);
-        }
-
-        .stat-item .number {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: var(--azul-primary);
-        }
-
-        .stat-item .label {
-            font-size: 0.75rem;
-            color: var(--gray-400);
-            margin-top: 4px;
-            font-weight: 500;
-        }
-
-        .hero-right {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .hero-image-container {
-            width: 100%;
-            max-width: 400px;
-            aspect-ratio: 1;
-            border-radius: var(--radius-lg);
-            overflow: hidden;
-            box-shadow: var(--shadow-hover);
-            border: 4px solid var(--white);
-        }
-
-        .hero-image-container img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        /* ===== DESTAQUE DE PREMIAÇÃO NO HERO ===== */
-        .premio-destaque {
-            background: var(--white);
-            border-radius: var(--radius);
-            padding: 16px 20px;
-            margin-bottom: 24px;
-            border-left: 4px solid var(--azul-primary);
-            box-shadow: var(--shadow);
-            max-width: 500px;
-        }
-
-        .premio-destaque .valor-grande {
-            font-family: 'Playfair Display', serif;
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--azul-primary);
-        }
-
-        .premio-destaque .valor-grande .gold {
-            color: var(--gold);
-        }
-
-        .premio-destaque .detalhes {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px 24px;
-            margin-top: 6px;
-            font-size: 0.9rem;
-            color: var(--gray-500);
-        }
-
-        .premio-destaque .detalhes .item {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .premio-destaque .detalhes .item i {
-            color: var(--azul-primary);
-            font-size: 0.8rem;
-        }
-
-        .premio-destaque .detalhes .item .tag {
-            display: inline-block;
-            padding: 2px 10px;
-            border-radius: 20px;
-            font-weight: 600;
-            font-size: 0.75rem;
-        }
-
-        .tag-50 {
-            background: var(--azul-light);
-            color: var(--azul-primary);
-        }
-
-        .tag-500 {
-            background: #fff5e0;
-            color: var(--gold);
-        }
-
-        .tag-obrigatorio {
-            background: #fef0f0;
-            color: #cc2233;
-        }
-
-        /* ============================================
-           FEATURES / COMO FUNCIONA
-           ============================================ */
-        .features {
-            padding: 80px 0;
-            background: var(--white);
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 30px;
-            margin-top: 40px;
-        }
-
-        .feature-card {
-            text-align: center;
-            padding: 32px 24px;
-            position: relative;
-        }
-
-        .feature-card .step-number {
-            position: absolute;
-            top: -14px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 32px;
-            height: 32px;
-            background: var(--azul-gradient);
-            color: var(--white);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 14px;
-        }
-
-        .feature-card .icon {
-            font-size: 48px;
-            color: var(--azul-primary);
-            margin: 8px 0 16px;
-        }
-
-        .feature-card .icon.gold {
-            color: var(--gold);
-        }
-
-        .feature-card .icon.green {
-            color: var(--success);
-        }
-
-        .feature-card h3 {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.2rem;
-            margin-bottom: 8px;
-            color: var(--dark);
-        }
-
-        .feature-card .premio-value {
-            display: inline-block;
-            font-weight: 700;
-            padding: 4px 16px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            margin-top: 8px;
-        }
-
-        .feature-card .premio-value.gold {
-            background: #fff5e0;
-            color: var(--gold);
-        }
-
-        .feature-card .premio-value.azul {
-            background: var(--azul-light);
-            color: var(--azul-primary);
-        }
-
-        .feature-card .premio-value.green {
-            background: #e8faf0;
-            color: var(--success);
-        }
-
-        .feature-card .premio-value .small {
-            font-weight: 400;
-            font-size: 0.75rem;
-            display: block;
-            color: var(--gray-400);
-        }
-
-        .feature-card p {
-            color: var(--gray-500);
-            font-size: 0.95rem;
-            margin-top: 8px;
-        }
-
-        /* ===== BANNER DE AVISO ===== */
-        .aviso-banner {
-            background: #fef8e7;
-            border: 1px solid #f5d76e;
-            border-radius: var(--radius);
-            padding: 16px 20px;
-            margin: 30px auto 0;
-            max-width: 800px;
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-        }
-
-        .aviso-banner i {
-            color: var(--warning);
-            font-size: 24px;
-            margin-top: 2px;
-            flex-shrink: 0;
-        }
-
-        .aviso-banner .texto {
-            font-size: 0.9rem;
-            color: var(--gray-600);
-        }
-
-        .aviso-banner .texto strong {
-            color: #8a7600;
-        }
-
-        .aviso-banner .texto .destaque {
-            color: var(--azul-primary);
-            font-weight: 600;
-        }
-
-        /* ============================================
-           PREMIAÇÕES
-           ============================================ */
-        .premiations {
-            padding: 80px 0;
-            background: var(--gray-100);
-        }
-
-        .premiations-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 24px;
-            margin-top: 40px;
-        }
-
-        .premiation-card {
-            background: var(--white);
-            border-radius: var(--radius);
-            padding: 20px 24px;
-            box-shadow: var(--shadow);
-            border: 1px solid rgba(0, 30, 240, 0.06);
-            transition: var(--transition);
-        }
-
-        .premiation-card:hover {
-            box-shadow: var(--shadow-hover);
-            transform: translateY(-3px);
-        }
-
-        .premiation-card .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 12px;
-            margin-bottom: 8px;
-        }
-
-        .premiation-card .card-header h4 {
-            font-family: 'Playfair Display', serif;
-            font-size: 1rem;
-            color: var(--dark);
-            flex: 1;
-        }
-
-        .premiation-card .badge {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 50px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            white-space: nowrap;
-        }
-
-        .premiation-card .badge.premio-50 {
-            background: rgba(0, 30, 240, 0.08);
-            color: var(--azul-primary);
-            border: 1px solid rgba(0, 30, 240, 0.12);
-        }
-
-        .premiation-card .badge.premio-500 {
-            background: rgba(212, 175, 55, 0.12);
-            color: #b8960a;
-            border: 1px solid rgba(212, 175, 55, 0.2);
-        }
-
-        .premiation-card .address {
-            color: var(--gray-400);
-            font-size: 0.85rem;
-            margin: 4px 0 8px;
-        }
-
-        .premiation-card .address i {
-            color: var(--azul-primary);
-            margin-right: 4px;
-        }
-
-        .premiation-card .indicator {
-            color: var(--gray-500);
-            font-size: 0.85rem;
-        }
-
-        .premiation-card .indicator .highlight {
-            color: var(--azul-primary);
-            font-weight: 600;
-        }
-
-        .premiation-card .valor-premio {
-            font-weight: 700;
-            font-size: 1rem;
-            margin-top: 10px;
-            padding-top: 10px;
-            border-top: 1px solid rgba(0, 30, 240, 0.06);
-        }
-
-        .premiation-card .valor-premio .azul {
-            color: var(--azul-primary);
-        }
-
-        .premiation-card .valor-premio .gold {
-            color: var(--gold);
-        }
-
-        .premiation-card .date {
-            color: var(--gray-400);
-            font-size: 0.8rem;
-            margin-top: 4px;
-        }
-
-        /* ============================================
-           DASHBOARD
-           ============================================ */
-        .dashboard {
-            display: none;
-            padding: 100px 0 60px;
-            min-height: 100vh;
-            background: var(--gray-100);
-        }
-
-        .dashboard.active {
-            display: block;
-        }
-
-        .dashboard-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 20px;
-            margin-bottom: 32px;
-        }
-
-        .dashboard-header h2 {
-            font-family: 'Playfair Display', serif;
-            font-size: 2rem;
-            color: var(--dark);
-        }
-
-        .dashboard-header .user-info {
-            color: var(--gray-500);
-        }
-
-        .dashboard-header .user-info span {
-            color: var(--azul-primary);
-            font-weight: 600;
-        }
-
-        .dashboard-filters {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            margin-bottom: 32px;
-        }
-
-        .filter-btn {
-            padding: 10px 24px;
-            border-radius: 50px;
-            border: 1px solid rgba(0, 30, 240, 0.12);
-            background: var(--white);
-            color: var(--gray-500);
-            cursor: pointer;
-            transition: var(--transition);
-            font-weight: 500;
-            font-family: 'Inter', sans-serif;
-            font-size: 0.9rem;
-        }
-
-        .filter-btn.active {
-            background: var(--azul-gradient);
-            color: var(--white);
-            border-color: transparent;
-        }
-
-        .filter-btn:hover:not(.active) {
-            border-color: var(--azul-primary);
-            color: var(--azul-primary);
-        }
-
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-            gap: 24px;
-        }
-
-        .dashboard-card {
-            background: var(--white);
-            border-radius: var(--radius);
-            padding: 24px;
-            box-shadow: var(--shadow);
-            border: 1px solid rgba(0, 30, 240, 0.06);
-            transition: var(--transition);
-        }
-
-        .dashboard-card:hover {
-            box-shadow: var(--shadow-hover);
-        }
-
-        .dashboard-card .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 8px;
-            gap: 12px;
-        }
-
-        .dashboard-card .card-header h4 {
-            font-family: 'Playfair Display', serif;
-            font-size: 1rem;
-            flex: 1;
-            color: var(--dark);
-        }
-
-        .dashboard-card .status-badge {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 50px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            white-space: nowrap;
-        }
-
-        .dashboard-card .card-address {
-            color: var(--gray-400);
-            font-size: 0.85rem;
-            margin: 4px 0 8px;
-        }
-
-        .dashboard-card .card-address i {
-            color: var(--azul-primary);
-            margin-right: 4px;
-        }
-
-        .dashboard-card .card-indicator {
-            color: var(--gray-500);
-            font-size: 0.85rem;
-            margin: 4px 0;
-        }
-
-        .dashboard-card .card-indicator .you {
-            color: var(--azul-primary);
-            font-weight: 600;
-        }
-
-        .dashboard-card .premio-info {
-            margin-top: 12px;
-            padding-top: 12px;
-            border-top: 1px solid rgba(0, 30, 240, 0.06);
-            font-weight: 600;
-            font-size: 0.95rem;
-        }
-
-        .dashboard-card .premio-info .azul {
-            color: var(--azul-primary);
-        }
-
-        .dashboard-card .premio-info .gold {
-            color: var(--gold);
-        }
-
-        .dashboard-card .premio-info .green {
-            color: var(--success);
-        }
-
-        .dashboard-card .card-date {
-            color: var(--gray-400);
-            font-size: 0.8rem;
-            margin-top: 8px;
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: var(--gray-400);
-            grid-column: 1/-1;
-        }
-
-        .empty-state i {
-            font-size: 48px;
-            color: var(--azul-light);
-            margin-bottom: 16px;
-        }
-
-        /* ============================================
-           MODAIS
-           ============================================ */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(8px);
-            z-index: 2000;
-            align-items: center;
-            justify-content: center;
-            padding: 16px;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .modal-overlay.active {
-            display: flex;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
-        }
-
-        .modal-content {
-            background: var(--white);
-            border-radius: var(--radius-lg);
-            max-width: 540px;
-            width: 100%;
-            max-height: 92vh;
-            overflow-y: auto;
-            padding: 32px 28px;
-            position: relative;
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2);
-        }
-
-        .modal-content .close-modal {
-            position: absolute;
-            top: 16px;
-            right: 20px;
-            font-size: 28px;
-            color: var(--gray-300);
-            cursor: pointer;
-            transition: var(--transition);
-            background: none;
-            border: none;
-            z-index: 10;
-        }
-
-        .modal-content .close-modal:hover {
-            color: var(--azul-primary);
-            transform: rotate(90deg);
-        }
-
-        .modal-content h2 {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.8rem;
-            margin-bottom: 16px;
-            color: var(--dark);
-        }
-
-        .modal-content .sub {
-            color: var(--gray-500);
-            margin-bottom: 20px;
-        }
-
-        .modal-content .rule-item {
-            padding: 14px 0;
-            border-bottom: 1px solid rgba(0, 30, 240, 0.06);
-        }
-
-        .modal-content .rule-item:last-child {
-            border-bottom: none;
-        }
-
-        .modal-content .rule-item h4 {
-            color: var(--azul-primary);
-            margin-bottom: 4px;
-            font-size: 1rem;
-        }
-
-        .modal-content .rule-item p {
-            color: var(--gray-500);
-            font-size: 0.95rem;
-        }
-
-        .modal-content .rule-item .premio-tag {
-            display: inline-block;
-            padding: 2px 12px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            margin-top: 4px;
-        }
-
-        .modal-content .rule-item .premio-tag.indicacao {
-            background: var(--azul-light);
-            color: var(--azul-primary);
-        }
-
-        .modal-content .rule-item .premio-tag.venda {
-            background: #fff5e0;
-            color: var(--gold);
-        }
-
-        .modal-content .rule-item .premio-tag.obrigatorio {
-            background: #fef0f0;
-            color: #cc2233;
-        }
-
-        .modal-content .resumo-premios {
-            background: var(--azul-light);
-            border-radius: var(--radius);
-            padding: 16px 20px;
-            margin: 16px 0;
-            text-align: center;
-        }
-
-        .modal-content .resumo-premios .total {
-            font-family: 'Playfair Display', serif;
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--azul-primary);
-        }
-
-        .modal-content .resumo-premios .total .gold {
-            color: var(--gold);
-        }
-
-        .modal-content .resumo-premios .detalhe {
-            font-size: 0.9rem;
-            color: var(--gray-500);
-            margin-top: 4px;
-        }
-
-        .modal-content .resumo-premios .detalhe i {
-            color: var(--azul-primary);
-            margin-right: 4px;
-        }
-
-        .form-group {
-            margin-bottom: 16px;
-        }
-
-        .form-group label {
-            display: block;
-            font-weight: 500;
-            margin-bottom: 4px;
-            font-size: 0.9rem;
-            color: var(--gray-600);
-        }
-
-        .form-group input,
-        .form-group textarea,
-        .form-group select {
-            width: 100%;
-            padding: 12px 14px;
-            background: var(--gray-100);
-            border: 1px solid rgba(0, 30, 240, 0.08);
-            border-radius: 8px;
-            color: var(--dark);
-            font-size: 1rem;
-            transition: var(--transition);
-            font-family: 'Inter', sans-serif;
-            autocomplete: off;
-            autocorrect: off;
-            autocapitalize: off;
-            spellcheck: false;
-        }
-
-        .form-group input:focus,
-        .form-group textarea:focus,
-        .form-group select:focus {
-            outline: none;
-            border-color: var(--azul-primary);
-            box-shadow: 0 0 0 3px rgba(0, 30, 240, 0.08);
-            background: var(--white);
-        }
-
-        .form-group input:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            background: var(--gray-200);
-        }
-
-        .form-group select option {
-            background: var(--white);
-            color: var(--dark);
-        }
-
-        .form-group textarea {
-            min-height: 70px;
-            resize: vertical;
-        }
-
-        .form-warning {
-            background: rgba(255, 193, 7, 0.08);
-            border-left: 3px solid var(--warning);
-            padding: 10px 14px;
-            border-radius: 4px;
-            margin-bottom: 16px;
-            font-size: 0.85rem;
-            color: #8a7600;
-        }
-
-        .form-warning i {
-            color: var(--warning);
-            margin-right: 8px;
-        }
-
-        .form-error {
-            background: rgba(255, 71, 87, 0.08);
-            border-left: 3px solid var(--danger);
-            padding: 10px 14px;
-            border-radius: 4px;
-            margin-bottom: 14px;
-            font-size: 0.85rem;
-            color: var(--danger);
-            display: none;
-        }
-
-        .form-error.show {
-            display: block;
-        }
-
-        .form-success {
-            display: none;
-            text-align: center;
-            padding: 24px;
-            background: rgba(46, 213, 115, 0.08);
-            border-radius: 8px;
-            border: 1px solid rgba(46, 213, 115, 0.2);
-            margin-top: 16px;
-        }
-
-        .form-success.show {
-            display: block;
-        }
-
-        .form-success i {
-            color: var(--success);
-            font-size: 32px;
-        }
-
-        .form-success p {
-            color: var(--success);
-            font-weight: 600;
-            margin-top: 8px;
-        }
-
-        .form-success .sub {
-            color: var(--gray-500);
-            font-weight: 400;
-            font-size: 0.9rem;
-        }
-
-        .telefone-hint {
-            color: var(--gray-400);
-            font-size: 0.75rem;
-            margin-top: 4px;
-        }
-
-        .telefone-hint i {
-            color: var(--azul-primary);
-        }
-
-        .welcome-back {
-            background: rgba(0, 30, 240, 0.06);
-            border: 1px solid rgba(0, 30, 240, 0.12);
-            border-radius: 8px;
-            padding: 10px 14px;
-            margin: 10px 0 14px;
-            display: none;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .welcome-back.show {
-            display: flex;
-        }
-
-        .welcome-back i {
-            color: var(--azul-primary);
-            font-size: 22px;
-        }
-
-        .welcome-back .text {
-            color: var(--dark);
-        }
-
-        .welcome-back .text strong {
-            font-size: 1rem;
-        }
-
-        .welcome-back .text .sub {
-            color: var(--gray-500);
-            font-weight: 400;
-            font-size: 0.8rem;
-        }
-
-        /* ============================================
-           FOOTER
-           ============================================ */
-        footer {
-            background: var(--white);
-            border-top: 1px solid rgba(0, 30, 240, 0.06);
-            padding: 30px 0;
-        }
-
-        .footer-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-
-        .footer-content p {
-            color: var(--gray-400);
-            font-size: 0.9rem;
-        }
-
-        .footer-content .footer-links {
-            display: flex;
-            gap: 24px;
-        }
-
-        .footer-content .footer-links a {
-            color: var(--gray-400);
-            text-decoration: none;
-            font-size: 0.9rem;
-            transition: var(--transition);
-            cursor: pointer;
-        }
-
-        .footer-content .footer-links a:hover {
-            color: var(--azul-primary);
-        }
-
-        /* ============================================
-           TOAST
-           ============================================ */
-        .toast {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            padding: 14px 20px;
-            border-radius: 12px;
-            background: var(--white);
-            border: 1px solid rgba(0, 30, 240, 0.12);
-            color: var(--dark);
-            font-size: 0.9rem;
-            z-index: 3000;
-            transform: translateX(120%);
-            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            max-width: 400px;
-            box-shadow: var(--shadow-hover);
-        }
-
-        .toast.show {
-            transform: translateX(0);
-        }
-
-        .toast.success {
-            border-color: var(--success);
-        }
-
-        .toast.error {
-            border-color: var(--danger);
-        }
-
-        .toast .toast-icon {
-            margin-right: 12px;
-        }
-
-        .toast.success .toast-icon {
-            color: var(--success);
-        }
-
-        .toast.error .toast-icon {
-            color: var(--danger);
-        }
-
-        /* ============================================
-           RESPONSIVE
-           ============================================ */
-        @media (max-width: 1024px) {
-            .hero-content {
-                grid-template-columns: 1fr;
-                text-align: center;
-            }
-
-            .hero-text p {
-                margin: 0 auto 24px;
-            }
-
-            .hero-buttons {
-                justify-content: center;
-            }
-
-            .hero-stats {
-                max-width: 400px;
-                margin: 0 auto;
-            }
-
-            .premio-destaque {
-                max-width: 500px;
-                margin: 0 auto 24px;
-                text-align: left;
-            }
-
-            .hero-image-container {
-                max-width: 300px;
-            }
-
-            .hero-text h1 {
-                font-size: 2.8rem;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .hamburger {
-                display: flex;
-            }
-
-            .nav-links {
-                display: none;
-                position: absolute;
-                top: 100%;
-                left: 0;
-                right: 0;
-                background: var(--white);
-                flex-direction: column;
-                padding: 20px;
-                gap: 14px;
-                border-bottom: 1px solid rgba(0, 30, 240, 0.06);
-                box-shadow: var(--shadow);
-            }
-
-            .nav-links.open {
-                display: flex;
-            }
-
-            .hero-text h1 {
-                font-size: 2.2rem;
-            }
-
-            .section-title {
-                font-size: 2rem;
-            }
-
-            .modal-content {
-                padding: 20px 16px;
-                margin: 10px;
-            }
-
-            .dashboard-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .premiations-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .hero-stats {
-                grid-template-columns: 1fr 1fr 1fr;
-                gap: 8px;
-            }
-
-            .dashboard-header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .footer-content {
-                flex-direction: column;
-                text-align: center;
-            }
-
-            .features-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .toast {
-                right: 16px;
-                left: 16px;
-                max-width: none;
-                bottom: 20px;
-            }
-
-            .premio-destaque .valor-grande {
-                font-size: 1.6rem;
-            }
-
-            .premio-destaque .detalhes {
-                font-size: 0.8rem;
-                gap: 8px 16px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .hero-text h1 {
-                font-size: 1.8rem;
-            }
-
-            .hero-stats {
-                grid-template-columns: 1fr 1fr 1fr;
-                gap: 6px;
-            }
-
-            .stat-item .number {
-                font-size: 1.2rem;
-            }
-
-            .stat-item {
-                padding: 10px 6px;
-            }
-
-            .stat-item .label {
-                font-size: 0.6rem;
-            }
-
-            .btn-primary,
-            .btn-outline {
-                width: 100%;
-                justify-content: center;
-                padding: 12px 20px;
-                font-size: 14px;
-            }
-
-            .dashboard-filters {
-                flex-direction: column;
-            }
-
-            .filter-btn {
-                width: 100%;
-                text-align: center;
-                padding: 8px 16px;
-                font-size: 0.85rem;
-            }
-
-            .modal-content {
-                padding: 16px 12px;
-            }
-
-            .modal-content h2 {
-                font-size: 1.4rem;
-            }
-
-            .modal-content .close-modal {
-                top: 10px;
-                right: 12px;
-                font-size: 22px;
-            }
-
-            .form-warning {
-                font-size: 0.8rem;
-                padding: 8px 12px;
-            }
-
-            .dashboard-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .premiations-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .features-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .premio-destaque .valor-grande {
-                font-size: 1.4rem;
-            }
-
-            .premio-destaque .detalhes {
-                flex-direction: column;
-                gap: 4px;
-            }
-
-            .aviso-banner {
-                flex-direction: column;
-                align-items: center;
-                text-align: center;
-            }
-        }
-    </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
+<title>Indique e Ganhe · Lima Ribeiro Imóveis</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --azul:#001EF0; --azul-esc:#0011a0; --azul-claro:#e8edff;
+  --cinza:#f5f7fc; --branco:#fff; --texto:#1a1a2e; --texto-cinza:#5a5a72; --muted:#94a3b8;
+  --borda:#e2e8f0; --verde:#16a34a; --vermelho:#dc2626; --amarelo:#f59e0b; --whatsapp:#25d366;
+  --sombra:0 8px 32px rgba(0,30,240,.06); --sombra-md:0 12px 48px rgba(0,30,240,.10);
+  --r:16px; --r-lg:24px; --trans:.25s cubic-bezier(.4,0,.2,1);
+}
+body{background:var(--cinza);font-family:'Inter',sans-serif;color:var(--texto);line-height:1.55;overflow-x:hidden;padding-bottom:80px}
+.container{max-width:1180px;margin:0 auto;padding:0 24px}
+
+/* HEADER */
+.navbar{display:flex;justify-content:space-between;align-items:center;padding:12px 24px;background:rgba(255,255,255,.95);backdrop-filter:blur(10px);position:sticky;top:0;z-index:100;border-bottom:1px solid rgba(0,30,240,.06);flex-wrap:wrap;gap:10px}
+.logo-link{display:flex;align-items:center;text-decoration:none}
+.logo-img{height:48px;width:auto}
+.nav-right{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.btn-ghost{background:transparent;color:var(--texto);border:1.5px solid var(--borda);padding:9px 18px;border-radius:40px;font-weight:600;font-size:.85rem;cursor:pointer;transition:var(--trans);font-family:'Inter',sans-serif;display:inline-flex;align-items:center;gap:6px}
+.btn-ghost:hover{border-color:var(--azul);color:var(--azul)}
+.btn-azul{background:var(--azul);color:#fff;border:none;padding:10px 22px;border-radius:40px;font-weight:700;font-size:.88rem;cursor:pointer;transition:var(--trans);font-family:'Inter',sans-serif;display:inline-flex;align-items:center;gap:8px}
+.btn-azul:hover{background:var(--azul-esc);transform:translateY(-1px);box-shadow:0 6px 20px rgba(0,30,240,.25)}
+.btn-azul:disabled{opacity:.6;cursor:not-allowed;transform:none}
+
+/* HERO */
+.hero{padding:48px 0 32px}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:var(--azul-claro);color:var(--azul);padding:6px 16px;border-radius:40px;font-size:.8rem;font-weight:700;margin-bottom:18px}
+.hero h1{font-size:3rem;font-weight:800;line-height:1.08;letter-spacing:-1.5px;margin-bottom:16px}
+.hero h1 .azul{color:var(--azul)}
+.hero p.sub{color:var(--texto-cinza);font-size:1.1rem;max-width:620px;margin-bottom:32px}
+.cta-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;max-width:760px;margin-bottom:36px}
+.cta-card{background:#fff;border:1.5px solid var(--borda);border-radius:var(--r);padding:22px 20px;cursor:pointer;transition:var(--trans);display:flex;align-items:center;gap:16px;text-align:left;font-family:'Inter',sans-serif;width:100%}
+.cta-card:hover{border-color:var(--azul);transform:translateY(-3px);box-shadow:var(--sombra-md)}
+.cta-card .ico{width:52px;height:52px;border-radius:14px;background:var(--azul-claro);color:var(--azul);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0}
+.cta-card .ico.green{background:#e8faf0;color:var(--verde)}
+.cta-card .ico.gold{background:#fff8e1;color:#b8860b}
+.cta-card .ico.dark{background:#1a1a2e;color:#fff}
+.cta-card .txt strong{display:block;font-size:1rem;color:var(--texto);margin-bottom:2px}
+.cta-card .txt small{color:var(--texto-cinza);font-size:.82rem}
+
+/* STEPS */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin:40px 0}
+.step-card{background:#fff;border:1px solid var(--borda);border-radius:var(--r);padding:28px 22px;text-align:center;transition:var(--trans);position:relative}
+.step-card:hover{border-color:var(--azul);box-shadow:var(--sombra-md)}
+.step-card .n{width:36px;height:36px;border-radius:50%;background:var(--azul);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.9rem;margin:0 auto 14px}
+.step-card h3{font-size:1.05rem;margin-bottom:8px}
+.step-card p{font-size:.88rem;color:var(--texto-cinza)}
+
+/* PREMIAÇÃO */
+.premios{padding:32px 0 8px}
+.premios h2{font-size:1.9rem;font-weight:800;letter-spacing:-.6px;margin-bottom:8px;text-align:center}
+.premios h2 .azul{color:var(--azul)}
+.premios .sub{text-align:center;color:var(--texto-cinza);margin-bottom:32px}
+.premio-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.premio-card{background:#fff;border-radius:var(--r-lg);padding:28px 26px;border:1px solid var(--borda);position:relative;overflow:hidden}
+.premio-card.tipo-imovel{border-top:4px solid var(--azul)}
+.premio-card.tipo-comprador{border-top:4px solid var(--verde)}
+.premio-card .ptag{display:inline-flex;align-items:center;gap:6px;font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.5px;padding:4px 12px;border-radius:20px;margin-bottom:14px}
+.premio-card.tipo-imovel .ptag{background:var(--azul-claro);color:var(--azul)}
+.premio-card.tipo-comprador .ptag{background:#e8faf0;color:var(--verde)}
+.premio-card h3{font-size:1.25rem;margin-bottom:12px}
+.premio-card .big{font-size:2rem;font-weight:800;color:var(--azul);margin:6px 0 4px}
+.premio-card.tipo-comprador .big{color:var(--verde)}
+.premio-card ul{list-style:none;margin:16px 0 0;display:flex;flex-direction:column;gap:10px}
+.premio-card li{display:flex;align-items:flex-start;gap:10px;font-size:.9rem;color:var(--texto-cinza)}
+.premio-card li i{color:var(--azul);margin-top:3px;flex-shrink:0}
+.premio-card.tipo-comprador li i{color:var(--verde)}
+.premio-card li strong{color:var(--texto)}
+
+/* PAINEL */
+.painel{display:none;padding:36px 0 32px}
+.painel.active{display:block}
+.painel-header{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:16px;margin-bottom:24px}
+.painel-header h2{font-size:1.7rem;font-weight:800;letter-spacing:-.5px}
+.painel-header p{color:var(--texto-cinza);font-size:.9rem;margin-top:4px}
+.saldo-card{background:linear-gradient(135deg,var(--azul),#0044ff);color:#fff;border-radius:var(--r-lg);padding:28px 26px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
+.saldo-card .label{font-size:.85rem;opacity:.85;font-weight:500;margin-bottom:6px}
+.saldo-card .valor{font-size:2.4rem;font-weight:800;letter-spacing:-1px;line-height:1}
+.saldo-card .mini{font-size:.8rem;opacity:.85;margin-top:8px}
+.saldo-card .pago{background:rgba(255,255,255,.15);border-radius:12px;padding:12px 18px;text-align:right}
+.saldo-card .pago strong{display:block;font-size:1.25rem}
+
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:28px}
+.stat-box{background:#fff;border:1px solid var(--borda);border-radius:var(--r);padding:16px;text-align:center}
+.stat-box .n{font-size:1.5rem;font-weight:800;color:var(--azul)}
+.stat-box .l{font-size:.72rem;color:var(--texto-cinza);text-transform:uppercase;letter-spacing:.4px;font-weight:600;margin-top:2px}
+
+.filtros{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+.filtro-btn{background:#fff;border:1.5px solid var(--borda);color:var(--texto-cinza);padding:8px 18px;border-radius:40px;font-weight:600;font-size:.82rem;cursor:pointer;transition:var(--trans);font-family:'Inter',sans-serif}
+.filtro-btn.active{background:var(--azul);color:#fff;border-color:var(--azul)}
+.filtro-btn:hover:not(.active){border-color:var(--azul);color:var(--azul)}
+
+.extrato-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
+.ex-card{background:#fff;border:1px solid var(--borda);border-radius:var(--r);padding:18px;transition:var(--trans);position:relative;overflow:hidden}
+.ex-card:hover{border-color:var(--azul);box-shadow:var(--sombra-md)}
+.ex-card .ex-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:10px}
+.ex-card .ex-head h4{font-size:.95rem;font-weight:700;flex:1;line-height:1.3}
+.ex-card .badge{font-size:.65rem;font-weight:800;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:.4px;white-space:nowrap}
+.badge.pendente{background:#fff3cd;color:#856404}
+.badge.captado{background:#d1ecf1;color:#0c5460}
+.badge.ativo{background:#d4edda;color:#155724}
+.badge.negociacao{background:#fff3cd;color:#856404}
+.badge.venda{background:#d4edda;color:var(--verde)}
+.badge.nao{background:#f8d7da;color:#721c24}
+.ex-card .row{font-size:.82rem;color:var(--texto-cinza);display:flex;align-items:center;gap:6px;margin-bottom:5px}
+.ex-card .row i{color:var(--azul);width:14px;font-size:.78rem}
+.ex-card .row strong{color:var(--texto);font-weight:600}
+.ex-card .premio{display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-top:12px;border-top:1px solid var(--borda)}
+.ex-card .premio .lbl{font-size:.75rem;color:var(--texto-cinza);font-weight:600}
+.ex-card .premio .val{font-weight:800;font-size:1.1rem;color:var(--verde)}
+.ex-card .premio .val.zero{color:var(--muted)}
+
+.empty{grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--muted)}
+.empty i{font-size:3rem;color:var(--azul-claro);margin-bottom:14px;display:block}
+.empty p{font-size:1rem;color:var(--texto-cinza);margin-bottom:14px}
+
+/* MODAIS */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;z-index:1000;padding:16px}
+.modal-overlay.active{display:flex}
+.modal-box{background:#fff;max-width:560px;width:100%;border-radius:var(--r-lg);padding:32px 28px;max-height:92vh;overflow-y:auto;position:relative;animation:fadeUp .3s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.modal-box .close{position:absolute;top:14px;right:18px;font-size:26px;color:var(--muted);cursor:pointer;background:none;border:none;line-height:1}
+.modal-box .close:hover{color:var(--texto)}
+.modal-box h3{font-size:1.4rem;font-weight:800;letter-spacing:-.4px;margin-bottom:6px;padding-right:32px}
+.modal-box .sub{color:var(--texto-cinza);font-size:.9rem;margin-bottom:22px}
+
+.form-group{margin-bottom:16px}
+.form-group label{display:block;font-weight:600;font-size:.85rem;color:var(--texto);margin-bottom:6px}
+.form-group input,.form-group textarea,.form-group select{width:100%;padding:12px 14px;border:1.5px solid var(--borda);border-radius:10px;background:var(--cinza);font-family:'Inter',sans-serif;font-size:.95rem;color:var(--texto);transition:var(--trans);autocomplete:off}
+.form-group input:focus,.form-group textarea:focus,.form-group select:focus{outline:none;border-color:var(--azul);background:#fff;box-shadow:0 0 0 3px rgba(0,30,240,.08)}
+.form-group textarea{resize:vertical;min-height:80px}
+.form-group .hint{font-size:.75rem;color:var(--muted);margin-top:4px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-check{display:flex;align-items:flex-start;gap:10px;background:var(--cinza);padding:12px 14px;border-radius:10px;margin-bottom:16px}
+.form-check input{width:18px;height:18px;margin-top:2px;flex-shrink:0}
+.form-check label{font-size:.85rem;color:var(--texto-cinza);cursor:pointer;line-height:1.4}
+.form-error{background:#fef2f2;color:var(--vermelho);border-left:3px solid var(--vermelho);padding:10px 14px;border-radius:8px;font-size:.85rem;margin-bottom:14px;display:none}
+.form-error.show{display:block}
+
+.btn-submit{width:100%;background:var(--azul);color:#fff;border:none;padding:14px;border-radius:40px;font-weight:700;font-size:.95rem;cursor:pointer;font-family:'Inter',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;transition:var(--trans)}
+.btn-submit:hover:not(:disabled){background:var(--azul-esc);transform:translateY(-1px)}
+.btn-submit:disabled{opacity:.6;cursor:not-allowed}
+
+.tabs{display:flex;background:var(--cinza);border-radius:40px;padding:4px;margin-bottom:20px}
+.tab{flex:1;padding:9px 14px;border:none;background:transparent;border-radius:40px;font-weight:700;font-size:.85rem;color:var(--texto-cinza);cursor:pointer;font-family:'Inter',sans-serif;transition:var(--trans)}
+.tab.active{background:#fff;color:var(--azul);box-shadow:0 2px 8px rgba(0,0,0,.06)}
+
+/* REGRAS */
+.regra-item{padding:14px 0;border-bottom:1px solid var(--borda)}
+.regra-item:last-child{border-bottom:none}
+.regra-item h4{color:var(--azul);font-size:1rem;margin-bottom:6px}
+.regra-item p{font-size:.9rem;color:var(--texto-cinza);line-height:1.65}
+.regra-item .tag{display:inline-block;padding:2px 10px;border-radius:20px;font-size:.72rem;font-weight:800;margin-right:6px;text-transform:uppercase;letter-spacing:.3px}
+.tag.az{background:var(--azul-claro);color:var(--azul)}
+.tag.vd{background:#e8faf0;color:var(--verde)}
+.tag.am{background:#fff3cd;color:#856404}
+
+.wsp-float{position:fixed;bottom:88px;right:20px;width:56px;height:56px;border-radius:50%;background:var(--whatsapp);color:#fff;border:none;font-size:1.6rem;cursor:pointer;z-index:99;box-shadow:0 6px 24px rgba(37,211,102,.4);transition:var(--trans);display:flex;align-items:center;justify-content:center}
+.wsp-float:hover{transform:scale(1.08);box-shadow:0 10px 32px rgba(37,211,102,.55)}
+
+.toast{position:fixed;bottom:90px;right:20px;padding:14px 20px;background:#fff;border-radius:12px;box-shadow:var(--sombra-md);border-left:4px solid var(--azul);font-size:.9rem;z-index:3000;transform:translateX(140%);transition:transform .4s cubic-bezier(.4,0,.2,1);max-width:340px}
+.toast.show{transform:translateX(0)}
+.toast.success{border-left-color:var(--verde)}
+.toast.error{border-left-color:var(--vermelho)}
+
+.footer{text-align:center;padding:32px 0 12px;border-top:1px solid var(--borda);color:var(--muted);font-size:.82rem;margin-top:40px}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .hero h1{font-size:2.2rem}
+  .cta-grid{grid-template-columns:1fr}
+  .steps{grid-template-columns:1fr}
+  .premio-grid{grid-template-columns:1fr}
+  .stats-row{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:600px){
+  .container{padding:0 16px}
+  .navbar{padding:10px 16px}
+  .logo-img{height:38px}
+  .hero{padding:28px 0 20px}
+  .hero h1{font-size:1.8rem;letter-spacing:-1px}
+  .hero p.sub{font-size:.95rem}
+  .saldo-card .valor{font-size:1.8rem}
+  .modal-box{padding:22px 18px}
+  .form-row{grid-template-columns:1fr}
+  .extrato-grid{grid-template-columns:1fr}
+}
+</style>
 </head>
 <body>
 
-    <!-- ==========================================
-    HEADER
-    ========================================== -->
-    <header id="header">
-        <div class="container nav-container">
-            <div class="logo" onclick="showHome()">
-                <img src="https://cdn.awsli.com.br/1608/1608652/arquivos/logo-lr-imoveis.jpg" alt="Lima Ribeiro Imóveis" class="logo-img">
-                <div class="logo-text">Lima Ribeiro <span>Imóveis</span></div>
-            </div>
+<nav class="navbar">
+  <a href="#" class="logo-link"><img src="https://cdn.awsli.com.br/1608/1608652/arquivos/logo-lr-imoveis.jpg" alt="Lima Ribeiro" class="logo-img"/></a>
+  <div class="nav-right" id="navRight">
+    <button class="btn-ghost" onclick="openModal('regras')"><i class="fas fa-info-circle"></i> Regras</button>
+    <button class="btn-azul" id="btnNavPainel" onclick="abrirLogin()"><i class="fas fa-user"></i> Ver minhas indicações</button>
+    <button class="btn-ghost" id="btnSair" style="display:none" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Sair</button>
+  </div>
+</nav>
 
-            <button class="hamburger" id="hamburger" aria-label="Menu">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
+<main class="container">
 
-            <ul class="nav-links" id="navLinks">
-                <li><a onclick="showHome()">Início</a></li>
-                <li><a onclick="openRulesModal()">Regras</a></li>
-                <li><a onclick="scrollToPremiations()">Premiações</a></li>
-                <li><a onclick="openWhatsappModal()">Contato</a></li>
-                <li><button class="nav-btn" id="navLoginBtn" onclick="openLoginModal()">
-                    <i class="fas fa-user"></i> Acessar Painel
-                </button></li>
-                <li style="display:none;" id="navUserInfo">
-                    <span style="color:var(--azul-primary);font-weight:600;" id="navUserName"></span>
-                    <button class="nav-btn-outline" style="font-size:0.8rem;padding:6px 16px;margin-left:8px;" onclick="logout()">
-                        <i class="fas fa-sign-out-alt"></i> Sair
-                    </button>
-                </li>
-            </ul>
-        </div>
-    </header>
+  <!-- ============ HOME ============ -->
+  <section id="secHome">
+    <div class="hero">
+      <span class="hero-badge"><i class="fas fa-gift"></i> Programa de premiações</span>
+      <h1>Indique um <span class="azul">imóvel</span><br>ou um <span class="azul">comprador</span><br>e ganhe prêmios.</h1>
+      <p class="sub">Você indica, nossa equipe atende, e você recebe por cada venda concluída. Simples, transparente e pago via PIX.</p>
 
-    <!-- ==========================================
-    TOAST
-    ========================================== -->
-    <div class="toast" id="toast">
-        <span class="toast-icon"><i class="fas fa-info-circle"></i></span>
-        <span id="toastMessage">Mensagem</span>
+      <div class="cta-grid">
+        <button class="cta-card" onclick="abrirIndicar('imovel')">
+          <div class="ico"><i class="fas fa-home"></i></div>
+          <div class="txt"><strong>Indicar um imóvel</strong><small>Ganhe R$50 + 1% no valor da venda</small></div>
+        </button>
+        <button class="cta-card" onclick="abrirIndicar('comprador')">
+          <div class="ico green"><i class="fas fa-user-tie"></i></div>
+          <div class="txt"><strong>Indicar um comprador</strong><small>Ganhe 1% sobre o valor da venda</small></div>
+        </button>
+        <button class="cta-card" onclick="openModal('regras')">
+          <div class="ico gold"><i class="fas fa-scroll"></i></div>
+          <div class="txt"><strong>Ver as regras completas</strong><small>Entenda como funciona</small></div>
+        </button>
+        <button class="cta-card" onclick="abrirLogin()">
+          <div class="ico dark"><i class="fas fa-key"></i></div>
+          <div class="txt"><strong>Ver minhas indicações</strong><small>Extrato, status e saldo</small></div>
+        </button>
+      </div>
     </div>
 
-    <!-- ==========================================
-    HERO
-    ========================================== -->
-    <section class="hero" id="homeSection">
-        <div class="container">
-            <div class="hero-content">
-                <div class="hero-text">
-                    <h1>
-                        Indique um imóvel<br>
-                        <span class="highlight">e ganhe prêmios</span><br>
-                        <span class="gold-highlight">em cada etapa!</span>
-                    </h1>
-
-                    <!-- DESTAQUE DE PREMIAÇÃO - CLARO E VISÍVEL -->
-                    <div class="premio-destaque">
-                        <div>
-                            <span class="valor-grande">R$ 50,00</span>
-                            <span style="font-size:1rem;color:var(--gray-500);">por indicação</span>
-                        </div>
-                        <div class="detalhes">
-                            <span class="item">
-                                <i class="fas fa-check-circle"></i>
-                                <span class="tag tag-50">R$ 50,00</span> ao indicar
-                            </span>
-                            <span class="item">
-                                <i class="fas fa-check-circle"></i>
-                                <span class="tag tag-500">+ R$ 500,00</span> se a venda for com nossa equipe
-                            </span>
-                            <span class="item">
-                                <i class="fas fa-clock"></i>
-                                <span class="tag tag-obrigatorio">Mínimo 15 dias</span> no sistema
-                            </span>
-                        </div>
-                        <div style="font-size:0.85rem;color:var(--gray-400);margin-top:6px;">
-                            <i class="fas fa-info-circle" style="color:var(--azul-primary);"></i>
-                            Total de <strong style="color:var(--azul-primary);">R$ 550,00</strong> por imóvel que vender com a gente!
-                        </div>
-                    </div>
-
-                    <div class="hero-buttons">
-                        <button class="btn-primary" onclick="openIndicateModal()">
-                            <i class="fas fa-home"></i> Indicar Imóvel
-                        </button>
-                        <button class="btn-outline" onclick="openRulesModal()">
-                            <i class="fas fa-info-circle"></i> Ver Regras
-                        </button>
-                    </div>
-
-                    <div class="hero-stats" id="heroStats">
-                        <div class="stat-item">
-                            <div class="number" id="totalPremiados">R$ 18.400</div>
-                            <div class="label">Total pago em prêmios</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="number" id="totalIndicacoes">67</div>
-                            <div class="label">Indicações recebidas</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="number" id="totalVendas">12</div>
-                            <div class="label">Vendas concluídas</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="hero-right">
-                    <div class="hero-image-container">
-                        <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=600&h=600&fit=crop" alt="Indique e Ganhe">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ==========================================
-    FEATURES / COMO FUNCIONA
-    ========================================== -->
-    <section class="features" id="featuresSection">
-        <div class="container">
-            <h2 class="section-title" style="text-align:center;">
-                Como funciona o <span class="azul">Indique e Ganhe</span>?
-            </h2>
-            <p class="section-subtitle" style="text-align:center;">
-                Três etapas simples, premiações claras e garantidas para você!
-            </p>
-            <div class="features-grid">
-                <div class="feature-card card">
-                    <div class="step-number">1</div>
-                    <div class="icon"><i class="fas fa-hand-peace"></i></div>
-                    <h3>Indique o imóvel</h3>
-                    <p>Preencha os dados do imóvel e do proprietário. A indicação é válida apenas com contato direto do proprietário.</p>
-                    <span class="premio-value azul"><i class="fas fa-money-bill-wave"></i> R$ 50,00 <span class="small">por indicação</span></span>
-                </div>
-
-                <div class="feature-card card">
-                    <div class="step-number">2</div>
-                    <div class="icon gold"><i class="fas fa-handshake"></i></div>
-                    <h3>Captação e Permanência</h3>
-                    <p>O imóvel precisa ficar <strong>no mínimo 15 dias</strong> no sistema para que a indicação seja válida.</p>
-                    <span class="premio-value gold"><i class="fas fa-clock"></i> Mínimo 15 dias <span class="small">obrigatório</span></span>
-                </div>
-
-                <div class="feature-card card">
-                    <div class="step-number">3</div>
-                    <div class="icon green"><i class="fas fa-home"></i></div>
-                    <h3>Venda concluída</h3>
-                    <p>Se a venda for concretizada pela <strong>nossa equipe Lima Ribeiro/QuintoAndar</strong>, você ganha a premiação extra!</p>
-                    <span class="premio-value green"><i class="fas fa-money-bill-wave"></i> + R$ 500,00 <span class="small">com venda pela nossa equipe</span></span>
-                </div>
-            </div>
-
-            <!-- BANNER DE AVISO SOBRE OS 15 DIAS -->
-            <div class="aviso-banner">
-                <i class="fas fa-exclamation-triangle"></i>
-                <div class="texto">
-                    <strong>⚠️ Atenção às regras!</strong><br>
-                    O imóvel indicado deve permanecer <strong>no mínimo 15 dias</strong> em nosso sistema para que a indicação seja válida e a premiação seja paga. 
-                    <span class="destaque">Indicações com permanência inferior a 15 dias não geram direito à premiação.</span>
-                </div>
-            </div>
-
-            <div style="text-align:center;margin-top:30px;background:var(--azul-light);border-radius:var(--radius-lg);padding:24px;border:1px solid rgba(0,30,240,0.06);">
-                <p style="font-size:1.1rem;color:var(--dark);font-weight:600;">
-                    <i class="fas fa-trophy" style="color:var(--gold);"></i>
-                    Total por indicação com venda: <span style="color:var(--azul-primary);">R$ 550,00</span>
-                    <span style="color:var(--gold);font-weight:400;">(R$ 50 + R$ 500)</span>
-                </p>
-                <p style="color:var(--gray-500);font-size:0.9rem;margin-top:4px;">
-                    Indique quantos imóveis quiser. Quanto mais indicar, mais ganha!
-                </p>
-            </div>
-        </div>
-    </section>
-
-    <!-- ==========================================
-    PREMIAÇÕES
-    ========================================== -->
-    <section class="premiations" id="premiationsSection">
-        <div class="container">
-            <h2 class="section-title" style="text-align:center;">
-                Últimas <span class="azul">premiações</span> pagas
-            </h2>
-            <p class="section-subtitle" style="text-align:center;">
-                Veja quem já ganhou e confie em um sistema que realmente paga
-            </p>
-            <div class="premiations-grid" id="premiationsGrid">
-                <!-- Injetado via JS -->
-            </div>
-        </div>
-    </section>
-
-    <!-- ==========================================
-    DASHBOARD
-    ========================================== -->
-    <section class="dashboard" id="dashboardSection">
-        <div class="container">
-            <div class="dashboard-header">
-                <div>
-                    <h2><i class="fas fa-chart-line" style="color:var(--azul-primary);"></i> Meu Painel</h2>
-                    <div class="user-info">
-                        Bem-vindo, <span id="dashboardUserName">Indicador</span>!
-                        <span style="color:var(--gray-500);font-size:0.85rem;margin-left:12px;">
-                            <i class="fas fa-file-alt"></i> Total: <span id="dashboardTotalCount">0</span> indicações
-                        </span>
-                    </div>
-                </div>
-                <button class="btn-primary" onclick="openIndicateModal()" style="font-size:14px;padding:10px 24px;">
-                    <i class="fas fa-plus"></i> Nova Indicação
-                </button>
-            </div>
-
-            <div class="dashboard-filters">
-                <button class="filter-btn active" data-filter="all" onclick="filterDashboard('all')">
-                    <i class="fas fa-list"></i> Todas
-                </button>
-                <button class="filter-btn" data-filter="mine" onclick="filterDashboard('mine')">
-                    <i class="fas fa-user"></i> Minhas
-                </button>
-                <button class="filter-btn" data-filter="concluidas" onclick="filterDashboard('concluidas')">
-                    <i class="fas fa-check-circle"></i> Concluídas
-                </button>
-                <button class="filter-btn" data-filter="pendentes" onclick="filterDashboard('pendentes')">
-                    <i class="fas fa-clock"></i> Pendentes
-                </button>
-            </div>
-
-            <div class="dashboard-grid" id="dashboardGrid">
-                <div class="empty-state">
-                    <i class="fas fa-inbox"></i>
-                    <p style="font-size:1.1rem;color:var(--gray-500);">Nenhuma indicação encontrada</p>
-                    <p style="font-size:0.9rem;color:var(--gray-400);">Comece indicando um imóvel agora mesmo!</p>
-                    <button class="btn-primary" style="margin-top:16px;" onclick="openIndicateModal()">
-                        <i class="fas fa-plus"></i> Indicar Imóvel
-                    </button>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ==========================================
-    MODAL: REGRAS (ATUALIZADO)
-    ========================================== -->
-    <div class="modal-overlay" id="rulesModal">
-        <div class="modal-content">
-            <button class="close-modal" onclick="closeModal('rulesModal')">&times;</button>
-            <h2>📋 Regras do Programa</h2>
-            <p class="sub">Entenda como funciona e como você pode ganhar prêmios indicando imóveis.</p>
-
-            <!-- RESULTADO DAS PREMIAÇÕES -->
-            <div class="resumo-premios">
-                <div>
-                    <span class="total">R$ 50,00</span>
-                    <span style="font-size:1rem;color:var(--gray-500);">por indicação</span>
-                </div>
-                <div class="detalhe">
-                    <i class="fas fa-plus-circle"></i> 
-                    <span class="tag tag-500" style="font-weight:700;">+ R$ 500,00</span> se a venda for com nossa equipe
-                </div>
-                <div class="detalhe" style="margin-top:8px;color:var(--gray-600);">
-                    <i class="fas fa-clock" style="color:#cc2233;"></i>
-                    <strong style="color:#cc2233;">Obrigatório:</strong> imóvel deve permanecer <strong>mínimo 15 dias</strong> no sistema
-                </div>
-                <div class="detalhe" style="color:var(--azul-primary);font-weight:700;font-size:1rem;">
-                    Total: R$ 550,00 por imóvel vendido com a nossa equipe!
-                </div>
-            </div>
-
-            <div class="rule-item">
-                <h4>1. Como indicar?</h4>
-                <p>Preencha o formulário com o endereço do imóvel e o telefone do proprietário. <strong>A indicação só é válida se o contato for diretamente do proprietário do imóvel.</strong></p>
-            </div>
-
-            <div class="rule-item">
-                <h4>2. Quais são as premiações?</h4>
-                <p>
-                    <span class="premio-tag indicacao"><i class="fas fa-money-bill-wave"></i> R$ 50,00</span> - Ao indicar um imóvel (valor fixo por indicação).<br>
-                    <span class="premio-tag venda"><i class="fas fa-money-bill-wave"></i> R$ 500,00</span> - Quando a venda é concluída pela <strong>nossa equipe Lima Ribeiro/QuintoAndar</strong>.
-                </p>
-                <p style="margin-top:6px;color:var(--gray-500);font-size:0.9rem;">
-                    <i class="fas fa-info-circle" style="color:var(--azul-primary);"></i>
-                    Total: <strong style="color:var(--azul-primary);">R$ 550,00</strong> por imóvel que vender com a nossa equipe!
-                </p>
-            </div>
-
-            <div class="rule-item">
-                <h4>3. ⏱️ Prazo mínimo de permanência</h4>
-                <p>
-                    <span class="premio-tag obrigatorio"><i class="fas fa-clock"></i> Mínimo 15 dias</span>
-                    <strong>O imóvel indicado deve permanecer no mínimo 15 dias em nosso sistema.</strong>
-                    Se o imóvel for retirado ou a captação for cancelada antes desse prazo, <strong>não há direito à premiação</strong>.
-                </p>
-                <p style="margin-top:6px;color:var(--gray-500);font-size:0.9rem;">
-                    <i class="fas fa-exclamation-triangle" style="color:var(--warning);"></i>
-                    Essa regra garante que a indicação seja séria e que o proprietário esteja realmente interessado em vender.
-                </p>
-            </div>
-
-            <div class="rule-item">
-                <h4>4. Posso indicar quantos imóveis quiser?</h4>
-                <p>Sim! Não há limite de indicações. Quanto mais você indicar, mais prêmios acumula. Cada imóvel é avaliado individualmente.</p>
-            </div>
-
-            <div class="rule-item">
-                <h4>5. Como recebo os prêmios?</h4>
-                <p>
-                    <strong>R$ 50,00</strong> - Pago via PIX em até 30 dias após a indicação válida (com permanência mínima de 15 dias).<br>
-                    <strong>R$ 500,00</strong> - Pago via PIX em até 30 dias após a conclusão da venda pela nossa equipe.
-                </p>
-            </div>
-
-            <div class="rule-item">
-                <h4>6. Acompanhamento em tempo real</h4>
-                <p>Faça login no sistema com seu telefone e nome para acompanhar todas as suas indicações, ver o status de cada uma e saber quando receberá seus prêmios.</p>
-            </div>
-        </div>
+    <div class="steps">
+      <div class="step-card"><div class="n">1</div><h3>Indique</h3><p>Cadastre um imóvel ou um comprador em potencial em menos de 1 minuto.</p></div>
+      <div class="step-card"><div class="n">2</div><h3>Acompanhe</h3><p>Entre no painel a qualquer momento e veja o status de cada indicação em tempo real.</p></div>
+      <div class="step-card"><div class="n">3</div><h3>Ganhe</h3><p>Venda concluída pela nossa equipe = prêmio calculado e pago via PIX.</p></div>
     </div>
 
-    <!-- ==========================================
-    MODAL: INDICAÇÃO (ENVIA PARA WHATSAPP)
-    ========================================== -->
-    <div class="modal-overlay" id="indicateModal">
-        <div class="modal-content">
-            <button class="close-modal" onclick="closeModal('indicateModal')">&times;</button>
-            <h2>🏠 Indicar Imóvel</h2>
-            <p class="sub">Preencha os dados abaixo. Sua indicação será enviada para nossa equipe via WhatsApp.</p>
+    <div class="premios">
+      <h2>Como você <span class="azul">ganha</span></h2>
+      <p class="sub">Duas formas de premiação — pode indicar quantos quiser e acumular nas duas.</p>
 
-            <div class="form-warning">
-                <i class="fas fa-exclamation-triangle"></i>
-                <strong>ATENÇÃO:</strong> A indicação só será válida se o contato for diretamente do <strong>PROPRIETÁRIO</strong> do imóvel. O imóvel deve permanecer <strong>mínimo 15 dias</strong> no sistema para gerar premiação.
-            </div>
-
-            <form id="indicateForm" onsubmit="submitIndication(event)" autocomplete="off">
-                <div class="form-group">
-                    <label>Seu telefone com DDD *</label>
-                    <input type="text" id="indTelefoneIndicador" placeholder="(31) 99999-9999" required maxlength="15" inputmode="numeric" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
-                    <div class="telefone-hint">
-                        <i class="fas fa-info-circle"></i> Digite apenas números. Ex: 31999999999
-                    </div>
-                </div>
-
-                <div class="welcome-back" id="welcomeBack">
-                    <i class="fas fa-hand-wave"></i>
-                    <div class="text">
-                        <strong id="welcomeNome">Bem-vindo de volta!</strong>
-                        <div class="sub" id="welcomeSub">Continue indicando e ganhando prêmios!</div>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label>Seu nome completo *</label>
-                    <input type="text" id="indNomeIndicador" placeholder="Digite seu nome completo" required autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
-                </div>
-
-                <div class="form-error" id="formError">
-                    <i class="fas fa-exclamation-circle"></i>
-                    <span id="formErrorMessage">Este telefone já está cadastrado com outro nome. Use o nome correto ou entre em contato.</span>
-                </div>
-
-                <div class="form-group">
-                    <label>Endereço do imóvel (Rua e Bairro) *</label>
-                    <input type="text" id="indEndereco" placeholder="Ex: Rua dos Otoni, 425 - Sion" required autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
-                    <div class="telefone-hint">
-                        <i class="fas fa-info-circle"></i> Informe apenas rua e bairro para manter a privacidade do proprietário
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label>Nome do proprietário *</label>
-                    <input type="text" id="indProprietario" placeholder="Nome completo do proprietário" required autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
-                </div>
-
-                <div class="form-group">
-                    <label>Telefone do proprietário (com DDD) *</label>
-                    <input type="text" id="indTelefoneProprietario" placeholder="(31) 99999-9999" required maxlength="15" inputmode="numeric" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
-                    <div class="telefone-hint">
-                        <i class="fas fa-info-circle"></i> Digite apenas números. Ex: 31999999999
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label>Complemento (opcional)</label>
-                    <input type="text" id="indComplemento" placeholder="Apartamento, Bloco, etc." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
-                </div>
-
-                <button type="submit" class="btn-primary" style="width:100%;justify-content:center;" id="indicateSubmitBtn">
-                    <i class="fab fa-whatsapp"></i> Enviar Indicação via WhatsApp
-                </button>
-            </form>
-
-            <div class="form-success" id="indicateSuccess">
-                <i class="fas fa-check-circle"></i>
-                <p>Indicação enviada com sucesso!</p>
-                <p class="sub">Nossa equipe já está analisando. Você será notificado em breve.</p>
-            </div>
+      <div class="premio-grid">
+        <div class="premio-card tipo-imovel">
+          <span class="ptag"><i class="fas fa-home"></i> Indicação de imóvel</span>
+          <h3>Você indica o imóvel, a gente capta e vende.</h3>
+          <div class="big">R$ 50 + 1%</div>
+          <ul>
+            <li><i class="fas fa-check-circle"></i> <span><strong>R$ 50</strong> após o imóvel ficar <strong>15 dias</strong> captado no sistema.</span></li>
+            <li><i class="fas fa-check-circle"></i> <span><strong>+ R$ 100 por cada R$ 100 mil</strong> do valor da venda (1% do valor).</span></li>
+            <li><i class="fas fa-check-circle"></i> <span>Exemplo: imóvel vendido por <strong>R$ 500.000</strong> = R$ 50 + R$ 500 = <strong>R$ 550,00</strong>.</span></li>
+            <li><i class="fas fa-check-circle"></i> <span>Pode indicar seu próprio imóvel — vale a mesma regra.</span></li>
+          </ul>
         </div>
+
+        <div class="premio-card tipo-comprador">
+          <span class="ptag"><i class="fas fa-user-tie"></i> Indicação de comprador</span>
+          <h3>Você indica alguém que quer comprar.</h3>
+          <div class="big">1% do valor</div>
+          <ul>
+            <li><i class="fas fa-check-circle"></i> <span><strong>R$ 100 por cada R$ 100 mil</strong> do valor da venda.</span></li>
+            <li><i class="fas fa-check-circle"></i> <span>Exemplo: comprador fecha <strong>R$ 650.000</strong> = <strong>R$ 650,00</strong> de prêmio.</span></li>
+            <li><i class="fas fa-check-circle"></i> <span>Vale mesmo se você indicar <strong>a si mesmo</strong> como comprador.</span></li>
+            <li><i class="fas fa-check-circle"></i> <span>Cadastre quantos compradores quiser.</span></li>
+          </ul>
+        </div>
+      </div>
     </div>
 
-    <!-- ==========================================
-    MODAL: LOGIN
-    ========================================== -->
-    <div class="modal-overlay" id="loginModal">
-        <div class="modal-content">
-            <button class="close-modal" onclick="closeModal('loginModal')">&times;</button>
-            <h2>🔑 Acessar Painel</h2>
-            <p class="sub">Digite seu <strong>nome completo</strong> e o <strong>celular</strong> para acompanhar suas indicações em tempo real.</p>
-            <form id="loginForm" onsubmit="login(event)" autocomplete="off">
-                <div class="form-group">
-                    <label>Seu nome completo *</label>
-                    <input type="text" id="loginNome" placeholder="Digite seu nome completo" required autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
-                    <div class="telefone-hint">
-                        <i class="fas fa-info-circle"></i> Mesmo nome usado na indicação
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>Seu telefone com DDD *</label>
-                    <input type="text" id="loginTelefone" placeholder="(31) 99999-9999" required maxlength="15" inputmode="numeric" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
-                    <div class="telefone-hint">
-                        <i class="fas fa-info-circle"></i> Digite apenas números. Ex: 31999999999
-                    </div>
-                </div>
-                <div class="form-error" id="loginError">
-                    <i class="fas fa-exclamation-circle"></i> Dados não encontrados. Você já indicou um imóvel? Entre em contato para se cadastrar.
-                </div>
-                <button type="submit" class="btn-primary" style="width:100%;justify-content:center;" id="loginSubmitBtn">
-                    <i class="fas fa-sign-in-alt"></i> Entrar
-                </button>
-            </form>
-        </div>
+    <div class="footer">© 2026 Lima Ribeiro Imóveis · Programa Indique e Ganhe</div>
+  </section>
+
+  <!-- ============ PAINEL ============ -->
+  <section id="secPainel" class="painel">
+    <div class="painel-header">
+      <div>
+        <h2>Olá, <span id="pnNome" class="azul">Indicador</span> 👋</h2>
+        <p>Aqui você acompanha todas as suas indicações, status e valores a receber.</p>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn-azul" onclick="abrirIndicar('imovel')"><i class="fas fa-plus"></i> Indicar imóvel</button>
+        <button class="btn-azul" onclick="abrirIndicar('comprador')" style="background:var(--verde)"><i class="fas fa-plus"></i> Indicar comprador</button>
+      </div>
     </div>
 
-    <!-- ==========================================
-    MODAL: WHATSAPP
-    ========================================== -->
-    <div class="modal-overlay" id="whatsappModal">
-        <div class="modal-content" style="text-align:center;">
-            <button class="close-modal" onclick="closeModal('whatsappModal')">&times;</button>
-            <div style="font-size:64px;color:#25d366;margin-bottom:16px;">
-                <i class="fab fa-whatsapp"></i>
-            </div>
-            <h2>Fale Conosco</h2>
-            <p style="color:var(--gray-500);margin:12px 0 8px;">
-                <i class="fas fa-clock" style="color:var(--azul-primary);"></i> Seg-Sex 9h às 18h
-            </p>
-            <p style="color:var(--gray-400);margin-bottom:20px;">
-                Envie sua mensagem que responderemos o mais breve possível!
-            </p>
-            <a href="https://wa.me/5531996273985?text=Olá!%20Gostaria%20de%20mais%20informações%20sobre%20o%20programa%20Indique%20e%20Ganhe." 
-               target="_blank" 
-               class="btn-whatsapp" style="width:100%;justify-content:center;">
-                <i class="fab fa-whatsapp"></i> Abrir WhatsApp
-            </a>
-        </div>
+    <div class="saldo-card">
+      <div>
+        <div class="label">Saldo a receber</div>
+        <div class="valor" id="pnSaldo">R$ 0,00</div>
+        <div class="mini">Atualizado em tempo real pelo nosso sistema</div>
+      </div>
+      <div class="pago">
+        <div class="label">Já pago</div>
+        <strong id="pnPago">R$ 0,00</strong>
+      </div>
     </div>
 
-    <!-- ==========================================
-    FOOTER
-    ========================================== -->
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <p>© 2026 Lima Ribeiro Imóveis - Indique e Ganhe</p>
-                <div class="footer-links">
-                    <a onclick="openRulesModal()">Regras</a>
-                    <a onclick="openWhatsappModal()">Contato</a>
-                    <a onclick="showHome()">Início</a>
-                </div>
-            </div>
+    <div class="stats-row">
+      <div class="stat-box"><div class="n" id="stTotal">0</div><div class="l">Total</div></div>
+      <div class="stat-box"><div class="n" id="stImoveis">0</div><div class="l">Imóveis</div></div>
+      <div class="stat-box"><div class="n" id="stCompradores">0</div><div class="l">Compradores</div></div>
+      <div class="stat-box"><div class="n" id="stVendas">0</div><div class="l">Vendas</div></div>
+    </div>
+
+    <div class="filtros">
+      <button class="filtro-btn active" data-f="all" onclick="filtrarPainel('all')">Todas</button>
+      <button class="filtro-btn" data-f="Imovel" onclick="filtrarPainel('Imovel')">Imóveis</button>
+      <button class="filtro-btn" data-f="Comprador" onclick="filtrarPainel('Comprador')">Compradores</button>
+      <button class="filtro-btn" data-f="Venda Concluida" onclick="filtrarPainel('Venda Concluida')">Vendas</button>
+      <button class="filtro-btn" data-f="PIX" onclick="abrirPix()"><i class="fas fa-key"></i> Minha chave PIX</button>
+    </div>
+
+    <div class="extrato-grid" id="extratoGrid"></div>
+  </section>
+
+</main>
+
+<button class="wsp-float" onclick="wspEquipe()" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></button>
+
+<!-- ============ MODAIS ============ -->
+
+<!-- LOGIN -->
+<div class="modal-overlay" id="mLogin">
+  <div class="modal-box">
+    <button class="close" onclick="closeModal('mLogin')">&times;</button>
+    <h3>Acessar painel</h3>
+    <p class="sub">Entre com seu telefone e senha para ver suas indicações.</p>
+
+    <div class="tabs">
+      <button class="tab active" id="tabLogin" onclick="alternarTab('login')">Entrar</button>
+      <button class="tab" id="tabCad" onclick="alternarTab('cad')">Cadastrar</button>
+    </div>
+
+    <form id="formLogin" onsubmit="fazerLogin(event)">
+      <div class="form-group">
+        <label>Telefone com DDD</label>
+        <input type="tel" id="loginTel" placeholder="(31) 99999-9999" required maxlength="15" inputmode="numeric">
+      </div>
+      <div class="form-group">
+        <label>Senha</label>
+        <input type="password" id="loginSenha" placeholder="Sua senha" required>
+      </div>
+      <div class="form-error" id="loginError"></div>
+      <button type="submit" class="btn-submit" id="loginBtn"><i class="fas fa-sign-in-alt"></i> Entrar</button>
+      <p style="text-align:center;margin-top:14px;font-size:.82rem;color:var(--texto-cinza)">
+        <a href="#" onclick="esqueciSenha();return false" style="color:var(--azul);font-weight:600">Esqueci a senha</a>
+      </p>
+    </form>
+
+    <form id="formCad" onsubmit="fazerCadastro(event)" style="display:none">
+      <div class="form-group">
+        <label>Nome completo</label>
+        <input type="text" id="cadNome" placeholder="Digite seu nome" required>
+      </div>
+      <div class="form-group">
+        <label>Telefone com DDD</label>
+        <input type="tel" id="cadTel" placeholder="(31) 99999-9999" required maxlength="15" inputmode="numeric">
+      </div>
+      <div class="form-group">
+        <label>Senha (mínimo 4 caracteres)</label>
+        <input type="password" id="cadSenha" placeholder="Crie uma senha" required minlength="4">
+      </div>
+      <div class="form-group">
+        <label>Chave PIX (opcional)</label>
+        <input type="text" id="cadPix" placeholder="CPF, telefone, e-mail ou chave aleatória">
+        <div class="hint">Pode preencher agora ou depois no painel.</div>
+      </div>
+      <div class="form-error" id="cadError"></div>
+      <button type="submit" class="btn-submit" id="cadBtn"><i class="fas fa-user-plus"></i> Criar conta</button>
+    </form>
+  </div>
+</div>
+
+<!-- INDICAR IMÓVEL -->
+<div class="modal-overlay" id="mIndImovel">
+  <div class="modal-box">
+    <button class="close" onclick="closeModal('mIndImovel')">&times;</button>
+    <h3>🏠 Indicar um imóvel</h3>
+    <p class="sub">Preencha os dados do proprietário. Nossa equipe entra em contato.</p>
+    <form id="formImovel" onsubmit="enviarImovel(event)">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Endereço / Rua *</label>
+          <input type="text" id="imEnd" placeholder="Rua dos Otoni, 425" required>
         </div>
-    </footer>
-
-    <!-- ==========================================
-    JAVASCRIPT
-    ========================================== -->
-    <script>
-        // ============================================
-        // CONFIGURAÇÕES
-        // ============================================
-        const WHATSAPP_NUMBER = '5531996273985';
-
-        // ============================================
-        // DADOS DE PREMIAÇÕES - ENDEREÇOS REAIS DE BH
-        // ============================================
-        const premiosData = [
-            { endereco: 'Rua dos Otoni, Sion', bairro: 'Sion', indicador: 'Carlos Alberto', valor: 50, tipo: 'Indicação', data: '20/05/2026' },
-            { endereco: 'Rua Aimorés, Sion', bairro: 'Sion', indicador: 'Fernanda Souza', valor: 500, tipo: 'Venda', data: '15/05/2026' },
-            { endereco: 'Rua da Bahia, Funcionários', bairro: 'Funcionários', indicador: 'Rodrigo Lima', valor: 50, tipo: 'Indicação', data: '12/05/2026' },
-            { endereco: 'Rua Antônio de Albuquerque, Funcionários', bairro: 'Funcionários', indicador: 'Patrícia Oliveira', valor: 500, tipo: 'Venda', data: '08/05/2026' },
-            { endereco: 'Rua Tupiniquins, Sion', bairro: 'Sion', indicador: 'Marcos Vinícius', valor: 50, tipo: 'Indicação', data: '05/05/2026' },
-            { endereco: 'Rua Marília de Dirceu, Lourdes', bairro: 'Lourdes', indicador: 'Ana Clara', valor: 500, tipo: 'Venda', data: '02/05/2026' },
-            { endereco: 'Rua Grão Pará, Santo Agostinho', bairro: 'Santo Agostinho', indicador: 'José Roberto', valor: 50, tipo: 'Indicação', data: '28/04/2026' },
-            { endereco: 'Rua Paraíba, Savassi', bairro: 'Savassi', indicador: 'Mariana Costa', valor: 500, tipo: 'Venda', data: '25/04/2026' },
-            { endereco: 'Rua Timbiras, Funcionários', bairro: 'Funcionários', indicador: 'Ricardo Alves', valor: 50, tipo: 'Indicação', data: '20/04/2026' },
-            { endereco: 'Rua Levindo Lopes, Sion', bairro: 'Sion', indicador: 'Camila Ribeiro', valor: 500, tipo: 'Venda', data: '15/04/2026' }
-        ];
-
-        // ============================================
-        // STATE
-        // ============================================
-        let currentUser = null;
-        let currentFilter = 'all';
-        let allData = [];
-        let isLoggedIn = false;
-        let usuarioEncontrado = null;
-
-        // ============================================
-        // DOM REFS
-        // ============================================
-        const homeSection = document.getElementById('homeSection');
-        const featuresSection = document.getElementById('featuresSection');
-        const premiationsSection = document.getElementById('premiationsSection');
-        const dashboardSection = document.getElementById('dashboardSection');
-        const navLoginBtn = document.getElementById('navLoginBtn');
-        const navUserInfo = document.getElementById('navUserInfo');
-        const navUserName = document.getElementById('navUserName');
-        const dashboardUserName = document.getElementById('dashboardUserName');
-        const dashboardTotalCount = document.getElementById('dashboardTotalCount');
-        const dashboardGrid = document.getElementById('dashboardGrid');
-        const premiationsGrid = document.getElementById('premiationsGrid');
-        const hamburger = document.getElementById('hamburger');
-        const navLinks = document.getElementById('navLinks');
-        const toast = document.getElementById('toast');
-        const toastMessage = document.getElementById('toastMessage');
-
-        // ============================================
-        // UTILITÁRIOS
-        // ============================================
-        function formatarTelefone(valor) {
-            const numeros = valor.replace(/\D/g, '');
-            if (numeros.length === 0) return '';
-            if (numeros.length <= 2) return '(' + numeros;
-            if (numeros.length <= 6) return '(' + numeros.substring(0, 2) + ') ' + numeros.substring(2);
-            if (numeros.length <= 10) return '(' + numeros.substring(0, 2) + ') ' + numeros.substring(2, 6) + '-' + numeros.substring(6);
-            return '(' + numeros.substring(0, 2) + ') ' + numeros.substring(2, 7) + '-' + numeros.substring(7, 11);
-        }
-
-        function apenasNumeros(valor) {
-            return valor.replace(/\D/g, '');
-        }
-
-        function maskPhone(phone) {
-            if (!phone) return '****';
-            const clean = phone.replace(/\D/g, '');
-            if (clean.length <= 4) return '****';
-            const last4 = clean.slice(-4);
-            return '****' + last4;
-        }
-
-        function formatDate(dateStr) {
-            if (!dateStr) return '---';
-            try {
-                const d = new Date(dateStr);
-                return d.toLocaleDateString('pt-BR');
-            } catch {
-                return dateStr;
-            }
-        }
-
-        function getStatusClass(status) {
-            const map = {
-                'Venda Concluída': 'badge-success',
-                'Venda': 'badge-success',
-                'Captação Aceita': 'badge-info',
-                'Captação': 'badge-info',
-                'Indicado': 'badge-warning',
-                'Não Efetivado': 'badge-danger'
-            };
-            return map[status] || 'badge-warning';
-        }
-
-        function getStatusIcon(status) {
-            const map = {
-                'Venda Concluída': 'fa-check-circle',
-                'Venda': 'fa-check-circle',
-                'Captação Aceita': 'fa-handshake',
-                'Captação': 'fa-handshake',
-                'Indicado': 'fa-clock',
-                'Não Efetivado': 'fa-times-circle'
-            };
-            return map[status] || 'fa-clock';
-        }
-
-        // ============================================
-        // MÁSCARA DE TELEFONE
-        // ============================================
-        document.addEventListener('DOMContentLoaded', function() {
-            const telefones = document.querySelectorAll('input[type="text"][maxlength="15"]');
-            telefones.forEach(input => {
-                input.addEventListener('input', function(e) {
-                    const cursorPos = this.selectionStart;
-                    const valor = this.value;
-                    
-                    if (valor.length < this.dataset.ultimoLength) {
-                        this.dataset.ultimoLength = valor.length;
-                        return;
-                    }
-                    
-                    const formatado = formatarTelefone(valor);
-                    if (formatado !== valor) {
-                        this.value = formatado;
-                        const diff = formatado.length - valor.length;
-                        this.setSelectionRange(cursorPos + diff, cursorPos + diff);
-                    }
-                    this.dataset.ultimoLength = this.value.length;
-                    this.dispatchEvent(new Event('telefoneChanged'));
-                });
-                input.dataset.ultimoLength = 0;
-            });
-
-            // Telefone no modal de indicação - busca usuário
-            const telefoneInput = document.getElementById('indTelefoneIndicador');
-            if (telefoneInput) {
-                let timeoutId = null;
-                telefoneInput.addEventListener('telefoneChanged', function() {
-                    clearTimeout(timeoutId);
-                    const tel = this.value;
-                    const numeros = apenasNumeros(tel);
-                    
-                    if (numeros.length >= 10) {
-                        timeoutId = setTimeout(() => {
-                            buscarUsuarioPorTelefone(tel);
-                        }, 800);
-                    } else {
-                        document.getElementById('welcomeBack').classList.remove('show');
-                        document.getElementById('formError').classList.remove('show');
-                        document.getElementById('indNomeIndicador').value = '';
-                        document.getElementById('indNomeIndicador').disabled = false;
-                        usuarioEncontrado = null;
-                    }
-                });
-            }
-        });
-
-        // ============================================
-        // TOAST
-        // ============================================
-        let toastTimeout = null;
-
-        function showToast(message, type = 'info') {
-            toast.className = 'toast ' + type;
-            toastMessage.innerHTML = message;
-            toast.classList.add('show');
-            
-            if (toastTimeout) clearTimeout(toastTimeout);
-            toastTimeout = setTimeout(() => {
-                toast.classList.remove('show');
-            }, 4000);
-        }
-
-        // ============================================
-        // BUSCAR USUÁRIO POR TELEFONE (SIMULADO)
-        // ============================================
-        async function buscarUsuarioPorTelefone(telefone) {
-            const welcomeBack = document.getElementById('welcomeBack');
-            const nomeInput = document.getElementById('indNomeIndicador');
-            const formError = document.getElementById('formError');
-            
-            const telefoneNumeros = apenasNumeros(telefone);
-            if (telefoneNumeros.length < 10) {
-                welcomeBack.classList.remove('show');
-                nomeInput.value = '';
-                nomeInput.disabled = false;
-                usuarioEncontrado = null;
-                return;
-            }
-
-            // Simulação de busca - usuários existentes
-            const usuariosExistentes = [
-                { nome: 'Carlos Alberto', telefone: '31999998888' },
-                { nome: 'Fernanda Souza', telefone: '31988887777' },
-                { nome: 'Rodrigo Lima', telefone: '31977776666' }
-            ];
-
-            const encontrado = usuariosExistentes.find(u => 
-                apenasNumeros(u.telefone) === telefoneNumeros
-            );
-            
-            if (encontrado) {
-                usuarioEncontrado = {
-                    encontrado: true,
-                    nome: encontrado.nome,
-                    telefone: encontrado.telefone
-                };
-                welcomeBack.classList.add('show');
-                document.getElementById('welcomeNome').textContent = `👋 ${encontrado.nome}`;
-                document.getElementById('welcomeSub').textContent = 'Continue indicando e ganhando prêmios!';
-                nomeInput.value = encontrado.nome;
-                nomeInput.disabled = true;
-                formError.classList.remove('show');
-                return;
-            }
-
-            usuarioEncontrado = null;
-            welcomeBack.classList.remove('show');
-            nomeInput.value = '';
-            nomeInput.disabled = false;
-            formError.classList.remove('show');
-        }
-
-        // ============================================
-        // VALIDAR NOME ANTES DE ENVIAR
-        // ============================================
-        function validarNomeAntesEnviar() {
-            const nomeInput = document.getElementById('indNomeIndicador');
-            const formError = document.getElementById('formError');
-            const errorMessage = document.getElementById('formErrorMessage');
-            
-            if (usuarioEncontrado && !nomeInput.disabled) {
-                const nomeAtual = nomeInput.value.trim();
-                const nomeCorreto = usuarioEncontrado.nome;
-                
-                if (nomeAtual && nomeAtual !== nomeCorreto) {
-                    formError.classList.add('show');
-                    errorMessage.textContent = `❌ Este telefone já está cadastrado com o nome "${nomeCorreto}". Use o nome correto ou entre em contato.`;
-                    return false;
-                }
-            }
-            
-            formError.classList.remove('show');
-            return true;
-        }
-
-        // ============================================
-        // RENDER PREMIAÇÕES
-        // ============================================
-        function renderPremiations(data) {
-            if (!data || data.length === 0) {
-                premiationsGrid.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-gift"></i>
-                        <p style="font-size:1.1rem;color:var(--gray-500);">Ainda não temos premiações pagas.</p>
-                        <p style="font-size:0.9rem;color:var(--gray-400);">Seja o primeiro a indicar e ganhar!</p>
-                    </div>
-                `;
-                return;
-            }
-
-            premiationsGrid.innerHTML = data.slice(0, 9).map(item => {
-                const valor = item.valor === 500 ? 'R$ 500,00' : 'R$ 50,00';
-                const badgeClass = item.valor === 500 ? 'premio-500' : 'premio-50';
-                const badgeText = item.valor === 500 ? '💰 Venda' : '🎯 Indicação';
-                
-                return `
-                    <div class="premiation-card">
-                        <div class="card-header">
-                            <h4>${item.endereco}</h4>
-                            <span class="badge ${badgeClass}">${badgeText}</span>
-                        </div>
-                        <div class="address">
-                            <i class="fas fa-map-marker-alt"></i> ${item.bairro} - Belo Horizonte
-                        </div>
-                        <div class="indicator">
-                            <i class="fas fa-user" style="color:var(--azul-primary);"></i> 
-                            Indicado por: <span class="highlight">${item.indicador}</span>
-                        </div>
-                        <div class="valor-premio">
-                            <i class="fas fa-money-bill-wave" style="color:var(--azul-primary);"></i> 
-                            Prêmio: <span class="${item.valor === 500 ? 'gold' : 'azul'}">${valor}</span>
-                        </div>
-                        <div class="date">
-                            <i class="fas fa-calendar-check" style="color:var(--azul-primary);"></i> 
-                            Pago em: ${item.data}
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        // ============================================
-        // RENDER DASHBOARD
-        // ============================================
-        function renderDashboard(data) {
-            if (!data || data.length === 0) {
-                dashboardGrid.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-inbox"></i>
-                        <p style="font-size:1.1rem;color:var(--gray-500);">Nenhuma indicação encontrada</p>
-                        <p style="font-size:0.9rem;color:var(--gray-400);">Comece indicando um imóvel agora mesmo!</p>
-                        <button class="btn-primary" style="margin-top:16px;" onclick="openIndicateModal()">
-                            <i class="fas fa-plus"></i> Indicar Imóvel
-                        </button>
-                    </div>
-                `;
-                return;
-            }
-
-            dashboardGrid.innerHTML = data.map(item => {
-                const isMine = currentUser && 
-                    item.NomeIndicador && 
-                    item.NomeIndicador.toLowerCase() === currentUser.nome.toLowerCase() &&
-                    apenasNumeros(item.TelefoneIndicador || '') === apenasNumeros(currentUser.telefone);
-
-                const statusClass = getStatusClass(item.Status);
-                const statusIcon = getStatusIcon(item.Status);
-                const valorPremio = item.TipoPremiacao || 'A definir';
-
-                return `
-                    <div class="dashboard-card">
-                        <div class="card-header">
-                            <h4>${item.EnderecoCompleto}</h4>
-                            <span class="status-badge ${statusClass}">
-                                <i class="fas ${statusIcon}"></i> ${item.Status || 'Indicado'}
-                            </span>
-                        </div>
-                        <div class="card-address">
-                            <i class="fas fa-map-marker-alt"></i> 
-                            ${item.Bairro || 'A definir'}, ${item.Cidade || 'Belo Horizonte'}
-                        </div>
-                        <div class="card-indicator">
-                            <i class="fas fa-user" style="color:var(--azul-primary);"></i> 
-                            Indicado por: ${item.NomeIndicador || 'Desconhecido'}
-                            ${isMine ? ' <span class="you">(Você)</span>' : ''}
-                        </div>
-                        ${!isMine ? `
-                            <div class="card-indicator">
-                                <i class="fas fa-phone" style="color:var(--azul-primary);"></i> 
-                                Telefone: <span style="color:var(--gray-400);">${maskPhone(item.TelefoneIndicador)}</span>
-                            </div>
-                        ` : `
-                            <div class="card-indicator">
-                                <i class="fas fa-phone" style="color:var(--azul-primary);"></i> 
-                                Telefone: <span style="color:var(--gray-600);">${item.TelefoneIndicador}</span>
-                            </div>
-                        `}
-                        <div class="premio-info">
-                            <i class="fas fa-trophy" style="color:var(--gold);"></i> 
-                            Prêmio: <span class="${item.Status === 'Venda Concluída' ? 'green' : 'azul'}">${valorPremio}</span>
-                        </div>
-                        <div class="card-date">
-                            <i class="fas fa-calendar-plus" style="color:var(--azul-primary);"></i> 
-                            Indicado em: ${formatDate(item.DataIndicacao)}
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        // ============================================
-        // DASHBOARD FILTERS
-        // ============================================
-        function filterDashboard(filter) {
-            currentFilter = filter;
-            document.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.dataset.filter === filter);
-            });
-            
-            if (!currentUser) return;
-            
-            let filtered = [...allData];
-            
-            if (filter === 'mine') {
-                const telefoneNumeros = apenasNumeros(currentUser.telefone);
-                filtered = filtered.filter(item => 
-                    item.NomeIndicador && 
-                    item.NomeIndicador.toLowerCase() === currentUser.nome.toLowerCase() &&
-                    apenasNumeros(item.TelefoneIndicador || '') === telefoneNumeros
-                );
-            } else if (filter === 'concluidas') {
-                filtered = filtered.filter(item => item.Status === 'Venda Concluída');
-            } else if (filter === 'pendentes') {
-                filtered = filtered.filter(item => item.Status !== 'Venda Concluída' && item.Status !== 'Não Efetivado');
-            }
-            
-            renderDashboard(filtered);
-        }
-
-        // ============================================
-        // LOGIN / LOGOUT
-        // ============================================
-        async function login(e) {
-            e.preventDefault();
-            const btn = document.getElementById('loginSubmitBtn');
-            btn.disabled = true;
-            btn.innerHTML = '<span class="loading-spinner"></span> Entrando...';
-
-            const nomeCompleto = document.getElementById('loginNome').value.trim();
-            const telefone = document.getElementById('loginTelefone').value.trim();
-            const telefoneNumeros = apenasNumeros(telefone);
-
-            if (!nomeCompleto || !telefoneNumeros || telefoneNumeros.length < 10) {
-                showToast('Preencha todos os campos corretamente.', 'error');
-                btn.disabled = false;
-                btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Entrar';
-                return;
-            }
-
-            // Simulação de login
-            const usuarios = [
-                { nome: 'Carlos Alberto', telefone: '31999998888' },
-                { nome: 'Fernanda Souza', telefone: '31988887777' },
-                { nome: 'Rodrigo Lima', telefone: '31977776666' }
-            ];
-
-            const encontrado = usuarios.find(u => 
-                u.nome.toLowerCase() === nomeCompleto.toLowerCase() &&
-                apenasNumeros(u.telefone) === telefoneNumeros
-            );
-
-            if (encontrado) {
-                currentUser = {
-                    nome: encontrado.nome,
-                    telefone: encontrado.telefone
-                };
-                isLoggedIn = true;
-
-                document.getElementById('loginError').classList.remove('show');
-                closeModal('loginModal');
-
-                navLoginBtn.style.display = 'none';
-                navUserInfo.style.display = 'block';
-                navUserName.textContent = encontrado.nome.split(' ')[0];
-                dashboardUserName.textContent = encontrado.nome;
-
-                // Dados simulados para o dashboard
-                allData = [
-                    { NomeIndicador: encontrado.nome, TelefoneIndicador: encontrado.telefone, EnderecoCompleto: 'Rua dos Otoni, Sion', Bairro: 'Sion', Cidade: 'Belo Horizonte', Status: 'Venda Concluída', TipoPremiacao: 'R$ 550,00', DataIndicacao: '2026-04-15' },
-                    { NomeIndicador: encontrado.nome, TelefoneIndicador: encontrado.telefone, EnderecoCompleto: 'Rua Aimorés, Sion', Bairro: 'Sion', Cidade: 'Belo Horizonte', Status: 'Captação Aceita', TipoPremiacao: 'R$ 50,00', DataIndicacao: '2026-04-20' },
-                    { NomeIndicador: 'Outro Usuário', TelefoneIndicador: '31977776666', EnderecoCompleto: 'Rua da Bahia, Funcionários', Bairro: 'Funcionários', Cidade: 'Belo Horizonte', Status: 'Indicado', TipoPremiacao: 'R$ 50,00', DataIndicacao: '2026-04-25' }
-                ];
-
-                dashboardTotalCount.textContent = allData.filter(item => 
-                    item.NomeIndicador === encontrado.nome
-                ).length;
-
-                renderDashboard(allData.filter(item => 
-                    item.NomeIndicador === encontrado.nome
-                ));
-
-                homeSection.style.display = 'none';
-                featuresSection.style.display = 'none';
-                dashboardSection.classList.add('active');
-
-                navLinks.classList.remove('open');
-                hamburger.classList.remove('active');
-
-                localStorage.setItem('indiqueUser', JSON.stringify(currentUser));
-                showToast(`Bem-vindo, ${encontrado.nome.split(' ')[0]}!`, 'success');
-            } else {
-                document.getElementById('loginError').classList.add('show');
-                showToast('Usuário não encontrado. Verifique seus dados.', 'error');
-            }
-
-            btn.disabled = false;
-            btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Entrar';
-        }
-
-        function logout() {
-            currentUser = null;
-            isLoggedIn = false;
-            allData = [];
-            navLoginBtn.style.display = 'block';
-            navUserInfo.style.display = 'none';
-            dashboardSection.classList.remove('active');
-            homeSection.style.display = 'block';
-            featuresSection.style.display = 'block';
-            currentFilter = 'all';
-            document.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.dataset.filter === 'all');
-            });
-            localStorage.removeItem('indiqueUser');
-            showToast('Você saiu do sistema.', 'info');
-        }
-
-        // ============================================
-        // SUBMIT INDICATION - ENVIA PARA WHATSAPP
-        // ============================================
-        function submitIndication(e) {
-            e.preventDefault();
-            
-            if (!validarNomeAntesEnviar()) {
-                showToast('Corrija o nome do indicador antes de continuar.', 'error');
-                return;
-            }
-
-            const btn = document.getElementById('indicateSubmitBtn');
-            btn.disabled = true;
-            btn.innerHTML = '<span class="loading-spinner"></span> Enviando...';
-
-            const nomeIndicador = document.getElementById('indNomeIndicador').value.trim();
-            const telefoneIndicador = document.getElementById('indTelefoneIndicador').value.trim();
-            const telefoneNumeros = apenasNumeros(telefoneIndicador);
-
-            if (!nomeIndicador || telefoneNumeros.length < 10) {
-                showToast('Preencha todos os campos obrigatórios.', 'error');
-                btn.disabled = false;
-                btn.innerHTML = '<i class="fab fa-whatsapp"></i> Enviar Indicação via WhatsApp';
-                return;
-            }
-
-            if (usuarioEncontrado) {
-                const nomeCorreto = usuarioEncontrado.nome;
-                if (nomeIndicador !== nomeCorreto) {
-                    showToast(`❌ Este telefone já está cadastrado com o nome "${nomeCorreto}". Use o nome correto.`, 'error');
-                    btn.disabled = false;
-                    btn.innerHTML = '<i class="fab fa-whatsapp"></i> Enviar Indicação via WhatsApp';
-                    return;
-                }
-            }
-
-            const endereco = document.getElementById('indEndereco').value.trim();
-            const proprietario = document.getElementById('indProprietario').value.trim();
-            const telefoneProprietario = document.getElementById('indTelefoneProprietario').value.trim();
-            const complemento = document.getElementById('indComplemento').value.trim();
-
-            if (!endereco || !proprietario || !telefoneProprietario) {
-                showToast('Preencha todos os campos obrigatórios.', 'error');
-                btn.disabled = false;
-                btn.innerHTML = '<i class="fab fa-whatsapp"></i> Enviar Indicação via WhatsApp';
-                return;
-            }
-
-            // Montar mensagem para WhatsApp com as regras claras
-            const mensagem = `🏠 *NOVA INDICAÇÃO - INDICAÇÃO E GANHE*
-
-👤 *Indicador:*
-Nome: ${nomeIndicador}
-Telefone: ${telefoneIndicador}
-
-📍 *Imóvel:*
-Endereço: ${endereco}
-${complemento ? 'Complemento: ' + complemento : ''}
-
-👤 *Proprietário:*
-Nome: ${proprietario}
-Telefone: ${telefoneProprietario}
-
-📅 *Data da Indicação:* ${new Date().toLocaleDateString('pt-BR')}
-
----
-*📋 REGRAS DO PROGRAMA:*
-✅ R$ 50,00 por indicação válida
-✅ + R$ 500,00 se a venda for com nossa equipe
-⏱️ Mínimo de 15 dias no sistema para validar a premiação
-❌ Indicação inválida se contato não for com o proprietário
-
----
-*Programa Indique e Ganhe - Lima Ribeiro Imóveis*`;
-
-            // Codificar para URL
-            const mensagemEncoded = encodeURIComponent(mensagem);
-            const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${mensagemEncoded}`;
-
-            // Abrir WhatsApp em nova guia
-            window.open(whatsappUrl, '_blank');
-
-            // Mostrar sucesso
-            document.getElementById('indicateForm').style.display = 'none';
-            document.getElementById('indicateSuccess').classList.add('show');
-            
-            if (isLoggedIn) {
-                // Atualizar dados do dashboard localmente
-                const novaIndicacao = {
-                    NomeIndicador: nomeIndicador,
-                    TelefoneIndicador: telefoneNumeros,
-                    EnderecoCompleto: endereco,
-                    Bairro: endereco.split(',')[1]?.trim() || 'A definir',
-                    Cidade: 'Belo Horizonte',
-                    Status: 'Indicado',
-                    TipoPremiacao: 'R$ 50,00 + R$ 500,00 (se vender)',
-                    DataIndicacao: new Date().toISOString().split('T')[0]
-                };
-                allData.push(novaIndicacao);
-                dashboardTotalCount.textContent = allData.filter(item => 
-                    item.NomeIndicador === nomeIndicador
-                ).length;
-                renderDashboard(allData.filter(item => 
-                    item.NomeIndicador === nomeIndicador
-                ));
-            }
-            
-            showToast('Indicação enviada com sucesso! 🎉', 'success');
-            
-            setTimeout(() => {
-                closeModal('indicateModal');
-                document.getElementById('indicateForm').style.display = 'block';
-                document.getElementById('indicateSuccess').classList.remove('show');
-                document.getElementById('indicateForm').reset();
-                document.getElementById('welcomeBack').classList.remove('show');
-                document.getElementById('indNomeIndicador').disabled = false;
-                document.getElementById('formError').classList.remove('show');
-                usuarioEncontrado = null;
-                btn.disabled = false;
-                btn.innerHTML = '<i class="fab fa-whatsapp"></i> Enviar Indicação via WhatsApp';
-            }, 3000);
-        }
-
-        // ============================================
-        // MODAL CONTROLS
-        // ============================================
-        function openRulesModal() {
-            document.getElementById('rulesModal').classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function openIndicateModal() {
-            document.getElementById('indicateModal').classList.add('active');
-            document.body.style.overflow = 'hidden';
-            
-            document.getElementById('indicateForm').reset();
-            document.getElementById('welcomeBack').classList.remove('show');
-            document.getElementById('indNomeIndicador').disabled = false;
-            document.getElementById('indicateSuccess').classList.remove('show');
-            document.getElementById('indicateForm').style.display = 'block';
-            document.getElementById('formError').classList.remove('show');
-            usuarioEncontrado = null;
-            
-            if (currentUser) {
-                document.getElementById('indNomeIndicador').value = currentUser.nome;
-                document.getElementById('indTelefoneIndicador').value = currentUser.telefone;
-                document.getElementById('indNomeIndicador').disabled = true;
-                
-                usuarioEncontrado = {
-                    encontrado: true,
-                    nome: currentUser.nome,
-                    telefone: currentUser.telefone
-                };
-                
-                const welcomeBack = document.getElementById('welcomeBack');
-                welcomeBack.classList.add('show');
-                document.getElementById('welcomeNome').textContent = `👋 ${currentUser.nome}`;
-                document.getElementById('welcomeSub').textContent = 'Continue indicando e ganhando prêmios!';
-            }
-        }
-
-        function openLoginModal() {
-            document.getElementById('loginModal').classList.add('active');
-            document.body.style.overflow = 'hidden';
-            document.getElementById('loginError').classList.remove('show');
-            document.getElementById('loginForm').reset();
-        }
-
-        function openWhatsappModal() {
-            document.getElementById('whatsappModal').classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeModal(id) {
-            document.getElementById(id).classList.remove('active');
-            document.body.style.overflow = 'auto';
-        }
-
-        document.querySelectorAll('.modal-overlay').forEach(modal => {
-            modal.addEventListener('click', function(e) {
-                if (e.target === this) {
-                    this.classList.remove('active');
-                    document.body.style.overflow = 'auto';
-                }
-            });
-        });
-
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                document.querySelectorAll('.modal-overlay.active').forEach(modal => {
-                    modal.classList.remove('active');
-                    document.body.style.overflow = 'auto';
-                });
-            }
-        });
-
-        // ============================================
-        // NAVEGAÇÃO
-        // ============================================
-        function showHome() {
-            if (!isLoggedIn) {
-                homeSection.style.display = 'block';
-                featuresSection.style.display = 'block';
-                dashboardSection.classList.remove('active');
-                navLinks.classList.remove('open');
-                hamburger.classList.remove('active');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }
-        }
-
-        function scrollToPremiations() {
-            if (!isLoggedIn) {
-                premiationsSection.scrollIntoView({ behavior: 'smooth' });
-                navLinks.classList.remove('open');
-                hamburger.classList.remove('active');
-            }
-        }
-
-        // ============================================
-        // HAMBURGER MENU
-        // ============================================
-        hamburger.addEventListener('click', function() {
-            this.classList.toggle('active');
-            navLinks.classList.toggle('open');
-        });
-
-        // ============================================
-        // HEADER SCROLL EFFECT
-        // ============================================
-        window.addEventListener('scroll', function() {
-            const header = document.getElementById('header');
-            if (window.scrollY > 50) {
-                header.classList.add('scrolled');
-            } else {
-                header.classList.remove('scrolled');
-            }
-        });
-
-        // ============================================
-        // INIT
-        // ============================================
-        async function init() {
-            console.log('🏠 Indique e Ganhe - Lima Ribeiro Imóveis');
-            console.log('💰 Sistema de Indicação e Premiação');
-            console.log('📱 Indicações enviadas via WhatsApp');
-            console.log('📋 Regras: R$50 por indicação + R$500 com venda | Mínimo 15 dias');
-            
-            // Carregar premiações
-            renderPremiations(premiosData);
-            
-            // Verificar usuário salvo
-            const savedUser = localStorage.getItem('indiqueUser');
-            if (savedUser) {
-                try {
-                    const user = JSON.parse(savedUser);
-                    currentUser = user;
-                    isLoggedIn = true;
-                    
-                    navLoginBtn.style.display = 'none';
-                    navUserInfo.style.display = 'block';
-                    navUserName.textContent = currentUser.nome.split(' ')[0];
-                    dashboardUserName.textContent = currentUser.nome;
-                    
-                    // Dados simulados para o dashboard
-                    allData = [
-                        { NomeIndicador: currentUser.nome, TelefoneIndicador: currentUser.telefone, EnderecoCompleto: 'Rua dos Otoni, Sion', Bairro: 'Sion', Cidade: 'Belo Horizonte', Status: 'Venda Concluída', TipoPremiacao: 'R$ 550,00', DataIndicacao: '2026-04-15' },
-                        { NomeIndicador: currentUser.nome, TelefoneIndicador: currentUser.telefone, EnderecoCompleto: 'Rua Aimorés, Sion', Bairro: 'Sion', Cidade: 'Belo Horizonte', Status: 'Captação Aceita', TipoPremiacao: 'R$ 50,00', DataIndicacao: '2026-04-20' }
-                    ];
-                    
-                    dashboardTotalCount.textContent = allData.length;
-                    renderDashboard(allData);
-                    
-                    homeSection.style.display = 'none';
-                    featuresSection.style.display = 'none';
-                    dashboardSection.classList.add('active');
-                    
-                    showToast(`Bem-vindo de volta, ${currentUser.nome.split(' ')[0]}!`, 'success');
-                } catch (e) {
-                    localStorage.removeItem('indiqueUser');
-                }
-            }
-        }
-
-        // Expor funções globalmente
-        window.openRulesModal = openRulesModal;
-        window.openIndicateModal = openIndicateModal;
-        window.openLoginModal = openLoginModal;
-        window.openWhatsappModal = openWhatsappModal;
-        window.closeModal = closeModal;
-        window.showHome = showHome;
-        window.scrollToPremiations = scrollToPremiations;
-        window.filterDashboard = filterDashboard;
-        window.logout = logout;
-        window.login = login;
-        window.submitIndication = submitIndication;
-
-        // Iniciar
-        init();
-    </script>
+        <div class="form-group">
+          <label>Bairro</label>
+          <input type="text" id="imBairro" placeholder="Sion">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Cidade</label>
+        <input type="text" id="imCidade" placeholder="Belo Horizonte" value="Belo Horizonte">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Nome do proprietário *</label>
+          <input type="text" id="imPropNome" placeholder="Nome completo" required>
+        </div>
+        <div class="form-group">
+          <label>Telefone do proprietário *</label>
+          <input type="tel" id="imPropTel" placeholder="(31) 99999-9999" required maxlength="15" inputmode="numeric">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Observações (opcional)</label>
+        <textarea id="imObs" placeholder="Ex.: imóvel está alugado, aceita financiamento, valor pretendido..."></textarea>
+      </div>
+      <div class="form-check">
+        <input type="checkbox" id="imSelf">
+        <label for="imSelf">Este imóvel é meu (estou me indicando).</label>
+      </div>
+      <div class="form-error" id="imError"></div>
+      <button type="submit" class="btn-submit" id="imBtn"><i class="fas fa-paper-plane"></i> Enviar indicação</button>
+    </form>
+  </div>
+</div>
+
+<!-- INDICAR COMPRADOR -->
+<div class="modal-overlay" id="mIndComprador">
+  <div class="modal-box">
+    <button class="close" onclick="closeModal('mIndComprador')">&times;</button>
+    <h3>👤 Indicar um comprador</h3>
+    <p class="sub">Indique alguém que esteja procurando um imóvel para comprar.</p>
+    <form id="formComprador" onsubmit="enviarComprador(event)">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Nome do comprador *</label>
+          <input type="text" id="cpNome" placeholder="Nome completo" required>
+        </div>
+        <div class="form-group">
+          <label>Telefone do comprador *</label>
+          <input type="tel" id="cpTel" placeholder="(31) 99999-9999" required maxlength="15" inputmode="numeric">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>O que essa pessoa procura? (opcional)</label>
+        <textarea id="cpObs" placeholder="Ex.: apartamento 3 quartos no Sion até R$ 800 mil..."></textarea>
+      </div>
+      <div class="form-check">
+        <input type="checkbox" id="cpSelf">
+        <label for="cpSelf">Sou eu mesmo quem está procurando comprar.</label>
+      </div>
+      <div class="form-error" id="cpError"></div>
+      <button type="submit" class="btn-submit" id="cpBtn"><i class="fas fa-paper-plane"></i> Enviar indicação</button>
+    </form>
+  </div>
+</div>
+
+<!-- PIX -->
+<div class="modal-overlay" id="mPix">
+  <div class="modal-box">
+    <button class="close" onclick="closeModal('mPix')">&times;</button>
+    <h3>💠 Minha chave PIX</h3>
+    <p class="sub">Cadastre para receber seus prêmios. Pode alterar quando quiser.</p>
+    <form onsubmit="salvarPix(event)">
+      <div class="form-group">
+        <label>Chave PIX</label>
+        <input type="text" id="pixInput" placeholder="CPF, telefone, e-mail ou aleatória">
+      </div>
+      <button type="submit" class="btn-submit" id="pixBtn"><i class="fas fa-save"></i> Salvar chave</button>
+    </form>
+  </div>
+</div>
+
+<!-- REGRAS -->
+<div class="modal-overlay" id="mRegras">
+  <div class="modal-box">
+    <button class="close" onclick="closeModal('mRegras')">&times;</button>
+    <h3>📋 Regras do programa</h3>
+    <p class="sub">Transparência total: entenda exatamente como você ganha.</p>
+
+    <div class="regra-item">
+      <h4>1. Indicação de imóvel</h4>
+      <p><span class="tag az">R$ 50,00</span> após o imóvel ficar <strong>no mínimo 15 dias</strong> captado no nosso sistema.<br>
+      <span class="tag az">+ 1% do valor da venda</span> (R$ 100 a cada R$ 100 mil).<br>
+      Exemplo: imóvel vendido por R$ 500.000 → <strong>R$ 50 + R$ 500 = R$ 550,00</strong>.</p>
+    </div>
+
+    <div class="regra-item">
+      <h4>2. Indicação de comprador</h4>
+      <p><span class="tag vd">1% do valor da venda</span> (R$ 100 a cada R$ 100 mil).<br>
+      Exemplo: comprador fecha R$ 650.000 → <strong>R$ 650,00</strong>.<br>
+      Vale mesmo se você estiver indicando <strong>a si mesmo</strong>.</p>
+    </div>
+
+    <div class="regra-item">
+      <h4>3. Pode indicar várias pessoas e imóveis</h4>
+      <p>Sem limite. Cada indicação é avaliada individualmente e o valor acumula no seu extrato.</p>
+    </div>
+
+    <div class="regra-item">
+      <h4>4. Regra dos 15 dias (imóvel)</h4>
+      <p>Para o imóvel valer R$ 50, ele precisa permanecer no mínimo 15 dias captado. Se for retirado antes, não há direito à premiação.</p>
+    </div>
+
+    <div class="regra-item">
+      <h4>5. Pagamento</h4>
+      <p>Todo prêmio é pago via PIX em até <strong>30 dias</strong> após a venda ser concluída e a chave PIX estar cadastrada. Você vê o extrato no seu painel.</p>
+    </div>
+
+    <div class="regra-item">
+      <h4>6. Transparência total</h4>
+      <p>Você acompanha no painel: status de cada indicação, corretor responsável, se a venda foi pela nossa equipe ou por terceiros, e o valor exato a receber. Por segurança, dados sensíveis (telefones e partes de nomes/endereços) ficam parcialmente ocultos.</p>
+    </div>
+
+    <div class="regra-item">
+      <h4>7. Contato</h4>
+      <p>Qualquer dúvida, fale com nossa equipe pelo WhatsApp. O botão verde flutuante está disponível em todas as telas.</p>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ============================================================
+// CONFIG
+// ============================================================
+const API_URL = 'https://script.google.com/macros/s/AKfycbx39tA1um2e37ksFXUeo8cKKdRaZtIPcHl_NhI_hexm64NFA_UexVZADeTpQg8UdSoi_g/exec';
+let WHATSAPP_EQUIPE = '5531996070930';
+const TOKEN_KEY = 'lr_indique_user';
+
+let user = null;         // { nome, telefone, senha, chavePix }
+let todasIndicacoes = [];
+let filtroPainel = 'all';
+
+// ============================================================
+// HELPERS
+// ============================================================
+const $ = id => document.getElementById(id);
+const apenasNum = v => String(v || '').replace(/\D/g, '');
+
+function fmtTel(v){
+  const n = apenasNum(v);
+  if(n.length <= 2) return n ? '('+n : '';
+  if(n.length <= 6) return '('+n.slice(0,2)+') '+n.slice(2);
+  if(n.length <= 10) return '('+n.slice(0,2)+') '+n.slice(2,6)+'-'+n.slice(6);
+  return '('+n.slice(0,2)+') '+n.slice(2,7)+'-'+n.slice(7,11);
+}
+function maskTel(p){
+  const c = apenasNum(p);
+  if(c.length < 6) return '***';
+  return '('+c.slice(0,2)+') *****-'+c.slice(-4);
+}
+function fmtBRL(v){
+  const n = Number(v) || 0;
+  return n.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+}
+function fmtData(iso){
+  if(!iso) return '—';
+  try {
+    const d = new Date(iso);
+    if(isNaN(d)) return iso;
+    return d.toLocaleDateString('pt-BR');
+  } catch{ return iso; }
+}
+function toast(msg, tipo='info'){
+  const t = $('toast');
+  t.className = 'toast show ' + (tipo==='success'?'success':tipo==='error'?'error':'');
+  t.textContent = msg;
+  setTimeout(()=>t.classList.remove('show'), 4000);
+}
+
+// ============================================================
+// API
+// ============================================================
+async function apiGet(action, params={}){
+  const qs = new URLSearchParams({action, _t:Date.now(), ...params}).toString();
+  const controller = new AbortController();
+  const timer = setTimeout(()=>controller.abort(), 25000);
+  try {
+    const r = await fetch(API_URL+'?'+qs, {method:'GET', redirect:'follow', signal:controller.signal});
+    clearTimeout(timer);
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    return await r.json();
+  } catch(e){ clearTimeout(timer); throw e; }
+}
+async function apiPost(action, body){
+  const url = API_URL + '?action=' + encodeURIComponent(action) + '&_t=' + Date.now();
+  try {
+    const r = await fetch(url, {
+      method:'POST',
+      headers:{'Content-Type':'text/plain;charset=utf-8'},
+      body: JSON.stringify(body),
+      redirect:'follow'
+    });
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    return await r.json();
+  } catch(e){
+    console.error('apiPost', action, e);
+    throw e;
+  }
+}
+
+// ============================================================
+// MODAL CONTROL
+// ============================================================
+const modaisMap = {regras:'mRegras', login:'mLogin', imovel:'mIndImovel', comprador:'mIndComprador', pix:'mPix'};
+function openModal(nome){
+  const id = modaisMap[nome] || nome;
+  const el = $(id);
+  if(el) el.classList.add('active');
+}
+function closeModal(id){
+  const el = $(id);
+  if(el) el.classList.remove('active');
+}
+document.querySelectorAll('.modal-overlay').forEach(m=>{
+  m.addEventListener('click', e => { if(e.target===m) m.classList.remove('active'); });
+});
+
+// ============================================================
+// LOGIN / CADASTRO
+// ============================================================
+function abrirLogin(){ openModal('mLogin'); }
+function alternarTab(t){
+  const isLogin = t === 'login';
+  $('tabLogin').classList.toggle('active', isLogin);
+  $('tabCad').classList.toggle('active', !isLogin);
+  $('formLogin').style.display = isLogin ? 'block' : 'none';
+  $('formCad').style.display = isLogin ? 'none' : 'block';
+}
+
+async function fazerLogin(ev){
+  ev.preventDefault();
+  const tel = apenasNum($('loginTel').value);
+  const senha = $('loginSenha').value.trim();
+  if(tel.length < 10 || !senha){ mostrarErro('loginError','Preencha telefone e senha.'); return; }
+  const btn = $('loginBtn'); btn.disabled=true; btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Entrando...';
+  try {
+    const res = await apiPost('login', {telefone: tel, senha});
+    if(res.status === 'success' && res.user){
+      const u = {...res.user, senha};
+      salvarUser(u);
+      closeModal('mLogin');
+      toast('Bem-vindo(a), '+u.nome.split(' ')[0]+'!', 'success');
+      await carregarPainel();
+    } else {
+      mostrarErro('loginError', res.error || 'Telefone ou senha inválidos.');
+    }
+  } catch(e){
+    mostrarErro('loginError', 'Não foi possível conectar. Tente novamente.');
+  } finally {
+    btn.disabled=false; btn.innerHTML='<i class="fas fa-sign-in-alt"></i> Entrar';
+  }
+}
+
+async function fazerCadastro(ev){
+  ev.preventDefault();
+  const nome = $('cadNome').value.trim();
+  const tel = apenasNum($('cadTel').value);
+  const senha = $('cadSenha').value.trim();
+  const pix = $('cadPix').value.trim();
+  if(!nome || tel.length < 10 || senha.length < 4){ mostrarErro('cadError','Preencha todos os campos. Senha mínima 4 caracteres.'); return; }
+  const btn = $('cadBtn'); btn.disabled=true; btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Criando...';
+  try {
+    const res = await apiPost('register', {nome, telefone:tel, senha, chavePix:pix});
+    if(res.status === 'success' && res.id){
+      const u = {id:res.id, nome, telefone:tel, senha, chavePix: pix || ''};
+      salvarUser(u);
+      closeModal('mLogin');
+      toast('Cadastro criado! Bem-vindo(a), '+nome.split(' ')[0]+'!', 'success');
+      await carregarPainel();
+    } else if((res.error||'').toLowerCase().includes('já cadastrado')){
+      mostrarErro('cadError','Este telefone já está cadastrado. Use a aba "Entrar".');
+    } else {
+      mostrarErro('cadError', res.error || 'Não foi possível cadastrar.');
+    }
+  } catch(e){
+    mostrarErro('cadError','Não foi possível conectar. Tente novamente.');
+  } finally {
+    btn.disabled=false; btn.innerHTML='<i class="fas fa-user-plus"></i> Criar conta';
+  }
+}
+
+function mostrarErro(id, msg){
+  const el = $(id);
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'), 6000);
+}
+
+function esqueciSenha(){
+  const msg = encodeURIComponent('Olá! Preciso redefinir minha senha do programa Indique e Ganhe. Meu nome é: ');
+  window.open('https://wa.me/'+WHATSAPP_EQUIPE+'?text='+msg, '_blank');
+}
+
+// ============================================================
+// SESSÃO
+// ============================================================
+function salvarUser(u){
+  user = u;
+  try { localStorage.setItem(TOKEN_KEY, JSON.stringify(u)); } catch(e){}
+  atualizarNav();
+}
+function logout(){
+  user = null;
+  try { localStorage.removeItem(TOKEN_KEY); } catch(e){}
+  atualizarNav();
+  $('secPainel').classList.remove('active');
+  $('secHome').style.display = 'block';
+  window.scrollTo({top:0,behavior:'smooth'});
+  toast('Você saiu.', 'info');
+}
+function atualizarNav(){
+  if(user){
+    $('btnNavPainel').style.display = 'none';
+    $('btnSair').style.display = 'inline-flex';
+    $('pnNome').textContent = user.nome.split(' ')[0];
+  } else {
+    $('btnNavPainel').style.display = 'inline-flex';
+    $('btnSair').style.display = 'none';
+  }
+}
+
+// ============================================================
+// INDICAR
+// ============================================================
+async function abrirIndicar(tipo){
+  if(!user){
+    toast('Cadastre-se ou entre para indicar.', 'error');
+    openModal('mLogin');
+    return;
+  }
+  if(tipo === 'imovel'){
+    $('formImovel').reset();
+    $('imError').classList.remove('show');
+    openModal('mIndImovel');
+  } else {
+    $('formComprador').reset();
+    $('cpError').classList.remove('show');
+    openModal('mIndComprador');
+  }
+}
+
+async function enviarImovel(ev){
+  ev.preventDefault();
+  if(!user) return;
+  const data = {
+    indicadorTelefone: user.telefone,
+    indicadorSenha: user.senha,
+    endereco: $('imEnd').value.trim(),
+    bairro: $('imBairro').value.trim(),
+    cidade: $('imCidade').value.trim(),
+    proprietarioNome: $('imPropNome').value.trim(),
+    proprietarioTelefone: apenasNum($('imPropTel').value),
+    observacoes: ($('imSelf').checked ? '[AUTOINDICAÇÃO] ' : '') + ($('imObs').value.trim())
+  };
+  if(!data.endereco || !data.proprietarioNome || data.proprietarioTelefone.length<10){
+    mostrarErro('imError','Preencha endereço, nome e telefone do proprietário.');
+    return;
+  }
+  const btn = $('imBtn'); btn.disabled=true; btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Enviando...';
+  try {
+    const res = await apiPost('insertImovel', data);
+    if(res.status === 'success'){
+      closeModal('mIndImovel');
+      toast('Imóvel indicado com sucesso! 🎉', 'success');
+      await carregarPainel();
+    } else {
+      mostrarErro('imError', res.error || 'Não foi possível enviar.');
+    }
+  } catch(e){ mostrarErro('imError','Erro de conexão.'); }
+  finally { btn.disabled=false; btn.innerHTML='<i class="fas fa-paper-plane"></i> Enviar indicação'; }
+}
+
+async function enviarComprador(ev){
+  ev.preventDefault();
+  if(!user) return;
+  const data = {
+    indicadorTelefone: user.telefone,
+    indicadorSenha: user.senha,
+    compradorNome: $('cpNome').value.trim(),
+    compradorTelefone: apenasNum($('cpTel').value),
+    compradorObservacao: $('cpObs').value.trim(),
+    observacoes: ($('cpSelf').checked ? '[AUTOINDICAÇÃO] ' : '') + ''
+  };
+  if(!data.compradorNome || data.compradorTelefone.length<10){
+    mostrarErro('cpError','Preencha nome e telefone do comprador.');
+    return;
+  }
+  const btn = $('cpBtn'); btn.disabled=true; btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Enviando...';
+  try {
+    const res = await apiPost('insertComprador', data);
+    if(res.status === 'success'){
+      closeModal('mIndComprador');
+      toast('Comprador indicado com sucesso! 🎉', 'success');
+      await carregarPainel();
+    } else {
+      mostrarErro('cpError', res.error || 'Não foi possível enviar.');
+    }
+  } catch(e){ mostrarErro('cpError','Erro de conexão.'); }
+  finally { btn.disabled=false; btn.innerHTML='<i class="fas fa-paper-plane"></i> Enviar indicação'; }
+}
+
+// ============================================================
+// PIX
+// ============================================================
+function abrirPix(){
+  if(!user){ toast('Entre para gerenciar sua chave PIX.', 'error'); openModal('mLogin'); return; }
+  $('pixInput').value = user.chavePix || '';
+  openModal('mPix');
+}
+async function salvarPix(ev){
+  ev.preventDefault();
+  if(!user) return;
+  const chave = $('pixInput').value.trim();
+  const btn = $('pixBtn'); btn.disabled=true; btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Salvando...';
+  try {
+    const res = await apiPost('updatePix', {telefone: user.telefone, senha: user.senha, chavePix: chave});
+    if(res.status === 'success'){
+      user.chavePix = chave;
+      salvarUser(user);
+      closeModal('mPix');
+      toast('Chave PIX salva!', 'success');
+    } else {
+      toast(res.error || 'Não foi possível salvar.', 'error');
+    }
+  } catch(e){ toast('Erro de conexão.', 'error'); }
+  finally { btn.disabled=false; btn.innerHTML='<i class="fas fa-save"></i> Salvar chave'; }
+}
+
+// ============================================================
+// PAINEL
+// ============================================================
+async function carregarPainel(){
+  if(!user) return;
+  $('secHome').style.display = 'none';
+  $('secPainel').classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+
+  // Stats
+  try {
+    const st = await apiGet('statsCliente', {telefone: user.telefone, senha: user.senha});
+    if(st.status === 'success'){
+      $('pnSaldo').textContent = fmtBRL(st.aReceber || 0);
+      $('pnPago').textContent = fmtBRL(st.pago || 0);
+      $('stTotal').textContent = st.total || 0;
+      $('stImoveis').textContent = st.imoveis || 0;
+      $('stCompradores').textContent = st.compradores || 0;
+      $('stVendas').textContent = st.concluidas || 0;
+    }
+  } catch(e){ console.warn('stats', e); }
+
+  // Lista
+  try {
+    const res = await apiGet('listByIndicador', {telefone: user.telefone, senha: user.senha});
+    if(res.status === 'success' && Array.isArray(res.data)){
+      todasIndicacoes = res.data;
+      renderExtrato();
+    } else {
+      todasIndicacoes = [];
+      renderExtrato();
+    }
+  } catch(e){ console.warn('list', e); todasIndicacoes = []; renderExtrato(); }
+}
+
+function filtrarPainel(f){
+  filtroPainel = f;
+  document.querySelectorAll('.filtro-btn').forEach(b=>b.classList.toggle('active', b.dataset.f===f));
+  renderExtrato();
+}
+
+function statusBadge(s){
+  const map = {
+    'Pendente':'pendente', 'Imovel Captado':'captado', 'Cliente Ativo':'ativo',
+    'Em Negociacao':'negociacao', 'Venda Concluida':'venda', 'Nao Efetivado':'nao'
+  };
+  return map[s] || 'pendente';
+}
+function statusLabel(s){
+  const map = {
+    'Pendente':'Em análise', 'Imovel Captado':'Imóvel captado', 'Cliente Ativo':'Cliente ativo',
+    'Em Negociacao':'Em negociação', 'Venda Concluida':'Venda concluída', 'Nao Efetivado':'Não efetivado'
+  };
+  return map[s] || s || 'Em análise';
+}
+
+function renderExtrato(){
+  let lista = [...todasIndicacoes];
+  if(filtroPainel !== 'all' && filtroPainel !== 'PIX'){
+    if(filtroPainel === 'Imovel' || filtroPainel === 'Comprador'){
+      lista = lista.filter(i => i.Tipo === filtroPainel);
+    } else {
+      lista = lista.filter(i => i.Status === filtroPainel);
+    }
+  }
+  lista.sort((a,b)=> new Date(b.DataIndicacao||0) - new Date(a.DataIndicacao||0));
+
+  const grid = $('extratoGrid');
+  if(!lista.length){
+    grid.innerHTML = `<div class="empty"><i class="fas fa-inbox"></i><p>Nenhuma indicação encontrada.</p><button class="btn-azul" onclick="abrirIndicar('imovel')"><i class="fas fa-plus"></i> Indicar agora</button></div>`;
+    return;
+  }
+
+  grid.innerHTML = lista.map(i=>{
+    const tipo = i.Tipo === 'Imovel' ? 'Imóvel' : 'Comprador';
+    const isImovel = i.Tipo === 'Imovel';
+    const local = isImovel ? (i.EnderecoImovel || 'Endereço oculto') : 'Comprador indicado';
+    const pessoa = isImovel
+      ? (i.ProprietarioNome ? 'Proprietário: '+i.ProprietarioNome : '')
+      : (i.CompradorNome ? 'Nome: '+i.CompradorNome : '');
+    const tel = isImovel ? i.ProprietarioTelefone : i.CompradorTelefone;
+    const premio = Number(i.PremioTotal) || 0;
+    const corretor = i.CorretorResponsavel || '';
+    const origem = i.OrigemVenda || '';
+    const valorVenda = Number(i.ValorVenda) || 0;
+
+    return `
+      <div class="ex-card">
+        <div class="ex-head">
+          <h4>${isImovel ? '🏠' : '👤'} ${local}</h4>
+          <span class="badge ${statusBadge(i.Status)}">${statusLabel(i.Status)}</span>
+        </div>
+        <div class="row"><i class="fas fa-tag"></i> ${tipo}</div>
+        ${pessoa ? `<div class="row"><i class="fas fa-user"></i> ${pessoa}</div>` : ''}
+        ${tel ? `<div class="row"><i class="fas fa-phone"></i> ${tel}</div>` : ''}
+        ${corretor ? `<div class="row"><i class="fas fa-user-tie"></i> Corretor: ${corretor}</div>` : ''}
+        ${origem ? `<div class="row"><i class="fas fa-handshake"></i> Venda: ${origem}</div>` : ''}
+        ${valorVenda > 0 ? `<div class="row"><i class="fas fa-dollar-sign"></i> Valor: ${fmtBRL(valorVenda)}</div>` : ''}
+        <div class="row"><i class="fas fa-calendar"></i> Indicado em ${fmtData(i.DataIndicacao)}</div>
+        <div class="premio">
+          <span class="lbl">Prêmio</span>
+          <span class="val ${premio===0?'zero':''}">${premio>0?fmtBRL(premio):'A calcular'}</span>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+// ============================================================
+// WHATSAPP EQUIPE
+// ============================================================
+function wspEquipe(){
+  const msg = encodeURIComponent('Olá! Estou no programa Indique e Ganhe e gostaria de falar com a equipe.');
+  window.open('https://wa.me/'+WHATSAPP_EQUIPE+'?text='+msg, '_blank');
+}
+
+// ============================================================
+// CARREGAR CONFIG PÚBLICA
+// ============================================================
+async function carregarConfig(){
+  try {
+    const r = await apiGet('configPublica');
+    if(r.status === 'success' && r.whatsappEquipe){
+      WHATSAPP_EQUIPE = String(r.whatsappEquipe).replace(/\D/g,'');
+    }
+  } catch(e){ console.warn('config', e); }
+}
+
+// ============================================================
+// INIT
+// ============================================================
+function init(){
+  // máscara de telefone
+  document.querySelectorAll('input[type="tel"]').forEach(inp=>{
+    inp.addEventListener('input', ()=>{
+      const pos = inp.selectionStart;
+      const old = inp.value.length;
+      inp.value = fmtTel(inp.value);
+      const diff = inp.value.length - old;
+      try { inp.setSelectionRange(pos+diff, pos+diff); } catch(e){}
+    });
+  });
+
+  // restaurar sessão
+  try {
+    const raw = localStorage.getItem(TOKEN_KEY);
+    if(raw){
+      const u = JSON.parse(raw);
+      if(u && u.telefone && u.senha){
+        user = u;
+        atualizarNav();
+        carregarPainel();
+      }
+    }
+  } catch(e){}
+
+  carregarConfig();
+}
+
+document.addEventListener('DOMContentLoaded', init);
+window.openModal = openModal;
+window.closeModal = closeModal;
+window.abrirLogin = abrirLogin;
+window.abrirIndicar = abrirIndicar;
+window.abrirPix = abrirPix;
+window.logout = logout;
+window.filtrarPainel = filtrarPainel;
+window.alternarTab = alternarTab;
+window.fazerLogin = fazerLogin;
+window.fazerCadastro = fazerCadastro;
+window.enviarImovel = enviarImovel;
+window.enviarComprador = enviarComprador;
+window.salvarPix = salvarPix;
+window.esqueciSenha = esqueciSenha;
+window.wspEquipe = wspEquipe;
+</script>
 
 </body>
 </html>
