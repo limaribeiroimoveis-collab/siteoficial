@@ -206,7 +206,19 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
     margin-bottom:14px;
     box-shadow: var(--sombra-card);
     border:1px solid rgba(0,30,240,0.05);
+    transition: all 0.3s ease;
   }
+  .secao.erro-destaque{
+    box-shadow: 0 0 0 3px var(--vermelho), var(--sombra-card);
+    border-color: var(--vermelho);
+    animation: shake 0.4s ease;
+  }
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    75% { transform: translateX(6px); }
+  }
+
   .secao-head{
     display:flex; align-items:center; gap:10px;
     margin-bottom:16px;
@@ -257,7 +269,7 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
   }
   .chip-tipo.ativo .ico-svg{ color:#fff; }
 
-  /* CÔMODOS EM LINHA HORIZONTAL (um embaixo do outro) */
+  /* CÔMODOS */
   .comodo-linha{
     display: flex;
     align-items: center;
@@ -337,7 +349,7 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
   }
   .campo-label .req{ color:var(--vermelho); }
 
-  /* INPUTS DE VALOR (metragem e valor) */
+  /* INPUTS DE VALOR */
   .input-valor-wrap{ position: relative; }
   .input-valor{
     width: 100%;
@@ -396,9 +408,9 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
   .input-valor-erro.show{ display: block; }
 
   /* BAIRROS */
-  .bairros-input{ display: flex; gap: 8px; margin-bottom: 10px; }
+  .bairros-input{ margin-bottom: 10px; }
   .bairros-input input{
-    flex: 1;
+    width: 100%;
     padding: 12px 14px;
     border: 2px solid var(--borda-forte);
     border-radius: 12px;
@@ -413,16 +425,6 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
     border-color: var(--vermelho);
     background: #fef2f2;
   }
-  .bairros-input button{
-    padding: 0 18px;
-    background: var(--azul); color: #fff;
-    border: none; border-radius: 12px;
-    font-weight: 800; font-size: 0.82rem;
-    cursor: pointer; font-family: inherit;
-    display: flex; align-items: center; gap: 5px;
-    transition: all 0.15s;
-  }
-  .bairros-input button:hover{ background: var(--azul-escuro); }
 
   .bairros-lista{
     display: flex; flex-wrap: wrap; gap: 6px;
@@ -754,11 +756,11 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
     </div>
 
     <!-- SEÇÃO 1: TIPO -->
-    <div class="secao">
+    <div class="secao" id="secaoTipo">
       <div class="secao-head">
         <div class="secao-num">1</div>
         <div>
-          <div class="secao-titulo">Que tipo de imóvel você procura?</div>
+          <div class="secao-titulo">Que tipo de imóvel você procura? <span class="req">*</span></div>
           <div class="secao-sub">Escolha uma opção</div>
         </div>
       </div>
@@ -782,7 +784,7 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
       </div>
     </div>
 
-    <!-- SEÇÃO 2: CÔMODOS EM LINHAS -->
+    <!-- SEÇÃO 2: CÔMODOS -->
     <div class="secao">
       <div class="secao-head">
         <div class="secao-num">2</div>
@@ -851,7 +853,7 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
       <div class="campo-bloco">
         <label class="campo-label">Metragem (m²)</label>
         <div class="input-valor-wrap">
-          <input type="text" class="input-valor" id="inputMetragem" placeholder="Ex: 100" inputmode="numeric" maxlength="6" autocomplete="off">
+          <input type="text" class="input-valor" id="inputMetragem" placeholder="Ex: 100" inputmode="numeric" maxlength="5" autocomplete="off">
         </div>
       </div>
 
@@ -859,7 +861,7 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
       <div class="campo-bloco">
         <label class="campo-label">Qual o valor máximo que pretende investir na compra do imóvel? <span class="req">*</span></label>
         <div class="input-valor-wrap">
-          <input type="text" class="input-valor" id="inputValor" placeholder="Ex: 450.000,00" inputmode="numeric" autocomplete="off">
+          <input type="text" class="input-valor" id="inputValor" placeholder="Ex: 500.000" inputmode="numeric" autocomplete="off">
         </div>
         <div class="input-valor-extenso" id="valorExtenso"></div>
         <div class="input-valor-erro" id="valorErro"></div>
@@ -881,12 +883,7 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
       </div>
 
       <div class="bairros-input">
-        <input type="text" id="inputBairro" placeholder="Digite um bairro, região ou referência" autocomplete="off"
-               onkeydown="if(event.key==='Enter'){event.preventDefault(); adicionarBairro();}">
-        <button type="button" onclick="adicionarBairro()">
-          <svg class="ico-svg" viewBox="0 0 24 24" style="width:14px;height:14px;"><path d="M12 5v14M5 12h14"/></svg>
-          Add
-        </button>
+        <input type="text" id="inputBairro" placeholder="Digite um bairro, região ou referência e aperte Enter" autocomplete="off">
       </div>
       <div class="bairros-lista" id="bairrosLista"></div>
       <div class="input-valor-erro" id="bairroErro" style="margin-top:10px;">
@@ -1031,18 +1028,20 @@ function mascaraTelefone(input){
 window.mascaraTelefone = mascaraTelefone;
 
 /* =====================================================
-   CHIPS DE TIPO
+   CHIPS DE TIPO (com destaque quando falta)
 ===================================================== */
 document.querySelectorAll('.chip-tipo').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.chip-tipo').forEach(b => b.classList.remove('ativo'));
     btn.classList.add('ativo');
     state.tipo = btn.dataset.tipo;
+    // Limpa erro visual
+    $('secaoTipo').classList.remove('erro-destaque');
   });
 });
 
 /* =====================================================
-   CÔMODOS (linhas horizontais)
+   CÔMODOS
 ===================================================== */
 document.querySelectorAll('.comodo-linha').forEach(linha => {
   const campo = linha.dataset.campo;
@@ -1061,12 +1060,10 @@ document.querySelectorAll('.comodo-linha').forEach(linha => {
 function numeroPorExtenso(n){
   if(n === 0) return 'zero';
   n = Math.floor(n);
-
   const unid = ['', 'um', 'dois', 'três', 'quatro', 'cinco', 'seis', 'sete', 'oito', 'nove',
     'dez', 'onze', 'doze', 'treze', 'quatorze', 'quinze', 'dezesseis', 'dezessete', 'dezoito', 'dezenove'];
   const dez = ['', '', 'vinte', 'trinta', 'quarenta', 'cinquenta', 'sessenta', 'setenta', 'oitenta', 'noventa'];
   const cem = ['', 'cento', 'duzentos', 'trezentos', 'quatrocentos', 'quinhentos', 'seiscentos', 'setecentos', 'oitocentos', 'novecentos'];
-
   function centena(num){
     if(num === 100) return 'cem';
     const c = Math.floor(num / 100);
@@ -1087,7 +1084,7 @@ function numeroPorExtenso(n){
     if(num < 1000) return centena(num);
     const m = Math.floor(num / 1000);
     const resto = num % 1000;
-    let parteM = grupo(m) + (m === 1 ? ' mil' : ' mil');
+    let parteM = grupo(m) + ' mil';
     if(resto === 0) return parteM;
     if(resto < 100) return parteM + ' e ' + centena(resto);
     return parteM + ' ' + centena(resto);
@@ -1105,31 +1102,24 @@ function numeroPorExtenso(n){
 function valorPorExtenso(valor){
   if(!valor || valor <= 0) return '';
   const reais = Math.floor(valor);
-  const centavos = Math.round((valor - reais) * 100);
   let ext = numeroPorExtenso(reais);
-  let txt = ext + (reais === 1 ? ' real' : ' reais');
-  if(centavos > 0){
-    txt += ' e ' + numeroPorExtenso(centavos) + (centavos === 1 ? ' centavo' : ' centavos');
-  }
-  return txt.charAt(0).toUpperCase() + txt.slice(1);
+  return (ext + (reais === 1 ? ' real' : ' reais')).replace(/^./, c => c.toUpperCase());
 }
 
 /* =====================================================
-   MÁSCARA DE VALOR (digitando, vira 1.234,56)
+   MÁSCARA DE VALOR (inteiro, sem centavos)
+   450000 → 450.000
 ===================================================== */
 function formatarValorDigitando(inp){
   let v = inp.value.replace(/\D/g, '');
-  if(!v){ inp.value = ''; return ''; }
-  v = v.padStart(3, '0');
-  const inteiro = v.slice(0, -2).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-  const dec = v.slice(-2);
-  inp.value = inteiro + ',' + dec;
-  return v;
+  if(v.length > 11) v = v.slice(0, 11);
+  if(!v){ inp.value = ''; return; }
+  inp.value = v.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 }
 
 function parseValorFormatado(str){
   if(!str) return 0;
-  return parseFloat(String(str).replace(/\./g, '').replace(',', '.')) || 0;
+  return parseInt(String(str).replace(/\D/g, ''), 10) || 0;
 }
 
 /* =====================================================
@@ -1142,25 +1132,22 @@ inputMetragem.addEventListener('input', () => {
 });
 
 /* =====================================================
-   INPUT VALOR (com extenso + mínimo 300k)
+   INPUT VALOR
 ===================================================== */
 const inputValor = $('inputValor');
 const valorExtenso = $('valorExtenso');
 const valorErro = $('valorErro');
 
 function atualizarValor(){
-  const textoDigitado = inputValor.value;
-  const valor = parseValorFormatado(textoDigitado);
+  const valor = parseValorFormatado(inputValor.value);
   state.valor = valor;
 
-  // Atualiza extenso
   if(valor > 0){
     valorExtenso.innerHTML = '<svg class="ico-svg" viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>' + valorPorExtenso(valor);
   } else {
     valorExtenso.innerHTML = '';
   }
 
-  // Validação mínima
   if(valor > 0 && valor < VALOR_MINIMO){
     valorErro.innerHTML = 'Infelizmente, nosso catálogo não possui imóveis abaixo de R$ 300.000,00. Para te ajudar da melhor forma, informe um valor a partir de R$ 300 mil. 😊';
     valorErro.classList.add('show');
@@ -1176,20 +1163,8 @@ inputValor.addEventListener('input', () => {
   atualizarValor();
 });
 
-inputValor.addEventListener('blur', () => {
-  // Ao sair do campo, se vazio ou 0, mantém
-  const valor = parseValorFormatado(inputValor.value);
-  if(valor === 0){
-    inputValor.value = '';
-    state.valor = 0;
-    valorExtenso.innerHTML = '';
-    valorErro.classList.remove('show');
-    inputValor.classList.remove('erro');
-  }
-});
-
 /* =====================================================
-   BAIRROS (só digitação livre)
+   BAIRROS (só digitação livre, sem botão)
 ===================================================== */
 const inputBairro = $('inputBairro');
 
@@ -1200,7 +1175,6 @@ function adicionarBairro(){
   if(state.bairros.find(b => b.toLowerCase() === val.toLowerCase())){ inputBairro.value = ''; return; }
   state.bairros.push(val);
   inputBairro.value = '';
-  inputBairro.focus();
   renderizarBairros();
   esconderErroBairro();
 }
@@ -1230,6 +1204,19 @@ function esc(s){
     .replace(/'/g,'&#39;');
 }
 
+// Enter adiciona
+inputBairro.addEventListener('keydown', (e) => {
+  if(e.key === 'Enter'){
+    e.preventDefault();
+    adicionarBairro();
+  }
+});
+
+// Ao sair do campo (blur), se tiver algo digitado, adiciona automaticamente
+inputBairro.addEventListener('blur', () => {
+  if(inputBairro.value.trim()) adicionarBairro();
+});
+
 window.adicionarBairro = adicionarBairro;
 window.removerBairro = removerBairro;
 
@@ -1254,12 +1241,19 @@ $('waModal').addEventListener('click', (e) => { if(e.target === $('waModal')) fe
 async function enviarSelecao(ev){
   ev.preventDefault();
 
+  // 1) TIPO — obrigatório
   if(!state.tipo){
-    alert('Escolha o tipo de imóvel que você procura.');
-    document.querySelector('.chips-tipo').scrollIntoView({behavior:'smooth', block:'center'});
+    // Rola até o topo e destaca a seção
+    const secTipo = $('secaoTipo');
+    secTipo.classList.add('erro-destaque');
+    secTipo.scrollIntoView({behavior:'smooth', block:'center'});
+    setTimeout(() => {
+      alert('Falta escolher o tipo de imóvel. Role até o topo e selecione uma opção.');
+    }, 300);
     return;
   }
 
+  // 2) VALOR
   if(!state.valor || state.valor <= 0){
     alert('Informe o valor máximo que pretende investir.');
     inputValor.focus();
@@ -1274,6 +1268,7 @@ async function enviarSelecao(ev){
     return;
   }
 
+  // 3) BAIRROS
   if(state.bairros.length === 0){
     mostrarErroBairro();
     alert('Informe pelo menos uma região ou bairro de interesse.');
@@ -1282,6 +1277,7 @@ async function enviarSelecao(ev){
   }
   esconderErroBairro();
 
+  // 4) NOME E TELEFONE
   const nome = $('nomeContato').value.trim();
   const tel = $('telContato').value.replace(/\D/g, '');
   if(nome.length < 2){
@@ -1373,16 +1369,6 @@ function montarResumo(){
   if(state.detalhes) l.push('<div>📝 <strong>Detalhes:</strong> ' + esc(state.detalhes) + '</div>');
   return l.join('');
 }
-
-/* =====================================================
-   INIT
-===================================================== */
-inputBairro.addEventListener('blur', () => {
-  // Se o usuário digitou algo e saiu do campo sem adicionar, adiciona automaticamente
-  if(inputBairro.value.trim()){
-    adicionarBairro();
-  }
-});
 </script>
 
 </body>
