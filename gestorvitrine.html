@@ -110,7 +110,7 @@
     transition: all .15s;
     white-space: nowrap;
     text-decoration: none;
-    position: relative; /* ✅ ESSENCIAL para o badge flutuante */
+    position: relative;
     line-height: 1;
   }
   .btn-header:hover{
@@ -126,16 +126,16 @@
     letter-spacing: .1px;
   }
 
-  /* ✅ BADGE FLUTUANTE PADRÃO (todos os botões) */
+  /* ✅ BADGE FLUTUANTE PADRÃO (Verde para a maioria, Vermelho para Correções) */
   .btn-header .badge-num,
   .btn-header .badge-pend {
     position: absolute;
     top: -6px;
     right: -6px;
-    display: inline-flex !important; /* Força exibição */
+    display: inline-flex !important;
     align-items: center;
     justify-content: center;
-    background: #dc2626 !important; /* ✅ Todos vermelhos */
+    background: #16a34a !important; /* Verde padrão */
     color: #fff !important;
     padding: 0 5px;
     border-radius: 999px;
@@ -150,6 +150,11 @@
     z-index: 10;
   }
 
+  /* Exceção: Badge de Correções continua vermelha */
+  .btn-header.correcoes .badge-num {
+    background: #dc2626 !important;
+  }
+
   /* Cores base dos botões */
   .btn-header.notas{
     color: #f5e8d8;
@@ -162,15 +167,19 @@
     border-color: rgba(160,82,45,.75);
   }
 
+  /* ✅ Botão Atualizar com cor mais clara e afastado */
   .btn-header.atualizar{
-    color: #f0e9e2;
-    border-color: rgba(139,115,85,.55);
-    background: rgba(139,115,85,.18);
+    color: #eaddd3;
+    border-color: rgba(180,150,120,.6);
+    background: rgba(180,150,120,.25);
   }
   .btn-header.atualizar:hover{
-    background: rgba(139,115,85,.35);
+    background: rgba(180,150,120,.45);
     color: #fff;
-    border-color: rgba(139,115,85,.8);
+    border-color: rgba(180,150,120,.9);
+  }
+  .btn-header.espaco-esq {
+    margin-right: 10px;
   }
 
   .btn-header.captar{
@@ -311,8 +320,8 @@
   @media(max-width:1100px){
     .btn-header .lbl-txt{ display: none; }
     .btn-header{ padding: 0 10px; }
-    .btn-header .lbl-indique{ display: none; }
     .btn-header{ padding: 0 10px; }
+    .btn-header.espaco-esq { margin-right: 8px; }
   }
 
   @media(max-width:768px){
@@ -340,6 +349,7 @@
       top: -5px;
       right: -5px;
     }
+    .btn-header.espaco-esq { margin-right: 6px; }
   }
 
   /* ============================================================
@@ -2222,8 +2232,8 @@
         <span class="badge-num" id="notasBadgeNum">0</span>
       </button>
 
-      <!-- 2. ATUALIZAR -->
-      <button class="btn-header atualizar" id="btnAtualizar" onclick="atualizarSomenteBadges()" title="Atualizar badges">
+      <!-- 2. ATUALIZAR (com espaço extra) -->
+      <button class="btn-header atualizar espaco-esq" id="btnAtualizar" onclick="atualizarSomenteBadges()" title="Atualizar badges">
         <svg class="ico" id="icoAtualizar" viewBox="0 0 24 24">
           <polyline points="23 4 23 10 17 10"/>
           <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
@@ -2253,7 +2263,7 @@
         <span class="badge-num" id="leadsBadgeNum">0</span>
       </button>
 
-      <!-- 5. INDIQUE (igual ao captar, só com ícone de mão) -->
+      <!-- 5. INDIQUE (igual ao captar) -->
       <button class="btn-header indique" id="btnIndiqueGanhe" onclick="abrirIndiqueGanhe()" title="Gestor de Indicações">
         <svg class="ico" viewBox="0 0 24 24">
           <path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/>
