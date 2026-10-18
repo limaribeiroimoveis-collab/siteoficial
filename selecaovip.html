@@ -428,28 +428,6 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
     background: #fef2f2;
   }
 
-  .bairros-lista{
-    display: flex; flex-wrap: wrap; gap: 6px;
-    margin-top: 10px;
-  }
-  .bairro-tag{
-    display: inline-flex; align-items: center; gap: 6px;
-    padding: 8px 14px;
-    background: var(--azul-claro); color: var(--azul);
-    border-radius: 40px;
-    font-size: 0.8rem; font-weight: 700;
-    animation: fadeIn 0.2s ease;
-  }
-  .bairro-tag button{
-    background: transparent; border: none;
-    color: var(--azul); cursor: pointer;
-    font-size: 1rem; line-height: 1;
-    padding: 0; width: 16px; height: 16px;
-    display: flex; align-items: center; justify-content: center;
-    opacity: 0.7;
-  }
-  .bairro-tag button:hover{ opacity: 1; }
-
   .bairros-instrucao{
     background: var(--azul-claro);
     border-radius: 10px;
@@ -461,11 +439,6 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
     font-weight: 500;
   }
   .bairros-instrucao strong{ font-weight: 800; }
-
-  @keyframes fadeIn{
-    from{ opacity: 0; transform: scale(0.9); }
-    to{ opacity: 1; transform: scale(1); }
-  }
 
   /* CONTATO */
   .contato-final .campo{ margin-bottom: 14px; }
@@ -864,14 +837,16 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
       </div>
 
       <div class="bairros-instrucao">
-        <strong>Como preencher:</strong> digite <strong>todos os bairros</strong> que você tem interesse, ou a <strong>região de Belo Horizonte</strong> (ex: "Zona Sul", "Centro-Sul"), ou ainda <strong>uma referência</strong> do que gostaria de ficar próximo. Aperte <strong>Enter</strong> ou <strong>vírgula</strong> para adicionar cada um.
+        <strong>Como preencher:</strong> digite <strong>todos os bairros</strong> que você tem interesse, ou a <strong>região de Belo Horizonte</strong> (ex: "Zona Sul", "Centro-Sul"), ou ainda <strong>uma referência</strong> do que gostaria de ficar próximo. Separe por <strong>vírgula</strong>.
       </div>
 
       <div class="textarea-wrap">
-        <textarea id="inputBairros" placeholder="Ex: Savassi, Lourdes, Funcionários, Próximo ao Shopping Diamond Mall..." style="min-height: 80px;"></textarea>
+        <textarea id="inputBairros" 
+                  placeholder="Ex: Savassi, Lourdes, Funcionários, Próximo ao Shopping Diamond Mall..."
+                  style="min-height: 90px;"
+                  maxlength="400"></textarea>
       </div>
 
-      <div class="bairros-lista" id="bairrosLista"></div>
       <div class="input-valor-erro" id="bairroErro" style="margin-top:10px;">
         Por favor, informe pelo menos uma região de interesse.
       </div>
@@ -993,7 +968,7 @@ const state = {
   vagas: '',
   metragem: '',
   valor: 0,
-  bairros: [],
+  bairros: [],       // ← preenchido a partir da textarea
   detalhes: ''
 };
 
@@ -1148,80 +1123,36 @@ inputValor.addEventListener('input', () => {
 });
 
 /* =====================================================
-   BAIRROS (textarea com tags)
+   BAIRROS — textarea livre (separado por vírgula)
 ===================================================== */
 const inputBairros = $('inputBairros');
 
-// Processa o texto da textarea, transforma em tags
-function processarBairros(){
-  let texto = inputBairros.value;
-  // Divide por vírgula ou quebra de linha
-  let partes = texto.split(/[,\n\r]+/);
-  let adicionou = false;
-  partes.forEach(p => {
-    let val = p.trim();
-    if(!val) return;
-    if(state.bairros.length >= 30) return; // Limite
-    if(!state.bairros.find(b => b.toLowerCase() === val.toLowerCase())){
-      state.bairros.push(val);
-      adicionou = true;
-    }
-  });
-  if(adicionou){
-    inputBairros.value = ''; // limpa após adicionar
-    renderizarBairros();
-    esconderErroBairro();
-  } else if(texto.trim() === '' && state.bairros.length > 0) {
-    inputBairros.value = '';
-  }
+/**
+ * Lê o texto da textarea e retorna um array de bairros/regiões.
+ * Aceita separação por vírgula, ponto-e-vírgula ou quebra de linha.
+ * Remove espaços extras, ignora vazios e limita a 30 itens.
+ */
+function parseBairros_(){
+  const texto = String(inputBairros.value || '').trim();
+  if(!texto) return [];
+  return texto
+    .split(/[,\n\r;]+/)
+    .map(s => s.trim())
+    .filter(Boolean)
+    .slice(0, 30);
 }
 
-function removerBairro(nome){
-  state.bairros = state.bairros.filter(b => b !== nome);
-  renderizarBairros();
+function esconderErroBairro(){
+  const el = $('bairroErro');
+  if(el) el.classList.remove('show');
+}
+function mostrarErroBairro(){
+  const el = $('bairroErro');
+  if(el) el.classList.add('show');
 }
 
-function renderizarBairros(){
-  const wrap = $('bairrosLista');
-  wrap.innerHTML = state.bairros.map(b => `
-    <span class="bairro-tag">
-      ${esc(b)}
-      <button type="button" onclick="removerBairro('${esc(b).replace(/'/g,"\\'")}')">✕</button>
-    </span>
-  `).join('');
-}
-
-function esconderErroBairro(){ $('bairroErro').classList.remove('show'); }
-function mostrarErroBairro(){ $('bairroErro').classList.add('show'); }
-
-function esc(s){
-  return String(s || '')
-    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;').replace(/"/g,'&quot;')
-    .replace(/'/g,'&#39;');
-}
-
-// Ao digitar, se apertar Enter, processa
-inputBairros.addEventListener('keydown', (e) => {
-  if(e.key === 'Enter' && !e.shiftKey){
-    e.preventDefault();
-    processarBairros();
-  }
-});
-
-// Ao sair do campo, processa o que estiver lá
-inputBairros.addEventListener('blur', () => {
-  if(inputBairros.value.trim()) processarBairros();
-});
-
-// Processa vírgulas também enquanto digita (opcional, mas ajuda)
-inputBairros.addEventListener('input', () => {
-  if(inputBairros.value.includes(',')){
-    processarBairros();
-  }
-});
-
-window.removerBairro = removerBairro;
+// Ao digitar, esconde o erro (feedback imediato)
+inputBairros.addEventListener('input', esconderErroBairro);
 
 /* =====================================================
    MODAL WHATSAPP
@@ -1243,9 +1174,6 @@ $('waModal').addEventListener('click', (e) => { if(e.target === $('waModal')) fe
 ===================================================== */
 async function enviarSelecao(ev){
   ev.preventDefault();
-
-  // Processa bairros pendentes na textarea antes de validar
-  if(inputBairros.value.trim()) processarBairros();
 
   // 1) TIPO — obrigatório
   if(!state.tipo){
@@ -1273,14 +1201,17 @@ async function enviarSelecao(ev){
     return;
   }
 
-  // 3) BAIRROS
-  if(state.bairros.length === 0){
+  // 3) BAIRROS — parse da textarea
+  const bairrosList = parseBairros_();
+  if(bairrosList.length === 0){
     mostrarErroBairro();
     alert('Informe pelo menos uma região ou bairro de interesse.');
     inputBairros.scrollIntoView({behavior:'smooth', block:'center'});
+    inputBairros.focus();
     return;
   }
   esconderErroBairro();
+  state.bairros = bairrosList;
 
   // 4) NOME E TELEFONE
   const nome = $('nomeContato').value.trim();
@@ -1359,6 +1290,13 @@ function detectarNavegador(){
   else if(/Edg/i.test(ua)) nav = 'Edge';
   const disp = /Mobile|Android|iPhone|iPad/i.test(ua) ? 'Mobile' : 'Desktop';
   return nav + ' / ' + disp;
+}
+
+function esc(s){
+  return String(s || '')
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;')
+    .replace(/'/g,'&#39;');
 }
 
 function montarResumo(){
