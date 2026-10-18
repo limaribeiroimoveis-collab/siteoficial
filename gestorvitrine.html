@@ -3989,13 +3989,48 @@ function renderizarCorretoresNoCardGostei_(){
 function renderizarCorretoresNoCardClientes_(){
   const wrap = $('clientesCorretoresLista');
   if(!wrap) return;
+  
   const contagem = {};
+  
   state.clientes.forEach(c => {
     const corr = chaveCorretorExata_(c.corretor) || '(sem corretor)';
-    if(!contagem[corr]) contagem[corr] = 0;
-    contagem[corr]++;
+    const inativo = String(c.inativo || '').toLowerCase() === 'sim';
+    
+    if(!contagem[corr]) {
+      contagem[corr] = { total: 0, ativos: 0 };
+    }
+    contagem[corr].total++;
+    if(!inativo) {
+      contagem[corr].ativos++;
+    }
   });
-  wrap.innerHTML = montarPreviaCorretores_(contagem, 5);
+
+  const entradas = Object.entries(contagem).sort((a, b) => b[1].total - a[1].total);
+  if(entradas.length === 0) return;
+
+  const limite = 5;
+  const visiveis = entradas.slice(0, limite);
+  const restantes = entradas.length - visiveis.length;
+
+  let html = visiveis.map(([nome, dados]) => {
+    const cor = corDoCorretor(nome) || '#94a3b8';
+    return `
+      <div class="linha-corr">
+        <span class="nome-corr">
+          <span class="dot-corr" style="background:${cor};"></span>
+          ${esc(nome)}
+        </span>
+        <span class="num-corr" title="${dados.ativos} ativos de ${dados.total} totais">
+          ${dados.ativos}/${dados.total}
+        </span>
+      </div>`;
+  }).join('');
+  
+  if(restantes > 0){
+    html += `<div class="linha-corr mais-itens">+ ${restantes} corretor${restantes === 1 ? '' : 'es'}...</div>`;
+  }
+  
+  wrap.innerHTML = html;
 }
 
 async function carregarTarefas(mostrarLoading){
