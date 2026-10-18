@@ -4,12 +4,10 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Gestor · Indique e Ganhe · Lima Ribeiro</title>
-
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
@@ -58,13 +56,11 @@ body{background:var(--bg);font-family:'Inter',sans-serif;color:var(--texto);font
 .app{display:none;padding-bottom:40px}
 .app.active{display:block}
 .container{max-width:1400px;margin:0 auto;padding:24px}
-
-/* PAGE HEADER */
 .pg-head{margin-bottom:20px}
 .pg-head h1{font-size:22px;font-weight:700;letter-spacing:-.3px;margin-bottom:4px}
 .pg-head p{color:var(--texto-2);font-size:13px}
 
-/* STATS COMO FILTRO */
+/* STATS / FILTRO */
 .filtros{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:20px}
 .filtro-card{background:var(--card);border:1px solid var(--borda);border-radius:var(--r);padding:14px 16px;cursor:pointer;transition:var(--trans);position:relative;display:flex;flex-direction:column;gap:4px}
 .filtro-card:hover{border-color:var(--borda-forte);box-shadow:var(--sombra)}
@@ -95,7 +91,7 @@ body{background:var(--bg);font-family:'Inter',sans-serif;color:var(--texto);font
 .section-head h2 .count{background:var(--amarelo);color:#fff;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700}
 .section-head .sub{color:var(--texto-2);font-size:12px}
 
-/* GRID DE PENDENTES */
+/* CARDS PENDENTES */
 .pendentes-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:12px}
 .pend-card{background:var(--card);border:1px solid var(--borda);border-left:3px solid var(--amarelo);border-radius:var(--r);padding:14px 16px;transition:var(--trans)}
 .pend-card:hover{box-shadow:var(--sombra-md);border-color:var(--borda-forte);border-left-color:var(--amarelo)}
@@ -120,6 +116,12 @@ body{background:var(--bg);font-family:'Inter',sans-serif;color:var(--texto);font
 .btn-acao.primary:hover{background:var(--primario-hover);border-color:var(--primario-hover)}
 .btn-acao.danger{background:transparent;border-color:#fca5a5;color:var(--vermelho)}
 .btn-acao.danger:hover{background:var(--vermelho-suave)}
+
+/* BADGE LIBERAÇÃO */
+.pend-liberacao{display:inline-flex;align-items:center;gap:5px;background:var(--amarelo-suave);color:#92400e;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:600;margin-bottom:8px}
+.pend-liberacao.ok{background:var(--verde-suave);color:#065f46}
+.pend-liberacao.cancel{background:var(--vermelho-suave);color:#991b1b}
+.pend-liberacao i{font-size:11px}
 
 /* TABELA */
 .tabela-card{background:var(--card);border:1px solid var(--borda);border-radius:var(--r-lg);overflow:hidden}
@@ -149,13 +151,15 @@ tbody td{padding:11px 14px;vertical-align:middle;color:var(--texto)}
 .col-premio .val.pago{color:var(--verde)}
 .col-premio .val.parcial{color:var(--amarelo)}
 .col-premio .info-pg{font-size:10.5px;color:var(--texto-3);margin-top:2px}
+.col-premio .info-lib{font-size:10.5px;color:var(--amarelo);margin-top:3px;font-weight:600}
+.col-premio .info-lib.ok{color:var(--verde)}
+.col-premio .info-lib.cancel{color:var(--vermelho)}
 .col-acoes{width:160px}
 .acoes-wrap{display:flex;gap:4px;flex-wrap:wrap}
 .ico-btn{width:28px;height:28px;border-radius:5px;border:1px solid var(--borda-forte);background:var(--card);color:var(--texto-2);cursor:pointer;transition:var(--trans);display:inline-flex;align-items:center;justify-content:center;font-size:11px}
 .ico-btn:hover{background:var(--primario-suave);border-color:var(--primario);color:var(--primario)}
 .ico-btn.wsp{background:var(--verde);border-color:var(--verde);color:#fff}
 .ico-btn.wsp:hover{background:#047857;border-color:#047857;color:#fff}
-.ico-btn.danger:hover{background:var(--vermelho-suave);border-color:#fca5a5;color:var(--vermelho)}
 
 .badge{display:inline-flex;align-items:center;gap:5px;padding:4px 9px;border-radius:4px;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;white-space:nowrap}
 .badge::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0}
@@ -203,15 +207,13 @@ tbody td{padding:11px 14px;vertical-align:middle;color:var(--texto)}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .form-hint{font-size:11px;color:var(--texto-3);margin-top:3px}
 
-/* CÁLCULO PREVIEW */
 .calc-box{background:var(--primario-suave);border:1px solid #d1d9e3;border-radius:6px;padding:12px 14px;margin:14px 0}
 .calc-box .linha{display:flex;justify-content:space-between;font-size:12.5px;color:var(--texto-2);padding:3px 0}
 .calc-box .linha strong{color:var(--texto);font-weight:600}
 .calc-box .linha.total{border-top:1px solid #d1d9e3;margin-top:6px;padding-top:6px;font-size:14px;font-weight:700;color:var(--primario)}
 .calc-box .linha.total strong{color:var(--primario)}
 
-/* PAGAMENTOS */
-.pg-extrato{background:#fafbfc;border:1px solid var(--borda);border-radius:6px;padding:12px 14px;margin:14px 0;max-height:220px;overflow-y:auto}
+.pg-extrato{background:#fafbfc;border:1px solid var(--borda);border-radius:6px;padding:12px 14px;margin:14px 0;max-height:240px;overflow-y:auto}
 .pg-extrato .empty-pg{font-size:12px;color:var(--texto-3);text-align:center;padding:14px}
 .pg-item{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--borda);font-size:12.5px}
 .pg-item:last-child{border-bottom:none}
@@ -224,16 +226,12 @@ tbody td{padding:11px 14px;vertical-align:middle;color:var(--texto)}
 .pg-resumo .lbl{font-weight:600;color:var(--texto-2)}
 .pg-resumo .val{font-weight:700;color:var(--texto)}
 
-/* TOAST */
 .toast{position:fixed;bottom:20px;left:50%;transform:translate(-50%,80px);background:var(--primario);color:#fff;padding:10px 18px;border-radius:6px;font-size:13px;font-weight:500;box-shadow:0 8px 24px rgba(0,0,0,.15);z-index:2000;opacity:0;transition:all .25s;pointer-events:none;max-width:90vw;text-align:center}
 .toast.show{opacity:1;transform:translate(-50%,0)}
 .toast.success{background:var(--verde)}
 .toast.error{background:var(--vermelho)}
 
-/* RESPONSIVE */
-@media(max-width:1100px){
-  .filtros{grid-template-columns:repeat(3,1fr)}
-}
+@media(max-width:1100px){.filtros{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:768px){
   .topbar{padding:12px 16px}
   .brand-txt strong{font-size:13px}
@@ -253,18 +251,10 @@ tbody td{padding:11px 14px;vertical-align:middle;color:var(--texto)}
   .tabela-head{padding:12px 14px}
   .tabela-head input{width:100%;min-width:0}
 }
-@media(max-width:480px){
-  .filtros{grid-template-columns:repeat(2,1fr);gap:6px}
-  .filtro-card{padding:9px 10px}
-  .filtro-card .f-num{font-size:15px}
-  .filtro-card .f-label{font-size:9.5px;letter-spacing:.3px}
-  .topbar-right{gap:6px}
-}
 </style>
 </head>
 <body>
 
-<!-- ==================== LOGIN ==================== -->
 <div class="tela-login" id="telaLogin">
   <div class="login-card">
     <div class="logo-lg">LR</div>
@@ -276,7 +266,6 @@ tbody td{padding:11px 14px;vertical-align:middle;color:var(--texto)}
   </div>
 </div>
 
-<!-- ==================== APP ==================== -->
 <div class="app" id="app">
   <header class="topbar">
     <div class="topbar-inner">
@@ -300,41 +289,27 @@ tbody td{padding:11px 14px;vertical-align:middle;color:var(--texto)}
       <p>Gerencie todas as indicações, registre vendas e pagamentos.</p>
     </div>
 
-    <!-- STATS / FILTROS -->
     <div class="filtros" id="filtros">
       <div class="filtro-card t-pendente active" data-filtro="Pendente" onclick="setFiltro('Pendente')">
-        <span class="f-dot"></span>
-        <span class="f-num" id="stPendente">0</span>
-        <span class="f-label">Pendentes</span>
+        <span class="f-dot"></span><span class="f-num" id="stPendente">0</span><span class="f-label">Pendentes</span>
       </div>
       <div class="filtro-card t-captado" data-filtro="Imovel Captado" onclick="setFiltro('Imovel Captado')">
-        <span class="f-dot"></span>
-        <span class="f-num" id="stCaptado">0</span>
-        <span class="f-label">Imóveis captados</span>
+        <span class="f-dot"></span><span class="f-num" id="stCaptado">0</span><span class="f-label">Imóveis captados</span>
       </div>
       <div class="filtro-card t-ativo" data-filtro="Cliente Ativo" onclick="setFiltro('Cliente Ativo')">
-        <span class="f-dot"></span>
-        <span class="f-num" id="stAtivo">0</span>
-        <span class="f-label">Clientes ativos</span>
+        <span class="f-dot"></span><span class="f-num" id="stAtivo">0</span><span class="f-label">Clientes ativos</span>
       </div>
       <div class="filtro-card t-negociacao" data-filtro="Em Negociacao" onclick="setFiltro('Em Negociacao')">
-        <span class="f-dot"></span>
-        <span class="f-num" id="stNegociacao">0</span>
-        <span class="f-label">Em negociação</span>
+        <span class="f-dot"></span><span class="f-num" id="stNegociacao">0</span><span class="f-label">Em negociação</span>
       </div>
       <div class="filtro-card t-venda" data-filtro="Venda Concluida" onclick="setFiltro('Venda Concluida')">
-        <span class="f-dot"></span>
-        <span class="f-num" id="stVenda">0</span>
-        <span class="f-label">Vendas concluídas</span>
+        <span class="f-dot"></span><span class="f-num" id="stVenda">0</span><span class="f-label">Vendas concluídas</span>
       </div>
       <div class="filtro-card t-pagar" data-filtro="__aPagar" onclick="setFiltro('__aPagar')">
-        <span class="f-dot"></span>
-        <span class="f-num" id="stAPagar">R$ 0</span>
-        <span class="f-label">Total a pagar</span>
+        <span class="f-dot"></span><span class="f-num" id="stAPagar">R$ 0</span><span class="f-label">Total a pagar</span>
       </div>
     </div>
 
-    <!-- FILA DE PENDENTES -->
     <section class="section" id="secPendentes">
       <div class="section-head">
         <h2><i class="fas fa-inbox" style="color:var(--amarelo);"></i> Novas indicações <span class="count" id="countPendentes">0</span></h2>
@@ -343,7 +318,6 @@ tbody td{padding:11px 14px;vertical-align:middle;color:var(--texto)}
       <div class="pendentes-grid" id="pendentesGrid"></div>
     </section>
 
-    <!-- TABELA GERAL -->
     <section class="section" id="secTabela" style="display:none;">
       <div class="tabela-card">
         <div class="tabela-head">
@@ -368,28 +342,22 @@ tbody td{padding:11px 14px;vertical-align:middle;color:var(--texto)}
         </div>
       </div>
     </section>
-
   </div>
 </div>
 
-<!-- ==================== MODAL EDITAR ==================== -->
+<!-- MODAL EDITAR -->
 <div class="modal-bg" id="mEditar">
   <div class="modal">
     <div class="modal-head">
-      <div>
-        <h2 id="editTitulo">Editar indicação</h2>
-        <div class="sub">Altere os dados e o status. O prêmio será recalculado ao salvar.</div>
-      </div>
+      <div><h2 id="editTitulo">Editar indicação</h2><div class="sub">Altere os dados e o status. O prêmio será recalculado ao salvar.</div></div>
       <button class="modal-close" onclick="fecharModal('mEditar')">&times;</button>
     </div>
     <div class="modal-body">
       <input type="hidden" id="editId">
-
       <div class="form-row">
-        <div class="form-group">
-          <label>Status</label>
+        <div class="form-group"><label>Status</label>
           <select id="editStatus" onchange="previewEdit()">
-            <option value="Pendente">Pendente (em análise)</option>
+            <option value="Pendente">Pendente</option>
             <option value="Imovel Captado">Imóvel captado</option>
             <option value="Cliente Ativo">Cliente ativo</option>
             <option value="Em Negociacao">Em negociação</option>
@@ -397,96 +365,50 @@ tbody td{padding:11px 14px;vertical-align:middle;color:var(--texto)}
             <option value="Nao Efetivado">Não efetivado</option>
           </select>
         </div>
-        <div class="form-group">
-          <label>Valor da venda (R$)</label>
+        <div class="form-group"><label>Valor da venda (R$)</label>
           <input type="text" id="editValor" placeholder="0,00" inputmode="numeric" oninput="formatarValorInput(this); previewEdit();">
         </div>
       </div>
-
       <div class="form-row">
-        <div class="form-group">
-          <label>Origem da venda</label>
+        <div class="form-group"><label>Origem da venda</label>
           <select id="editOrigem" onchange="previewEdit()">
             <option value="">Selecione...</option>
             <option value="Nossa equipe">Nossa equipe</option>
             <option value="Terceiros">Terceiros</option>
           </select>
         </div>
-        <div class="form-group">
-          <label>Corretor responsável</label>
+        <div class="form-group"><label>Corretor responsável</label>
           <input type="text" id="editCorretor" placeholder="Nome do corretor">
         </div>
       </div>
-
       <div class="form-row">
-        <div class="form-group">
-          <label>Nome do indicador</label>
-          <input type="text" id="editIndNome">
-        </div>
-        <div class="form-group">
-          <label>Telefone do indicador</label>
-          <input type="text" id="editIndTel" inputmode="numeric" oninput="formatarTelefoneInput(this)">
-        </div>
+        <div class="form-group"><label>Nome do indicador</label><input type="text" id="editIndNome"></div>
+        <div class="form-group"><label>Telefone do indicador</label><input type="text" id="editIndTel" inputmode="numeric" oninput="formatarTelefoneInput(this)"></div>
       </div>
-
-      <!-- IMÓVEL -->
       <div id="blocoImovel">
-        <div class="form-group">
-          <label>Endereço do imóvel</label>
-          <input type="text" id="editEnd">
+        <div class="form-group"><label>Endereço do imóvel</label><input type="text" id="editEnd"></div>
+        <div class="form-row">
+          <div class="form-group"><label>Bairro</label><input type="text" id="editBairro"></div>
+          <div class="form-group"><label>Cidade</label><input type="text" id="editCidade"></div>
         </div>
         <div class="form-row">
-          <div class="form-group">
-            <label>Bairro</label>
-            <input type="text" id="editBairro">
-          </div>
-          <div class="form-group">
-            <label>Cidade</label>
-            <input type="text" id="editCidade">
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label>Proprietário</label>
-            <input type="text" id="editPropNome">
-          </div>
-          <div class="form-group">
-            <label>Telefone do proprietário</label>
-            <input type="text" id="editPropTel" inputmode="numeric" oninput="formatarTelefoneInput(this)">
-          </div>
+          <div class="form-group"><label>Proprietário</label><input type="text" id="editPropNome"></div>
+          <div class="form-group"><label>Telefone do proprietário</label><input type="text" id="editPropTel" inputmode="numeric" oninput="formatarTelefoneInput(this)"></div>
         </div>
       </div>
-
-      <!-- COMPRADOR -->
       <div id="blocoComprador" style="display:none;">
         <div class="form-row">
-          <div class="form-group">
-            <label>Nome do comprador</label>
-            <input type="text" id="editCompNome">
-          </div>
-          <div class="form-group">
-            <label>Telefone do comprador</label>
-            <input type="text" id="editCompTel" inputmode="numeric" oninput="formatarTelefoneInput(this)">
-          </div>
+          <div class="form-group"><label>Nome do comprador</label><input type="text" id="editCompNome"></div>
+          <div class="form-group"><label>Telefone do comprador</label><input type="text" id="editCompTel" inputmode="numeric" oninput="formatarTelefoneInput(this)"></div>
         </div>
-        <div class="form-group">
-          <label>Observação do comprador</label>
-          <input type="text" id="editCompObs" placeholder="O que procura...">
-        </div>
+        <div class="form-group"><label>Observação do comprador</label><input type="text" id="editCompObs"></div>
       </div>
-
-      <div class="form-group">
-        <label>Observações gerais</label>
-        <textarea id="editObs"></textarea>
-      </div>
-
+      <div class="form-group"><label>Observações gerais</label><textarea id="editObs"></textarea></div>
       <div class="calc-box">
         <div class="linha"><span>Prêmio de indicação:</span><strong id="calcInd">R$ 0,00</strong></div>
         <div class="linha"><span>Prêmio de venda:</span><strong id="calcVenda">R$ 0,00</strong></div>
         <div class="linha total"><span>Total devido:</span><strong id="calcTotal">R$ 0,00</strong></div>
       </div>
-
-      <!-- EXTRATO DE PAGAMENTOS -->
       <div class="form-group" style="margin-top:16px;">
         <label style="display:flex;justify-content:space-between;align-items:center;">
           <span>Pagamentos registrados</span>
@@ -499,81 +421,63 @@ tbody td{padding:11px 14px;vertical-align:middle;color:var(--texto)}
     </div>
     <div class="modal-foot">
       <button class="btn btn-ghost" onclick="fecharModal('mEditar')">Cancelar</button>
-      <button class="btn btn-primary" id="editBtn" onclick="salvarEdicao()">
-        <i class="fas fa-save"></i> Salvar alterações
-      </button>
+      <button class="btn btn-primary" id="editBtn" onclick="salvarEdicao()"><i class="fas fa-save"></i> Salvar alterações</button>
     </div>
   </div>
 </div>
 
-<!-- ==================== MODAL CONCLUIR VENDA ==================== -->
+<!-- MODAL CONCLUIR -->
 <div class="modal-bg" id="mConcluir">
   <div class="modal">
     <div class="modal-head">
-      <div>
-        <h2>Concluir venda</h2>
-        <div class="sub" id="cvInfoSub">—</div>
-      </div>
+      <div><h2>Concluir venda</h2><div class="sub" id="cvInfoSub">—</div></div>
       <button class="modal-close" onclick="fecharModal('mConcluir')">&times;</button>
     </div>
     <div class="modal-body">
       <input type="hidden" id="cvId">
-
       <div class="form-group">
         <label>Valor final da venda *</label>
         <input type="text" id="cvValor" placeholder="0,00" inputmode="numeric" oninput="formatarValorInput(this); previewConcluir();">
         <div class="form-hint">Digite apenas números — pontos e vírgulas são adicionados automaticamente.</div>
       </div>
-
       <div class="form-row">
-        <div class="form-group">
-          <label>Corretor responsável</label>
-          <input type="text" id="cvCorretor" placeholder="Nome do corretor">
-        </div>
-        <div class="form-group">
-          <label>Origem da venda *</label>
+        <div class="form-group"><label>Corretor responsável</label><input type="text" id="cvCorretor"></div>
+        <div class="form-group"><label>Origem da venda *</label>
           <select id="cvOrigem" onchange="previewConcluir()">
             <option value="Nossa equipe">Nossa equipe</option>
             <option value="Terceiros">Terceiros</option>
           </select>
         </div>
       </div>
-
       <div class="calc-box">
         <div class="linha"><span>Prêmio de indicação:</span><strong id="cvCalcInd">R$ 0,00</strong></div>
         <div class="linha"><span>Prêmio de venda:</span><strong id="cvCalcVenda">R$ 0,00</strong></div>
         <div class="linha total"><span>Total a pagar:</span><strong id="cvCalcTotal">R$ 0,00</strong></div>
       </div>
+      <div id="cvLibInfo" style="font-size:12px;color:var(--texto-2);text-align:center;margin-top:6px;"></div>
     </div>
     <div class="modal-foot">
       <button class="btn btn-ghost" onclick="fecharModal('mConcluir')">Cancelar</button>
-      <button class="btn btn-verde" id="cvBtn" onclick="confirmarConcluir()">
-        <i class="fas fa-check"></i> Confirmar venda
-      </button>
+      <button class="btn btn-verde" id="cvBtn" onclick="confirmarConcluir()"><i class="fas fa-check"></i> Confirmar venda</button>
     </div>
   </div>
 </div>
 
-<!-- ==================== MODAL PAGAR ==================== -->
+<!-- MODAL PAGAR -->
 <div class="modal-bg" id="mPagar">
   <div class="modal">
     <div class="modal-head">
-      <div>
-        <h2>Registrar pagamento</h2>
-        <div class="sub" id="pgInfoSub">—</div>
-      </div>
+      <div><h2>Registrar pagamento</h2><div class="sub" id="pgInfoSub">—</div></div>
       <button class="modal-close" onclick="fecharModal('mPagar')">&times;</button>
     </div>
     <div class="modal-body">
       <input type="hidden" id="pgId">
-
+      <div id="pgSaldoInfo" style="font-size:12.5px;color:var(--texto-2);background:var(--primario-suave);border-radius:5px;padding:10px 12px;margin-bottom:14px;"></div>
       <div class="form-row">
-        <div class="form-group">
-          <label>Valor a pagar (R$) *</label>
+        <div class="form-group"><label>Valor a pagar (R$) *</label>
           <input type="text" id="pgValor" placeholder="0,00" inputmode="numeric" oninput="formatarValorInput(this)">
         </div>
-        <div class="form-group">
-          <label>Tipo</label>
+        <div class="form-group"><label>Tipo</label>
           <select id="pgTipo">
             <option value="Indicacao">Indicação (R$ 50)</option>
             <option value="Venda">Venda</option>
@@ -581,25 +485,15 @@ tbody td{padding:11px 14px;vertical-align:middle;color:var(--texto)}
           </select>
         </div>
       </div>
-
-      <div class="form-group">
-        <label>Chave PIX do indicador</label>
+      <div class="form-group"><label>Chave PIX do indicador</label>
         <input type="text" id="pgPix" placeholder="CPF, telefone, e-mail ou chave aleatória">
         <div class="form-hint">Deixe em branco se não souber — pode preencher depois.</div>
       </div>
-
-      <div class="form-group">
-        <label>Observação (opcional)</label>
-        <input type="text" id="pgObs" placeholder="Ex: pagamento referente ao imóvel X">
-      </div>
-
-      <div id="pgSaldoInfo" style="font-size:12.5px;color:var(--texto-2);background:var(--primario-suave);border-radius:5px;padding:10px 12px;margin-bottom:12px;"></div>
+      <div class="form-group"><label>Observação (opcional)</label><input type="text" id="pgObs"></div>
     </div>
     <div class="modal-foot">
       <button class="btn btn-ghost" onclick="fecharModal('mPagar')">Cancelar</button>
-      <button class="btn btn-primary" id="pgBtn" onclick="confirmarPagar()">
-        <i class="fas fa-check"></i> Confirmar pagamento
-      </button>
+      <button class="btn btn-primary" id="pgBtn" onclick="confirmarPagar()"><i class="fas fa-check"></i> Confirmar pagamento</button>
     </div>
   </div>
 </div>
@@ -607,402 +501,243 @@ tbody td{padding:11px 14px;vertical-align:middle;color:var(--texto)}
 <div class="toast" id="toast"></div>
 
 <script>
-/* ============================================================
- * CONFIG
- * ============================================================ */
 const API = 'https://script.google.com/macros/s/AKfycbx39tA1um2e37ksFXUeo8cKKdRaZtIPcHl_NhI_hexm64NFA_UexVZADeTpQg8UdSoi_g/exec';
-const KEY = 'lr_gestor_indique_v2';
-
-let autenticado = false;
+const KEY = 'lr_gestor_indique_v6';
 let todas = [];
 let filtroAtual = 'Pendente';
 let busca = '';
 let editandoId = null;
-
 const $ = id => document.getElementById(id);
 const num = v => String(v||'').replace(/\D/g,'');
 
-/* ============================================================
- * HELPERS
- * ============================================================ */
-function fmtBRL(v){
-  const n = Number(v) || 0;
-  return n.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
-}
-function fmtTel(v){
-  const n = num(v);
-  if(n.length===11) return `(${n.slice(0,2)}) ${n.slice(2,3)} ${n.slice(3,7)}-${n.slice(7)}`;
-  if(n.length===10) return `(${n.slice(0,2)}) ${n.slice(2,6)}-${n.slice(6)}`;
-  return v || '';
-}
-function fmtData(iso){
-  if(!iso) return '—';
-  try{const d=new Date(iso);if(isNaN(d))return iso;
-    return d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'2-digit'});}catch(e){return iso;}
-}
-function fmtDataHora(iso){
-  if(!iso) return '—';
-  try{const d=new Date(iso);if(isNaN(d))return iso;
-    return d.toLocaleDateString('pt-BR')+' '+d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});}catch(e){return iso;}
-}
-function toast(msg, tipo=''){
-  const t = $('toast');
-  t.textContent = msg;
-  t.className = 'toast show ' + tipo;
-  clearTimeout(t._timer);
-  t._timer = setTimeout(() => t.classList.remove('show'), 3500);
-}
+function fmtBRL(v){ return (Number(v)||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'}); }
+function fmtTel(v){ const n=num(v); if(n.length===11)return `(${n.slice(0,2)}) ${n.slice(2,3)} ${n.slice(3,7)}-${n.slice(7)}`; if(n.length===10)return `(${n.slice(0,2)}) ${n.slice(2,6)}-${n.slice(6)}`; return v||''; }
+function fmtData(iso){ if(!iso)return '—'; try{const d=new Date(iso);if(isNaN(d))return iso;return d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'2-digit'});}catch(e){return iso;} }
+function fmtDataHora(iso){ if(!iso)return '—'; try{const d=new Date(iso);if(isNaN(d))return iso;return d.toLocaleDateString('pt-BR')+' '+d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});}catch(e){return iso;} }
+function toast(msg,tipo=''){const t=$('toast');t.textContent=msg;t.className='toast show '+tipo;clearTimeout(t._timer);t._timer=setTimeout(()=>t.classList.remove('show'),4000);}
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
-/* ============================================================
- * FORMATAÇÃO DE MOEDA AO DIGITAR
- * ============================================================ */
 function formatarValorInput(inp){
   let v = inp.value.replace(/\D/g,'');
-  if(!v){ inp.value = ''; return; }
-  // Trabalha como centavos: "650000" → "6.500,00"
+  if(!v){inp.value='';return;}
   v = v.padStart(3,'0');
   const inteiro = v.slice(0,-2).replace(/\B(?=(\d{3})+(?!\d))/g,'.');
-  const dec = v.slice(-2);
-  inp.value = inteiro + ',' + dec;
+  inp.value = inteiro + ',' + v.slice(-2);
 }
-function parseValor(str){
-  if(!str) return 0;
-  const limpo = String(str).replace(/\./g,'').replace(',','.');
-  return parseFloat(limpo) || 0;
-}
+function parseValor(str){ if(!str)return 0; return parseFloat(String(str).replace(/\./g,'').replace(',','.')) || 0; }
 function formatarTelefoneInput(inp){
   let v = inp.value.replace(/\D/g,'').slice(0,11);
   if(!v){inp.value='';return;}
-  if(v.length<=2) inp.value = '('+v;
-  else if(v.length<=6) inp.value = '('+v.slice(0,2)+') '+v.slice(2);
-  else if(v.length<=10) inp.value = '('+v.slice(0,2)+') '+v.slice(2,6)+'-'+v.slice(6);
-  else inp.value = '('+v.slice(0,2)+') '+v.slice(2,7)+'-'+v.slice(7);
+  if(v.length<=2) inp.value='('+v;
+  else if(v.length<=6) inp.value='('+v.slice(0,2)+') '+v.slice(2);
+  else if(v.length<=10) inp.value='('+v.slice(0,2)+') '+v.slice(2,6)+'-'+v.slice(6);
+  else inp.value='('+v.slice(0,2)+') '+v.slice(2,7)+'-'+v.slice(7);
 }
 
-/* ============================================================
- * API
- * ============================================================ */
-async function apiGet(action, params={}){
+async function apiGet(action,params={}){
   const qs = new URLSearchParams({action,_t:Date.now(),...params}).toString();
-  const ctl = new AbortController();
-  const t = setTimeout(()=>ctl.abort(),25000);
-  try{
-    const r = await fetch(API+'?'+qs,{method:'GET',redirect:'follow',signal:ctl.signal});
-    clearTimeout(t);
-    if(!r.ok) throw new Error('HTTP '+r.status);
-    return await r.json();
-  }catch(e){clearTimeout(t);throw e;}
+  const ctl = new AbortController(); const t = setTimeout(()=>ctl.abort(),25000);
+  try{const r=await fetch(API+'?'+qs,{method:'GET',redirect:'follow',signal:ctl.signal});clearTimeout(t);if(!r.ok)throw new Error('HTTP '+r.status);return await r.json();}catch(e){clearTimeout(t);throw e;}
 }
-async function apiPost(action, body){
+async function apiPost(action,body){
   const url = API+'?action='+encodeURIComponent(action)+'&_t='+Date.now();
-  try{
-    const r = await fetch(url,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(body),redirect:'follow'});
-    if(!r.ok) throw new Error('HTTP '+r.status);
-    return await r.json();
-  }catch(e){throw e;}
+  try{const r=await fetch(url,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(body),redirect:'follow'});if(!r.ok)throw new Error('HTTP '+r.status);return await r.json();}catch(e){throw e;}
 }
 
-/* ============================================================
- * LOGIN
- * ============================================================ */
 async function entrar(){
   const senha = $('senhaGestor').value.trim();
-  if(!senha){ return; }
-  const btn = $('btnEntrar');
-  btn.disabled = true; btn.textContent = 'Verificando...';
+  if(!senha) return;
+  const btn = $('btnEntrar'); btn.disabled=true; btn.textContent='Verificando...';
   $('loginErro').classList.remove('show');
   try{
     const res = await apiPost('loginGestor',{senha});
-    if(res.status==='success' && res.role==='gestor'){
-      localStorage.setItem(KEY,'1');
-      autenticado = true;
-      iniciarApp();
-    } else {
-      $('loginErro').textContent = res.error || 'Senha incorreta.';
-      $('loginErro').classList.add('show');
-    }
-  }catch(e){
-    $('loginErro').textContent = 'Erro de conexão. Tente novamente.';
-    $('loginErro').classList.add('show');
-  }finally{
-    btn.disabled = false; btn.textContent = 'Entrar';
-  }
+    if(res.status==='success' && res.role==='gestor'){ localStorage.setItem(KEY,'1'); iniciarApp(); }
+    else { $('loginErro').textContent = res.error || 'Senha incorreta.'; $('loginErro').classList.add('show'); }
+  }catch(e){ $('loginErro').textContent = 'Erro de conexão.'; $('loginErro').classList.add('show'); }
+  finally{ btn.disabled=false; btn.textContent='Entrar'; }
 }
 $('senhaGestor').addEventListener('keydown', e => { if(e.key==='Enter') entrar(); });
 
-function sair(){
-  localStorage.removeItem(KEY);
-  autenticado = false;
-  todas = [];
-  $('app').classList.remove('active');
-  $('telaLogin').style.display = 'flex';
-  $('senhaGestor').value = '';
-}
+function sair(){ localStorage.removeItem(KEY); todas=[]; $('app').classList.remove('active'); $('telaLogin').style.display='flex'; $('senhaGestor').value=''; }
 
 function iniciarApp(){
-  $('telaLogin').style.display = 'none';
+  $('telaLogin').style.display='none';
   $('app').classList.add('active');
-  filtroAtual = 'Pendente';
-  document.querySelectorAll('.filtro-card').forEach(c => {
-    c.classList.toggle('active', c.dataset.filtro === 'Pendente');
-  });
+  filtroAtual='Pendente';
+  document.querySelectorAll('.filtro-card').forEach(c => c.classList.toggle('active', c.dataset.filtro==='Pendente'));
   carregarTudo();
 }
 
-/* ============================================================
- * CARREGAR
- * ============================================================ */
 async function carregarTudo(){
   try{
     const res = await apiGet('listAll');
-    if(res.status==='success' && Array.isArray(res.data)){
-      todas = res.data;
-      renderTudo();
-    } else {
-      toast('Erro ao carregar dados.', 'error');
-    }
-  }catch(e){ toast('Erro de conexão.', 'error'); }
+    if(res.status==='success' && Array.isArray(res.data)){ todas=res.data; renderTudo(); }
+    else { toast('Erro ao carregar dados.','error'); }
+  }catch(e){ toast('Erro de conexão.','error'); }
 }
 
-function renderTudo(){
-  renderStats();
-  renderPendentes();
-  renderTabela();
-}
+function renderTudo(){ renderStats(); renderPendentes(); renderTabela(); }
 
-/* ============================================================
- * STATS
- * ============================================================ */
 function renderStats(){
-  const c = (st) => todas.filter(i => i.Status === st).length;
+  const c = st => todas.filter(i => i.Status===st).length;
   $('stPendente').textContent = c('Pendente');
   $('stCaptado').textContent = c('Imovel Captado');
   $('stAtivo').textContent = c('Cliente Ativo');
   $('stNegociacao').textContent = c('Em Negociacao');
   $('stVenda').textContent = c('Venda Concluida');
-
   const aPagar = todas.reduce((acc,i)=>{
-    const total = Number(i.PremioTotal) || 0;
-    const pago = Number(i.TotalPago) || 0;
-    return acc + Math.max(0, total - pago);
+    if(i.Status==='Nao Efetivado') return acc;
+    const disponivel = Number(i.PremioDisponivel)||0;
+    const pago = Number(i.TotalPago)||0;
+    return acc + Math.max(0, disponivel - pago);
   },0);
   $('stAPagar').textContent = fmtBRL(aPagar);
   $('countPendentes').textContent = c('Pendente');
 }
 
-/* ============================================================
- * FILTRO
- * ============================================================ */
 function setFiltro(f){
-  filtroAtual = f;
-  document.querySelectorAll('.filtro-card').forEach(c => {
-    c.classList.toggle('active', c.dataset.filtro === f);
-  });
-  if(f === 'Pendente'){
-    $('secPendentes').style.display = '';
-    $('secTabela').style.display = 'none';
-  } else {
-    $('secPendentes').style.display = 'none';
-    $('secTabela').style.display = '';
-    $('tabelaTitulo').textContent = labelFiltro(f);
-    renderTabela();
-  }
+  filtroAtual=f;
+  document.querySelectorAll('.filtro-card').forEach(c => c.classList.toggle('active', c.dataset.filtro===f));
+  if(f==='Pendente'){ $('secPendentes').style.display=''; $('secTabela').style.display='none'; }
+  else { $('secPendentes').style.display='none'; $('secTabela').style.display=''; $('tabelaTitulo').textContent = labelFiltro(f); renderTabela(); }
 }
 function irParaPendentes(){ setFiltro('Pendente'); window.scrollTo({top:0,behavior:'smooth'}); }
+function labelFiltro(f){ return {'Pendente':'Indicações pendentes','Imovel Captado':'Imóveis captados','Cliente Ativo':'Clientes ativos','Em Negociacao':'Em negociação','Venda Concluida':'Vendas concluídas','__aPagar':'Com saldo a pagar'}[f]||'Indicações'; }
+function aplicarBusca(){ busca=($('busca').value||'').toLowerCase().trim(); renderTabela(); }
 
-function labelFiltro(f){
-  const map = {
-    'Pendente':'Indicações pendentes',
-    'Imovel Captado':'Imóveis captados',
-    'Cliente Ativo':'Clientes ativos',
-    'Em Negociacao':'Em negociação',
-    'Venda Concluida':'Vendas concluídas',
-    '__aPagar':'Com saldo a pagar'
-  };
-  return map[f] || 'Indicações';
-}
-function aplicarBusca(){
-  busca = ($('busca').value || '').toLowerCase().trim();
-  renderTabela();
+function renderLibBadge(lib){
+  if(!lib || !lib.aplica) return '';
+  if(lib.msg==='Cancelado') return `<div class="pend-liberacao cancel"><i class="fas fa-ban"></i> Cancelado</div>`;
+  if(lib.msg==='Aguardando captação') return `<div class="pend-liberacao"><i class="fas fa-clock"></i> Aguardando captação</div>`;
+  if(lib.liberado) return `<div class="pend-liberacao ok"><i class="fas fa-check-circle"></i> Liberado</div>`;
+  const dataFmt = lib.dataLiberacao ? fmtData(lib.dataLiberacao) : '';
+  return `<div class="pend-liberacao"><i class="fas fa-hourglass-half"></i> Faltam ${lib.diasRestantes} dia(s) útil(eis)${dataFmt ? ' · libera em '+dataFmt : ''}</div>`;
 }
 
-/* ============================================================
- * PENDENTES (prioriza dados do INDICADO)
- * ============================================================ */
 function renderPendentes(){
-  const pend = todas.filter(i => i.Status === 'Pendente')
-    .sort((a,b)=> new Date(b.DataIndicacao||0) - new Date(a.DataIndicacao||0));
+  const pend = todas.filter(i => i.Status==='Pendente').sort((a,b)=> new Date(b.DataIndicacao||0) - new Date(a.DataIndicacao||0));
   const grid = $('pendentesGrid');
-  if(!pend.length){
-    grid.innerHTML = `<div class="empty" style="grid-column:1/-1"><i class="fas fa-check-circle" style="color:var(--verde)"></i><p>Nenhuma indicação pendente. Tudo em dia.</p></div>`;
-    return;
-  }
+  if(!pend.length){ grid.innerHTML = `<div class="empty" style="grid-column:1/-1"><i class="fas fa-check-circle" style="color:var(--verde)"></i><p>Nenhuma indicação pendente. Tudo em dia.</p></div>`; return; }
   grid.innerHTML = pend.map(i => pendCardHTML(i)).join('');
 }
 
 function pendCardHTML(i){
-  const isImovel = i.Tipo === 'Imovel';
+  const isImovel = i.Tipo==='Imovel';
   const data = fmtDataHora(i.DataIndicacao);
-  const indicadorNome = i.IndicadorNome || '—';
+  const libHtml = renderLibBadge(i.Liberacao);
 
   if(isImovel){
-    const endereco = i.EnderecoImovel || '—';
-    const bairro = i.Bairro || '';
-    const cidade = i.Cidade || '';
-    const propNome = i.ProprietarioNome || '—';
     const propTel = num(i.ProprietarioTelefone);
-    const obs = i.Observacoes || '';
     return `
       <div class="pend-card">
         <div class="pend-top">
           <span class="pend-tipo"><i class="fas fa-home"></i> Imóvel</span>
           <span class="pend-data">${data}</span>
         </div>
-        <h3>${esc(endereco)}</h3>
+        <h3>${esc(i.EnderecoImovel||'—')}</h3>
         <div class="pend-info">
-          ${bairro||cidade ? `<div class="row"><i class="fas fa-map-marker-alt"></i> <span>${esc([bairro,cidade].filter(Boolean).join(' · '))}</span></div>` : ''}
-          <div class="row"><i class="fas fa-user-tie"></i> <span>Proprietário: <strong>${esc(propNome)}</strong></span></div>
-          ${propTel ? `<div class="row"><i class="fas fa-phone"></i>
-            <a href="https://wa.me/55${propTel}" target="_blank" class="tel-link">
-              <i class="fab fa-whatsapp" style="color:var(--verde);font-size:12px;"></i> ${fmtTel(propTel)}
-            </a>
-          </div>` : ''}
-          ${obs ? `<div class="row"><i class="fas fa-comment-alt"></i> <span>${esc(obs)}</span></div>` : ''}
+          ${(i.Bairro||i.Cidade)?`<div class="row"><i class="fas fa-map-marker-alt"></i> <span>${esc([i.Bairro,i.Cidade].filter(Boolean).join(' · '))}</span></div>`:''}
+          <div class="row"><i class="fas fa-user-tie"></i> <span>Proprietário: <strong>${esc(i.ProprietarioNome||'—')}</strong></span></div>
+          ${propTel?`<div class="row"><i class="fas fa-phone"></i><a href="https://wa.me/55${propTel}" target="_blank" class="tel-link"><i class="fab fa-whatsapp" style="color:var(--verde);font-size:12px;"></i> ${fmtTel(propTel)}</a></div>`:''}
+          ${i.Observacoes?`<div class="row"><i class="fas fa-comment-alt"></i> <span>${esc(i.Observacoes)}</span></div>`:''}
         </div>
+        ${libHtml}
         <div class="pend-actions">
-          ${propTel ? `<button class="btn-acao wsp" onclick="abrirZapIndicado('${propTel}')"><i class="fab fa-whatsapp"></i> Contatar</button>` : ''}
+          ${propTel?`<button class="btn-acao wsp" onclick="abrirZapIndicado('${propTel}')"><i class="fab fa-whatsapp"></i> Contatar</button>`:''}
           <button class="btn-acao primary" onclick="mudarStatus(${i.ID},'Imovel Captado')"><i class="fas fa-home"></i> Captado</button>
           <button class="btn-acao" onclick="mudarStatus(${i.ID},'Em Negociacao')"><i class="fas fa-handshake"></i> Negociação</button>
           <button class="btn-acao" onclick="abrirConcluir(${i.ID})"><i class="fas fa-check"></i> Venda</button>
           <button class="btn-acao" onclick="abrirEditar(${i.ID})"><i class="fas fa-edit"></i> Editar</button>
           <button class="btn-acao danger" onclick="mudarStatus(${i.ID},'Nao Efetivado')"><i class="fas fa-times"></i></button>
         </div>
-      </div>
-    `;
+      </div>`;
   }
 
-  // Comprador
-  const compNome = i.CompradorNome || '—';
   const compTel = num(i.CompradorTelefone);
-  const compObs = i.CompradorObservacao || '';
-  const obs = i.Observacoes || '';
   return `
     <div class="pend-card">
       <div class="pend-top">
         <span class="pend-tipo comprador"><i class="fas fa-user-tie"></i> Comprador</span>
         <span class="pend-data">${data}</span>
       </div>
-      <h3>${esc(compNome)}</h3>
+      <h3>${esc(i.CompradorNome||'—')}</h3>
       <div class="pend-info">
-        ${compTel ? `<div class="row"><i class="fas fa-phone"></i>
-          <a href="https://wa.me/55${compTel}" target="_blank" class="tel-link">
-            <i class="fab fa-whatsapp" style="color:var(--verde);font-size:12px;"></i> ${fmtTel(compTel)}
-          </a>
-        </div>` : ''}
-        ${compObs ? `<div class="row"><i class="fas fa-search"></i> <span>Procura: ${esc(compObs)}</span></div>` : ''}
-        ${obs ? `<div class="row"><i class="fas fa-comment-alt"></i> <span>${esc(obs)}</span></div>` : ''}
+        ${compTel?`<div class="row"><i class="fas fa-phone"></i><a href="https://wa.me/55${compTel}" target="_blank" class="tel-link"><i class="fab fa-whatsapp" style="color:var(--verde);font-size:12px;"></i> ${fmtTel(compTel)}</a></div>`:''}
+        ${i.CompradorObservacao?`<div class="row"><i class="fas fa-search"></i> <span>Procura: ${esc(i.CompradorObservacao)}</span></div>`:''}
+        ${i.Observacoes?`<div class="row"><i class="fas fa-comment-alt"></i> <span>${esc(i.Observacoes)}</span></div>`:''}
       </div>
+      ${libHtml}
       <div class="pend-actions">
-        ${compTel ? `<button class="btn-acao wsp" onclick="abrirZapIndicado('${compTel}')"><i class="fab fa-whatsapp"></i> Contatar</button>` : ''}
+        ${compTel?`<button class="btn-acao wsp" onclick="abrirZapIndicado('${compTel}')"><i class="fab fa-whatsapp"></i> Contatar</button>`:''}
         <button class="btn-acao primary" onclick="mudarStatus(${i.ID},'Cliente Ativo')"><i class="fas fa-user-check"></i> Ativo</button>
         <button class="btn-acao" onclick="mudarStatus(${i.ID},'Em Negociacao')"><i class="fas fa-handshake"></i> Negociação</button>
         <button class="btn-acao" onclick="abrirConcluir(${i.ID})"><i class="fas fa-check"></i> Venda</button>
         <button class="btn-acao" onclick="abrirEditar(${i.ID})"><i class="fas fa-edit"></i> Editar</button>
         <button class="btn-acao danger" onclick="mudarStatus(${i.ID},'Nao Efetivado')"><i class="fas fa-times"></i></button>
       </div>
-    </div>
-  `;
+    </div>`;
 }
 
-function abrirZapIndicado(tel){
-  const t = num(tel);
-  if(!t) return;
-  const full = t.startsWith('55') ? t : '55'+t;
-  window.open('https://wa.me/'+full,'_blank');
-}
+function abrirZapIndicado(tel){ const t=num(tel); if(!t)return; window.open('https://wa.me/'+(t.startsWith('55')?t:'55'+t),'_blank'); }
 
-/* ============================================================
- * TABELA
- * ============================================================ */
 function renderTabela(){
   let lista = [...todas];
-
-  if(filtroAtual === '__aPagar'){
-    lista = lista.filter(i => {
-      const total = Number(i.PremioTotal) || 0;
-      const pago = Number(i.TotalPago) || 0;
-      return total > 0 && (total - pago) > 0;
+  if(filtroAtual==='__aPagar'){
+    lista = lista.filter(i=>{
+      if(i.Status==='Nao Efetivado') return false;
+      const disp = Number(i.PremioDisponivel)||0;
+      const pago = Number(i.TotalPago)||0;
+      return (disp - pago) > 0;
     });
-  } else if(filtroAtual !== 'all'){
-    lista = lista.filter(i => i.Status === filtroAtual);
+  } else if(filtroAtual!=='all'){
+    lista = lista.filter(i => i.Status===filtroAtual);
   }
-
   if(busca){
-    const b = busca;
-    const bNum = num(busca);
-    lista = lista.filter(i => {
-      const campos = [
-        i.IndicadorNome, i.IndicadorTelefone,
-        i.ProprietarioNome, i.ProprietarioTelefone,
-        i.CompradorNome, i.CompradorTelefone,
-        i.EnderecoImovel, i.Bairro, i.Cidade
-      ].map(c => String(c||'').toLowerCase());
-      if(campos.some(c => c.includes(b))) return true;
-      if(bNum){
-        const tels = [i.IndicadorTelefone,i.ProprietarioTelefone,i.CompradorTelefone].map(num);
-        if(tels.some(t => t.includes(bNum))) return true;
-      }
+    const b = busca, bNum = num(busca);
+    lista = lista.filter(i=>{
+      const campos = [i.IndicadorNome,i.IndicadorTelefone,i.ProprietarioNome,i.ProprietarioTelefone,i.CompradorNome,i.CompradorTelefone,i.EnderecoImovel,i.Bairro,i.Cidade].map(c=>String(c||'').toLowerCase());
+      if(campos.some(c=>c.includes(b))) return true;
+      if(bNum){ const tels = [i.IndicadorTelefone,i.ProprietarioTelefone,i.CompradorTelefone].map(num); if(tels.some(t=>t.includes(bNum))) return true; }
       return false;
     });
   }
-
   lista.sort((a,b)=> new Date(b.DataIndicacao||0) - new Date(a.DataIndicacao||0));
-
   const tbody = $('tabelaBody');
-  if(!lista.length){
-    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--texto-3);font-size:13px;"><i class="fas fa-inbox" style="font-size:24px;display:block;margin-bottom:8px;opacity:.5;"></i>Nenhuma indicação encontrada</td></tr>`;
-    return;
-  }
-
+  if(!lista.length){ tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--texto-3);font-size:13px;"><i class="fas fa-inbox" style="font-size:24px;display:block;margin-bottom:8px;opacity:.5;"></i>Nenhuma indicação encontrada</td></tr>`; return; }
   tbody.innerHTML = lista.map(i => tabelaRowHTML(i)).join('');
 }
 
 function tabelaRowHTML(i){
-  const isImovel = i.Tipo === 'Imovel';
-  const indicNome = esc(i.IndicadorNome || '—');
-  const indicTel = fmtTel(i.IndicadorTelefone || '');
+  const isImovel = i.Tipo==='Imovel';
   const detalhes = isImovel
-    ? `<div class="end">${esc(i.EnderecoImovel||'—')}</div><div class="sub">${esc([i.Bairro,i.Cidade].filter(Boolean).join(' · '))||''}${i.ProprietarioNome ? ' · '+esc(i.ProprietarioNome) : ''}</div>`
-    : `<div class="end">${esc(i.CompradorNome||'—')}</div><div class="sub">${fmtTel(i.CompradorTelefone||'')}${i.CompradorObservacao ? ' · '+esc(i.CompradorObservacao) : ''}</div>`;
+    ? `<div class="end">${esc(i.EnderecoImovel||'—')}</div><div class="sub">${esc([i.Bairro,i.Cidade].filter(Boolean).join(' · '))||''}${i.ProprietarioNome?' · '+esc(i.ProprietarioNome):''}</div>`
+    : `<div class="end">${esc(i.CompradorNome||'—')}</div><div class="sub">${fmtTel(i.CompradorTelefone||'')}${i.CompradorObservacao?' · '+esc(i.CompradorObservacao):''}</div>`;
 
-  const total = Number(i.PremioTotal) || 0;
-  const pago = Number(i.TotalPago) || 0;
-  const saldo = total - pago;
+  const total = Number(i.PremioTotal)||0;
+  const disp = Number(i.PremioDisponivel)||0;
+  const pago = Number(i.TotalPago)||0;
+  const lib = i.Liberacao||{};
+
   let premioHtml = '<span style="color:var(--texto-3);font-size:12px;">—</span>';
-  if(total > 0){
-    let cls = 'val';
-    if(pago >= total && total > 0) cls += ' pago';
-    else if(pago > 0) cls += ' parcial';
+  if(total>0){
+    let cls='val';
+    if(pago>=total && total>0) cls+=' pago';
+    else if(pago>0) cls+=' parcial';
     premioHtml = `<div class="${cls}">${fmtBRL(total)}</div>`;
-    if(pago > 0){
-      premioHtml += `<div class="info-pg">Pago: ${fmtBRL(pago)} · Falta: ${fmtBRL(saldo)}</div>`;
-    }
+    if(lib.msg==='Cancelado') premioHtml += `<div class="info-lib cancel"><i class="fas fa-ban"></i> Cancelado</div>`;
+    else if(lib.liberado) premioHtml += `<div class="info-lib ok"><i class="fas fa-check-circle"></i> Liberado: ${fmtBRL(disp)}</div>`;
+    else if(lib.diasRestantes!=null) premioHtml += `<div class="info-lib"><i class="fas fa-hourglass-half"></i> Faltam ${lib.diasRestantes} dia(s) útil(eis)</div>`;
+    else if(lib.msg) premioHtml += `<div class="info-lib"><i class="fas fa-clock"></i> ${esc(lib.msg)}</div>`;
+    if(pago>0) premioHtml += `<div class="info-pg">Pago: ${fmtBRL(pago)} · Falta: ${fmtBRL(Math.max(0,disp-pago))}</div>`;
   }
 
-  const indicadoTel = isImovel ? i.ProprietarioTelefone : i.CompradorTelefone;
-  const telLimpo = num(indicadoTel);
+  const telIndicado = num(isImovel ? i.ProprietarioTelefone : i.CompradorTelefone);
 
   return `
     <tr>
       <td class="col-id">#${i.ID}</td>
-      <td class="col-indicador">
-        <div class="nome">${indicNome}</div>
-        <div class="tel">${indicTel}</div>
-      </td>
-      <td class="col-tipo">
-        <span class="badge ${isImovel?'tipo-imovel':'tipo-comprador'}">${isImovel?'Imóvel':'Comprador'}</span>
-      </td>
+      <td class="col-indicador"><div class="nome">${esc(i.IndicadorNome||'—')}</div><div class="tel">${fmtTel(i.IndicadorTelefone||'')}</div></td>
+      <td class="col-tipo"><span class="badge ${isImovel?'tipo-imovel':'tipo-comprador'}">${isImovel?'Imóvel':'Comprador'}</span></td>
       <td class="col-detalhes">${detalhes}</td>
       <td class="col-status"><span class="badge ${badgeCls(i.Status)}">${labelStatus(i.Status)}</span></td>
       <td class="col-premio">${premioHtml}</td>
@@ -1011,83 +746,56 @@ function tabelaRowHTML(i){
           <button class="ico-btn" onclick="abrirEditar(${i.ID})" title="Editar"><i class="fas fa-edit"></i></button>
           <button class="ico-btn" onclick="abrirConcluir(${i.ID})" title="Concluir venda"><i class="fas fa-check"></i></button>
           <button class="ico-btn" onclick="abrirModalPagar(${i.ID})" title="Registrar pagamento"><i class="fas fa-dollar-sign"></i></button>
-          ${telLimpo ? `<button class="ico-btn wsp" onclick="abrirZapIndicado('${telLimpo}')" title="WhatsApp do indicado"><i class="fab fa-whatsapp"></i></button>` : ''}
+          ${telIndicado?`<button class="ico-btn wsp" onclick="abrirZapIndicado('${telIndicado}')" title="WhatsApp do indicado"><i class="fab fa-whatsapp"></i></button>`:''}
         </div>
       </td>
-    </tr>
-  `;
+    </tr>`;
 }
 
-function badgeCls(s){
-  return {
-    'Pendente':'pendente','Imovel Captado':'captado','Cliente Ativo':'ativo',
-    'Em Negociacao':'negociacao','Venda Concluida':'venda','Nao Efetivado':'nao'
-  }[s] || 'pendente';
-}
-function labelStatus(s){
-  return {
-    'Pendente':'Pendente','Imovel Captado':'Captado','Cliente Ativo':'Ativo',
-    'Em Negociacao':'Negociação','Venda Concluida':'Venda','Nao Efetivado':'Não efetivado'
-  }[s] || s;
-}
+function badgeCls(s){return {'Pendente':'pendente','Imovel Captado':'captado','Cliente Ativo':'ativo','Em Negociacao':'negociacao','Venda Concluida':'venda','Nao Efetivado':'nao'}[s]||'pendente';}
+function labelStatus(s){return {'Pendente':'Pendente','Imovel Captado':'Captado','Cliente Ativo':'Ativo','Em Negociacao':'Negociação','Venda Concluida':'Venda','Nao Efetivado':'Não efetivado'}[s]||s;}
 
-/* ============================================================
- * AÇÕES RÁPIDAS
- * ============================================================ */
 async function mudarStatus(id, novoStatus){
-  if(novoStatus === 'Nao Efetivado'){
-    if(!confirm('Marcar como não efetivado?')) return;
-  }
-  if(novoStatus === 'Venda Concluida'){
-    abrirConcluir(id);
-    return;
-  }
+  if(novoStatus==='Nao Efetivado'){ if(!confirm('Marcar como não efetivado?')) return; }
+  if(novoStatus==='Venda Concluida'){ abrirConcluir(id); return; }
   try{
-    const body = {id, status: novoStatus};
-    if(novoStatus === 'Imovel Captado') body.dataCaptacao = new Date().toISOString();
-    const res = await apiPost('update', body);
-    if(res.status === 'success'){
-      toast('Status atualizado.', 'success');
-      await carregarTudo();
-    } else {
-      toast(res.error || 'Erro.', 'error');
-    }
-  }catch(e){ toast('Erro de conexão.', 'error'); }
+    const body = {id, status:novoStatus};
+    if(novoStatus==='Imovel Captado') body.dataCaptacao = new Date().toISOString();
+    const res = await apiPost('update',body);
+    if(res.status==='success'){ toast('Status atualizado.','success'); await carregarTudo(); }
+    else { toast(res.error||'Erro.','error'); }
+  }catch(e){ toast('Erro de conexão.','error'); }
 }
 
-/* ============================================================
- * EDITAR
- * ============================================================ */
 function abrirEditar(id){
-  const i = todas.find(x => Number(x.ID) === Number(id));
-  if(!i){ toast('Não encontrado.', 'error'); return; }
+  const i = todas.find(x => Number(x.ID)===Number(id));
+  if(!i){ toast('Não encontrado.','error'); return; }
   editandoId = id;
   $('editId').value = id;
-  $('editTitulo').textContent = 'Editar indicação #' + id;
-  $('editStatus').value = i.Status || 'Pendente';
-  $('editOrigem').value = i.OrigemVenda || '';
-  $('editCorretor').value = i.CorretorResponsavel || '';
-  $('editIndNome').value = i.IndicadorNome || '';
+  $('editTitulo').textContent = 'Editar indicação #'+id;
+  $('editStatus').value = i.Status||'Pendente';
+  $('editOrigem').value = i.OrigemVenda||'';
+  $('editCorretor').value = i.CorretorResponsavel||'';
+  $('editIndNome').value = i.IndicadorNome||'';
   $('editIndTel').value = fmtTel(i.IndicadorTelefone||'');
   $('editValor').value = i.ValorVenda ? fmtBRL(i.ValorVenda).replace('R$','').trim() : '';
-  $('editObs').value = i.Observacoes || '';
+  $('editObs').value = i.Observacoes||'';
 
-  if(i.Tipo === 'Imovel'){
-    $('blocoImovel').style.display = '';
-    $('blocoComprador').style.display = 'none';
-    $('editEnd').value = i.EnderecoImovel || '';
-    $('editBairro').value = i.Bairro || '';
-    $('editCidade').value = i.Cidade || '';
-    $('editPropNome').value = i.ProprietarioNome || '';
+  if(i.Tipo==='Imovel'){
+    $('blocoImovel').style.display='';
+    $('blocoComprador').style.display='none';
+    $('editEnd').value = i.EnderecoImovel||'';
+    $('editBairro').value = i.Bairro||'';
+    $('editCidade').value = i.Cidade||'';
+    $('editPropNome').value = i.ProprietarioNome||'';
     $('editPropTel').value = fmtTel(i.ProprietarioTelefone||'');
   } else {
-    $('blocoImovel').style.display = 'none';
-    $('blocoComprador').style.display = '';
-    $('editCompNome').value = i.CompradorNome || '';
+    $('blocoImovel').style.display='none';
+    $('blocoComprador').style.display='';
+    $('editCompNome').value = i.CompradorNome||'';
     $('editCompTel').value = fmtTel(i.CompradorTelefone||'');
-    $('editCompObs').value = i.CompradorObservacao || '';
+    $('editCompObs').value = i.CompradorObservacao||'';
   }
-
   renderExtratoEdit(i);
   previewEdit();
   abrirModal('mEditar');
@@ -1095,92 +803,75 @@ function abrirEditar(id){
 
 function renderExtratoEdit(i){
   const cont = $('extratoEdit');
-  const pags = Array.isArray(i.Pagamentos) ? i.Pagamentos : [];
-  const total = Number(i.PremioTotal) || 0;
-  const pago = Number(i.TotalPago) || 0;
-  const saldo = total - pago;
+  const pags = Array.isArray(i.Pagamentos)?i.Pagamentos:[];
+  const total = Number(i.PremioTotal)||0;
+  const disp = Number(i.PremioDisponivel)||0;
+  const pago = Number(i.TotalPago)||0;
+  const saldo = Math.max(0,disp-pago);
+  const lib = i.Liberacao||{};
 
-  if(!pags.length){
-    cont.innerHTML = `<div class="empty-pg">Nenhum pagamento registrado${total>0 ? ' — total devido: '+fmtBRL(total) : ''}.</div>`;
-    return;
+  let libHtml = '';
+  if(lib.aplica){
+    if(lib.msg==='Cancelado') libHtml = `<div style="padding:8px 12px;background:var(--vermelho-suave);color:#991b1b;border-radius:5px;font-size:12px;margin-bottom:8px;font-weight:600;"><i class="fas fa-ban"></i> Cancelado — sem premiação</div>`;
+    else if(lib.msg==='Aguardando captação') libHtml = `<div style="padding:8px 12px;background:var(--amarelo-suave);color:#92400e;border-radius:5px;font-size:12px;margin-bottom:8px;font-weight:600;"><i class="fas fa-clock"></i> Aguardando captação</div>`;
+    else if(lib.liberado) libHtml = `<div style="padding:8px 12px;background:var(--verde-suave);color:#065f46;border-radius:5px;font-size:12px;margin-bottom:8px;font-weight:600;"><i class="fas fa-check-circle"></i> Liberado · disponível ${fmtBRL(disp)}</div>`;
+    else if(lib.diasRestantes!=null){ const dt = lib.dataLiberacao?fmtData(lib.dataLiberacao):''; libHtml = `<div style="padding:8px 12px;background:var(--amarelo-suave);color:#92400e;border-radius:5px;font-size:12px;margin-bottom:8px;font-weight:600;"><i class="fas fa-hourglass-half"></i> Faltam ${lib.diasRestantes} dia(s) útil(eis)${dt?' · libera em '+dt:''}</div>`; }
   }
 
-  const itens = pags.map(p => `
-    <div class="pg-item">
-      <div class="info">
-        <div class="tipo">${esc(p.tipo||'Pagamento')}</div>
-        <div class="data">${fmtDataHora(p.dataPagamento)}</div>
-        ${p.observacao ? `<div class="obs">${esc(p.observacao)}</div>` : ''}
-      </div>
-      <div class="valor">${fmtBRL(p.valor)}</div>
-    </div>
-  `).join('');
+  if(!pags.length){ cont.innerHTML = libHtml + `<div class="empty-pg">Nenhum pagamento registrado${total>0?' — total devido: '+fmtBRL(total):''}.</div>`; return; }
 
-  cont.innerHTML = itens + `
-    <div class="pg-resumo">
-      <span class="lbl">Total pago:</span>
-      <span class="val">${fmtBRL(pago)}</span>
-    </div>
-    <div class="pg-resumo" style="border-top:none;padding-top:4px;margin-top:0;">
-      <span class="lbl">Saldo restante:</span>
-      <span class="val" style="${saldo>0?'color:var(--amarelo);':'color:var(--verde);'}">${fmtBRL(Math.max(0,saldo))}</span>
-    </div>
-  `;
+  const itens = pags.map(p=>`
+    <div class="pg-item">
+      <div class="info"><div class="tipo">${esc(p.tipo||'Pagamento')}</div><div class="data">${fmtDataHora(p.dataPagamento)}</div>${p.observacao?`<div class="obs">${esc(p.observacao)}</div>`:''}</div>
+      <div class="valor">${fmtBRL(p.valor)}</div>
+    </div>`).join('');
+
+  cont.innerHTML = libHtml + itens + `
+    <div class="pg-resumo"><span class="lbl">Total pago:</span><span class="val">${fmtBRL(pago)}</span></div>
+    <div class="pg-resumo" style="border-top:none;padding-top:4px;margin-top:0;"><span class="lbl">Saldo disponível:</span><span class="val" style="${saldo>0?'color:var(--amarelo);':'color:var(--verde);'}">${fmtBRL(saldo)}</span></div>`;
 }
 
 function previewEdit(){
   const id = Number($('editId').value);
-  const i = todas.find(x => Number(x.ID) === id);
+  const i = todas.find(x => Number(x.ID)===id);
   if(!i) return;
-  const tipo = i.Tipo;
-  const status = $('editStatus').value;
-  const origem = $('editOrigem').value;
-  const valor = parseValor($('editValor').value);
-
-  const calc = calcular(tipo, origem, valor, status);
+  const calc = calcular(i.Tipo, $('editOrigem').value, parseValor($('editValor').value), $('editStatus').value);
   $('calcInd').textContent = fmtBRL(calc.pi);
   $('calcVenda').textContent = fmtBRL(calc.pv);
-  $('calcTotal').textContent = fmtBRL(calc.pi + calc.pv);
+  $('calcTotal').textContent = fmtBRL(calc.pi+calc.pv);
 }
-
 function calcular(tipo, origem, valor, status){
-  const blocos = Math.floor(valor / 100000);
-  let pi = 0, pv = 0;
-  if(tipo === 'Imovel') pi = 50;
-  if(status === 'Venda Concluida' && blocos > 0){
-    if(tipo === 'Imovel'){
-      if(origem === 'Nossa equipe') pv = blocos * 100;
-      else if(origem === 'Terceiros') pv = blocos * 50;
-    } else {
-      if(origem === 'Nossa equipe') pv = blocos * 100;
-    }
+  const blocos = Math.floor(valor/100000);
+  let pi=0, pv=0;
+  if(tipo==='Imovel') pi = 50;
+  if(status==='Venda Concluida' && blocos>0){
+    if(tipo==='Imovel'){ if(origem==='Nossa equipe') pv = blocos*100; else if(origem==='Terceiros') pv = blocos*50; }
+    else { if(origem==='Nossa equipe') pv = blocos*100; }
   }
-  return {pi, pv};
+  return {pi,pv};
 }
 
 async function salvarEdicao(){
   const id = Number($('editId').value);
-  const i = todas.find(x => Number(x.ID) === id);
+  const i = todas.find(x => Number(x.ID)===id);
   if(!i) return;
-
-  const btn = $('editBtn');
-  btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Salvando...';
+  const btn = $('editBtn'); btn.disabled=true; btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Salvando...';
 
   const body = {
-    id,
-    status: $('editStatus').value,
-    origemVenda: $('editOrigem').value,
+    id, status: $('editStatus').value, origemVenda: $('editOrigem').value,
     corretorResponsavel: $('editCorretor').value.trim(),
     valorVenda: parseValor($('editValor').value),
     observacoes: $('editObs').value.trim()
   };
-
-  if(i.Tipo === 'Imovel'){
+  if(i.Tipo==='Imovel'){
     body.enderecoImovel = $('editEnd').value.trim();
     body.bairro = $('editBairro').value.trim();
     body.cidade = $('editCidade').value.trim();
     body.proprietarioNome = $('editPropNome').value.trim();
     body.proprietarioTelefone = num($('editPropTel').value);
+    if(body.status==='Imovel Captado' && !i.DataCaptacao){
+      body.dataCaptacao = new Date().toISOString();
+    }
   } else {
     body.compradorNome = $('editCompNome').value.trim();
     body.compradorTelefone = num($('editCompTel').value);
@@ -1188,161 +879,132 @@ async function salvarEdicao(){
   }
 
   try{
-    const res = await apiPost('update', body);
-    if(res.status === 'success'){
-      toast('Indicação atualizada.', 'success');
-      fecharModal('mEditar');
-      await carregarTudo();
-    } else {
-      toast(res.error || 'Erro ao salvar.', 'error');
-    }
-  }catch(e){ toast('Erro de conexão.', 'error'); }
-  finally{
-    btn.disabled = false; btn.innerHTML = '<i class="fas fa-save"></i> Salvar alterações';
-  }
+    const res = await apiPost('update',body);
+    if(res.status==='success'){ toast('Indicação atualizada.','success'); fecharModal('mEditar'); await carregarTudo(); }
+    else { toast(res.error||'Erro ao salvar.','error'); }
+  }catch(e){ toast('Erro de conexão.','error'); }
+  finally{ btn.disabled=false; btn.innerHTML='<i class="fas fa-save"></i> Salvar alterações'; }
 }
 
-/* ============================================================
- * CONCLUIR VENDA
- * ============================================================ */
 function abrirConcluir(id){
-  const i = todas.find(x => Number(x.ID) === Number(id));
-  if(!i){ toast('Não encontrado.', 'error'); return; }
+  const i = todas.find(x => Number(x.ID)===Number(id));
+  if(!i){ toast('Não encontrado.','error'); return; }
   $('cvId').value = id;
   $('cvValor').value = i.ValorVenda ? fmtBRL(i.ValorVenda).replace('R$','').trim() : '';
-  $('cvCorretor').value = i.CorretorResponsavel || '';
-  $('cvOrigem').value = i.OrigemVenda || 'Nossa equipe';
-  const titulo = i.Tipo === 'Imovel'
-    ? (i.EnderecoImovel || 'Imóvel') + ' — ' + (i.IndicadorNome||'')
-    : (i.CompradorNome || 'Comprador') + ' — ' + (i.IndicadorNome||'');
-  $('cvInfoSub').textContent = titulo;
+  $('cvCorretor').value = i.CorretorResponsavel||'';
+  $('cvOrigem').value = i.OrigemVenda||'Nossa equipe';
+  $('cvInfoSub').textContent = i.Tipo==='Imovel'
+    ? (i.EnderecoImovel||'Imóvel')+' — '+(i.IndicadorNome||'')
+    : (i.CompradorNome||'Comprador')+' — '+(i.IndicadorNome||'');
   previewConcluir();
   abrirModal('mConcluir');
 }
 
 function previewConcluir(){
   const id = Number($('cvId').value);
-  const i = todas.find(x => Number(x.ID) === id);
+  const i = todas.find(x => Number(x.ID)===id);
   if(!i) return;
-  const valor = parseValor($('cvValor').value);
-  const origem = $('cvOrigem').value;
-  const calc = calcular(i.Tipo, origem, valor, 'Venda Concluida');
+  const calc = calcular(i.Tipo, $('cvOrigem').value, parseValor($('cvValor').value), 'Venda Concluida');
   $('cvCalcInd').textContent = fmtBRL(calc.pi);
   $('cvCalcVenda').textContent = fmtBRL(calc.pv);
-  $('cvCalcTotal').textContent = fmtBRL(calc.pi + calc.pv);
+  $('cvCalcTotal').textContent = fmtBRL(calc.pi+calc.pv);
+
+  // Aviso sobre liberação dos R$ 50
+  const lib = i.Liberacao||{};
+  const aviso = $('cvLibInfo');
+  if(i.Tipo==='Imovel' && lib.aplica && !lib.liberado && lib.diasRestantes!=null){
+    aviso.innerHTML = `<i class="fas fa-info-circle"></i> Os R$ 50 da indicação serão liberados em ${lib.diasRestantes} dia(s) útil(eis). O bônus de venda fica disponível imediatamente.`;
+  } else if(i.Tipo==='Imovel' && lib.liberado){
+    aviso.innerHTML = `<i class="fas fa-check-circle" style="color:var(--verde);"></i> R$ 50 da indicação já liberado.`;
+  } else {
+    aviso.innerHTML = '';
+  }
 }
 
 async function confirmarConcluir(){
   const id = Number($('cvId').value);
   const valor = parseValor($('cvValor').value);
-  const origem = $('cvOrigem').value;
-  if(!valor || valor <= 0){ toast('Informe o valor da venda.', 'error'); return; }
-
-  const btn = $('cvBtn');
-  btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Concluindo...';
-
+  if(!valor||valor<=0){ toast('Informe o valor da venda.','error'); return; }
+  const btn = $('cvBtn'); btn.disabled=true; btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Concluindo...';
   try{
-    const res = await apiPost('concludeSale', {
-      id, valorVenda: valor, origemVenda: origem,
-      corretorResponsavel: $('cvCorretor').value.trim()
+    const res = await apiPost('concludeSale',{
+      id, valorVenda:valor, origemVenda:$('cvOrigem').value,
+      corretorResponsavel:$('cvCorretor').value.trim()
     });
-    if(res.status === 'success'){
-      toast(`Venda concluída. Prêmio: ${fmtBRL(res.premioTotal)}`, 'success');
+    if(res.status==='success'){
+      let msg = `Venda concluída. Prêmio: ${fmtBRL(res.premioTotal)}`;
+      if(res.liberacao && res.liberacao.aplica && !res.liberacao.liberado && res.liberacao.diasRestantes!=null){
+        msg += ` · R$ 50 libera em ${res.liberacao.diasRestantes} dia(s) útil(eis)`;
+      }
+      toast(msg,'success');
       fecharModal('mConcluir');
       await carregarTudo();
-    } else {
-      toast(res.error || 'Erro.', 'error');
-    }
-  }catch(e){ toast('Erro de conexão.', 'error'); }
-  finally{
-    btn.disabled = false; btn.innerHTML = '<i class="fas fa-check"></i> Confirmar venda';
-  }
+    } else { toast(res.error||'Erro.','error'); }
+  }catch(e){ toast('Erro de conexão.','error'); }
+  finally{ btn.disabled=false; btn.innerHTML='<i class="fas fa-check"></i> Confirmar venda'; }
 }
 
-/* ============================================================
- * REGISTRAR PAGAMENTO
- * ============================================================ */
 function abrirModalPagar(id){
-  const i = todas.find(x => Number(x.ID) === Number(id));
-  if(!i){ toast('Não encontrado.', 'error'); return; }
+  const i = todas.find(x => Number(x.ID)===Number(id));
+  if(!i){ toast('Não encontrado.','error'); return; }
+  const lib = i.Liberacao||{};
+  if(lib.aplica && !lib.liberado){
+    if(lib.msg==='Cancelado'){ toast('Indicação cancelada.','error'); return; }
+    if(lib.msg==='Aguardando captação'){ toast('Marque como "Imóvel Captado" antes de pagar.','error'); return; }
+    if(lib.diasRestantes!=null){ toast(`Faltam ${lib.diasRestantes} dia(s) útil(eis) para liberar.`,'error'); return; }
+    toast(lib.msg||'Pagamento não disponível.','error'); return;
+  }
   $('pgId').value = id;
-  const titulo = i.Tipo === 'Imovel'
-    ? (i.EnderecoImovel || 'Imóvel')
-    : (i.CompradorNome || 'Comprador');
+  const titulo = i.Tipo==='Imovel' ? (i.EnderecoImovel||'Imóvel') : (i.CompradorNome||'Comprador');
   $('pgInfoSub').textContent = titulo + ' · ' + (i.IndicadorNome||'');
 
-  const total = Number(i.PremioTotal) || 0;
-  const pago = Number(i.TotalPago) || 0;
-  const saldo = Math.max(0, total - pago);
+  const total = Number(i.PremioTotal)||0;
+  const disp = Number(i.PremioDisponivel)||0;
+  const pago = Number(i.TotalPago)||0;
+  const saldo = Math.max(0, disp-pago);
 
-  $('pgSaldoInfo').innerHTML = total > 0
-    ? `Total devido: <strong>${fmtBRL(total)}</strong> · Já pago: <strong>${fmtBRL(pago)}</strong> · Saldo: <strong style="color:var(--amarelo);">${fmtBRL(saldo)}</strong>`
-    : `Sem prêmio definido ainda. Você pode registrar um pagamento mesmo assim (ex.: R$ 50 da indicação).`;
+  $('pgSaldoInfo').innerHTML = disp>0
+    ? `Total devido: <strong>${fmtBRL(total)}</strong> · Liberado: <strong>${fmtBRL(disp)}</strong> · Já pago: <strong>${fmtBRL(pago)}</strong> · Saldo: <strong style="color:var(--amarelo);">${fmtBRL(saldo)}</strong>`
+    : `Nada liberado ainda.`;
 
   $('pgValor').value = '';
   $('pgPix').value = '';
   $('pgObs').value = '';
-  // Se já tem saldo a receber, pré-preenche com o saldo
-  if(saldo > 0) $('pgValor').value = fmtBRL(saldo).replace('R$','').trim();
+  if(saldo>0) $('pgValor').value = fmtBRL(saldo).replace('R$','').trim();
 
   abrirModal('mPagar');
-  setTimeout(() => $('pgValor').focus(), 150);
+  setTimeout(()=>$('pgValor').focus(),150);
 }
 
 async function confirmarPagar(){
   const id = Number($('pgId').value);
   const valor = parseValor($('pgValor').value);
-  if(!valor || valor <= 0){ toast('Informe o valor do pagamento.', 'error'); return; }
-
-  const btn = $('pgBtn');
-  btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Registrando...';
-
+  if(!valor||valor<=0){ toast('Informe o valor.','error'); return; }
+  const btn = $('pgBtn'); btn.disabled=true; btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Registrando...';
   try{
-    const res = await apiPost('registrarPagamento', {
-      indicacaoId: id,
-      valor: valor,
-      tipo: $('pgTipo').value,
-      chavePix: $('pgPix').value.trim(),
-      observacao: $('pgObs').value.trim()
+    const res = await apiPost('registrarPagamento',{
+      indicacaoId:id, valor, tipo:$('pgTipo').value,
+      chavePix:$('pgPix').value.trim(), observacao:$('pgObs').value.trim()
     });
-    if(res.status === 'success'){
-      toast(`Pagamento de ${fmtBRL(valor)} registrado.`, 'success');
+    if(res.status==='success'){
+      toast(`Pagamento de ${fmtBRL(valor)} registrado.`,'success');
       fecharModal('mPagar');
       await carregarTudo();
-      // Se estava com modal de editar aberto, re-renderiza o extrato
       if($('mEditar').classList.contains('show')){
-        const i = todas.find(x => Number(x.ID) === id);
-        if(i) renderExtratoEdit(i);
+        const it = todas.find(x => Number(x.ID)===id);
+        if(it) renderExtratoEdit(it);
       }
-    } else {
-      toast(res.error || 'Erro.', 'error');
-    }
-  }catch(e){ toast('Erro de conexão.', 'error'); }
-  finally{
-    btn.disabled = false; btn.innerHTML = '<i class="fas fa-check"></i> Confirmar pagamento';
-  }
+    } else { toast(res.error||'Erro.','error'); }
+  }catch(e){ toast('Erro de conexão.','error'); }
+  finally{ btn.disabled=false; btn.innerHTML='<i class="fas fa-check"></i> Confirmar pagamento'; }
 }
 
-/* ============================================================
- * MODAIS
- * ============================================================ */
 function abrirModal(id){ $(id).classList.add('show'); }
 function fecharModal(id){ $(id).classList.remove('show'); }
-document.querySelectorAll('.modal-bg').forEach(m=>{
-  m.addEventListener('click', e => { if(e.target===m) m.classList.remove('show'); });
-});
-document.addEventListener('keydown', e => {
-  if(e.key==='Escape') document.querySelectorAll('.modal-bg.show').forEach(m=>m.classList.remove('show'));
-});
+document.querySelectorAll('.modal-bg').forEach(m => m.addEventListener('click', e => { if(e.target===m) m.classList.remove('show'); }));
+document.addEventListener('keydown', e => { if(e.key==='Escape') document.querySelectorAll('.modal-bg.show').forEach(m=>m.classList.remove('show')); });
 
-/* ============================================================
- * INIT
- * ============================================================ */
-if(localStorage.getItem(KEY) === '1'){
-  autenticado = true;
-  iniciarApp();
-}
+if(localStorage.getItem(KEY)==='1') iniciarApp();
 </script>
-
 </body>
 </html>
