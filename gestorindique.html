@@ -60,8 +60,8 @@ body{background:var(--bg);font-family:'Inter',sans-serif;color:var(--texto);font
 .pg-head h1{font-size:22px;font-weight:700;letter-spacing:-.3px;margin-bottom:4px}
 .pg-head p{color:var(--texto-2);font-size:13px}
 
-/* STATS / FILTRO */
-.filtros{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:20px}
+/* STATS / FILTROS */
+.filtros{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;margin-bottom:20px}
 .filtro-card{background:var(--card);border:1px solid var(--borda);border-radius:var(--r);padding:14px 16px;cursor:pointer;transition:var(--trans);position:relative;display:flex;flex-direction:column;gap:4px}
 .filtro-card:hover{border-color:var(--borda-forte);box-shadow:var(--sombra)}
 .filtro-card.active{background:var(--primario);border-color:var(--primario);color:#fff}
@@ -74,6 +74,7 @@ body{background:var(--bg);font-family:'Inter',sans-serif;color:var(--texto);font
 .filtro-card.t-ativo .f-num{color:var(--verde)}
 .filtro-card.t-negociacao .f-num{color:var(--roxo)}
 .filtro-card.t-venda .f-num{color:var(--verde)}
+.filtro-card.t-nao .f-num{color:var(--vermelho)}
 .filtro-card.t-pagar .f-num{color:var(--primario);font-size:16px}
 .filtro-card.active .f-num{color:#fff !important}
 .filtro-card .f-dot{position:absolute;top:14px;right:16px;width:6px;height:6px;border-radius:50%;background:var(--borda-forte)}
@@ -82,6 +83,7 @@ body{background:var(--bg);font-family:'Inter',sans-serif;color:var(--texto);font
 .filtro-card.t-ativo .f-dot{background:var(--verde)}
 .filtro-card.t-negociacao .f-dot{background:var(--roxo)}
 .filtro-card.t-venda .f-dot{background:var(--verde)}
+.filtro-card.t-nao .f-dot{background:var(--vermelho)}
 .filtro-card.active .f-dot{background:rgba(255,255,255,.5)}
 
 /* SECTION */
@@ -231,7 +233,9 @@ tbody td{padding:11px 14px;vertical-align:middle;color:var(--texto)}
 .toast.success{background:var(--verde)}
 .toast.error{background:var(--vermelho)}
 
-@media(max-width:1100px){.filtros{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:1100px){
+  .filtros{grid-template-columns:repeat(4,1fr)}
+}
 @media(max-width:768px){
   .topbar{padding:12px 16px}
   .brand-txt strong{font-size:13px}
@@ -305,6 +309,9 @@ tbody td{padding:11px 14px;vertical-align:middle;color:var(--texto)}
       <div class="filtro-card t-venda" data-filtro="Venda Concluida" onclick="setFiltro('Venda Concluida')">
         <span class="f-dot"></span><span class="f-num" id="stVenda">0</span><span class="f-label">Vendas concluídas</span>
       </div>
+      <div class="filtro-card t-nao" data-filtro="Nao Efetivado" onclick="setFiltro('Nao Efetivado')">
+        <span class="f-dot"></span><span class="f-num" id="stNao">0</span><span class="f-label">Não efetivadas</span>
+      </div>
       <div class="filtro-card t-pagar" data-filtro="__aPagar" onclick="setFiltro('__aPagar')">
         <span class="f-dot"></span><span class="f-num" id="stAPagar">R$ 0</span><span class="f-label">Total a pagar</span>
       </div>
@@ -345,7 +352,6 @@ tbody td{padding:11px 14px;vertical-align:middle;color:var(--texto)}
   </div>
 </div>
 
-<!-- MODAL EDITAR -->
 <div class="modal-bg" id="mEditar">
   <div class="modal">
     <div class="modal-head">
@@ -378,7 +384,7 @@ tbody td{padding:11px 14px;vertical-align:middle;color:var(--texto)}
           </select>
         </div>
         <div class="form-group"><label>Corretor responsável</label>
-          <input type="text" id="editCorretor" placeholder="Nome do corretor">
+          <input type="text" id="editCorretor">
         </div>
       </div>
       <div class="form-row">
@@ -426,7 +432,6 @@ tbody td{padding:11px 14px;vertical-align:middle;color:var(--texto)}
   </div>
 </div>
 
-<!-- MODAL CONCLUIR -->
 <div class="modal-bg" id="mConcluir">
   <div class="modal">
     <div class="modal-head">
@@ -463,7 +468,6 @@ tbody td{padding:11px 14px;vertical-align:middle;color:var(--texto)}
   </div>
 </div>
 
-<!-- MODAL PAGAR -->
 <div class="modal-bg" id="mPagar">
   <div class="modal">
     <div class="modal-head">
@@ -502,7 +506,7 @@ tbody td{padding:11px 14px;vertical-align:middle;color:var(--texto)}
 
 <script>
 const API = 'https://script.google.com/macros/s/AKfycbx39tA1um2e37ksFXUeo8cKKdRaZtIPcHl_NhI_hexm64NFA_UexVZADeTpQg8UdSoi_g/exec';
-const KEY = 'lr_gestor_indique_v6';
+const KEY = 'lr_gestor_indique_v7';
 let todas = [];
 let filtroAtual = 'Pendente';
 let busca = '';
@@ -585,6 +589,7 @@ function renderStats(){
   $('stAtivo').textContent = c('Cliente Ativo');
   $('stNegociacao').textContent = c('Em Negociacao');
   $('stVenda').textContent = c('Venda Concluida');
+  $('stNao').textContent = c('Nao Efetivado');
   const aPagar = todas.reduce((acc,i)=>{
     if(i.Status==='Nao Efetivado') return acc;
     const disponivel = Number(i.PremioDisponivel)||0;
@@ -602,7 +607,17 @@ function setFiltro(f){
   else { $('secPendentes').style.display='none'; $('secTabela').style.display=''; $('tabelaTitulo').textContent = labelFiltro(f); renderTabela(); }
 }
 function irParaPendentes(){ setFiltro('Pendente'); window.scrollTo({top:0,behavior:'smooth'}); }
-function labelFiltro(f){ return {'Pendente':'Indicações pendentes','Imovel Captado':'Imóveis captados','Cliente Ativo':'Clientes ativos','Em Negociacao':'Em negociação','Venda Concluida':'Vendas concluídas','__aPagar':'Com saldo a pagar'}[f]||'Indicações'; }
+function labelFiltro(f){
+  return {
+    'Pendente':'Indicações pendentes',
+    'Imovel Captado':'Imóveis captados',
+    'Cliente Ativo':'Clientes ativos',
+    'Em Negociacao':'Em negociação',
+    'Venda Concluida':'Vendas concluídas',
+    'Nao Efetivado':'Indicações não efetivadas',
+    '__aPagar':'Com saldo a pagar'
+  }[f] || 'Indicações';
+}
 function aplicarBusca(){ busca=($('busca').value||'').toLowerCase().trim(); renderTabela(); }
 
 function renderLibBadge(lib){
@@ -719,7 +734,9 @@ function tabelaRowHTML(i){
   const lib = i.Liberacao||{};
 
   let premioHtml = '<span style="color:var(--texto-3);font-size:12px;">—</span>';
-  if(total>0){
+  if(i.Status==='Nao Efetivado'){
+    premioHtml = `<span class="info-lib cancel" style="font-size:11px;"><i class="fas fa-ban"></i> Cancelado</span>`;
+  } else if(total>0){
     let cls='val';
     if(pago>=total && total>0) cls+=' pago';
     else if(pago>0) cls+=' parcial';
@@ -843,6 +860,7 @@ function previewEdit(){
 function calcular(tipo, origem, valor, status){
   const blocos = Math.floor(valor/100000);
   let pi=0, pv=0;
+  if(status==='Nao Efetivado') return {pi:0, pv:0};
   if(tipo==='Imovel') pi = 50;
   if(status==='Venda Concluida' && blocos>0){
     if(tipo==='Imovel'){ if(origem==='Nossa equipe') pv = blocos*100; else if(origem==='Terceiros') pv = blocos*50; }
@@ -908,8 +926,6 @@ function previewConcluir(){
   $('cvCalcInd').textContent = fmtBRL(calc.pi);
   $('cvCalcVenda').textContent = fmtBRL(calc.pv);
   $('cvCalcTotal').textContent = fmtBRL(calc.pi+calc.pv);
-
-  // Aviso sobre liberação dos R$ 50
   const lib = i.Liberacao||{};
   const aviso = $('cvLibInfo');
   if(i.Tipo==='Imovel' && lib.aplica && !lib.liberado && lib.diasRestantes!=null){
@@ -947,6 +963,7 @@ async function confirmarConcluir(){
 function abrirModalPagar(id){
   const i = todas.find(x => Number(x.ID)===Number(id));
   if(!i){ toast('Não encontrado.','error'); return; }
+  if(i.Status==='Nao Efetivado'){ toast('Indicação cancelada.','error'); return; }
   const lib = i.Liberacao||{};
   if(lib.aplica && !lib.liberado){
     if(lib.msg==='Cancelado'){ toast('Indicação cancelada.','error'); return; }
