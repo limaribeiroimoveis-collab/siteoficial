@@ -344,8 +344,8 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
     display:block; letter-spacing:-0.1px;
   }
   .campo-label .opc{
-    font-weight:600; color:var(--muted);
-    font-size:0.72rem; margin-left:6px;
+    font-weight:500; color:var(--muted);
+    font-size:0.74rem; margin-left:4px;
   }
   .campo-label .req{ color:var(--vermelho); }
 
@@ -407,28 +407,30 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
   }
   .input-valor-erro.show{ display: block; }
 
-  /* BAIRROS */
-  .bairros-input{ margin-bottom: 10px; }
-  .bairros-input input{
+  /* BAIRROS E TEXTAREA LIVRE */
+  .textarea-wrap textarea{
     width: 100%;
-    padding: 12px 14px;
+    padding: 14px;
     border: 2px solid var(--borda-forte);
     border-radius: 12px;
     font-size: 0.9rem; font-family: inherit;
     color: var(--texto); background: #fff;
+    resize: vertical; min-height: 90px;
+    line-height: 1.55;
+    transition: all 0.15s;
   }
-  .bairros-input input:focus{
+  .textarea-wrap textarea:focus{
     outline: none; border-color: var(--azul);
     box-shadow: 0 0 0 4px rgba(0,30,240,0.08);
   }
-  .bairros-input input.erro{
+  .textarea-wrap textarea.erro{
     border-color: var(--vermelho);
     background: #fef2f2;
   }
 
   .bairros-lista{
     display: flex; flex-wrap: wrap; gap: 6px;
-    margin-top: 6px;
+    margin-top: 10px;
   }
   .bairro-tag{
     display: inline-flex; align-items: center; gap: 6px;
@@ -463,23 +465,6 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
   @keyframes fadeIn{
     from{ opacity: 0; transform: scale(0.9); }
     to{ opacity: 1; transform: scale(1); }
-  }
-
-  /* TEXTAREA */
-  .textarea-wrap textarea{
-    width: 100%;
-    padding: 14px;
-    border: 2px solid var(--borda-forte);
-    border-radius: 12px;
-    font-size: 0.9rem; font-family: inherit;
-    color: var(--texto); background: #fff;
-    resize: vertical; min-height: 90px;
-    line-height: 1.55;
-    transition: all 0.15s;
-  }
-  .textarea-wrap textarea:focus{
-    outline: none; border-color: var(--azul);
-    box-shadow: 0 0 0 4px rgba(0,30,240,0.08);
   }
 
   /* CONTATO */
@@ -851,7 +836,7 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
 
       <!-- METRAGEM -->
       <div class="campo-bloco">
-        <label class="campo-label">Metragem (m²)</label>
+        <label class="campo-label">Metragem mínima <span class="opc">(opcional)</span></label>
         <div class="input-valor-wrap">
           <input type="text" class="input-valor" id="inputMetragem" placeholder="Ex: 100" inputmode="numeric" maxlength="5" autocomplete="off">
         </div>
@@ -879,12 +864,13 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
       </div>
 
       <div class="bairros-instrucao">
-        <strong>Como preencher:</strong> digite <strong>todos os bairros</strong> que você tem interesse, ou a <strong>região de Belo Horizonte</strong> (ex: "Zona Sul", "Centro-Sul"), ou ainda <strong>uma referência</strong> do que gostaria de ficar próximo (ex: "Próximo ao Mineirão", "Perto do Shopping Diamond Mall"). Pode adicionar quantos quiser.
+        <strong>Como preencher:</strong> digite <strong>todos os bairros</strong> que você tem interesse, ou a <strong>região de Belo Horizonte</strong> (ex: "Zona Sul", "Centro-Sul"), ou ainda <strong>uma referência</strong> do que gostaria de ficar próximo. Aperte <strong>Enter</strong> ou <strong>vírgula</strong> para adicionar cada um.
       </div>
 
-      <div class="bairros-input">
-        <input type="text" id="inputBairro" placeholder="Digite um bairro, região ou referência e aperte Enter" autocomplete="off">
+      <div class="textarea-wrap">
+        <textarea id="inputBairros" placeholder="Ex: Savassi, Lourdes, Funcionários, Próximo ao Shopping Diamond Mall..." style="min-height: 80px;"></textarea>
       </div>
+
       <div class="bairros-lista" id="bairrosLista"></div>
       <div class="input-valor-erro" id="bairroErro" style="margin-top:10px;">
         Por favor, informe pelo menos uma região de interesse.
@@ -1028,14 +1014,13 @@ function mascaraTelefone(input){
 window.mascaraTelefone = mascaraTelefone;
 
 /* =====================================================
-   CHIPS DE TIPO (com destaque quando falta)
+   CHIPS DE TIPO
 ===================================================== */
 document.querySelectorAll('.chip-tipo').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.chip-tipo').forEach(b => b.classList.remove('ativo'));
     btn.classList.add('ativo');
     state.tipo = btn.dataset.tipo;
-    // Limpa erro visual
     $('secaoTipo').classList.remove('erro-destaque');
   });
 });
@@ -1108,7 +1093,6 @@ function valorPorExtenso(valor){
 
 /* =====================================================
    MÁSCARA DE VALOR (inteiro, sem centavos)
-   450000 → 450.000
 ===================================================== */
 function formatarValorDigitando(inp){
   let v = inp.value.replace(/\D/g, '');
@@ -1164,19 +1148,32 @@ inputValor.addEventListener('input', () => {
 });
 
 /* =====================================================
-   BAIRROS (só digitação livre, sem botão)
+   BAIRROS (textarea com tags)
 ===================================================== */
-const inputBairro = $('inputBairro');
+const inputBairros = $('inputBairros');
 
-function adicionarBairro(){
-  const val = inputBairro.value.trim();
-  if(!val) return;
-  if(state.bairros.length >= 30){ alert('Máximo de 30 locais.'); return; }
-  if(state.bairros.find(b => b.toLowerCase() === val.toLowerCase())){ inputBairro.value = ''; return; }
-  state.bairros.push(val);
-  inputBairro.value = '';
-  renderizarBairros();
-  esconderErroBairro();
+// Processa o texto da textarea, transforma em tags
+function processarBairros(){
+  let texto = inputBairros.value;
+  // Divide por vírgula ou quebra de linha
+  let partes = texto.split(/[,\n\r]+/);
+  let adicionou = false;
+  partes.forEach(p => {
+    let val = p.trim();
+    if(!val) return;
+    if(state.bairros.length >= 30) return; // Limite
+    if(!state.bairros.find(b => b.toLowerCase() === val.toLowerCase())){
+      state.bairros.push(val);
+      adicionou = true;
+    }
+  });
+  if(adicionou){
+    inputBairros.value = ''; // limpa após adicionar
+    renderizarBairros();
+    esconderErroBairro();
+  } else if(texto.trim() === '' && state.bairros.length > 0) {
+    inputBairros.value = '';
+  }
 }
 
 function removerBairro(nome){
@@ -1204,20 +1201,26 @@ function esc(s){
     .replace(/'/g,'&#39;');
 }
 
-// Enter adiciona
-inputBairro.addEventListener('keydown', (e) => {
-  if(e.key === 'Enter'){
+// Ao digitar, se apertar Enter, processa
+inputBairros.addEventListener('keydown', (e) => {
+  if(e.key === 'Enter' && !e.shiftKey){
     e.preventDefault();
-    adicionarBairro();
+    processarBairros();
   }
 });
 
-// Ao sair do campo (blur), se tiver algo digitado, adiciona automaticamente
-inputBairro.addEventListener('blur', () => {
-  if(inputBairro.value.trim()) adicionarBairro();
+// Ao sair do campo, processa o que estiver lá
+inputBairros.addEventListener('blur', () => {
+  if(inputBairros.value.trim()) processarBairros();
 });
 
-window.adicionarBairro = adicionarBairro;
+// Processa vírgulas também enquanto digita (opcional, mas ajuda)
+inputBairros.addEventListener('input', () => {
+  if(inputBairros.value.includes(',')){
+    processarBairros();
+  }
+});
+
 window.removerBairro = removerBairro;
 
 /* =====================================================
@@ -1241,9 +1244,11 @@ $('waModal').addEventListener('click', (e) => { if(e.target === $('waModal')) fe
 async function enviarSelecao(ev){
   ev.preventDefault();
 
+  // Processa bairros pendentes na textarea antes de validar
+  if(inputBairros.value.trim()) processarBairros();
+
   // 1) TIPO — obrigatório
   if(!state.tipo){
-    // Rola até o topo e destaca a seção
     const secTipo = $('secaoTipo');
     secTipo.classList.add('erro-destaque');
     secTipo.scrollIntoView({behavior:'smooth', block:'center'});
@@ -1272,7 +1277,7 @@ async function enviarSelecao(ev){
   if(state.bairros.length === 0){
     mostrarErroBairro();
     alert('Informe pelo menos uma região ou bairro de interesse.');
-    inputBairro.scrollIntoView({behavior:'smooth', block:'center'});
+    inputBairros.scrollIntoView({behavior:'smooth', block:'center'});
     return;
   }
   esconderErroBairro();
