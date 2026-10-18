@@ -90,7 +90,7 @@
   }
 
   /* ============================================================
-     BOTÕES DO HEADER — padrão único + badge flutuante
+     BOTÕES DO HEADER — padrão único
   ============================================================ */
   .btn-header{
     display: inline-flex;
@@ -110,7 +110,7 @@
     transition: all .15s;
     white-space: nowrap;
     text-decoration: none;
-    position: relative;
+    position: relative; /* ✅ ESSENCIAL para o badge flutuante */
     line-height: 1;
   }
   .btn-header:hover{
@@ -126,16 +126,17 @@
     letter-spacing: .1px;
   }
 
-  /* Badge flutuante (estilo WhatsApp) — canto superior direito */
-  .btn-header .badge-num{
+  /* ✅ BADGE FLUTUANTE PADRÃO (todos os botões) */
+  .btn-header .badge-num,
+  .btn-header .badge-pend {
     position: absolute;
     top: -6px;
     right: -6px;
-    display: inline-flex;
+    display: inline-flex !important; /* Força exibição */
     align-items: center;
     justify-content: center;
-    background: #dc2626;
-    color: #fff;
+    background: #dc2626 !important; /* ✅ Todos vermelhos */
+    color: #fff !important;
     padding: 0 5px;
     border-radius: 999px;
     font-size: .58rem;
@@ -146,10 +147,10 @@
     border: 1.5px solid #3d2b20;
     box-shadow: 0 1px 3px rgba(0,0,0,.3);
     pointer-events: none;
-    z-index: 2;
+    z-index: 10;
   }
 
-  /* Cores por tipo — todas harmonizadas em marrom/dourado */
+  /* Cores base dos botões */
   .btn-header.notas{
     color: #f5e8d8;
     border-color: rgba(160,82,45,.5);
@@ -160,7 +161,6 @@
     color: #fff;
     border-color: rgba(160,82,45,.75);
   }
-  .btn-header.notas .badge-num{ background: #a0522d; }
 
   .btn-header.atualizar{
     color: #f0e9e2;
@@ -183,7 +183,6 @@
     color: #fff;
     border-color: rgba(139,111,58,.8);
   }
-  .btn-header.captar .badge-num{ background: #8b6f3a; }
 
   .btn-header.leads{
     color: #efebe9;
@@ -195,7 +194,6 @@
     color: #fff;
     border-color: rgba(109,76,65,.9);
   }
-  .btn-header.leads .badge-num{ background: #6d4c41; }
 
   .btn-header.imoveis{
     color: #efebe9;
@@ -206,6 +204,17 @@
     background: rgba(93,64,55,.45);
     color: #fff;
     border-color: rgba(93,64,55,.9);
+  }
+
+  .btn-header.indique{
+    color: #f5efe0;
+    border-color: rgba(139,111,58,.55);
+    background: rgba(139,111,58,.18);
+  }
+  .btn-header.indique:hover{
+    background: rgba(139,111,58,.35);
+    color: #fff;
+    border-color: rgba(139,111,58,.8);
   }
 
   .btn-header.correcoes{
@@ -228,71 +237,6 @@
     background: rgba(220,38,38,.22);
     color: #fff;
     border-color: rgba(220,38,38,.55);
-  }
-
-  /* ============================================================
-     BOTÃO INDIQUE — IGUAL AO CAPTAR (mesmas cores)
-  ============================================================ */
-  .btn-indique-ganhe{
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    height: 34px;
-    padding: 0 12px;
-    border-radius: 7px;
-    border: 1px solid rgba(139,111,58,.55);
-    background: rgba(139,111,58,.18);
-    color: #f5efe0;
-    font-family: inherit;
-    font-size: .74rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all .15s;
-    white-space: nowrap;
-    position: relative;
-    line-height: 1;
-  }
-  .btn-indique-ganhe:hover{
-    background: rgba(139,111,58,.35);
-    color: #fff;
-    border-color: rgba(139,111,58,.8);
-  }
-  .btn-indique-ganhe:active{ transform: translateY(1px); }
-  .btn-indique-ganhe .ico{ width: 15px; height: 15px; }
-  .btn-indique-ganhe .lbl-indique{
-    font-size: .74rem;
-    font-weight: 600;
-    letter-spacing: .1px;
-  }
-  .btn-indique-ganhe .badge-pend{
-    position: absolute;
-    top: -6px;
-    right: -6px;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    background: #dc2626;
-    color: #fff;
-    padding: 0 5px;
-    border-radius: 999px;
-    font-size: .58rem;
-    font-weight: 800;
-    min-width: 16px;
-    height: 16px;
-    line-height: 1;
-    border: 1.5px solid #3d2b20;
-    box-shadow: 0 1px 3px rgba(0,0,0,.3);
-    pointer-events: none;
-    z-index: 2;
-  }
-  .btn-indique-ganhe .badge-pend.show{
-    display: inline-flex;
-    animation: pulseBadge 1.5s ease-in-out infinite;
-  }
-  @keyframes pulseBadge {
-    0%, 100% { box-shadow: 0 1px 3px rgba(0,0,0,.3), 0 0 0 0 rgba(220,38,38,.7); }
-    50% { box-shadow: 0 1px 3px rgba(0,0,0,.3), 0 0 0 4px rgba(220,38,38,0); }
   }
 
   /* Botão hamburguer */
@@ -367,8 +311,8 @@
   @media(max-width:1100px){
     .btn-header .lbl-txt{ display: none; }
     .btn-header{ padding: 0 10px; }
-    .btn-indique-ganhe .lbl-indique{ display: none; }
-    .btn-indique-ganhe{ padding: 0 10px; }
+    .btn-header .lbl-indique{ display: none; }
+    .btn-header{ padding: 0 10px; }
   }
 
   @media(max-width:768px){
@@ -387,9 +331,8 @@
       gap: 4px;
     }
     .btn-header .ico{ width: 15px; height: 15px; }
-    .btn-indique-ganhe{ padding: 0 8px; }
     .btn-header .badge-num,
-    .btn-indique-ganhe .badge-pend{
+    .btn-header .badge-pend{
       min-width: 14px;
       height: 14px;
       font-size: .54rem;
@@ -2276,7 +2219,7 @@
           <line x1="9" y1="17" x2="15" y2="17"/>
         </svg>
         <span class="lbl-txt">Notas</span>
-        <span class="badge-num" id="notasBadgeNum" style="display:none;">0</span>
+        <span class="badge-num" id="notasBadgeNum">0</span>
       </button>
 
       <!-- 2. ATUALIZAR -->
@@ -2310,15 +2253,15 @@
         <span class="badge-num" id="leadsBadgeNum">0</span>
       </button>
 
-      <!-- 5. INDIQUE (igual ao captar) -->
-      <button class="btn-indique-ganhe" id="btnIndiqueGanhe" onclick="abrirIndiqueGanhe()" title="Gestor de Indicações">
+      <!-- 5. INDIQUE (igual ao captar, só com ícone de mão) -->
+      <button class="btn-header indique" id="btnIndiqueGanhe" onclick="abrirIndiqueGanhe()" title="Gestor de Indicações">
         <svg class="ico" viewBox="0 0 24 24">
           <path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/>
           <path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"/>
           <path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/>
           <path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/>
         </svg>
-        <span class="lbl-indique">Indique</span>
+        <span class="lbl-txt">Indique</span>
         <span class="badge-pend" id="badgeIndiquePend">0</span>
       </button>
 
@@ -3275,7 +3218,6 @@
   <div class="spinner"></div>
   <div class="msg">Aguarde, estamos salvando...</div>
 </div>
-
 
 <script>
 /* =====================================================
