@@ -155,7 +155,7 @@
 
   .container { max-width: 1400px; margin: 0 auto; padding: 0 20px; }
 
-  /* ===== SELETOR DE MODO (3 BOTÕES LADO A LADO) ===== */
+  /* ===== SELETOR DE MODO ===== */
   .modo-selector {
     display: flex;
     justify-content: center;
@@ -188,6 +188,15 @@
     color: #fff;
     border-color: var(--azul-quinto);
     box-shadow: 0 6px 16px rgba(0, 30, 240, 0.2);
+  }
+
+  /* ✅ BOTÃO LISTA 2: SÓ APARECE NO MOBILE */
+  #modoLista2 {
+    display: none;
+  }
+
+  @media (max-width: 768px) {
+    #modoLista2 { display: inline-flex; }
   }
 
   /* ===== BARRA DE BUSCA + BOTÃO AVANÇADO ===== */
@@ -281,18 +290,28 @@
     gap: 16px;
     align-content: start;
   }
-  /* ✅ LISTA 1 — 1 card por linha */
+
+  /* ✅ LISTA 1 (padrão) */
   .cards-grid.lista-1 {
-    grid-template-columns: 1fr;
-    gap: 14px;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
   }
-  /* ✅ LISTA 2 — 2 cards por linha */
-  .cards-grid.lista-2 {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 14px;
-  }
-  @media(max-width: 640px) {
-    .cards-grid.lista-2 { grid-template-columns: 1fr; }
+
+  /* ✅ LISTA 2 — SÓ FORÇA 2 COLUNAS NO MOBILE */
+  @media (max-width: 768px) {
+    .cards-grid.lista-2 {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+    .cards-grid.lista-2 .imovel-card .corpo { padding: 10px; gap: 5px; }
+    .cards-grid.lista-2 .imovel-card .preco { font-size: 0.95rem; }
+    .cards-grid.lista-2 .imovel-card .preco .tipo { font-size: 0.6rem; }
+    .cards-grid.lista-2 .imovel-card .endereco-linha .rua { font-size: 0.74rem; }
+    .cards-grid.lista-2 .imovel-card .endereco-linha .bairro-destaque { font-size: 0.64rem; }
+    .cards-grid.lista-2 .imovel-card .descricao-2linhas { font-size: 0.66rem; }
+    .cards-grid.lista-2 .imovel-card .condo-info { font-size: 0.64rem; gap: 6px; }
+    .cards-grid.lista-2 .imovel-card .foto .badge-descricao { font-size: 0.6rem; padding: 4px 8px; }
+    .cards-grid.lista-2 .imovel-card .foto .badge-tipo { font-size: 0.54rem; padding: 2px 7px; }
   }
 
   .cards-grid.admin-mode {
@@ -464,7 +483,7 @@
   .imovel-card .admin-acoes .btn-a.btn-anuncio:hover { background: var(--azul-quinto); color: #fff; }
   .imovel-card .admin-acoes .btn-a:disabled { opacity: 0.4; cursor: not-allowed; }
 
-  /* ===== MAPA ISOLADO (TELA CHEIA) ===== */
+  /* ===== MAPA ===== */
   .mapa-tela {
     display: none;
     position: fixed;
@@ -548,25 +567,97 @@
     background: var(--azul-escuro);
     border-color: var(--azul-escuro);
   }
-  /* ✅ BOTÃO SAIR DO MAPA (X) */
-  .mapa-tela-header .btn-h.sair-mapa {
-    background: var(--vermelho);
-    color: #fff;
-    border-color: var(--vermelho);
-    padding: 8px 12px;
-  }
-  .mapa-tela-header .btn-h.sair-mapa:hover {
-    background: #b91c1c;
-    border-color: #b91c1c;
-    transform: scale(1.05);
-  }
-  .mapa-tela-header .btn-h.sair-mapa i { font-size: 0.95rem; }
   .mapa-tela-corpo {
     flex: 1;
     position: relative;
     min-height: 0;
   }
   #mapa { width: 100%; height: 100%; }
+
+  /* ✅ FAIXA FIXA "VOLTAR PARA LISTA" (bem visível) */
+  .mapa-voltar-faixa {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1001;
+    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+    color: #fff;
+    padding: 12px 16px;
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    box-shadow: 0 4px 16px rgba(220, 38, 38, 0.35);
+    animation: slideDownFaixa 0.3s ease;
+  }
+  .mapa-voltar-faixa.show { display: flex; }
+  @keyframes slideDownFaixa {
+    from { transform: translateY(-100%); }
+    to { transform: translateY(0); }
+  }
+  .mapa-voltar-faixa .info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+    min-width: 0;
+  }
+  .mapa-voltar-faixa .info i {
+    font-size: 1.1rem;
+    flex-shrink: 0;
+  }
+  .mapa-voltar-faixa .info .txt {
+    font-size: 0.82rem;
+    font-weight: 700;
+    line-height: 1.2;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    min-width: 0;
+  }
+  .mapa-voltar-faixa .info .txt .bairro {
+    font-size: 0.7rem;
+    font-weight: 500;
+    opacity: 0.9;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .mapa-voltar-faixa .btn-voltar {
+    background: #fff;
+    color: #b91c1c;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-family: inherit;
+    font-weight: 800;
+    font-size: 0.84rem;
+    cursor: pointer;
+    transition: 0.15s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  }
+  .mapa-voltar-faixa .btn-voltar:hover {
+    background: #fef2f2;
+    transform: scale(1.03);
+  }
+  .mapa-voltar-faixa .btn-voltar i {
+    font-size: 0.9rem;
+  }
+  @media (max-width: 640px) {
+    .mapa-voltar-faixa {
+      padding: 10px 12px;
+    }
+    .mapa-voltar-faixa .info .txt { font-size: 0.76rem; }
+    .mapa-voltar-faixa .btn-voltar {
+      padding: 8px 14px;
+      font-size: 0.78rem;
+    }
+  }
 
   .mapa-loading {
     position: absolute;
@@ -1042,6 +1133,10 @@
     padding-top: 12px;
     border-top: 1px dashed var(--borda);
   }
+  .modal-busca-avancada .secao-titulo:first-of-type {
+    border-top: none;
+    padding-top: 0;
+  }
   .modal-busca-avancada .acoes-modal {
     display: flex;
     gap: 10px;
@@ -1255,7 +1350,6 @@
     .mapa-tela-header .titulo { font-size: 0.86rem; }
     .mapa-tela-header .btn-h { font-size: 0.72rem; padding: 7px 10px; }
     .mapa-tela-header .btn-h .lbl-h { display: none; }
-    .mapa-tela-header .btn-h.sair-mapa { padding: 7px 10px; }
   }
 
   @media (max-width: 640px) {
@@ -1271,6 +1365,7 @@
     .barra-busca-wrap { padding: 10px; gap: 8px; top: 60px; }
     .busca-wrap input { padding: 10px 12px 10px 34px; font-size: 0.86rem; }
     .cards-grid { grid-template-columns: 1fr; gap: 12px; }
+    .cards-grid.lista-1 { grid-template-columns: 1fr; }
     .imovel-card .preco { font-size: 1.15rem; }
     .imovel-card .foto .badge-descricao { font-size: 0.66rem; padding: 5px 10px; }
     .modal-detalhes .conteudo { padding: 18px; }
@@ -1332,12 +1427,13 @@
   </div>
 </section>
 
-<!-- ===== SELETOR DE MODO (3 BOTÕES) ===== -->
+<!-- ===== SELETOR DE MODO ===== -->
 <div class="container">
   <div class="modo-selector">
     <button class="modo-btn ativo" id="modoLista1" onclick="trocarModo('lista1')">
-      <i class="fas fa-list"></i> Lista 1
+      <i class="fas fa-list"></i> Lista
     </button>
+    <!-- ✅ LISTA 2: SÓ APARECE NO MOBILE (controlado por CSS) -->
     <button class="modo-btn" id="modoLista2" onclick="trocarModo('lista2')">
       <i class="fas fa-th-large"></i> Lista 2
     </button>
@@ -1374,6 +1470,20 @@
   </div>
 </div>
 
+<!-- ===== FAIXA FIXA DE VOLTAR DO MAPA ===== -->
+<div class="mapa-voltar-faixa" id="mapaVoltarFaixa">
+  <div class="info">
+    <i class="fas fa-map-marked-alt"></i>
+    <div class="txt">
+      <span>Você está vendo o mapa</span>
+      <span class="bairro" id="mapaFaixaBairro">—</span>
+    </div>
+  </div>
+  <button class="btn-voltar" onclick="sairDoMapaTotalmente()">
+    <i class="fas fa-arrow-left"></i> Voltar para lista
+  </button>
+</div>
+
 <!-- ===== TELA DO MAPA (TELA CHEIA) ===== -->
 <div class="mapa-tela" id="mapaTela">
   <div class="mapa-tela-header">
@@ -1390,11 +1500,6 @@
       <button class="btn-h primary" onclick="sairDoMapa()">
         <i class="fas fa-th-large"></i>
         <span class="lbl-h">Ver em lista</span>
-      </button>
-      <!-- ✅ BOTÃO SAIR DO MAPA (VOLTA AO SITE) -->
-      <button class="btn-h sair-mapa" onclick="sairDoMapaTotalmente()" title="Sair do mapa">
-        <i class="fas fa-times"></i>
-        <span class="lbl-h">Sair</span>
       </button>
     </div>
   </div>
@@ -1519,29 +1624,9 @@
           <option value="4">4+</option>
         </select>
       </div>
-      <div class="filtro-grupo">
+      <div class="filtro-grupo" style="grid-column: 1 / -1;">
         <label for="filtroMetragem">Metragem mínima (m²)</label>
         <input type="number" id="filtroMetragem" placeholder="Ex: 80" min="0" step="10">
-      </div>
-      <div class="filtro-grupo">
-        <label for="filtroTipo">Tipo</label>
-        <select id="filtroTipo">
-          <option value="">Todos os tipos</option>
-          <option value="cobertura">Cobertura</option>
-          <option value="area-privativa">Área privativa</option>
-        </select>
-      </div>
-    </div>
-
-    <div class="secao-titulo">🏢 Condomínio</div>
-    <div class="filtros-grid-2">
-      <div class="filtro-grupo" style="grid-column: 1 / -1;">
-        <label for="filtroCondominio">Condomínio</label>
-        <select id="filtroCondominio">
-          <option value="">Qualquer</option>
-          <option value="com">Com condomínio</option>
-          <option value="sem">Sem condomínio (isento)</option>
-        </select>
       </div>
     </div>
 
@@ -1738,8 +1823,6 @@ const state = {
   _filtrosAplicados: {
     bairro: '',
     preco: '',
-    condominio: '',
-    tipo: '',
     quartos: '',
     vagas: '',
     metragem: '',
@@ -1822,25 +1905,20 @@ function isVendido(descricao){
   return false;
 }
 
-/* ✅ EXTRAI QUARTOS DA DESCRIÇÃO (aceita qts, quartos, quars, etc.) */
 function extrairQuartos(descricao){
   if(!descricao) return 0;
   const s = String(descricao).toLowerCase();
-  // Aceita: 3 quartos | 3 qts | 3quarts | 3 quars | 3 qtos
   const m = s.match(/(\d+)\s*(quartos?|qts?|quars?|qtos?|quartitos?)/i);
   return m ? parseInt(m[1], 10) : 0;
 }
 
-/* ✅ EXTRAI VAGAS DA DESCRIÇÃO */
 function extrairVagas(descricao){
   if(!descricao) return 0;
   const s = String(descricao).toLowerCase();
-  // Aceita: 2 vagas | 2 vgs | 2vg | 2 garagens
   const m = s.match(/(\d+)\s*(vagas?|vgs?|garagens?|garagem)/i);
   return m ? parseInt(m[1], 10) : 0;
 }
 
-/* ✅ EXTRAI SUÍTES DA DESCRIÇÃO */
 function extrairSuites(descricao){
   if(!descricao) return 0;
   const s = String(descricao).toLowerCase();
@@ -1848,11 +1926,9 @@ function extrairSuites(descricao){
   return m ? parseInt(m[1], 10) : 0;
 }
 
-/* ✅ EXTRAI METRAGEM DA DESCRIÇÃO (aceita m², m2, metros) */
 function extrairMetragem(descricao){
   if(!descricao) return 0;
   const s = String(descricao).toLowerCase();
-  // Aceita: 120m² | 120 m² | 120m2 | 120 metros | 120m
   const m = s.match(/(\d+[,.]?\d*)\s*(m²|m2|metros?|mts?)/i);
   if(!m) return 0;
   const num = String(m[1]).replace(',', '.');
@@ -2021,7 +2097,7 @@ function popularSelectBairros(){
 function temFiltroAtivo(){
   const busca = $('filtroBusca').value.trim();
   const f = state._filtrosAplicados;
-  return !!(busca || f.bairro || f.preco || f.condominio || f.tipo || f.quartos || f.vagas || f.metragem);
+  return !!(busca || f.bairro || f.preco || f.quartos || f.vagas || f.metragem);
 }
 
 function aplicarFiltros(){
@@ -2029,8 +2105,6 @@ function aplicarFiltros(){
   const f = state._filtrosAplicados;
   const bairro = f.bairro;
   const precoRange = f.preco;
-  const condominio = f.condominio;
-  const tipoFiltro = f.tipo;
   const quartosMin = parseInt(f.quartos || '0', 10) || 0;
   const vagasMin = parseInt(f.vagas || '0', 10) || 0;
   const metragemMin = parseInt(f.metragem || '0', 10) || 0;
@@ -2062,19 +2136,6 @@ function aplicarFiltros(){
     });
   }
 
-  if(condominio === 'com'){
-    arr = arr.filter(im => parseNumeroBR(im.condominio) > 0);
-  } else if(condominio === 'sem'){
-    arr = arr.filter(im => parseNumeroBR(im.condominio) === 0);
-  }
-
-  if(tipoFiltro === 'cobertura'){
-    arr = arr.filter(im => extrairTipoImovel(im.descricao) === 'Cobertura');
-  } else if(tipoFiltro === 'area-privativa'){
-    arr = arr.filter(im => extrairTipoImovel(im.descricao) === 'Área privativa');
-  }
-
-  // ✅ Filtros de quartos, vagas e metragem
   if(quartosMin > 0){
     arr = arr.filter(im => extrairQuartos(im.descricao) >= quartosMin);
   }
@@ -2102,8 +2163,6 @@ function atualizarBadgeFiltros(){
   let count = 0;
   if(f.bairro) count++;
   if(f.preco) count++;
-  if(f.condominio) count++;
-  if(f.tipo) count++;
   if(f.quartos) count++;
   if(f.vagas) count++;
   if(f.metragem) count++;
@@ -2117,8 +2176,6 @@ function limparFiltros(){
   state._filtrosAplicados = {
     bairro: '',
     preco: '',
-    condominio: '',
-    tipo: '',
     quartos: '',
     vagas: '',
     metragem: '',
@@ -2127,8 +2184,6 @@ function limparFiltros(){
   $('filtroBusca').value = '';
   $('filtroBairroAvancado').value = '';
   $('filtroPreco').value = '';
-  $('filtroCondominio').value = '';
-  $('filtroTipo').value = '';
   $('filtroQuartos').value = '';
   $('filtroVagas').value = '';
   $('filtroMetragem').value = '';
@@ -2143,8 +2198,6 @@ function abrirModalBuscaAvancada(){
   const f = state._filtrosAplicados;
   $('filtroBairroAvancado').value = f.bairro || '';
   $('filtroPreco').value = f.preco || '';
-  $('filtroCondominio').value = f.condominio || '';
-  $('filtroTipo').value = f.tipo || '';
   $('filtroQuartos').value = f.quartos || '';
   $('filtroVagas').value = f.vagas || '';
   $('filtroMetragem').value = f.metragem || '';
@@ -2162,8 +2215,6 @@ function aplicarFiltrosAvancados(){
   state._filtrosAplicados = {
     bairro: $('filtroBairroAvancado').value,
     preco: $('filtroPreco').value,
-    condominio: $('filtroCondominio').value,
-    tipo: $('filtroTipo').value,
     quartos: $('filtroQuartos').value,
     vagas: $('filtroVagas').value,
     metragem: $('filtroMetragem').value,
@@ -2184,7 +2235,6 @@ function renderizarCards(){
   const arr = state.imoveisFiltrados;
 
   grid.classList.toggle('admin-mode', state.modoAdmin);
-  // ✅ Classes de modo de visualização
   grid.classList.remove('lista-1', 'lista-2');
   if(state.modoView === 'lista1') grid.classList.add('lista-1');
   if(state.modoView === 'lista2') grid.classList.add('lista-2');
@@ -2520,7 +2570,6 @@ async function abrirMapaParaBairro(bairro){
   state._bairroMapaAtual = bairro;
   state.modoView = 'mapa';
 
-  // Atualiza botões
   $('modoLista1').classList.remove('ativo');
   $('modoLista2').classList.remove('ativo');
   $('modoMapa').classList.add('ativo');
@@ -2531,8 +2580,10 @@ async function abrirMapaParaBairro(bairro){
 
   $('mapaBairroTitulo').textContent = bairro;
   $('mapaQtdBadge').textContent = `${imoveisBairro.length} ${imoveisBairro.length === 1 ? 'imóvel' : 'imóveis'}`;
+  $('mapaFaixaBairro').textContent = bairro;
 
   $('mapaTela').classList.add('show');
+  $('mapaVoltarFaixa').classList.add('show');
   document.body.style.overflow = 'hidden';
 
   setTimeout(async () => {
@@ -2614,6 +2665,7 @@ function adicionarMarker(im, coords){
 
 function sairDoMapa(){
   $('mapaTela').classList.remove('show');
+  $('mapaVoltarFaixa').classList.remove('show');
   document.body.style.overflow = '';
   state._bairroMapaAtual = '';
   state.modoView = 'lista1';
@@ -2623,7 +2675,6 @@ function sairDoMapa(){
   renderizarCards();
 }
 
-/* ✅ SAI DO MAPA TOTALMENTE — volta ao site */
 function sairDoMapaTotalmente(){
   sairDoMapa();
   window.scrollTo({ top: 0, behavior: 'smooth' });
