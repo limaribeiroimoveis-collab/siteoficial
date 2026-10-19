@@ -155,7 +155,7 @@
 
   .container { max-width: 1400px; margin: 0 auto; padding: 0 20px; }
 
-  /* ===== SELETOR DE MODO (LADO A LADO) ===== */
+  /* ===== SELETOR DE MODO (3 BOTÕES LADO A LADO) ===== */
   .modo-selector {
     display: flex;
     justify-content: center;
@@ -281,6 +281,20 @@
     gap: 16px;
     align-content: start;
   }
+  /* ✅ LISTA 1 — 1 card por linha */
+  .cards-grid.lista-1 {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  /* ✅ LISTA 2 — 2 cards por linha */
+  .cards-grid.lista-2 {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+  @media(max-width: 640px) {
+    .cards-grid.lista-2 { grid-template-columns: 1fr; }
+  }
+
   .cards-grid.admin-mode {
     grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 12px;
@@ -502,6 +516,7 @@
     display: flex;
     gap: 8px;
     flex-wrap: wrap;
+    align-items: center;
   }
   .mapa-tela-header .btn-h {
     display: inline-flex;
@@ -533,6 +548,19 @@
     background: var(--azul-escuro);
     border-color: var(--azul-escuro);
   }
+  /* ✅ BOTÃO SAIR DO MAPA (X) */
+  .mapa-tela-header .btn-h.sair-mapa {
+    background: var(--vermelho);
+    color: #fff;
+    border-color: var(--vermelho);
+    padding: 8px 12px;
+  }
+  .mapa-tela-header .btn-h.sair-mapa:hover {
+    background: #b91c1c;
+    border-color: #b91c1c;
+    transform: scale(1.05);
+  }
+  .mapa-tela-header .btn-h.sair-mapa i { font-size: 0.95rem; }
   .mapa-tela-corpo {
     flex: 1;
     position: relative;
@@ -776,7 +804,7 @@
   }
   .modal-detalhes .acoes .btn-share:hover { background: #e0e4ef; }
 
-  /* ===== MODAL BAIRROS (NOVO) ===== */
+  /* ===== MODAL BAIRROS ===== */
   .modal-bairros {
     background: #fff;
     border-radius: var(--radius-lg);
@@ -938,7 +966,7 @@
   .modal-busca-avancada {
     background: #fff;
     border-radius: var(--radius-lg);
-    max-width: 560px; width: 100%;
+    max-width: 620px; width: 100%;
     max-height: 92vh; overflow-y: auto;
     box-shadow: var(--sombra-forte);
     position: relative;
@@ -985,7 +1013,8 @@
     letter-spacing: 0.4px;
     color: var(--muted);
   }
-  .filtro-grupo select {
+  .filtro-grupo select,
+  .filtro-grupo input {
     width: 100%;
     padding: 10px 12px;
     border: 1.5px solid var(--borda-forte);
@@ -997,10 +1026,21 @@
     transition: 0.15s;
     height: 42px;
   }
-  .filtro-grupo select:focus {
+  .filtro-grupo select:focus,
+  .filtro-grupo input:focus {
     outline: none;
     border-color: var(--azul-quinto);
     box-shadow: 0 0 0 3px rgba(0, 30, 240, 0.1);
+  }
+  .modal-busca-avancada .secao-titulo {
+    font-size: 0.68rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--azul-quinto);
+    margin-bottom: 8px;
+    padding-top: 12px;
+    border-top: 1px dashed var(--borda);
   }
   .modal-busca-avancada .acoes-modal {
     display: flex;
@@ -1215,6 +1255,7 @@
     .mapa-tela-header .titulo { font-size: 0.86rem; }
     .mapa-tela-header .btn-h { font-size: 0.72rem; padding: 7px 10px; }
     .mapa-tela-header .btn-h .lbl-h { display: none; }
+    .mapa-tela-header .btn-h.sair-mapa { padding: 7px 10px; }
   }
 
   @media (max-width: 640px) {
@@ -1291,11 +1332,14 @@
   </div>
 </section>
 
-<!-- ===== SELETOR DE MODO ===== -->
+<!-- ===== SELETOR DE MODO (3 BOTÕES) ===== -->
 <div class="container">
   <div class="modo-selector">
-    <button class="modo-btn ativo" id="modoLista" onclick="trocarModo('lista')">
-      <i class="fas fa-th-large"></i> Lista
+    <button class="modo-btn ativo" id="modoLista1" onclick="trocarModo('lista1')">
+      <i class="fas fa-list"></i> Lista 1
+    </button>
+    <button class="modo-btn" id="modoLista2" onclick="trocarModo('lista2')">
+      <i class="fas fa-th-large"></i> Lista 2
     </button>
     <button class="modo-btn" id="modoMapa" onclick="abrirModalBairros()">
       <i class="fas fa-map-marked-alt"></i> Mapa
@@ -1321,7 +1365,7 @@
 <!-- ===== CONTEÚDO PRINCIPAL (SÓ CARDS) ===== -->
 <div class="container">
   <div class="conteudo-principal">
-    <div class="cards-grid" id="cardsGrid">
+    <div class="cards-grid lista-1" id="cardsGrid">
       <div class="loading-principal">
         <div class="spinner"></div>
         <p>Carregando imóveis disponíveis...</p>
@@ -1346,6 +1390,11 @@
       <button class="btn-h primary" onclick="sairDoMapa()">
         <i class="fas fa-th-large"></i>
         <span class="lbl-h">Ver em lista</span>
+      </button>
+      <!-- ✅ BOTÃO SAIR DO MAPA (VOLTA AO SITE) -->
+      <button class="btn-h sair-mapa" onclick="sairDoMapaTotalmente()" title="Sair do mapa">
+        <i class="fas fa-times"></i>
+        <span class="lbl-h">Sair</span>
       </button>
     </div>
   </div>
@@ -1422,15 +1471,20 @@
     <h3><i class="fas fa-sliders-h"></i> Busca avançada</h3>
     <p class="sub">Combine filtros para encontrar exatamente o que procura.</p>
 
+    <div class="secao-titulo">📍 Localização</div>
     <div class="filtros-grid-2">
-      <div class="filtro-grupo">
+      <div class="filtro-grupo" style="grid-column: 1 / -1;">
         <label for="filtroBairroAvancado">Bairro</label>
         <select id="filtroBairroAvancado">
           <option value="">Todos os bairros</option>
         </select>
       </div>
-      <div class="filtro-grupo">
-        <label for="filtroPreco">Faixa de preço</label>
+    </div>
+
+    <div class="secao-titulo">💰 Faixa de preço</div>
+    <div class="filtros-grid-2">
+      <div class="filtro-grupo" style="grid-column: 1 / -1;">
+        <label for="filtroPreco">Preço do imóvel</label>
         <select id="filtroPreco">
           <option value="">Qualquer valor</option>
           <option value="0-300000">Até R$ 300 mil</option>
@@ -1440,13 +1494,34 @@
           <option value="1200000-999999999">Acima de R$ 1,2 mi</option>
         </select>
       </div>
+    </div>
+
+    <div class="secao-titulo">🏠 Características</div>
+    <div class="filtros-grid-2">
       <div class="filtro-grupo">
-        <label for="filtroCondominio">Condomínio</label>
-        <select id="filtroCondominio">
+        <label for="filtroQuartos">Quartos (mínimo)</label>
+        <select id="filtroQuartos">
           <option value="">Qualquer</option>
-          <option value="com">Com condomínio</option>
-          <option value="sem">Sem condomínio (isento)</option>
+          <option value="1">1+</option>
+          <option value="2">2+</option>
+          <option value="3">3+</option>
+          <option value="4">4+</option>
+          <option value="5">5+</option>
         </select>
+      </div>
+      <div class="filtro-grupo">
+        <label for="filtroVagas">Vagas (mínimo)</label>
+        <select id="filtroVagas">
+          <option value="">Qualquer</option>
+          <option value="1">1+</option>
+          <option value="2">2+</option>
+          <option value="3">3+</option>
+          <option value="4">4+</option>
+        </select>
+      </div>
+      <div class="filtro-grupo">
+        <label for="filtroMetragem">Metragem mínima (m²)</label>
+        <input type="number" id="filtroMetragem" placeholder="Ex: 80" min="0" step="10">
       </div>
       <div class="filtro-grupo">
         <label for="filtroTipo">Tipo</label>
@@ -1456,12 +1531,29 @@
           <option value="area-privativa">Área privativa</option>
         </select>
       </div>
+    </div>
+
+    <div class="secao-titulo">🏢 Condomínio</div>
+    <div class="filtros-grid-2">
+      <div class="filtro-grupo" style="grid-column: 1 / -1;">
+        <label for="filtroCondominio">Condomínio</label>
+        <select id="filtroCondominio">
+          <option value="">Qualquer</option>
+          <option value="com">Com condomínio</option>
+          <option value="sem">Sem condomínio (isento)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="secao-titulo">📊 Ordenação</div>
+    <div class="filtros-grid-2">
       <div class="filtro-grupo" style="grid-column: 1 / -1;">
         <label for="filtroOrdenacao">Ordenar por</label>
         <select id="filtroOrdenacao">
           <option value="recentes">Mais recentes</option>
           <option value="menor-preco">Menor preço</option>
           <option value="maior-preco">Maior preço</option>
+          <option value="maior-metragem">Maior metragem</option>
         </select>
       </div>
     </div>
@@ -1495,7 +1587,7 @@
   </div>
 </div>
 
-<!-- ===== MODAL EDITOR (IDÊNTICO AO VITRINEADMIN) ===== -->
+<!-- ===== MODAL EDITOR ===== -->
 <div class="modal-backdrop" id="modalEditarImovel">
   <div class="modal-editor">
     <button class="btn-fechar" onclick="fecharModalEditarImovel()"><i class="fas fa-times"></i></button>
@@ -1633,7 +1725,7 @@ const state = {
   mapa: null,
   markerCluster: null,
   markersPorId: {},
-  modoView: 'lista',
+  modoView: 'lista1',
   imovelAtual: null,
   filtroAtivo: false,
   modoAdmin: false,
@@ -1648,6 +1740,9 @@ const state = {
     preco: '',
     condominio: '',
     tipo: '',
+    quartos: '',
+    vagas: '',
+    metragem: '',
     ordenacao: 'recentes'
   }
 };
@@ -1725,6 +1820,44 @@ function isVendido(descricao){
     if(texto.includes('vendido')) return true;
   }
   return false;
+}
+
+/* ✅ EXTRAI QUARTOS DA DESCRIÇÃO (aceita qts, quartos, quars, etc.) */
+function extrairQuartos(descricao){
+  if(!descricao) return 0;
+  const s = String(descricao).toLowerCase();
+  // Aceita: 3 quartos | 3 qts | 3quarts | 3 quars | 3 qtos
+  const m = s.match(/(\d+)\s*(quartos?|qts?|quars?|qtos?|quartitos?)/i);
+  return m ? parseInt(m[1], 10) : 0;
+}
+
+/* ✅ EXTRAI VAGAS DA DESCRIÇÃO */
+function extrairVagas(descricao){
+  if(!descricao) return 0;
+  const s = String(descricao).toLowerCase();
+  // Aceita: 2 vagas | 2 vgs | 2vg | 2 garagens
+  const m = s.match(/(\d+)\s*(vagas?|vgs?|garagens?|garagem)/i);
+  return m ? parseInt(m[1], 10) : 0;
+}
+
+/* ✅ EXTRAI SUÍTES DA DESCRIÇÃO */
+function extrairSuites(descricao){
+  if(!descricao) return 0;
+  const s = String(descricao).toLowerCase();
+  const m = s.match(/(\d+)\s*(su[ií]tes?|stes?)/i);
+  return m ? parseInt(m[1], 10) : 0;
+}
+
+/* ✅ EXTRAI METRAGEM DA DESCRIÇÃO (aceita m², m2, metros) */
+function extrairMetragem(descricao){
+  if(!descricao) return 0;
+  const s = String(descricao).toLowerCase();
+  // Aceita: 120m² | 120 m² | 120m2 | 120 metros | 120m
+  const m = s.match(/(\d+[,.]?\d*)\s*(m²|m2|metros?|mts?)/i);
+  if(!m) return 0;
+  const num = String(m[1]).replace(',', '.');
+  const n = parseFloat(num);
+  return isNaN(n) ? 0 : Math.round(n);
 }
 
 function primeiraLinhaDescricao(descricao){
@@ -1888,7 +2021,7 @@ function popularSelectBairros(){
 function temFiltroAtivo(){
   const busca = $('filtroBusca').value.trim();
   const f = state._filtrosAplicados;
-  return !!(busca || f.bairro || f.preco || f.condominio || f.tipo);
+  return !!(busca || f.bairro || f.preco || f.condominio || f.tipo || f.quartos || f.vagas || f.metragem);
 }
 
 function aplicarFiltros(){
@@ -1898,6 +2031,9 @@ function aplicarFiltros(){
   const precoRange = f.preco;
   const condominio = f.condominio;
   const tipoFiltro = f.tipo;
+  const quartosMin = parseInt(f.quartos || '0', 10) || 0;
+  const vagasMin = parseInt(f.vagas || '0', 10) || 0;
+  const metragemMin = parseInt(f.metragem || '0', 10) || 0;
   const ordenacao = f.ordenacao || 'recentes';
 
   state.filtroAtivo = temFiltroAtivo();
@@ -1938,9 +2074,21 @@ function aplicarFiltros(){
     arr = arr.filter(im => extrairTipoImovel(im.descricao) === 'Área privativa');
   }
 
+  // ✅ Filtros de quartos, vagas e metragem
+  if(quartosMin > 0){
+    arr = arr.filter(im => extrairQuartos(im.descricao) >= quartosMin);
+  }
+  if(vagasMin > 0){
+    arr = arr.filter(im => extrairVagas(im.descricao) >= vagasMin);
+  }
+  if(metragemMin > 0){
+    arr = arr.filter(im => extrairMetragem(im.descricao) >= metragemMin);
+  }
+
   arr.sort((a, b) => {
     if(ordenacao === 'menor-preco') return parseNumeroBR(a.preco) - parseNumeroBR(b.preco);
     if(ordenacao === 'maior-preco') return parseNumeroBR(b.preco) - parseNumeroBR(a.preco);
+    if(ordenacao === 'maior-metragem') return extrairMetragem(b.descricao) - extrairMetragem(a.descricao);
     return new Date(b.dataCadastro||0) - new Date(a.dataCadastro||0);
   });
 
@@ -1956,6 +2104,9 @@ function atualizarBadgeFiltros(){
   if(f.preco) count++;
   if(f.condominio) count++;
   if(f.tipo) count++;
+  if(f.quartos) count++;
+  if(f.vagas) count++;
+  if(f.metragem) count++;
   const badge = $('badgeFiltrosAtivos');
   const btn = $('btnBuscaAvancada');
   if(badge) badge.textContent = count;
@@ -1968,6 +2119,9 @@ function limparFiltros(){
     preco: '',
     condominio: '',
     tipo: '',
+    quartos: '',
+    vagas: '',
+    metragem: '',
     ordenacao: 'recentes'
   };
   $('filtroBusca').value = '';
@@ -1975,6 +2129,9 @@ function limparFiltros(){
   $('filtroPreco').value = '';
   $('filtroCondominio').value = '';
   $('filtroTipo').value = '';
+  $('filtroQuartos').value = '';
+  $('filtroVagas').value = '';
+  $('filtroMetragem').value = '';
   $('filtroOrdenacao').value = 'recentes';
   aplicarFiltros();
 }
@@ -1988,6 +2145,9 @@ function abrirModalBuscaAvancada(){
   $('filtroPreco').value = f.preco || '';
   $('filtroCondominio').value = f.condominio || '';
   $('filtroTipo').value = f.tipo || '';
+  $('filtroQuartos').value = f.quartos || '';
+  $('filtroVagas').value = f.vagas || '';
+  $('filtroMetragem').value = f.metragem || '';
   $('filtroOrdenacao').value = f.ordenacao || 'recentes';
   $('modalBuscaAvancada').classList.add('show');
   document.body.style.overflow = 'hidden';
@@ -2004,14 +2164,15 @@ function aplicarFiltrosAvancados(){
     preco: $('filtroPreco').value,
     condominio: $('filtroCondominio').value,
     tipo: $('filtroTipo').value,
+    quartos: $('filtroQuartos').value,
+    vagas: $('filtroVagas').value,
+    metragem: $('filtroMetragem').value,
     ordenacao: $('filtroOrdenacao').value
   };
   fecharModalBuscaAvancada();
   aplicarFiltros();
-  if(state.modoView === 'mapa') {
-    if(state._bairroMapaAtual) {
-      abrirMapaParaBairro(state._bairroMapaAtual);
-    }
+  if(state.modoView === 'mapa' && state._bairroMapaAtual) {
+    abrirMapaParaBairro(state._bairroMapaAtual);
   }
 }
 
@@ -2023,6 +2184,10 @@ function renderizarCards(){
   const arr = state.imoveisFiltrados;
 
   grid.classList.toggle('admin-mode', state.modoAdmin);
+  // ✅ Classes de modo de visualização
+  grid.classList.remove('lista-1', 'lista-2');
+  if(state.modoView === 'lista1') grid.classList.add('lista-1');
+  if(state.modoView === 'lista2') grid.classList.add('lista-2');
 
   if(arr.length === 0){
     grid.innerHTML = `
@@ -2174,7 +2339,6 @@ function abrirDetalhes(id){
     $('detalheGastos').style.display = 'none';
   }
 
-  // ✅ WHATSAPP DIRECIONADO PARA O CORRETOR DO LINK
   const whatsNum = getWhatsappCorretor(im);
   const corretorNome = detectarCorretorDoLink(im.link || '');
   const msg = encodeURIComponent(
@@ -2354,8 +2518,13 @@ function delay(ms){ return new Promise(r => setTimeout(r, ms)); }
 async function abrirMapaParaBairro(bairro){
   fecharModalBairros();
   state._bairroMapaAtual = bairro;
+  state.modoView = 'mapa';
 
-  // Filtra imóveis deste bairro
+  // Atualiza botões
+  $('modoLista1').classList.remove('ativo');
+  $('modoLista2').classList.remove('ativo');
+  $('modoMapa').classList.add('ativo');
+
   const imoveisBairro = state.imoveisUnicos.filter(im => 
     normalizaTexto(im.bairro) === normalizaTexto(bairro)
   );
@@ -2363,11 +2532,9 @@ async function abrirMapaParaBairro(bairro){
   $('mapaBairroTitulo').textContent = bairro;
   $('mapaQtdBadge').textContent = `${imoveisBairro.length} ${imoveisBairro.length === 1 ? 'imóvel' : 'imóveis'}`;
 
-  // Abre a tela do mapa
   $('mapaTela').classList.add('show');
   document.body.style.overflow = 'hidden';
 
-  // Precisa inicializar o mapa DEPOIS de mostrar (para tamanho correto)
   setTimeout(async () => {
     inicializarMapa();
     state.mapa.invalidateSize();
@@ -2449,9 +2616,17 @@ function sairDoMapa(){
   $('mapaTela').classList.remove('show');
   document.body.style.overflow = '';
   state._bairroMapaAtual = '';
-  // Volta o botão "Lista" como ativo
-  $('modoLista').classList.add('ativo');
+  state.modoView = 'lista1';
+  $('modoLista1').classList.add('ativo');
+  $('modoLista2').classList.remove('ativo');
   $('modoMapa').classList.remove('ativo');
+  renderizarCards();
+}
+
+/* ✅ SAI DO MAPA TOTALMENTE — volta ao site */
+function sairDoMapaTotalmente(){
+  sairDoMapa();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function trocarModo(modo){
@@ -2459,11 +2634,11 @@ function trocarModo(modo){
     abrirModalBairros();
     return;
   }
-  // modo === 'lista'
-  sairDoMapa();
-  state.modoView = 'lista';
-  $('modoLista').classList.add('ativo');
+  state.modoView = modo;
+  $('modoLista1').classList.toggle('ativo', modo === 'lista1');
+  $('modoLista2').classList.toggle('ativo', modo === 'lista2');
   $('modoMapa').classList.remove('ativo');
+  renderizarCards();
 }
 
 /* =====================================================
@@ -2959,6 +3134,7 @@ window.fecharModalBairros = fecharModalBairros;
 window.filtrarListaBairros = filtrarListaBairros;
 window.abrirMapaParaBairro = abrirMapaParaBairro;
 window.sairDoMapa = sairDoMapa;
+window.sairDoMapaTotalmente = sairDoMapaTotalmente;
 window.trocarModo = trocarModo;
 window.abrirModalBuscaAvancada = abrirModalBuscaAvancada;
 window.fecharModalBuscaAvancada = fecharModalBuscaAvancada;
