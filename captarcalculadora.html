@@ -278,6 +278,11 @@
     border-color: #c4b5fd;
     color: #5b21b6;
   }
+  .cc-tag.pets{
+    background: #fce7f3;
+    border-color: #fbcfe8;
+    color: #831843;
+  }
   .cc-tag.fase1{
     background: #fef3c7;
     border-color: #fbbf24;
@@ -758,8 +763,12 @@
 
     <div class="form-row-3">
       <div class="form-group">
-        <label>Tipo</label>
-        <input type="text" id="editTipo" placeholder="Ex: Apartamento">
+        <label>Tipo do Imóvel</label>
+        <select id="editTipo">
+          <option value="">Selecione...</option>
+          <option value="Apartamento">Apartamento</option>
+          <option value="Casa">Casa</option>
+        </select>
       </div>
       <div class="form-group">
         <label>Área (m²)</label>
@@ -939,12 +948,13 @@ function nomeCompletoCliente_(nome, telefone){
   return n;
 }
 
-/* Parse da coluna "origem" */
+/* Parse da coluna "origem" - MANTIDO PARA COMPATIBILIDADE COM DADOS ANTIGOS */
 function parseOrigem_(origemBruta){
   const out = {
     fase: '', nome: '', telefone: '', endereco: '',
     rua: '', numero: '', complemento: '', bairro: '',
-    tipo: '', area: '', quartos: '', suites: '', banheiros: '',
+    tipo: '', tipoApto: '', tipoVaga: '', pets: '',
+    area: '', quartos: '', suites: '', banheiros: '',
     vagas: '', condominio: '', iptu: '', valorEstimado: '',
     completa: false,
     _raw: String(origemBruta || '').trim()
@@ -972,6 +982,9 @@ function parseOrigem_(origemBruta){
         } else { out.rua = valor; }
         break;
       case 'tipo':           out.tipo        = valor; break;
+      case 'tipoapto':       out.tipoApto    = valor; break;
+      case 'tipovaga':       out.tipoVaga    = valor; break;
+      case 'pets':           out.pets        = valor; break;
       case 'area':           out.area        = valor; break;
       case 'quartos':        out.quartos     = valor; break;
       case 'suites':         out.suites      = valor; break;
@@ -1096,7 +1109,8 @@ async function carregarCaptacoes(mostrarLoading){
     $('captLista').innerHTML = '<div class="loading-inline"><span class="loader loader-lg"></span><p>Carregando captações...</p></div>';
   }
   marcarSalvando(true);
-  const res = await api('listarCaptacoesQPrecoV2', { senha: state.adminSenha });
+  // ✅ Trocado para V3 que retorna todos os campos separados!
+  const res = await api('listarCaptacoesQPrecoV3', { senha: state.adminSenha });
   marcarSalvando(false);
   if(!res.ok){
     $('captLista').innerHTML = '<div class="empty-state"><h3>Erro ao carregar captações</h3><p>' + esc(res.error || '') + '</p></div>';
@@ -1320,22 +1334,48 @@ function captacaoCardHTML(c){
   `;
 
   let chipsImovel = '';
+  
+  // ✅ AJUSTE: Pega os dados das novas colunas dedicadas (c.tipo, c.tipoApto, c.pets, etc.)
+  const tipoFinal = c.tipo || origem.tipo || '';
+  const tipoAptoFinal = c.tipoApto || origem.tipoApto || '';
+  const tipoVagaFinal = c.tipoVaga || origem.tipoVaga || '';
+  const petsFinal = c.pets || origem.pets || '';
+  const areaFinal = c.area || origem.area || '';
+  const quartosFinal = c.quartos !== undefined && c.quartos !== '' ? c.quartos : origem.quartos;
+  const suitesFinal = c.suites !== undefined && c.suites !== '' ? c.suites : origem.suites;
+  const banheirosFinal = c.banheiros !== undefined && c.banheiros !== '' ? c.banheiros : origem.banheiros;
+  const vagasFinal = c.vagas !== undefined && c.vagas !== '' ? c.vagas : origem.vagas;
+  const condominioFinal = c.condominio || origem.condominio || '';
+  const iptuFinal = c.iptu || origem.iptu || '';
+  const valorEstimadoFinal = c.valorEstimado || origem.valorEstimado || '';
+
   const temDadosImovel =
-    origem.tipo || origem.area || origem.quartos || origem.suites ||
-    origem.banheiros || origem.vagas || origem.condominio ||
-    origem.iptu || origem.valorEstimado;
+    tipoFinal || areaFinal || quartosFinal || suitesFinal ||
+    banheirosFinal || vagasFinal || condominioFinal ||
+    iptuFinal || valorEstimadoFinal || petsFinal || tipoVagaFinal || tipoAptoFinal;
 
   if(temDadosImovel){
     const tags = [];
-    if(origem.tipo) tags.push(`<span class="cc-tag tipo"><span class="lbl">Tipo:</span> ${esc(origem.tipo)}</span>`);
-    if(origem.area) tags.push(`<span class="cc-tag"><span class="lbl">Área:</span> ${esc(origem.area)} m²</span>`);
-    if(origem.quartos && origem.quartos !== '0') tags.push(`<span class="cc-tag"><span class="lbl">🛏</span> ${esc(origem.quartos)}</span>`);
-    if(origem.suites && origem.suites !== '0') tags.push(`<span class="cc-tag"><span class="lbl">🛁</span> ${esc(origem.suites)}</span>`);
-    if(origem.banheiros && origem.banheiros !== '0') tags.push(`<span class="cc-tag"><span class="lbl">🚿</span> ${esc(origem.banheiros)}</span>`);
-    if(origem.vagas && origem.vagas !== '0') tags.push(`<span class="cc-tag"><span class="lbl">🚗</span> ${esc(origem.vagas)}</span>`);
-    if(origem.condominio && origem.condominio !== '0') tags.push(`<span class="cc-tag"><span class="lbl">Cond.:</span> R$ ${esc(origem.condominio)}</span>`);
-    if(origem.iptu && origem.iptu !== '0') tags.push(`<span class="cc-tag"><span class="lbl">IPTU:</span> R$ ${esc(origem.iptu)}</span>`);
-    if(origem.valorEstimado) tags.push(`<span class="cc-tag valor"><span class="lbl">💰 Dono acha:</span> R$ ${esc(origem.valorEstimado)}</span>`);
+    
+    let labelTipo = tipoFinal;
+    if (tipoFinal === 'Apartamento' && tipoAptoFinal) labelTipo += ' (' + tipoAptoFinal + ')';
+    else if (tipoFinal === 'Casa' && tipoAptoFinal) labelTipo += ' (' + tipoAptoFinal + ')';
+    
+    if(labelTipo) tags.push(`<span class="cc-tag tipo"><span class="lbl">Tipo:</span> ${esc(labelTipo)}</span>`);
+    if(areaFinal) tags.push(`<span class="cc-tag"><span class="lbl">Área:</span> ${esc(areaFinal)} m²</span>`);
+    if(quartosFinal && quartosFinal !== '0') tags.push(`<span class="cc-tag"><span class="lbl">🛏</span> ${esc(quartosFinal)}</span>`);
+    if(suitesFinal && suitesFinal !== '0') tags.push(`<span class="cc-tag"><span class="lbl">🛁</span> ${esc(suitesFinal)}</span>`);
+    if(banheirosFinal && banheirosFinal !== '0') tags.push(`<span class="cc-tag"><span class="lbl">🚿</span> ${esc(banheirosFinal)}</span>`);
+    
+    let labelVagas = vagasFinal;
+    if (vagasFinal && vagasFinal !== '0' && tipoVagaFinal) labelVagas += ' (' + tipoVagaFinal + ')';
+    if(labelVagas && labelVagas !== '0') tags.push(`<span class="cc-tag"><span class="lbl">🚗</span> ${esc(labelVagas)}</span>`);
+
+    if(petsFinal) tags.push(`<span class="cc-tag pets"><span class="lbl">🐾 Pets:</span> ${esc(petsFinal)}</span>`);
+    if(condominioFinal && condominioFinal !== '0') tags.push(`<span class="cc-tag"><span class="lbl">Cond.:</span> R$ ${esc(condominioFinal)}</span>`);
+    if(iptuFinal && iptuFinal !== '0') tags.push(`<span class="cc-tag"><span class="lbl">IPTU:</span> R$ ${esc(iptuFinal)}</span>`);
+    if(valorEstimadoFinal) tags.push(`<span class="cc-tag valor"><span class="lbl">💰 Dono acha:</span> R$ ${esc(valorEstimadoFinal)}</span>`);
+    
     chipsImovel = `<div class="cc-imovel">${tags.join('')}</div>`;
   } else if(origem.fase === 'FASE1-PARCIAL'){
     chipsImovel = `<div class="cc-imovel"><span class="cc-tag fase1">⏳ Aguardando complemento (fase 2)</span></div>`;
@@ -1860,7 +1900,8 @@ async function refreshSilencioso_(){
   if(!podeAtualizarAgora_()) return false;
 
   try {
-    const res = await api('listarCaptacoesQPrecoV2', { senha: state.adminSenha });
+    // ✅ Trocado para V3
+    const res = await api('listarCaptacoesQPrecoV3', { senha: state.adminSenha });
     if(!res.ok) return false;
     if(!podeAtualizarAgora_()) return false;
 
