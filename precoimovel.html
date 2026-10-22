@@ -192,6 +192,84 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
   }
   .linha-dupla { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
+  /* =============================================
+     TRIAGEM — cards de opção (Fase 1)
+  ============================================= */
+  .triagem-bloco {
+    margin-bottom: 18px;
+    padding: 16px 14px;
+    background: #f9fafc;
+    border: 1px solid rgba(0, 30, 240, 0.06);
+    border-radius: 14px;
+  }
+  .triagem-bloco .triagem-titulo {
+    font-size: 0.82rem; font-weight: 800;
+    color: var(--texto); margin-bottom: 10px;
+    display: flex; align-items: center; gap: 8px;
+    letter-spacing: 0.1px;
+  }
+  .triagem-bloco .triagem-titulo .num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 20px; height: 20px; border-radius: 50%;
+    background: var(--azul); color: #fff;
+    font-size: 0.7rem; font-weight: 800;
+    flex-shrink: 0;
+  }
+  .triagem-bloco .triagem-titulo .obrig { color: var(--vermelho); margin-left: 2px; }
+
+  .triagem-opcoes {
+    display: grid; grid-template-columns: 1fr; gap: 8px;
+  }
+  .triagem-opcoes.duas-colunas { grid-template-columns: 1fr 1fr; }
+
+  .opcao {
+    display: flex; align-items: center; gap: 10px;
+    padding: 11px 13px;
+    background: #fff;
+    border: 1.5px solid var(--borda-forte);
+    border-radius: 11px;
+    font-family: inherit; font-size: 0.84rem; font-weight: 600;
+    color: var(--texto); cursor: pointer; transition: 0.15s;
+    text-align: left; line-height: 1.35;
+  }
+  .opcao:hover { border-color: var(--azul); background: #f5f7ff; }
+  .opcao .bolinha {
+    width: 16px; height: 16px; border-radius: 50%;
+    border: 2px solid var(--borda-forte); background: #fff;
+    flex-shrink: 0; transition: 0.15s;
+    position: relative;
+  }
+  .opcao.ativo {
+    border-color: var(--azul);
+    background: linear-gradient(135deg, rgba(0,30,240,0.05), rgba(0,68,255,0.05));
+    box-shadow: 0 3px 12px rgba(0, 30, 240, 0.10);
+  }
+  .opcao.ativo .bolinha {
+    border-color: var(--azul);
+    background: var(--azul);
+  }
+  .opcao.ativo .bolinha::after {
+    content: ''; position: absolute;
+    top: 2px; left: 2px;
+    width: 8px; height: 8px; border-radius: 50%;
+    background: #fff;
+  }
+
+  /* Aviso de bloqueio */
+  .aviso-bloqueio {
+    display: none;
+    margin-top: 10px;
+    padding: 10px 12px;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 10px;
+    font-size: 0.78rem; color: #991b1b;
+    line-height: 1.45;
+    align-items: flex-start; gap: 8px;
+  }
+  .aviso-bloqueio.visivel { display: flex; }
+  .aviso-bloqueio i { color: var(--vermelho); margin-top: 2px; flex-shrink: 0; }
+
   /* BOTÃO PROFISSIONAL */
   .btn-enviar {
     width: 100%;
@@ -220,7 +298,12 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
     transform: translateY(0);
     box-shadow: 0 6px 18px rgba(0, 30, 240, 0.35);
   }
-  .btn-enviar:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+  .btn-enviar:disabled {
+    background: linear-gradient(135deg, #cbd5e1, #94a3b8);
+    box-shadow: none;
+    opacity: 0.85;
+    cursor: not-allowed; transform: none;
+  }
   .btn-enviar i { font-size: 1.05rem; }
 
   /* WHATSAPP DISCRETO */
@@ -367,9 +450,18 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
   }
   .resultado-final p {
     color: var(--texto-cinza); font-size: 0.95rem;
-    line-height: 1.65; max-width: 440px;
-    margin: 0 auto 26px;
+    line-height: 1.65; max-width: 460px;
+    margin: 0 auto 16px;
   }
+  .resultado-final .prazo {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: #f0fdf4; color: #166534;
+    padding: 8px 16px; border-radius: 30px;
+    font-size: 0.82rem; font-weight: 700;
+    margin-bottom: 24px;
+    border: 1px solid #bbf7d0;
+  }
+  .resultado-final .prazo i { font-size: 0.9rem; }
 
   /* BOTÃO WHATSAPP RESULTADO FINAL */
   .btn-whatsapp-final {
@@ -436,6 +528,9 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
     .fase2-card { padding: 24px 18px; border-radius: 20px; }
     .fase2-card .form-titulo { font-size: 1.1rem; }
     .linha-steppers { grid-template-columns: 1fr 1fr; }
+
+    .triagem-opcoes.duas-colunas { grid-template-columns: 1fr; }
+    .opcao { font-size: 0.82rem; padding: 11px 12px; }
 
     .loading-titulo { font-size: 1.02rem; }
     .loading-sub { font-size: 0.85rem; }
@@ -504,17 +599,17 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
           </div>
 
           <div class="beneficio">
-            <div class="icone"><i class="fas fa-user-shield"></i></div>
+            <div class="icone"><i class="fas fa-user-tie"></i></div>
             <div class="texto">
-              <h4>Seus dados são protegidos</h4>
-              <p>Usamos suas informações apenas para te ajudar a vender melhor.</p>
+              <h4>Consultor especialista responde</h4>
+              <p>Um consultor da Lima Ribeiro (Grupo Quinto Andar) te chama no WhatsApp com a análise gratuita.</p>
             </div>
           </div>
         </div>
 
         <div class="selo-quintoandar">
           <i class="fas fa-shield-alt"></i>
-          <span>Avaliação conduzida pela equipe <strong>Lima Ribeiro Imóveis</strong>.</span>
+          <span>Avaliação conduzida pela equipe <strong>Lima Ribeiro Imóveis</strong> · Grupo Quinto Andar</span>
         </div>
       </div>
 
@@ -528,11 +623,113 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
               <i class="fas fa-home"></i> Vamos começar sua avaliação
             </div>
             <p class="form-sub">
-              São só <strong>6 campos rápidos</strong>. Depois disso, você responde alguns detalhes do imóvel.
+              Responda <strong>4 perguntas rápidas</strong> e depois alguns dados do imóvel.
+              Leva menos de 2 minutos.
             </p>
 
             <form id="formCaptacao" novalidate onsubmit="enviarFormulario(event)">
 
+              <!-- TRIAGEM 1 — PROPRIETÁRIO -->
+              <div class="triagem-bloco">
+                <div class="triagem-titulo">
+                  <span class="num">1</span>
+                  Você é o proprietário deste imóvel?
+                  <span class="obrig">*</span>
+                </div>
+                <div class="triagem-opcoes" id="opcoesProprietario">
+                  <button type="button" class="opcao" data-val="proprietario">
+                    <span class="bolinha"></span>
+                    Sim, sou o proprietário (ou coproprietário)
+                  </button>
+                  <button type="button" class="opcao" data-val="familiar">
+                    <span class="bolinha"></span>
+                    Não, sou familiar/representante do proprietário
+                  </button>
+                  <button type="button" class="opcao" data-val="corretor">
+                    <span class="bolinha"></span>
+                    Não, sou corretor ou apenas consultando
+                  </button>
+                </div>
+              </div>
+
+              <!-- TRIAGEM 2 — CIDADE -->
+              <div class="triagem-bloco">
+                <div class="triagem-titulo">
+                  <span class="num">2</span>
+                  Em qual cidade o imóvel está localizado?
+                  <span class="obrig">*</span>
+                </div>
+                <div class="triagem-opcoes duas-colunas" id="opcoesCidade">
+                  <button type="button" class="opcao" data-val="Belo Horizonte">
+                    <span class="bolinha"></span> Belo Horizonte
+                  </button>
+                  <button type="button" class="opcao" data-val="Contagem">
+                    <span class="bolinha"></span> Contagem
+                  </button>
+                  <button type="button" class="opcao" data-val="Nova Lima">
+                    <span class="bolinha"></span> Nova Lima
+                  </button>
+                  <button type="button" class="opcao" data-val="Outra cidade">
+                    <span class="bolinha"></span> Outra cidade
+                  </button>
+                </div>
+                <div class="aviso-bloqueio" id="avisoCidade">
+                  <i class="fas fa-info-circle"></i>
+                  <span>Atendemos apenas imóveis em <strong>Belo Horizonte, Contagem e Nova Lima</strong>. Se o seu imóvel for de outra cidade, não conseguimos seguir com a avaliação.</span>
+                </div>
+              </div>
+
+              <!-- TRIAGEM 3 — ANUNCIADO NO QUINTO ANDAR AGORA -->
+              <div class="triagem-bloco">
+                <div class="triagem-titulo">
+                  <span class="num">3</span>
+                  Este imóvel está anunciado no Quinto Andar (incluindo Casa Mineira) <u>neste momento</u>?
+                  <span class="obrig">*</span>
+                </div>
+                <div class="triagem-opcoes" id="opcoesAnunciadoQA">
+                  <button type="button" class="opcao" data-val="nao_anunciado">
+                    <span class="bolinha"></span>
+                    Não, não está anunciado em nenhum lugar
+                  </button>
+                  <button type="button" class="opcao" data-val="outras_imobiliarias">
+                    <span class="bolinha"></span>
+                    Está anunciado em outras imobiliárias/plataformas, mas não no Quinto Andar
+                  </button>
+                  <button type="button" class="opcao" data-val="sim_agora">
+                    <span class="bolinha"></span>
+                    Sim, está anunciado no Quinto Andar / Casa Mineira <strong>agora</strong>
+                  </button>
+                </div>
+                <div class="aviso-bloqueio" id="avisoQA">
+                  <i class="fas fa-info-circle"></i>
+                  <span>Este imóvel já está anunciado no Quinto Andar / Casa Mineira. <strong>Não é possível fazer uma avaliação duplicada.</strong> Se o anúncio foi removido e você quer reavaliar, selecione outra opção acima.</span>
+                </div>
+              </div>
+
+              <!-- TRIAGEM 4 — INTENÇÃO -->
+              <div class="triagem-bloco">
+                <div class="triagem-titulo">
+                  <span class="num">4</span>
+                  Qual é a sua principal intenção agora?
+                  <span class="obrig">*</span>
+                </div>
+                <div class="triagem-opcoes" id="opcoesIntencao">
+                  <button type="button" class="opcao" data-val="quero_vender_conhecer">
+                    <span class="bolinha"></span>
+                    Quero vender e conhecer o preço de mercado antes de decidir
+                  </button>
+                  <button type="button" class="opcao" data-val="quero_vender_decidido">
+                    <span class="bolinha"></span>
+                    Quero vender, já decidi, só preciso de um preço de referência
+                  </button>
+                  <button type="button" class="opcao" data-val="apenas_curioso">
+                    <span class="bolinha"></span>
+                    Apenas curioso, querendo saber quanto vale (sem intenção de vender agora)
+                  </button>
+                </div>
+              </div>
+
+              <!-- DADOS PESSOAIS -->
               <div class="campo">
                 <label for="nome">Seu nome completo <span class="obrig">*</span></label>
                 <input type="text" id="nome" name="nome" placeholder="Ex: Maria Silva" autocomplete="name" required>
@@ -563,7 +760,7 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
                 </div>
               </div>
 
-              <button type="submit" class="btn-enviar" id="btnEnviar">
+              <button type="submit" class="btn-enviar" id="btnEnviar" disabled>
                 <i class="fas fa-calculator"></i>
                 <span>Começar a Calcular o Valor do Imóvel</span>
               </button>
@@ -692,13 +889,20 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
             <div class="icone">
               <i class="fas fa-user-tie"></i>
             </div>
-            <h2>Análise em andamento 🎯</h2>
+            <h2>Ótimo! Recebemos seus dados 🎯</h2>
             <p>
-              O sistema, pela localização, <strong>não conseguiu calcular automaticamente</strong>.
-              Mas já direcionamos para o nosso <strong>consultor especialista</strong> — ele
-              vai te chamar pelo <strong>WhatsApp</strong> para enviar o resultado do valor
-              do seu imóvel, <strong>totalmente sem custo</strong>.
+              Um <strong>consultor especialista da Lima Ribeiro Imóveis (Grupo Quinto Andar)</strong>
+              vai entrar em contato pelo <strong>WhatsApp</strong> o mais rápido possível com a
+              <strong>análise de preço de mercado do seu imóvel</strong>.
             </p>
+            <p style="margin-bottom:24px;">
+              Essa análise é <strong>totalmente gratuita e sem compromisso</strong>.
+              Se preferir, você pode adiantar a conversa agora mesmo pelo botão abaixo.
+            </p>
+            <div class="prazo">
+              <i class="fas fa-clock"></i>
+              Resposta em até 1 dia útil
+            </div>
             <a href="https://wa.me/5531996070930?text=Ol%C3%A1!%20Acabei%20de%20enviar%20os%20dados%20do%20meu%20im%C3%B3vel%20para%20avalia%C3%A7%C3%A3o.%20Aguardo%20o%20resultado!"
                target="_blank" rel="noopener" class="btn-whatsapp-final">
               <i class="fab fa-whatsapp"></i>
@@ -738,6 +942,14 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
     // Dados da FASE 1 + o ID retornado pelo backend
     let dadosFase1 = null;
     let captacaoId = null;
+
+    // Respostas da TRIAGEM (fase 1)
+    const triagem = {
+      proprietario: '',
+      cidade: '',
+      anunciadoQA: '',
+      intencao: ''
+    };
 
     // Respostas da FASE 2
     const respostas = {
@@ -799,9 +1011,63 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
     }
 
     // ============================================================
+    // TRIAGEM — botões de opção
+    // ============================================================
+    function montarTriagem(idContainer, chaveTriagem, aoSelecionar) {
+      const container = $(idContainer);
+      if (!container) return;
+      container.querySelectorAll('.opcao').forEach(btn => {
+        btn.addEventListener('click', () => {
+          container.querySelectorAll('.opcao').forEach(b => b.classList.remove('ativo'));
+          btn.classList.add('ativo');
+          triagem[chaveTriagem] = btn.dataset.val;
+          if (typeof aoSelecionar === 'function') aoSelecionar(btn.dataset.val);
+          atualizarEstadoBotao();
+        });
+      });
+    }
+
+    // Configura os 4 blocos
+    montarTriagem('opcoesProprietario', 'proprietario');
+    montarTriagem('opcoesCidade', 'cidade', (val) => {
+      $('avisoCidade').classList.toggle('visivel', val === 'Outra cidade');
+    });
+    montarTriagem('opcoesAnunciadoQA', 'anunciadoQA', (val) => {
+      $('avisoQA').classList.toggle('visivel', val === 'sim_agora');
+    });
+    montarTriagem('opcoesIntencao', 'intencao');
+
+    // ============================================================
+    // REGRAS DE BLOQUEIO DO BOTÃO
+    // ============================================================
+    function atualizarEstadoBotao() {
+      const bloqueadoPorCidade = triagem.cidade === 'Outra cidade';
+      const bloqueadoPorQA     = triagem.anunciadoQA === 'sim_agora';
+      const temTriagemCompleta =
+        triagem.proprietario && triagem.cidade &&
+        triagem.anunciadoQA && triagem.intencao;
+
+      const btn = $('btnEnviar');
+      btn.disabled = bloqueadoPorCidade || bloqueadoPorQA || !temTriagemCompleta;
+    }
+
+    // ============================================================
     // VALIDAÇÃO FASE 1
     // ============================================================
     function validarFormulario(){
+      // Triagem
+      if (!triagem.proprietario) return { ok:false, msg:'Informe se você é o proprietário.' };
+      if (!triagem.cidade)       return { ok:false, msg:'Informe a cidade do imóvel.' };
+      if (triagem.cidade === 'Outra cidade') {
+        return { ok:false, msg:'Atendemos apenas Belo Horizonte, Contagem e Nova Lima.' };
+      }
+      if (!triagem.anunciadoQA)  return { ok:false, msg:'Informe se o imóvel está anunciado no Quinto Andar agora.' };
+      if (triagem.anunciadoQA === 'sim_agora') {
+        return { ok:false, msg:'Imóvel já anunciado no Quinto Andar não pode ser reavaliado.' };
+      }
+      if (!triagem.intencao)     return { ok:false, msg:'Informe sua intenção com a avaliação.' };
+
+      // Dados
       const campos = ['nome', 'telefone', 'rua', 'numero', 'complemento', 'bairro'];
       let primeiroErro = null;
 
@@ -856,22 +1122,29 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
         navegador:   detectarNavegador()
       };
 
-      // Pacote da fase 1 (marcado como PARCIAL)
       const pacoteFase1 =
         'FASE1-PARCIAL' +
+        ' | proprietario:' + triagem.proprietario +
+        ' | cidade:' + triagem.cidade +
+        ' | anunciadoQA:' + triagem.anunciadoQA +
+        ' | intencao:' + triagem.intencao +
         ' | nome:' + dadosFase1.nome +
         ' | telefone:' + dadosFase1.telefone +
         ' | endereco:' + dadosFase1.rua + ', ' + dadosFase1.numero + ' - ' + dadosFase1.complemento + ' - ' + dadosFase1.bairro +
         ' | aguardando complemento';
 
       const payload = {
-        action: 'salvarCaptacaoQPreco',
+        action: 'salvarCaptacaoQPrecoV2',
         nome: dadosFase1.nome,
         telefone: dadosFase1.telefone,
         rua: dadosFase1.rua,
         numero: dadosFase1.numero,
         complemento: dadosFase1.complemento,
         bairro: dadosFase1.bairro,
+        proprietario: triagem.proprietario,
+        cidade: triagem.cidade,
+        anunciadoQA: triagem.anunciadoQA,
+        intencao: triagem.intencao,
         origem: pacoteFase1,
         navegador: dadosFase1.navegador,
         ip: '',
@@ -895,7 +1168,6 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
           return;
         }
 
-        // Guarda o ID retornado pelo backend para usar na fase 2
         captacaoId = json.id || null;
 
         // Avança para a fase 2
@@ -978,9 +1250,12 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
 
       iniciarLoading();
 
-      // Pacote completo (substitui o da fase 1)
       const pacoteCompleto =
         'FASE2-COMPLETA' +
+        ' | proprietario:' + triagem.proprietario +
+        ' | cidade:' + triagem.cidade +
+        ' | anunciadoQA:' + triagem.anunciadoQA +
+        ' | intencao:' + triagem.intencao +
         ' | nome:' + dadosFase1.nome +
         ' | telefone:' + dadosFase1.telefone +
         ' | endereco:' + dadosFase1.rua + ', ' + dadosFase1.numero + ' - ' + dadosFase1.complemento + ' - ' + dadosFase1.bairro +
@@ -994,8 +1269,6 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
         ' | iptu:' + (respostas.iptu || '0') +
         ' | valor_estimado:' + respostas.valorEstimado;
 
-      // Se temos o ID da fase 1, ATUALIZAMOS a linha existente.
-      // Se não temos (fallback de segurança), criamos uma nova.
       const payload = captacaoId
         ? {
             action: 'atualizarCaptacaoExistente',
@@ -1005,13 +1278,17 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
             ip: ''
           }
         : {
-            action: 'salvarCaptacaoQPreco',
+            action: 'salvarCaptacaoQPrecoV2',
             nome: dadosFase1.nome,
             telefone: dadosFase1.telefone,
             rua: dadosFase1.rua,
             numero: dadosFase1.numero,
             complemento: dadosFase1.complemento,
             bairro: dadosFase1.bairro,
+            proprietario: triagem.proprietario,
+            cidade: triagem.cidade,
+            anunciadoQA: triagem.anunciadoQA,
+            intencao: triagem.intencao,
             origem: pacoteCompleto,
             navegador: dadosFase1.navegador,
             ip: ''
@@ -1026,7 +1303,6 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
         redirect: 'follow'
       }).then(r => r.json()).catch(err => ({ ok:false, error: String(err) }));
 
-      // Aguarda o loading terminar (9s) E o envio concluir
       const [json] = await Promise.all([
         envioPromise,
         aguardar(9000)
