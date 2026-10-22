@@ -110,9 +110,7 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
     padding: 34px 24px 28px;
     margin-bottom: 22px;
     overflow: hidden;
-    box-shadow:
-      0 20px 50px rgba(0,30,240,0.25),
-      0 4px 12px rgba(15,23,42,0.15);
+    box-shadow: 0 20px 50px rgba(0,30,240,0.25), 0 4px 12px rgba(15,23,42,0.15);
     text-align: center;
     isolation: isolate;
   }
@@ -120,10 +118,7 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
     content: '';
     position: absolute;
     inset: 0;
-    background:
-      radial-gradient(circle at 15% 20%, rgba(255,255,255,0.08) 0%, transparent 40%),
-      radial-gradient(circle at 85% 80%, rgba(255,255,255,0.06) 0%, transparent 40%),
-      repeating-linear-gradient(45deg, transparent, transparent 30px, rgba(255,255,255,0.02) 30px, rgba(255,255,255,0.02) 60px);
+    background: radial-gradient(circle at 15% 20%, rgba(255,255,255,0.08) 0%, transparent 40%), radial-gradient(circle at 85% 80%, rgba(255,255,255,0.06) 0%, transparent 40%), repeating-linear-gradient(45deg, transparent, transparent 30px, rgba(255,255,255,0.02) 30px, rgba(255,255,255,0.02) 60px);
     pointer-events: none;
     z-index: 0;
   }
@@ -269,6 +264,51 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
   }
   .chip-tipo.ativo .ico-svg{ color:#fff; }
 
+  /* CIDADES */
+  .chips-cidade{
+    display:grid; grid-template-columns: repeat(3, 1fr); gap:10px;
+  }
+  .chip-cidade{
+    padding: 14px 8px;
+    border:2px solid var(--borda-forte);
+    background:#fff; border-radius:14px;
+    font-family:inherit; font-size:0.85rem; font-weight:700;
+    color:var(--texto); cursor:pointer;
+    transition: all 0.15s;
+    display:flex; flex-direction:column;
+    align-items:center; gap:6px;
+    text-align: center;
+  }
+  .chip-cidade:hover{ border-color: var(--azul); }
+  .chip-cidade.ativo{
+    background: linear-gradient(135deg, var(--azul), #0044ff);
+    color:#fff; border-color: var(--azul);
+    box-shadow: 0 6px 20px rgba(0,30,240,0.25);
+    transform: translateY(-2px);
+  }
+
+  /* OPÇÕES DE APARTAMENTO */
+  .chips-apto{
+    display:grid; grid-template-columns: repeat(3, 1fr); gap:8px;
+    margin-top: 12px;
+    padding-top: 14px;
+    border-top: 1px dashed var(--borda);
+  }
+  .chip-apto{
+    padding: 10px 8px;
+    border:1.5px solid var(--borda-forte);
+    background:#fff; border-radius:10px;
+    font-family:inherit; font-size:0.78rem; font-weight:700;
+    color:var(--texto); cursor:pointer;
+    transition: all 0.15s;
+    text-align: center;
+  }
+  .chip-apto:hover{ border-color: var(--azul); }
+  .chip-apto.ativo{
+    background: linear-gradient(135deg, var(--azul), #0044ff);
+    color:#fff; border-color: var(--azul);
+  }
+
   /* CÔMODOS */
   .comodo-linha{
     display: flex;
@@ -334,6 +374,8 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
     .comodo-linha-label{ width: auto; }
     .comodo-btn{ padding: 9px 8px; font-size: 0.78rem; }
     .comodo-btn.tanto-faz{ flex: 1; font-size: 0.7rem; }
+    .chips-cidade{ grid-template-columns: 1fr; }
+    .chips-apto{ grid-template-columns: 1fr; }
   }
 
   .campo-bloco{ margin-bottom:20px; }
@@ -406,6 +448,11 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
     border-left: 3px solid var(--vermelho);
   }
   .input-valor-erro.show{ display: block; }
+  .input-valor-erro a {
+    color: var(--vermelho);
+    font-weight: 800;
+    text-decoration: underline;
+  }
 
   /* BAIRROS E TEXTAREA LIVRE */
   .textarea-wrap textarea{
@@ -713,16 +760,44 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
       </div>
     </div>
 
-    <!-- SEÇÃO 1: TIPO -->
-    <div class="secao" id="secaoTipo">
+    <!-- SEÇÃO 1: LOCALIZAÇÃO (CIDADES) -->
+    <div class="secao" id="secaoCidade">
       <div class="secao-head">
         <div class="secao-num">1</div>
+        <div>
+          <div class="secao-titulo">Em quais cidades você quer morar? <span class="req">*</span></div>
+          <div class="secao-sub">Você pode escolher mais de uma</div>
+        </div>
+      </div>
+      <div class="chips-cidade" id="chipsCidade">
+        <button type="button" class="chip-cidade" data-val="Belo Horizonte">
+          <svg class="ico-svg" viewBox="0 0 24 24" style="width:24px;height:24px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          Belo Horizonte
+        </button>
+        <button type="button" class="chip-cidade" data-val="Contagem">
+          <svg class="ico-svg" viewBox="0 0 24 24" style="width:24px;height:24px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          Contagem
+        </button>
+        <button type="button" class="chip-cidade" data-val="Nova Lima">
+          <svg class="ico-svg" viewBox="0 0 24 24" style="width:24px;height:24px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          Nova Lima
+        </button>
+      </div>
+      <div class="input-valor-erro" id="cidadeErro" style="margin-top:10px;">
+        Por favor, escolha pelo menos uma cidade.
+      </div>
+    </div>
+
+    <!-- SEÇÃO 2: TIPO -->
+    <div class="secao" id="secaoTipo">
+      <div class="secao-head">
+        <div class="secao-num">2</div>
         <div>
           <div class="secao-titulo">Que tipo de imóvel você procura? <span class="req">*</span></div>
           <div class="secao-sub">Escolha uma opção</div>
         </div>
       </div>
-      <div class="chips-tipo">
+      <div class="chips-tipo" id="chipsTipoVip">
         <button type="button" class="chip-tipo" data-tipo="Apartamento">
           <svg class="ico-svg" viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="1"/><line x1="9" y1="6" x2="9" y2="6.01"/><line x1="15" y1="6" x2="15" y2="6.01"/><line x1="9" y1="10" x2="9" y2="10.01"/><line x1="15" y1="10" x2="15" y2="10.01"/><line x1="9" y1="14" x2="9" y2="14.01"/><line x1="15" y1="14" x2="15" y2="14.01"/><line x1="9" y1="18" x2="15" y2="18"/></svg>
           Apartamento
@@ -731,21 +806,26 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
           <svg class="ico-svg" viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V14h6v8"/></svg>
           Casa
         </button>
-        <button type="button" class="chip-tipo" data-tipo="Cobertura">
-          <svg class="ico-svg" viewBox="0 0 24 24"><path d="M2 12l5-5 5 5 5-5 5 5"/><rect x="4" y="12" width="16" height="9" rx="1"/><line x1="9" y1="21" x2="9" y2="15"/><line x1="15" y1="21" x2="15" y2="15"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
-          Cobertura
-        </button>
-        <button type="button" class="chip-tipo" data-tipo="Área Privativa">
-          <svg class="ico-svg" viewBox="0 0 24 24"><path d="M3 20h18"/><path d="M5 20V9l4-3 4 3 4-3 4 3v11"/><circle cx="12" cy="12" r="2"/></svg>
-          Área Privativa
-        </button>
+      </div>
+
+      <!-- OPÇÕES DE APARTAMENTO -->
+      <div id="blocoTipoApto" style="display:none;">
+        <div class="chips-apto" id="chipsTipoAptoVip">
+          <button type="button" class="chip-apto" data-val="Padrão">Padrão</button>
+          <button type="button" class="chip-apto" data-val="Cobertura">Cobertura</button>
+          <button type="button" class="chip-apto" data-val="Área Privativa">Área Privativa</button>
+        </div>
+      </div>
+      
+      <div class="input-valor-erro" id="tipoErro" style="margin-top:10px;">
+        Por favor, escolha o tipo de imóvel.
       </div>
     </div>
 
-    <!-- SEÇÃO 2: CÔMODOS -->
+    <!-- SEÇÃO 3: CÔMODOS -->
     <div class="secao">
       <div class="secao-head">
-        <div class="secao-num">2</div>
+        <div class="secao-num">3</div>
         <div>
           <div class="secao-titulo">Quantos cômodos você precisa?</div>
           <div class="secao-sub">Toque em "Tanto Faz" se não for importante</div>
@@ -797,10 +877,10 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
       </div>
     </div>
 
-    <!-- SEÇÃO 3: METRAGEM E VALOR -->
+    <!-- SEÇÃO 4: METRAGEM E VALOR -->
     <div class="secao">
       <div class="secao-head">
-        <div class="secao-num">3</div>
+        <div class="secao-num">4</div>
         <div>
           <div class="secao-titulo">Tamanho e valor do imóvel</div>
           <div class="secao-sub">Digite apenas números — pontos e vírgulas são adicionados automaticamente</div>
@@ -826,25 +906,22 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
       </div>
     </div>
 
-    <!-- SEÇÃO 4: BAIRROS -->
+    <!-- SEÇÃO 5: BAIRROS -->
     <div class="secao">
       <div class="secao-head">
-        <div class="secao-num">4</div>
+        <div class="secao-num">5</div>
         <div>
-          <div class="secao-titulo">Onde você quer morar? <span class="req">*</span></div>
+          <div class="secao-titulo">Em quais bairros ou regiões? <span class="req">*</span></div>
           <div class="secao-sub">Obrigatório preencher</div>
         </div>
       </div>
 
       <div class="bairros-instrucao">
-        <strong>Como preencher:</strong> digite <strong>todos os bairros</strong> que você tem interesse, ou a <strong>região de Belo Horizonte</strong> (ex: "Zona Sul", "Centro-Sul"), ou ainda <strong>uma referência</strong> do que gostaria de ficar próximo. Separe por <strong>vírgula</strong>.
+        <strong>Como preencher:</strong> digite todos os bairros que você tem interesse, ou a região (ex: "Zona Sul", "Centro-Sul"), ou ainda uma referência. Separe por <strong>vírgula</strong>.
       </div>
 
       <div class="textarea-wrap">
-        <textarea id="inputBairros" 
-                  placeholder="Ex: Savassi, Lourdes, Funcionários, Próximo ao Shopping Diamond Mall..."
-                  style="min-height: 90px;"
-                  maxlength="400"></textarea>
+        <textarea id="inputBairros" placeholder="Ex: Savassi, Lourdes, Funcionários, Próximo ao Shopping Diamond Mall..." style="min-height: 90px;" maxlength="400"></textarea>
       </div>
 
       <div class="input-valor-erro" id="bairroErro" style="margin-top:10px;">
@@ -852,10 +929,10 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
       </div>
     </div>
 
-    <!-- SEÇÃO 5: DETALHES -->
+    <!-- SEÇÃO 6: DETALHES -->
     <div class="secao">
       <div class="secao-head">
-        <div class="secao-num">5</div>
+        <div class="secao-num">6</div>
         <div>
           <div class="secao-titulo">O que mais precisa ter? <span class="opc">(opcional)</span></div>
           <div class="secao-sub">Escreva do seu jeito, sem compromisso</div>
@@ -866,7 +943,7 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
       </div>
     </div>
 
-    <!-- SEÇÃO 6: CONTATO -->
+    <!-- SEÇÃO 7: CONTATO -->
     <div class="secao contato-final">
       <div class="secao-head">
         <div class="secao-num" style="background: linear-gradient(135deg, var(--whatsapp), var(--whatsapp-escuro)); color:#fff;">
@@ -961,14 +1038,16 @@ const $ = id => document.getElementById(id);
    ESTADO
 ===================================================== */
 const state = {
+  cidades: [],       // array
   tipo: '',
+  tiposApto: [],     // array
   quartos: '',
   banheiros: '',
   suites: '',
   vagas: '',
   metragem: '',
   valor: 0,
-  bairros: [],       // ← preenchido a partir da textarea
+  bairros: [],       // preenchido a partir da textarea
   detalhes: ''
 };
 
@@ -989,14 +1068,54 @@ function mascaraTelefone(input){
 window.mascaraTelefone = mascaraTelefone;
 
 /* =====================================================
+   CHIPS DE CIDADE (MÚLTIPLA ESCOLHA)
+===================================================== */
+document.querySelectorAll('#chipsCidade .chip-cidade').forEach(btn => {
+  btn.addEventListener('click', () => {
+    btn.classList.toggle('ativo');
+    const val = btn.dataset.val;
+    if (state.cidades.includes(val)) {
+      state.cidades = state.cidades.filter(c => c !== val);
+    } else {
+      state.cidades.push(val);
+    }
+    $('cidadeErro').classList.remove('show');
+  });
+});
+
+/* =====================================================
    CHIPS DE TIPO
 ===================================================== */
-document.querySelectorAll('.chip-tipo').forEach(btn => {
+document.querySelectorAll('#chipsTipoVip .chip-tipo').forEach(btn => {
   btn.addEventListener('click', () => {
-    document.querySelectorAll('.chip-tipo').forEach(b => b.classList.remove('ativo'));
+    document.querySelectorAll('#chipsTipoVip .chip-tipo').forEach(b => b.classList.remove('ativo'));
     btn.classList.add('ativo');
     state.tipo = btn.dataset.tipo;
-    $('secaoTipo').classList.remove('erro-destaque');
+    $('tipoErro').classList.remove('show');
+
+    // Se for apartamento, abre as opções de apto
+    if (state.tipo === 'Apartamento') {
+      $('blocoTipoApto').style.display = 'block';
+    } else {
+      $('blocoTipoApto').style.display = 'none';
+      state.tiposApto = []; // limpa
+      document.querySelectorAll('#chipsTipoAptoVip .chip-apto').forEach(b => b.classList.remove('ativo'));
+    }
+  });
+});
+
+/* =====================================================
+   CHIPS DE TIPO DE APARTAMENTO (MÚLTIPLA ESCOLHA)
+===================================================== */
+document.querySelectorAll('#chipsTipoAptoVip .chip-apto').forEach(btn => {
+  btn.addEventListener('click', () => {
+    btn.classList.toggle('ativo');
+    const val = btn.dataset.val;
+    if (state.tiposApto.includes(val)) {
+      state.tiposApto = state.tiposApto.filter(c => c !== val);
+    } else {
+      state.tiposApto.push(val);
+    }
   });
 });
 
@@ -1108,7 +1227,7 @@ function atualizarValor(){
   }
 
   if(valor > 0 && valor < VALOR_MINIMO){
-    valorErro.innerHTML = 'Infelizmente, nosso catálogo não possui imóveis abaixo de R$ 300.000,00. Para te ajudar da melhor forma, informe um valor a partir de R$ 300 mil. 😊';
+    valorErro.innerHTML = 'Infelizmente, nosso catálogo não possui imóveis abaixo de R$ 300.000,00. Para te ajudar da melhor forma, consulte nossas opções disponíveis <a href="https://limaribeiroimoveis.com.br/imoveis.html" target="_blank">clicando aqui</a> e use o filtro avançado para imóveis abaixo de 300 mil.';
     valorErro.classList.add('show');
     inputValor.classList.add('erro');
   } else {
@@ -1127,11 +1246,6 @@ inputValor.addEventListener('input', () => {
 ===================================================== */
 const inputBairros = $('inputBairros');
 
-/**
- * Lê o texto da textarea e retorna um array de bairros/regiões.
- * Aceita separação por vírgula, ponto-e-vírgula ou quebra de linha.
- * Remove espaços extras, ignora vazios e limita a 30 itens.
- */
 function parseBairros_(){
   const texto = String(inputBairros.value || '').trim();
   if(!texto) return [];
@@ -1151,7 +1265,6 @@ function mostrarErroBairro(){
   if(el) el.classList.add('show');
 }
 
-// Ao digitar, esconde o erro (feedback imediato)
 inputBairros.addEventListener('input', esconderErroBairro);
 
 /* =====================================================
@@ -1175,18 +1288,23 @@ $('waModal').addEventListener('click', (e) => { if(e.target === $('waModal')) fe
 async function enviarSelecao(ev){
   ev.preventDefault();
 
-  // 1) TIPO — obrigatório
-  if(!state.tipo){
-    const secTipo = $('secaoTipo');
-    secTipo.classList.add('erro-destaque');
-    secTipo.scrollIntoView({behavior:'smooth', block:'center'});
-    setTimeout(() => {
-      alert('Falta escolher o tipo de imóvel. Role até o topo e selecione uma opção.');
-    }, 300);
+  // 1) CIDADES — obrigatório
+  if(state.cidades.length === 0){
+    $('cidadeErro').classList.add('show');
+    alert('Escolha pelo menos uma cidade de interesse.');
+    $('secaoCidade').scrollIntoView({behavior:'smooth', block:'center'});
     return;
   }
 
-  // 2) VALOR
+  // 2) TIPO — obrigatório
+  if(!state.tipo){
+    $('tipoErro').classList.add('show');
+    alert('Escolha o tipo de imóvel.');
+    $('secaoTipo').scrollIntoView({behavior:'smooth', block:'center'});
+    return;
+  }
+
+  // 3) VALOR
   if(!state.valor || state.valor <= 0){
     alert('Informe o valor máximo que pretende investir.');
     inputValor.focus();
@@ -1195,13 +1313,13 @@ async function enviarSelecao(ev){
   }
 
   if(state.valor < VALOR_MINIMO){
-    alert('Nosso catálogo não possui imóveis abaixo de R$ 300.000,00. Por favor, informe um valor a partir de R$ 300 mil.');
+    alert('Nosso catálogo não possui imóveis abaixo de R$ 300.000,00. Por favor, consulte nossa vitrine usando o filtro de valores.');
     inputValor.focus();
     inputValor.scrollIntoView({behavior:'smooth', block:'center'});
     return;
   }
 
-  // 3) BAIRROS — parse da textarea
+  // 4) BAIRROS
   const bairrosList = parseBairros_();
   if(bairrosList.length === 0){
     mostrarErroBairro();
@@ -1213,7 +1331,7 @@ async function enviarSelecao(ev){
   esconderErroBairro();
   state.bairros = bairrosList;
 
-  // 4) NOME E TELEFONE
+  // 5) NOME E TELEFONE
   const nome = $('nomeContato').value.trim();
   const tel = $('telContato').value.replace(/\D/g, '');
   if(nome.length < 2){
@@ -1239,7 +1357,9 @@ async function enviarSelecao(ev){
     action: 'salvarLeadVIP',
     nome: nome,
     telefone: tel,
+    cidades: state.cidades.join(', '),
     tipo: state.tipo,
+    tipoApto: state.tiposApto.join(', '),
     quartos: state.quartos || 'tanto-faz',
     banheiros: state.banheiros || 'tanto-faz',
     suites: state.suites || 'tanto-faz',
@@ -1301,7 +1421,14 @@ function esc(s){
 
 function montarResumo(){
   const l = [];
-  l.push('<div>🏢 <strong>Tipo:</strong> ' + esc(state.tipo) + '</div>');
+  l.push('<div>📍 <strong>Cidades:</strong> ' + esc(state.cidades.join(', ')) + '</div>');
+  
+  let t = state.tipo;
+  if (state.tipo === 'Apartamento' && state.tiposApto.length > 0) {
+    t += ' (' + state.tiposApto.join(', ') + ')';
+  }
+  l.push('<div>🏢 <strong>Tipo:</strong> ' + esc(t) + '</div>');
+
   l.push('<div>🛏 <strong>Quartos:</strong> ' + esc(state.quartos || 'Tanto faz') +
          ' · 🚿 <strong>Banheiros:</strong> ' + esc(state.banheiros || 'Tanto faz') +
          ' · 🛁 <strong>Suítes:</strong> ' + esc(state.suites || 'Tanto faz') + '</div>');
