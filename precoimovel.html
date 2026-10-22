@@ -221,6 +221,7 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
     display: grid; grid-template-columns: 1fr; gap: 8px;
   }
   .triagem-opcoes.duas-colunas { grid-template-columns: 1fr 1fr; }
+  .triagem-opcoes.tres-colunas { grid-template-columns: 1fr 1fr 1fr; }
 
   .opcao {
     display: flex; align-items: center; gap: 10px;
@@ -488,6 +489,15 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
   }
   .footer-mini a { color: var(--azul); text-decoration: none; }
 
+  /* CHECKBOX CUSTOMIZADO (IPTU) */
+  .checkbox-group {
+    display: flex; align-items: center; gap: 8px; margin-top: 6px; cursor: pointer;
+  }
+  .checkbox-group input {
+    width: 18px; height: 18px; cursor: pointer; accent-color: var(--azul);
+  }
+  .checkbox-group span { font-size: 0.8rem; font-weight: 600; color: var(--texto); }
+
   /* RESPONSIVO */
   @media (max-width: 900px) {
     .main-grid { grid-template-columns: 1fr; gap: 32px; }
@@ -530,6 +540,7 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
     .linha-steppers { grid-template-columns: 1fr 1fr; }
 
     .triagem-opcoes.duas-colunas { grid-template-columns: 1fr; }
+    .triagem-opcoes.tres-colunas { grid-template-columns: 1fr; }
     .opcao { font-size: 0.82rem; padding: 11px 12px; }
 
     .loading-titulo { font-size: 1.02rem; }
@@ -624,7 +635,7 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
             </div>
             <p class="form-sub">
               Responda <strong>4 perguntas rápidas</strong> e depois alguns dados do imóvel.
-              Leva menos de 1 minutos.
+              Leva menos de 2 minutos.
             </p>
 
             <form id="formCaptacao" novalidate onsubmit="enviarFormulario(event)">
@@ -776,11 +787,10 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
           <div class="fase2-card" id="fase2Wrap" style="display:none;">
 
             <div class="form-titulo">
-              <i class="fas fa-clipboard-list"></i> Precisamos de algumas informações
+              <i class="fas fa-clipboard-list"></i> Detalhes do Imóvel
             </div>
             <p class="form-sub">
               Esses dados são essenciais para <strong>garantir o preço exato do seu imóvel</strong>.
-              Leva menos de 1 minuto.
             </p>
 
             <div class="campo">
@@ -788,13 +798,23 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
               <div class="chips" id="chipsTipo">
                 <button type="button" class="chip" data-val="Apartamento">Apartamento</button>
                 <button type="button" class="chip" data-val="Casa">Casa</button>
-                <button type="button" class="chip" data-val="Studio">Studio</button>
-                <button type="button" class="chip" data-val="Cobertura">Cobertura</button>
+              </div>
+            </div>
+
+            <!-- OPÇÕES EXTRAS SE FOR APARTAMENTO -->
+            <div id="blocoApartamento" style="display:none; margin-bottom: 16px; padding: 14px; background: #f9fafc; border-radius: 12px; border: 1px solid var(--borda);">
+              <div class="campo" style="margin-bottom: 0;">
+                <label>Qual o tipo de Apartamento? <span class="obrig">*</span></label>
+                <div class="chips" id="chipsTipoApto" style="grid-template-columns: 1fr 1fr 1fr;">
+                  <button type="button" class="chip" data-val="Apartamento Padrão" style="font-size: 0.8rem;">Padrão</button>
+                  <button type="button" class="chip" data-val="Cobertura" style="font-size: 0.8rem;">Cobertura</button>
+                  <button type="button" class="chip" data-val="Área Privativa" style="font-size: 0.8rem;">Área Privativa</button>
+                </div>
               </div>
             </div>
 
             <div class="campo">
-              <label for="area">Área (m²) <span class="obrig">*</span></label>
+              <label for="area">Área Total (m²) <span class="obrig">*</span></label>
               <input type="number" id="area" inputmode="numeric" placeholder="Ex: 120" min="1">
             </div>
 
@@ -809,7 +829,7 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
               </div>
 
               <div class="campo stepper-campo">
-                <label>Suítes</label>
+                <label>Quantos são suítes?</label>
                 <div class="stepper" data-campo="suites">
                   <button type="button" class="stepper-btn" data-op="-1">−</button>
                   <span class="stepper-val" id="val-suites">0</span>
@@ -836,18 +856,44 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
               </div>
             </div>
 
-            <div class="linha-dupla">
+            <!-- TIPO DE VAGA -->
+            <div id="blocoVagas" style="display:none; margin-bottom: 16px;">
               <div class="campo">
+                <label>Tipo de Vaga</label>
+                <div class="chips" id="chipsVagas" style="grid-template-columns: 1fr 1fr;">
+                  <button type="button" class="chip" data-val="Livre">Livre</button>
+                  <button type="button" class="chip" data-val="Presa">Presa / Demarcada</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- CONDOMÍNIO E IPTU -->
+            <div class="linha-dupla" id="linhaCondominio">
+              <div class="campo" id="campoCondominio" style="display:none;">
                 <label for="condominio">Condomínio (R$)</label>
                 <input type="text" id="condominio" inputmode="numeric" placeholder="Ex: 850" oninput="mascaraMoeda(this)">
               </div>
               <div class="campo">
                 <label for="iptu">IPTU (R$/mês)</label>
                 <input type="text" id="iptu" inputmode="numeric" placeholder="Ex: 220" oninput="mascaraMoeda(this)">
+                <label class="checkbox-group">
+                  <input type="checkbox" id="isentoIPTU" onchange="toggleIPTU()">
+                  <span>Isento de IPTU</span>
+                </label>
               </div>
             </div>
 
-            <div class="campo" style="margin-top:6px;">
+            <!-- PETS -->
+            <div class="campo">
+              <label>É permitido Pets no imóvel/condomínio?</label>
+              <div class="chips" id="chipsPets" style="grid-template-columns: 1fr 1fr 1fr;">
+                <button type="button" class="chip" data-val="Sim">Sim</button>
+                <button type="button" class="chip" data-val="Não">Não</button>
+                <button type="button" class="chip" data-val="Tanto faz">Tanto faz</button>
+              </div>
+            </div>
+
+            <div class="campo" style="margin-top:16px;">
               <label for="valorEstimado" style="font-size:0.85rem;line-height:1.5;font-weight:700;color:var(--texto);">
                 Queremos ouvir a sua opinião! 🏡<br>
                 <span style="font-weight:600;color:var(--texto-cinza);font-size:0.78rem;">
@@ -954,13 +1000,16 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
     // Respostas da FASE 2
     const respostas = {
       tipo: '',
+      tipoApto: '',
       area: '',
       quartos: 0,
       suites: 0,
       banheiros: 0,
       vagas: 0,
+      tipoVaga: '',
       condominio: '',
       iptu: '',
+      pets: '',
       valorEstimado: ''
     };
 
@@ -994,6 +1043,18 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
       let v = input.value.replace(/\D/g, '');
       if(!v) { input.value = ''; return; }
       input.value = Number(v).toLocaleString('pt-BR');
+    }
+
+    function toggleIPTU() {
+      const isento = $('isentoIPTU').checked;
+      const input = $('iptu');
+      if (isento) {
+        input.value = 'Isento';
+        input.disabled = true;
+      } else {
+        input.value = '';
+        input.disabled = false;
+      }
     }
 
     // ============================================================
@@ -1184,28 +1245,90 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
     }
 
     // ============================================================
-    // CHIPS DE TIPO
+    // FASE 2 — LÓGICA DE EXIBIÇÃO E SELEÇÃO
     // ============================================================
+    
+    // CHIPS TIPO (Apartamento / Casa)
     document.querySelectorAll('#chipsTipo .chip').forEach(btn => {
       btn.addEventListener('click', () => {
         document.querySelectorAll('#chipsTipo .chip').forEach(b => b.classList.remove('ativo'));
         btn.classList.add('ativo');
         respostas.tipo = btn.dataset.val;
+        
+        if (respostas.tipo === 'Apartamento') {
+          $('blocoApartamento').style.display = 'block';
+          $('campoCondominio').style.display = 'flex';
+        } else {
+          $('blocoApartamento').style.display = 'none';
+          $('campoCondominio').style.display = 'none';
+          respostas.tipoApto = ''; // reseta se mudar pra casa
+          document.querySelectorAll('#chipsTipoApto .chip').forEach(b => b.classList.remove('ativo'));
+        }
       });
     });
 
-    // ============================================================
+    // CHIPS TIPO APARTAMENTO
+    document.querySelectorAll('#chipsTipoApto .chip').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('#chipsTipoApto .chip').forEach(b => b.classList.remove('ativo'));
+        btn.classList.add('ativo');
+        respostas.tipoApto = btn.dataset.val;
+      });
+    });
+
+    // CHIPS TIPO DE VAGA
+    document.querySelectorAll('#chipsVagas .chip').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('#chipsVagas .chip').forEach(b => b.classList.remove('ativo'));
+        btn.classList.add('ativo');
+        respostas.tipoVaga = btn.dataset.val;
+      });
+    });
+
+    // CHIPS PETS
+    document.querySelectorAll('#chipsPets .chip').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('#chipsPets .chip').forEach(b => b.classList.remove('ativo'));
+        btn.classList.add('ativo');
+        respostas.pets = btn.dataset.val;
+      });
+    });
+
     // STEPPERS
-    // ============================================================
     document.querySelectorAll('.stepper').forEach(stepper => {
       const campo = stepper.dataset.campo;
       const valEl = stepper.querySelector('.stepper-val');
+      
       stepper.querySelectorAll('.stepper-btn').forEach(btn => {
         btn.addEventListener('click', () => {
           const op = Number(btn.dataset.op);
           let v = Number(valEl.textContent) + op;
+          
           if(v < 0) v = 0;
           if(v > 20) v = 20;
+
+          // Lógica inteligente de suítes
+          if (campo === 'suites') {
+             const qtdQuartos = respostas.quartos || 0;
+             if (v > qtdQuartos) {
+               v = qtdQuartos;
+             }
+          }
+
+          // Se diminuir quartos, as suítes não podem ser maiores
+          if (campo === 'quartos') {
+            const qtdSuites = respostas.suites || 0;
+            if (qtdSuites > v) {
+               respostas.suites = v;
+               $('val-suites').textContent = v;
+            }
+          }
+
+          // Exibe bloco tipo de vaga só se vagas > 0
+          if (campo === 'vagas') {
+            $('blocoVagas').style.display = v > 0 ? 'block' : 'none';
+          }
+
           valEl.textContent = v;
           respostas[campo] = v;
         });
@@ -1217,15 +1340,20 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
     // ============================================================
     async function enviarFase2(){
       if(!respostas.tipo){
-        alert('Escolha o tipo do imóvel.');
+        alert('Escolha o tipo do imóvel (Apartamento ou Casa).');
+        return;
+      }
+      if(respostas.tipo === 'Apartamento' && !respostas.tipoApto) {
+        alert('Escolha o tipo do apartamento (Padrão, Cobertura ou Área Privativa).');
         return;
       }
       const area = $('area').value.trim();
       if(!area || Number(area) <= 0){
-        alert('Informe a área em m².');
+        alert('Informe a área total em m².');
         $('area').focus();
         return;
       }
+      
       const valorEstimado = $('valorEstimado').value.trim();
       if(!valorEstimado){
         alert('Informe quanto você acha que vale seu imóvel.');
@@ -1260,22 +1388,36 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
         ' | telefone:' + dadosFase1.telefone +
         ' | endereco:' + dadosFase1.rua + ', ' + dadosFase1.numero + ' - ' + dadosFase1.complemento + ' - ' + dadosFase1.bairro +
         ' | tipo:' + respostas.tipo +
+        (respostas.tipo === 'Apartamento' ? ' | tipoApto:' + respostas.tipoApto : '') +
         ' | area:' + respostas.area +
         ' | quartos:' + respostas.quartos +
         ' | suites:' + respostas.suites +
         ' | banheiros:' + respostas.banheiros +
         ' | vagas:' + respostas.vagas +
+        (respostas.vagas > 0 ? ' | tipoVaga:' + respostas.tipoVaga : '') +
         ' | condominio:' + (respostas.condominio || '0') +
         ' | iptu:' + (respostas.iptu || '0') +
+        ' | pets:' + respostas.pets +
         ' | valor_estimado:' + respostas.valorEstimado;
 
+      // ✅ AQUI ENVIAMOS OS CAMPOS SEPARADOS TAMBÉM
       const payload = captacaoId
         ? {
             action: 'atualizarCaptacaoExistente',
             id: captacaoId,
             origem: pacoteCompleto,
             navegador: dadosFase1.navegador,
-            ip: ''
+            ip: '',
+            tipo: respostas.tipo,
+            tipoApto: respostas.tipoApto,
+            tipoVaga: respostas.tipoVaga,
+            pets: respostas.pets,
+            quartos: respostas.quartos,
+            suites: respostas.suites,
+            banheiros: respostas.banheiros,
+            vagas: respostas.vagas,
+            area: respostas.area,
+            valorEstimado: respostas.valorEstimado
           }
         : {
             action: 'salvarCaptacaoQPrecoV2',
@@ -1291,7 +1433,17 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
             intencao: triagem.intencao,
             origem: pacoteCompleto,
             navegador: dadosFase1.navegador,
-            ip: ''
+            ip: '',
+            tipo: respostas.tipo,
+            tipoApto: respostas.tipoApto,
+            tipoVaga: respostas.tipoVaga,
+            pets: respostas.pets,
+            quartos: respostas.quartos,
+            suites: respostas.suites,
+            banheiros: respostas.banheiros,
+            vagas: respostas.vagas,
+            area: respostas.area,
+            valorEstimado: respostas.valorEstimado
           };
 
       payload._t = Date.now();
@@ -1356,6 +1508,7 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
     window.enviarFormulario = enviarFormulario;
     window.mascaraTelefone = mascaraTelefone;
     window.mascaraMoeda = mascaraMoeda;
+    window.toggleIPTU = toggleIPTU;
     window.voltarPagina = voltarPagina;
     window.enviarFase2 = enviarFase2;
   </script>
