@@ -45,6 +45,33 @@
     padding-bottom: 40px;
   }
 
+  /* LOADING INICIAL */
+  .carregando-inicial{
+    position: fixed; inset: 0;
+    background: rgba(251,246,242,.98);
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 16px;
+    color: var(--primary);
+  }
+  .carregando-inicial.esconder{ display: none; }
+  .carregando-inicial .spinner{
+    width: 42px; height: 42px;
+    border: 3px solid var(--primary-soft);
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: spin .8s linear infinite;
+  }
+  @keyframes spin{ to{ transform: rotate(360deg); } }
+  .carregando-inicial p{
+    font-size: .85rem;
+    font-weight: 600;
+    color: var(--primary);
+  }
+
   /* HEADER */
   .header{
     background: var(--primary);
@@ -93,6 +120,22 @@
     margin: 0 auto;
   }
   .ola p strong{ color: var(--primary); font-weight: 800; }
+
+  /* BANNER "Já preenchido" */
+  .banner-preenchido{
+    background: #ecfdf5;
+    border: 1px solid #a7f3d0;
+    border-left: 3px solid var(--success);
+    padding: 10px 12px;
+    border-radius: var(--radius-sm);
+    font-size: .78rem;
+    color: #065f46;
+    line-height: 1.5;
+    margin-bottom: 14px;
+    display: none;
+  }
+  .banner-preenchido.show{ display: block; }
+  .banner-preenchido strong{ color: var(--success); font-weight: 800; }
 
   /* ABAS */
   .abas{
@@ -161,7 +204,6 @@
     to   { opacity: 1; transform: translateY(0); }
   }
 
-  /* SEÇÕES DENTRO DA ABA */
   .secao{ margin-bottom: 22px; }
   .secao:last-child{ margin-bottom: 0; }
   .secao-titulo{
@@ -180,7 +222,6 @@
   }
   .secao-sub strong{ color: var(--primary); }
 
-  /* INPUT / TEXTAREA */
   .campo-label{
     display: block;
     font-size: .78rem;
@@ -259,7 +300,6 @@
   }
   .campo-erro.show{ display: block; }
 
-  /* 4 BOTÕES DE TIPO */
   .tipos-grid{
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -307,7 +347,6 @@
     font-weight: 900;
   }
 
-  /* OPÇÕES PEQUENAS (quartos, suites, vagas, etc) */
   .opcoes-linha{
     display: flex;
     flex-wrap: wrap;
@@ -340,7 +379,6 @@
     border-color: #475569;
   }
 
-  /* AQUISIÇÃO */
   .aquisicao-opcoes{
     display: flex;
     flex-direction: column;
@@ -427,7 +465,6 @@
   .mistura-info.ok{ color: var(--success); }
   .mistura-info.erro{ color: var(--danger); }
 
-  /* AVISO */
   .aviso{
     background: var(--warn-soft);
     border-left: 3px solid var(--warn);
@@ -440,7 +477,6 @@
   }
   .aviso strong{ color: var(--warn); font-weight: 800; }
 
-  /* NAVEGAÇÃO */
   .nav-botoes{
     display: flex;
     gap: 8px;
@@ -481,7 +517,6 @@
     box-shadow: 0 6px 18px rgba(47,107,79,.28);
   }
 
-  /* TELA FINAL */
   .tela-final{
     display: none;
     text-align: center;
@@ -549,7 +584,6 @@
     box-shadow: 0 12px 28px rgba(37,211,102,.45);
   }
 
-  /* OVERLAY SALVANDO */
   .salvando-overlay{
     position: fixed; inset: 0;
     background: rgba(61,43,32,.72);
@@ -571,10 +605,8 @@
     border-radius: 50%;
     animation: spin .8s linear infinite;
   }
-  @keyframes spin{ to{ transform: rotate(360deg); } }
   .salvando-overlay .msg{ font-size: .95rem; font-weight: 600; }
 
-  /* TOAST */
   .toast{
     position: fixed;
     bottom: 30px;
@@ -612,6 +644,12 @@
 </head>
 <body>
 
+<!-- LOADING INICIAL -->
+<div class="carregando-inicial" id="loadingInicial">
+  <div class="spinner"></div>
+  <p>Carregando suas preferências...</p>
+</div>
+
 <header class="header">
   <img src="https://cdn.awsli.com.br/1608/1608652/arquivos/logo-lr-imoveis.jpg" alt="Lima Ribeiro" class="logo">
   <span class="tag">Preferências de imóvel</span>
@@ -624,6 +662,11 @@
     <p>Responda rapidinho. <strong>Leva só 1 minuto</strong> e seu consultor já sai na frente buscando as melhores opções pra você.</p>
   </div>
 
+  <!-- BANNER "Já preenchido" -->
+  <div class="banner-preenchido" id="bannerPreenchido">
+    ✅ Encontramos <strong>suas preferências salvas anteriormente</strong>. Você pode alterar o que quiser e salvar novamente.
+  </div>
+
   <!-- ABAS -->
   <div class="abas" id="abas">
     <button type="button" class="aba ativa" data-aba="1" onclick="mudarAba(1)">
@@ -634,10 +677,9 @@
     </button>
   </div>
 
-  <!-- ============ ABA 1: O QUE PROCURA ============ -->
+  <!-- ============ ABA 1 ============ -->
   <div class="card ativa" data-card="1">
 
-    <!-- Bairros -->
     <div class="secao">
       <div class="secao-titulo">📍 Quais bairros ou regiões?</div>
       <div class="secao-sub">Onde você gostaria de morar.</div>
@@ -646,7 +688,6 @@
       <div class="campo-erro" id="bairrosErro">Informe pelo menos 1 bairro ou região.</div>
     </div>
 
-    <!-- Tipo -->
     <div class="secao">
       <div class="secao-titulo">🏠 Que tipo de imóvel procura?</div>
       <div class="secao-sub">Pode escolher <strong>mais de uma opção</strong>. Assim seu consultor pesquisa mais opções.</div>
@@ -671,7 +712,6 @@
       <div class="campo-erro" id="tiposErro">Escolha pelo menos 1 tipo de imóvel.</div>
     </div>
 
-    <!-- Valor -->
     <div class="secao">
       <div class="secao-titulo">💰 Qual o valor do investimento?</div>
       <div class="secao-sub">Pra filtrar os imóveis dentro do que você procura.</div>
@@ -689,7 +729,6 @@
       </div>
     </div>
 
-    <!-- Aquisição -->
     <div class="secao">
       <div class="secao-titulo">💵 Como pretende adquirir?</div>
       <div class="secao-sub">Ajuda seu consultor a indicar as melhores opções.</div>
@@ -728,10 +767,9 @@
     </div>
   </div>
 
-  <!-- ============ ABA 2: DETALHES FINAIS ============ -->
+  <!-- ============ ABA 2 ============ -->
   <div class="card" data-card="2">
 
-    <!-- Cômodos -->
     <div class="secao">
       <div class="secao-titulo">🛏️ Quantos cômodos precisa?</div>
       <div class="secao-sub">Toque em "Tanto faz" se não for importante.</div>
@@ -771,7 +809,6 @@
       </div>
     </div>
 
-    <!-- Acessibilidade -->
     <div class="secao">
       <div class="secao-titulo">♿ Precisa de acessibilidade?</div>
       <div class="secao-sub">Itens que facilitam o acesso ao imóvel.</div>
@@ -808,7 +845,6 @@
       </div>
     </div>
 
-    <!-- Extras -->
     <div class="secao">
       <div class="secao-titulo">📝 Mais algum detalhe importante?</div>
       <div class="secao-sub">Escreva com suas palavras. Pode ser qualquer coisa.</div>
@@ -825,7 +861,7 @@
     </div>
   </div>
 
-  <!-- ============ TELA FINAL ============ -->
+  <!-- TELA FINAL -->
   <div class="tela-final" id="telaFinal">
     <div class="ico-final">✅</div>
     <h2>Preferências enviadas!</h2>
@@ -838,10 +874,7 @@
 
 </div>
 
-<!-- TOAST -->
 <div class="toast" id="toast"></div>
-
-<!-- SALVANDO -->
 <div class="salvando-overlay" id="salvandoOverlay">
   <div class="spinner"></div>
   <div class="msg">Enviando suas preferências...</div>
@@ -852,7 +885,7 @@
    CONFIG
 ===================================================== */
 const API_URL = 'https://script.google.com/macros/s/AKfycbzuCjg_5ZJDMWWKmjYp1ThW34iWS0YouviWFdiMGx8W3yApv0F1fdUcjeZdjm0s6Mg/exec';
-const SENHA_ADMIN = 'Cal@562938'; // usada pelo endpoint salvarPreferenciasCliente
+const SENHA_ADMIN = 'Cal@562938';
 
 /* =====================================================
    ESTADO
@@ -862,10 +895,10 @@ const state = {
   nomeCliente: '',
   abaAtual: 1,
   bairros: '',
-  tipos: [],                // ['apartamento padrao', 'casa', ...]
+  tipos: [],
   precoMax: '',
   condMax: '',
-  aquisicao: '',            // 'avista' | 'financiado' | 'misto'
+  aquisicao: '',
   misturaAvista: '',
   misturaFinanc: '',
   quartos: '',
@@ -874,7 +907,8 @@ const state = {
   acessibilidade: 'tanto faz',
   elevador: 'tanto faz',
   semEscada: 'tanto faz',
-  extras: ''
+  extras: '',
+  jaPreenchido: false
 };
 
 const $ = id => document.getElementById(id);
@@ -882,11 +916,6 @@ const $ = id => document.getElementById(id);
 /* =====================================================
    UTILS
 ===================================================== */
-function escapeHtml(s){
-  return String(s || '')
-    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
-}
 function toast(msg, tipo){
   const t = $('toast');
   if(!t) return;
@@ -917,7 +946,7 @@ function timestampAgora(){
 /* =====================================================
    INICIALIZAÇÃO
 ===================================================== */
-(function init(){
+(async function init(){
   const params = new URLSearchParams(window.location.search);
   const tel = String(params.get('tel') || '').replace(/\D/g, '');
   const nome = String(params.get('nome') || '').trim();
@@ -929,7 +958,6 @@ function timestampAgora(){
     $('olaTitulo').textContent = `Oi, ${nome.split(' ')[0]}! Vamos encontrar seu imóvel ideal 🎯`;
   }
 
-  // Configura WhatsApp
   if(tel){
     const num = tel.startsWith('55') ? tel : '55' + tel;
     const url = `https://wa.me/${num}?text=${encodeURIComponent('Olá! Acabei de preencher minhas preferências de imóvel 🏠')}`;
@@ -938,7 +966,7 @@ function timestampAgora(){
     $('btnWhatsFinal').style.display = 'none';
   }
 
-  // Máscara de valores
+  // Máscaras
   ['precoMax', 'condMax'].forEach(id => {
     const inp = $(id);
     if(!inp) return;
@@ -949,17 +977,219 @@ function timestampAgora(){
     });
   });
 
-  // Extras
-  $('extras').addEventListener('input', () => {
-    state.extras = $('extras').value;
-  });
-
   // Bairros
   $('inputBairros').addEventListener('input', () => {
     state.bairros = $('inputBairros').value;
     $('bairrosErro').classList.remove('show');
   });
+
+  // Extras
+  $('extras').addEventListener('input', () => {
+    state.extras = $('extras').value;
+  });
+
+  // Carrega preferências salvas (se existirem)
+  if(tel){
+    await carregarPreferenciasSalvas(tel);
+  }
+
+  // Esconde loading inicial
+  $('loadingInicial').classList.add('esconder');
 })();
+
+/* =====================================================
+   CARREGAR PREFERÊNCIAS SALVAS
+===================================================== */
+async function carregarPreferenciasSalvas(tel){
+  try {
+    const qs = new URLSearchParams({
+      action: 'buscarPreferenciasCliente',
+      senha: SENHA_ADMIN,
+      telefone: tel,
+      _t: Date.now()
+    }).toString();
+
+    const resp = await fetch(API_URL + '?' + qs, {
+      method: 'GET',
+      mode: 'cors',
+      headers: { 'Accept': 'application/json' },
+      redirect: 'follow'
+    });
+    const json = await resp.json();
+
+    if(!json.ok || !json.data) return; // nada salvo
+
+    const dados = json.data;
+    preencherFormulario(dados);
+
+    // Se tem dados reais (bairros ou algum campo preenchido), mostra banner
+    const temDados = (dados.bairros && dados.bairros.length > 0) ||
+                     dados.precoMax || dados.quartos || dados.outros;
+    if(temDados){
+      state.jaPreenchido = true;
+      $('bannerPreenchido').classList.add('show');
+    }
+  } catch(err){
+    console.warn('Erro ao carregar preferências:', err);
+  }
+}
+
+/* =====================================================
+   PREENCHER FORMULÁRIO COM DADOS SALVOS
+===================================================== */
+function preencherFormulario(dados){
+  // ---- Bairros ----
+  if(Array.isArray(dados.bairros) && dados.bairros.length > 0){
+    $('inputBairros').value = dados.bairros.join(', ');
+    state.bairros = dados.bairros.join(', ');
+  } else if(typeof dados.bairros === 'string' && dados.bairros.trim()){
+    $('inputBairros').value = dados.bairros;
+    state.bairros = dados.bairros;
+  }
+
+  // ---- Tipo ----
+  if(dados.tipo && dados.tipo !== 'tanto faz'){
+    let tipos = [];
+    const tipoStr = String(dados.tipo).toLowerCase().trim();
+    // tipo pode vir como "apartamento padrao" ou "apartamento, padrao"
+    if(tipoStr === 'apartamento') tipos = ['apartamento padrao'];
+    else if(tipoStr === 'casa') tipos = ['casa'];
+    else if(tipoStr.includes('padrao') || tipoStr.includes('padrão')) tipos = ['apartamento padrao'];
+    else if(tipoStr.includes('cobertura')) tipos = ['apartamento cobertura'];
+    else if(tipoStr.includes('area privativa') || tipoStr.includes('área privativa')) tipos = ['apartamento area privativa'];
+    else if(tipoStr.includes('apartamento')) tipos = ['apartamento padrao'];
+
+    // Junta com tipos extras do `outros` (🏠 Também busca: ...)
+    const outros = String(dados.outros || '');
+    const match = outros.match(/🏠\s*Também busca:\s*([^\n]+)/i);
+    if(match){
+      const extras = match[1].split(',').map(s => s.trim().toLowerCase()).filter(Boolean);
+      extras.forEach(t => {
+        if(t.includes('padrao') || t.includes('padrão')) tipos.push('apartamento padrao');
+        else if(t.includes('cobertura')) tipos.push('apartamento cobertura');
+        else if(t.includes('area privativa') || t.includes('área privativa')) tipos.push('apartamento area privativa');
+        else if(t === 'casa' || t.includes('casa')) tipos.push('casa');
+      });
+    }
+
+    // Remove duplicatas
+    tipos = [...new Set(tipos)];
+    state.tipos = tipos;
+    // Marca os botões
+    document.querySelectorAll('.tipo-btn').forEach(btn => {
+      btn.classList.toggle('ativo', tipos.includes(btn.dataset.tipo));
+    });
+    // Mostra condomínio se for apartamento
+    const temApto = tipos.some(t => t.startsWith('apartamento'));
+    $('blocoCondominio').style.display = temApto ? 'block' : 'none';
+  }
+
+  // ---- Preço ----
+  if(dados.precoMax){
+    $('precoMax').value = formatarMoeda(dados.precoMax);
+    state.precoMax = formatarMoeda(dados.precoMax);
+  }
+
+  // ---- Condomínio ----
+  if(dados.condMax){
+    $('condMax').value = formatarMoeda(dados.condMax);
+    state.condMax = formatarMoeda(dados.condMax);
+  }
+
+  // ---- Quartos / Suítes / Vagas ----
+  ['quartos', 'suites', 'vagas'].forEach(campo => {
+    if(dados[campo]){
+      const val = String(dados[campo]);
+      state[campo] = val;
+      const wrap = document.querySelector(`.opcoes-linha[data-campo="${campo}"]`);
+      if(wrap){
+        wrap.querySelectorAll('.opcao-peq').forEach(b => {
+          b.classList.remove('ativa');
+          b.classList.remove('destaque-ativa');
+          if(b.dataset.val === val){
+            b.classList.add('ativa');
+          }
+        });
+      }
+    }
+  });
+
+  // ---- Acessibilidade / Elevador ----
+  ['acessibilidade', 'elevador'].forEach(campo => {
+    if(dados[campo]){
+      const val = String(dados[campo]).toLowerCase();
+      state[campo] = val;
+      const wrap = document.querySelector(`.opcoes-linha[data-campo="${campo}"]`);
+      if(wrap){
+        wrap.querySelectorAll('.opcao-peq').forEach(b => {
+          b.classList.remove('ativa');
+          b.classList.remove('destaque-ativa');
+          if(b.dataset.val === val){
+            b.classList.add('ativa');
+            if(val === 'tanto faz') b.classList.add('destaque-ativa');
+          }
+        });
+      }
+    }
+  });
+
+  // ---- Parsear o `outros` para extrair aquisição, sem escada, extras ----
+  const outros = String(dados.outros || '');
+
+  // Aquisição: "💰 Aquisição: ..."
+  const matchAquis = outros.match(/💰\s*Aquisição:\s*([^\n]+)/i);
+  if(matchAquis){
+    const txt = matchAquis[1].toLowerCase();
+    if(txt.includes('recursos próprios') || txt.includes('à vista') || txt.includes('a vista')){
+      if(txt.includes('parte') || txt.includes('+') || txt.includes('%')){
+        // Misto
+        state.aquisicao = 'misto';
+        const mAv = txt.match(/(\d+)\s*%/);
+        if(mAv){ state.misturaAvista = mAv[1]; }
+        const partes = txt.match(/(\d+)\s*%.*?(\d+)\s*%/);
+        if(partes && partes[2]) state.misturaFinanc = partes[2];
+        document.querySelector('.aquisicao-btn[data-aquis="misto"]').classList.add('ativa');
+        $('misturaWrap').classList.add('show');
+        $('misturaAvista').value = state.misturaAvista || '';
+        $('misturaFinanc').value = state.misturaFinanc || '';
+        if(state.misturaAvista && state.misturaFinanc){
+          calcMistura();
+        }
+      } else {
+        state.aquisicao = 'avista';
+        document.querySelector('.aquisicao-btn[data-aquis="avista"]').classList.add('ativa');
+      }
+    } else if(txt.includes('financiado')){
+      state.aquisicao = 'financiado';
+      document.querySelector('.aquisicao-btn[data-aquis="financiado"]').classList.add('ativa');
+    }
+  }
+
+  // Sem escada: "🚫 Sem escada: Sim"
+  const matchEscada = outros.match(/🚫\s*Sem escada:\s*(Sim|Não|sim|nao)/i);
+  if(matchEscada){
+    const val = matchEscada[1].toLowerCase().includes('sim') ? 'sim' : 'nao';
+    state.semEscada = val;
+    const wrap = document.querySelector(`.opcoes-linha[data-campo="semEscada"]`);
+    if(wrap){
+      wrap.querySelectorAll('.opcao-peq').forEach(b => {
+        b.classList.remove('ativa');
+        b.classList.remove('destaque-ativa');
+        if(b.dataset.val === val){
+          b.classList.add('ativa');
+        }
+      });
+    }
+  }
+
+  // Extras: "📝 ..." (linha única ou múltiplas)
+  const matchExtras = outros.match(/📝\s*([\s\S]*?)(?=\n🏠|\n💰|\n🚫|$)/);
+  if(matchExtras && matchExtras[1].trim()){
+    const txt = matchExtras[1].trim();
+    $('extras').value = txt;
+    state.extras = txt;
+  }
+}
 
 /* =====================================================
    ABAS
@@ -981,7 +1211,6 @@ function mudarAba(n){
 ===================================================== */
 function validarAba1(){
   let ok = true;
-  // Bairros
   const txtB = ($('inputBairros').value || '').trim();
   if(!txtB){
     $('bairrosErro').classList.add('show');
@@ -991,14 +1220,12 @@ function validarAba1(){
   } else {
     $('inputBairros').classList.remove('erro');
   }
-  // Tipos
   if(state.tipos.length === 0){
     $('tiposErro').classList.add('show');
     ok = false;
   } else {
     $('tiposErro').classList.remove('show');
   }
-  // Preço
   if(parseMoeda(state.precoMax) <= 0){
     $('precoMaxErro').classList.add('show');
     $('precoMax').classList.add('erro');
@@ -1006,7 +1233,6 @@ function validarAba1(){
   } else {
     $('precoMax').classList.remove('erro');
   }
-  // Aquisição
   if(!state.aquisicao){
     $('aquisErro').classList.add('show');
     ok = false;
@@ -1021,7 +1247,7 @@ function validarAba1(){
 }
 
 /* =====================================================
-   TIPO — multi-seleção
+   TIPO
 ===================================================== */
 function toggleTipo(btn){
   const val = btn.dataset.tipo;
@@ -1033,8 +1259,6 @@ function toggleTipo(btn){
     btn.classList.add('ativo');
   }
   $('tiposErro').classList.remove('show');
-
-  // Se marcou algum apartamento, mostra campo condomínio
   const temApto = state.tipos.some(t => t.startsWith('apartamento'));
   $('blocoCondominio').style.display = temApto ? 'block' : 'none';
   if(!temApto){
@@ -1106,15 +1330,8 @@ function escolherOpcao(campo, btn){
   }
   let val = btn.dataset.val;
   if(campo === 'acessibilidade' || campo === 'elevador' || campo === 'semEscada'){
-    if(val === 'tanto faz' || val === ''){
-      if(campo === 'acessibilidade') state.acessibilidade = 'tanto faz';
-      if(campo === 'elevador') state.elevador = 'tanto faz';
-      if(campo === 'semEscada') state.semEscada = 'tanto faz';
-    } else {
-      if(campo === 'acessibilidade') state.acessibilidade = val;
-      if(campo === 'elevador') state.elevador = val;
-      if(campo === 'semEscada') state.semEscada = val;
-    }
+    if(val === 'tanto faz' || val === '') val = 'tanto faz';
+    state[campo] = val;
   } else {
     state[campo] = val;
   }
@@ -1125,11 +1342,8 @@ function escolherOpcao(campo, btn){
 ===================================================== */
 function montarOutros(){
   const linhas = [];
-
-  // 1) Timestamp (topo, sempre atualizado)
   linhas.push(timestampAgora());
 
-  // 2) Aquisição
   let aquisTxt = '';
   if(state.aquisicao === 'avista') aquisTxt = 'Recursos próprios (à vista)';
   else if(state.aquisicao === 'financiado') aquisTxt = 'Financiado';
@@ -1138,12 +1352,10 @@ function montarOutros(){
   }
   if(aquisTxt) linhas.push(`💰 Aquisição: ${aquisTxt}`);
 
-  // 3) Sem escada (se sim)
   if(state.semEscada === 'sim'){
     linhas.push('🚫 Sem escada: Sim (obrigatório)');
   }
 
-  // 4) Extras
   if(state.extras && state.extras.trim()){
     linhas.push(`📝 ${state.extras.trim()}`);
   }
@@ -1165,14 +1377,11 @@ async function salvarTudo(){
   btn.disabled = true;
   $('salvandoOverlay').classList.add('show');
 
-  // Prepara arrays
   const listaBairros = state.bairros
     .split(/[,\n;]+/)
     .map(s => s.trim())
     .filter(Boolean);
 
-  // Para o campo `tipo` do Apps Script (só aceita um valor)
-  // Se só tem 1 tipo, manda ele. Se tem vários, prioriza o primeiro (o outro vai no `outros`)
   let tipoParaAPI = '';
   let tiposExtras = '';
   if(state.tipos.length === 1){
@@ -1182,7 +1391,6 @@ async function salvarTudo(){
     tiposExtras = state.tipos.slice(1).join(', ');
   }
 
-  // Junta os tipos extras ao `outros`
   let outrosFinal = montarOutros();
   if(tiposExtras){
     outrosFinal += `\n🏠 Também busca: ${tiposExtras}`;
@@ -1192,7 +1400,7 @@ async function salvarTudo(){
     action: 'salvarPreferenciasCliente',
     senha: SENHA_ADMIN,
     telefone: state.telCliente,
-    bairros: listaBairros.join(', '),           // string separada por vírgula
+    bairros: listaBairros.join(', '),
     precoMin: '',
     precoMax: String(parseMoeda(state.precoMax)),
     condMin: '',
@@ -1226,7 +1434,6 @@ async function salvarTudo(){
       return;
     }
 
-    // Sucesso
     $('salvandoOverlay').classList.remove('show');
     document.querySelectorAll('.card').forEach(c => c.classList.remove('ativa'));
     $('abas').style.display = 'none';
