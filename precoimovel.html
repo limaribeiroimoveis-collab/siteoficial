@@ -1039,10 +1039,16 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
       input.value = out;
     }
 
-    function mascaraMoeda(input){
+       function mascaraMoeda(input){
       let v = input.value.replace(/\D/g, '');
       if(!v) { input.value = ''; return; }
-      input.value = Number(v).toLocaleString('pt-BR');
+      // Converte para número (ex: 500000 -> 5000.00)
+      const valorNumerico = parseFloat(v) / 100;
+      // Formata no padrão brasileiro (R$ 5.000,00)
+      input.value = valorNumerico.toLocaleString('pt-BR', { 
+        minimumFractionDigits: 2, 
+        maximumFractionDigits: 2 
+      });
     }
 
     function toggleIPTU() {
