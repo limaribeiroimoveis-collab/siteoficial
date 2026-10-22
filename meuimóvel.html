@@ -1,0 +1,1543 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+<meta name="theme-color" content="#3d2b20">
+<meta name="robots" content="noindex, nofollow">
+<title>Minhas preferências de imóvel · Lima Ribeiro</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%233d2b20'/><text x='50' y='68' font-family='-apple-system,sans-serif' font-size='48' font-weight='800' fill='white' text-anchor='middle'>LR</text></svg>">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  :root{
+    --primary:#3d2b20;
+    --primary-hover:#2a1d15;
+    --primary-soft:#f5e8d8;
+    --accent:#a0522d;
+    --success:#2f6b4f;
+    --success-soft:#e6efe9;
+    --warn:#8b6f3a;
+    --warn-soft:#f5efe0;
+    --danger:#8b3a3a;
+    --danger-soft:#f4e6e6;
+    --bg:#f1f3f5;
+    --card:#ffffff;
+    --text:#0f172a;
+    --text-soft:#475569;
+    --muted:#94a3b8;
+    --border:#e2e8f0;
+    --border-strong:#cbd5e1;
+    --radius:12px;
+    --radius-sm:8px;
+    --shadow-sm: 0 1px 3px rgba(15,23,42,.08);
+    --shadow-md: 0 4px 14px rgba(15,23,42,.10);
+    --shadow-lg: 0 12px 32px rgba(15,23,42,.14);
+    --font: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
+  }
+  html, body { height:100%; }
+  body{
+    font-family: var(--font);
+    background: linear-gradient(170deg, #fbf6f2 0%, #f5e8d8 100%);
+    color: var(--text);
+    line-height: 1.5;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    padding-bottom: 100px;
+  }
+
+  /* HEADER */
+  .header{
+    background: var(--primary);
+    color: #fff;
+    padding: 14px 16px;
+    display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; z-index: 50;
+    box-shadow: 0 2px 8px rgba(0,0,0,.12);
+    gap: 10px;
+  }
+  .header .logo{ height: 34px; width: auto; display: block; flex-shrink: 0; }
+  .header .tag{
+    font-size: .68rem; font-weight: 700;
+    background: rgba(255,255,255,.12);
+    padding: 5px 10px; border-radius: 40px;
+    color: #f5e8d8;
+    letter-spacing: .3px;
+    white-space: nowrap;
+  }
+
+  /* CONTAINER */
+  .container{
+    max-width: 620px;
+    margin: 0 auto;
+    padding: 18px 14px 20px;
+  }
+
+  /* SAUDAÇÃO */
+  .ola{
+    text-align: center;
+    margin-bottom: 18px;
+  }
+  .ola h1{
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: var(--primary);
+    letter-spacing: -.3px;
+    line-height: 1.25;
+    margin-bottom: 6px;
+  }
+  .ola p{
+    font-size: .85rem;
+    color: var(--text-soft);
+    line-height: 1.5;
+    max-width: 440px;
+    margin: 0 auto;
+  }
+  .ola p strong{ color: var(--primary); font-weight: 700; }
+
+  /* PROGRESSO */
+  .progresso-wrap{
+    background: #fff;
+    border-radius: var(--radius);
+    padding: 10px 12px;
+    margin-bottom: 14px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border);
+  }
+  .progresso-txt{
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: .7rem; font-weight: 700; color: var(--muted);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: .4px;
+  }
+  .progresso-txt .atual{ color: var(--primary); font-weight: 800; }
+  .progresso-barra{
+    height: 6px;
+    background: var(--bg);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .progresso-barra-fill{
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%);
+    border-radius: 3px;
+    transition: width .35s ease;
+    width: 12.5%;
+  }
+
+  /* CARD DA TELA */
+  .tela{
+    background: #fff;
+    border-radius: var(--radius);
+    padding: 22px 18px;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border);
+    display: none;
+    animation: fadeUp .28s ease;
+  }
+  .tela.ativa{ display: block; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .tela-titulo{
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: var(--primary);
+    letter-spacing: -.2px;
+    line-height: 1.3;
+    margin-bottom: 4px;
+  }
+  .tela-sub{
+    font-size: .8rem;
+    color: var(--text-soft);
+    line-height: 1.5;
+    margin-bottom: 16px;
+  }
+  .tela-sub strong{ color: var(--primary); }
+
+  /* AVISO */
+  .aviso{
+    background: var(--warn-soft);
+    border-left: 3px solid var(--warn);
+    padding: 10px 12px;
+    border-radius: var(--radius-sm);
+    font-size: .76rem;
+    color: #5a4a25;
+    line-height: 1.5;
+    margin-bottom: 14px;
+  }
+  .aviso strong{ color: var(--warn); font-weight: 800; }
+
+  /* BAIRROS */
+  .bairros-add{
+    display: flex;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  .bairros-add input{
+    flex: 1;
+    padding: 12px 14px;
+    border: 2px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    font-family: inherit;
+    font-size: .9rem;
+    color: var(--text);
+  }
+  .bairros-add input:focus{
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(61,43,32,.08);
+  }
+  .bairros-add button{
+    padding: 12px 16px;
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-family: inherit;
+    font-size: .88rem;
+    font-weight: 800;
+    cursor: pointer;
+    white-space: nowrap;
+    display: inline-flex; align-items: center; gap: 4px;
+    transition: all .15s;
+  }
+  .bairros-add button:hover{ background: var(--primary-hover); }
+  .bairros-add button:disabled{ opacity: .5; cursor: not-allowed; }
+
+  .bairros-chips{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    min-height: 30px;
+    margin-bottom: 14px;
+  }
+  .bairro-chip{
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: var(--primary-soft);
+    color: #6d3e1e;
+    border: 1px solid #e8d4c4;
+    border-radius: 999px;
+    font-size: .8rem;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .bairro-chip .x{
+    cursor: pointer;
+    font-weight: 900;
+    opacity: .5;
+    font-size: .95rem;
+    line-height: 1;
+    padding: 0 2px;
+  }
+  .bairro-chip .x:hover{ opacity: 1; }
+
+  .sugestoes-lbl{
+    font-size: .68rem;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: .4px;
+    margin-bottom: 6px;
+  }
+  .sugestoes-chips{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+  .sugestao-chip{
+    padding: 5px 10px;
+    background: #fff;
+    border: 1px dashed var(--border-strong);
+    border-radius: 999px;
+    font-size: .74rem;
+    font-weight: 600;
+    color: var(--text-soft);
+    cursor: pointer;
+    transition: all .15s;
+    font-family: inherit;
+  }
+  .sugestao-chip:hover{
+    background: var(--primary-soft);
+    border-style: solid;
+    border-color: var(--primary);
+    color: var(--primary);
+  }
+  .sugestao-chip.added{
+    opacity: .4;
+    pointer-events: none;
+  }
+
+  /* OPÇÕES GRANDES (tipo apartamento/casa) */
+  .opcoes-grandes{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .opcao-grande{
+    padding: 20px 12px;
+    background: #fff;
+    border: 2px solid var(--border-strong);
+    border-radius: var(--radius);
+    font-family: inherit;
+    font-size: .9rem;
+    font-weight: 800;
+    color: var(--text);
+    cursor: pointer;
+    transition: all .15s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  .opcao-grande .emoji{ font-size: 2rem; line-height: 1; }
+  .opcao-grande:hover{ border-color: var(--primary); }
+  .opcao-grande.ativa{
+    background: linear-gradient(135deg, var(--primary), #5d3f2f);
+    color: #fff;
+    border-color: var(--primary);
+    box-shadow: 0 6px 18px rgba(61,43,32,.28);
+    transform: translateY(-2px);
+  }
+
+  /* CHIPS MULTI-SELEÇÃO */
+  .chips-multi{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+  .chip-multi{
+    padding: 12px 10px;
+    background: #fff;
+    border: 2px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    font-family: inherit;
+    font-size: .82rem;
+    font-weight: 700;
+    color: var(--text);
+    cursor: pointer;
+    transition: all .15s;
+    text-align: center;
+    line-height: 1.2;
+  }
+  .chip-multi:hover{ border-color: var(--primary); }
+  .chip-multi.ativa{
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary);
+  }
+
+  /* INPUTS */
+  .campo-bloco{ margin-bottom: 14px; }
+  .campo-bloco:last-child{ margin-bottom: 0; }
+  .campo-label{
+    display: block;
+    font-size: .8rem;
+    font-weight: 800;
+    color: var(--primary);
+    margin-bottom: 6px;
+    letter-spacing: -.1px;
+  }
+  .campo-label .opc{
+    font-weight: 500;
+    color: var(--muted);
+    font-size: .74rem;
+    margin-left: 4px;
+  }
+  .campo-label .req{ color: var(--danger); }
+  .input-valor{
+    width: 100%;
+    padding: 12px 14px;
+    border: 2px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    font-size: 1rem;
+    font-family: inherit;
+    font-weight: 700;
+    color: var(--text);
+    background: #fff;
+    font-variant-numeric: tabular-nums;
+    transition: all .15s;
+  }
+  .input-valor:focus{
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(61,43,32,.08);
+  }
+  .input-valor.erro{
+    border-color: var(--danger);
+    background: #fef2f2;
+  }
+  .campo-erro{
+    font-size: .74rem;
+    color: var(--danger);
+    font-weight: 600;
+    margin-top: 4px;
+    display: none;
+  }
+  .campo-erro.show{ display: block; }
+
+  textarea.livre{
+    width: 100%;
+    padding: 12px 14px;
+    border: 2px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    font-family: inherit;
+    font-size: .9rem;
+    color: var(--text);
+    line-height: 1.5;
+    min-height: 100px;
+    resize: vertical;
+    transition: all .15s;
+  }
+  textarea.livre:focus{
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(61,43,32,.08);
+  }
+
+  /* PADRÃO DE OPÇÕES PEQUENAS (quartos, suites, etc) */
+  .opcoes-linha{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .opcao-peq{
+    flex: 1;
+    min-width: 52px;
+    padding: 10px 8px;
+    background: #fff;
+    border: 2px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    font-family: inherit;
+    font-size: .8rem;
+    font-weight: 700;
+    color: var(--text);
+    cursor: pointer;
+    transition: all .15s;
+    text-align: center;
+    white-space: nowrap;
+  }
+  .opcao-peq:hover{ border-color: var(--primary); }
+  .opcao-peq.ativa{
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary);
+  }
+  .opcao-peq.destaque-ativa{
+    background: #64748b;
+    border-color: #475569;
+  }
+
+  /* AQUISIÇÃO MISTA */
+  .mistura-wrap{
+    background: var(--primary-soft);
+    border: 1px dashed var(--primary);
+    border-radius: var(--radius-sm);
+    padding: 12px;
+    margin-top: 10px;
+    display: none;
+  }
+  .mistura-wrap.show{ display: block; }
+  .mistura-lbl{
+    font-size: .74rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 8px;
+    line-height: 1.4;
+  }
+  .mistura-inputs{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .mistura-campo{
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .mistura-campo label{
+    font-size: .68rem;
+    font-weight: 700;
+    color: var(--text-soft);
+    text-transform: uppercase;
+    letter-spacing: .3px;
+  }
+  .mistura-campo input{
+    padding: 10px 12px;
+    border: 2px solid var(--border-strong);
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: .92rem;
+    font-weight: 700;
+    color: var(--text);
+    text-align: center;
+  }
+  .mistura-campo input:focus{
+    outline: none;
+    border-color: var(--primary);
+  }
+  .mistura-info{
+    margin-top: 8px;
+    font-size: .74rem;
+    font-weight: 700;
+    color: var(--text-soft);
+    text-align: center;
+  }
+  .mistura-info.ok{ color: var(--success); }
+  .mistura-info.erro{ color: var(--danger); }
+
+  /* BOTÕES NAVEGAÇÃO */
+  .nav-botoes{
+    display: flex;
+    gap: 8px;
+    margin-top: 20px;
+  }
+  .btn-nav{
+    flex: 1;
+    padding: 15px 16px;
+    border-radius: var(--radius-sm);
+    font-family: inherit;
+    font-size: .92rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all .15s;
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    letter-spacing: .2px;
+    border: none;
+  }
+  .btn-voltar{
+    flex: 0 0 auto;
+    background: #fff;
+    color: var(--text-soft);
+    border: 2px solid var(--border-strong);
+  }
+  .btn-voltar:hover{ background: var(--bg); color: var(--text); }
+  .btn-proximo{
+    background: linear-gradient(135deg, var(--primary), #5d3f2f);
+    color: #fff;
+    box-shadow: 0 6px 18px rgba(61,43,32,.28);
+  }
+  .btn-proximo:hover:not(:disabled){
+    transform: translateY(-1px);
+    box-shadow: 0 10px 24px rgba(61,43,32,.35);
+  }
+  .btn-proximo:disabled{ opacity: .5; cursor: not-allowed; }
+  .btn-proximo.final{
+    background: linear-gradient(135deg, var(--success), #24603f);
+    box-shadow: 0 6px 18px rgba(47,107,79,.28);
+  }
+  .btn-proximo.final:hover:not(:disabled){
+    box-shadow: 0 10px 24px rgba(47,107,79,.35);
+  }
+
+  /* TELA FINAL */
+  .tela-final{
+    text-align: center;
+    padding: 40px 20px;
+  }
+  .tela-final .ico-final{
+    width: 76px; height: 76px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--success), #24603f);
+    color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 20px;
+    font-size: 2.2rem;
+    box-shadow: 0 10px 24px rgba(47,107,79,.35);
+    animation: popIn .4s ease;
+  }
+  @keyframes popIn {
+    from { transform: scale(0); opacity: 0; }
+    to   { transform: scale(1); opacity: 1; }
+  }
+  .tela-final h2{
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: var(--primary);
+    margin-bottom: 10px;
+    letter-spacing: -.3px;
+  }
+  .tela-final p{
+    font-size: .9rem;
+    color: var(--text-soft);
+    line-height: 1.6;
+    margin-bottom: 22px;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .btn-whats-final{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 24px;
+    background: linear-gradient(135deg, #25D366, #1da851);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-family: inherit;
+    font-size: .95rem;
+    font-weight: 800;
+    text-decoration: none;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(37,211,102,.35);
+    transition: all .15s;
+    width: 100%;
+    max-width: 320px;
+  }
+  .btn-whats-final:hover{
+    transform: translateY(-1px);
+    box-shadow: 0 12px 28px rgba(37,211,102,.45);
+  }
+  .btn-rever{
+    background: none;
+    border: none;
+    color: var(--text-soft);
+    font-family: inherit;
+    font-size: .82rem;
+    font-weight: 600;
+    text-decoration: underline;
+    cursor: pointer;
+    margin-top: 16px;
+    padding: 8px;
+  }
+  .btn-rever:hover{ color: var(--primary); }
+
+  /* OVERLAY SALVANDO */
+  .salvando-overlay{
+    position: fixed; inset: 0;
+    background: rgba(61,43,32,.72);
+    z-index: 999;
+    display: none;
+    align-items: center; justify-content: center;
+    flex-direction: column;
+    gap: 14px;
+    color: #fff;
+    text-align: center;
+    padding: 20px;
+    backdrop-filter: blur(3px);
+  }
+  .salvando-overlay.show{ display: flex; }
+  .salvando-overlay .spinner{
+    width: 48px; height: 48px;
+    border: 4px solid rgba(255,255,255,.25);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin .8s linear infinite;
+  }
+  @keyframes spin{ to{ transform: rotate(360deg); } }
+  .salvando-overlay .msg{ font-size: .95rem; font-weight: 600; }
+
+  /* TOAST */
+  .toast{
+    position: fixed;
+    bottom: 100px;
+    left: 50%;
+    transform: translate(-50%, 20px);
+    background: #0f172a;
+    color: #fff;
+    padding: 12px 20px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-lg);
+    font-size: .85rem;
+    font-weight: 600;
+    max-width: 90vw;
+    text-align: center;
+    opacity: 0;
+    transition: all .3s;
+    pointer-events: none;
+    z-index: 1000;
+  }
+  .toast.show{
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+  .toast.success{ background: var(--success); }
+  .toast.error{ background: var(--danger); }
+
+  /* BOTÃO FLUTUANTE WHATSAPP */
+  .rodape-whats{
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: rgba(255,255,255,.97);
+    backdrop-filter: blur(12px);
+    border-top: 1px solid var(--border);
+    padding: 10px 14px calc(10px + env(safe-area-inset-bottom));
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 40;
+  }
+  .rodape-whats .txt{
+    flex: 1;
+    font-size: .72rem;
+    color: var(--text-soft);
+    font-weight: 600;
+    line-height: 1.3;
+  }
+  .rodape-whats .txt strong{
+    display: block;
+    color: var(--primary);
+    font-size: .78rem;
+    font-weight: 800;
+  }
+  .rodape-whats .btn-zap{
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 11px 16px;
+    background: linear-gradient(135deg, #25D366, #1da851);
+    color: #fff;
+    border: none;
+    border-radius: 40px;
+    font-family: inherit;
+    font-size: .8rem;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 6px 16px rgba(37,211,102,.35);
+    transition: all .15s;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .rodape-whats .btn-zap:hover{
+    transform: translateY(-1px);
+    box-shadow: 0 10px 22px rgba(37,211,102,.45);
+  }
+
+  @media (max-width: 400px){
+    .chips-multi{ grid-template-columns: repeat(2, 1fr); }
+    .tela{ padding: 18px 14px; }
+    .tela-titulo{ font-size: 1rem; }
+    .opcao-grande{ padding: 16px 10px; font-size: .85rem; }
+    .opcao-grande .emoji{ font-size: 1.7rem; }
+  }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <img src="https://cdn.awsli.com.br/1608/1608652/arquivos/logo-lr-imoveis.jpg" alt="Lima Ribeiro" class="logo">
+  <span class="tag">Preferências de imóvel</span>
+</header>
+
+<div class="container">
+
+  <div class="ola">
+    <h1 id="olaTitulo">Vamos encontrar seu imóvel ideal!</h1>
+    <p id="olaSub">Preencha com calma. <strong>Leva só 2 minutinhos</strong> e seu consultor já sai na frente procurando as melhores opções pra você.</p>
+  </div>
+
+  <!-- PROGRESSO -->
+  <div class="progresso-wrap" id="progressoWrap">
+    <div class="progresso-txt">
+      <span>Passo <span class="atual" id="passoAtual">1</span> de <span id="passoTotal">8</span></span>
+      <span id="passoLabel">Bairros</span>
+    </div>
+    <div class="progresso-barra">
+      <div class="progresso-barra-fill" id="progressoFill"></div>
+    </div>
+  </div>
+
+  <!-- ====== TELA 1: BAIRROS ====== -->
+  <div class="tela ativa" data-tela="1">
+    <div class="tela-titulo">📍 Em quais bairros você procura?</div>
+    <div class="tela-sub">Digite e adicione quantos quiser. Se tiver preferência por regiões, pode colocar (ex: "Zona Sul").</div>
+
+    <div class="bairros-add">
+      <input type="text" id="bairroInput" placeholder="Digite o bairro ou região" autocomplete="off" inputmode="text">
+      <button type="button" onclick="adicionarBairro()">+ Add</button>
+    </div>
+
+    <div class="bairros-chips" id="bairrosChips"></div>
+
+    <div class="sugestoes-lbl">Sugestões rápidas:</div>
+    <div class="sugestoes-chips" id="sugestoesChips"></div>
+  </div>
+
+  <!-- ====== TELA 2: TIPO ====== -->
+  <div class="tela" data-tela="2">
+    <div class="tela-titulo">🏠 Que tipo de imóvel você procura?</div>
+    <div class="tela-sub">Escolha o que você quer que seu consultor pesquise.</div>
+
+    <div class="opcoes-grandes">
+      <button type="button" class="opcao-grande" data-tipo="apartamento" onclick="escolherTipo('apartamento')">
+        <span class="emoji">🏢</span>
+        Apartamento
+      </button>
+      <button type="button" class="opcao-grande" data-tipo="casa" onclick="escolherTipo('casa')">
+        <span class="emoji">🏡</span>
+        Casa
+      </button>
+    </div>
+
+    <div id="blocoTipoApto" style="display:none;">
+      <div class="campo-label">Que tipo de apartamento? <span class="opc">(escolha um ou mais)</span></div>
+      <div class="chips-multi" id="chipsTipoApto">
+        <button type="button" class="chip-multi" data-val="padrao" onclick="toggleTipoApto(this)">Padrão</button>
+        <button type="button" class="chip-multi" data-val="cobertura" onclick="toggleTipoApto(this)">Cobertura</button>
+        <button type="button" class="chip-multi" data-val="area privativa" onclick="toggleTipoApto(this)">Área Privativa</button>
+      </div>
+      <div class="aviso" style="margin-top:12px;">
+        💡 <strong>Fique à vontade:</strong> pode marcar mais de um. Assim seu consultor pesquisa mais opções pra você.
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== TELA 3: VALOR ====== -->
+  <div class="tela" data-tela="3">
+    <div class="tela-titulo">💰 Qual o valor do investimento?</div>
+    <div class="tela-sub">Nos ajude a filtrar os imóveis dentro do que você procura.</div>
+
+    <div class="campo-bloco">
+      <label class="campo-label">Valor máximo que pretende investir <span class="req">*</span></label>
+      <input type="text" class="input-valor" id="precoMax" placeholder="Ex: 700.000" inputmode="numeric" autocomplete="off">
+      <div class="campo-erro" id="precoMaxErro">Informe o valor que pretende investir.</div>
+    </div>
+
+    <div class="campo-bloco" id="blocoCondominio" style="display:none;">
+      <label class="campo-label">Valor médio de condomínio que aceita <span class="opc">(opcional)</span></label>
+      <input type="text" class="input-valor" id="condMax" placeholder="Ex: 800" inputmode="numeric" autocomplete="off">
+    </div>
+  </div>
+
+  <!-- ====== TELA 4: AQUISIÇÃO ====== -->
+  <div class="tela" data-tela="4">
+    <div class="tela-titulo">💵 Como pretende adquirir o imóvel?</div>
+    <div class="tela-sub">Isso ajuda seu consultor a indicar as melhores opções.</div>
+
+    <div style="display:flex; flex-direction:column; gap:8px; margin-bottom:14px;">
+      <button type="button" class="opcao-peq" data-aquis="avista" onclick="escolherAquisicao('avista', this)" style="padding:14px; text-align:left; font-size:.9rem; display:flex; align-items:center; gap:8px;">
+        <span style="font-size:1.3rem;">💵</span> Recursos próprios (à vista)
+      </button>
+      <button type="button" class="opcao-peq" data-aquis="financiado" onclick="escolherAquisicao('financiado', this)" style="padding:14px; text-align:left; font-size:.9rem; display:flex; align-items:center; gap:8px;">
+        <span style="font-size:1.3rem;">🏦</span> Financiado
+      </button>
+      <button type="button" class="opcao-peq" data-aquis="misto" onclick="escolherAquisicao('misto', this)" style="padding:14px; text-align:left; font-size:.9rem; display:flex; align-items:center; gap:8px;">
+        <span style="font-size:1.3rem;">🔀</span> Parte à vista, parte financiado
+      </button>
+    </div>
+
+    <div class="mistura-wrap" id="misturaWrap">
+      <div class="mistura-lbl">Aproximadamente, como você pretende dividir?</div>
+      <div class="mistura-inputs">
+        <div class="mistura-campo">
+          <label>% à vista</label>
+          <input type="number" id="misturaAvista" min="1" max="99" inputmode="numeric" placeholder="30" oninput="calcMistura()">
+        </div>
+        <div class="mistura-campo">
+          <label>% financiado</label>
+          <input type="number" id="misturaFinanc" min="1" max="99" inputmode="numeric" placeholder="70" oninput="calcMistura()">
+        </div>
+      </div>
+      <div class="mistura-info" id="misturaInfo">Digite os dois percentuais (a soma precisa dar 100%)</div>
+    </div>
+  </div>
+
+  <!-- ====== TELA 5: CÔMODOS ====== -->
+  <div class="tela" data-tela="5">
+    <div class="tela-titulo">🛏️ Quantos cômodos você precisa?</div>
+    <div class="tela-sub">Toque em "Tanto faz" se não for importante.</div>
+
+    <div class="campo-bloco">
+      <div class="campo-label">Quartos</div>
+      <div class="opcoes-linha" data-campo="quartos">
+        <button type="button" class="opcao-peq destaque-ativa" data-val="" onclick="escolherOpcao('quartos', this)">Tanto faz</button>
+        <button type="button" class="opcao-peq" data-val="1" onclick="escolherOpcao('quartos', this)">1+</button>
+        <button type="button" class="opcao-peq" data-val="2" onclick="escolherOpcao('quartos', this)">2+</button>
+        <button type="button" class="opcao-peq" data-val="3" onclick="escolherOpcao('quartos', this)">3+</button>
+        <button type="button" class="opcao-peq" data-val="4" onclick="escolherOpcao('quartos', this)">4+</button>
+      </div>
+    </div>
+
+    <div class="campo-bloco">
+      <div class="campo-label">Suítes</div>
+      <div class="opcoes-linha" data-campo="suites">
+        <button type="button" class="opcao-peq destaque-ativa" data-val="" onclick="escolherOpcao('suites', this)">Tanto faz</button>
+        <button type="button" class="opcao-peq" data-val="1" onclick="escolherOpcao('suites', this)">1+</button>
+        <button type="button" class="opcao-peq" data-val="2" onclick="escolherOpcao('suites', this)">2+</button>
+        <button type="button" class="opcao-peq" data-val="3" onclick="escolherOpcao('suites', this)">3+</button>
+        <button type="button" class="opcao-peq" data-val="4" onclick="escolherOpcao('suites', this)">4+</button>
+      </div>
+    </div>
+
+    <div class="campo-bloco">
+      <div class="campo-label">Vagas de garagem</div>
+      <div class="opcoes-linha" data-campo="vagas">
+        <button type="button" class="opcao-peq destaque-ativa" data-val="" onclick="escolherOpcao('vagas', this)">Tanto faz</button>
+        <button type="button" class="opcao-peq" data-val="0" onclick="escolherOpcao('vagas', this)">0</button>
+        <button type="button" class="opcao-peq" data-val="1" onclick="escolherOpcao('vagas', this)">1+</button>
+        <button type="button" class="opcao-peq" data-val="2" onclick="escolherOpcao('vagas', this)">2+</button>
+        <button type="button" class="opcao-peq" data-val="3" onclick="escolherOpcao('vagas', this)">3+</button>
+        <button type="button" class="opcao-peq" data-val="4" onclick="escolherOpcao('vagas', this)">4+</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== TELA 6: ACESSIBILIDADE ====== -->
+  <div class="tela" data-tela="6">
+    <div class="tela-titulo">♿ Precisa de acessibilidade?</div>
+    <div class="tela-sub">Alguns itens são importantes pra facilitar o acesso.</div>
+
+    <div class="aviso">
+      ⚠️ <strong>Atenção:</strong> marcar estas opções ajuda no acesso, mas <strong>reduz as opções disponíveis</strong>. Marque <strong>somente</strong> se for fundamental pra você.
+    </div>
+
+    <div class="campo-bloco">
+      <div class="campo-label">Precisa de acessibilidade?</div>
+      <div class="opcoes-linha" data-campo="acessibilidade">
+        <button type="button" class="opcao-peq destaque-ativa" data-val="tanto faz" onclick="escolherOpcao('acessibilidade', this)">Tanto faz</button>
+        <button type="button" class="opcao-peq" data-val="sim" onclick="escolherOpcao('acessibilidade', this)">Sim</button>
+        <button type="button" class="opcao-peq" data-val="nao" onclick="escolherOpcao('acessibilidade', this)">Não</button>
+      </div>
+    </div>
+
+    <div class="campo-bloco">
+      <div class="campo-label">É obrigatório ter elevador?</div>
+      <div class="opcoes-linha" data-campo="elevador">
+        <button type="button" class="opcao-peq destaque-ativa" data-val="tanto faz" onclick="escolherOpcao('elevador', this)">Tanto faz</button>
+        <button type="button" class="opcao-peq" data-val="sim" onclick="escolherOpcao('elevador', this)">Sim</button>
+        <button type="button" class="opcao-peq" data-val="nao" onclick="escolherOpcao('elevador', this)">Não</button>
+      </div>
+    </div>
+
+    <div class="campo-bloco">
+      <div class="campo-label">Precisa que seja sem escada?</div>
+      <div class="opcoes-linha" data-campo="semEscada">
+        <button type="button" class="opcao-peq destaque-ativa" data-val="tanto faz" onclick="escolherOpcao('semEscada', this)">Tanto faz</button>
+        <button type="button" class="opcao-peq" data-val="sim" onclick="escolherOpcao('semEscada', this)">Sim</button>
+        <button type="button" class="opcao-peq" data-val="nao" onclick="escolherOpcao('semEscada', this)">Não</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== TELA 7: EXTRAS ====== -->
+  <div class="tela" data-tela="7">
+    <div class="tela-titulo">📝 Mais algum detalhe importante?</div>
+    <div class="tela-sub">Escreva com suas palavras. Pode ser qualquer coisa: varanda, andar alto, piscina, pet, etc.</div>
+
+    <div class="campo-bloco">
+      <textarea class="livre" id="extras" placeholder="Ex: gostaria de varanda gourmet, andar alto, aceita pet, próximo de escola..." maxlength="600"></textarea>
+    </div>
+  </div>
+
+  <!-- ====== TELA 8: REVISÃO E ENVIO ====== -->
+  <div class="tela" data-tela="8">
+    <div class="tela-titulo">✅ Tudo pronto!</div>
+    <div class="tela-sub">Dá uma olhada se está tudo certo antes de enviar.</div>
+    <div id="revisaoResumo" style="background:var(--primary-soft); border-radius:var(--radius-sm); padding:14px; font-size:.82rem; line-height:1.7; color:var(--text);"></div>
+    <div class="aviso" style="margin-top:14px;">
+      💡 Você pode <strong>editar depois</strong> se mudar de ideia. Basta voltar no link.
+    </div>
+  </div>
+
+  <!-- ====== TELA FINAL (obrigado) ====== -->
+  <div class="tela tela-final" data-tela="final">
+    <div class="ico-final">✅</div>
+    <h2>Preferências enviadas!</h2>
+    <p id="finalTexto">Seu consultor já recebeu suas preferências e vai começar a buscar as melhores opções pra você.</p>
+    <a href="#" class="btn-whats-final" id="btnWhatsFinal" target="_blank" rel="noopener">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.465 3.63"/></svg>
+      Falar com meu consultor
+    </a>
+    <br>
+    <button type="button" class="btn-rever" onclick="revisarNovamente()">Rever minhas preferências</button>
+  </div>
+
+  <!-- NAVEGAÇÃO -->
+  <div class="nav-botoes" id="navBotoes">
+    <button type="button" class="btn-nav btn-voltar" id="btnVoltar" onclick="voltarPasso()" style="display:none;">
+      ← Voltar
+    </button>
+    <button type="button" class="btn-nav btn-proximo" id="btnProximo" onclick="proximoPasso()">
+      Próximo →
+    </button>
+  </div>
+
+</div>
+
+<!-- RODAPÉ WHATS -->
+<a class="rodape-whats" id="rodapeWhats" href="#" target="_blank" rel="noopener" style="text-decoration:none; color:inherit;">
+  <div class="txt">
+    <strong>Precisa de ajuda?</strong>
+    Fale com seu consultor
+  </div>
+  <span class="btn-zap">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.465 3.63"/></svg>
+    WhatsApp
+  </span>
+</a>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- SALVANDO -->
+<div class="salvando-overlay" id="salvandoOverlay">
+  <div class="spinner"></div>
+  <div class="msg">Enviando suas preferências...</div>
+</div>
+
+<script>
+/* =====================================================
+   CONFIG
+===================================================== */
+const API_URL = 'https://script.google.com/macros/s/AKfycbzuCjg_5ZJDMWWKmjYp1ThW34iWS0YouviWFdiMGx8W3yApv0F1fdUcjeZdjm0s6Mg/exec';
+const WHATS_FALLBACK = '5531999999999'; // fallback se não tiver tel na URL
+
+/* =====================================================
+   ESTADO
+===================================================== */
+const state = {
+  telCliente: '',
+  nomeCliente: '',
+  passoAtual: 1,
+  totalPassos: 8,
+  bairros: [],
+  tipo: '',                 // 'apartamento' | 'casa'
+  tiposApto: [],            // ['padrao', 'cobertura', ...]
+  precoMax: '',
+  condMax: '',
+  aquisicao: '',            // 'avista' | 'financiado' | 'misto'
+  misturaAvista: '',
+  misturaFinanc: '',
+  quartos: '',
+  suites: '',
+  vagas: '',
+  acessibilidade: 'tanto faz',
+  elevador: 'tanto faz',
+  semEscada: 'tanto faz',
+  extras: ''
+};
+
+const SUGESTOES_BAIRROS = [
+  'Savassi', 'Funcionários', 'Lourdes', 'Buritis', 'Belvedere',
+  'Santo Agostinho', 'Serra', 'Sion', 'Pampulha', 'Mangabeiras',
+  'Vila da Serra', 'Centro-Sul', 'Zona Sul', 'Região Centro-Sul'
+];
+
+const $ = id => document.getElementById(id);
+
+/* =====================================================
+   UTILS
+===================================================== */
+function escapeHtml(s){
+  return String(s || '')
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+function toast(msg, tipo){
+  const t = $('toast');
+  if(!t) return;
+  t.textContent = msg;
+  t.className = 'toast show ' + (tipo || '');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.remove('show'), 3200);
+}
+function formatarMoeda(v){
+  const n = String(v || '').replace(/\D/g, '');
+  if(!n) return '';
+  return n.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+}
+function parseMoeda(v){
+  const n = String(v || '').replace(/\D/g, '');
+  return n ? parseInt(n, 10) : 0;
+}
+function timestampAgora(){
+  const d = new Date();
+  const dia = String(d.getDate()).padStart(2, '0');
+  const mes = String(d.getMonth() + 1).padStart(2, '0');
+  const ano = String(d.getFullYear()).slice(-2);
+  const h = String(d.getHours()).padStart(2, '0');
+  const m = String(d.getMinutes()).padStart(2, '0');
+  return `${dia}/${mes}/${ano} ${h}:${m}hs`;
+}
+
+/* =====================================================
+   INICIALIZAÇÃO — pega tel e nome da URL
+===================================================== */
+(function init(){
+  const params = new URLSearchParams(window.location.search);
+  const tel = String(params.get('tel') || '').replace(/\D/g, '');
+  const nome = String(params.get('nome') || '').trim();
+
+  state.telCliente = tel;
+  state.nomeCliente = nome;
+
+  if(nome){
+    $('olaTitulo').textContent = `Oi, ${nome.split(' ')[0]}! Vamos encontrar seu imóvel ideal 🎯`;
+  }
+
+  // Configura WhatsApp se tiver telefone
+  if(tel){
+    const num = tel.startsWith('55') ? tel : '55' + tel;
+    const url = `https://wa.me/${num}?text=${encodeURIComponent('Olá! Acabei de preencher minhas preferências de imóvel 🏠')}`;
+    $('btnWhatsFinal').href = url;
+    $('rodapeWhats').href = url;
+  } else {
+    $('btnWhatsFinal').style.display = 'none';
+  }
+
+  renderizarBairros();
+  renderizarSugestoes();
+  atualizarProgresso();
+  atualizarNavBotoes();
+  configurarInputsMoeda();
+})();
+
+/* =====================================================
+   NAVEGAÇÃO ENTRE PASSOS
+===================================================== */
+function atualizarProgresso(){
+  const pct = (state.passoAtual / state.totalPassos) * 100;
+  $('progressoFill').style.width = pct + '%';
+  $('passoAtual').textContent = state.passoAtual;
+  $('passoTotal').textContent = state.totalPassos;
+  const labels = {
+    1: 'Bairros', 2: 'Tipo', 3: 'Valor', 4: 'Aquisição',
+    5: 'Cômodos', 6: 'Acessibilidade', 7: 'Extras', 8: 'Revisão'
+  };
+  $('passoLabel').textContent = labels[state.passoAtual] || '';
+}
+function atualizarNavBotoes(){
+  const btnVoltar = $('btnVoltar');
+  const btnProximo = $('btnProximo');
+  if(state.passoAtual === 1){
+    btnVoltar.style.display = 'none';
+  } else {
+    btnVoltar.style.display = 'inline-flex';
+  }
+  if(state.passoAtual === state.totalPassos){
+    btnProximo.textContent = '✓ Enviar preferências';
+    btnProximo.classList.add('final');
+  } else {
+    btnProximo.textContent = 'Próximo →';
+    btnProximo.classList.remove('final');
+  }
+  // Desabilita próximo se não cumpriu requisito
+  btnProximo.disabled = !podeAvancar();
+}
+function proximoPasso(){
+  if(!podeAvancar()){
+    toast(erroAvancar(), 'error');
+    return;
+  }
+  if(state.passoAtual === state.totalPassos){
+    salvarTudo();
+    return;
+  }
+  state.passoAtual++;
+  if(state.passoAtual === 8){ montarRevisao(); }
+  trocarTela();
+}
+function voltarPasso(){
+  if(state.passoAtual === 1) return;
+  state.passoAtual--;
+  trocarTela();
+}
+function trocarTela(){
+  document.querySelectorAll('.tela').forEach(t => t.classList.remove('ativa'));
+  const alvo = document.querySelector(`.tela[data-tela="${state.passoAtual}"]`);
+  if(alvo) alvo.classList.add('ativa');
+  atualizarProgresso();
+  atualizarNavBotoes();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function podeAvancar(){
+  if(state.passoAtual === 1){
+    return state.bairros.length > 0;
+  }
+  if(state.passoAtual === 2){
+    return state.tipo !== '';
+  }
+  if(state.passoAtual === 3){
+    return parseMoeda(state.precoMax) > 0;
+  }
+  if(state.passoAtual === 4){
+    if(!state.aquisicao) return false;
+    if(state.aquisicao === 'misto'){
+      return validarMistura();
+    }
+    return true;
+  }
+  return true;
+}
+function erroAvancar(){
+  if(state.passoAtual === 1) return 'Adicione pelo menos 1 bairro.';
+  if(state.passoAtual === 2) return 'Escolha o tipo de imóvel.';
+  if(state.passoAtual === 3) return 'Informe o valor máximo.';
+  if(state.passoAtual === 4){
+    if(!state.aquisicao) return 'Escolha como pretende adquirir.';
+    if(state.aquisicao === 'misto') return 'Informe os percentuais (soma 100%).';
+  }
+  return 'Preencha os campos obrigatórios.';
+}
+
+/* =====================================================
+   PASSO 1 — BAIRROS
+===================================================== */
+function adicionarBairro(){
+  const inp = $('bairroInput');
+  const v = (inp.value || '').trim();
+  if(!v){
+    toast('Digite um bairro antes de adicionar', 'error');
+    return;
+  }
+  if(state.bairros.some(b => b.toLowerCase() === v.toLowerCase())){
+    toast('Esse bairro já foi adicionado', 'error');
+    inp.value = '';
+    return;
+  }
+  if(state.bairros.length >= 20){
+    toast('Máximo de 20 bairros', 'error');
+    return;
+  }
+  state.bairros.push(v);
+  inp.value = '';
+  inp.focus();
+  renderizarBairros();
+  renderizarSugestoes();
+  atualizarNavBotoes();
+}
+function removerBairro(idx){
+  state.bairros.splice(idx, 1);
+  renderizarBairros();
+  renderizarSugestoes();
+  atualizarNavBotoes();
+}
+function adicionarSugestao(val){
+  if(state.bairros.some(b => b.toLowerCase() === val.toLowerCase())) return;
+  state.bairros.push(val);
+  renderizarBairros();
+  renderizarSugestoes();
+  atualizarNavBotoes();
+}
+function renderizarBairros(){
+  const wrap = $('bairrosChips');
+  if(!wrap) return;
+  if(state.bairros.length === 0){
+    wrap.innerHTML = '';
+    return;
+  }
+  wrap.innerHTML = state.bairros.map((b, i) => `
+    <span class="bairro-chip">
+      ${escapeHtml(b)}
+      <span class="x" onclick="removerBairro(${i})" title="Remover">×</span>
+    </span>
+  `).join('');
+}
+function renderizarSugestoes(){
+  const wrap = $('sugestoesChips');
+  if(!wrap) return;
+  wrap.innerHTML = SUGESTOES_BAIRROS.map(s => {
+    const ja = state.bairros.some(b => b.toLowerCase() === s.toLowerCase());
+    return `<button type="button" class="sugestao-chip ${ja ? 'added' : ''}"
+              onclick="adicionarSugestao('${escapeHtml(s)}')">${escapeHtml(s)}</button>`;
+  }).join('');
+}
+// Enter no input adiciona
+$('bairroInput').addEventListener('keydown', (e) => {
+  if(e.key === 'Enter'){
+    e.preventDefault();
+    adicionarBairro();
+  }
+});
+
+/* =====================================================
+   PASSO 2 — TIPO
+===================================================== */
+function escolherTipo(tipo){
+  state.tipo = tipo;
+  document.querySelectorAll('.opcao-grande').forEach(b => {
+    b.classList.toggle('ativa', b.dataset.tipo === tipo);
+  });
+  if(tipo === 'apartamento'){
+    $('blocoTipoApto').style.display = 'block';
+    $('blocoCondominio').style.display = 'block';
+  } else {
+    $('blocoTipoApto').style.display = 'none';
+    $('blocoCondominio').style.display = 'none';
+    // Limpa tipos apto e condomínio
+    state.tiposApto = [];
+    state.condMax = '';
+    document.querySelectorAll('#chipsTipoApto .chip-multi').forEach(b => b.classList.remove('ativa'));
+    $('condMax').value = '';
+  }
+  atualizarNavBotoes();
+}
+function toggleTipoApto(btn){
+  const val = btn.dataset.val;
+  if(state.tiposApto.includes(val)){
+    state.tiposApto = state.tiposApto.filter(v => v !== val);
+    btn.classList.remove('ativa');
+  } else {
+    state.tiposApto.push(val);
+    btn.classList.add('ativa');
+  }
+}
+
+/* =====================================================
+   PASSO 3 — VALOR
+===================================================== */
+function configurarInputsMoeda(){
+  ['precoMax', 'condMax'].forEach(id => {
+    const inp = $(id);
+    if(!inp) return;
+    inp.addEventListener('input', () => {
+      inp.value = formatarMoeda(inp.value);
+      if(id === 'precoMax') state.precoMax = inp.value;
+      if(id === 'condMax') state.condMax = inp.value;
+      $('precoMaxErro').classList.remove('show');
+      atualizarNavBotoes();
+    });
+  });
+}
+
+/* =====================================================
+   PASSO 4 — AQUISIÇÃO
+===================================================== */
+function escolherAquisicao(tipo, btn){
+  state.aquisicao = tipo;
+  document.querySelectorAll('[data-aquis]').forEach(b => b.classList.remove('ativa'));
+  btn.classList.add('ativa');
+  if(tipo === 'misto'){
+    $('misturaWrap').classList.add('show');
+  } else {
+    $('misturaWrap').classList.remove('show');
+    state.misturaAvista = '';
+    state.misturaFinanc = '';
+    $('misturaAvista').value = '';
+    $('misturaFinanc').value = '';
+    $('misturaInfo').textContent = '';
+    $('misturaInfo').className = 'mistura-info';
+  }
+  atualizarNavBotoes();
+}
+function calcMistura(){
+  const av = parseInt($('misturaAvista').value || '0', 10);
+  const fi = parseInt($('misturaFinanc').value || '0', 10);
+  const soma = av + fi;
+  const info = $('misturaInfo');
+  if(soma === 100 && av > 0 && fi > 0){
+    info.textContent = `✓ ${av}% à vista + ${fi}% financiado`;
+    info.className = 'mistura-info ok';
+    state.misturaAvista = String(av);
+    state.misturaFinanc = String(fi);
+  } else if(soma === 0){
+    info.textContent = 'Digite os dois percentuais (a soma precisa dar 100%)';
+    info.className = 'mistura-info';
+    state.misturaAvista = '';
+    state.misturaFinanc = '';
+  } else {
+    info.textContent = `Soma: ${soma}% — precisa dar 100%`;
+    info.className = 'mistura-info erro';
+    state.misturaAvista = '';
+    state.misturaFinanc = '';
+  }
+  atualizarNavBotoes();
+}
+function validarMistura(){
+  const av = parseInt($('misturaAvista').value || '0', 10);
+  const fi = parseInt($('misturaFinanc').value || '0', 10);
+  return av > 0 && fi > 0 && (av + fi) === 100;
+}
+
+/* =====================================================
+   PASSO 5 e 6 — OPÇÕES (quartos, suites, etc)
+===================================================== */
+function escolherOpcao(campo, btn){
+  const wrap = btn.parentElement;
+  wrap.querySelectorAll('.opcao-peq').forEach(b => {
+    b.classList.remove('ativa');
+    b.classList.remove('destaque-ativa');
+  });
+  btn.classList.add('ativa');
+  if(btn.dataset.val === '' || btn.dataset.val === 'tanto faz'){
+    btn.classList.add('destaque-ativa');
+  }
+  let val = btn.dataset.val;
+  if(campo === 'acessibilidade' || campo === 'elevador' || campo === 'semEscada'){
+    if(val === 'tanto faz' || val === ''){
+      if(campo === 'acessibilidade') state.acessibilidade = 'tanto faz';
+      if(campo === 'elevador') state.elevador = 'tanto faz';
+      if(campo === 'semEscada') state.semEscada = 'tanto faz';
+    } else {
+      if(campo === 'acessibilidade') state.acessibilidade = val;
+      if(campo === 'elevador') state.elevador = val;
+      if(campo === 'semEscada') state.semEscada = val;
+    }
+  } else {
+    state[campo] = val;
+  }
+}
+
+/* =====================================================
+   PASSO 7 — EXTRAS
+===================================================== */
+$('extras').addEventListener('input', () => {
+  state.extras = $('extras').value;
+});
+
+/* =====================================================
+   PASSO 8 — REVISÃO
+===================================================== */
+function montarRevisao(){
+  const linhas = [];
+  linhas.push(`<div><strong>📍 Bairros:</strong> ${escapeHtml(state.bairros.join(', '))}</div>`);
+
+  let tipoTxt = state.tipo === 'apartamento' ? 'Apartamento' : 'Casa';
+  if(state.tipo === 'apartamento' && state.tiposApto.length > 0){
+    const labels = { padrao: 'Padrão', cobertura: 'Cobertura', 'area privativa': 'Área Privativa' };
+    tipoTxt += ' (' + state.tiposApto.map(t => labels[t] || t).join(', ') + ')';
+  }
+  linhas.push(`<div><strong>🏠 Tipo:</strong> ${escapeHtml(tipoTxt)}</div>`);
+
+  linhas.push(`<div><strong>💰 Valor máximo:</strong> R$ ${escapeHtml(state.precoMax)}</div>`);
+  if(state.condMax && state.tipo === 'apartamento'){
+    linhas.push(`<div><strong>🏢 Condomínio:</strong> R$ ${escapeHtml(state.condMax)}</div>`);
+  }
+
+  let aquisTxt = '';
+  if(state.aquisicao === 'avista') aquisTxt = 'Recursos próprios (à vista)';
+  else if(state.aquisicao === 'financiado') aquisTxt = 'Financiado';
+  else if(state.aquisicao === 'misto') aquisTxt = `${state.misturaAvista}% à vista + ${state.misturaFinanc}% financiado`;
+  linhas.push(`<div><strong>💵 Aquisição:</strong> ${escapeHtml(aquisTxt)}</div>`);
+
+  linhas.push(`<div><strong>🛏️ Quartos:</strong> ${state.quartos ? state.quartos + '+' : 'Tanto faz'} · <strong>🚿 Suítes:</strong> ${state.suites ? state.suites + '+' : 'Tanto faz'} · <strong>🚗 Vagas:</strong> ${state.vagas ? (state.vagas === '0' ? '0' : state.vagas + '+') : 'Tanto faz'}</div>`);
+
+  const acessTxt = state.acessibilidade === 'sim' ? 'Sim' : state.acessibilidade === 'nao' ? 'Não' : 'Tanto faz';
+  const elevTxt = state.elevador === 'sim' ? 'Sim' : state.elevador === 'nao' ? 'Não' : 'Tanto faz';
+  const escadaTxt = state.semEscada === 'sim' ? 'Sim' : state.semEscada === 'nao' ? 'Não' : 'Tanto faz';
+  linhas.push(`<div><strong>♿ Acessibilidade:</strong> ${acessTxt} · <strong>🛗 Elevador:</strong> ${elevTxt} · <strong>🚫 Sem escada:</strong> ${escadaTxt}</div>`);
+
+  if(state.extras){
+    linhas.push(`<div><strong>📝 Extras:</strong> ${escapeHtml(state.extras)}</div>`);
+  }
+
+  $('revisaoResumo').innerHTML = linhas.join('');
+}
+
+/* =====================================================
+   SALVAR — monta o campo `outros` com timestamp no topo
+===================================================== */
+function montarOutros(){
+  const linhas = [];
+
+  // 1) Timestamp (topo, sempre atualizado)
+  linhas.push(timestampAgora());
+
+  // 2) Aquisição
+  let aquisTxt = '';
+  if(state.aquisicao === 'avista') aquisTxt = 'Recursos próprios (à vista)';
+  else if(state.aquisicao === 'financiado') aquisTxt = 'Financiado';
+  else if(state.aquisicao === 'misto'){
+    aquisTxt = `Parte à vista (${state.misturaAvista}%) + Financiado (${state.misturaFinanc}%)`;
+  }
+  if(aquisTxt) linhas.push(`💰 Aquisição: ${aquisTxt}`);
+
+  // 3) Sem escada (se marcado sim — é detalhe que não cabe em coluna própria)
+  if(state.semEscada === 'sim'){
+    linhas.push('🚫 Sem escada: Sim (obrigatório)');
+  }
+
+  // 4) Extras (texto livre do cliente)
+  if(state.extras && state.extras.trim()){
+    linhas.push(`📝 ${state.extras.trim()}`);
+  }
+
+  return linhas.join('\n');
+}
+
+/* =====================================================
+   SALVAR — chama a API (mesma do gestor)
+===================================================== */
+async function salvarTudo(){
+  if(!state.telCliente){
+    toast('Link inválido. Peça ao seu consultor um novo link.', 'error');
+    return;
+  }
+
+  const btn = $('btnProximo');
+  btn.disabled = true;
+  $('salvandoOverlay').classList.add('show');
+
+  // Prepara payload
+  const tipoParaAPI = state.tipo === 'apartamento'
+    ? (state.tiposApto.length > 0 ? state.tiposApto.join(', ') : 'apartamento')
+    : 'casa';
+
+  const payload = {
+    action: 'salvarPreferenciasCliente',
+    senha: 'Cal@562938',          // ← senha admin padrão (endpoint exige)
+    telefone: state.telCliente,
+    bairros: state.bairros,
+    precoMin: '',
+    precoMax: String(parseMoeda(state.precoMax)),
+    condMin: '',
+    condMax: state.tipo === 'apartamento' ? String(parseMoeda(state.condMax)) : '',
+    quartos: state.quartos,
+    suites: state.suites,
+    vagas: state.vagas,
+    acessibilidade: state.acessibilidade,
+    elevador: state.elevador,
+    tipo: tipoParaAPI,
+    outros: montarOutros(),
+    _t: Date.now()
+  };
+
+  try {
+    const qs = new URLSearchParams(payload).toString();
+    const resp = await fetch(API_URL + '?' + qs, {
+      method: 'GET',
+      mode: 'cors',
+      headers: { 'Accept': 'application/json' },
+      redirect: 'follow'
+    });
+    const json = await resp.json();
+
+    if(!json.ok){
+      toast(json.error || 'Erro ao salvar. Tente novamente.', 'error');
+      btn.disabled = false;
+      $('salvandoOverlay').classList.remove('show');
+      return;
+    }
+
+    // Sucesso
+    $('salvandoOverlay').classList.remove('show');
+    document.querySelectorAll('.tela').forEach(t => t.classList.remove('ativa'));
+    document.querySelector('.tela[data-tela="final"]').classList.add('ativa');
+    $('progressoWrap').style.display = 'none';
+    $('navBotoes').style.display = 'none';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // Personaliza mensagem final
+    if(state.nomeCliente){
+      $('finalTexto').textContent = `${state.nomeCliente.split(' ')[0]}, seu consultor já recebeu suas preferências e vai começar a buscar as melhores opções pra você.`;
+    }
+  } catch(err){
+    console.error('Erro ao salvar:', err);
+    toast('Erro de conexão. Tente novamente.', 'error');
+    btn.disabled = false;
+    $('salvandoOverlay').classList.remove('show');
+  }
+}
+
+/* =====================================================
+   REVER — volta pra revisão (após já ter enviado)
+===================================================== */
+function revisarNovamente(){
+  document.querySelectorAll('.tela').forEach(t => t.classList.remove('ativa'));
+  document.querySelector('.tela[data-tela="8"]').classList.add('ativa');
+  $('progressoWrap').style.display = 'block';
+  $('navBotoes').style.display = 'flex';
+  state.passoAtual = 8;
+  atualizarProgresso();
+  atualizarNavBotoes();
+  montarRevisao();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
