@@ -237,6 +237,14 @@
     border-color: var(--border);
     font-style: italic; font-weight: 500;
   }
+  .lc-perfil .tagv.bairro-digitado{
+    background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+    border-color: #93c5fd; color: #1e40af;
+  }
+  .lc-perfil .tagv.cidade{
+    background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+    border-color: #6ee7b7; color: #065f46;
+  }
 
   .lc-detalhes{
     font-size: .74rem; color: var(--text-soft);
@@ -423,6 +431,14 @@
     background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%);
     border: 1px solid #c4b5fd; border-radius: 999px;
     font-size: .74rem; font-weight: 700; color: #5b21b6;
+  }
+  .det-bairro.cidade{
+    background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+    border-color: #6ee7b7; color: #065f46;
+  }
+  .det-bairro.digitado{
+    background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+    border-color: #93c5fd; color: #1e40af;
   }
   .det-detalhes-box{
     background: #fef9c3; border: 1px solid #fde68a;
@@ -981,7 +997,7 @@ function renderizarLeads(){
 }
 
 /* =====================================================
-   ✅ CARD DO LEAD — com metragem mínima e valor máximo
+   ✅ CARD DO LEAD
 ===================================================== */
 function leadCardHTML(l){
   const status = statusLead_(l);
@@ -1004,7 +1020,7 @@ function leadCardHTML(l){
   const perfilHTML = montarPerfilHTML(l);
 
   const detalhes = String(l.detalhes || '').trim();
-  const detalhesHTML = detalhes
+  const detalhesHTML = detalhes && detalhes !== 'nenhum'
     ? `<div class="lc-detalhes"><strong>📝 Detalhes:</strong> ${esc(detalhes)}</div>`
     : '';
 
@@ -1118,22 +1134,35 @@ function leadCardHTML(l){
 }
 
 /* =====================================================
-   PERFIL — tags das preferências
-   ✅ Ajustado: cidades, tipo apto, pets, metragem mínima e valor máximo
+   ✅ PERFIL — tags das preferências
+   CIDADES (campo bairros) + BAIRROS DIGITADOS (campo novo)
 ===================================================== */
 function montarPerfilHTML(l){
   const tags = [];
 
-  // CIDADE (vem no campo bairros, separados por vírgula)
-  const bairros = String(l.bairros || '').trim();
-  if(bairros && bairros !== 'tanto-faz'){
-    const lista = bairros.split(',').map(s => s.trim()).filter(Boolean).slice(0, 5);
-    lista.forEach(b => {
-      tags.push(`<span class="tagv bairro">📍 ${esc(b)}</span>`);
+  // CIDADE (do campo l.bairros, que na prática guarda as cidades)
+  const cidades = String(l.bairros || '').trim();
+  if(cidades && cidades !== 'tanto-faz'){
+    const lista = cidades.split(',').map(s => s.trim()).filter(Boolean).slice(0, 4);
+    lista.forEach(c => {
+      tags.push(`<span class="tagv cidade">🏙️ ${esc(c)}</span>`);
     });
-    const total = bairros.split(',').filter(Boolean).length;
-    if(total > 5){
-      tags.push(`<span class="tagv bairro">+${total - 5}</span>`);
+    const totalCid = cidades.split(',').filter(Boolean).length;
+    if(totalCid > 4){
+      tags.push(`<span class="tagv cidade">+${totalCid - 4}</span>`);
+    }
+  }
+
+  // BAIRROS DIGITADOS (campo novo l.bairrosDigitados)
+  const bairrosDigitados = String(l.bairrosDigitados || '').trim();
+  if(bairrosDigitados){
+    const listaB = bairrosDigitados.split(',').map(s => s.trim()).filter(Boolean).slice(0, 5);
+    listaB.forEach(b => {
+      tags.push(`<span class="tagv bairro-digitado">📍 ${esc(b)}</span>`);
+    });
+    const totalB = bairrosDigitados.split(',').filter(Boolean).length;
+    if(totalB > 5){
+      tags.push(`<span class="tagv bairro-digitado">+${totalB - 5}</span>`);
     }
   }
 
@@ -1189,7 +1218,7 @@ function montarPerfilHTML(l){
     tags.push(`<span class="tagv destaque"><span class="lbl">💰</span> a partir de ${fmtValorBR_(valMin)}</span>`);
   }
 
-  // PETS (fica no detalhes como extra)
+  // PETS
   const matchPet = detalhesStr.match(/Pets:\s*([^|]+)/i);
   if(matchPet && matchPet[1].trim()){
     tags.push(`<span class="tagv"><span class="lbl">🐾</span> ${esc(matchPet[1].trim())}</span>`);
@@ -1320,7 +1349,7 @@ async function onChangeObs(el){
 }
 
 /* =====================================================
-   DETALHES
+   DETALHES — separa CIDADES de BAIRROS DIGITADOS
 ===================================================== */
 function abrirDetalhes(id){
   const item = state.lista.find(x => String(x.id) === String(id));
@@ -1414,15 +1443,30 @@ function abrirDetalhes(id){
     </div>
   `;
 
+  // CIDADES
+  html += `
+    <div class="det-secao">
+      <div class="det-secao-titulo">
+        <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-4"/></svg>
+        Cidades de interesse
+      </div>
+      ${(item.bairros && item.bairros !== 'tanto-faz')
+        ? `<div class="det-bairros">${item.bairros.split(',').map(b => `<span class="det-bairro cidade">🏙️ ${esc(b.trim())}</span>`).join('')}</div>`
+        : '<div class="det-item"><div class="val muted">Sem preferência de cidade</div></div>'
+      }
+    </div>
+  `;
+
+  // BAIRROS DIGITADOS
   html += `
     <div class="det-secao">
       <div class="det-secao-titulo">
         <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-        Cidades / Bairros de interesse
+        Bairros / Regiões digitados
       </div>
-      ${(item.bairros && item.bairros !== 'tanto-faz')
-        ? `<div class="det-bairros">${item.bairros.split(',').map(b => `<span class="det-bairro">${esc(b.trim())}</span>`).join('')}</div>`
-        : '<div class="det-item"><div class="val muted">Sem preferência de local</div></div>'
+      ${item.bairrosDigitados
+        ? `<div class="det-bairros">${item.bairrosDigitados.split(',').map(b => `<span class="det-bairro digitado">📍 ${esc(b.trim())}</span>`).join('')}</div>`
+        : '<div class="det-item"><div class="val muted">Nenhum bairro digitado</div></div>'
       }
     </div>
   `;
@@ -1470,7 +1514,7 @@ function abrirMsgDoDetalhe(){
 }
 
 /* =====================================================
-   EDITAR
+   EDITAR — preserva os bairros digitados no campo
 ===================================================== */
 function abrirEditModal(id){
   const item = state.lista.find(x => String(x.id) === String(id));
@@ -1478,7 +1522,13 @@ function abrirEditModal(id){
   $('editLeadId').value = id;
   $('editNome').value = item.nome || '';
   $('editTelefone').value = fmtTel(item.telefone || '');
-  $('editBairros').value = String(item.bairros || '').replace(/tanto-faz/gi, '');
+  // Junta cidades + bairros digitados para o usuário editar num só lugar
+  const cidades = String(item.bairros || '').replace(/tanto-faz/gi, '').trim();
+  const digitados = String(item.bairrosDigitados || '').trim();
+  const partes = [];
+  if(cidades) partes.push(cidades);
+  if(digitados) partes.push(digitados);
+  $('editBairros').value = partes.join(', ');
   $('editDetalhes').value = String(item.detalhes || '').replace(/^nenhum$/i, '');
   $('editBackdrop').classList.add('show');
   setTimeout(() => $('editNome').focus(), 120);
