@@ -627,8 +627,8 @@
       </div>
     </div>
     <div class="edit-campo">
-      <label>Bairros (separados por vírgula)</label>
-      <input type="text" id="editBairros" placeholder="Ex: Savassi, Lourdes, Sion">
+      <label>Bairros / Cidades (separados por vírgula)</label>
+      <input type="text" id="editBairros" placeholder="Ex: Savassi, Lourdes, Contagem">
     </div>
     <div class="edit-campo">
       <label>Detalhes extras</label>
@@ -1119,15 +1119,36 @@ function leadCardHTML(l){
 
 /* =====================================================
    PERFIL — tags das preferências
-   ✅ Ajustado: metragem mínima e valor máximo
+   ✅ Ajustado: cidades, tipo apto, pets, metragem mínima e valor máximo
 ===================================================== */
 function montarPerfilHTML(l){
   const tags = [];
 
-  if(l.tipo){
-    tags.push(`<span class="tagv"><span class="lbl">Tipo:</span> ${esc(l.tipo)}</span>`);
+  // CIDADE (vem no campo bairros, separados por vírgula)
+  const bairros = String(l.bairros || '').trim();
+  if(bairros && bairros !== 'tanto-faz'){
+    const lista = bairros.split(',').map(s => s.trim()).filter(Boolean).slice(0, 5);
+    lista.forEach(b => {
+      tags.push(`<span class="tagv bairro">📍 ${esc(b)}</span>`);
+    });
+    const total = bairros.split(',').filter(Boolean).length;
+    if(total > 5){
+      tags.push(`<span class="tagv bairro">+${total - 5}</span>`);
+    }
   }
 
+  // TIPO E TIPO APTO
+  let tipoFinal = l.tipo || '';
+  const detalhesStr = String(l.detalhes || '');
+  const matchTipoApto = detalhesStr.match(/Tipo Apto:\s*([^|]+)/i);
+  if(matchTipoApto && matchTipoApto[1].trim()){
+    tipoFinal += ' (' + matchTipoApto[1].trim() + ')';
+  }
+  if(tipoFinal){
+    tags.push(`<span class="tagv destaque"><span class="lbl">Tipo:</span> ${esc(tipoFinal)}</span>`);
+  }
+
+  // CÔMODOS
   if(l.quartos && l.quartos !== 'tanto-faz'){
     tags.push(`<span class="tagv"><span class="lbl">🛏</span> ${esc(l.quartos)}+ quartos</span>`);
   } else {
@@ -1140,14 +1161,13 @@ function montarPerfilHTML(l){
   if(l.suites && l.suites !== 'tanto-faz'){
     tags.push(`<span class="tagv"><span class="lbl">🛁</span> ${esc(l.suites)}+ suítes</span>`);
   }
-
   if(l.vagas && l.vagas !== 'tanto-faz'){
     tags.push(`<span class="tagv"><span class="lbl">🚗</span> ${esc(l.vagas)}+ vagas</span>`);
   } else {
     tags.push(`<span class="tagv tanto-faz">🚗 Vagas: tanto faz</span>`);
   }
 
-  // ✅ METRAGEM — o site manda "metragem" como metragemMin
+  // METRAGEM
   const metMin = String(l.metragemMin || '').trim();
   const metMax = String(l.metragemMax || '').trim();
   if(metMin && metMax){
@@ -1158,7 +1178,7 @@ function montarPerfilHTML(l){
     tags.push(`<span class="tagv"><span class="lbl">📐</span> até ${esc(metMax)} m²</span>`);
   }
 
-  // ✅ VALOR — o site manda "valor" como valorMax
+  // VALOR
   const valMin = String(l.valorMin || '').trim();
   const valMax = String(l.valorMax || '').trim();
   if(valMin && valMax){
@@ -1169,16 +1189,10 @@ function montarPerfilHTML(l){
     tags.push(`<span class="tagv destaque"><span class="lbl">💰</span> a partir de ${fmtValorBR_(valMin)}</span>`);
   }
 
-  const bairros = String(l.bairros || '').trim();
-  if(bairros && bairros !== 'tanto-faz'){
-    const lista = bairros.split(',').map(s => s.trim()).filter(Boolean).slice(0, 5);
-    lista.forEach(b => {
-      tags.push(`<span class="tagv bairro">📍 ${esc(b)}</span>`);
-    });
-    const total = bairros.split(',').filter(Boolean).length;
-    if(total > 5){
-      tags.push(`<span class="tagv bairro">+${total - 5}</span>`);
-    }
+  // PETS (fica no detalhes como extra)
+  const matchPet = detalhesStr.match(/Pets:\s*([^|]+)/i);
+  if(matchPet && matchPet[1].trim()){
+    tags.push(`<span class="tagv"><span class="lbl">🐾</span> ${esc(matchPet[1].trim())}</span>`);
   }
 
   return `<div class="lc-perfil">${tags.join('')}</div>`;
@@ -1320,6 +1334,22 @@ function abrirDetalhes(id){
   const statusLabel = STATUS_LABEL[status];
   const corpo = $('detCorpo');
 
+  const detalhesStr = String(item.detalhes || '');
+  let tipoAptoStr = '';
+  const matchTipoApto = detalhesStr.match(/Tipo Apto:\s*([^|]+)/i);
+  if(matchTipoApto) tipoAptoStr = matchTipoApto[1].trim();
+
+  let petsStr = '';
+  const matchPet = detalhesStr.match(/Pets:\s*([^|]+)/i);
+  if(matchPet) petsStr = matchPet[1].trim();
+
+  let detalhesLimpos = detalhesStr
+    .replace(/Tipo Apto:\s*[^|]+\|?/gi, '')
+    .replace(/Pets:\s*[^|]+\|?/gi, '')
+    .replace(/^\s*\|\s*|\s*\|\s*$/g, '')
+    .trim();
+  if(detalhesLimpos === 'nenhum') detalhesLimpos = '';
+
   const metMin = String(item.metragemMin || '').trim();
   const metMax = String(item.metragemMax || '').trim();
   let metTxt = '—';
@@ -1358,12 +1388,13 @@ function abrirDetalhes(id){
         Preferências do cliente
       </div>
       <div class="det-grid">
-        <div class="det-item destaque"><div class="lbl">Tipo de imóvel</div><div class="val">${esc(item.tipo || '—')}</div></div>
+        <div class="det-item destaque"><div class="lbl">Tipo de imóvel</div><div class="val">${esc(item.tipo || '—')}${tipoAptoStr ? ' (' + esc(tipoAptoStr) + ')' : ''}</div></div>
         <div class="det-item"><div class="lbl">Quartos</div><div class="val ${!item.quartos || item.quartos === 'tanto-faz' ? 'muted' : ''}">${!item.quartos || item.quartos === 'tanto-faz' ? 'Tanto faz' : esc(item.quartos) + '+'}</div></div>
         <div class="det-item"><div class="lbl">Banheiros</div><div class="val ${!item.banheiros || item.banheiros === 'tanto-faz' ? 'muted' : ''}">${!item.banheiros || item.banheiros === 'tanto-faz' ? 'Tanto faz' : esc(item.banheiros) + '+'}</div></div>
         <div class="det-item"><div class="lbl">Suítes</div><div class="val ${!item.suites || item.suites === 'tanto-faz' ? 'muted' : ''}">${!item.suites || item.suites === 'tanto-faz' ? 'Tanto faz' : esc(item.suites) + '+'}</div></div>
         <div class="det-item"><div class="lbl">Vagas</div><div class="val ${!item.vagas || item.vagas === 'tanto-faz' ? 'muted' : ''}">${!item.vagas || item.vagas === 'tanto-faz' ? 'Tanto faz' : esc(item.vagas) + '+'}</div></div>
         <div class="det-item"><div class="lbl">Metragem</div><div class="val ${metTxt === '—' ? 'muted' : ''}">${metTxt}</div></div>
+        <div class="det-item"><div class="lbl">🐾 Pets</div><div class="val ${!petsStr ? 'muted' : ''}">${petsStr || 'Não informado'}</div></div>
       </div>
     </div>
   `;
@@ -1387,11 +1418,11 @@ function abrirDetalhes(id){
     <div class="det-secao">
       <div class="det-secao-titulo">
         <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-        Bairros de interesse
+        Cidades / Bairros de interesse
       </div>
       ${(item.bairros && item.bairros !== 'tanto-faz')
         ? `<div class="det-bairros">${item.bairros.split(',').map(b => `<span class="det-bairro">${esc(b.trim())}</span>`).join('')}</div>`
-        : '<div class="det-item"><div class="val muted">Sem preferência de bairro</div></div>'
+        : '<div class="det-item"><div class="val muted">Sem preferência de local</div></div>'
       }
     </div>
   `;
@@ -1402,8 +1433,8 @@ function abrirDetalhes(id){
         <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
         Detalhes extras pedidos
       </div>
-      ${(item.detalhes && item.detalhes !== 'nenhum')
-        ? `<div class="det-detalhes-box">${esc(item.detalhes)}</div>`
+      ${detalhesLimpos
+        ? `<div class="det-detalhes-box">${esc(detalhesLimpos)}</div>`
         : '<div class="det-detalhes-box vazio">Nenhum detalhe extra informado</div>'
       }
     </div>
@@ -1494,7 +1525,14 @@ function montarMensagens_(item){
   const funcaoCorretor = info?.funcao || 'Corretor(a)';
   const nomeCliente = String(item.nome || '').trim();
   const doisNomes = doisPrimeirosNomes_(nomeCliente);
-  const tipo = item.tipo || 'imóvel';
+  
+  let tipo = item.tipo || 'imóvel';
+  const detalhesStr = String(item.detalhes || '');
+  const matchTipoApto = detalhesStr.match(/Tipo Apto:\s*([^|]+)/i);
+  if(matchTipoApto && matchTipoApto[1].trim()) {
+    tipo += ' (' + matchTipoApto[1].trim() + ')';
+  }
+
   const bairros = String(item.bairros || '').trim();
   const bairrosList = bairros && bairros !== 'tanto-faz'
     ? bairros.split(',').map(s => s.trim()).filter(Boolean) : [];
@@ -1519,7 +1557,7 @@ Vou te enviar em instantes!`;
     msg2 += '\n' + detalhesList.map(d => '• ' + d).join('\n');
   }
   if(bairrosList.length > 0){
-    msg2 += '\n• Bairros: ' + bairrosList.join(', ');
+    msg2 += '\n• Cidades/Bairros: ' + bairrosList.join(', ');
   }
   if(item.valorMax){
     msg2 += `\n• Valor: até ${fmtValorBR_(item.valorMax)}`;
