@@ -1,0 +1,1963 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Captar — Lima Ribeiro Imóveis</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%231e3a5f'/><text x='50' y='68' font-family='-apple-system,sans-serif' font-size='48' font-weight='800' fill='white' text-anchor='middle'>LR</text></svg>">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root{
+    --primary:#1e3a5f; --primary-hover:#0f2942; --primary-soft:#eef2f7;
+    --success:#2f6b4f; --success-hover:#245540; --success-soft:#e6efe9;
+    --danger:#8b3a3a; --danger-hover:#6f2d2d; --danger-soft:#f4e6e6;
+    --warn:#8b6f3a; --warn-hover:#6f582d; --warn-soft:#f5efe0;
+    --info:#2c5a8c; --info-soft:#e6eef7;
+    --whatsapp:#25d366;
+    --msg:#7c3aed;
+    --bg:#f4f6f8; --bg-alt:#e8ecf0;
+    --card:#ffffff;
+    --text:#0f172a; --text-soft:#475569; --muted:#94a3b8;
+    --border:#e2e8f0; --border-strong:#cbd5e1;
+    --radius:8px; --radius-sm:6px; --radius-lg:12px;
+    --shadow-xs: 0 1px 2px rgba(15,23,42,.04);
+    --shadow-sm: 0 1px 3px rgba(15,23,42,.08), 0 1px 2px rgba(15,23,42,.04);
+    --shadow-md: 0 4px 12px rgba(15,23,42,.08), 0 1px 3px rgba(15,23,42,.05);
+    --shadow-lg: 0 12px 32px rgba(15,23,42,.12), 0 2px 6px rgba(15,23,42,.06);
+    --font: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+    --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  }
+  html, body { height: 100%; }
+  body{
+    font-family: var(--font);
+    background: var(--bg); color: var(--text);
+    -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+    line-height: 1.5; font-size: 14px;
+  }
+
+  .ico{
+    display: inline-block; width: 16px; height: 16px;
+    vertical-align: -3px; flex-shrink: 0;
+    stroke: currentColor; fill: none; stroke-width: 2;
+    stroke-linecap: round; stroke-linejoin: round;
+  }
+  .ico-sm{ width: 14px; height: 14px; vertical-align: -3px; }
+  .ico-lg{ width: 20px; height: 20px; }
+  .ico-fill{ fill: currentColor; stroke: none; }
+
+  /* ------------ HEADER ------------ */
+  .capt-header{
+    background: #fff;
+    border-bottom: 1px solid var(--border);
+    padding: 14px 22px;
+    position: sticky; top: 0; z-index: 50;
+    box-shadow: var(--shadow-xs);
+  }
+  .capt-header-inner{
+    max-width: 1600px; margin: 0 auto;
+    display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+  }
+  .capt-title{
+    display: flex; align-items: center; gap: 10px;
+    font-size: 1.1rem; font-weight: 700; letter-spacing: -.01em;
+  }
+  .capt-title .ico{ color: #16a34a; width: 22px; height: 22px; }
+  .capt-resumo{
+    font-size: .74rem; color: var(--text-soft);
+    font-weight: 600;
+    background: var(--bg);
+    padding: 5px 12px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+  .capt-spacer{ flex: 1; min-width: 20px; }
+
+  .capt-header-actions{
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  }
+
+  /* ------------ FILTROS ------------ */
+  .capt-filtros{
+    background: #fff;
+    border-bottom: 1px solid var(--border);
+    padding: 12px 22px;
+    position: sticky; top: 60px; z-index: 40;
+  }
+  .capt-filtros-inner{
+    max-width: 1600px; margin: 0 auto;
+    display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+  }
+  .capt-filtros-grupo{
+    display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+  }
+  .capt-lbl{
+    font-size: .66rem; font-weight: 700;
+    color: var(--muted); text-transform: uppercase;
+    letter-spacing: .5px;
+  }
+  .chip{
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 6px 12px; border-radius: 999px;
+    background: #fff; border: 1px solid var(--border-strong);
+    font-size: .74rem; font-weight: 600; cursor: pointer;
+    transition: all .15s; font-family: inherit; color: var(--text-soft);
+    white-space: nowrap;
+  }
+  .chip:hover{ border-color: var(--primary); color: var(--primary); }
+  .chip.active{ background: var(--primary); color: #fff; border-color: var(--primary); }
+  .chip.chip-corretor{ color: #fff; }
+  .chip.chip-corretor:not(.active){ background: #fff !important; color: var(--text-soft) !important; }
+  .chip .cnt{
+    background: rgba(15,23,42,.08); padding: 0px 6px;
+    border-radius: 999px; font-size: .62rem; font-weight: 700;
+    min-width: 16px; text-align: center;
+  }
+  .chip.active .cnt{ background: rgba(255,255,255,.25); }
+  .chip .dot{
+    display: inline-block; width: 8px; height: 8px;
+    border-radius: 50%; flex-shrink: 0;
+  }
+  .chip .dot-warn{ background: var(--warn); }
+  .chip .dot-danger{ background: var(--danger); }
+  .chip .dot-success{ background: var(--success); }
+  .chip.active .dot{ background: #fff !important; opacity: .9; }
+
+  /* ------------ BUSCA / ORDENAÇÃO ------------ */
+  .capt-busca-wrap{
+    display: flex; gap: 8px; align-items: center;
+    flex: 1; min-width: 220px; max-width: 480px;
+    position: relative;
+  }
+  .capt-busca-wrap .ico-busca{
+    position: absolute; left: 10px; top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted); pointer-events: none;
+    width: 16px; height: 16px;
+  }
+  input.capt-input, select.capt-select{
+    width: 100%; padding: 8px 12px;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    font-size: .84rem; font-family: inherit;
+    background: #fff; color: var(--text);
+    transition: all .15s;
+  }
+  .capt-busca-wrap input.capt-input{ padding-left: 34px; }
+  input.capt-input:focus, select.capt-select:focus{
+    outline: none; border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(30,58,95,.1);
+  }
+  select.capt-select{
+    width: auto; min-width: 170px; cursor: pointer;
+  }
+
+  /* ------------ LISTA ------------ */
+  .capt-lista-wrap{
+    max-width: 1600px; margin: 0 auto;
+    padding: 18px 22px 40px;
+  }
+  .capt-lista{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+    gap: 14px;
+    align-content: start;
+  }
+  @media(max-width:820px){
+    .capt-lista{ grid-template-columns: 1fr; gap: 10px; }
+    .capt-lista-wrap{ padding: 12px 12px 30px; }
+    .capt-header{ padding: 12px 14px; }
+    .capt-filtros{ padding: 10px 14px; top: 56px; }
+    .capt-filtros-inner{ gap: 8px; }
+  }
+
+  /* ------------ CARD ------------ */
+  .capt-card{
+    background: #fff;
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--warn);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    display: flex; flex-direction: column; gap: 10px;
+    transition: all .18s;
+    position: relative;
+  }
+  .capt-card:hover{
+    border-color: var(--border-strong);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
+  }
+  .capt-card.status-pendente{ border-left-color: var(--warn); }
+  .capt-card.status-sem-retorno{
+    border-left-color: var(--danger);
+    background: linear-gradient(180deg, #fdf7f7 0%, #fbeaea 100%);
+  }
+  .capt-card.status-concluida{
+    border-left-color: var(--success);
+    background: linear-gradient(180deg, #f5faf7 0%, #e6efe9 100%);
+    opacity: .92;
+  }
+
+  /* Linha 1: nome + telefone + status */
+  .cc-l1{
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  }
+  .cc-nome{
+    font-size: .92rem; font-weight: 700; color: var(--text);
+    flex: 1; min-width: 0;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    letter-spacing: -.005em;
+  }
+  .cc-tel{
+    font-size: .72rem; color: var(--text-soft);
+    font-family: var(--mono);
+    white-space: nowrap;
+  }
+  .cc-status-tag{
+    font-size: .6rem; font-weight: 800;
+    padding: 3px 8px; border-radius: 999px;
+    text-transform: uppercase; letter-spacing: .3px;
+    white-space: nowrap;
+  }
+  .cc-status-tag.pendente{ background: var(--warn-soft); color: var(--warn); }
+  .cc-status-tag.sem-retorno{ background: var(--danger-soft); color: var(--danger); }
+  .cc-status-tag.concluida{ background: var(--success-soft); color: var(--success); }
+
+  /* Linha 2: endereço */
+  .cc-l2{
+    font-size: .76rem; color: var(--text-soft);
+    display: flex; align-items: center; gap: 6px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .cc-l2 .ico{ flex-shrink: 0; color: var(--muted); }
+
+  /* Idade do lead */
+  .cc-idade{
+    font-size: .62rem; color: var(--muted);
+    font-family: var(--mono); font-weight: 600;
+    margin-left: auto;
+    white-space: nowrap;
+  }
+  .cc-idade.recente{ color: var(--success); }
+  .cc-idade.antigo{ color: var(--danger); }
+
+  /* Dados do imóvel */
+  .cc-imovel{
+    display: flex; flex-wrap: wrap; gap: 4px;
+    padding: 8px 10px;
+    background: #fff;
+    border: 1px solid #bae6fd;
+    border-radius: var(--radius-sm);
+  }
+  .capt-card.status-sem-retorno .cc-imovel{
+    background: #fff;
+    border-color: #e0c4c4;
+  }
+  .capt-card.status-concluida .cc-imovel{
+    background: #fff;
+    border-color: #b8dfc7;
+  }
+  .cc-tag{
+    display: inline-flex; align-items: center; gap: 3px;
+    font-size: .66rem; font-weight: 700;
+    padding: 3px 8px; border-radius: 4px;
+    background: #f0f9ff; color: #0c4a6e;
+    border: 1px solid #7dd3fc;
+    white-space: nowrap;
+  }
+  .cc-tag .lbl{
+    font-weight: 500; color: #0369a1; opacity: .8;
+  }
+  .cc-tag.valor{
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    border-color: #fbbf24;
+    color: #78350f;
+  }
+  .cc-tag.tipo{
+    background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%);
+    border-color: #c4b5fd;
+    color: #5b21b6;
+  }
+  .cc-tag.fase1{
+    background: #fef3c7;
+    border-color: #fbbf24;
+    color: #78350f;
+  }
+
+  /* Selects */
+  .cc-selects{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .cc-campo{ display: flex; flex-direction: column; gap: 3px; }
+  .cc-campo label{
+    font-size: .58rem; font-weight: 700;
+    color: var(--muted); text-transform: uppercase;
+    letter-spacing: .3px; margin: 0;
+  }
+  .cc-campo select{
+    padding: 6px 9px;
+    font-size: .74rem;
+    border-radius: 6px;
+    border: 1px solid var(--border-strong);
+    background: #fff;
+    height: auto; min-height: 30px;
+    font-family: inherit;
+    color: var(--text);
+    cursor: pointer;
+  }
+  .cc-campo select:focus{
+    outline: none; border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(30,58,95,.1);
+  }
+  .cc-campo select:disabled{
+    opacity: .6; cursor: not-allowed;
+  }
+
+  /* Observações */
+  .cc-obs-wrap{
+    display: none;
+    flex-direction: column; gap: 4px;
+    padding-top: 8px;
+    border-top: 1px dashed var(--border);
+  }
+  .capt-card.obs-aberta .cc-obs-wrap{ display: flex; }
+  .cc-obs-wrap label{
+    font-size: .6rem; font-weight: 700;
+    color: var(--muted); text-transform: uppercase;
+    letter-spacing: .3px; margin: 0;
+  }
+  .cc-obs-wrap textarea{
+    min-height: 70px;
+    font-size: .78rem;
+    padding: 8px 10px;
+    border-radius: 6px;
+    border: 1px solid var(--border-strong);
+    resize: vertical;
+    font-family: inherit;
+    line-height: 1.5;
+  }
+  .cc-obs-wrap textarea:focus{
+    outline: none; border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(30,58,95,.1);
+  }
+
+  /* Linha de ações */
+  .cc-l3{
+    display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+    padding-top: 8px;
+    border-top: 1px dashed var(--border);
+  }
+  .cc-data{
+    font-size: .66rem; color: var(--muted);
+    font-family: var(--mono);
+    margin-right: auto;
+  }
+  .cc-acoes{
+    display: flex; gap: 4px; align-items: center;
+  }
+  .cc-btn{
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 32px; height: 32px;
+    border-radius: 7px;
+    border: 1px solid var(--border);
+    background: #fff; color: var(--text-soft);
+    cursor: pointer; transition: all .15s;
+    text-decoration: none;
+    padding: 0;
+    font-family: inherit;
+  }
+  .cc-btn:hover{
+    background: var(--bg);
+    border-color: var(--border-strong);
+    color: var(--text);
+    transform: translateY(-1px);
+  }
+  .cc-btn .ico{ width: 15px; height: 15px; }
+
+  /* WhatsApp — verde oficial */
+  .cc-btn.btn-zap{ color: #25d366; }
+  .cc-btn.btn-zap:hover{ background: #e7f6ed; border-color: #25d366; color: #128c7e; }
+
+  /* Editar */
+  .cc-btn.btn-edit:hover{ background: var(--primary-soft); border-color: #c9d6e4; color: var(--primary); }
+
+  /* Mensagem — botão roxo com ícone branco */
+  .cc-btn.btn-msg{
+    background: var(--msg);
+    border-color: var(--msg);
+    color: #ffffff;
+  }
+  .cc-btn.btn-msg:hover{
+    background: #5b21b6;
+    border-color: #5b21b6;
+    color: #ffffff;
+    transform: translateY(-1px);
+  }
+  .cc-btn.btn-msg.desabilitado{
+    background: #e2e8f0;
+    border-color: #cbd5e1;
+    color: #94a3b8 !important;
+    opacity: 1;
+    cursor: not-allowed;
+  }
+  .cc-btn.btn-msg.desabilitado:hover{
+    background: #e2e8f0;
+    border-color: #cbd5e1;
+    transform: none;
+  }
+  .cc-btn.btn-msg .ico{
+    stroke-width: 2.5;
+  }
+
+  /* Observações */
+  .cc-btn.btn-expandir.ativo{
+    background: var(--primary-soft);
+    border-color: var(--primary);
+    color: var(--primary);
+  }
+  .cc-btn.btn-expandir.tem-conteudo{
+    background: #dbeafe;
+    border-color: #3b82f6;
+    color: #1d4ed8;
+  }
+  .cc-btn.btn-expandir.tem-conteudo:hover{
+    background: #bfdbfe;
+    border-color: #2563eb;
+  }
+  .cc-btn.btn-expandir.ativo.tem-conteudo{
+    background: #3b82f6;
+    border-color: #2563eb;
+    color: #fff;
+  }
+  .cc-btn.btn-expandir{ position: relative; }
+  .cc-btn.btn-expandir .dot-obs{
+    position: absolute; top: 3px; right: 3px;
+    width: 7px; height: 7px; border-radius: 50%;
+    background: #1d4ed8;
+    border: 1.5px solid #fff;
+  }
+
+  /* ------------ BACKDROP / MODAL ------------ */
+  .backdrop{
+    position: fixed; inset: 0; background: rgba(15,23,42,.6);
+    z-index: 1000;
+    display: none; align-items: center; justify-content: center; padding: 20px;
+    backdrop-filter: blur(3px);
+  }
+  .backdrop.show{ display: flex; }
+  .modal{
+    background: #fff; border-radius: var(--radius-lg);
+    max-width: 620px; width: 100%;
+    max-height: 92vh; overflow: auto; padding: 24px;
+    position: relative;
+    box-shadow: var(--shadow-lg);
+  }
+  .modal-close{
+    position: absolute; top: 14px; right: 14px;
+    background: transparent; border: none; cursor: pointer;
+    color: var(--text-soft); line-height: 1;
+    width: 32px; height: 32px; border-radius: var(--radius-sm);
+    transition: background .15s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .modal-close:hover{ background: var(--bg-alt); color: var(--text); }
+  .modal h2{
+    font-size: 1.05rem; font-weight: 700; letter-spacing: -.01em;
+    margin-bottom: 18px; display: flex; align-items: center; gap: 9px;
+  }
+
+  /* Modal de mensagens */
+  .modal-msgs{
+    max-width: 720px;
+  }
+  .msgs-intro{
+    font-size: .8rem; color: var(--text-soft);
+    margin-bottom: 18px; line-height: 1.5;
+  }
+  .msgs-bloco{
+    position: relative;
+    padding: 16px 18px 14px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 12px;
+  }
+  .msgs-bloco-head{
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 10px;
+    gap: 12px;
+  }
+  .msgs-bloco-num{
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: .72rem; font-weight: 800;
+    color: var(--msg);
+    text-transform: uppercase; letter-spacing: .5px;
+  }
+  .msgs-bloco-num .num{
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--msg); color: #fff;
+    font-size: .7rem; font-weight: 800;
+  }
+  .msgs-bloco-copiar{
+    background: #fff;
+    border: 1px solid var(--border-strong);
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-size: .7rem; font-weight: 700;
+    color: var(--text-soft);
+    cursor: pointer; font-family: inherit;
+    transition: all .15s;
+    display: inline-flex; align-items: center; gap: 5px;
+  }
+  .msgs-bloco-copiar:hover{
+    background: var(--msg);
+    border-color: var(--msg);
+    color: #fff;
+  }
+  .msgs-bloco-texto{
+    font-size: .84rem;
+    color: var(--text);
+    line-height: 1.65;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .msgs-bloco-texto strong{
+    font-weight: 800;
+    color: #0f172a;
+    background: #fef3c7;
+    padding: 0 3px;
+    border-radius: 2px;
+  }
+  .msgs-aviso{
+    font-size: .72rem; color: var(--text-soft);
+    background: #fef9c3;
+    border: 1px solid #fde68a;
+    border-radius: var(--radius-sm);
+    padding: 10px 12px;
+    line-height: 1.5;
+    margin-top: 4px;
+  }
+  .msgs-aviso strong{ color: #78350f; }
+  .msgs-rodape{
+    display: flex; gap: 8px; justify-content: flex-end;
+    margin-top: 18px;
+    flex-wrap: wrap;
+  }
+
+  .form-group{ margin-bottom: 14px; }
+  .form-row{ display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .form-row-3{ display: grid; grid-template-columns: 2fr 1fr 2fr; gap: 12px; }
+  @media(max-width:520px){
+    .form-row, .form-row-3{ grid-template-columns: 1fr; }
+  }
+  label{
+    display: block; font-size: .68rem; font-weight: 700;
+    margin-bottom: 5px; color: var(--text-soft);
+    text-transform: uppercase; letter-spacing: .4px;
+  }
+  label .req{ color: var(--danger); }
+  input[type="text"], input[type="tel"], textarea, select{
+    width: 100%; padding: 9px 11px;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm); font-size: .86rem;
+    font-family: inherit; transition: all .15s;
+    background: #fff; color: var(--text);
+  }
+  input:focus, textarea:focus, select:focus{
+    outline: none; border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(30,58,95,.1);
+  }
+  textarea{ resize: vertical; min-height: 70px; line-height: 1.5; }
+
+  .btn{
+    display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+    padding: 9px 16px; border-radius: var(--radius-sm);
+    border: 1px solid transparent;
+    cursor: pointer; font-size: .84rem; font-weight: 600;
+    transition: all .15s; text-decoration: none; font-family: inherit;
+    white-space: nowrap;
+  }
+  .btn:disabled{ opacity: .5; cursor: not-allowed; }
+  .btn-primary{ background: var(--primary); color: #fff; }
+  .btn-primary:hover:not(:disabled){ background: var(--primary-hover); }
+  .btn-success{ background: var(--success); color: #fff; }
+  .btn-success:hover:not(:disabled){ background: var(--success-hover); }
+  .btn-ghost{ background: #fff; color: var(--text-soft); border: 1px solid var(--border-strong); }
+  .btn-ghost:hover:not(:disabled){ background: var(--bg-alt); color: var(--text); border-color: var(--muted); }
+  .btn-msg{ background: var(--msg); color: #fff; }
+  .btn-msg:hover:not(:disabled){ background: #5b21b6; }
+  .btn-sm{ padding: 6px 12px; font-size: .78rem; gap: 5px; }
+
+  /* ------------ TOAST ------------ */
+  .toast{
+    position: fixed; bottom: 24px; left: 50%;
+    transform: translate(-50%, 30px);
+    background: #0f172a; color: #fff;
+    padding: 12px 22px; border-radius: var(--radius);
+    box-shadow: var(--shadow-lg); opacity: 0;
+    transition: all .3s; z-index: 2001;
+    font-size: .85rem; font-weight: 600;
+    max-width: 90vw; pointer-events: none; text-align: center;
+  }
+  .toast.show{ opacity: 1; transform: translate(-50%, 0); }
+  .toast.success{ background: var(--success); }
+  .toast.error{ background: var(--danger); }
+  .toast.warn{ background: var(--warn); }
+
+  /* ------------ LOADER ------------ */
+  .loader{
+    display: inline-block; width: 14px; height: 14px;
+    border: 2px solid currentColor; border-top-color: transparent;
+    border-radius: 50%; animation: spin .6s linear infinite;
+  }
+  .loader-lg{ width: 34px; height: 34px; border-width: 3px; }
+  @keyframes spin{ to{ transform: rotate(360deg); } }
+  .loading-inline{
+    text-align: center; padding: 50px 20px; color: var(--primary);
+    grid-column: 1 / -1;
+  }
+  .loading-inline p{ margin-top: 10px; font-size: .85rem; color: var(--text-soft); }
+
+  .empty-state{
+    text-align: center; padding: 60px 20px; color: var(--muted);
+    grid-column: 1 / -1;
+  }
+  .empty-state h3{
+    font-size: 1rem; margin-bottom: 6px;
+    color: var(--text-soft); font-weight: 700;
+  }
+  .empty-state p{ font-size: .85rem; }
+
+  .saving-overlay{
+    position: fixed; inset: 0; background: rgba(15,23,42,.7);
+    z-index: 9999; display: none; align-items: center; justify-content: center;
+    flex-direction: column; gap: 14px; color: #fff; text-align: center; padding: 20px;
+    backdrop-filter: blur(3px);
+  }
+  .saving-overlay.show{ display: flex; }
+  .saving-overlay .spinner{
+    width: 46px; height: 46px;
+    border: 3px solid rgba(255,255,255,.2);
+    border-top-color: #fff; border-radius: 50%; animation: spin .8s linear infinite;
+  }
+  .saving-overlay .msg{ font-size: 1rem; font-weight: 600; }
+</style>
+</head>
+<body>
+
+<header class="capt-header">
+  <div class="capt-header-inner">
+    <div class="capt-title">
+      <svg class="ico" viewBox="0 0 24 24">
+        <path d="M12 2v20"/>
+        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+      </svg>
+      Captações QPreço
+    </div>
+    <span class="capt-resumo" id="captResumo">Carregando...</span>
+    <div class="capt-spacer"></div>
+    <div class="capt-header-actions">
+      <button class="btn btn-ghost btn-sm" onclick="carregarCaptacoes(true)">
+        <svg class="ico ico-sm" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+        Atualizar
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="capt-filtros">
+  <div class="capt-filtros-inner">
+    <div class="capt-filtros-grupo">
+      <span class="capt-lbl">Status:</span>
+      <button class="chip active" data-capt-filter="pendentes" onclick="setFiltroCaptacoes('pendentes', this)">
+        <span class="dot dot-warn"></span> Pendentes <span class="cnt" id="cntPendentes">0</span>
+      </button>
+      <button class="chip" data-capt-filter="sem-retorno" onclick="setFiltroCaptacoes('sem-retorno', this)">
+        <span class="dot dot-danger"></span> Sem retorno <span class="cnt" id="cntSemRetorno">0</span>
+      </button>
+      <button class="chip" data-capt-filter="concluidas" onclick="setFiltroCaptacoes('concluidas', this)">
+        <span class="dot dot-success"></span> Concluídas <span class="cnt" id="cntConcluidas">0</span>
+      </button>
+      <button class="chip" data-capt-filter="todas" onclick="setFiltroCaptacoes('todas', this)">
+        📋 Todas <span class="cnt" id="cntTodas">0</span>
+      </button>
+    </div>
+
+    <div class="capt-filtros-grupo" id="captFiltroCorretores">
+      <span class="capt-lbl">Corretor:</span>
+    </div>
+
+    <div class="capt-spacer"></div>
+
+    <div class="capt-busca-wrap">
+      <svg class="ico-busca" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+      <input type="search" class="capt-input" id="captBusca" placeholder="Buscar nome, telefone ou endereço..." oninput="onBuscaCaptChanged()">
+    </div>
+
+    <select class="capt-select" id="captOrdem" onchange="renderizarCaptacoes()">
+      <option value="recentes">Mais recentes</option>
+      <option value="antigos">Mais antigos</option>
+      <option value="alfabetica">Nome (A-Z)</option>
+      <option value="corretor">Corretor (A-Z)</option>
+    </select>
+  </div>
+</div>
+
+<main class="capt-lista-wrap">
+  <div id="captLista" class="capt-lista">
+    <div class="loading-inline"><span class="loader loader-lg"></span><p>Carregando captações...</p></div>
+  </div>
+</main>
+
+<!-- MODAL EDITAR DADOS DO CLIENTE / IMÓVEL -->
+<div class="backdrop" id="editBackdrop">
+  <div class="modal">
+    <button class="modal-close" onclick="fecharEditModal()">
+      <svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <h2>
+      <svg class="ico" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      Editar dados da captação
+    </h2>
+    <input type="hidden" id="editCaptId">
+
+    <div class="form-group">
+      <label>Nome do cliente <span class="req">*</span></label>
+      <input type="text" id="editNome" placeholder="Nome completo">
+    </div>
+
+    <div class="form-group">
+      <label>Telefone <span class="req">*</span></label>
+      <input type="tel" id="editTelefone" inputmode="numeric" maxlength="16" oninput="mascaraTelefone(this)">
+    </div>
+
+    <div class="form-row-3">
+      <div class="form-group" style="grid-column: 1 / 2;">
+        <label>Rua</label>
+        <input type="text" id="editRua">
+      </div>
+      <div class="form-group">
+        <label>Número</label>
+        <input type="text" id="editNumero">
+      </div>
+      <div class="form-group">
+        <label>Complemento</label>
+        <input type="text" id="editComplemento">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Bairro</label>
+      <input type="text" id="editBairro">
+    </div>
+
+    <div class="form-row-3">
+      <div class="form-group">
+        <label>Tipo</label>
+        <input type="text" id="editTipo" placeholder="Ex: Apartamento">
+      </div>
+      <div class="form-group">
+        <label>Área (m²)</label>
+        <input type="text" id="editArea">
+      </div>
+      <div class="form-group">
+        <label>Valor estimado</label>
+        <input type="text" id="editValor">
+      </div>
+    </div>
+
+    <div style="display:flex; gap:8px; justify-content:flex-end; margin-top:8px;">
+      <button class="btn btn-ghost" onclick="fecharEditModal()">Cancelar</button>
+      <button class="btn btn-primary" id="btnSalvarEdit" onclick="salvarEdicaoCaptacao()">
+        <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+        Salvar alterações
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL MENSAGENS -->
+<div class="backdrop" id="msgBackdrop">
+  <div class="modal modal-msgs">
+    <button class="modal-close" onclick="fecharMsgModal()">
+      <svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <h2>
+      <svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      Mensagens — <span id="msgNomeCliente" style="color:var(--text-soft); font-weight:600;"></span>
+    </h2>
+    <p class="msgs-intro">
+      Textos prontos para enviar via WhatsApp. Use o botão <strong>Copiar</strong> de cada bloco ou copie tudo de uma vez.
+    </p>
+
+    <div id="msgBlocos"></div>
+
+    <div class="msgs-aviso">
+      💡 <strong>Dica:</strong> o trecho entre asteriscos (<code>*texto*</code>) fica <strong>em negrito</strong> automaticamente quando você cola no WhatsApp.
+    </div>
+
+    <div class="msgs-rodape">
+      <button class="btn btn-ghost" onclick="fecharMsgModal()">Fechar</button>
+      <button class="btn btn-msg" onclick="copiarTodasMensagens()">
+        <svg class="ico ico-sm" viewBox="0 0 24 24">
+          <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+        </svg>
+        Copiar todas as mensagens
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<div class="saving-overlay" id="savingOverlay">
+  <div class="spinner"></div>
+  <div class="msg">Aguarde, estamos salvando...</div>
+</div>
+
+<script>
+/* =====================================================
+   CONFIG
+===================================================== */
+const API_URL = 'https://script.google.com/macros/s/AKfycbzuCjg_5ZJDMWWKmjYp1ThW34iWS0YouviWFdiMGx8W3yApv0F1fdUcjeZdjm0s6Mg/exec';
+const ADMIN_KEY = 'vitrine_admin_v11';
+const CORRETORES_CACHE_KEY = 'vitrine_corretores_v11';
+const TIMEOUT_API = 90000;
+const AUTO_REFRESH_MS = 5 * 60 * 1000; // 5 minutos
+
+const CORES_PADRAO = {
+  'Hugo':     '#1e40af',
+  'Carolina': '#9333ea'
+};
+
+/* =====================================================
+   ✅ DADOS DOS CORRETORES (edite aqui quando entrar alguém novo)
+===================================================== */
+const CORRETORES_INFO = {
+  'Hugo': {
+    nomeCompleto: 'Hugo Ribeiro',
+    funcao: 'Corretor',
+    genero: 'M'
+  },
+  'Carolina': {
+    nomeCompleto: 'Carolina Lima',
+    funcao: 'Corretora',
+    genero: 'F'
+  }
+};
+
+const $ = id => document.getElementById(id);
+
+/* =====================================================
+   STATE
+===================================================== */
+const state = {
+  adminSenha: null,
+  corretores: [],
+  lista: [],
+  filtro: 'pendentes',
+  filtrosCorretores: new Set(),
+  busca: '',
+  obsAbertas: new Set(),
+  salvando: 0,
+  _msgClienteTelAtual: null,
+  _msgAtuais: null
+};
+
+/* =====================================================
+   UTILITÁRIOS
+===================================================== */
+function esc(s){
+  return String(s || '')
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+function normalizaTel(t){ return String(t || '').replace(/\D/g, ''); }
+function fmtTel(t){
+  const n = normalizaTel(t);
+  if(n.length === 11) return `(${n.slice(0,2)}) ${n.slice(2,3)} ${n.slice(3,7)}-${n.slice(7)}`;
+  if(n.length === 10) return `(${n.slice(0,2)}) ${n.slice(2,6)}-${n.slice(6)}`;
+  return String(t || '');
+}
+function fmtDataHora(d){
+  if(!d) return '—';
+  const dt = new Date(d);
+  if(isNaN(dt.getTime())) return '—';
+  const dia = String(dt.getDate()).padStart(2,'0');
+  const mes = String(dt.getMonth()+1).padStart(2,'0');
+  const ano = dt.getFullYear();
+  const h = String(dt.getHours()).padStart(2,'0');
+  const m = String(dt.getMinutes()).padStart(2,'0');
+  return `${dia}/${mes}/${ano} às ${h}:${m}`;
+}
+function idadeLead(d){
+  if(!d) return { txt: '', classe: '' };
+  const dt = new Date(d);
+  if(isNaN(dt.getTime())) return { txt: '', classe: '' };
+  const diff = Date.now() - dt.getTime();
+  const dias = Math.floor(diff / 86400000);
+  const horas = Math.floor(diff / 3600000);
+  if(horas < 1) return { txt: 'agora há pouco', classe: 'recente' };
+  if(horas < 24) return { txt: `há ${horas}h`, classe: 'recente' };
+  if(dias === 1) return { txt: 'há 1 dia', classe: 'recente' };
+  if(dias < 7) return { txt: `há ${dias} dias`, classe: '' };
+  if(dias < 15) return { txt: `há ${dias} dias`, classe: 'antigo' };
+  return { txt: `há ${dias} dias`, classe: 'antigo' };
+}
+function mascaraTelefone(input){
+  let v = input.value.replace(/\D/g, '');
+  if(v.length > 11) v = v.slice(0, 11);
+  let out = '';
+  if(v.length === 0) out = '';
+  else if(v.length <= 2) out = '(' + v;
+  else if(v.length <= 3) out = '(' + v.slice(0,2) + ') ' + v.slice(2);
+  else if(v.length <= 7) out = '(' + v.slice(0,2) + ') ' + v.slice(2,3) + ' ' + v.slice(3);
+  else out = '(' + v.slice(0,2) + ') ' + v.slice(2,3) + ' ' + v.slice(3,7) + '-' + v.slice(7);
+  input.value = out;
+}
+function corDoCorretor(nome){
+  if(!nome) return '#64748b';
+  const c = state.corretores.find(x => x.nome === nome);
+  if(c && c.cor) return c.cor;
+  return CORES_PADRAO[nome] || '#64748b';
+}
+function doisPrimeirosNomes_(nomeCompleto){
+  const preposicoes = new Set(['de','da','do','das','dos','e']);
+  const partes = String(nomeCompleto || '').trim().split(/\s+/);
+  const significativas = partes.filter(p => p && !preposicoes.has(p.toLowerCase()));
+  return significativas.slice(0, 2).join(' ');
+}
+function nomeCompletoCliente_(nome, telefone){
+  const n = String(nome || '').trim() || 'Sem nome';
+  const tel = normalizaTel(telefone);
+  if(tel.length >= 4) return n + ' ' + tel.slice(-4);
+  return n;
+}
+
+/* Parse da coluna "origem" */
+function parseOrigem_(origemBruta){
+  const out = {
+    fase: '', nome: '', telefone: '', endereco: '',
+    rua: '', numero: '', complemento: '', bairro: '',
+    tipo: '', area: '', quartos: '', suites: '', banheiros: '',
+    vagas: '', condominio: '', iptu: '', valorEstimado: '',
+    completa: false,
+    _raw: String(origemBruta || '').trim()
+  };
+  if(!out._raw) return out;
+  if(/^FASE2-COMPLETA/i.test(out._raw)) { out.fase = 'FASE2-COMPLETA'; out.completa = true; }
+  else if(/^FASE1-PARCIAL/i.test(out._raw)) { out.fase = 'FASE1-PARCIAL'; }
+  const partes = out._raw.split('|').map(p => p.trim()).filter(Boolean);
+  partes.forEach(parte => {
+    const idx = parte.indexOf(':');
+    if(idx < 0) return;
+    const chave = parte.slice(0, idx).trim().toLowerCase();
+    const valor = parte.slice(idx + 1).trim();
+    switch(chave){
+      case 'nome':           out.nome        = valor; break;
+      case 'telefone':       out.telefone    = valor; break;
+      case 'endereco':
+        out.endereco = valor;
+        const m = valor.match(/^([^,]+),\s*([^\s-]+)?\s*-?\s*([^-]+)?\s*-?\s*([^-]+)?$/);
+        if(m){
+          out.rua         = (m[1] || '').trim();
+          out.numero      = (m[2] || '').trim();
+          out.complemento = (m[3] || '').trim();
+          out.bairro      = (m[4] || '').trim();
+        } else { out.rua = valor; }
+        break;
+      case 'tipo':           out.tipo        = valor; break;
+      case 'area':           out.area        = valor; break;
+      case 'quartos':        out.quartos     = valor; break;
+      case 'suites':         out.suites      = valor; break;
+      case 'banheiros':      out.banheiros   = valor; break;
+      case 'vagas':          out.vagas       = valor; break;
+      case 'condominio':     out.condominio  = valor; break;
+      case 'iptu':           out.iptu        = valor; break;
+      case 'valor_estimado': out.valorEstimado = valor; break;
+    }
+  });
+  return out;
+}
+
+function toast(msg, type=''){
+  const t = $('toast');
+  if(!t) return;
+  t.textContent = msg;
+  t.className = 'toast show ' + type;
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.remove('show'), 3200);
+  if(type === 'success') avisarPai('atualizado');
+}
+function marcarSalvando(inicio){
+  if(inicio) state.salvando++;
+  else state.salvando = Math.max(0, state.salvando - 1);
+  const ov = $('savingOverlay');
+  if(ov) ov.classList.toggle('show', state.salvando > 0);
+}
+
+/* =====================================================
+   API
+===================================================== */
+async function apiOnce(action, params, timeoutMs){
+  const qs = new URLSearchParams({ action, ...params, _t: Date.now() }).toString();
+  const url = API_URL + '?' + qs;
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const resp = await fetch(url, {
+      method: 'GET', mode: 'cors',
+      headers: { 'Accept': 'application/json' },
+      redirect: 'follow',
+      signal: controller.signal
+    });
+    clearTimeout(timer);
+    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+    return await resp.json();
+  } catch (err) {
+    clearTimeout(timer);
+    throw err;
+  }
+}
+async function api(action, params = {}, timeoutMs = TIMEOUT_API, retries = 2) {
+  let lastErr;
+  for (let i = 0; i <= retries; i++) {
+    try { return await apiOnce(action, params, timeoutMs); }
+    catch (err) {
+      lastErr = err;
+      if (i < retries) await new Promise(r => setTimeout(r, 800 * (i + 1)));
+    }
+  }
+  console.error('API falhou:', lastErr, { action, params });
+  return { ok: false, error: 'Falha ao conectar: ' + lastErr.message };
+}
+
+/* =====================================================
+   COMUNICAÇÃO COM O PAI (iframe)
+===================================================== */
+const EH_IFRAME = window.parent !== window;
+
+function avisarPai(tipo, dados = {}) {
+  if (!EH_IFRAME) return;
+  try {
+    window.parent.postMessage(
+      { origem: 'captar', tipo: tipo, ...dados },
+      '*'
+    );
+  } catch(e) { /* silencioso */ }
+}
+
+/* =====================================================
+   CORRETORES
+===================================================== */
+async function carregarCorretores(){
+  try {
+    const cache = JSON.parse(localStorage.getItem(CORRETORES_CACHE_KEY) || 'null');
+    if(cache && Array.isArray(cache.data) && cache.data.length > 0){
+      state.corretores = cache.data;
+    }
+  } catch(e){}
+
+  const res = await api('listarCorretores', { senha: state.adminSenha });
+  if(res.ok && Array.isArray(res.data) && res.data.length > 0){
+    state.corretores = res.data;
+    try {
+      localStorage.setItem(CORRETORES_CACHE_KEY, JSON.stringify({ data: res.data, ts: Date.now() }));
+    } catch(e){}
+  }
+  if(!state.corretores || state.corretores.length === 0){
+    state.corretores = [
+      { nome: 'Hugo',     cor: '#1e40af' },
+      { nome: 'Carolina', cor: '#9333ea' }
+    ];
+  }
+}
+
+/* =====================================================
+   STATUS
+===================================================== */
+function statusCaptacao_(c){
+  const v = String(c.contatoFeito || '').trim().toLowerCase();
+  if(v === 'sem-retorno' || v === 'sem retorno') return 'sem-retorno';
+  if(v === 'concluida') return 'concluidas';
+  return 'pendentes';
+}
+
+/* =====================================================
+   CARREGAR
+===================================================== */
+async function carregarCaptacoes(mostrarLoading){
+  if(mostrarLoading){
+    $('captLista').innerHTML = '<div class="loading-inline"><span class="loader loader-lg"></span><p>Carregando captações...</p></div>';
+  }
+  marcarSalvando(true);
+  const res = await api('listarCaptacoesQPrecoV2', { senha: state.adminSenha });
+  marcarSalvando(false);
+  if(!res.ok){
+    $('captLista').innerHTML = '<div class="empty-state"><h3>Erro ao carregar captações</h3><p>' + esc(res.error || '') + '</p></div>';
+    return;
+  }
+  state.lista = res.data || [];
+  atualizarContadores();
+  renderizarFiltroCorretores();
+  renderizarCaptacoes();
+}
+
+function atualizarContadores(){
+  const lista = state.lista || [];
+  const pendentes  = lista.filter(c => statusCaptacao_(c) === 'pendentes').length;
+  const semRetorno = lista.filter(c => statusCaptacao_(c) === 'sem-retorno').length;
+  const concluidas = lista.filter(c => statusCaptacao_(c) === 'concluidas').length;
+  const total = lista.length;
+
+  const elP = $('cntPendentes'); if(elP) elP.textContent = pendentes;
+  const elS = $('cntSemRetorno'); if(elS) elS.textContent = semRetorno;
+  const elC = $('cntConcluidas'); if(elC) elC.textContent = concluidas;
+  const elT = $('cntTodas'); if(elT) elT.textContent = total;
+
+  const resumo = $('captResumo');
+  if(resumo){
+    resumo.textContent = `${pendentes} pendente${pendentes===1?'':'s'} · ${semRetorno} sem retorno · ${concluidas} concluída${concluidas===1?'':'s'}`;
+  }
+}
+
+/* =====================================================
+   FILTROS
+===================================================== */
+function setFiltroCaptacoes(filtro, btn){
+  state.filtro = filtro;
+  document.querySelectorAll('.capt-filtros-grupo .chip[data-capt-filter]').forEach(b => {
+    b.classList.toggle('active', b.dataset.captFilter === filtro);
+  });
+  renderizarFiltroCorretores();
+  renderizarCaptacoes();
+}
+
+function renderizarFiltroCorretores(){
+  const wrap = $('captFiltroCorretores');
+  if(!wrap) return;
+
+  let baseStatus = state.lista || [];
+  if(state.filtro !== 'todas'){
+    baseStatus = baseStatus.filter(c => statusCaptacao_(c) === state.filtro);
+  }
+
+  const corretoresDoStatus = new Set();
+  baseStatus.forEach(c => {
+    const ap = String(c.atendidoPor || '').trim();
+    if(ap) corretoresDoStatus.add(ap);
+  });
+
+  // Remove filtros que não existem mais nesse status
+  const paraRemover = [];
+  state.filtrosCorretores.forEach(nome => {
+    if(!corretoresDoStatus.has(nome)) paraRemover.push(nome);
+  });
+  paraRemover.forEach(nome => state.filtrosCorretores.delete(nome));
+
+  if(corretoresDoStatus.size === 0){
+    wrap.innerHTML = `
+      <span class="capt-lbl">Corretor:</span>
+      <span style="font-size:.72rem; color:var(--muted); font-style:italic;">Nenhum atribuído</span>
+    `;
+    return;
+  }
+
+  const chips = [...corretoresDoStatus].sort((a,b) => a.localeCompare(b,'pt-BR')).map(nome => {
+    const cnt = baseStatus.filter(x => String(x.atendidoPor || '').trim() === nome).length;
+    const ativo = state.filtrosCorretores.has(nome);
+    const cor = corDoCorretor(nome);
+    return `<button class="chip chip-corretor ${ativo ? 'active' : ''}"
+              style="background:${ativo ? cor : '#fff'}; color:${ativo ? '#fff' : cor}; border-color:${cor}"
+              onclick="toggleFiltroCorretor('${esc(nome)}')">
+              ${esc(nome)} <span class="cnt">${cnt}</span>
+            </button>`;
+  }).join('');
+
+  wrap.innerHTML = `
+    <span class="capt-lbl">Corretor:</span>
+    <button class="chip ${state.filtrosCorretores.size === 0 ? 'active' : ''}" onclick="limparFiltroCorretor()">Todos</button>
+    ${chips}
+  `;
+}
+function toggleFiltroCorretor(nome){
+  if(state.filtrosCorretores.has(nome)) state.filtrosCorretores.delete(nome);
+  else state.filtrosCorretores.add(nome);
+  renderizarFiltroCorretores();
+  renderizarCaptacoes();
+}
+function limparFiltroCorretor(){
+  state.filtrosCorretores.clear();
+  renderizarFiltroCorretores();
+  renderizarCaptacoes();
+}
+
+/* =====================================================
+   BUSCA
+===================================================== */
+let _buscaTimer = null;
+function onBuscaCaptChanged(){
+  clearTimeout(_buscaTimer);
+  _buscaTimer = setTimeout(() => {
+    state.busca = ($('captBusca').value || '').toLowerCase().trim();
+    renderizarCaptacoes();
+  }, 250);
+}
+
+/* =====================================================
+   RENDER — LISTA
+===================================================== */
+function renderizarCaptacoes(){
+  const container = $('captLista');
+  if(!container) return;
+
+  let arr = [...(state.lista || [])];
+
+  if(state.filtro !== 'todas'){
+    arr = arr.filter(c => statusCaptacao_(c) === state.filtro);
+  }
+
+  if(state.filtrosCorretores.size > 0){
+    arr = arr.filter(c => state.filtrosCorretores.has(String(c.atendidoPor || '').trim()));
+  }
+
+  if(state.busca){
+    const b = state.busca;
+    const bNum = normalizaTel(state.busca);
+    arr = arr.filter(c => {
+      const origem = parseOrigem_(c.origem);
+      const nome = String(c.nome || origem.nome || '').toLowerCase();
+      const tel  = normalizaTel(c.telefone);
+      const rua  = String(c.rua || origem.rua || '').toLowerCase();
+      const bair = String(c.bairro || origem.bairro || '').toLowerCase();
+      const num  = String(c.numero || origem.numero || '').toLowerCase();
+      const tipo = String(c.tipo || origem.tipo || '').toLowerCase();
+      if(nome.includes(b)) return true;
+      if(bNum && tel.includes(bNum)) return true;
+      if(rua.includes(b)) return true;
+      if(bair.includes(b)) return true;
+      if(num.includes(b)) return true;
+      if(tipo.includes(b)) return true;
+      return false;
+    });
+  }
+
+  const ordem = $('captOrdem')?.value || 'recentes';
+  arr.sort((a, b) => {
+    if(ordem === 'alfabetica'){
+      const oa = parseOrigem_(a.origem), ob = parseOrigem_(b.origem);
+      return String(a.nome || oa.nome || '').localeCompare(String(b.nome || ob.nome || ''), 'pt-BR');
+    }
+    if(ordem === 'corretor'){
+      const ca = String(a.atendidoPor || '').toLowerCase();
+      const cb = String(b.atendidoPor || '').toLowerCase();
+      if(ca !== cb) return ca.localeCompare(cb, 'pt-BR');
+      return new Date(b.dataHora||0) - new Date(a.dataHora||0);
+    }
+    if(ordem === 'antigos') return new Date(a.dataHora||0) - new Date(b.dataHora||0);
+    return new Date(b.dataHora||0) - new Date(a.dataHora||0);
+  });
+
+  if(arr.length === 0){
+    let msg = 'Nenhuma captação nesse filtro';
+    let sub = 'Tente outro filtro ou limpe a busca.';
+    if(state.filtro === 'pendentes'){ msg = 'Nenhuma captação pendente 🎉'; sub = 'Você está em dia!'; }
+    else if(state.filtro === 'sem-retorno'){ msg = 'Nenhuma captação sem retorno'; sub = 'Tudo sob controle.'; }
+    else if(state.filtro === 'concluidas'){ msg = 'Nenhuma captação concluída ainda'; sub = 'Mude o status para "Concluída" para vê-la aqui.'; }
+    else if(state.filtro === 'todas'){ msg = 'Nenhuma captação cadastrada'; sub = 'Aguardando novos leads.'; }
+    container.innerHTML = `<div class="empty-state"><h3>${msg}</h3><p>${sub}</p></div>`;
+    return;
+  }
+
+  container.innerHTML = arr.map(c => captacaoCardHTML(c)).join('');
+}
+
+/* =====================================================
+   RENDER — CARD
+===================================================== */
+function captacaoCardHTML(c){
+  const status = statusCaptacao_(c);
+  const statusClasse = status === 'pendentes' ? 'pendente'
+                     : status === 'concluidas' ? 'concluida'
+                     : status;
+
+  const tel = normalizaTel(c.telefone);
+  const telFmt = fmtTel(tel);
+  const telZap = tel.startsWith('55') ? tel : '55' + tel;
+  const atendidoPor = String(c.atendidoPor || '').trim();
+  const temCorretor = !!atendidoPor;
+  const obsAberta = state.obsAbertas.has(String(c.id));
+  const obsTemConteudo = String(c.observacoes || '').trim().length > 0;
+
+  const origem = parseOrigem_(c.origem);
+
+  const nomeFinal = c.nome || origem.nome || '(sem nome)';
+  const ruaFinal = c.rua || origem.rua || '';
+  const numeroFinal = c.numero || origem.numero || '';
+  const complementoFinal = c.complemento || origem.complemento || '';
+  const bairroFinal = c.bairro || origem.bairro || '';
+  const enderecoCompleto = [ruaFinal, numeroFinal].filter(Boolean).join(', ') +
+    (complementoFinal ? ' - ' + complementoFinal : '') +
+    (bairroFinal ? ' - ' + bairroFinal : '');
+
+  const statusTag = status === 'pendentes'
+    ? '<span class="cc-status-tag pendente">⏳ Pendente</span>'
+    : status === 'sem-retorno'
+      ? '<span class="cc-status-tag sem-retorno">❌ Sem retorno</span>'
+      : '<span class="cc-status-tag concluida">✅ Concluída</span>';
+
+  const idade = idadeLead(c.dataHora);
+
+  const selectStatusOpts = `
+    <option value="" ${status === 'pendentes' ? 'selected' : ''}>⏳ Pendente</option>
+    <option value="sem-retorno" ${status === 'sem-retorno' ? 'selected' : ''}>❌ Sem retorno</option>
+    <option value="concluida" ${status === 'concluidas' ? 'selected' : ''}>✅ Concluída</option>
+  `;
+
+  let chipsImovel = '';
+  const temDadosImovel =
+    origem.tipo || origem.area || origem.quartos || origem.suites ||
+    origem.banheiros || origem.vagas || origem.condominio ||
+    origem.iptu || origem.valorEstimado;
+
+  if(temDadosImovel){
+    const tags = [];
+    if(origem.tipo) tags.push(`<span class="cc-tag tipo"><span class="lbl">Tipo:</span> ${esc(origem.tipo)}</span>`);
+    if(origem.area) tags.push(`<span class="cc-tag"><span class="lbl">Área:</span> ${esc(origem.area)} m²</span>`);
+    if(origem.quartos && origem.quartos !== '0') tags.push(`<span class="cc-tag"><span class="lbl">🛏</span> ${esc(origem.quartos)}</span>`);
+    if(origem.suites && origem.suites !== '0') tags.push(`<span class="cc-tag"><span class="lbl">🛁</span> ${esc(origem.suites)}</span>`);
+    if(origem.banheiros && origem.banheiros !== '0') tags.push(`<span class="cc-tag"><span class="lbl">🚿</span> ${esc(origem.banheiros)}</span>`);
+    if(origem.vagas && origem.vagas !== '0') tags.push(`<span class="cc-tag"><span class="lbl">🚗</span> ${esc(origem.vagas)}</span>`);
+    if(origem.condominio && origem.condominio !== '0') tags.push(`<span class="cc-tag"><span class="lbl">Cond.:</span> R$ ${esc(origem.condominio)}</span>`);
+    if(origem.iptu && origem.iptu !== '0') tags.push(`<span class="cc-tag"><span class="lbl">IPTU:</span> R$ ${esc(origem.iptu)}</span>`);
+    if(origem.valorEstimado) tags.push(`<span class="cc-tag valor"><span class="lbl">💰 Dono acha:</span> R$ ${esc(origem.valorEstimado)}</span>`);
+    chipsImovel = `<div class="cc-imovel">${tags.join('')}</div>`;
+  } else if(origem.fase === 'FASE1-PARCIAL'){
+    chipsImovel = `<div class="cc-imovel"><span class="cc-tag fase1">⏳ Aguardando complemento (fase 2)</span></div>`;
+  }
+
+  const corretoresOpts = state.corretores.map(cr =>
+    `<option value="${esc(cr.nome)}" ${atendidoPor === cr.nome ? 'selected' : ''}>${esc(cr.nome)}</option>`
+  ).join('');
+
+  const btnMsgClass = temCorretor ? '' : 'desabilitado';
+  const btnMsgTitle = temCorretor
+    ? 'Ver mensagens prontas para WhatsApp'
+    : 'Escolha o corretor antes de ver as mensagens';
+  const btnMsg = `
+    <button class="cc-btn btn-msg ${btnMsgClass}"
+            onclick="abrirMsgModal('${esc(c.id)}')"
+            title="${esc(btnMsgTitle)}">
+      <svg class="ico" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="10"/>
+        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+        <line x1="12" y1="17" x2="12.01" y2="17"/>
+      </svg>
+    </button>
+  `;
+
+  return `
+    <div class="capt-card status-${statusClasse} ${obsAberta ? 'obs-aberta' : ''}" data-id="${esc(c.id)}">
+      <div class="cc-l1">
+        <span class="cc-nome" title="${esc(nomeFinal)}">${esc(nomeFinal)}</span>
+        <span class="cc-tel">${esc(telFmt)}</span>
+        ${statusTag}
+      </div>
+
+      <div class="cc-l2">
+        <svg class="ico ico-sm" viewBox="0 0 24 24">
+          <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+        <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; flex:1;">
+          ${esc(enderecoCompleto || '(endereço não informado)')}
+        </span>
+        ${idade.txt ? `<span class="cc-idade ${idade.classe}">${esc(idade.txt)}</span>` : ''}
+      </div>
+
+      ${chipsImovel}
+
+      <div class="cc-selects">
+        <div class="cc-campo">
+          <label>Status</label>
+          <select data-cap-id="${esc(c.id)}" data-cap-field="contatoFeito" onchange="onChangeStatus(this)">
+            ${selectStatusOpts}
+          </select>
+        </div>
+        <div class="cc-campo">
+          <label>Corretor</label>
+          <select data-cap-id="${esc(c.id)}" data-cap-field="atendidoPor" onchange="onChangeCorretor(this)">
+            <option value="">— Não atribuído —</option>
+            ${corretoresOpts}
+          </select>
+        </div>
+      </div>
+
+      <div class="cc-obs-wrap">
+        <label>Observações</label>
+        <textarea data-cap-id="${esc(c.id)}" data-cap-field="observacoes"
+                  placeholder="Digite observações... (Ctrl+Enter para salvar)"
+                  onblur="onChangeObs(this)"
+                  onkeydown="if((event.ctrlKey||event.metaKey)&&event.key==='Enter'){this.blur();}">${esc(c.observacoes || '')}</textarea>
+      </div>
+
+      <div class="cc-l3">
+        <span class="cc-data">📅 ${esc(fmtDataHora(c.dataHora))}</span>
+        <div class="cc-acoes">
+          ${btnMsg}
+
+          <button class="cc-btn btn-edit"
+                  onclick="abrirEditModal('${esc(c.id)}')"
+                  title="Editar dados">
+            <svg class="ico" viewBox="0 0 24 24">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+            </svg>
+          </button>
+
+          <a class="cc-btn btn-zap"
+             href="https://wa.me/${telZap}"
+             target="_blank" rel="noopener"
+             title="Abrir WhatsApp">
+            <svg class="ico ico-fill" viewBox="0 0 24 24">
+              <path d="M19.05 4.91A10.46 10.46 0 0 0 12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38c1.45.79 3.08 1.21 4.79 1.21h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.91-7.01zM12.05 20.15h-.01c-1.5 0-2.98-.4-4.27-1.17l-.31-.18-3.12.82.83-3.04-.2-.32a8.24 8.24 0 0 1-1.26-4.39c0-4.54 3.7-8.24 8.25-8.24 2.2 0 4.27.86 5.83 2.42a8.19 8.19 0 0 1 2.41 5.83c0 4.54-3.7 8.24-8.15 8.24zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.17.25-.64.81-.79.97-.14.17-.29.19-.54.06-.25-.12-1.05-.39-2.01-1.24-.74-.66-1.24-1.48-1.39-1.73-.14-.25-.02-.39.11-.51.11-.11.25-.29.37-.43.12-.14.17-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.41-.42-.56-.42-.14 0-.31-.02-.47-.02-.17 0-.43.06-.66.31-.23.25-.86.85-.86 2.07 0 1.22.89 2.4 1.01 2.56.12.17 1.75 2.67 4.23 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.55.1.47-.07 1.47-.6 1.68-1.18.21-.58.21-1.08.14-1.18-.06-.11-.22-.17-.47-.29z"/>
+            </svg>
+          </a>
+
+          <button class="cc-btn btn-expandir ${obsAberta ? 'ativo' : ''} ${obsTemConteudo ? 'tem-conteudo' : ''}"
+                  onclick="toggleObsCaptacao('${esc(c.id)}')"
+                  title="${obsTemConteudo ? 'Observações (há conteúdo salvo)' : 'Observações'}">
+            <svg class="ico" viewBox="0 0 24 24">
+              <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+              <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+            </svg>
+            ${obsTemConteudo ? '<span class="dot-obs"></span>' : ''}
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+/* =====================================================
+   AÇÕES DO CARD
+===================================================== */
+function toggleObsCaptacao(id){
+  if(state.obsAbertas.has(id)) state.obsAbertas.delete(id);
+  else state.obsAbertas.add(id);
+  const card = document.querySelector(`.capt-card[data-id="${id}"]`);
+  if(card){
+    card.classList.toggle('obs-aberta');
+    const btn = card.querySelector('.btn-expandir');
+    if(btn) btn.classList.toggle('ativo');
+  }
+}
+
+async function onChangeStatus(el){
+  const id = el.dataset.capId;
+  const valor = el.value;
+  if(!id) return;
+
+  const item = state.lista.find(x => String(x.id) === String(id));
+  if(!item) return;
+
+  if((valor === 'sem-retorno' || valor === 'concluida') && !String(item.atendidoPor || '').trim()){
+    toast('Escolha o corretor antes de marcar como "' + (valor === 'sem-retorno' ? 'Sem retorno' : 'Concluída') + '".', 'warn');
+    el.value = String(item.contatoFeito || '').trim() === 'sem-retorno' ? 'sem-retorno'
+             : String(item.contatoFeito || '').trim() === 'concluida' ? 'concluida'
+             : '';
+    return;
+  }
+
+  const anterior = item.contatoFeito || '';
+  item.contatoFeito = valor;
+
+  marcarSalvando(true);
+  const res = await api('atualizarCaptacao', {
+    senha: state.adminSenha,
+    id: id,
+    contatoFeito: valor
+  });
+  marcarSalvando(false);
+
+  if(!res.ok){
+    toast(res.error || 'Erro ao salvar', 'error');
+    item.contatoFeito = anterior;
+    renderizarCaptacoes();
+    return;
+  }
+
+  toast('Status atualizado ✅', 'success');
+  atualizarContadores();
+
+  const statusNovo = statusCaptacao_({ contatoFeito: valor });
+  const filtroDestino = statusNovo === 'sem-retorno' ? 'sem-retorno'
+                     : statusNovo === 'concluidas' ? 'concluidas'
+                     : 'pendentes';
+
+  if(state.filtro !== filtroDestino && state.filtro !== 'todas'){
+    setFiltroCaptacoes(filtroDestino, document.querySelector(`.chip[data-capt-filter="${filtroDestino}"]`));
+  } else {
+    renderizarFiltroCorretores();
+    renderizarCaptacoes();
+  }
+
+  setTimeout(() => {
+    const card = document.querySelector(`.capt-card[data-id="${id}"]`);
+    if(card){
+      card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      card.style.transition = 'box-shadow .3s';
+      card.style.boxShadow = '0 0 0 3px rgba(30,58,95,.4)';
+      setTimeout(() => { card.style.boxShadow = ''; }, 1200);
+    }
+  }, 100);
+}
+
+async function onChangeCorretor(el){
+  const id = el.dataset.capId;
+  const valor = el.value;
+  if(!id) return;
+
+  const item = state.lista.find(x => String(x.id) === String(id));
+  if(!item) return;
+
+  const anterior = item.atendidoPor || '';
+  item.atendidoPor = valor;
+
+  marcarSalvando(true);
+  const res = await api('atualizarCaptacao', {
+    senha: state.adminSenha,
+    id: id,
+    atendidoPor: valor
+  });
+  marcarSalvando(false);
+
+  if(!res.ok){
+    toast(res.error || 'Erro ao salvar', 'error');
+    item.atendidoPor = anterior;
+    renderizarCaptacoes();
+    return;
+  }
+
+  toast('Corretor atualizado ✅', 'success');
+  renderizarFiltroCorretores();
+  renderizarCaptacoes();
+}
+
+let _obsTimers = {};
+async function onChangeObs(el){
+  const id = el.dataset.capId;
+  const valor = el.value;
+  if(!id) return;
+
+  const item = state.lista.find(x => String(x.id) === String(id));
+  if(!item) return;
+
+  if(String(item.observacoes || '') === String(valor || '')) return;
+
+  item.observacoes = valor;
+
+  clearTimeout(_obsTimers[id]);
+  _obsTimers[id] = setTimeout(async () => {
+    marcarSalvando(true);
+    const res = await api('atualizarCaptacao', {
+      senha: state.adminSenha,
+      id: id,
+      observacoes: valor
+    });
+    marcarSalvando(false);
+
+    if(!res.ok){
+      toast(res.error || 'Erro ao salvar observação', 'error');
+      return;
+    }
+    toast('Observação salva ✅', 'success');
+
+    const card = document.querySelector(`.capt-card[data-id="${id}"]`);
+    if(card){
+      const btn = card.querySelector('.btn-expandir');
+      if(btn){
+        const tem = String(valor).trim().length > 0;
+        btn.classList.toggle('tem-conteudo', tem);
+        const dot = btn.querySelector('.dot-obs');
+        if(tem && !dot){
+          const span = document.createElement('span');
+          span.className = 'dot-obs';
+          btn.appendChild(span);
+        } else if(!tem && dot){
+          dot.remove();
+        }
+      }
+    }
+  }, 600);
+}
+
+/* =====================================================
+   MODAL EDITAR
+===================================================== */
+function abrirEditModal(id){
+  const item = state.lista.find(x => String(x.id) === String(id));
+  if(!item){ toast('Captação não encontrada', 'error'); return; }
+
+  const origem = parseOrigem_(item.origem);
+
+  $('editCaptId').value = id;
+  $('editNome').value = item.nome || origem.nome || '';
+  $('editTelefone').value = fmtTel(item.telefone || origem.telefone || '');
+  $('editRua').value = item.rua || origem.rua || '';
+  $('editNumero').value = item.numero || origem.numero || '';
+  $('editComplemento').value = item.complemento || origem.complemento || '';
+  $('editBairro').value = item.bairro || origem.bairro || '';
+  $('editTipo').value = item.tipo || origem.tipo || '';
+  $('editArea').value = item.area || origem.area || '';
+  $('editValor').value = item.valorEstimado || origem.valorEstimado || '';
+
+  $('editBackdrop').classList.add('show');
+  setTimeout(() => $('editNome').focus(), 120);
+}
+function fecharEditModal(){
+  $('editBackdrop').classList.remove('show');
+}
+
+async function salvarEdicaoCaptacao(){
+  const id = $('editCaptId').value;
+  if(!id){ fecharEditModal(); return; }
+
+  const nome = $('editNome').value.trim();
+  const telefone = normalizaTel($('editTelefone').value);
+  const rua = $('editRua').value.trim();
+  const numero = $('editNumero').value.trim();
+  const complemento = $('editComplemento').value.trim();
+  const bairro = $('editBairro').value.trim();
+  const tipo = $('editTipo').value.trim();
+  const area = $('editArea').value.trim();
+  const valorEstimado = $('editValor').value.trim();
+
+  if(!nome){ toast('Informe o nome', 'error'); return; }
+  if(telefone.length < 10){ toast('Telefone inválido', 'error'); return; }
+
+  const btn = $('btnSalvarEdit');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="loader"></span> Salvando...';
+
+  marcarSalvando(true);
+  const res = await api('atualizarCaptacao', {
+    senha: state.adminSenha,
+    id: id,
+    nome: nome,
+    telefone: telefone,
+    rua: rua,
+    numero: numero,
+    complemento: complemento,
+    bairro: bairro,
+    tipo: tipo,
+    area: area,
+    valorEstimado: valorEstimado
+  });
+  marcarSalvando(false);
+
+  btn.disabled = false;
+  btn.innerHTML = '<svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Salvar alterações';
+
+  if(!res.ok){
+    toast(res.error || 'Erro ao salvar', 'error');
+    return;
+  }
+
+  const item = state.lista.find(x => String(x.id) === String(id));
+  if(item){
+    item.nome = nome;
+    item.telefone = telefone;
+    item.rua = rua;
+    item.numero = numero;
+    item.complemento = complemento;
+    item.bairro = bairro;
+    item.tipo = tipo;
+    item.area = area;
+    item.valorEstimado = valorEstimado;
+  }
+
+  toast('Dados atualizados ✅', 'success');
+  fecharEditModal();
+  renderizarCaptacoes();
+}
+
+/* =====================================================
+   MENSAGENS PRONTAS
+===================================================== */
+function montarMensagens_(item){
+  const atendidoPor = String(item.atendidoPor || '').trim();
+  if(!atendidoPor) return null;
+
+  const info = CORRETORES_INFO[atendidoPor];
+  const nomeCompletoCorretor = info?.nomeCompleto || atendidoPor;
+  const funcaoCorretor = info?.funcao || 'Corretor(a)';
+
+  const origem = parseOrigem_(item.origem);
+  const nomeCliente = String(item.nome || origem.nome || '').trim();
+  const doisNomes = doisPrimeirosNomes_(nomeCliente);
+
+  const msg1 = doisNomes
+    ? `Oi, ${doisNomes}, tudo bem com você?
+
+Sou ${nomeCompletoCorretor}, ${funcaoCorretor} da Lima Ribeiro Imóveis. Vi que você acessou nossa calculadora de preços de imóveis e fiz uma simulação com base nos dados que você nos informou, considerando também outros imóveis da sua região.
+
+Vou te enviar o print da sua simulação.`
+    : `Oi, tudo bem com você?
+
+Sou ${nomeCompletoCorretor}, ${funcaoCorretor} da Lima Ribeiro Imóveis. Vi que você acessou nossa calculadora de preços de imóveis e fiz uma simulação com base nos dados que você nos informou, considerando também outros imóveis da sua região.
+
+Vou te enviar o print da sua simulação.`;
+
+  const msg2 = `Essa análise nos permite chegar a uma estimativa mais próxima da realidade do mercado, ajudando a definir um valor competitivo para a venda do seu imóvel.
+
+*É importante ressaltar*: quem define o preço de venda é você, proprietário. Essa é apenas uma estimativa de mercado. Nosso papel é orientar com base na realidade, para que possamos trabalhar com uma estratégia que traga ótimos resultados.`;
+
+  const msg3 = `Esse seu imóvel está à venda? Posso fazer a avaliação e agendar fotos para colocar no nosso sistema do Quinto Andar. Será um prazer colocar seu imóvel em nossa pasta e trabalhar essa venda com todo o nosso suporte.
+
+Lembrando: toda a divulgação é 100% sem custos.`;
+
+  return {
+    nomeCliente: nomeCliente,
+    nomeCorretor: nomeCompletoCorretor,
+    funcaoCorretor: funcaoCorretor,
+    mensagens: [msg1, msg2, msg3]
+  };
+}
+
+function abrirMsgModal(id){
+  const item = state.lista.find(x => String(x.id) === String(id));
+  if(!item){ toast('Captação não encontrada', 'error'); return; }
+
+  const atendidoPor = String(item.atendidoPor || '').trim();
+  if(!atendidoPor){
+    toast('Escolha o corretor antes de ver as mensagens.', 'warn');
+    return;
+  }
+
+  const dados = montarMensagens_(item);
+  if(!dados){
+    toast('Não foi possível montar as mensagens.', 'error');
+    return;
+  }
+
+  state._msgClienteTelAtual = normalizaTel(item.telefone);
+
+  const nomeCompleto = nomeCompletoCliente_(item.nome || parseOrigem_(item.origem).nome, item.telefone);
+  $('msgNomeCliente').textContent = nomeCompleto;
+
+  const blocos = dados.mensagens.map((texto, idx) => {
+    const rotulos = ['Abordagem inicial', 'Explicação técnica', 'Convite à ação'];
+    const rotulo = rotulos[idx] || `Mensagem ${idx + 1}`;
+    const htmlTexto = esc(texto)
+      .replace(/\*([^*]+)\*/g, '<strong>$1</strong>');
+    return `
+      <div class="msgs-bloco">
+        <div class="msgs-bloco-head">
+          <span class="msgs-bloco-num">
+            <span class="num">${idx + 1}</span>
+            ${esc(rotulo)}
+          </span>
+          <button class="msgs-bloco-copiar" onclick="copiarBloco(${idx})">
+            <svg class="ico ico-sm" viewBox="0 0 24 24">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+            </svg>
+            Copiar
+          </button>
+        </div>
+        <div class="msgs-bloco-texto">${htmlTexto}</div>
+      </div>
+    `;
+  }).join('');
+
+  $('msgBlocos').innerHTML = blocos;
+  state._msgAtuais = dados.mensagens;
+
+  $('msgBackdrop').classList.add('show');
+}
+
+function fecharMsgModal(){
+  $('msgBackdrop').classList.remove('show');
+  state._msgClienteTelAtual = null;
+  state._msgAtuais = null;
+}
+
+function copiarBloco(idx){
+  const lista = state._msgAtuais || [];
+  const texto = lista[idx];
+  if(!texto){ toast('Mensagem indisponível', 'error'); return; }
+  copiarTextoSimples(texto, 'Mensagem ' + (idx + 1) + ' copiada');
+}
+
+function copiarTodasMensagens(){
+  const lista = state._msgAtuais || [];
+  if(lista.length === 0){ toast('Nada para copiar', 'error'); return; }
+  const texto = lista.join('\n\n---\n\n');
+  copiarTextoSimples(texto, 'Todas as mensagens copiadas');
+}
+
+function copiarTextoSimples(texto, msgSucesso){
+  if(navigator.clipboard && window.isSecureContext){
+    navigator.clipboard.writeText(texto)
+      .then(() => toast(msgSucesso + ' ✅', 'success'))
+      .catch(() => fallbackCopy(texto, msgSucesso));
+  } else {
+    fallbackCopy(texto, msgSucesso);
+  }
+}
+
+function fallbackCopy(texto, msgSucesso){
+  const ta = document.createElement('textarea');
+  ta.value = texto;
+  ta.style.position = 'fixed';
+  ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.select();
+  try {
+    document.execCommand('copy');
+    toast(msgSucesso + ' ✅', 'success');
+  } catch(e){
+    toast('Não foi possível copiar', 'error');
+  }
+  document.body.removeChild(ta);
+}
+
+/* =====================================================
+   AUTO-REFRESH — a cada 5 minutos, com proteções
+===================================================== */
+let _autoRefreshTimer = null;
+let _ultimoRefreshTs = Date.now();
+
+function podeAtualizarAgora_(){
+  if(state.salvando > 0) return false;
+
+  const modais = ['editBackdrop', 'msgBackdrop'];
+  for(const id of modais){
+    const el = $(id);
+    if(el && el.classList.contains('show')) return false;
+  }
+
+  const ativo = document.activeElement;
+  if(ativo){
+    const tag = ativo.tagName;
+    if(tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return false;
+    if(ativo.isContentEditable) return false;
+  }
+
+  if(state.obsAbertas && state.obsAbertas.size > 0) return false;
+  if(document.hidden) return false;
+
+  return true;
+}
+
+async function refreshSilencioso_(){
+  if(!podeAtualizarAgora_()) return false;
+
+  try {
+    const res = await api('listarCaptacoesQPrecoV2', { senha: state.adminSenha });
+    if(!res.ok) return false;
+    if(!podeAtualizarAgora_()) return false;
+
+    state.lista = res.data || [];
+    atualizarContadores();
+    renderizarFiltroCorretores();
+    renderizarCaptacoes();
+    _ultimoRefreshTs = Date.now();
+    return true;
+  } catch(e){
+    console.warn('[auto-refresh] falha silenciosa:', e);
+    return false;
+  }
+}
+
+function agendarAutoRefresh_(){
+  clearTimeout(_autoRefreshTimer);
+  _autoRefreshTimer = setTimeout(async () => {
+    if(!state.adminSenha){
+      agendarAutoRefresh_();
+      return;
+    }
+    await refreshSilencioso_();
+    agendarAutoRefresh_();
+  }, AUTO_REFRESH_MS);
+}
+
+/* Atualiza ao voltar pra aba, se passou tempo suficiente */
+document.addEventListener('visibilitychange', () => {
+  if(document.hidden) return;
+  const agora = Date.now();
+  if(agora - _ultimoRefreshTs > AUTO_REFRESH_MS){
+    refreshSilencioso_().then(() => { _ultimoRefreshTs = Date.now(); });
+  }
+});
+
+/* =====================================================
+   INIT
+===================================================== */
+(async function init(){
+  try {
+    const senhaSalva = localStorage.getItem(ADMIN_KEY);
+    if(!senhaSalva){
+      document.body.innerHTML = `
+        <div style="padding:60px 20px; text-align:center; font-family:-apple-system,sans-serif;">
+          <h2 style="color:#8b3a3a;">Acesso negado</h2>
+          <p style="margin-top:10px; color:#475569;">Faça login no painel administrativo primeiro.</p>
+        </div>`;
+      return;
+    }
+    state.adminSenha = senhaSalva;
+
+    await carregarCorretores();
+    await carregarCaptacoes(true);
+    agendarAutoRefresh_();
+    _ultimoRefreshTs = Date.now();
+
+    // Se estiver dentro de iframe, adiciona botão "Fechar" no header
+    if (EH_IFRAME) {
+      const header = document.querySelector('.capt-header-actions');
+      if (header) {
+        const btnFechar = document.createElement('button');
+        btnFechar.className = 'btn btn-ghost btn-sm';
+        btnFechar.style.marginLeft = '8px';
+        btnFechar.innerHTML = `
+          <svg class="ico ico-sm" viewBox="0 0 24 24">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+          Fechar
+        `;
+        btnFechar.onclick = () => avisarPai('fechar');
+        header.appendChild(btnFechar);
+      }
+    }
+  } catch(err){
+    console.error('Erro no init:', err);
+    $('captLista').innerHTML = '<div class="empty-state"><h3>Erro ao iniciar</h3><p>' + esc(err.message) + '</p></div>';
+  }
+})();
+
+/* Fecha modal com ESC */
+document.addEventListener('keydown', (e) => {
+  if(e.key === 'Escape'){
+    fecharEditModal();
+    fecharMsgModal();
+  }
+});
+
+/* Previne sair com salvamento pendente */
+window.addEventListener('beforeunload', function(e){
+  if(state.salvando > 0){
+    e.preventDefault();
+    e.returnValue = 'Aguarde, estamos salvando...';
+    return e.returnValue;
+  }
+});
+</script>
+</body>
+</html>
