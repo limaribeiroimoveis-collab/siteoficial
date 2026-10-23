@@ -6560,32 +6560,70 @@ function extrairPrimeiraLinhaChave(txt){
   }
   return '';
 }
-function abrirRelatorio(id){
+async function abrirRelatorio(id){
   const a = state.agendamentos.find(x => x.id === id);
   if(!a){ toast('Agendamento não encontrado', 'error'); return; }
   const cli = state.clientes.find(c => normalizaTel(c.telefone) === normalizaTel(a.telefone));
   const nomeCli = cli ? cli.nome : (a.clienteNome || '(sem cadastro)');
 
+  // ✅ CRUZAMENTO: procura o imóvel completo em state.todosImoveis
+  // (o agendamento sozinho não tem preço, condomínio, iptu, descrição, tipo)
+  let imovelCompleto = null;
+
+  // Primeiro, garante que todosImoveis está carregado
+  if(!state.todosImoveis || state.todosImoveis.length === 0){
+    try {
+      const resIm = await api('listarTodosImoveis', { senha: state.adminSenha });
+      if(resIm.ok && resIm.data){
+        state.todosImoveis = resIm.data;
+        state._corretorPorImovelId = {};
+        state.todosImoveis.forEach(im => {
+          state._corretorPorImovelId[String(im.id)] = im.corretor || '';
+        });
+      }
+    } catch(e){
+      console.warn('[abrirRelatorio] erro ao carregar todosImoveis:', e);
+    }
+  }
+
+  // Agora procura o imóvel pelo ID
+  if(state.todosImoveis && state.todosImoveis.length > 0){
+    imovelCompleto = state.todosImoveis.find(im => String(im.id) === String(a.id));
+    // Fallback: procura por código (mais confiável quando há duplicatas)
+    if(!imovelCompleto && a.codigo){
+      imovelCompleto = state.todosImoveis.find(im => String(im.codigo) === String(a.codigo));
+    }
+  }
+
   $('relatorioNome').textContent = nomeCompletoCliente_(nomeCli, a.telefone);
-  state._relatorioAtual = { agendamento: a, cliente: cli || null, nomeCli };
-  $('relatorioCorpo').innerHTML = montarHTMLRelatorio(a, cli);
+  state._relatorioAtual = { agendamento: a, cliente: cli || null, nomeCli, imovelCompleto };
+  $('relatorioCorpo').innerHTML = montarHTMLRelatorio(a, cli, imovelCompleto);
   $('relatorioBackdrop').classList.add('show');
 }
-function montarHTMLRelatorio(a, cli){
+function montarHTMLRelatorio(a, cli, imovelCompleto){
+  const im = imovelCompleto || {};
   const nomeCli = cli ? (cli.nome || '') : (a.clienteNome || '(sem cadastro)');
   const telCli = a.telefone || '';
   const corr = resolverCorretor_(a);
-  const campos = camposEndereco_(a);
-  const codigo = String(a.codigo || '').trim();
-  const tipo = String(a.tipo || '').trim();
-  const preco = String(a.preco || '').trim();
-  const condominio = String(a.condominio || '').trim();
-  const iptu = String(a.iptu || '').trim();
-  const descricao = String(a.descricao || '').trim();
-  const chavePrimeiraLinha = extrairPrimeiraLinhaChave(a.chaveTexto);
-  const dataVisita = a.dataVisitaAgendada;
-  const linkAnuncio = String(a.link || '').trim();
-  const linkBuscar = codigo ? `${BUSCAR_BASE}/${codigo}` : '';
+
+  // Pega os dados de endereço/chave do IMÓVEL COMPLETO (mais confiável)
+  const campos = {
+    rua:    String(im.rua        || a.rua        || '').trim(),
+    numero: String(im.numero     || a.numero     || '').trim(),
+    bairro: String(im.bairro     || a.bairro     || '').trim(),
+    chave:  String(im.chaveTexto || a.chaveTexto || '').trim()
+  };
+
+  const codigo      = String(im.codigo     || a.codigo     || '').trim();
+  const tipo        = String(im.tipo       || a.tipo       || '').trim();
+  const preco       = String(im.preco      || a.preco      || '').trim();
+  const condominio  = String(im.condominio || a.condominio || '').trim();
+  const iptu        = String(im.iptu       || a.iptu       || '').trim();
+  const descricao   = String(im.descricao  || a.descricao  || '').trim();
+  const chavePrimeiraLinha = extrairPrimeiraLinhaChave(campos.chave);
+  const dataVisita  = a.dataVisitaAgendada;
+  const linkAnuncio = String(im.link       || a.link       || '').trim();
+  const linkBuscar  = codigo ? `${BUSCAR_BASE}/${codigo}` : '';
   const tel = normalizaTel(telCli);
   const telZap = tel ? (tel.startsWith('55') ? tel : '55' + tel) : '';
 
@@ -6674,20 +6712,30 @@ function fecharRelatorio(){
   state._relatorioAtual = null;
 }
 function montarTextoRelatorio(a){
+  const im = state.todosImoveis.find(x => String(x.id) === String(a.id))
+          || (a.codigo ? state.todosImoveis.find(x => String(x.codigo) === String(a.codigo)) : null)
+          || {};
   const cli = state.clientes.find(c => normalizaTel(c.telefone) === normalizaTel(a.telefone));
   const nomeCli = cli ? (cli.nome || '') : (a.clienteNome || '(sem cadastro)');
   const corr = resolverCorretor_(a);
-  const campos = camposEndereco_(a);
-  const codigo = String(a.codigo || '').trim();
-  const tipo = String(a.tipo || '').trim();
-  const preco = String(a.preco || '').trim();
-  const condominio = String(a.condominio || '').trim();
-  const iptu = String(a.iptu || '').trim();
-  const descricao = String(a.descricao || '').trim();
-  const chavePrimeiraLinha = extrairPrimeiraLinhaChave(a.chaveTexto);
-  const dataVisita = a.dataVisitaAgendada;
-  const linkAnuncio = String(a.link || '').trim();
-  const linkBuscar = codigo ? `${BUSCAR_BASE}/${codigo}` : '';
+
+  const campos = {
+    rua:    String(im.rua        || a.rua        || '').trim(),
+    numero: String(im.numero     || a.numero     || '').trim(),
+    bairro: String(im.bairro     || a.bairro     || '').trim(),
+    chave:  String(im.chaveTexto || a.chaveTexto || '').trim()
+  };
+
+  const codigo      = String(im.codigo     || a.codigo     || '').trim();
+  const tipo        = String(im.tipo       || a.tipo       || '').trim();
+  const preco       = String(im.preco      || a.preco      || '').trim();
+  const condominio  = String(im.condominio || a.condominio || '').trim();
+  const iptu        = String(im.iptu       || a.iptu       || '').trim();
+  const descricao   = String(im.descricao  || a.descricao  || '').trim();
+  const chavePrimeiraLinha = extrairPrimeiraLinhaChave(campos.chave);
+  const dataVisita  = a.dataVisitaAgendada;
+  const linkAnuncio = String(im.link       || a.link       || '').trim();
+  const linkBuscar  = codigo ? `${BUSCAR_BASE}/${codigo}` : '';
   const tel = normalizaTel(a.telefone);
   const telZap = tel ? (tel.startsWith('55') ? tel : '55' + tel) : '';
 
