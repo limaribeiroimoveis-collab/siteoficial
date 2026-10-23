@@ -447,6 +447,24 @@
   }
   .imovel-card .condo-info .feat i { color: var(--azul-quinto); font-size: 0.78rem; }
 
+  /* Badge admin "Apto 402" no card */
+  .apto-admin {
+    font-size: 0.74rem; font-weight: 800;
+    color: var(--roxo);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    background: #f3e8ff;
+    padding: 1px 8px;
+    border-radius: 6px;
+    margin-left: 4px;
+  }
+
+  /* Destaque do andar no card público */
+  .feat-andar {
+    color: var(--azul-quinto) !important;
+    font-weight: 700 !important;
+  }
+
   /* ===== BOTÕES ADMIN ===== */
   .imovel-card .admin-acoes {
     display: grid;
@@ -769,7 +787,7 @@
   .modal-busca-avancada .acoes-modal .btn-modal.aplicar { background: var(--azul-quinto); color: #fff; }
   .modal-busca-avancada .acoes-modal .btn-modal.aplicar:hover { background: var(--azul-escuro); }
 
-  /* ✅ NOVO: CHIPS DE TIPO DE IMÓVEL */
+  /* ✅ CHIPS DE TIPO DE IMÓVEL */
   .chips-tipo-imovel {
     display: flex; flex-wrap: wrap; gap: 8px;
     margin-bottom: 16px;
@@ -815,6 +833,193 @@
   .btn-admin-primary:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
   .erro-senha { display: none; background: #fef2f2; color: var(--vermelho); border: 1px solid #fecaca; padding: 10px 14px; border-radius: 10px; font-size: 0.82rem; font-weight: 600; margin-bottom: 14px; }
   .erro-senha.show { display: block; }
+
+  /* ===== MODAL EDITOR (ADMIN) ===== */
+  .modal-editor {
+    background: #fff;
+    border-radius: var(--radius-lg);
+    max-width: 880px;
+    width: 100%;
+    max-height: 94vh;
+    overflow-y: auto;
+    box-shadow: var(--sombra-forte);
+    position: relative;
+    animation: fadeUp 0.25s ease;
+    padding: 28px;
+  }
+  .modal-editor .btn-fechar {
+    position: absolute; top: 14px; right: 14px;
+    background: var(--cinza-claro); border: none;
+    width: 34px; height: 34px; border-radius: 50%;
+    cursor: pointer; font-size: 0.9rem; color: var(--texto-escuro);
+    display: flex; align-items: center; justify-content: center;
+    transition: 0.15s; z-index: 5;
+  }
+  .modal-editor .btn-fechar:hover { background: #e0e4ef; transform: scale(1.05); }
+  .modal-editor h3 {
+    font-size: 1.2rem; font-weight: 800; margin-bottom: 18px;
+    display: flex; align-items: center; gap: 10px;
+    color: var(--texto-escuro); padding-right: 44px; flex-wrap: wrap;
+  }
+  .modal-editor h3 i { color: var(--azul-quinto); }
+
+  .form-row-4, .form-row-3, .form-row-2-img {
+    display: grid; gap: 12px; margin-bottom: 14px;
+  }
+  .form-row-4 { grid-template-columns: repeat(4, 1fr); }
+  .form-row-3 { grid-template-columns: 2fr 0.7fr 1.3fr; }
+  .form-row-2-img { grid-template-columns: 260px 1fr; }
+
+  @media(max-width: 720px) {
+    .form-row-4 { grid-template-columns: 1fr 1fr; }
+    .form-row-3 { grid-template-columns: 1fr; }
+    .form-row-2-img { grid-template-columns: 1fr; }
+  }
+  @media(max-width: 460px) {
+    .form-row-4 { grid-template-columns: 1fr; }
+  }
+
+  .form-group-modal { display: flex; flex-direction: column; gap: 5px; }
+  .form-group-modal label {
+    font-size: 0.72rem; font-weight: 700;
+    color: var(--texto-cinza); text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+  .form-group-modal label .req { color: var(--vermelho); }
+  .form-group-modal input,
+  .form-group-modal select,
+  .form-group-modal textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1.5px solid var(--borda-forte);
+    border-radius: 10px;
+    font-size: 0.88rem;
+    font-family: inherit;
+    background: #fff;
+    color: var(--texto-escuro);
+    transition: 0.15s;
+    resize: vertical;
+  }
+  .form-group-modal textarea { min-height: 80px; line-height: 1.5; }
+  .form-group-modal input:focus,
+  .form-group-modal select:focus,
+  .form-group-modal textarea:focus {
+    outline: none;
+    border-color: var(--azul-quinto);
+    box-shadow: 0 0 0 3px rgba(0, 30, 240, 0.1);
+  }
+  .form-group-modal input[readonly] {
+    background: var(--cinza-claro);
+    color: var(--texto-cinza);
+    cursor: not-allowed;
+  }
+
+  .img-preview-box {
+    width: 100%; aspect-ratio: 16 / 10;
+    background: var(--cinza-claro);
+    border: 1.5px dashed var(--borda-forte);
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+  }
+  .img-preview-box img { width: 100%; height: 100%; object-fit: cover; }
+  .img-preview-box .sem-img {
+    color: var(--muted); font-size: 0.78rem;
+    text-align: center; line-height: 1.4; padding: 10px;
+  }
+
+  .btn-buscar-entrada {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 10px 16px; margin-bottom: 16px;
+    background: #fff; color: var(--azul-quinto);
+    border: 1.5px solid var(--azul-quinto);
+    border-radius: 10px; font-family: inherit;
+    font-size: 0.84rem; font-weight: 700;
+    cursor: pointer; transition: 0.15s;
+  }
+  .btn-buscar-entrada:hover:not(:disabled) {
+    background: var(--azul-quinto); color: #fff;
+  }
+  .btn-buscar-entrada:disabled {
+    opacity: 0.45; cursor: not-allowed;
+    border-color: var(--borda-forte); color: var(--muted);
+  }
+  .btn-buscar-entrada .codigo-badge {
+    background: var(--azul-claro); color: var(--azul-quinto);
+    padding: 2px 8px; border-radius: 6px;
+    font-size: 0.7rem; font-weight: 800;
+    font-family: 'SF Mono', Menlo, monospace;
+  }
+
+  .aviso-massivo {
+    display: flex; align-items: flex-start; gap: 10px;
+    background: #fef3c7;
+    border-left: 3px solid var(--laranja);
+    color: #78350f;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 0.82rem;
+    line-height: 1.5;
+    margin-bottom: 16px;
+  }
+  .aviso-massivo i { color: var(--laranja); font-size: 1rem; margin-top: 2px; flex-shrink: 0; }
+  .aviso-massivo strong { color: var(--texto-escuro); }
+
+  .form-actions-row {
+    display: flex; align-items: center; gap: 10px;
+    flex-wrap: wrap; padding-top: 14px;
+    border-top: 1px solid var(--borda);
+  }
+  .form-actions-row .link-label {
+    font-size: 0.78rem; font-weight: 700;
+    color: var(--texto-cinza); text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+  .form-actions-row .link-label .req { color: var(--vermelho); }
+
+  .btn-corretor-escolha {
+    padding: 8px 16px; border-radius: 8px;
+    border: 1.5px solid var(--borda-forte);
+    background: #fff; color: var(--texto-cinza);
+    font-family: inherit; font-size: 0.8rem; font-weight: 700;
+    cursor: pointer; transition: 0.15s;
+  }
+  .btn-corretor-escolha:hover { border-color: var(--azul-quinto); color: var(--azul-quinto); }
+  .btn-corretor-escolha.ativo {
+    background: var(--azul-quinto); color: #fff; border-color: var(--azul-quinto);
+    box-shadow: 0 3px 10px rgba(0, 30, 240, 0.25);
+  }
+
+  .btn-salvar-imovel {
+    margin-left: auto;
+    padding: 11px 20px; border-radius: 10px;
+    border: none; background: var(--verde); color: #fff;
+    font-family: inherit; font-size: 0.86rem; font-weight: 700;
+    cursor: pointer; transition: 0.15s;
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .btn-salvar-imovel:hover:not(:disabled) { background: #15803d; transform: translateY(-1px); }
+  .btn-salvar-imovel:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+  .btn-cancelar-editor {
+    padding: 11px 18px; border-radius: 10px;
+    border: 1.5px solid var(--borda-forte); background: #fff;
+    color: var(--texto-cinza); font-family: inherit;
+    font-size: 0.86rem; font-weight: 700; cursor: pointer;
+    transition: 0.15s;
+  }
+  .btn-cancelar-editor:hover { background: var(--cinza-claro); color: var(--texto-escuro); }
+
+  .campo-info-apto {
+    display: flex; align-items: center; gap: 10px;
+    background: var(--azul-claro); border: 1.5px solid #c7d2fe;
+    padding: 10px 14px; border-radius: 10px;
+    margin-bottom: 14px; font-size: 0.82rem;
+    color: var(--azul-escuro); font-weight: 600;
+  }
+  .campo-info-apto i { color: var(--azul-quinto); }
+  .campo-info-apto strong { color: var(--azul-quinto); font-weight: 800; }
 
   /* ===== ESTADOS ===== */
   .loading-principal {
@@ -882,6 +1087,7 @@
     .modal-bairros .busca-bairro i { left: 30px; }
     .bairro-item { padding: 11px 12px; }
     .bairro-item .nome-b { font-size: 0.86rem; }
+    .modal-editor { padding: 20px 16px; }
   }
 </style>
 </head>
@@ -1140,6 +1346,22 @@
         <label for="filtroMetragem">Metragem mínima (m²)</label>
         <input type="number" id="filtroMetragem" placeholder="Ex: 80" min="0" step="10">
       </div>
+      <div class="filtro-grupo" style="grid-column: 1 / -1;">
+        <label for="filtroAndar">Andar</label>
+        <select id="filtroAndar">
+          <option value="">Qualquer</option>
+          <option value="1">1º andar</option>
+          <option value="2">2º andar</option>
+          <option value="3">3º andar</option>
+          <option value="4">4º andar</option>
+          <option value="5">5º andar</option>
+          <option value="6">6º andar</option>
+          <option value="7">7º andar</option>
+          <option value="8">8º andar</option>
+          <option value="9">9º andar</option>
+          <option value="10+">10º andar ou mais</option>
+        </select>
+      </div>
     </div>
 
     <div class="secao-titulo">📊 Ordenação</div>
@@ -1189,6 +1411,12 @@
   <div class="modal-editor">
     <button class="btn-fechar" onclick="fecharModalEditarImovel()"><i class="fas fa-times"></i></button>
     <h3><i class="fas fa-edit"></i> Editar imóvel <span style="color:var(--texto-cinza); font-weight:600; font-size:0.82rem; margin-left:8px;" id="editarSubInfo">—</span></h3>
+
+    <div class="campo-info-apto" id="infoAptoEditor" style="display:none;">
+      <i class="fas fa-door-open"></i>
+      <span>Apartamento: <strong id="aptoEditorNumero">—</strong> · <span id="aptoEditorAndar">—</span></span>
+    </div>
+
     <div class="form-row-4">
       <div class="form-group-modal">
         <label>Link do anúncio</label>
@@ -1338,8 +1566,9 @@ const state = {
     quartos: '',
     vagas: '',
     metragem: '',
+    andar: '',
     ordenacao: 'recentes',
-    tipos: [] // ← NOVO
+    tipos: []
   }
 };
 
@@ -1448,6 +1677,40 @@ function extrairMetragem(descricao){
   const num = String(m[1]).replace(',', '.');
   const n = parseFloat(num);
   return isNaN(n) ? 0 : Math.round(n);
+}
+
+/* =====================================================
+   ✅ ANDAR / APARTAMENTO
+===================================================== */
+function extrairNumeroApto(chaveTexto){
+  if(!chaveTexto) return '';
+  const primeiraLinha = String(chaveTexto).split(/\r?\n/)[0] || '';
+  const m = primeiraLinha.match(/(?:apto?|ap|apartamento)?\s*[•·:]?\s*(\d{1,6})/i);
+  return m ? m[1] : '';
+}
+
+function calcularAndar(numeroApto){
+  const n = String(numeroApto || '').replace(/\D/g, '');
+  if(!n) return 0;
+  if(n.length <= 2) return 1;
+  if(n.length === 3) return parseInt(n[0], 10);
+  const semPrimeiro = n.slice(1);
+  return parseInt(semPrimeiro[0], 10) || 0;
+}
+
+function fmtAndar(andar){
+  if(!andar || andar <= 0) return '';
+  return `${andar}º andar`;
+}
+
+function infoAptoImovel(im){
+  const numero = extrairNumeroApto(im.chaveTexto || '');
+  const andar = calcularAndar(numero);
+  return {
+    numero,
+    andar,
+    andarTxt: fmtAndar(andar)
+  };
 }
 
 function primeiraLinhaDescricao(descricao){
@@ -1611,10 +1874,9 @@ function popularSelectBairros(){
 function temFiltroAtivo(){
   const busca = $('filtroBusca').value.trim();
   const f = state._filtrosAplicados;
-  return !!(busca || f.bairro || f.preco || f.quartos || f.vagas || f.metragem || (f.tipos && f.tipos.length));
+  return !!(busca || f.bairro || f.preco || f.quartos || f.vagas || f.metragem || f.andar || (f.tipos && f.tipos.length));
 }
 
-/* Verifica se a descrição bate com algum tipo selecionado */
 function bateComTipos(descricao, tipos){
   if(!tipos || tipos.length === 0) return true;
 
@@ -1634,7 +1896,6 @@ function bateComTipos(descricao, tipos){
 
   for(const tipo of tipos){
     if(tipo === 'padrao'){
-      // Padrão = nenhum asterisco de cobertura, área privativa ou casa
       if(!marcadores.cobertura && !marcadores['area-privativa'] && !marcadores.casa) return true;
     } else if(tipo === 'casa' && marcadores.casa) return true;
     else if(tipo === 'cobertura' && marcadores.cobertura) return true;
@@ -1651,6 +1912,7 @@ function aplicarFiltros(){
   const quartosMin = parseInt(f.quartos || '0', 10) || 0;
   const vagasMin = parseInt(f.vagas || '0', 10) || 0;
   const metragemMin = parseInt(f.metragem || '0', 10) || 0;
+  const andarFiltro = f.andar || '';
   const ordenacao = f.ordenacao || 'recentes';
   const tipos = f.tipos || [];
 
@@ -1688,6 +1950,16 @@ function aplicarFiltros(){
   if(vagasMin > 0) arr = arr.filter(im => extrairVagas(im.descricao) >= vagasMin);
   if(metragemMin > 0) arr = arr.filter(im => extrairMetragem(im.descricao) >= metragemMin);
 
+  // ✅ Filtro de andar
+  if(andarFiltro){
+    arr = arr.filter(im => {
+      const info = infoAptoImovel(im);
+      if(!info.andar) return false;
+      if(andarFiltro === '10+') return info.andar >= 10;
+      return info.andar === parseInt(andarFiltro, 10);
+    });
+  }
+
   arr.sort((a, b) => {
     if(ordenacao === 'menor-preco') return parseNumeroBR(a.preco) - parseNumeroBR(b.preco);
     if(ordenacao === 'maior-preco') return parseNumeroBR(b.preco) - parseNumeroBR(a.preco);
@@ -1708,6 +1980,7 @@ function atualizarBadgeFiltros(){
   if(f.quartos) count++;
   if(f.vagas) count++;
   if(f.metragem) count++;
+  if(f.andar) count++;
   if(f.tipos && f.tipos.length) count++;
   const badge = $('badgeFiltrosAtivos');
   const btn = $('btnBuscaAvancada');
@@ -1722,6 +1995,7 @@ function limparFiltros(){
     quartos: '',
     vagas: '',
     metragem: '',
+    andar: '',
     ordenacao: 'recentes',
     tipos: []
   };
@@ -1731,6 +2005,7 @@ function limparFiltros(){
   $('filtroQuartos').value = '';
   $('filtroVagas').value = '';
   $('filtroMetragem').value = '';
+  $('filtroAndar').value = '';
   $('filtroOrdenacao').value = 'recentes';
   document.querySelectorAll('#chipsTipoImovel .chip-tipo-imovel').forEach(b => b.classList.remove('ativo'));
   aplicarFiltros();
@@ -1746,6 +2021,7 @@ function abrirModalBuscaAvancada(){
   $('filtroQuartos').value = f.quartos || '';
   $('filtroVagas').value = f.vagas || '';
   $('filtroMetragem').value = f.metragem || '';
+  $('filtroAndar').value = f.andar || '';
   $('filtroOrdenacao').value = f.ordenacao || 'recentes';
   document.querySelectorAll('#chipsTipoImovel .chip-tipo-imovel').forEach(b => {
     b.classList.toggle('ativo', (f.tipos || []).includes(b.dataset.tipo));
@@ -1759,7 +2035,6 @@ function fecharModalBuscaAvancada(){
   document.body.style.overflow = '';
 }
 
-/* ✅ NOVO: cliques nos chips de tipo */
 document.querySelectorAll('#chipsTipoImovel .chip-tipo-imovel').forEach(btn => {
   btn.addEventListener('click', () => {
     btn.classList.toggle('ativo');
@@ -1776,6 +2051,7 @@ function aplicarFiltrosAvancados(){
     quartos: $('filtroQuartos').value,
     vagas: $('filtroVagas').value,
     metragem: $('filtroMetragem').value,
+    andar: $('filtroAndar').value,
     ordenacao: $('filtroOrdenacao').value,
     tipos: tiposAtivos
   };
@@ -1823,8 +2099,13 @@ function cardHTML(im){
   const extras = [];
   const c = parseNumeroBR(im.condominio);
   const i = parseNumeroBR(im.iptu);
+  const infoApto = infoAptoImovel(im);
+
   if(c > 0) extras.push(`<span class="feat"><i class="fas fa-building"></i> Cond. ${esc(fmtPreco(im.condominio))}</span>`);
   if(i > 0) extras.push(`<span class="feat"><i class="fas fa-file-invoice-dollar"></i> IPTU ${esc(fmtPreco(im.iptu))}</span>`);
+  if(!state.modoAdmin && infoApto.andarTxt){
+    extras.push(`<span class="feat feat-andar"><i class="fas fa-layer-group"></i> ${esc(infoApto.andarTxt)}</span>`);
+  }
 
   const fotoStyle = im.imagem
     ? `background-image: url('${esc(urlImagem(im))}');`
@@ -1837,6 +2118,10 @@ function cardHTML(im){
   const descDuasLinhas = duasLinhasDescricao(im.descricao);
   const tipo = extrairTipoImovel(im.descricao);
   const vendido = isVendido(im.descricao);
+
+  const aptoAdmin = (state.modoAdmin && infoApto.numero)
+    ? `<span class="apto-admin">· Apto ${esc(infoApto.numero)}</span>`
+    : '';
 
   const adminAcoes = state.modoAdmin ? `
     <div class="admin-acoes">
@@ -1881,6 +2166,7 @@ function cardHTML(im){
         <div class="endereco-linha">
           <span class="rua">${esc(rua)}</span>
           ${bairro ? `<span class="bairro-destaque">· ${esc(bairro)}</span>` : ''}
+          ${aptoAdmin}
         </div>
         ${descDuasLinhas ? `<div class="descricao-2linhas">${esc(descDuasLinhas)}</div>` : ''}
         ${extras.length ? `<div class="condo-info">${extras.join('')}</div>` : ''}
@@ -1936,8 +2222,10 @@ function abrirDetalhes(id){
   const gastos = [];
   const c = parseNumeroBR(im.condominio);
   const ip = parseNumeroBR(im.iptu);
+  const infoAptoDetalhe = infoAptoImovel(im);
   if(c > 0) gastos.push(`<span><strong>Condomínio:</strong> ${esc(fmtPreco(im.condominio))}/mês</span>`);
   if(ip > 0) gastos.push(`<span><strong>IPTU:</strong> ${esc(fmtPreco(im.iptu))}/mês</span>`);
+  if(infoAptoDetalhe.andarTxt) gastos.push(`<span><strong>Andar:</strong> ${esc(infoAptoDetalhe.andarTxt)}</span>`);
   if(gastos.length){
     $('detalheGastos').style.display = 'flex';
     $('detalheGastos').innerHTML = gastos.join('');
@@ -2367,6 +2655,17 @@ function abrirModalEditarImovel(id){
     $('codigoBadge').textContent = cod ? '#' + cod : 'sem código';
   }
   atualizarPreview(imCompleto.imagem || im.imagem || '');
+
+  // ✅ Mostra apto real (somente leitura)
+  const chaveDoImovel = imCompleto.chaveTexto || im.chaveTexto || '';
+  const infoAptoEd = infoAptoImovel({ chaveTexto: chaveDoImovel });
+  if(infoAptoEd.numero){
+    $('infoAptoEditor').style.display = 'flex';
+    $('aptoEditorNumero').textContent = infoAptoEd.numero;
+    $('aptoEditorAndar').textContent = infoAptoEd.andarTxt || '—';
+  } else {
+    $('infoAptoEditor').style.display = 'none';
+  }
 
   const total = contarClientesVinculados(im.codigo);
   $('editarSubInfo').textContent = `#${im.codigo || '---'} · ${im.bairro || ''} — ${total} cliente(s) vinculado(s)`;
