@@ -3204,7 +3204,7 @@
       </div>
     </div>
 
-    <!-- BLOCO 5: CÔMODOS -->
+        <!-- BLOCO 5: CÔMODOS -->
     <div class="form-group">
       <label>Quartos</label>
       <div class="prefs-opcoes" id="prefsQuartosOpcoes" data-campo="quartos"></div>
@@ -3216,6 +3216,13 @@
     <div class="form-group">
       <label>Vagas de garagem</label>
       <div class="prefs-opcoes" id="prefsVagasOpcoes" data-campo="vagas"></div>
+    </div>
+
+    <!-- ===== NOVO: METRAGEM MÍNIMA ===== -->
+    <div class="form-group">
+      <label>📐 Metragem mínima (m²) <span style="font-weight:500; color:var(--muted); font-size:.72rem;">(opcional)</span></label>
+      <input type="text" id="prefsMetragemMin" placeholder="Ex: 115" inputmode="numeric" maxlength="5" autocomplete="off">
+      <div style="font-size:.68rem; color:var(--muted); margin-top:4px; font-style:italic;">💡 Se não tiver preferência, deixe em branco.</div>
     </div>
 
     <!-- BLOCO 6: ACESSIBILIDADE -->
@@ -5196,10 +5203,20 @@ async function abrirPrefsDoCard(telefone){
     $('prefsMisturaInfo').className = 'mistura-info';
   }
 
-  // QUARTOS/SUÍTES/VAGAS/ACESSIBILIDADE/ELEVADOR
+    // QUARTOS/SUÍTES/VAGAS/ACESSIBILIDADE/ELEVADOR
   renderizarOpcoesPrefs('quartos', ['', '1', '2', '3', '4', '5'], pref?.quartos || '');
   renderizarOpcoesPrefs('suites',  ['', '1', '2', '3', '4', '5'], pref?.suites  || '');
   renderizarOpcoesPrefs('vagas',   ['', '0', '1', '2', '3', '4'], pref?.vagas   || '');
+
+  // ===== NOVO: METRAGEM MÍNIMA =====
+  configurarInputMetragem('prefsMetragemMin');
+  let metragemDetectada = '';
+  if(pref && pref.outros){
+    const matchArea = String(pref.outros).match(/📐\s*Área:\s*(\d+)\s*m²/i);
+    if(matchArea) metragemDetectada = matchArea[1];
+  }
+  $('prefsMetragemMin').value = metragemDetectada;
+ 
   renderizarOpcoesPrefs('acessibilidade', ['tanto faz', 'sim', 'nao'], pref?.acessibilidade || 'tanto faz');
   renderizarOpcoesPrefs('elevador',       ['tanto faz', 'sim', 'nao'], pref?.elevador       || 'tanto faz');
 
@@ -5351,6 +5368,16 @@ function configurarInputMoeda(idInput){
   input.addEventListener('input', () => formatarValorMoedaInput(input));
 }
 
+ function configurarInputMetragem(idInput){
+  const input = $(idInput);
+  if(!input) return;
+  if(input.dataset.metragemConfigurada === '1') return;
+  input.dataset.metragemConfigurada = '1';
+  input.addEventListener('input', () => {
+    input.value = input.value.replace(/\D/g, '').slice(0, 5);
+  });
+}
+
 /* ===== abre prefs a partir do modal do cliente ===== */
 async function abrirPrefsDoClienteModal(){
   const tel = normalizaTel($('cliTelefone').value);
@@ -5405,7 +5432,14 @@ async function salvarPrefsCliente(){
     const m = String(d.getMinutes()).padStart(2, '0');
     return `${dia}/${mes}/${ano} ${h}:${m}hs`;
   }
-  const linhasOutros = [timestampAgora_()];
+    const linhasOutros = [timestampAgora_()];
+
+  // ===== NOVO: METRAGEM MÍNIMA (sempre em 2º lugar, igual ao formulário do cliente) =====
+  const metragemMin = ($('prefsMetragemMin').value || '').replace(/\D/g, '').trim();
+  if(metragemMin){
+    linhasOutros.push(`📐 Área: ${metragemMin}m²`);
+  }
+ 
   // Aquisição
   if(aquisicao === 'avista'){
     linhasOutros.push('💰 Aquisição: Recursos próprios (à vista)');
