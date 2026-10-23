@@ -5230,11 +5230,12 @@ async function abrirPrefsDoCard(telefone){
   }
   renderizarOpcoesPrefs('semEscada', ['tanto faz', 'sim', 'nao'], semEscadaValor);
 
-  // EXTRAS
+   // EXTRAS
   let extrasLimpos = '';
   if(pref && pref.outros){
     let txt = String(pref.outros);
     txt = txt.replace(/^\d{2}\/\d{2}\/\d{2,4}\s+\d{2}:\d{2}hs?\s*\n?/i, '');
+    txt = txt.replace(/📐\s*Área:[^\n]*\n?/gi, '');        // ← NOVO (remove a metragem)
     txt = txt.replace(/💰\s*Aquisição:[^\n]*\n?/gi, '');
     txt = txt.replace(/🚫\s*Sem escada:[^\n]*\n?/gi, '');
     txt = txt.replace(/🏠\s*Também busca:[^\n]*\n?/gi, '');
