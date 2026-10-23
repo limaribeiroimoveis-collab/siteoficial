@@ -430,7 +430,8 @@
   .btn-evento{ background: var(--purple); color: #fff; border: 1px solid var(--purple); }
   .btn-evento:hover:not(:disabled){ background: #7d3f22; }
 
-  .big-cards{ display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 20px; }
+  .big-cards{ display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-top: 20px; }
+@media(max-width:1100px){ .big-cards{ grid-template-columns: repeat(5, 1fr); gap: 8px; } }
   @media(max-width:780px){ .big-cards{ grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 12px; } }
   @media(max-width:640px){ .big-cards{ grid-template-columns: repeat(2, 1fr); gap: 8px; } }
   .big-card{
@@ -3681,7 +3682,7 @@ const BUSCAR_BASE = 'https://corretor.quintoandar.com.br/informacoes-de-entrada'
 const VITRINE_URL_BASE = 'https://limaribeiroimoveis.com.br/vitrine.html';
 const VITRINE_ADMIN_URL = 'vitrineadmin.html';
 const IMOVEIS_ADMIN_URL = 'https://limaribeiroimoveis.com.br/imoveis.html?admin=1&senha=Cal%40562938';
-const PREFERENCIAS_URL_BASE = 'https://limaribeiroimoveis.com.br/preferencias-cliente.html';
+const PREFERENCIAS_URL_BASE = 'https://limaribeiroimoveis.com.br/meuimovel.html';
 const TIMEOUT_API = 90000;
 const TIMEOUT_LOGIN = 60000;
 const AUTO_REFRESH_BADGES_MS = 2 * 60 * 1000; // 2 minutos
@@ -4963,7 +4964,23 @@ function montarPrefsBarHTML(tel, pref){
   if(pref.elevador && pref.elevador !== 'tanto faz'){
     partes.push(`<span class="pref-item">🛗 <strong>${pref.elevador === 'sim' ? 'Com elevador' : 'Sem elevador'}</strong></span>`);
   }
-  if(pref.tipo && pref.tipo !== 'tanto faz') partes.push(`<span class="pref-item">🏠 <strong>${esc(pref.tipo)}</strong></span>`);
+    // ===== Tipos (principal + extras do "🏠 Também busca:") =====
+  let tiposTexto = '';
+  if(pref.tipo && pref.tipo !== 'tanto faz'){
+    tiposTexto = String(pref.tipo);
+  }
+  if(pref.outros){
+    const matchTipoExtra = String(pref.outros).match(/🏠\s*Também busca:\s*([^\n]+)/i);
+    if(matchTipoExtra){
+      const extras = matchTipoExtra[1].split(',').map(s => s.trim()).filter(Boolean);
+      if(extras.length){
+        tiposTexto = tiposTexto ? (tiposTexto + ', ' + extras.join(', ')) : extras.join(', ');
+      }
+    }
+  }
+  if(tiposTexto){
+    partes.push(`<span class="pref-item">🏠 <strong>${esc(tiposTexto)}</strong></span>`);
+  }
     if(pref.outros) partes.push(`<span class="pref-item pref-item-outros">📝 <strong>${esc(pref.outros)}</strong></span>`);
   return `
     <div class="prefs-bar ${aberto ? 'aberto' : ''}" onclick="togglePrefsBar('${tel}')" title="Clique para expandir/ver todas as preferências">
@@ -5031,10 +5048,25 @@ function montarPrefsExpandidoHTML(tel, pref){
           <span class="prefs-lbl">🛗 Elevador</span>
           <span class="prefs-val">${pref.elevador || 'tanto faz'}</span>
         </div>
-        <div class="prefs-linha">
-          <span class="prefs-lbl">🏠 Tipo</span>
-          <span class="prefs-val">${pref.tipo || 'tanto faz'}</span>
-        </div>
+                ${(() => {
+          let tiposTexto = '';
+          if(pref.tipo && pref.tipo !== 'tanto faz'){
+            tiposTexto = String(pref.tipo);
+          }
+          if(pref.outros){
+            const matchTipoExtra = String(pref.outros).match(/🏠\s*Também busca:\s*([^\n]+)/i);
+            if(matchTipoExtra){
+              const extras = matchTipoExtra[1].split(',').map(s => s.trim()).filter(Boolean);
+              if(extras.length){
+                tiposTexto = tiposTexto ? (tiposTexto + ', ' + extras.join(', ')) : extras.join(', ');
+              }
+            }
+          }
+          return `<div class="prefs-linha">
+            <span class="prefs-lbl">🏠 Tipo</span>
+            <span class="prefs-val">${esc(tiposTexto || 'tanto faz')}</span>
+          </div>`;
+        })()}
         ${pref.outros ? `
         <div class="prefs-linha" style="grid-column:1/-1">
           <span class="prefs-lbl">📝 Outros</span>
@@ -5242,16 +5274,8 @@ function copiarLinkFormulario(){
   const cli = state.clientes.find(c => normalizaTel(c.telefone) === tel);
   const nome = cli ? (cli.nome || '') : '';
   const url = PREFERENCIAS_URL_BASE + '?tel=' + encodeURIComponent(tel) + '&nome=' + encodeURIComponent(nome);
-  const texto =
-`Olá${nome ? ', ' + primeiroNome_(nome) : ''}!
-
-Preparamos um formulário rapidinho pra você nos contar o que procura no seu próximo imóvel. Leva só 1 minuto:
-
-${url}
-
-Qualquer dúvida, estou à disposição!`;
-  copiarTexto(texto);
-  toast('Link copiado! Cole no WhatsApp para o cliente', 'success');
+  copiarTexto(url);
+  toast('Link copiado! Cole no navegador para abrir', 'success');
 }
 
 /* ===== renderiza opções clicáveis de preferência ===== */
@@ -5408,8 +5432,8 @@ async function salvarPrefsCliente(){
     tipoParaAPI = tiposAtivos[0];
     tiposExtras = tiposAtivos.slice(1).join(', ');
   }
-  if(tiposExtras){
-    linhasOutros.push(`🏠 Também busca: ${tiposExtras}`);
+   if(tiposExtras){
+    linhasOutros.push(`🏠 Também busca: ${tiposExtras} (também ${tipoParaAPI})`);
   }
 
   const payload = {
