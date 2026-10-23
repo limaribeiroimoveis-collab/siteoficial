@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
@@ -38,9 +38,9 @@
     --primary:#1e3a5f; --primary-dark:#152a45; --primary-soft:#eef2f7;
     --accent:#8b7355;
     --success:#2f6b4f; --success-bright:#16a34a;
-    --danger:#8b3a3a; --warn:#8b6f3a;
+    --danger:#8b3a3a; --danger-bright:#dc2626; --warn:#8b6f3a;
     --purple:#4a3d6b;
-    --bg:#eef1f4; --bg-alt:#e2e6ea;
+        --bg:#d8dde3; --bg-alt:#c8cfd6;
     --card:#ffffff;
     --text:#0f172a; --text-soft:#475569; --muted:#94a3b8;
     --border:#e2e8f0; --border-strong:#cbd5e1;
@@ -94,41 +94,107 @@
   }
   .header-inner{
     max-width: 1400px; margin: 0 auto;
-    display: flex; align-items: center; justify-content: space-between;
-    gap: 12px; flex-wrap: nowrap; min-height: 38px;
-    padding: 12px 16px;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    min-height: 56px;
   }
-  .brand{ display: flex; align-items: center; gap: 10px; min-width: 0; }
+  @media(max-width:640px){
+    .header-inner{
+      padding: 8px 10px;
+      gap: 6px;
+      min-height: 52px;
+    }
+  }
+
+  .brand{ display: flex; align-items: center; gap: 8px; min-width: 0; }
   .brand-icon{
-    width: 34px; height: 34px; flex-shrink: 0;
+    width: 32px; height: 32px; flex-shrink: 0;
     background: var(--accent); border-radius: 8px;
     display: flex; align-items: center; justify-content: center;
-    font-size: .9rem; color: #fff; font-weight: 800; letter-spacing: .5px;
+    font-size: .85rem; color: #fff; font-weight: 800; letter-spacing: .5px;
   }
   .brand-text{ display: flex; flex-direction: column; line-height: 1.05; min-width: 0; }
-  .brand-title{ font-size: .92rem; font-weight: 700; letter-spacing: .2px; }
-  .brand-sub{ font-size: .58rem; opacity: .7; letter-spacing: 1.2px; text-transform: uppercase; margin-top: 2px; }
+  .brand-title{ font-size: .88rem; font-weight: 700; letter-spacing: .2px; }
+  .brand-sub{ font-size: .55rem; opacity: .7; letter-spacing: 1.2px; text-transform: uppercase; margin-top: 2px; }
+  @media(max-width:480px){
+    .brand-text{ display: none; }
+  }
+
+  /* BOTÃO PWA NO CENTRO DO HEADER — sempre visível */
+  .pwa-btn-center{
+    background: rgba(255,255,255,.1);
+    border: 1px solid rgba(255,255,255,.18);
+    color: #fff;
+    height: 36px;
+    padding: 0 14px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    cursor: pointer;
+    font-size: .78rem;
+    font-weight: 700;
+    font-family: inherit;
+    transition: all .15s;
+    white-space: nowrap;
+    justify-self: center;
+    position: relative;
+    animation: pwaPulse 2.4s ease-in-out infinite;
+  }
+  .pwa-btn-center:hover{ background: rgba(255,255,255,.22); }
+  .pwa-btn-center .pwa-emoji{ font-size: 1rem; line-height: 1; }
+  @keyframes pwaPulse{
+    0%,100%{ box-shadow: 0 0 0 0 rgba(139,115,85,.6); }
+    50%{ box-shadow: 0 0 0 8px rgba(139,115,85,0); }
+  }
+  @media(max-width:520px){
+    .pwa-btn-center{
+      font-size: .68rem;
+      height: 32px;
+      padding: 0 10px;
+      gap: 5px;
+    }
+    .pwa-btn-center .pwa-txt-app{ display: none; }
+  }
+  @media(max-width:400px){
+    .pwa-btn-center{ padding: 0 8px; }
+    .pwa-btn-center .pwa-emoji{ font-size: .9rem; }
+  }
+
+  .header-actions{
+    display: flex; align-items: center; gap: 6px;
+    min-width: 0;
+    justify-self: end;
+  }
+
   .user-info{
-    font-size: .78rem; opacity: .95;
+    font-size: .74rem; opacity: .95;
     display: flex; align-items: center; gap: 5px;
-    max-width: 40vw; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    max-width: 34vw; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
     background: rgba(255,255,255,.08);
-    padding: 6px 12px; border-radius: 999px;
+    padding: 5px 10px; border-radius: 999px;
     border: 1px solid rgba(255,255,255,.1);
   }
   @media(max-width:600px){
-    .user-info{ font-size: .7rem; max-width: 36vw; padding: 5px 10px; }
+    .user-info{ font-size: .68rem; max-width: 30vw; padding: 4px 8px; }
+  }
+  @media(max-width:400px){
+    .user-info{ max-width: 26vw; }
   }
 
   .btn-lupa{
     background: rgba(255,255,255,.08);
     border: 1px solid rgba(255,255,255,.1);
     color: #fff;
-    width: 36px; height: 36px;
+    width: 34px; height: 34px;
     border-radius: 999px;
     display: inline-flex; align-items: center; justify-content: center;
     cursor: pointer;
-    font-size: 1.05rem;
+    font-size: 1rem;
     transition: all .15s;
     flex-shrink: 0;
   }
@@ -178,7 +244,6 @@
   .form-group{ margin-bottom: 14px; }
   .code-input{ text-align: center; font-size: 1.5rem; font-weight: 700; letter-spacing: .4rem; text-transform: uppercase; font-family: var(--mono); padding: 14px; }
 
-  /* BOTÕES */
   .btn{
     display: inline-flex; align-items: center; justify-content: center; gap: 6px;
     padding: 12px 18px; border-radius: 10px; border: none; cursor: pointer;
@@ -217,7 +282,16 @@
   }
   @keyframes spin{ to{ transform: rotate(360deg); } }
 
-  /* SEÇÕES */
+  .spinner-btn{
+    width: 14px; height: 14px;
+    border: 2px solid rgba(255,255,255,.4);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin .7s linear infinite;
+    display: inline-block;
+    vertical-align: middle;
+  }
+
   .section{ margin-top: 18px; animation: fadeInUp .35s ease-out both; }
   @keyframes fadeInUp{
     from{ opacity: 0; transform: translateY(8px); }
@@ -235,7 +309,6 @@
     border: 1px solid var(--border); font-weight: 700;
   }
 
-  /* CARROSSEL */
   .carrossel-scroll{
     display: flex; gap: 10px; overflow-x: auto;
     padding: 4px 4px 10px;
@@ -249,7 +322,6 @@
   .carrossel-scroll > *{ scroll-snap-align: start; flex: 0 0 auto; width: 240px; }
   @media(min-width:768px){ .carrossel-scroll > *{ width: 280px; } }
 
-  /* VISITA CONFIRMADA */
   .visita-card{
     position: relative;
     background: linear-gradient(135deg, #fff5f5 0%, #ffe8e8 100%);
@@ -300,7 +372,6 @@
     border: 1px solid #ddd4ec; align-self: flex-start;
   }
 
-  /* CARD NOVO */
   .novo-card{
     background: #fff; border-radius: var(--radius);
     border: 2px solid #bbf7d0; overflow: hidden;
@@ -317,7 +388,6 @@
   }
   .novo-card-preco{ font-size: .9rem; font-weight: 800; color: var(--success-bright); }
 
-  /* FILTRO DE BAIRROS */
   .bairros-bar-wrap{
     position: relative;
     margin: 12px 0 6px;
@@ -370,7 +440,6 @@
   }
   .bairro-chip.active .cnt{ background: rgba(255,255,255,.25); }
 
-  /* GRID */
   .grid{
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -381,12 +450,11 @@
   @media(min-width:1200px){ .grid{ grid-template-columns: repeat(5, 1fr); } }
   @media(max-width:380px){ .grid{ gap: 8px; } }
 
-  /* CARD */
   .card{
     background: var(--card); border-radius: var(--radius);
     box-shadow: var(--shadow-xs);
     display: flex; flex-direction: column;
-    transition: all .2s; position: relative;
+    transition: all .25s; position: relative;
     border: 1px solid var(--border); overflow: hidden;
     animation: cardIn .35s ease-out both;
   }
@@ -395,8 +463,28 @@
     to{ opacity: 1; transform: translateY(0); }
   }
   .card:hover{ box-shadow: var(--shadow-md); transform: translateY(-2px); border-color: var(--border-strong); }
-  .card.card-nao-gostei{ opacity: .55; filter: grayscale(60%); }
-  .card.card-nao-gostei:hover{ opacity: .8; filter: grayscale(40%); }
+
+  /* ✅ CARD NÃO TENHO INTERESSE — muito apagado */
+  .card.card-nao-gostei{
+    opacity: .12;
+    filter: grayscale(100%);
+    transform: scale(.97);
+  }
+  .card.card-nao-gostei:hover{
+    opacity: .45;
+    filter: grayscale(60%);
+    transform: scale(1);
+  }
+  .card.card-nao-gostei::before{
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 5px;
+    background: var(--danger);
+    opacity: .7;
+    z-index: 5;
+    pointer-events: none;
+  }
 
   .badge-novo{
     position: absolute; top: 8px; left: 8px;
@@ -424,6 +512,10 @@
     color: #fff; z-index: 4;
     box-shadow: 0 2px 6px rgba(0,0,0,.18);
     display: inline-flex; align-items: center; gap: 3px;
+    max-width: calc(100% - 24px);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
   .status-gostei{ background: var(--success); }
   .status-nao-gostei{ background: var(--danger); }
@@ -440,6 +532,60 @@
   }
   .card:hover .card-img{ transform: scale(1.04); }
 
+  /* ✅ OVERLAY 1 linha — fundo mais transparente (não tampa a foto) */
+  .card-overlay-specs{
+    position: absolute;
+    left: 8px; right: 8px;
+    bottom: 8px;
+    background: rgba(15,23,42,.55);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    color: #fff;
+    font-size: .68rem;
+    font-weight: 700;
+    line-height: 1.3;
+    padding: 5px 10px;
+    border-radius: 8px;
+    letter-spacing: .2px;
+    box-shadow: 0 2px 6px rgba(0,0,0,.15);
+    z-index: 3;
+    pointer-events: none;
+    display: block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: calc(100% - 16px);
+    text-shadow: 0 1px 2px rgba(0,0,0,.4);
+  }
+
+    /* ✅ Badge extraído de *asteriscos* — dentro da foto, canto superior esquerdo */
+  .card-tag-topo{
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    background: linear-gradient(135deg, #8b7355 0%, #6d5a42 100%);
+    color: #fff;
+    font-size: .55rem;
+    font-weight: 800;
+    letter-spacing: .4px;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 6px;
+    z-index: 5;
+    box-shadow: 0 2px 6px rgba(0,0,0,.35);
+    white-space: nowrap;
+    max-width: calc(100% - 60px);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    pointer-events: none;
+    animation: badgeTagIn .3s ease-out both;
+    line-height: 1.2;
+  }
+  @keyframes badgeTagIn{
+    from{ opacity: 0; transform: scale(.85); }
+    to{ opacity: 1; transform: scale(1); }
+  }
+
   .card-body{ padding: 10px 10px 8px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
   .card-title{
     font-size: .78rem; font-weight: 700; line-height: 1.3; color: var(--text);
@@ -447,9 +593,12 @@
     overflow: hidden; min-height: 2.1em; letter-spacing: -.005em;
   }
   .card-preco{
-    font-size: .92rem; font-weight: 800;
+    font-size: 1.05rem;
+    font-weight: 800;
     color: var(--success-bright);
     display: inline-flex; align-items: center; gap: 4px;
+    letter-spacing: -.015em;
+    line-height: 1.15;
   }
   .card-preco-sec{
     font-size: .66rem; color: var(--muted); font-weight: 600;
@@ -457,7 +606,6 @@
   }
   .card-preco-sec .sep{ color: var(--border-strong); }
 
-  /* Ações do card */
   .card-actions{
     display: grid; grid-template-columns: repeat(3, 1fr);
     gap: 4px; padding: 0 10px 10px;
@@ -491,8 +639,39 @@
     background: var(--danger); border-color: var(--danger); color: #fff;
     box-shadow: 0 2px 8px rgba(139,58,58,.25);
   }
+  .card-actions .btn-action.salvando{
+    pointer-events: none;
+    opacity: .7;
+  }
 
-  /* Botão Ver Todas as Fotos — 1 linha, sem corte */
+  /* ✅ BOTÃO REATIVAR — ocupa linha inteira quando card descartado */
+  .card-actions .btn-action.btn-reativar{
+    grid-column: 1 / -1;
+    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+    color: #fff;
+    border: none;
+    padding: 14px 12px;
+    border-radius: var(--radius-sm);
+    font-size: .82rem;
+    font-weight: 800;
+    letter-spacing: .3px;
+    min-height: 52px;
+    flex-direction: row;
+    gap: 8px;
+    box-shadow: 0 3px 10px rgba(220,38,38,.3);
+    transition: all .18s;
+  }
+  .card-actions .btn-action.btn-reativar:hover{
+    background: linear-gradient(135deg, #b91c1c 0%, #991b1b 100%);
+    box-shadow: 0 5px 14px rgba(220,38,38,.45);
+    transform: translateY(-1px);
+  }
+  .card-actions .btn-action.btn-reativar .icone{ font-size: 1.1rem; }
+  .card-actions .btn-action.btn-reativar.salvando{
+    pointer-events: none;
+    opacity: .7;
+  }
+
   .btn-ver-anuncio{
     display: flex; align-items: center; justify-content: center; gap: 5px;
     background: var(--primary); color: #fff; text-decoration: none;
@@ -514,7 +693,6 @@
     transform: translateY(-1px);
   }
 
-  /* Observação */
   .obs-wrap{
     margin: 0 10px 8px; background: var(--bg);
     border: 1px solid var(--border); border-radius: var(--radius-sm);
@@ -556,7 +734,6 @@
   }
   .obs-empty:hover{ color: var(--primary); }
 
-  /* Descrição — 2 linhas reais, sem gap */
   .card-desc{
     padding: 0 10px 6px;
     margin-top: 0;
@@ -617,7 +794,6 @@
   .card-desc-meta .meta-codigo.copiado{ background: var(--success); color: #fff; border-color: var(--success); }
   .card-desc-meta .meta-data{ display: inline-flex; align-items: center; gap: 3px; font-weight: 600; }
 
-  /* EMPTY / ERRO */
   .empty-state{
     text-align: center; padding: 60px 20px; color: var(--muted);
     background: #fff; border-radius: var(--radius); margin-top: 16px;
@@ -625,6 +801,16 @@
   }
   .empty-state svg{ width: 56px; height: 56px; margin-bottom: 12px; opacity: .35; }
   .empty-state h3{ font-size: .95rem; margin-bottom: 4px; color: var(--text-soft); }
+  .empty-state p{ margin-bottom: 18px; font-size: .82rem; }
+  .empty-state .btn-ver-todos{
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    background: var(--primary); color: #fff;
+    border: none; cursor: pointer; font-family: inherit;
+    padding: 12px 22px; border-radius: 10px;
+    font-size: .88rem; font-weight: 700;
+    transition: all .15s; box-shadow: 0 3px 10px rgba(30,58,95,.2);
+  }
+  .empty-state .btn-ver-todos:hover{ background: var(--primary-dark); transform: translateY(-1px); }
 
   .erro-conexao{
     background: #fff; border-radius: var(--radius);
@@ -645,7 +831,6 @@
   }
   .erro-conexao .btn-recarregar:hover{ background: var(--primary-dark); transform: translateY(-1px); }
 
-  /* TOAST */
   .toast{
     position: fixed; bottom: calc(var(--navbar-h) + 20px); left: 50%;
     transform: translate(-50%, 30px);
@@ -662,7 +847,6 @@
 
   .hidden{ display: none !important; }
 
-  /* SKELETON */
   @keyframes shimmer{
     0%{ background-position: -400px 0; }
     100%{ background-position: 400px 0; }
@@ -686,7 +870,6 @@
   .skeleton-line.medium{ width: 70%; }
   .skeleton-line.long{ width: 90%; }
 
-  /* MENU INFERIOR */
   .bottom-nav{
     position: fixed; bottom: 0; left: 0; right: 0;
     height: calc(var(--navbar-h) + env(safe-area-inset-bottom));
@@ -750,7 +933,6 @@
   .nav-btn.nav-corretor:hover{ color: #1da851; }
   .nav-btn.nav-corretor.active{ color: #25D366; }
 
-  /* MODAL COMO USAR */
   .modal-backdrop{
     position: fixed; inset: 0;
     background: rgba(15,23,42,.6);
@@ -823,6 +1005,7 @@
     font-size: .78rem; color: var(--text-soft);
     line-height: 1.45;
   }
+  .como-desc b{ color: var(--text); font-weight: 700; }
 
   .como-msg-final{
     margin-top: 16px;
@@ -840,6 +1023,23 @@
     margin-top: 20px;
     display: flex; flex-direction: column; gap: 8px;
   }
+
+  .pwa-step{
+    display: flex; gap: 12px; align-items: flex-start;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .pwa-step:last-of-type{ border-bottom: none; }
+  .pwa-step .num{
+    background: var(--primary); color: #fff;
+    width: 26px; height: 26px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: .78rem; font-weight: 800; flex-shrink: 0;
+  }
+  .pwa-step .txt{
+    font-size: .82rem; color: var(--text); line-height: 1.45;
+  }
+  .pwa-step .txt b{ font-weight: 800; }
 </style>
 </head>
 <body>
@@ -853,13 +1053,20 @@
         <div class="brand-sub">Imóveis</div>
       </div>
     </div>
-    <div style="display:flex; align-items:center; gap:10px; min-width:0;">
+
+    <button class="pwa-btn-center" id="pwaBtn" onclick="abrirAjudaPWA()" title="Instalar como aplicativo">
+      <span class="pwa-emoji">📲</span>
+      <span class="pwa-txt-app">Instalar como&nbsp;</span><span>APP</span>
+    </button>
+
+    <div class="header-actions">
       <span class="user-info" id="userInfo"></span>
       <button class="btn-lupa" id="btnLupa" onclick="toggleBusca()" title="Buscar">
         <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
       </button>
     </div>
   </div>
+
   <div class="busca-expansivel" id="buscaExpansivel">
     <input type="search" id="buscaInput" placeholder="🔍 Buscar por rua, bairro ou descrição..." oninput="renderizarImoveis()">
   </div>
@@ -954,7 +1161,7 @@
     <div class="bairros-bar" id="bairrosBar"></div>
   </div>
 
-  <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; padding: 10px 4px 0;">
+  <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; padding: 10px 4px 0; flex-wrap:wrap;">
     <div style="font-size:.78rem; color:var(--muted); font-weight:700;" id="contadorImoveis"></div>
     <div style="font-size:.74rem; color:var(--primary); font-weight:700; cursor:pointer; display:none;" id="filtroAtivoTag" onclick="limparFiltro()"></div>
   </div>
@@ -967,6 +1174,9 @@
     </svg>
     <h3 id="emptyTitulo">Nenhum imóvel aqui</h3>
     <p id="emptyMsg">Nada para mostrar neste filtro.</p>
+    <button class="btn-ver-todos hidden" id="btnVerTodos" onclick="limparFiltro()">
+      🏠 Ver todos os imóveis
+    </button>
   </div>
 </div>
 
@@ -1007,11 +1217,12 @@
   </button>
 </nav>
 
+<!-- MODAL AJUDA -->
 <div class="modal-backdrop" id="ajudaBackdrop" onclick="if(event.target===this) fecharAjuda()">
   <div class="modal">
     <button class="modal-close" onclick="fecharAjuda()">×</button>
     <h2>Como usar sua vitrine</h2>
-    <p class="sub">Em 4 passos simples, você organiza tudo.</p>
+    <p class="sub">Em 5 passos simples, você organiza tudo.</p>
 
     <div class="como-item">
       <div class="como-ico">
@@ -1029,7 +1240,7 @@
       </div>
       <div class="como-txt">
         <div class="como-titulo">2. Marque o que gostou</div>
-        <div class="como-desc">Toque no <b>Gostei</b> nos imóveis que te agradaram. Assim ficam salvos em "Gostei".</div>
+        <div class="como-desc">Toque em <b>Gostei</b> nos imóveis que te agradaram.</div>
       </div>
     </div>
 
@@ -1039,7 +1250,17 @@
       </div>
       <div class="como-txt">
         <div class="como-titulo">3. Peça uma visita</div>
-        <div class="como-desc">Toque no <b>Visitar</b> nos que quiser conhecer pessoalmente.</div>
+        <div class="como-desc">Toque em <b>Visitar</b> nos que quiser conhecer pessoalmente.</div>
+      </div>
+    </div>
+
+    <div class="como-item">
+      <div class="como-ico">
+        <svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+      </div>
+      <div class="como-txt">
+        <div class="como-titulo">4. Mudou de ideia? Reative!</div>
+        <div class="como-desc">Se marcar <b>Não tenho interesse</b> em algum imóvel, ele fica apagado. Se mudar de ideia, é só tocar em <b>Reativar este imóvel</b> que ele volta ao normal.</div>
       </div>
     </div>
 
@@ -1048,8 +1269,18 @@
         <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
       </div>
       <div class="como-txt">
-        <div class="como-titulo">4. Fale com o corretor</div>
+        <div class="como-titulo">5. Fale com o corretor</div>
         <div class="como-desc">Toque em <b>Corretor</b> no menu abaixo para tirar dúvidas no WhatsApp.</div>
+      </div>
+    </div>
+
+    <div class="como-item">
+      <div class="como-ico">
+        <svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+      </div>
+      <div class="como-txt">
+        <div class="como-titulo">📲 Instale como aplicativo</div>
+        <div class="como-desc">Toque em <b>Instalar como APP</b> no topo. Adicione à tela inicial e acesse sua vitrine com 1 toque, como um app de verdade.</div>
       </div>
     </div>
 
@@ -1063,8 +1294,65 @@
   </div>
 </div>
 
-<div class="toast" id="toast"></div>
+<!-- MODAL PWA -->
+<div class="modal-backdrop" id="pwaBackdrop" onclick="if(event.target===this) fecharAjudaPWA()">
+  <div class="modal">
+    <button class="modal-close" onclick="fecharAjudaPWA()">×</button>
+    <h2>📲 Instalar como aplicativo</h2>
+    <p class="sub">Adicione sua vitrine à tela inicial e acesse com 1 toque.</p>
 
+    <div id="pwaStepsIOS" class="hidden">
+      <div class="pwa-step">
+        <div class="num">1</div>
+        <div class="txt">Toque no botão <b>Compartilhar</b> <span style="display:inline-block;background:#eef2f7;padding:1px 6px;border-radius:4px;font-family:monospace;">⬆️</span> no rodapé do Safari.</div>
+      </div>
+      <div class="pwa-step">
+        <div class="num">2</div>
+        <div class="txt">Role e escolha <b>"Adicionar à Tela de Início"</b>.</div>
+      </div>
+      <div class="pwa-step">
+        <div class="num">3</div>
+        <div class="txt">Confirme tocando em <b>Adicionar</b>. Pronto! 🎉</div>
+      </div>
+    </div>
+
+    <div id="pwaStepsAndroid" class="hidden">
+      <div class="pwa-step">
+        <div class="num">1</div>
+        <div class="txt">Toque no menu <b>⋮</b> no canto superior do Chrome.</div>
+      </div>
+      <div class="pwa-step">
+        <div class="num">2</div>
+        <div class="txt">Escolha <b>"Instalar aplicativo"</b> ou <b>"Adicionar à tela inicial"</b>.</div>
+      </div>
+      <div class="pwa-step">
+        <div class="num">3</div>
+        <div class="txt">Confirme. Pronto! 🎉</div>
+      </div>
+    </div>
+
+    <div id="pwaStepsOutros" class="hidden">
+      <div class="pwa-step">
+        <div class="num">1</div>
+        <div class="txt">No menu do seu navegador, procure por <b>"Instalar app"</b> ou <b>"Adicionar à tela inicial"</b>.</div>
+      </div>
+      <div class="pwa-step">
+        <div class="num">2</div>
+        <div class="txt">Confirme a instalação. Pronto! 🎉</div>
+      </div>
+    </div>
+
+    <div class="como-msg-final" style="margin-top:16px;">
+      <strong>💡 Dica:</strong> depois de instalar, sua vitrine abre como um app normal, com ícone próprio na tela inicial.
+    </div>
+
+    <div class="como-cta">
+      <button class="btn btn-primary btn-full" onclick="fecharAjudaPWA()">Entendi 👍</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
 <script>
 const API_URL = window.__WARMUP_URL__ || 'https://script.google.com/macros/s/AKfycbzuCjg_5ZJDMWWKmjYp1ThW34iWS0YouviWFdiMGx8W3yApv0F1fdUcjeZdjm0s6Mg/exec';
 const TEL_KEY   = 'vitrine_telefone';
@@ -1076,6 +1364,7 @@ const ORIGINAL_URL_KEY = 'vitrine_url_original';
 const VISTOS_KEY = 'vitrine_imoveis_vistos';
 const ULTIMO_ACESSO_KEY = 'vitrine_ultimo_acesso';
 const AJUDA_VISTA_KEY = 'vitrine_ajuda_vista';
+const PWA_BANNER_KEY  = 'vitrine_pwa_banner_fechado';
 const CACHE_TTL = 5 * 60 * 1000;
 
 const TIMEOUT_API = 30000;
@@ -1129,6 +1418,87 @@ function esc(s){
   return String(s || '')
     .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+/* ============================================================
+   ✅ FORMATAÇÃO DE PREÇO — regra robusta com heurística segura
+============================================================ */
+function formatarPreco(valor){
+  if(valor === null || valor === undefined) return '';
+  let s = String(valor).trim();
+  if(!s) return '';
+
+  s = s.replace(/R\$\s*/gi, '').trim();
+  if(!s) return '';
+
+  s = s.replace(/[^\d.,]/g, '');
+  if(!s) return '';
+
+  let num;
+
+  if(s.indexOf(',') >= 0){
+    s = s.replace(/\./g, '').replace(',', '.');
+    num = parseFloat(s);
+  } else if(s.indexOf('.') >= 0){
+    const partes = s.split('.');
+    const ultimo = partes[partes.length - 1];
+    if(partes.length > 1 && ultimo.length === 3){
+      num = parseFloat(s.replace(/\./g, ''));
+    } else {
+      num = parseFloat(s);
+    }
+  } else {
+    num = parseFloat(s);
+  }
+
+  if(isNaN(num) || num <= 0) return '';
+
+  // ✅ HEURÍSTICA: imóvel não custa R$ 1.800. Se for valor baixo, multiplica por 1000
+  if(num >= 100 && num <= 99999){
+    num = num * 1000;
+  }
+
+  return num.toLocaleString('pt-BR', {
+    style: 'currency',
+    currency: 'BRL',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
+}
+
+/* ============================================================
+   ✅ EXTRAI SPECS DA DESCRIÇÃO
+   - Sempre pega só a 1ª linha (overlay sobre a foto)
+   - Extrai o que estiver entre *asteriscos* para virar "badge" no topo
+   Ex.: "178m², 4 quartos e 2 vagas *Cobertura*"
+        → specs = "178m², 4 quartos e 2 vagas"
+        → badge = "Cobertura"
+============================================================ */
+function extrairSpecsDescricao(descricao){
+  if(!descricao) return { specs: '', badge: '' };
+  const texto = String(descricao);
+  const linhas = texto.split('\n').map(l => l.trim()).filter(Boolean);
+  if(linhas.length === 0) return { specs: '', badge: '' };
+
+  let linha1 = linhas[0] || '';
+
+  // ✅ Extrai o que está entre *asteriscos* (primeira ocorrência)
+  let badge = '';
+  const mBadge = linha1.match(/\*([^*]+)\*/);
+  if(mBadge && mBadge[1]){
+    badge = mBadge[1].trim();
+    // Remove o *...* da linha 1 para não aparecer duplicado
+    linha1 = linha1.replace(mBadge[0], '').replace(/\s{2,}/g, ' ').trim();
+  }
+
+  // Valida se a linha1 parece ter specs de imóvel
+  const temM2 = /\d+\s*m[²2]/i.test(linha1);
+  const temKeyword = /\b(quarto|quartos|vaga|vagas|suíte|suite|sala|salas|banheiro|banheiros|dormitório|dormitorio|dormitórios|dormitorios|privativa|privativo|área|area|terreno)\b/i.test(linha1);
+  const temNumero = /\d/.test(linha1);
+
+  const specsValido = (temM2 || (temNumero && temKeyword)) ? linha1 : '';
+
+  return { specs: specsValido, badge: badge };
 }
 
 function fmtData(d){
@@ -1831,14 +2201,14 @@ function novoCardHTML(im){
   const id = esc(im.id);
   const endereco = esc(enderecoSemNumero_(im));
   const img = esc(im.imagem || 'https://via.placeholder.com/400x300/e2e8f0/64748b?text=Sem+imagem');
-  const preco = String(im.preco || '').trim();
+  const precoFmt = formatarPreco(im.preco);
   return `
     <div class="novo-card" onclick="clicarNovoCard('${id}')">
       <img class="novo-card-img" src="${img}" loading="lazy"
            onerror="this.src='https://via.placeholder.com/400x300/e2e8f0/64748b?text=Sem+imagem'">
       <div class="novo-card-body">
         <div class="novo-card-endereco">🏠 ${endereco}</div>
-        ${preco ? `<div class="novo-card-preco">${esc(preco)}</div>` : ''}
+        ${precoFmt ? `<div class="novo-card-preco">${esc(precoFmt)}</div>` : ''}
       </div>
     </div>`;
 }
@@ -1856,29 +2226,60 @@ function clicarNovoCard(id){
   }
 }
 
-function atualizarContadores(){
-  const counts = { todos: state.imoveis.length, gostei: 0, 'quero-visitar': 0, 'nao-gostei': 0, pendente: 0 };
+function calcularContadores_(){
+  const c = {
+    total: state.imoveis.length,
+    gostei: 0,
+    queroVisitar: 0,
+    jaVisitado: 0,
+    naoGostei: 0,
+    pendente: 0
+  };
   state.imoveis.forEach(im => {
     const s = im.status || 'pendente';
-    if(counts[s] !== undefined) counts[s]++;
-    else counts.pendente++;
+    if(s === 'gostei') c.gostei++;
+    else if(s === 'nao-gostei') c.naoGostei++;
+    else if(s === 'pendente') c.pendente++;
+
+    const jaVisitou = String(im.visitaFeita || '').toLowerCase() === 'sim';
+    if(s === 'quero-visitar' && !jaVisitou) c.queroVisitar++;
+    if(jaVisitou) c.jaVisitado++;
   });
-  const gostei = counts.gostei;
-  const vis = counts['quero-visitar'];
+  return c;
+}
+
+function atualizarContadores(){
+  const c = calcularContadores_();
 
   const bf = $('badgeFavoritos');
   const bv = $('badgeVisitar');
   if(bf){
-    bf.textContent = gostei;
-    bf.classList.toggle('hidden', gostei === 0);
+    bf.textContent = c.gostei;
+    bf.classList.toggle('hidden', c.gostei === 0);
   }
   if(bv){
-    bv.textContent = vis;
-    bv.classList.toggle('hidden', vis === 0);
+    bv.textContent = c.queroVisitar;
+    bv.classList.toggle('hidden', c.queroVisitar === 0);
   }
 }
 
 function atualizarBadgesNav(){ atualizarContadores(); }
+
+function atualizarContadorTopo_(lista){
+  const el = $('contadorImoveis');
+  if(!el) return;
+  const c = calcularContadores_();
+  const partes = [];
+  const total = lista ? lista.length : c.total;
+
+  partes.push(`${total} ${total === 1 ? 'imóvel' : 'imóveis'}`);
+
+  if(c.gostei > 0) partes.push(`${c.gostei} gostei`);
+  if(c.queroVisitar > 0) partes.push(`${c.queroVisitar} quero visitar`);
+  if(c.jaVisitado > 0) partes.push(`${c.jaVisitado} já visitado${c.jaVisitado > 1 ? 's' : ''}`);
+
+  el.textContent = partes.join(' · ');
+}
 
 function extrairBairros_(){
   const mapa = new Map();
@@ -2045,6 +2446,27 @@ function talvezMostrarAjudaPrimeiraVez(){
   } catch(e){}
 }
 
+function abrirAjudaPWA(){
+  const ua = navigator.userAgent;
+  const isIOS = /iPhone|iPad|iPod/i.test(ua);
+  const isAndroid = /Android/i.test(ua);
+
+  ['pwaStepsIOS','pwaStepsAndroid','pwaStepsOutros'].forEach(id => {
+    const el = $(id); if(el) el.classList.add('hidden');
+  });
+
+  if(isIOS) $('pwaStepsIOS').classList.remove('hidden');
+  else if(isAndroid) $('pwaStepsAndroid').classList.remove('hidden');
+  else $('pwaStepsOutros').classList.remove('hidden');
+
+  $('pwaBackdrop').classList.add('show');
+}
+
+function fecharAjudaPWA(){
+  // ✅ Só fecha o modal. O botão do header continua sempre visível.
+  $('pwaBackdrop').classList.remove('show');
+}
+
 function toggleBusca(){
   const barra = $('buscaExpansivel');
   if(!barra) return;
@@ -2108,20 +2530,32 @@ function renderizarImoveis(){
     );
   }
 
-  const contador = $('contadorImoveis');
-  if(contador){
-    contador.textContent = lista.length === 1 ? '1 imóvel' : `${lista.length} imóveis`;
-  }
+  atualizarContadorTopo_(lista);
 
   if(lista.length === 0){
     grid.innerHTML = '';
     $('emptyState').classList.remove('hidden');
     $('emptyTitulo').textContent = busca ? 'Nada encontrado' : 'Nenhum imóvel aqui';
-    $('emptyMsg').textContent = busca ? 'Tente outra busca.'
-      : state.filtroNav === 'favoritos' ? 'Você ainda não marcou nenhum como Gostei.'
-      : state.filtroNav === 'visitar' ? 'Você ainda não marcou nenhum como Visitar.'
-      : state.bairrosSelecionados.size > 0 ? 'Nenhum imóvel nos bairros selecionados.'
-      : 'Nada para mostrar.';
+
+    let msgVazia = 'Nada para mostrar.';
+    let mostrarBotao = false;
+
+    if(busca){
+      msgVazia = 'Tente outra busca.';
+    } else if(state.filtroNav === 'favoritos'){
+      msgVazia = 'Você ainda não marcou nenhum imóvel como Gostei.';
+      mostrarBotao = true;
+    } else if(state.filtroNav === 'visitar'){
+      msgVazia = 'Você ainda não marcou nenhum imóvel para Visitar.';
+      mostrarBotao = true;
+    } else if(state.bairrosSelecionados.size > 0){
+      msgVazia = 'Nenhum imóvel nos bairros selecionados.';
+      mostrarBotao = true;
+    }
+
+    $('emptyMsg').textContent = msgVazia;
+    const btn = $('btnVerTodos');
+    if(btn) btn.classList.toggle('hidden', !mostrarBotao);
     return;
   }
   $('emptyState').classList.add('hidden');
@@ -2146,12 +2580,18 @@ function renderizarImoveis(){
 
 function cardHTML(im, idx){
   const statusAtual = im.status || 'pendente';
+  const descartado = statusAtual === 'nao-gostei';
+
   const statusClass = {
     'gostei':'status-gostei','nao-gostei':'status-nao-gostei',
     'quero-visitar':'status-quero-visitar','pendente':'status-pendente'
   }[statusAtual] || 'status-pendente';
+
   const statusLabel = {
-    'gostei':'Gostei','nao-gostei':'Não','quero-visitar':'Visitar','pendente':''
+    'gostei':'Gostei',
+    'nao-gostei':'Não tenho interesse',
+    'quero-visitar':'Visitar',
+    'pendente':''
   }[statusAtual] || '';
 
   const img = im.imagem || 'https://via.placeholder.com/400x300/e2e8f0/64748b?text=Sem+imagem';
@@ -2170,7 +2610,7 @@ function cardHTML(im, idx){
 
   const descId = 'desc-' + id;
 
-  const cardExtraClass = (statusAtual === 'nao-gostei') ? ' card-nao-gostei' : '';
+  const cardExtraClass = descartado ? ' card-nao-gostei' : '';
   const salvando = !!state.salvandoIds[im.id];
   const disabledAttr = salvando ? 'disabled' : '';
 
@@ -2179,10 +2619,19 @@ function cardHTML(im, idx){
   const btnNao = (statusAtual === 'nao-gostei') ? 'ativo' : '';
 
   const enderecoCliente = esc(enderecoSemNumero_(im));
-  const preco = String(im.preco || '').trim();
-  const cond = String(im.condominio || '').trim();
-  const iptu = String(im.iptu || '').trim();
-  const temPrecoSec = cond || iptu;
+  const precoFmt = formatarPreco(im.preco);
+  const condFmt = String(im.condominio || '').trim();
+  const iptuFmt = String(im.iptu || '').trim();
+  const temPrecoSec = condFmt || iptuFmt;
+
+  // ✅ Specs: só a 1ª linha no overlay + badge (asteriscos) no topo
+  const specsInfo = extrairSpecsDescricao(im.descricao);
+  const specsHtml = specsInfo.specs
+    ? `<div class="card-overlay-specs">${esc(specsInfo.specs)}</div>`
+    : '';
+  const badgeTagHtml = specsInfo.badge
+    ? `<div class="card-tag-topo">${esc(specsInfo.badge)}</div>`
+    : '';
 
   const ehNovo = imovelEhNovo(im);
   const badgeNovoHtml = ehNovo ? `<div class="badge-novo">NOVO</div>` : '';
@@ -2190,24 +2639,64 @@ function cardHTML(im, idx){
 
   const temDescricao = descTexto || im.codigo || dataFmt;
 
+  const spinnerHtml = '<span class="spinner-btn"></span>';
+  const iconeG = salvando ? spinnerHtml : '❤️';
+  const iconeV = salvando ? spinnerHtml : '📅';
+  const iconeN = salvando ? spinnerHtml : '❌';
+
+  // ✅ AÇÕES: se descartado → 1 botão grande "Reativar este imóvel"
+  //              se normal   → 3 botões (Gostei / Visitar / Não)
+  const acoesHtml = descartado
+    ? `
+      <div class="card-actions" onclick="event.stopPropagation();">
+        <button class="btn-action btn-reativar ${salvando ? 'salvando' : ''}" ${disabledAttr} onclick="marcar('${id}','nao-gostei')" title="Reativar este imóvel">
+          <span class="icone">${salvando ? spinnerHtml : '↻'}</span>
+          <span>Reativar este imóvel</span>
+        </button>
+      </div>
+    `
+    : `
+      <div class="card-actions" onclick="event.stopPropagation();">
+        <button class="btn-action act-gostei ${btnGostei} ${salvando ? 'salvando' : ''}" ${disabledAttr} onclick="marcar('${id}','gostei')" title="Gostei">
+          <span class="icone">${iconeG}</span>
+          <span>Gostei</span>
+        </button>
+        <button class="btn-action act-visitar ${btnVisitar} ${salvando ? 'salvando' : ''}" ${disabledAttr} onclick="marcar('${id}','quero-visitar')" title="Quero visitar">
+          <span class="icone">${iconeV}</span>
+          <span>Visitar</span>
+        </button>
+                <button class="btn-action act-nao ${btnNao} ${salvando ? 'salvando' : ''}" ${disabledAttr} onclick="marcar('${id}','nao-gostei')" title="Não gostei">
+          <span class="icone">${iconeN}</span>
+          <span>Não Gostei</span>
+        </button>
+      </div>
+    `;
+
+  // ✅ Foto clicável → abre o anúncio (se tiver link)
+  const imgClickAttr = im.link
+    ? `onclick="event.stopPropagation(); clicarAnuncio('${id}'); window.open('${esc(im.link)}', '_blank', 'noopener');" style="cursor:pointer;"`
+    : '';
+
   return `
     <div class="card${cardExtraClass}" data-id="${id}" style="animation-delay:${animDelay}ms" onclick="clicarCard('${id}')">
       ${badgeNovoHtml}
       ${statusLabel ? `<div class="card-status-strip ${statusClass}"><span>${statusLabel}</span></div>` : ''}
 
-      <div class="card-img-wrap">
+      <div class="card-img-wrap" ${imgClickAttr}>
         <img class="card-img" src="${esc(img)}" alt="${enderecoCliente}" loading="lazy"
              onerror="this.src='https://via.placeholder.com/400x300/e2e8f0/64748b?text=Sem+imagem'">
+        ${badgeTagHtml}
+        ${specsHtml}
       </div>
 
       <div class="card-body">
         <div class="card-title">${enderecoCliente}</div>
-        ${preco ? `<div class="card-preco">${esc(preco)}</div>` : ''}
+        ${precoFmt ? `<div class="card-preco">${esc(precoFmt)}</div>` : ''}
         ${temPrecoSec ? `
           <div class="card-preco-sec">
-            ${cond ? `Cond. ${esc(cond)}` : ''}
-            ${cond && iptu ? '<span class="sep">·</span>' : ''}
-            ${iptu ? `IPTU ${esc(iptu)}` : ''}
+            ${condFmt ? `Cond. ${esc(condFmt)}` : ''}
+            ${condFmt && iptuFmt ? '<span class="sep">·</span>' : ''}
+            ${iptuFmt ? `IPTU ${esc(iptuFmt)}` : ''}
           </div>
         ` : ''}
       </div>
@@ -2226,27 +2715,9 @@ function cardHTML(im, idx){
         </div>
       ` : ''}
 
-      <div class="card-actions" onclick="event.stopPropagation();">
-        <button class="btn-action act-gostei ${btnGostei}" ${disabledAttr} onclick="marcar('${id}','gostei')" title="Gostei">
-          <span class="icone">❤️</span>
-          <span>Gostei</span>
-        </button>
-        <button class="btn-action act-visitar ${btnVisitar}" ${disabledAttr} onclick="marcar('${id}','quero-visitar')" title="Quero visitar">
-          <span class="icone">📅</span>
-          <span>Visitar</span>
-        </button>
-        <button class="btn-action act-nao ${btnNao}" ${disabledAttr} onclick="marcar('${id}','nao-gostei')" title="Não gostei">
-          <span class="icone">❌</span>
-          <span>Não</span>
-        </button>
-      </div>
+      ${acoesHtml}
 
-      ${im.link ? `
-        <a class="btn-ver-anuncio" href="${esc(im.link)}" target="_blank" rel="noopener" onclick="event.stopPropagation(); clicarAnuncio('${id}');">
-          <svg class="ico" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-          <span>Ver Todas as Fotos</span>
-        </a>
-      ` : ''}
+            ${'' /* Botão "Ver Todas as Fotos" removido — clique na imagem abre o anúncio */}
 
       <div class="obs-wrap" id="${obsId}" onclick="event.stopPropagation();">
         <div class="obs-label">
@@ -2318,10 +2789,10 @@ async function marcar(id, acao){
   } else {
     renderizarImoveis();
     atualizarContadores();
-    const msg = novaAcao === 'pendente' ? 'Voltou para aguardando'
+    const msg = novaAcao === 'pendente' ? 'Imóvel reativado!'
               : novaAcao === 'gostei' ? 'Gostei!'
               : novaAcao === 'quero-visitar' ? 'Vou querer visitar!'
-              : 'Não gostei';
+              : 'Não tenho interesse';
     toast(msg, 'success');
   }
 }
