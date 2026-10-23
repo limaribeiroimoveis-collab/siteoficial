@@ -809,6 +809,15 @@
       </div>
     </div>
 
+    <!-- ===== NOVO: METRAGEM MÍNIMA ===== -->
+    <div class="secao">
+      <div class="secao-titulo">📐 Tamanho mínimo do imóvel</div>
+      <div class="secao-sub">Metragem mínima que você procura (opcional).</div>
+      <label class="campo-label">Metragem mínima (m²) <span class="opc">(opcional)</span></label>
+      <input type="text" class="input-valor" id="metragemMin" placeholder="Ex: 115" inputmode="numeric" autocomplete="off" maxlength="5">
+      <div class="hint">💡 Se não tiver preferência, deixe em branco.</div>
+    </div>
+
     <div class="secao">
       <div class="secao-titulo">♿ Precisa de acessibilidade?</div>
       <div class="secao-sub">Itens que facilitam o acesso ao imóvel.</div>
@@ -904,6 +913,7 @@ const state = {
   quartos: '',
   suites: '',
   vagas: '',
+  metragemMin: '',
   acessibilidade: 'tanto faz',
   elevador: 'tanto faz',
   semEscada: 'tanto faz',
@@ -988,6 +998,12 @@ function timestampAgora(){
     state.extras = $('extras').value;
   });
 
+  // Metragem mínima
+  $('metragemMin').addEventListener('input', () => {
+    $('metragemMin').value = $('metragemMin').value.replace(/\D/g, '').slice(0, 5);
+    state.metragemMin = $('metragemMin').value;
+  });
+
   // Carrega preferências salvas (se existirem)
   if(tel){
     await carregarPreferenciasSalvas(tel);
@@ -1051,7 +1067,6 @@ function preencherFormulario(dados){
   if(dados.tipo && dados.tipo !== 'tanto faz'){
     let tipos = [];
     const tipoStr = String(dados.tipo).toLowerCase().trim();
-    // tipo pode vir como "apartamento padrao" ou "apartamento, padrao"
     if(tipoStr === 'apartamento') tipos = ['apartamento padrao'];
     else if(tipoStr === 'casa') tipos = ['casa'];
     else if(tipoStr.includes('padrao') || tipoStr.includes('padrão')) tipos = ['apartamento padrao'];
@@ -1059,7 +1074,6 @@ function preencherFormulario(dados){
     else if(tipoStr.includes('area privativa') || tipoStr.includes('área privativa')) tipos = ['apartamento area privativa'];
     else if(tipoStr.includes('apartamento')) tipos = ['apartamento padrao'];
 
-    // Junta com tipos extras do `outros` (🏠 Também busca: ...)
     const outros = String(dados.outros || '');
     const match = outros.match(/🏠\s*Também busca:\s*([^\n]+)/i);
     if(match){
@@ -1072,14 +1086,11 @@ function preencherFormulario(dados){
       });
     }
 
-    // Remove duplicatas
     tipos = [...new Set(tipos)];
     state.tipos = tipos;
-    // Marca os botões
     document.querySelectorAll('.tipo-btn').forEach(btn => {
       btn.classList.toggle('ativo', tipos.includes(btn.dataset.tipo));
     });
-    // Mostra condomínio se for apartamento
     const temApto = tipos.some(t => t.startsWith('apartamento'));
     $('blocoCondominio').style.display = temApto ? 'block' : 'none';
   }
@@ -1133,16 +1144,22 @@ function preencherFormulario(dados){
     }
   });
 
-  // ---- Parsear o `outros` para extrair aquisição, sem escada, extras ----
+  // ---- Parsear o `outros` ----
   const outros = String(dados.outros || '');
 
-  // Aquisição: "💰 Aquisição: ..."
+  // ===== METRAGEM MÍNIMA: "📐 Área: 115m²" =====
+  const matchArea = outros.match(/📐\s*Área:\s*(\d+)\s*m²/i);
+  if(matchArea){
+    state.metragemMin = matchArea[1];
+    $('metragemMin').value = matchArea[1];
+  }
+
+  // Aquisição
   const matchAquis = outros.match(/💰\s*Aquisição:\s*([^\n]+)/i);
   if(matchAquis){
     const txt = matchAquis[1].toLowerCase();
     if(txt.includes('recursos próprios') || txt.includes('à vista') || txt.includes('a vista')){
       if(txt.includes('parte') || txt.includes('+') || txt.includes('%')){
-        // Misto
         state.aquisicao = 'misto';
         const mAv = txt.match(/(\d+)\s*%/);
         if(mAv){ state.misturaAvista = mAv[1]; }
@@ -1165,7 +1182,7 @@ function preencherFormulario(dados){
     }
   }
 
-  // Sem escada: "🚫 Sem escada: Sim"
+  // Sem escada
   const matchEscada = outros.match(/🚫\s*Sem escada:\s*(Sim|Não|sim|nao)/i);
   if(matchEscada){
     const val = matchEscada[1].toLowerCase().includes('sim') ? 'sim' : 'nao';
@@ -1182,8 +1199,8 @@ function preencherFormulario(dados){
     }
   }
 
-  // Extras: "📝 ..." (linha única ou múltiplas)
-  const matchExtras = outros.match(/📝\s*([\s\S]*?)(?=\n🏠|\n💰|\n🚫|$)/);
+  // Extras
+  const matchExtras = outros.match(/📝\s*([\s\S]*?)(?=\n🏠|\n💰|\n🚫|\n📐|$)/);
   if(matchExtras && matchExtras[1].trim()){
     const txt = matchExtras[1].trim();
     $('extras').value = txt;
@@ -1339,11 +1356,19 @@ function escolherOpcao(campo, btn){
 
 /* =====================================================
    MONTAR `outros` COM TIMESTAMP NO TOPO
+   Ordem: Timestamp → 📐 Área → 💰 Aquisição → 🚫 Sem escada → 📝 Extras
+   (🏠 Também busca é adicionado depois no salvarTudo)
 ===================================================== */
 function montarOutros(){
   const linhas = [];
   linhas.push(timestampAgora());
 
+  // ===== Área mínima (NOVO — sempre em 2º lugar) =====
+  if(state.metragemMin && String(state.metragemMin).trim()){
+    linhas.push(`📐 Área: ${String(state.metragemMin).trim()}m²`);
+  }
+
+  // Aquisição
   let aquisTxt = '';
   if(state.aquisicao === 'avista') aquisTxt = 'Recursos próprios (à vista)';
   else if(state.aquisicao === 'financiado') aquisTxt = 'Financiado';
