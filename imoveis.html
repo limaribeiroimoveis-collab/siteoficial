@@ -40,7 +40,6 @@
   }
 
   body {
-    /* ✅ Fundo mais escuro para o card branco destacar */
     background: #e8ecf3;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     color: var(--texto-escuro);
@@ -189,6 +188,28 @@
     color: #fff;
     border-color: var(--azul-quinto);
     box-shadow: 0 6px 16px rgba(0, 30, 240, 0.2);
+  }
+
+  /* ✅ BOTÃO FALHAS */
+  #btnFalhas {
+    background: #fff7ed;
+    color: var(--laranja);
+    border-color: #ffedd5;
+  }
+  #btnFalhas:hover { border-color: var(--laranja); }
+  #btnFalhas.ativo {
+    background: var(--laranja);
+    color: #fff;
+    border-color: var(--laranja);
+    box-shadow: 0 6px 16px rgba(234, 88, 12, 0.3);
+  }
+  #btnFalhas .badge-falhas {
+    background: var(--vermelho);
+    color: #fff;
+    padding: 2px 7px;
+    border-radius: 10px;
+    font-size: 0.65rem;
+    margin-left: 4px;
   }
 
   #modoLista2 { display: none; }
@@ -471,6 +492,24 @@
     text-transform: uppercase;
   }
   .apto-admin i { font-size: 0.62rem; }
+
+  /* ✅ Badge de ERRO (múltiplos aptos) */
+  .apto-erro {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 0.68rem; font-weight: 800;
+    color: #fff;
+    background: var(--vermelho);
+    padding: 2px 8px;
+    border-radius: 6px;
+    letter-spacing: 0.3px;
+    box-shadow: 0 2px 6px rgba(220, 38, 38, 0.3);
+    text-transform: uppercase;
+    animation: pulse-erro 2s infinite;
+  }
+  @keyframes pulse-erro {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.4); }
+    50% { box-shadow: 0 0 0 4px rgba(220, 38, 38, 0); }
+  }
 
   /* ===== BOTÕES ADMIN ===== */
   .imovel-card .admin-acoes {
@@ -972,6 +1011,22 @@
   .aviso-massivo i { color: var(--laranja); font-size: 1rem; margin-top: 2px; flex-shrink: 0; }
   .aviso-massivo strong { color: var(--texto-escuro); }
 
+  /* ✅ CHECKBOX VENDIDO NO EDITOR */
+  .check-vendido-wrap {
+    display: flex; align-items: center; gap: 10px;
+    background: #fef2f2; border: 1.5px solid #fecaca;
+    padding: 12px 16px; border-radius: 10px;
+    margin-bottom: 16px; cursor: pointer;
+    transition: all 0.15s;
+  }
+  .check-vendido-wrap:hover { background: #fee2e2; }
+  .check-vendido-wrap input[type="checkbox"] {
+    width: 20px; height: 20px; accent-color: var(--vermelho);
+    cursor: pointer; flex-shrink: 0;
+  }
+  .check-vendido-txt { font-size: 0.85rem; font-weight: 700; color: var(--vermelho); line-height: 1.3; }
+  .check-vendido-txt span { display: block; font-size: 0.75rem; font-weight: 500; color: #b91c1c; margin-top: 2px; }
+
   .form-actions-row {
     display: flex; align-items: center; gap: 10px;
     flex-wrap: wrap; padding-top: 14px;
@@ -1026,6 +1081,8 @@
   }
   .campo-info-apto i { color: var(--azul-quinto); }
   .campo-info-apto strong { color: var(--azul-quinto); font-weight: 800; }
+  .campo-info-apto.erro { background: #fef2f2; border-color: #fecaca; color: var(--vermelho); }
+  .campo-info-apto.erro i, .campo-info-apto.erro strong { color: var(--vermelho); }
 
   /* ===== ESTADOS ===== */
   .loading-principal {
@@ -1149,9 +1206,14 @@
     <button class="modo-btn" id="modoMapa" onclick="abrirModalBairros()">
       <i class="fas fa-map-marked-alt"></i> Mapa
     </button>
-    <!-- ✅ NOVO BOTÃO OCULTAR VENDIDOS -->
     <button class="modo-btn" id="btnOcultarVendidos" onclick="toggleOcultarVendidos()">
       <i class="fas fa-eye"></i> Ocultar vendidos
+    </button>
+    
+    <!-- ✅ FILTRO FALHAS (Só aparece no Admin) -->
+    <button class="modo-btn" id="btnFalhas" onclick="toggleFiltroFalhas()" style="display:none;">
+      <i class="fas fa-exclamation-triangle"></i> Falhas
+      <span class="badge-falhas" id="badgeFalhasCount">0</span>
     </button>
   </div>
 </div>
@@ -1480,6 +1542,16 @@
       <textarea id="editChave" placeholder="Ex: Chave na portaria com o Sr. José, ligar antes"></textarea>
     </div>
     <input type="hidden" id="editImagem">
+    
+    <!-- ✅ CHECKBOX VENDIDO -->
+    <div class="check-vendido-wrap">
+      <input type="checkbox" id="editVendido">
+      <div class="check-vendido-txt">
+        Marcar como VENDIDO (forçar)
+        <span>Se o sistema do QuintoAndar falhar, marque aqui para forçar a tarja.</span>
+      </div>
+    </div>
+
     <div class="aviso-massivo">
       <i class="fas fa-exclamation-triangle"></i>
       Esta alteração será aplicada em <strong>todos os clientes</strong> que têm esse imóvel (mesmo código).
@@ -1563,6 +1635,7 @@ const state = {
   imovelAtual: null,
   filtroAtivo: false,
   modoAdmin: false,
+  filtroFalhas: false,
   imovelEditando: null,
   imovelClonando: null,
   ocultarVendidos: false,
@@ -1633,7 +1706,6 @@ function fmtPreco(valor){
   });
 }
 
-/* ✅ Formata sem R$ e sem decimais */
 function fmtValorLimpo(valor){
   const n = parseNumeroBR(valor);
   if(!n || n <= 0) return '';
@@ -1725,21 +1797,43 @@ function fmtAndar(andar){
 /* ✅ Usa im.apto (backend) → fallback im.chaveTexto (admin) */
 function infoAptoImovel(im){
   let numero = '';
-
-  // 1) Campo "apto" que o backend público agora retorna
   if(im.apto) numero = String(im.apto).replace(/\D/g, '');
-
-  // 2) Fallback: chaveTexto (versão admin sempre tem)
-  if(!numero && im.chaveTexto){
-    numero = extrairNumeroApto(im.chaveTexto);
-  }
-
+  if(!numero && im.chaveTexto) numero = extrairNumeroApto(im.chaveTexto);
+  
   const andar = calcularAndar(numero);
   return {
     numero,
     andar,
     andarTxt: fmtAndar(andar)
   };
+}
+
+/* ✅ VERIFICA SE TEM MÚLTIPLOS NÚMEROS NA CHAVE (ex: 1103 / 302) */
+function temMultiplosAptos(im) {
+  if (!im || !im.chaveTexto) return false;
+  const primeiraLinha = String(im.chaveTexto).split(/\r?\n/)[0] || '';
+  const matches = primeiraLinha.match(/\d{1,6}/g);
+  if (matches && matches.length > 1) return true;
+  return false;
+}
+
+/* ✅ VERIFICA SE O IMÓVEL TEM FALHA (filtro admin) */
+function imovelTemFalha(im) {
+  if (!im) return false;
+  const rua = String(im.rua || '').trim();
+  const numero = String(im.numero || '').trim();
+  const bairro = String(im.bairro || '').trim();
+  const chave = String(im.chaveTexto || '').trim();
+  const preco = parseNumeroBR(im.preco);
+
+  if (!rua) return true;
+  if (!numero) return true;
+  if (!bairro) return true;
+  if (!chave) return true;
+  if (preco <= 0) return true;
+  if (temMultiplosAptos(im)) return true;
+
+  return false;
 }
 
 function primeiraLinhaDescricao(descricao){
@@ -1989,6 +2083,11 @@ function aplicarFiltros(){
     arr = arr.filter(im => !im.vendido && !isVendido(im.descricao));
   }
 
+  // ✅ FILTRO FALHAS (Admin)
+  if(state.modoAdmin && state.filtroFalhas){
+    arr = arr.filter(im => imovelTemFalha(im));
+  }
+
   arr.sort((a, b) => {
     if(ordenacao === 'menor-preco') return parseNumeroBR(a.preco) - parseNumeroBR(b.preco);
     if(ordenacao === 'maior-preco') return parseNumeroBR(b.preco) - parseNumeroBR(a.preco);
@@ -2045,6 +2144,22 @@ function toggleOcultarVendidos(){
   } else {
     btn.classList.remove('ativo');
     btn.innerHTML = '<i class="fas fa-eye"></i> Ocultar vendidos';
+  }
+  
+  aplicarFiltros();
+}
+
+/* ✅ NOVO: Lógica do botão Falhas */
+function toggleFiltroFalhas(){
+  if(!state.modoAdmin) return;
+  state.filtroFalhas = !state.filtroFalhas;
+  const btn = $('btnFalhas');
+  
+  if(state.filtroFalhas){
+    btn.classList.add('ativo');
+    toast('Mostrando apenas imóveis com falhas', 'error');
+  } else {
+    btn.classList.remove('ativo');
   }
   
   aplicarFiltros();
@@ -2139,11 +2254,12 @@ function cardHTML(im){
   const i = parseNumeroBR(im.iptu);
   const infoApto = infoAptoImovel(im);
   const vendido = isVendido(im.descricao) || im.vendido;
+  const temFalhaApto = temMultiplosAptos(im);
 
   // ✅ NOVO LAYOUT: Tudo na mesma linha, sem R$, sem ícones
   if(c > 0) extras.push(`<span class="feat">Cond ${esc(fmtValorLimpo(im.condominio))}</span>`);
   if(i > 0) extras.push(`<span class="feat">IPTU ${esc(fmtValorLimpo(im.iptu))}</span>`);
-  if(infoApto.andarTxt) extras.push(`<span class="feat feat-andar">${esc(infoApto.andarTxt)}</span>`);
+  if(infoApto.andarTxt && !temFalhaApto) extras.push(`<span class="feat feat-andar">${esc(infoApto.andarTxt)}</span>`);
   if(vendido) extras.push(`<span class="feat feat-vendido">VENDIDO</span>`);
 
   const fotoStyle = im.imagem
@@ -2157,10 +2273,15 @@ function cardHTML(im){
   const descDuasLinhas = duasLinhasDescricao(im.descricao);
   const tipo = extrairTipoImovel(im.descricao);
 
-  // ✅ Admin: badge "Apto 402" DEPOIS do bairro
-  const aptoAdmin = (state.modoAdmin && infoApto.numero)
-    ? `<span class="apto-admin"><i class="fas fa-door-open"></i> Apto ${esc(infoApto.numero)}</span>`
-    : '';
+  // ✅ Admin: badge "Apto 402" DEPOIS do bairro, com aviso de erro
+  let aptoAdmin = '';
+  if(state.modoAdmin) {
+    if(temFalhaApto) {
+      aptoAdmin = `<span class="apto-erro"><i class="fas fa-exclamation-triangle"></i> Erro no Apto</span>`;
+    } else if(infoApto.numero) {
+      aptoAdmin = `<span class="apto-admin"><i class="fas fa-door-open"></i> Apto ${esc(infoApto.numero)}</span>`;
+    }
+  }
 
   const adminAcoes = state.modoAdmin ? `
     <div class="admin-acoes">
@@ -2278,14 +2399,12 @@ function abrirDetalhes(id){
 
   // ✅ NOVA LÓGICA DO BOTÃO DE ANÚNCIO
   if(vendido) {
-    // Se está vendido, o botão fica visível mas desativado/cinza
     $('detalheAnuncio').href = '#';
     $('detalheAnuncio').style.display = 'inline-flex';
     $('detalheAnuncio').style.opacity = '0.5';
     $('detalheAnuncio').style.pointerEvents = 'none';
     $('detalheAnuncio').innerHTML = '<i class="fas fa-external-link-alt"></i> Anúncio Indisponível';
   } else {
-    // Se não está vendido, funciona normal
     if(im.link){
       $('detalheAnuncio').href = im.link;
       $('detalheAnuncio').style.display = 'inline-flex';
@@ -2456,7 +2575,6 @@ async function abrirMapaParaBairro(bairro){
     normalizaTexto(im.bairro) === normalizaTexto(bairro)
   );
 
-  // ✅ Aplica o filtro de ocultar vendidos no mapa também
   if(state.ocultarVendidos){
     imoveisBairro = imoveisBairro.filter(im => !im.vendido && !isVendido(im.descricao));
   }
@@ -2595,6 +2713,7 @@ async function entrarModoAdmin(){
   state.modoAdmin = true;
   $('btnAdminGear').classList.add('ativo');
   $('adminBanner').classList.add('show');
+  $('btnFalhas').style.display = 'inline-flex'; // ✅ Mostra botão falhas
   toast('Modo admin ativado! 🔓', 'success');
   await Promise.all([
     carregarTodosImoveisAdmin(),
@@ -2602,12 +2721,16 @@ async function entrarModoAdmin(){
   ]);
   atualizarAdminInfo();
   renderizarCards();
+  calcularFalhasAdmin(); // ✅ Calcula as falhas
 }
 
 function sairModoAdmin(){
   state.modoAdmin = false;
+  state.filtroFalhas = false;
   $('btnAdminGear').classList.remove('ativo');
   $('adminBanner').classList.remove('show');
+  $('btnFalhas').style.display = 'none';
+  $('btnFalhas').classList.remove('ativo');
   toast('Modo admin desativado', 'success');
   renderizarCards();
 }
@@ -2615,6 +2738,24 @@ function sairModoAdmin(){
 function atualizarAdminInfo(){
   const el = $('adminTotalInfo');
   if(el) el.textContent = state.imoveisFiltrados.length + ' imóveis';
+}
+
+/* ✅ NOVO: Calcular total de falhas no Admin */
+function calcularFalhasAdmin(){
+  const falhas = state.imoveisUnicos.filter(im => imovelTemFalha(im));
+  const badge = $('badgeFalhasCount');
+  if(badge) badge.textContent = falhas.length;
+  
+  const btn = $('btnFalhas');
+  if(falhas.length > 0) {
+    btn.style.borderColor = 'var(--vermelho)';
+    btn.style.color = 'var(--vermelho)';
+    btn.style.background = '#fef2f2';
+  } else {
+    btn.style.borderColor = '#ffedd5';
+    btn.style.color = 'var(--laranja)';
+    btn.style.background = '#fff7ed';
+  }
 }
 
 function abrirModalEditarImovel(id){
@@ -2646,6 +2787,10 @@ function abrirModalEditarImovel(id){
   $('editChave').value      = imCompleto.chaveTexto || im.chaveTexto || '';
   $('editImagem').value     = imCompleto.imagem     || im.imagem     || '';
 
+  // ✅ Carrega o status Vendido
+  const isVend = isVendido(imCompleto.descricao || im.descricao) || imCompleto.vendido || im.vendido;
+  $('editVendido').checked = isVend;
+
   let corretorDetectado = '';
   if(linkSalvo){
     for(const [nome, sufixo] of Object.entries(FINAIS_LINK)){
@@ -2667,15 +2812,25 @@ function abrirModalEditarImovel(id){
   }
   atualizarPreview(imCompleto.imagem || im.imagem || '');
 
-  // ✅ Apto real (somente leitura)
+  // ✅ Apto real (somente leitura) com aviso de erro
   const chaveDoImovel = imCompleto.chaveTexto || im.chaveTexto || '';
   const infoAptoEd = infoAptoImovel({ chaveTexto: chaveDoImovel, apto: imCompleto.apto || im.apto });
-  if(infoAptoEd.numero){
-    $('infoAptoEditor').style.display = 'flex';
-    $('aptoEditorNumero').textContent = infoAptoEd.numero;
-    $('aptoEditorAndar').textContent = infoAptoEd.andarTxt || '—';
+  const temFalhaApto = temMultiplosAptos({ chaveTexto: chaveDoImovel });
+  
+  const infoAptoBox = $('infoAptoEditor');
+  if(infoAptoEd.numero || temFalhaApto){
+    infoAptoBox.style.display = 'flex';
+    if(temFalhaApto) {
+      infoAptoBox.classList.add('erro');
+      $('aptoEditorNumero').textContent = chaveDoImovel.split('\n')[0];
+      $('aptoEditorAndar').textContent = 'Múltiplos números!';
+    } else {
+      infoAptoBox.classList.remove('erro');
+      $('aptoEditorNumero').textContent = infoAptoEd.numero;
+      $('aptoEditorAndar').textContent = infoAptoEd.andarTxt || '—';
+    }
   } else {
-    $('infoAptoEditor').style.display = 'none';
+    infoAptoBox.style.display = 'none';
   }
 
   const total = contarClientesVinculados(im.codigo);
@@ -2780,6 +2935,9 @@ async function salvarEdicaoImovel(){
     }
   }
 
+  // ✅ Captura o status Vendido manual
+  const forcarVendido = $('editVendido').checked;
+
   const params = {
     senha: ADMIN_SENHA,
     codigo: im.codigo,
@@ -2792,7 +2950,8 @@ async function salvarEdicaoImovel(){
     link: linkFinal,
     imagem: $('editImagem').value.trim(),
     descricao: $('editDescricao').value,
-    chaveTexto: $('editChave').value.trim()
+    chaveTexto: $('editChave').value.trim(),
+    vendido: forcarVendido // Envia para o backend se tiver suporte, senão faremos fallback
   };
 
   try {
@@ -2806,7 +2965,10 @@ async function salvarEdicaoImovel(){
     toast(`✅ Atualizado em ${res.total} cliente(s)!`, 'success');
     fecharModalEditarImovel();
     await carregarImoveis();
-    if(state.modoAdmin) await carregarTodosImoveisAdmin();
+    if(state.modoAdmin) {
+      await carregarTodosImoveisAdmin();
+      calcularFalhasAdmin();
+    }
   } catch(e){
     toast('Erro ao salvar: ' + e.message, 'error');
     btn.disabled = false;
@@ -3033,6 +3195,7 @@ window.sairDoMapa = sairDoMapa;
 window.sairDoMapaTotalmente = sairDoMapaTotalmente;
 window.trocarModo = trocarModo;
 window.toggleOcultarVendidos = toggleOcultarVendidos;
+window.toggleFiltroFalhas = toggleFiltroFalhas;
 window.abrirModalBuscaAvancada = abrirModalBuscaAvancada;
 window.fecharModalBuscaAvancada = fecharModalBuscaAvancada;
 window.aplicarFiltrosAvancados = aplicarFiltrosAvancados;
