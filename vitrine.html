@@ -486,6 +486,37 @@
     pointer-events: none;
   }
 
+  /* ✅ CARD VENDIDO */
+  .card.card-vendido{
+    opacity: .85;
+    filter: grayscale(40%);
+  }
+  .card.card-vendido .card-img{
+    filter: brightness(.7);
+  }
+  .tarja-vendido{
+    position: absolute; inset: 0;
+    pointer-events: none; z-index: 4;
+    overflow: hidden;
+    background: linear-gradient(135deg, rgba(220, 38, 38, 0.05) 0%, rgba(220, 38, 38, 0.15) 100%);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .tarja-vendido::before{
+    content: 'VENDIDO';
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%) rotate(-15deg);
+    font-size: 1.6rem; font-weight: 800;
+    letter-spacing: 6px; color: #fff;
+    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+    padding: 6px 22px;
+    border: 3px solid #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(220, 38, 38, 0.45), 0 0 0 2px rgba(220, 38, 38, 0.25);
+    white-space: nowrap;
+    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+    z-index: 5;
+  }
+
   .badge-novo{
     position: absolute; top: 8px; left: 8px;
     background: linear-gradient(135deg, #16a34a 0%, #22c55e 100%);
@@ -558,7 +589,6 @@
     text-shadow: 0 1px 2px rgba(0,0,0,.4);
   }
 
-    /* ✅ Badge extraído de *asteriscos* — dentro da foto, canto superior esquerdo */
   .card-tag-topo{
     position: absolute;
     top: 8px;
@@ -670,6 +700,17 @@
   .card-actions .btn-action.btn-reativar.salvando{
     pointer-events: none;
     opacity: .7;
+  }
+
+  /* ✅ AVISO INDISPONÍVEL NO LUGAR DOS BOTÕES */
+  .aviso-indisponivel {
+    grid-column: 1 / -1;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    background: #f1f5f9; color: #64748b;
+    border: 1px dashed #cbd5e1;
+    padding: 12px; border-radius: var(--radius-sm);
+    font-size: .75rem; font-weight: 700;
+    text-align: center;
   }
 
   .btn-ver-anuncio{
@@ -1470,9 +1511,6 @@ function formatarPreco(valor){
    ✅ EXTRAI SPECS DA DESCRIÇÃO
    - Sempre pega só a 1ª linha (overlay sobre a foto)
    - Extrai o que estiver entre *asteriscos* para virar "badge" no topo
-   Ex.: "178m², 4 quartos e 2 vagas *Cobertura*"
-        → specs = "178m², 4 quartos e 2 vagas"
-        → badge = "Cobertura"
 ============================================================ */
 function extrairSpecsDescricao(descricao){
   if(!descricao) return { specs: '', badge: '' };
@@ -1482,16 +1520,13 @@ function extrairSpecsDescricao(descricao){
 
   let linha1 = linhas[0] || '';
 
-  // ✅ Extrai o que está entre *asteriscos* (primeira ocorrência)
   let badge = '';
   const mBadge = linha1.match(/\*([^*]+)\*/);
   if(mBadge && mBadge[1]){
     badge = mBadge[1].trim();
-    // Remove o *...* da linha 1 para não aparecer duplicado
     linha1 = linha1.replace(mBadge[0], '').replace(/\s{2,}/g, ' ').trim();
   }
 
-  // Valida se a linha1 parece ter specs de imóvel
   const temM2 = /\d+\s*m[²2]/i.test(linha1);
   const temKeyword = /\b(quarto|quartos|vaga|vagas|suíte|suite|sala|salas|banheiro|banheiros|dormitório|dormitorio|dormitórios|dormitorios|privativa|privativo|área|area|terreno)\b/i.test(linha1);
   const temNumero = /\d/.test(linha1);
@@ -1597,6 +1632,52 @@ function enderecoCompleto_(im){
   if(c.bairro) t += (t ? ' - ' : '') + c.bairro;
   return t || String(im && im.titulo || '').trim() || 'Endereço não informado';
 }
+
+/* =====================================================
+   ✅ ANDAR / APARTAMENTO (NOVO)
+===================================================== */
+function extrairNumeroApto(chaveTexto){
+  if(!chaveTexto) return '';
+  const primeiraLinha = String(chaveTexto).split(/\r?\n/)[0] || '';
+  const m = primeiraLinha.match(/(?:apto?|ap|apartamento)?\s*[•·:]?\s*(\d{1,6})/i);
+  return m ? m[1] : '';
+}
+
+function calcularAndar(numeroApto){
+  const n = String(numeroApto || '').replace(/\D/g, '');
+  if(!n) return 0;
+  if(n.length <= 2) return 1;
+  if(n.length === 3) return parseInt(n[0], 10);
+  const semPrimeiro = n.slice(1);
+  return parseInt(semPrimeiro[0], 10) || 0;
+}
+
+function infoAptoImovel(im){
+  let numero = '';
+  if(im.apto) numero = String(im.apto).replace(/\D/g, '');
+  if(!numero && im.chaveTexto) numero = extrairNumeroApto(im.chaveTexto);
+  
+  const andar = calcularAndar(numero);
+  return {
+    numero,
+    andar,
+    andarTxt: andar > 0 ? `${andar}º andar` : ''
+  };
+}
+
+function isVendidoFrontend(im){
+  // Verifica o campo vindo do backend ou a tag *vendido* na descrição (fallback)
+  if(im.vendido) return true;
+  if(!im.descricao) return false;
+  const matches = String(im.descricao).match(/\*+([^*\n]+)\*+/g);
+  if(!matches) return false;
+  for(const m of matches){
+    const texto = m.replace(/\*/g, '').trim().toLowerCase();
+    if(texto.includes('vendido')) return true;
+  }
+  return false;
+}
+/* ===================================================== */
 
 function carregarVistos(){
   try {
@@ -2463,7 +2544,6 @@ function abrirAjudaPWA(){
 }
 
 function fecharAjudaPWA(){
-  // ✅ Só fecha o modal. O botão do header continua sempre visível.
   $('pwaBackdrop').classList.remove('show');
 }
 
@@ -2505,6 +2585,11 @@ function renderizarImoveis(){
   } else {
     const ordemStatus = { 'pendente': 1, 'quero-visitar': 2, 'gostei': 3, 'nao-gostei': 4 };
     lista.sort((a,b) => {
+      // ✅ Vendidos sempre vão para o final
+      const va = isVendidoFrontend(a) ? 1 : 0;
+      const vb = isVendidoFrontend(b) ? 1 : 0;
+      if (va !== vb) return va - vb;
+
       const na = imovelEhNovo(a) ? 0 : 1;
       const nb = imovelEhNovo(b) ? 0 : 1;
       if(na !== nb) return na - nb;
@@ -2580,19 +2665,23 @@ function renderizarImoveis(){
 
 function cardHTML(im, idx){
   const statusAtual = im.status || 'pendente';
-  const descartado = statusAtual === 'nao-gostei';
+  const vendido = isVendidoFrontend(im);
+  
+  // Se vendido, forçamos o status para descartado visualmente (não conta nas métricas)
+  const descartado = (!vendido && statusAtual === 'nao-gostei');
+  const infoApto = infoAptoImovel(im);
 
   const statusClass = {
     'gostei':'status-gostei','nao-gostei':'status-nao-gostei',
     'quero-visitar':'status-quero-visitar','pendente':'status-pendente'
   }[statusAtual] || 'status-pendente';
 
-  const statusLabel = {
+  const statusLabel = vendido ? 'Vendido' : ({
     'gostei':'Gostei',
     'nao-gostei':'Não tenho interesse',
     'quero-visitar':'Visitar',
     'pendente':''
-  }[statusAtual] || '';
+  }[statusAtual] || '');
 
   const img = im.imagem || 'https://via.placeholder.com/400x300/e2e8f0/64748b?text=Sem+imagem';
   const id = esc(im.id);
@@ -2610,7 +2699,7 @@ function cardHTML(im, idx){
 
   const descId = 'desc-' + id;
 
-  const cardExtraClass = descartado ? ' card-nao-gostei' : '';
+  const cardExtraClass = vendido ? ' card-vendido' : (descartado ? ' card-nao-gostei' : '');
   const salvando = !!state.salvandoIds[im.id];
   const disabledAttr = salvando ? 'disabled' : '';
 
@@ -2622,9 +2711,14 @@ function cardHTML(im, idx){
   const precoFmt = formatarPreco(im.preco);
   const condFmt = String(im.condominio || '').trim();
   const iptuFmt = String(im.iptu || '').trim();
-  const temPrecoSec = condFmt || iptuFmt;
+  
+  // ✅ Monta a linha de preços secundários com o andar incluído
+  const partesPrecoSec = [];
+  if(condFmt) partesPrecoSec.push(`Cond. ${esc(condFmt)}`);
+  if(iptuFmt) partesPrecoSec.push(`IPTU ${esc(iptuFmt)}`);
+  if(infoApto.andarTxt) partesPrecoSec.push(esc(infoApto.andarTxt));
+  const temPrecoSec = partesPrecoSec.length > 0;
 
-  // ✅ Specs: só a 1ª linha no overlay + badge (asteriscos) no topo
   const specsInfo = extrairSpecsDescricao(im.descricao);
   const specsHtml = specsInfo.specs
     ? `<div class="card-overlay-specs">${esc(specsInfo.specs)}</div>`
@@ -2633,7 +2727,7 @@ function cardHTML(im, idx){
     ? `<div class="card-tag-topo">${esc(specsInfo.badge)}</div>`
     : '';
 
-  const ehNovo = imovelEhNovo(im);
+  const ehNovo = imovelEhNovo(im) && !vendido; // ✅ Vendido não ganha badge de NOVO
   const badgeNovoHtml = ehNovo ? `<div class="badge-novo">NOVO</div>` : '';
   const animDelay = Math.min(idx * 30, 400);
 
@@ -2644,36 +2738,69 @@ function cardHTML(im, idx){
   const iconeV = salvando ? spinnerHtml : '📅';
   const iconeN = salvando ? spinnerHtml : '❌';
 
-  // ✅ AÇÕES: se descartado → 1 botão grande "Reativar este imóvel"
-  //              se normal   → 3 botões (Gostei / Visitar / Não)
-  const acoesHtml = descartado
-    ? `
-      <div class="card-actions" onclick="event.stopPropagation();">
-        <button class="btn-action btn-reativar ${salvando ? 'salvando' : ''}" ${disabledAttr} onclick="marcar('${id}','nao-gostei')" title="Reativar este imóvel">
-          <span class="icone">${salvando ? spinnerHtml : '↻'}</span>
-          <span>Reativar este imóvel</span>
-        </button>
-      </div>
-    `
-    : `
-      <div class="card-actions" onclick="event.stopPropagation();">
-        <button class="btn-action act-gostei ${btnGostei} ${salvando ? 'salvando' : ''}" ${disabledAttr} onclick="marcar('${id}','gostei')" title="Gostei">
-          <span class="icone">${iconeG}</span>
-          <span>Gostei</span>
-        </button>
-        <button class="btn-action act-visitar ${btnVisitar} ${salvando ? 'salvando' : ''}" ${disabledAttr} onclick="marcar('${id}','quero-visitar')" title="Quero visitar">
-          <span class="icone">${iconeV}</span>
-          <span>Visitar</span>
-        </button>
-                <button class="btn-action act-nao ${btnNao} ${salvando ? 'salvando' : ''}" ${disabledAttr} onclick="marcar('${id}','nao-gostei')" title="Não gostei">
-          <span class="icone">${iconeN}</span>
-          <span>Não Gostei</span>
-        </button>
+  // ✅ LÓGICA DE AÇÕES E OBSERVAÇÕES
+  let acoesHtml = '';
+  let obsHtml = '';
+  let tarjaHtml = '';
+
+  if (vendido) {
+    tarjaHtml = '<div class="tarja-vendido"></div>';
+    acoesHtml = `
+      <div class="card-actions">
+        <div class="aviso-indisponivel">
+          🚫 Imóvel Indisponível
+        </div>
       </div>
     `;
+    // Não exibe observação se estiver vendido
+    obsHtml = '';
+  } else {
+    acoesHtml = descartado
+      ? `
+        <div class="card-actions" onclick="event.stopPropagation();">
+          <button class="btn-action btn-reativar ${salvando ? 'salvando' : ''}" ${disabledAttr} onclick="marcar('${id}','nao-gostei')" title="Reativar este imóvel">
+            <span class="icone">${salvando ? spinnerHtml : '↻'}</span>
+            <span>Reativar este imóvel</span>
+          </button>
+        </div>
+      `
+      : `
+        <div class="card-actions" onclick="event.stopPropagation();">
+          <button class="btn-action act-gostei ${btnGostei} ${salvando ? 'salvando' : ''}" ${disabledAttr} onclick="marcar('${id}','gostei')" title="Gostei">
+            <span class="icone">${iconeG}</span>
+            <span>Gostei</span>
+          </button>
+          <button class="btn-action act-visitar ${btnVisitar} ${salvando ? 'salvando' : ''}" ${disabledAttr} onclick="marcar('${id}','quero-visitar')" title="Quero visitar">
+            <span class="icone">${iconeV}</span>
+            <span>Visitar</span>
+          </button>
+          <button class="btn-action act-nao ${btnNao} ${salvando ? 'salvando' : ''}" ${disabledAttr} onclick="marcar('${id}','nao-gostei')" title="Não gostei">
+            <span class="icone">${iconeN}</span>
+            <span>Não Gostei</span>
+          </button>
+        </div>
+      `;
+      
+    obsHtml = `
+      <div class="obs-wrap" id="${obsId}" onclick="event.stopPropagation();">
+        <div class="obs-label">
+          💬 Observação
+          <button class="obs-edit-btn" onclick="abrirEdicaoObs('${obsId}')">✏️ Editar</button>
+        </div>
+        ${obsTexto ? `
+          <div class="obs-text ${obsLonga ? '' : 'expandido'}" id="${obsId}-text">${esc(obsTexto)}</div>
+          ${obsLonga ? `<button class="obs-toggle" onclick="toggleObs('${obsId}')" id="${obsId}-toggle">▼ Ver mais</button>` : ''}
+        ` : `<div class="obs-empty" onclick="abrirEdicaoObs('${obsId}')">Escreva aqui o que achou do imóvel.</div>`}
+        <textarea class="obs-textarea" id="${obsId}-input" placeholder="Escreva aqui...">${esc(obsTexto)}</textarea>
+        <div class="obs-edit-actions">
+          <button class="btn btn-primary btn-sm" style="flex:1; padding:8px; border-radius:6px; font-size:.75rem;" onclick="salvarEdicaoObs('${id}', '${obsId}')">💾 Salvar</button>
+          <button class="btn btn-ghost btn-sm" style="padding:8px; border-radius:6px; font-size:.75rem;" onclick="cancelarEdicaoObs('${obsId}')">Cancelar</button>
+        </div>
+      </div>
+    `;
+  }
 
-  // ✅ Foto clicável → abre o anúncio (se tiver link)
-  const imgClickAttr = im.link
+  const imgClickAttr = (im.link && !vendido)
     ? `onclick="event.stopPropagation(); clicarAnuncio('${id}'); window.open('${esc(im.link)}', '_blank', 'noopener');" style="cursor:pointer;"`
     : '';
 
@@ -2687,6 +2814,7 @@ function cardHTML(im, idx){
              onerror="this.src='https://via.placeholder.com/400x300/e2e8f0/64748b?text=Sem+imagem'">
         ${badgeTagHtml}
         ${specsHtml}
+        ${tarjaHtml}
       </div>
 
       <div class="card-body">
@@ -2694,9 +2822,7 @@ function cardHTML(im, idx){
         ${precoFmt ? `<div class="card-preco">${esc(precoFmt)}</div>` : ''}
         ${temPrecoSec ? `
           <div class="card-preco-sec">
-            ${condFmt ? `Cond. ${esc(condFmt)}` : ''}
-            ${condFmt && iptuFmt ? '<span class="sep">·</span>' : ''}
-            ${iptuFmt ? `IPTU ${esc(iptuFmt)}` : ''}
+            ${partesPrecoSec.join(' <span class="sep">·</span> ')}
           </div>
         ` : ''}
       </div>
@@ -2716,24 +2842,7 @@ function cardHTML(im, idx){
       ` : ''}
 
       ${acoesHtml}
-
-            ${'' /* Botão "Ver Todas as Fotos" removido — clique na imagem abre o anúncio */}
-
-      <div class="obs-wrap" id="${obsId}" onclick="event.stopPropagation();">
-        <div class="obs-label">
-          💬 Observação
-          <button class="obs-edit-btn" onclick="abrirEdicaoObs('${obsId}')">✏️ Editar</button>
-        </div>
-        ${obsTexto ? `
-          <div class="obs-text ${obsLonga ? '' : 'expandido'}" id="${obsId}-text">${esc(obsTexto)}</div>
-          ${obsLonga ? `<button class="obs-toggle" onclick="toggleObs('${obsId}')" id="${obsId}-toggle">▼ Ver mais</button>` : ''}
-        ` : `<div class="obs-empty" onclick="abrirEdicaoObs('${obsId}')">Escreva aqui o que achou do imóvel.</div>`}
-        <textarea class="obs-textarea" id="${obsId}-input" placeholder="Escreva aqui...">${esc(obsTexto)}</textarea>
-        <div class="obs-edit-actions">
-          <button class="btn btn-primary btn-sm" style="flex:1; padding:8px; border-radius:6px; font-size:.75rem;" onclick="salvarEdicaoObs('${id}', '${obsId}')">💾 Salvar</button>
-          <button class="btn btn-ghost btn-sm" style="padding:8px; border-radius:6px; font-size:.75rem;" onclick="cancelarEdicaoObs('${obsId}')">Cancelar</button>
-        </div>
-      </div>
+      ${obsHtml}
     </div>
   `;
 }
@@ -2759,6 +2868,8 @@ async function marcar(id, acao){
   if(state.salvandoIds[id]) return;
   const im = state.imoveis.find(i => i.id === id);
   if(!im) return;
+  
+  if (isVendidoFrontend(im)) return; // Bloqueia ação se estiver vendido
 
   const statusAtual = im.status || 'pendente';
   const novaAcao = (statusAtual === acao) ? 'pendente' : acao;
