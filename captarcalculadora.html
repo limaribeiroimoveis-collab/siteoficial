@@ -41,14 +41,17 @@
   .ico-lg{ width: 20px; height: 20px; }
   .ico-fill{ fill: currentColor; stroke: none; }
 
-  /* ------------ HEADER ------------ */
-  .capt-header{ background: #fff; border-bottom: 1px solid var(--border); padding: 14px 22px; position: sticky; top: 0; z-index: 50; box-shadow: var(--shadow-xs); }
+  /* ------------ HEADER NOVO (Fundo Vermelho) ------------ */
+  .capt-header{ background: #7f1d1d; border-bottom: none; padding: 14px 22px; position: sticky; top: 0; z-index: 50; box-shadow: var(--shadow-sm); }
   .capt-header-inner{ max-width: 1600px; margin: 0 auto; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
-  .capt-title{ display: flex; align-items: center; gap: 10px; font-size: 1.1rem; font-weight: 700; letter-spacing: -.01em; }
-  .capt-title .ico{ color: #16a34a; width: 22px; height: 22px; }
-  .capt-resumo{ font-size: .74rem; color: var(--text-soft); font-weight: 600; background: var(--bg); padding: 5px 12px; border-radius: 999px; white-space: nowrap; }
+  .capt-title{ display: flex; align-items: center; gap: 10px; font-size: 1.1rem; font-weight: 700; letter-spacing: -.01em; color: #fff; }
+  .capt-title .ico{ color: #fff; opacity: .85; width: 22px; height: 22px; }
+  .capt-resumo{ font-size: .74rem; color: #fecaca; font-weight: 600; background: rgba(0,0,0,.2); padding: 6px 12px; border-radius: 999px; white-space: nowrap; }
   .capt-spacer{ flex: 1; min-width: 20px; }
   .capt-header-actions{ display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  
+  .btn-header-icon { background: transparent; border: 1px solid rgba(255,255,255,.2); color: #fff; border-radius: 6px; width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; transition: all .15s; padding: 0; }
+  .btn-header-icon:hover { background: rgba(255,255,255,.1); border-color: rgba(255,255,255,.4); }
 
   /* ------------ FILTROS ------------ */
   .capt-filtros{ background: #fff; border-bottom: 1px solid var(--border); padding: 12px 22px; position: sticky; top: 60px; z-index: 40; }
@@ -236,9 +239,8 @@
     <span class="capt-resumo" id="captResumo">Carregando...</span>
     <div class="capt-spacer"></div>
     <div class="capt-header-actions">
-      <button class="btn btn-ghost btn-sm" onclick="carregarCaptacoes(true)">
-        <svg class="ico ico-sm" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
-        Atualizar
+      <button class="btn-header-icon" onclick="carregarCaptacoes(true)" title="Atualizar">
+        <svg class="ico" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
       </button>
     </div>
   </div>
@@ -454,7 +456,6 @@ function fmtTel(t){
   return String(t || '');
 }
 
-// ✅ NOVA FUNÇÃO PARA FORMATAR VALORES
 function fmtMoeda(v) {
   if (!v) return '';
   let limpo = String(v).replace(/\D/g, '');
@@ -518,7 +519,6 @@ function nomeCompletoCliente_(nome, telefone){
   return n;
 }
 
-/* Parse da coluna "origem" - MANTIDO PARA COMPATIBILIDADE */
 function parseOrigem_(origemBruta){
   const out = {
     fase: '', nome: '', telefone: '', endereco: '',
@@ -677,8 +677,9 @@ function atualizarContadores(){
   const elC = $('cntConcluidas'); if(elC) elC.textContent = concluidas;
   const elT = $('cntTodas'); if(elT) elT.textContent = total;
 
+  // RESUMO NO CABEÇALHO
   const resumo = $('captResumo');
-  if(resumo){ resumo.textContent = `${pendentes} pendente${pendentes===1?'':'s'} · ${semRetorno} sem retorno · ${concluidas} concluída${concluidas===1?'':'s'}`; }
+  if(resumo){ resumo.textContent = `${total} leads • ${pendentes} pendentes • ${semRetorno} sem retorno • ${concluidas} concluídos`; }
 }
 
 /* =====================================================
@@ -1341,8 +1342,8 @@ document.addEventListener('visibilitychange', () => {
       const header = document.querySelector('.capt-header-actions');
       if (header) {
         const btnFechar = document.createElement('button');
-        btnFechar.className = 'btn btn-ghost btn-sm'; btnFechar.style.marginLeft = '8px';
-        btnFechar.innerHTML = `<svg class="ico ico-sm" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> Fechar`;
+        btnFechar.className = 'btn-header-icon'; btnFechar.style.marginLeft = '8px';
+        btnFechar.innerHTML = `<svg class="ico ico-sm" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
         btnFechar.onclick = () => avisarPai('fechar');
         header.appendChild(btnFechar);
       }
