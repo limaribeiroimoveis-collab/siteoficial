@@ -1,0 +1,2463 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Admin · Lima Ribeiro Imóveis</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23001EF0'/><text x='50' y='68' font-family='sans-serif' font-size='48' font-weight='800' fill='white' text-anchor='middle'>LR</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --azul-quinto: #001EF0;
+    --azul-escuro: #0011a0;
+    --azul-claro: #e8edff;
+    --cinza-claro: #f0f2f8;
+    --branco: #ffffff;
+    --texto-escuro: #1a1a2e;
+    --texto-cinza: #5a5a72;
+    --muted: #94a3b8;
+    --borda: #e2e8f0;
+    --borda-forte: #cbd5e1;
+    --verde: #16a34a;
+    --vermelho: #dc2626;
+    --laranja: #ea580c;
+    --roxo: #7c3aed;
+    --sombra-suave: 0 8px 32px rgba(0, 30, 240, 0.06);
+    --sombra-media: 0 12px 48px rgba(0, 30, 240, 0.10);
+    --sombra-forte: 0 20px 60px rgba(0, 30, 240, 0.18);
+    --radius: 14px;
+    --radius-lg: 20px;
+  }
+
+  body {
+    background: #e8ecf3;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: var(--texto-escuro);
+    line-height: 1.5;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .navbar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 20px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    position: sticky; top: 0; z-index: 1000;
+    border-bottom: 1px solid rgba(0, 30, 240, 0.06);
+    gap: 12px; flex-wrap: wrap;
+  }
+  .navbar .logo-link { display: flex; align-items: center; text-decoration: none; }
+  .navbar .logo-img { height: 44px; width: auto; }
+  .navbar .nav-links { display: flex; gap: 20px; align-items: center; flex-wrap: wrap; }
+  .navbar .nav-links a { color: var(--texto-escuro); text-decoration: none; font-weight: 500; font-size: 0.88rem; transition: 0.2s; white-space: nowrap; }
+  .navbar .nav-links a:hover { color: var(--azul-quinto); }
+  .navbar .nav-links a.destaque { background: var(--azul-quinto); color: #fff; padding: 8px 16px; border-radius: 40px; font-weight: 600; }
+  .navbar .nav-links a.destaque:hover { background: var(--azul-escuro); }
+
+  .btn-admin-gear {
+    position: fixed; top: 76px; right: 16px;
+    z-index: 999; width: 42px; height: 42px;
+    border-radius: 50%; background: rgba(26, 26, 46, 0.82);
+    color: #fff; border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+    transition: 0.2s; backdrop-filter: blur(8px);
+  }
+  .btn-admin-gear:hover { transform: scale(1.1) rotate(45deg); background: var(--azul-quinto); }
+  .btn-admin-gear.ativo { background: var(--verde); animation: pulse-gear 2s infinite; }
+  @keyframes pulse-gear {
+    0%, 100% { box-shadow: 0 4px 16px rgba(22, 163, 74, 0.4); }
+    50% { box-shadow: 0 4px 24px rgba(22, 163, 74, 0.8); }
+  }
+
+  .admin-banner {
+    background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+    color: #fff; padding: 10px 20px;
+    text-align: center; font-size: 0.82rem;
+    font-weight: 700; letter-spacing: 0.3px;
+    z-index: 998; position: relative;
+    box-shadow: 0 4px 12px rgba(22, 163, 74, 0.25);
+    display: flex; align-items: center; justify-content: center;
+    gap: 12px; flex-wrap: wrap;
+  }
+  .admin-banner .badge { background: rgba(255, 255, 255, 0.22); padding: 3px 10px; border-radius: 20px; font-size: 0.72rem; }
+  .admin-banner .btn-sair-admin { background: rgba(0, 0, 0, 0.25); color: #fff; border: none; padding: 5px 14px; border-radius: 20px; font-family: inherit; font-weight: 700; font-size: 0.72rem; cursor: pointer; transition: 0.2s; }
+  .admin-banner .btn-sair-admin:hover { background: rgba(0, 0, 0, 0.4); }
+
+  /* ===== BARRA DE CLONAGEM EXPANSÍVEL ===== */
+  .barra-clonagem-wrap {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    z-index: 1500; display: none; flex-direction: column;
+  }
+  .barra-clonagem-wrap.show { display: flex; }
+  
+  .barra-clonagem-header {
+    background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%);
+    color: #fff; padding: 12px 20px;
+    box-shadow: 0 -6px 24px rgba(124, 58, 237, 0.4);
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 14px; flex-wrap: wrap;
+    border-radius: 20px 20px 0 0;
+  }
+  .barra-clonagem-header .info { display: flex; align-items: center; gap: 10px; font-size: 0.9rem; font-weight: 700; flex: 1; min-width: 0; cursor: pointer; }
+  .barra-clonagem-header .info i { font-size: 1.15rem; flex-shrink: 0; }
+  .barra-clonagem-header .info .cont { background: rgba(255,255,255,0.25); padding: 2px 10px; border-radius: 20px; font-size: 0.8rem; }
+  .barra-clonagem-header .acoes-barra { display: flex; gap: 8px; flex-wrap: wrap; }
+  .barra-clonagem-header .btn-barra { padding: 9px 16px; border-radius: 10px; border: none; font-family: inherit; font-weight: 700; font-size: 0.82rem; cursor: pointer; transition: 0.15s; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+  .barra-clonagem-header .btn-barra.limpar { background: rgba(255,255,255,0.2); color: #fff; }
+  .barra-clonagem-header .btn-barra.limpar:hover { background: rgba(255,255,255,0.35); }
+  .barra-clonagem-header .btn-barra.confirmar { background: #fff; color: #5b21b6; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+  .barra-clonagem-header .btn-barra.confirmar:hover { background: #f3f0ff; transform: scale(1.02); }
+
+  .barra-clonagem-lista {
+    background: #fff; max-height: 300px; overflow-y: auto;
+    border-top: 1px solid var(--borda);
+    padding: 10px 20px;
+    box-shadow: 0 -4px 12px rgba(0,0,0,0.05);
+    display: none; flex-direction: column; gap: 8px;
+  }
+  .barra-clonagem-lista.show { display: flex; }
+  .clonar-item-lista {
+    display: flex; align-items: center; gap: 12px;
+    background: var(--cinza-claro); border-radius: 10px; padding: 10px;
+    border: 1px solid var(--borda);
+  }
+  .clonar-item-lista .thumb { width: 50px; height: 50px; border-radius: 8px; object-fit: cover; background: #ddd; flex-shrink: 0; }
+  .clonar-item-lista .dados { flex: 1; min-width: 0; }
+  .clonar-item-lista .dados .titulo { font-size: 0.85rem; font-weight: 800; color: var(--texto-escuro); margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .clonar-item-lista .dados .end { font-size: 0.74rem; color: var(--texto-cinza); font-weight: 600; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .clonar-item-lista .dados .desc { font-size: 0.7rem; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .clonar-item-lista .dados .valor { font-size: 0.8rem; font-weight: 800; color: var(--azul-quinto); margin-top: 2px; }
+  .clonar-item-lista .btn-remover { background: transparent; border: none; color: var(--vermelho); cursor: pointer; padding: 6px; font-size: 1.1rem; border-radius: 50%; transition: 0.15s; display: flex; align-items: center; justify-content: center; }
+  .clonar-item-lista .btn-remover:hover { background: #fee2e2; }
+
+  /* Card Marcado para Clonagem */
+  .imovel-card.card-marcado-clonar {
+    outline: 3px solid var(--roxo) !important;
+    outline-offset: -3px;
+    box-shadow: 0 8px 28px rgba(124, 58, 237, 0.35) !important;
+    position: relative;
+  }
+  .imovel-card.card-marcado-clonar::after {
+    content: '\f00c';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    position: absolute; top: 10px; right: 10px;
+    width: 32px; height: 32px;
+    background: var(--roxo); color: #fff;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.9rem; z-index: 10;
+    box-shadow: 0 4px 12px rgba(124, 58, 237, 0.5);
+    border: 2px solid #fff;
+    pointer-events: none;
+  }
+  .imovel-card .btn-a.btn-clonar.marcado { background: var(--vermelho) !important; color: #fff !important; border-color: var(--vermelho) !important; }
+  .imovel-card .btn-a.btn-clonar.marcado:hover { background: #b91c1c !important; }
+
+  .progresso-clonagem-wrap { background: #f3f0ff; border: 1px solid #c4b5fd; border-radius: 10px; padding: 12px 14px; margin-bottom: 16px; display: none; }
+  .progresso-clonagem-wrap.show { display: block; }
+  .progresso-clonagem-wrap .barra-ext { width: 100%; height: 10px; background: #e9e3ff; border-radius: 6px; overflow: hidden; margin: 8px 0; }
+  .progresso-clonagem-wrap .barra-int { height: 100%; background: linear-gradient(90deg, #7c3aed, #5b21b6); border-radius: 6px; transition: width 0.4s ease; width: 0%; }
+  .progresso-clonagem-wrap .lbl { font-size: 0.78rem; font-weight: 700; color: #5b21b6; display: flex; justify-content: space-between; }
+  .progresso-clonagem-wrap .detalhe { font-size: 0.72rem; color: #7c3aed; margin-top: 4px; font-family: 'SF Mono', Menlo, monospace; }
+  .progresso-clonagem-wrap .log { max-height: 130px; overflow-y: auto; font-family: 'SF Mono', Menlo, monospace; font-size: 0.72rem; color: #5b21b6; background: #fff; border-radius: 6px; padding: 8px; margin-top: 6px; line-height: 1.5; }
+  .progresso-clonagem-wrap .log .ok { color: var(--verde); }
+  .progresso-clonagem-wrap .log .erro { color: var(--vermelho); }
+
+  .hero-imoveis { background: linear-gradient(135deg, #001EF0 0%, #0044ff 100%); color: #fff; padding: 18px 20px; text-align: center; }
+  .hero-imoveis .hero-inner { display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; max-width: 1200px; margin: 0 auto; }
+  .hero-imoveis h1 { font-size: 1.15rem; font-weight: 800; letter-spacing: -0.3px; line-height: 1.2; margin: 0; }
+  .hero-imoveis .contador { display: inline-flex; align-items: center; gap: 6px; background: rgba(255, 255, 255, 0.18); padding: 5px 14px; border-radius: 40px; font-size: 0.76rem; font-weight: 700; backdrop-filter: blur(6px); white-space: nowrap; }
+
+  .container { max-width: 1400px; margin: 0 auto; padding: 0 20px; }
+
+  .modo-selector { display: flex; justify-content: center; gap: 10px; margin-top: 18px; margin-bottom: 4px; flex-wrap: wrap; }
+  .modo-btn { display: inline-flex; align-items: center; gap: 8px; background: #fff; border: 1.5px solid var(--borda); border-radius: 40px; padding: 9px 20px; cursor: pointer; font-family: inherit; font-size: 0.84rem; font-weight: 700; color: var(--texto-cinza); transition: all 0.18s; box-shadow: 0 2px 8px rgba(0, 30, 240, 0.04); white-space: nowrap; }
+  .modo-btn i { font-size: 0.9rem; }
+  .modo-btn:hover { border-color: var(--azul-claro); color: var(--azul-quinto); }
+  .modo-btn.ativo { background: var(--azul-quinto); color: #fff; border-color: var(--azul-quinto); box-shadow: 0 6px 16px rgba(0, 30, 240, 0.2); }
+  #btnFalhas { background: #fff7ed; color: var(--laranja); border-color: #ffedd5; }
+  #btnFalhas:hover { border-color: var(--laranja); }
+  #btnFalhas.ativo { background: var(--laranja); color: #fff; border-color: var(--laranja); box-shadow: 0 6px 16px rgba(234, 88, 12, 0.3); }
+  #btnFalhas .badge-falhas { background: var(--vermelho); color: #fff; padding: 2px 7px; border-radius: 10px; font-size: 0.65rem; margin-left: 4px; }
+
+  .barra-busca-wrap { background: #fff; border-radius: var(--radius); padding: 12px; margin-top: 14px; box-shadow: var(--sombra-suave); border: 1px solid var(--borda); display: flex; gap: 10px; align-items: center; position: sticky; top: 68px; z-index: 900; }
+  .busca-wrap { position: relative; flex: 1; min-width: 0; }
+  .busca-wrap i { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: 0.9rem; pointer-events: none; }
+  .busca-wrap input { width: 100%; padding: 11px 14px 11px 38px; border: 1.5px solid var(--borda-forte); border-radius: 10px; font-size: 0.9rem; font-family: inherit; background: #fff; color: var(--texto-escuro); transition: 0.15s; }
+  .busca-wrap input:focus { outline: none; border-color: var(--azul-quinto); box-shadow: 0 0 0 3px rgba(0, 30, 240, 0.1); }
+  .btn-busca-avancada { display: inline-flex; align-items: center; gap: 8px; padding: 11px 18px; background: var(--azul-quinto); color: #fff; border: none; border-radius: 10px; font-family: inherit; font-size: 0.86rem; font-weight: 700; cursor: pointer; transition: all 0.15s; white-space: nowrap; position: relative; }
+  .btn-busca-avancada:hover { background: var(--azul-escuro); }
+  .btn-busca-avancada .badge-filtro { background: rgba(255, 255, 255, 0.25); padding: 1px 7px; border-radius: 10px; font-size: 0.68rem; font-weight: 800; display: none; }
+  .btn-busca-avancada.tem-filtro .badge-filtro { display: inline-block; }
+  @media (max-width: 640px) {
+    .btn-busca-avancada .lbl-avancada { display: none; }
+    .btn-busca-avancada { padding: 11px 14px; }
+  }
+
+  .conteudo-principal { padding: 20px 0 60px; position: relative; }
+
+  .cards-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 16px; align-content: start; }
+  @media(max-width: 1400px) { .cards-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+  @media(max-width: 1100px) { .cards-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  @media(max-width: 820px)  { .cards-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; } }
+  @media (max-width: 480px) { .cards-grid { grid-template-columns: repeat(1, 1fr); } }
+
+  .imovel-card { background: #fff; border-radius: var(--radius); overflow: hidden; box-shadow: var(--sombra-suave); border: 1px solid var(--borda); transition: 0.25s; display: flex; flex-direction: column; position: relative; content-visibility: auto; contain-intrinsic-size: 0 320px; }
+  .imovel-card:hover { transform: translateY(-3px); box-shadow: var(--sombra-media); border-color: rgba(0, 30, 240, 0.15); }
+  .imovel-card .foto { width: 100%; aspect-ratio: 16 / 10; background: var(--cinza-claro); background-size: cover; background-position: center; position: relative; display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 1.6rem; overflow: hidden; }
+  .imovel-card .foto .badge-descricao { position: absolute; top: 10px; left: 10px; right: 10px; background: rgba(0, 30, 240, 0.92); color: #fff; padding: 6px 12px; border-radius: 8px; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.2px; backdrop-filter: blur(4px); line-height: 1.3; text-align: center; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; z-index: 3; }
+  .imovel-card .foto .badge-tipo { position: absolute; bottom: 10px; left: 10px; background: rgba(124, 58, 237, 0.95); color: #fff; padding: 3px 10px; border-radius: 6px; font-size: 0.62rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; backdrop-filter: blur(4px); z-index: 3; }
+  .imovel-card .tarja-vendido { position: absolute; inset: 0; pointer-events: none; z-index: 4; overflow: hidden; background: linear-gradient(135deg, rgba(220, 38, 38, 0.05) 0%, rgba(220, 38, 38, 0.1) 100%); }
+  .imovel-card .tarja-vendido::before { content: 'VENDIDO'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-20deg); font-size: 1.8rem; font-weight: 800; letter-spacing: 6px; color: #fff; background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%); padding: 6px 24px; border: 3px solid #fff; border-radius: 8px; box-shadow: 0 4px 20px rgba(220, 38, 38, 0.45), 0 0 0 2px rgba(220, 38, 38, 0.25); white-space: nowrap; text-shadow: 0 2px 5px rgba(0, 0, 0, 0.25); z-index: 5; }
+  .imovel-card .corpo { padding: 14px; display: flex; flex-direction: column; gap: 8px; }
+  
+  .imovel-card .codigo-linha { display: flex; align-items: center; gap: 6px; margin-bottom: 2px; flex-wrap: wrap; }
+  .imovel-card .codigo-linha .codigo-badge { display: inline-flex; align-items: center; gap: 4px; background: #1a1a2e; color: #fff; padding: 3px 9px; border-radius: 6px; font-size: 0.68rem; font-weight: 700; font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.4px; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15); }
+  .imovel-card .codigo-linha .codigo-badge i { color: #fbbf24; font-size: 0.62rem; }
+
+  /* ✅ Linha do Preço com botão de compartilhar alinhado à direita */
+  .imovel-card .preco-linha { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .imovel-card .preco { font-size: 1.25rem; font-weight: 800; color: var(--azul-quinto); letter-spacing: -0.5px; line-height: 1.1; }
+  .imovel-card .preco .tipo { font-size: 0.7rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.4px; display: block; margin-bottom: 2px; }
+  
+  .btn-share-card { background: transparent; border: none; color: var(--texto-cinza); width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.15s; flex-shrink: 0; }
+  .btn-share-card:hover { background: var(--azul-claro); color: var(--azul-quinto); }
+
+  .imovel-card .endereco-linha { display: flex; align-items: baseline; gap: 6px; flex-wrap: wrap; line-height: 1.35; }
+  .imovel-card .endereco-linha .rua { font-size: 0.85rem; font-weight: 600; color: var(--texto-escuro); }
+  .imovel-card .endereco-linha .bairro-destaque { font-size: 0.74rem; font-weight: 800; color: var(--azul-quinto); text-transform: uppercase; letter-spacing: 0.3px; }
+  .imovel-card .descricao-2linhas { font-size: 0.76rem; color: var(--texto-cinza); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+  .imovel-card .condo-info { display: flex; gap: 6px; flex-wrap: wrap; padding-top: 8px; border-top: 1px solid var(--borda); font-size: 0.72rem; color: var(--texto-cinza); align-items: center; }
+  .imovel-card .condo-info .feat { display: inline-flex; align-items: center; font-weight: 500; }
+  .imovel-card .condo-info .divisor { color: var(--borda-forte); font-weight: 300; margin: 0 2px; }
+  .imovel-card .condo-info .feat-vendido { font-weight: 700; color: var(--vermelho); }
+
+  .apto-admin { display: inline-flex; align-items: center; gap: 4px; font-size: 0.72rem; font-weight: 900; color: #fff; background: var(--roxo); padding: 3px 9px; border-radius: 6px; letter-spacing: 0.5px; box-shadow: 0 2px 6px rgba(124, 58, 237, 0.35); text-transform: uppercase; }
+  .apto-admin i { font-size: 0.62rem; }
+  .apto-erro { display: inline-flex; align-items: center; gap: 4px; font-size: 0.72rem; font-weight: 900; color: #fff; background: var(--vermelho); padding: 3px 9px; border-radius: 6px; letter-spacing: 0.5px; box-shadow: 0 2px 6px rgba(220, 38, 38, 0.35); text-transform: uppercase; }
+
+  .tarja-falha { background: #fef2f2; border: 1px solid #fecaca; border-left: 4px solid var(--vermelho); padding: 8px 12px; margin-bottom: 10px; border-radius: 8px; display: flex; flex-direction: column; gap: 4px; }
+  .tarja-falha .falha-titulo { font-size: 0.65rem; font-weight: 800; color: var(--vermelho); text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 4px; }
+  .tarja-falha .falha-lista { font-size: 0.78rem; color: #991b1b; font-weight: 600; line-height: 1.4; list-style: none; padding: 0; margin: 0; }
+  .tarja-falha .falha-lista li { display: flex; align-items: center; gap: 4px; }
+  .tarja-falha .falha-codigo { margin-top: 4px; display: inline-flex; background: #fee2e2; color: #991b1b; padding: 2px 8px; border-radius: 4px; font-family: 'SF Mono', Menlo, monospace; font-size: 0.7rem; font-weight: 800; align-self: flex-start; border: 1px solid #fca5a5; }
+
+  .imovel-card .admin-acoes { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; padding: 0 10px 10px; }
+  .imovel-card .admin-acoes .btn-a { display: inline-flex; align-items: center; justify-content: center; gap: 5px; padding: 7px 8px; border-radius: 8px; border: none; font-family: inherit; font-size: 0.68rem; font-weight: 700; cursor: pointer; transition: 0.15s; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .imovel-card .admin-acoes .btn-a i { font-size: 0.72rem; }
+  .imovel-card .admin-acoes .btn-a.btn-editar { background: var(--azul-quinto); color: #fff; }
+  .imovel-card .admin-acoes .btn-a.btn-editar:hover { background: var(--azul-escuro); }
+  .imovel-card .admin-acoes .btn-a.btn-clonar { background: #e2e8f0; color: var(--texto-escuro); border: 1px solid var(--borda-forte); }
+  .imovel-card .admin-acoes .btn-a.btn-clonar:hover { background: #cbd5e1; }
+  .imovel-card .admin-acoes .btn-a.btn-clientes { background: var(--cinza-claro); color: var(--texto-escuro); }
+  .imovel-card .admin-acoes .btn-a.btn-clientes:hover { background: #e0e4ef; }
+  .imovel-card .admin-acoes .btn-a.btn-entrada { background: #fff; color: var(--laranja); border: 1.5px solid var(--laranja); }
+  .imovel-card .admin-acoes .btn-a.btn-entrada:hover { background: var(--laranja); color: #fff; }
+  .imovel-card .admin-acoes .btn-a.btn-anuncio { background: #fff; color: var(--azul-quinto); border: 1.5px solid var(--azul-quinto); grid-column: 1 / -1; }
+  .imovel-card .admin-acoes .btn-a.btn-anuncio:hover { background: var(--azul-quinto); color: #fff; }
+  .imovel-card .admin-acoes .btn-a:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  /* ===== MODAL DETALHES PROFISSIONAL ===== */
+  .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.55); backdrop-filter: blur(4px); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 16px; overflow-y: auto; }
+  .modal-backdrop.show { display: flex; }
+
+  .modal-detalhes { background: #fff; border-radius: var(--radius-lg); max-width: 900px; width: 100%; max-height: 92vh; overflow: hidden; box-shadow: var(--sombra-forte); position: relative; animation: fadeUp 0.25s ease; display: flex; flex-direction: column; }
+  @media (max-width: 768px) { .modal-detalhes { flex-direction: column; overflow-y: auto; } }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  .modal-detalhes .btn-fechar { position: absolute; top: 14px; right: 14px; background: rgba(255, 255, 255, 0.9); border: none; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; font-size: 1rem; color: var(--texto-escuro); display: flex; align-items: center; justify-content: center; z-index: 10; box-shadow: 0 2px 10px rgba(0,0,0,0.15); transition: 0.15s; }
+  .modal-detalhes .btn-fechar:hover { background: #fff; transform: scale(1.05); }
+
+  .modal-detalhes .foto-lateral { width: 50%; background: var(--cinza-claro); background-size: cover; background-position: center; position: relative; min-height: 300px; display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 2rem; }
+  @media (max-width: 768px) { .modal-detalhes .foto-lateral { width: 100%; height: 240px; min-height: auto; } }
+  
+  .modal-detalhes .foto-lateral .tarja-vendido { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; overflow: hidden; background: linear-gradient(135deg, rgba(220, 38, 38, 0.05) 0%, rgba(220, 38, 38, 0.1) 100%); }
+  .modal-detalhes .foto-lateral .tarja-vendido::before { content: 'VENDIDO'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-20deg); font-size: 2.2rem; font-weight: 800; letter-spacing: 8px; color: #fff; background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%); padding: 10px 30px; border: 4px solid #fff; border-radius: 12px; box-shadow: 0 8px 32px rgba(220, 38, 38, 0.5), 0 0 0 3px rgba(220, 38, 38, 0.25); white-space: nowrap; text-shadow: 0 3px 8px rgba(0, 0, 0, 0.3); }
+
+  .modal-detalhes .info-lateral { width: 50%; padding: 32px; display: flex; flex-direction: column; gap: 20px; overflow-y: auto; }
+  @media (max-width: 768px) { .modal-detalhes .info-lateral { width: 100%; padding: 24px; } }
+
+  .modal-detalhes .topo { display: flex; flex-direction: column; gap: 8px; }
+  .modal-detalhes .topo .codigo-linha { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .modal-detalhes .topo .codigo-badge { background: var(--azul-claro); color: var(--azul-quinto); padding: 4px 12px; border-radius: 8px; font-size: 0.78rem; font-weight: 700; font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.5px; }
+  .modal-detalhes .topo .tipo-badge { background: var(--roxo); color: #fff; padding: 4px 12px; border-radius: 8px; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+  .modal-detalhes .topo .vendido-badge { background: var(--vermelho); color: #fff; padding: 4px 12px; border-radius: 8px; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+  .modal-detalhes .topo h2 { font-size: 1.8rem; font-weight: 800; color: var(--azul-quinto); letter-spacing: -0.5px; line-height: 1.1; }
+  .modal-detalhes .topo .endereco-completo { font-size: 0.95rem; color: var(--texto-escuro); font-weight: 500; line-height: 1.5; }
+  .modal-detalhes .topo .endereco-completo i { color: var(--azul-quinto); margin-right: 6px; }
+  .modal-detalhes .topo .endereco-completo .bairro-destaque { color: var(--azul-quinto); font-weight: 800; text-transform: uppercase; letter-spacing: 0.4px; font-size: 0.85rem; margin-left: 6px; }
+  
+  .modal-detalhes .descricao { font-size: 0.9rem; line-height: 1.65; color: var(--texto-cinza); white-space: pre-wrap; }
+  .modal-detalhes .gastos { display: flex; gap: 16px; flex-wrap: wrap; font-size: 0.82rem; color: var(--texto-cinza); padding: 12px 16px; background: #fef3c7; border-left: 3px solid var(--laranja); border-radius: 8px; }
+  .modal-detalhes .gastos strong { color: var(--texto-escuro); }
+  
+  .modal-detalhes .acoes { display: flex; gap: 10px; flex-wrap: wrap; margin-top: auto; padding-top: 10px; }
+  .modal-detalhes .acoes .btn { flex: 1; min-width: 140px; padding: 13px 18px; border-radius: 12px; border: none; font-family: inherit; font-weight: 700; font-size: 0.88rem; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; transition: 0.15s; }
+  .modal-detalhes .acoes .btn-zap { background: #25d366; color: #fff; }
+  .modal-detalhes .acoes .btn-zap:hover { background: #1eb955; transform: translateY(-1px); }
+  .modal-detalhes .acoes .btn-anuncio { background: var(--azul-quinto); color: #fff; }
+  .modal-detalhes .acoes .btn-anuncio:hover { background: var(--azul-escuro); transform: translateY(-1px); }
+  .modal-detalhes .acoes .btn-share { background: var(--cinza-claro); color: var(--texto-escuro); flex: 0 0 auto; min-width: auto; padding: 13px 16px; }
+  .modal-detalhes .acoes .btn-share:hover { background: #e0e4ef; }
+
+  /* ===== MODAL EDITOR PADRONIZADO ===== */
+  .modal-editor { background: #fff; border-radius: var(--radius-lg); max-width: 1000px; width: 100%; max-height: 94vh; overflow-y: auto; box-shadow: var(--sombra-forte); position: relative; animation: fadeUp 0.25s ease; padding: 24px; }
+  .modal-editor .btn-fechar { position: absolute; top: 14px; right: 14px; background: var(--cinza-claro); border: none; width: 34px; height: 34px; border-radius: 50%; cursor: pointer; font-size: 0.9rem; color: var(--texto-escuro); display: flex; align-items: center; justify-content: center; transition: 0.15s; z-index: 5; }
+  .modal-editor .btn-fechar:hover { background: #e0e4ef; transform: scale(1.05); }
+  .modal-editor h3 { font-size: 1.2rem; font-weight: 800; margin-bottom: 18px; display: flex; align-items: center; gap: 10px; color: var(--texto-escuro); padding-right: 44px; flex-wrap: wrap; }
+  .modal-editor h3 i { color: var(--azul-quinto); }
+
+  .form-row-4, .form-row-3, .form-row-2-img { display: grid; gap: 12px; margin-bottom: 14px; }
+  .form-row-4 { grid-template-columns: repeat(4, 1fr); }
+  .form-row-3 { grid-template-columns: 2fr 0.7fr 1.3fr; }
+  .form-row-2-img { grid-template-columns: 260px 1fr; }
+  @media(max-width: 720px) {
+    .form-row-4 { grid-template-columns: 1fr 1fr; }
+    .form-row-3 { grid-template-columns: 1fr; }
+    .form-row-2-img { grid-template-columns: 1fr; }
+  }
+  @media(max-width: 460px) { .form-row-4 { grid-template-columns: 1fr; } }
+
+  .form-group-modal { display: flex; flex-direction: column; gap: 5px; }
+  .form-group-modal label { font-size: 0.72rem; font-weight: 700; color: var(--texto-cinza); text-transform: uppercase; letter-spacing: 0.4px; }
+  .form-group-modal label .req { color: var(--vermelho); }
+  .form-group-modal input,
+  .form-group-modal select,
+  .form-group-modal textarea { width: 100%; padding: 10px 12px; border: 1.5px solid var(--borda-forte); border-radius: 10px; font-size: 0.88rem; font-family: inherit; background: #fff; color: var(--texto-escuro); transition: 0.15s; resize: vertical; }
+  .form-group-modal textarea { min-height: 80px; line-height: 1.5; }
+  .form-group-modal input:focus,
+  .form-group-modal select:focus,
+  .form-group-modal textarea:focus { outline: none; border-color: var(--azul-quinto); box-shadow: 0 0 0 3px rgba(0, 30, 240, 0.1); }
+  .form-group-modal input[readonly] { background: var(--cinza-claro); color: var(--texto-cinza); cursor: not-allowed; }
+
+  .img-preview-box { width: 100%; aspect-ratio: 16 / 10; background: var(--cinza-claro); border: 1.5px dashed var(--borda-forte); border-radius: 10px; overflow: hidden; display: flex; align-items: center; justify-content: center; position: relative; }
+  .img-preview-box img { width: 100%; height: 100%; object-fit: cover; }
+  .img-preview-box .sem-img { color: var(--muted); font-size: 0.78rem; text-align: center; line-height: 1.4; padding: 10px; }
+
+  .btn-buscar-entrada { display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; margin-bottom: 16px; background: #fff; color: var(--azul-quinto); border: 1.5px solid var(--azul-quinto); border-radius: 10px; font-family: inherit; font-size: 0.84rem; font-weight: 700; cursor: pointer; transition: 0.15s; }
+  .btn-buscar-entrada:hover:not(:disabled) { background: var(--azul-quinto); color: #fff; }
+  .btn-buscar-entrada:disabled { opacity: 0.45; cursor: not-allowed; border-color: var(--borda-forte); color: var(--muted); }
+  .btn-buscar-entrada .codigo-badge { background: var(--azul-claro); color: var(--azul-quinto); padding: 2px 8px; border-radius: 6px; font-size: 0.7rem; font-weight: 800; font-family: 'SF Mono', Menlo, monospace; }
+
+  .form-actions-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding-top: 14px; border-top: 1px solid var(--borda); }
+  .form-actions-row .link-label { font-size: 0.78rem; font-weight: 700; color: var(--texto-cinza); text-transform: uppercase; letter-spacing: 0.4px; }
+  .form-actions-row .link-label .req { color: var(--vermelho); }
+
+  .btn-corretor-escolha { padding: 8px 16px; border-radius: 8px; border: 1.5px solid var(--borda-forte); background: #fff; color: var(--texto-cinza); font-family: inherit; font-size: 0.8rem; font-weight: 700; cursor: pointer; transition: 0.15s; }
+  .btn-corretor-escolha:hover { border-color: var(--azul-quinto); color: var(--azul-quinto); }
+  .btn-corretor-escolha.ativo { background: var(--azul-quinto); color: #fff; border-color: var(--azul-quinto); box-shadow: 0 3px 10px rgba(0, 30, 240, 0.25); }
+
+  .btn-salvar-imovel { margin-left: auto; padding: 11px 20px; border-radius: 10px; border: none; background: var(--verde); color: #fff; font-family: inherit; font-size: 0.86rem; font-weight: 700; cursor: pointer; transition: 0.15s; display: inline-flex; align-items: center; gap: 8px; }
+  .btn-salvar-imovel:hover:not(:disabled) { background: #15803d; transform: translateY(-1px); }
+  .btn-salvar-imovel:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+  .btn-cancelar-editor { padding: 11px 18px; border-radius: 10px; border: 1.5px solid var(--borda-forte); background: #fff; color: var(--texto-cinza); font-family: inherit; font-size: 0.86rem; font-weight: 700; cursor: pointer; transition: 0.15s; }
+  .btn-cancelar-editor:hover { background: var(--cinza-claro); color: var(--texto-escuro); }
+
+  .campo-info-apto { display: flex; align-items: center; gap: 10px; background: var(--azul-claro); border: 1.5px solid #c7d2fe; padding: 10px 14px; border-radius: 10px; margin-bottom: 14px; font-size: 0.82rem; color: var(--azul-escuro); font-weight: 600; }
+  .campo-info-apto i { color: var(--azul-quinto); }
+  .campo-info-apto strong { color: var(--azul-quinto); font-weight: 800; }
+  .campo-info-apto.erro { background: #fef2f2; border-color: #fecaca; color: var(--vermelho); }
+  .campo-info-apto.erro i, .campo-info-apto.erro strong { color: var(--vermelho); }
+
+  .check-vendido-wrap { display: flex; align-items: center; gap: 10px; background: #fef2f2; border: 1.5px solid #fecaca; padding: 12px 16px; border-radius: 10px; margin-bottom: 16px; cursor: pointer; transition: all 0.15s; }
+  .check-vendido-wrap:hover { background: #fee2e2; }
+  .check-vendido-wrap input[type="checkbox"] { width: 20px; height: 20px; accent-color: var(--vermelho); cursor: pointer; flex-shrink: 0; }
+  .check-vendido-txt { font-size: 0.85rem; font-weight: 700; color: var(--vermelho); line-height: 1.3; }
+  .check-vendido-txt span { display: block; font-size: 0.75rem; font-weight: 500; color: #b91c1c; margin-top: 2px; }
+
+  .aviso-massivo { display: flex; align-items: flex-start; gap: 10px; background: #fef3c7; border-left: 3px solid var(--laranja); color: #78350f; padding: 12px 16px; border-radius: 8px; font-size: 0.82rem; line-height: 1.5; margin-bottom: 16px; }
+  .aviso-massivo i { color: var(--laranja); font-size: 1rem; margin-top: 2px; flex-shrink: 0; }
+
+  /* Outros modais simples */
+  .modal-admin { background: #fff; border-radius: var(--radius-lg); max-width: 500px; width: 100%; max-height: 92vh; overflow-y: auto; box-shadow: var(--sombra-forte); position: relative; animation: fadeUp 0.25s ease; padding: 28px; }
+  .modal-admin .btn-fechar { position: absolute; top: 14px; right: 14px; background: var(--cinza-claro); border: none; width: 34px; height: 34px; border-radius: 50%; cursor: pointer; font-size: 0.9rem; color: var(--texto-escuro); display: flex; align-items: center; justify-content: center; transition: 0.15s; }
+  .modal-admin .btn-fechar:hover { background: #e0e4ef; transform: scale(1.05); }
+  .modal-admin h2 { font-size: 1.15rem; font-weight: 800; margin-bottom: 6px; display: flex; align-items: center; gap: 10px; color: var(--texto-escuro); }
+  .modal-admin h2 i { color: var(--azul-quinto); }
+  .modal-admin .sub { color: var(--texto-cinza); font-size: 0.85rem; margin-bottom: 20px; line-height: 1.5; }
+  .campo-admin { display: flex; flex-direction: column; gap: 5px; margin-bottom: 14px; }
+  .campo-admin label { font-size: 0.72rem; font-weight: 700; color: var(--texto-cinza); text-transform: uppercase; letter-spacing: 0.4px; }
+  .campo-admin label .req { color: var(--vermelho); }
+  .campo-admin input, .campo-admin select { width: 100%; padding: 10px 12px; border: 1.5px solid var(--borda-forte); border-radius: 10px; font-size: 0.88rem; font-family: inherit; background: #fff; color: var(--texto-escuro); transition: 0.15s; }
+  .btn-admin-primary { background: var(--azul-quinto); color: #fff; border: none; padding: 12px 20px; border-radius: 12px; font-family: inherit; font-weight: 700; font-size: 0.9rem; cursor: pointer; transition: 0.15s; display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; }
+  .btn-admin-primary:hover { background: var(--azul-escuro); transform: translateY(-1px); }
+  .erro-senha { display: none; background: #fef2f2; color: var(--vermelho); border: 1px solid #fecaca; padding: 10px 14px; border-radius: 10px; font-size: 0.82rem; font-weight: 600; margin-bottom: 14px; }
+  .erro-senha.show { display: block; }
+  
+  .cliente-chip { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-radius: 10px; background: var(--cinza-claro); border: 1px solid var(--borda); margin-bottom: 8px; text-decoration: none; color: var(--texto-escuro); transition: 0.15s; cursor: pointer; }
+  .cliente-chip:hover { background: var(--azul-claro); border-color: var(--azul-quinto); transform: translateX(2px); }
+  .cliente-chip .avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--azul-quinto); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem; flex-shrink: 0; }
+  .cliente-chip .nome { flex: 1; font-weight: 700; font-size: 0.88rem; }
+  .cliente-chip .corretor-tag { display: inline-block; background: var(--azul-claro); color: var(--azul-quinto); padding: 2px 8px; border-radius: 4px; font-size: 0.66rem; font-weight: 700; margin-left: 6px; }
+  .cliente-chip .tel { font-family: 'SF Mono', Menlo, monospace; font-size: 0.74rem; color: var(--texto-cinza); }
+  .cliente-chip i.fa-whatsapp { color: #25d366; font-size: 1.2rem; }
+
+  /* Multi select e filtros avançados */
+  .modal-busca-avancada { background: #fff; border-radius: var(--radius-lg); max-width: 620px; width: 100%; max-height: 92vh; overflow-y: auto; box-shadow: var(--sombra-forte); position: relative; animation: fadeUp 0.25s ease; padding: 24px; }
+  .modal-busca-avancada .btn-fechar { position: absolute; top: 14px; right: 14px; background: var(--cinza-claro); border: none; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-size: 0.9rem; color: var(--texto-cinza); display: flex; align-items: center; justify-content: center; transition: 0.15s; }
+  .modal-busca-avancada .btn-fechar:hover { background: #e0e4ef; color: var(--texto-escuro); }
+  .modal-busca-avancada h3 { font-size: 1.1rem; font-weight: 800; color: var(--texto-escuro); display: flex; align-items: center; gap: 10px; margin-bottom: 6px; padding-right: 40px; letter-spacing: -0.02em; }
+  .modal-busca-avancada h3 i { color: var(--azul-quinto); }
+  .modal-busca-avancada .sub { color: var(--texto-cinza); font-size: 0.82rem; margin-bottom: 18px; line-height: 1.5; }
+  .filtros-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+  @media(max-width: 520px) { .filtros-grid-2 { grid-template-columns: 1fr; } }
+  .filtro-grupo { display: flex; flex-direction: column; gap: 5px; }
+  .filtro-grupo label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; color: var(--muted); }
+  .filtro-grupo select, .filtro-grupo input { width: 100%; padding: 10px 12px; border: 1.5px solid var(--borda-forte); border-radius: 10px; font-size: 0.86rem; font-family: inherit; background: #fff; color: var(--texto-escuro); transition: 0.15s; height: 42px; }
+  .modal-busca-avancada .secao-titulo { font-size: 0.68rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.6px; color: var(--azul-quinto); margin-bottom: 8px; padding-top: 12px; border-top: 1px dashed var(--borda); }
+  .modal-busca-avancada .secao-titulo:first-of-type { border-top: none; padding-top: 0; }
+  .modal-busca-avancada .acoes-modal { display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap; padding-top: 8px; border-top: 1px solid var(--borda); margin-top: 8px; }
+  .modal-busca-avancada .acoes-modal .btn-modal { padding: 10px 20px; border-radius: 10px; border: none; font-family: inherit; font-weight: 700; font-size: 0.86rem; cursor: pointer; transition: 0.15s; display: inline-flex; align-items: center; gap: 6px; }
+  .modal-busca-avancada .acoes-modal .btn-modal.limpar { background: var(--cinza-claro); color: var(--texto-escuro); }
+  .modal-busca-avancada .acoes-modal .btn-modal.limpar:hover { background: #e0e4ef; }
+  .modal-busca-avancada .acoes-modal .btn-modal.aplicar { background: var(--azul-quinto); color: #fff; }
+  .modal-busca-avancada .acoes-modal .btn-modal.aplicar:hover { background: var(--azul-escuro); }
+
+  .chips-tipo-imovel { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+  .chip-tipo-imovel { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border: 1.5px solid var(--borda-forte); background: #fff; border-radius: 30px; font-family: inherit; font-size: 0.78rem; font-weight: 700; color: var(--texto-cinza); cursor: pointer; transition: 0.15s; white-space: nowrap; }
+  .chip-tipo-imovel:hover { border-color: var(--azul-quinto); color: var(--azul-quinto); }
+  .chip-tipo-imovel.ativo { background: var(--azul-quinto); color: #fff; border-color: var(--azul-quinto); box-shadow: 0 4px 12px rgba(0, 30, 240, 0.2); }
+
+  .multi-select-wrap { position: relative; width: 100%; }
+  .multi-select-trigger { width: 100%; padding: 10px 12px; border: 1.5px solid var(--borda-forte); border-radius: 10px; font-size: 0.86rem; font-family: inherit; background: #fff; color: var(--texto-escuro); cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 8px; transition: 0.15s; text-align: left; min-height: 42px; }
+  .multi-select-trigger:hover { border-color: var(--azul-quinto); }
+  .multi-select-trigger.aberto { border-color: var(--azul-quinto); box-shadow: 0 0 0 3px rgba(0, 30, 240, 0.1); }
+  .multi-select-trigger .txt-trigger { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--texto-cinza); }
+  .multi-select-trigger .txt-trigger.tem-valor { color: var(--texto-escuro); font-weight: 600; }
+  .multi-select-trigger .contador-bairros { background: var(--azul-quinto); color: #fff; padding: 1px 8px; border-radius: 10px; font-size: 0.68rem; font-weight: 800; flex-shrink: 0; }
+  .multi-select-trigger i { color: var(--muted); font-size: 0.72rem; transition: transform 0.2s; flex-shrink: 0; }
+  .multi-select-trigger.aberto i { transform: rotate(180deg); }
+  .multi-select-dropdown { display: none; position: absolute; top: calc(100% + 4px); left: 0; right: 0; background: #fff; border: 1.5px solid var(--borda-forte); border-radius: 12px; box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15); z-index: 100; max-height: 280px; overflow-y: auto; padding: 6px; }
+  .multi-select-dropdown.aberto { display: block; }
+  .multi-select-dropdown .ms-item { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 8px; cursor: pointer; transition: 0.1s; font-size: 0.86rem; font-weight: 500; color: var(--texto-escuro); user-select: none; }
+  .multi-select-dropdown .ms-item:hover { background: var(--azul-claro); }
+  .multi-select-dropdown .ms-item.ativo { background: var(--azul-claro); font-weight: 700; }
+  .multi-select-dropdown .ms-item input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--azul-quinto); cursor: pointer; flex-shrink: 0; margin: 0; }
+  .multi-select-dropdown .ms-item .qtd-b { margin-left: auto; background: var(--cinza-claro); color: var(--texto-cinza); padding: 2px 8px; border-radius: 999px; font-size: 0.66rem; font-weight: 700; flex-shrink: 0; }
+  .multi-select-dropdown .ms-vazia { text-align: center; padding: 20px; color: var(--muted); font-size: 0.82rem; }
+  .ms-acoes-rapidas { display: flex; gap: 6px; padding: 6px 4px 8px; border-bottom: 1px solid var(--borda); margin-bottom: 4px; }
+  .ms-acoes-rapidas button { flex: 1; padding: 6px 8px; border: 1px solid var(--borda-forte); background: #fff; border-radius: 6px; font-family: inherit; font-size: 0.7rem; font-weight: 700; color: var(--texto-cinza); cursor: pointer; transition: 0.15s; }
+  .ms-acoes-rapidas button:hover { background: var(--azul-claro); color: var(--azul-quinto); border-color: var(--azul-quinto); }
+
+  .range-preco-wrap { padding: 4px 0 8px; }
+  .range-valores { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
+  .range-valores .campo-valor { flex: 1; display: flex; flex-direction: column; gap: 3px; }
+  .range-valores .campo-valor label { font-size: 0.62rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; color: var(--muted); }
+  .range-valores .campo-valor input { width: 100%; padding: 8px 10px; border: 1.5px solid var(--borda-forte); border-radius: 8px; font-size: 0.84rem; font-family: inherit; font-weight: 600; background: #fff; color: var(--texto-escuro); transition: 0.15s; height: 38px; }
+  .range-valores .traco-meio { font-weight: 700; color: var(--muted); font-size: 1rem; margin-top: 18px; }
+  .slider-container { position: relative; height: 36px; margin: 0 4px; }
+  .slider-track { position: absolute; top: 50%; transform: translateY(-50%); left: 0; right: 0; height: 5px; background: var(--borda-forte); border-radius: 3px; pointer-events: none; }
+  .slider-range { position: absolute; top: 50%; transform: translateY(-50%); height: 5px; background: var(--azul-quinto); border-radius: 3px; pointer-events: none; z-index: 1; }
+  .slider-container input[type="range"] { position: absolute; top: 0; left: 0; width: 100%; height: 36px; -webkit-appearance: none; appearance: none; background: transparent; pointer-events: none; margin: 0; z-index: 2; outline: none; }
+  .slider-container input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 22px; height: 22px; border-radius: 50%; background: var(--azul-quinto); border: 3px solid #fff; box-shadow: 0 2px 8px rgba(0, 30, 240, 0.4); cursor: grab; pointer-events: auto; transition: transform 0.15s; }
+  .slider-container input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
+  .slider-container input[type="range"]::-moz-range-thumb { width: 22px; height: 22px; border-radius: 50%; background: var(--azul-quinto); border: 3px solid #fff; box-shadow: 0 2px 8px rgba(0, 30, 240, 0.4); cursor: grab; pointer-events: auto; }
+  .slider-container input[type="range"]::-moz-range-track { background: transparent; border: none; }
+  .slider-container input[type="range"]:nth-child(3) { z-index: 3; }
+
+  .loading-principal { text-align: center; padding: 60px 20px; color: var(--texto-cinza); grid-column: 1 / -1; }
+  .loading-principal .spinner { width: 44px; height: 44px; border: 4px solid var(--azul-claro); border-top-color: var(--azul-quinto); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 16px; }
+  .loading-principal p { font-size: 0.9rem; font-weight: 500; }
+  .empty-state { text-align: center; padding: 60px 20px; color: var(--muted); grid-column: 1 / -1; }
+  .empty-state i { font-size: 3rem; color: var(--borda-forte); margin-bottom: 14px; display: block; }
+  .empty-state h3 { font-size: 1.05rem; color: var(--texto-cinza); font-weight: 600; margin-bottom: 6px; }
+  .empty-state p { font-size: 0.85rem; }
+  .btn-topo { position: fixed; bottom: 24px; right: 24px; width: 48px; height: 48px; border-radius: 50%; background: var(--azul-quinto); color: #fff; border: none; cursor: pointer; font-size: 1rem; display: none; align-items: center; justify-content: center; box-shadow: 0 6px 20px rgba(0, 30, 240, 0.35); z-index: 800; transition: 0.2s; }
+  .btn-topo.show { display: flex; }
+  .btn-topo:hover { transform: scale(1.08); background: var(--azul-escuro); }
+  .toast { position: fixed; bottom: 24px; left: 50%; transform: translate(-50%, 30px); background: #1a1a2e; color: #fff; padding: 12px 22px; border-radius: 10px; font-size: 0.85rem; font-weight: 600; opacity: 0; transition: 0.3s; z-index: 3000; pointer-events: none; box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
+  .toast.show { opacity: 1; transform: translate(-50%, 0); }
+  .toast.success { background: var(--verde); }
+  .toast.error { background: var(--vermelho); }
+
+  @media (max-width: 640px) {
+    .navbar { padding: 10px 14px; }
+    .navbar .nav-links { display: none; }
+    .hero-imoveis { padding: 14px 14px; }
+    .hero-imoveis h1 { font-size: 1rem; }
+    .hero-imoveis .contador { font-size: 0.7rem; padding: 4px 11px; }
+    .container { padding: 0 12px; }
+    .cards-grid { gap: 10px; }
+    .imovel-card .preco { font-size: 1.1rem; }
+    .modal-editor { padding: 16px; }
+    .modal-editor h3 { font-size: 1rem; }
+    .modal-detalhes .info-lateral { padding: 16px; }
+    .modal-detalhes .topo h2 { font-size: 1.3rem; }
+    .modal-detalhes .acoes .btn { min-width: 100%; }
+    .btn-topo { bottom: 16px; right: 16px; width: 44px; height: 44px; }
+    .btn-admin-gear { top: 68px; right: 12px; width: 38px; height: 38px; font-size: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== BANNER ADMIN ===== -->
+<div class="admin-banner" id="adminBanner">
+  <i class="fas fa-shield-alt"></i>
+  <span>MODO ADMIN ATIVO</span>
+  <span class="badge" id="adminTotalInfo">0 imóveis</span>
+  <button class="btn-sair-admin" onclick="sairModoAdmin()">
+    <i class="fas fa-sign-out-alt"></i> Sair
+  </button>
+</div>
+
+<button class="btn-admin-gear" id="btnAdminGear" onclick="abrirModalSenhaAdmin()" title="Admin">
+  <i class="fas fa-cog"></i>
+</button>
+
+<nav class="navbar">
+  <a href="index.html" class="logo-link">
+    <img src="https://cdn.awsli.com.br/1608/1608652/arquivos/logo-lr-imoveis.jpg" alt="Lima Ribeiro Imóveis" class="logo-img" loading="lazy">
+  </a>
+  <div class="nav-links">
+    <a href="index.html">Início</a>
+    <a href="imoveis.html" class="destaque"><i class="fas fa-home"></i> Catálogo</a>
+  </div>
+</nav>
+
+<section class="hero-imoveis">
+  <div class="hero-inner">
+    <h1><i class="fas fa-shield-alt"></i> Painel Administrativo</h1>
+    <div class="contador" id="contadorImoveis">
+      <i class="fas fa-spinner fa-spin"></i> Carregando...
+    </div>
+  </div>
+</section>
+
+<div class="container">
+  <div class="modo-selector">
+    <button class="modo-btn active" id="modoLista1">
+      <i class="fas fa-list"></i> Lista
+    </button>
+    <button class="modo-btn" id="btnOcultarVendidos" onclick="toggleOcultarVendidos()">
+      <i class="fas fa-eye"></i> Ocultar vendidos
+    </button>
+    <button class="modo-btn" id="btnFalhas" onclick="toggleFiltroFalhas()" style="display:none;">
+      <i class="fas fa-exclamation-triangle"></i> Falhas
+      <span class="badge-falhas" id="badgeFalhasCount">0</span>
+    </button>
+  </div>
+</div>
+
+<div class="container">
+  <div class="barra-busca-wrap">
+    <div class="busca-wrap">
+      <i class="fas fa-search"></i>
+      <input type="text" id="filtroBusca" placeholder="Buscar por código, rua ou bairro...">
+    </div>
+    <button class="btn-busca-avancada" id="btnBuscaAvancada" onclick="abrirModalBuscaAvancada()">
+      <i class="fas fa-sliders-h"></i>
+      <span class="lbl-avancada">Busca avançada</span>
+      <span class="badge-filtro" id="badgeFiltrosAtivos">0</span>
+    </button>
+  </div>
+</div>
+
+<div class="container">
+  <div class="conteudo-principal">
+    <div class="cards-grid" id="cardsGrid">
+      <div class="loading-principal">
+        <div class="spinner"></div>
+        <p>Carregando imóveis...</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button class="btn-topo" id="btnTopo" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+  <i class="fas fa-arrow-up"></i>
+</button>
+
+<!-- ===== BARRA DE CLONAGEM EXPANSÍVEL ===== -->
+<div class="barra-clonagem-wrap" id="barraClonagemWrap">
+  <div class="barra-clonagem-lista" id="barraClonagemLista">
+    <!-- Itens selecionados vão aqui via JS -->
+  </div>
+  <div class="barra-clonagem-header" onclick="toggleListaClonagem(event)">
+    <div class="info">
+      <i class="fas fa-chevron-up" id="iconToggleLista"></i>
+      <span>Imóveis marcados:</span>
+      <span class="cont" id="contadorClonagem">0</span>
+    </div>
+    <div class="acoes-barra">
+      <button class="btn-barra limpar" onclick="limparMarcadosClonagem(event)">
+        <i class="fas fa-times"></i> Limpar
+      </button>
+      <button class="btn-barra confirmar" onclick="abrirModalConfirmarClonagem(event)">
+        <i class="fas fa-check"></i> Clonar
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL DETALHES PROFISSIONAL ===== -->
+<div class="modal-backdrop" id="modalDetalhes">
+  <div class="modal-detalhes" id="modalDetalhesBox">
+    <button class="btn-fechar" onclick="fecharDetalhes()"><i class="fas fa-times"></i></button>
+    <div class="foto-lateral" id="detalheFoto"></div>
+    <div class="info-lateral">
+      <div class="topo">
+        <div class="codigo-linha">
+          <span class="codigo-badge" id="detalheCodigo">#---</span>
+          <span class="tipo-badge" id="detalheTipo" style="display:none;">Tipo</span>
+          <span class="vendido-badge" id="detalheVendido" style="display:none;">Vendido</span>
+        </div>
+        <h2 id="detalhePreco">R$ ---</h2>
+        <div class="endereco-completo" id="detalheEndereco">
+          <i class="fas fa-map-marker-alt"></i> ---
+        </div>
+      </div>
+      <div class="descricao" id="detalheDescricao"></div>
+      <div class="gastos" id="detalheGastos" style="display:none;"></div>
+      
+      <div class="acoes">
+        <a href="#" target="_blank" class="btn btn-zap" id="detalheZap">
+          <i class="fab fa-whatsapp"></i> Falar com corretor
+        </a>
+        <a href="#" target="_blank" class="btn btn-anuncio" id="detalheAnuncio">
+          <i class="fas fa-external-link-alt"></i> Ver anúncio
+        </a>
+        <button class="btn btn-share" onclick="compartilharImovel()"><i class="fas fa-share-alt"></i></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL EDITOR PADRONIZADO ===== -->
+<div class="modal-backdrop" id="modalEditarImovel">
+  <div class="modal-editor">
+    <button class="btn-fechar" onclick="fecharModalEditarImovel()"><i class="fas fa-times"></i></button>
+    <h3><i class="fas fa-edit"></i> Editar imóvel <span style="color:var(--texto-cinza); font-weight:600; font-size:0.82rem; margin-left:8px;" id="editarSubInfo">—</span></h3>
+
+    <div class="campo-info-apto" id="infoAptoEditor" style="display:none;">
+      <i class="fas fa-door-open"></i>
+      <span>Apartamento: <strong id="aptoEditorNumero">—</strong> · <span id="aptoEditorAndar">—</span></span>
+    </div>
+
+    <div class="form-row-4">
+      <div class="form-group-modal">
+        <label>Link do anúncio</label>
+        <input type="url" id="editLink" placeholder="https://..." oninput="onLinkImovelChanged()" onblur="onLinkBlur()">
+      </div>
+      <div class="form-group-modal">
+        <label>Preço</label>
+        <input type="text" id="editPreco" inputmode="numeric" placeholder="450.000,00">
+      </div>
+      <div class="form-group-modal">
+        <label>Condomínio</label>
+        <input type="text" id="editCondominio" inputmode="numeric" placeholder="800,00">
+      </div>
+      <div class="form-group-modal">
+        <label>IPTU</label>
+        <input type="text" id="editIptu" inputmode="numeric" placeholder="1.200,00">
+      </div>
+    </div>
+    <div class="form-row-2-img">
+      <div>
+        <label style="display:block; font-size:0.74rem; font-weight:600; margin-bottom:6px; color:var(--texto-cinza); text-transform:uppercase; letter-spacing:0.4px;">Miniatura</label>
+        <div class="img-preview-box" id="imgPreviewBox">
+          <div class="sem-img" id="semImgTxt">Cole um link<br>para buscar a imagem</div>
+          <img id="previewImg" style="display:none;" alt="Preview">
+        </div>
+      </div>
+      <div>
+        <label style="display:block; font-size:0.74rem; font-weight:600; margin-bottom:6px; color:var(--texto-cinza); text-transform:uppercase; letter-spacing:0.4px;">Descrição</label>
+        <textarea id="editDescricao" style="min-height:150px;" placeholder="Descrição do imóvel..."></textarea>
+      </div>
+    </div>
+    <button type="button" class="btn-buscar-entrada" id="btnBuscarEntrada" onclick="abrirBuscarEntradaForm()" disabled>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      Buscar entrada <span class="codigo-badge" id="codigoBadge">sem código</span>
+    </button>
+    <div class="form-row-3">
+      <div class="form-group-modal">
+        <label>Rua <span class="req">*</span></label>
+        <input type="text" id="editRua">
+      </div>
+      <div class="form-group-modal">
+        <label>Número</label>
+        <input type="text" id="editNumero">
+      </div>
+      <div class="form-group-modal">
+        <label>Bairro</label>
+        <input type="text" id="editBairro">
+      </div>
+    </div>
+    <div class="form-group-modal">
+      <label>Chave (onde pegar)</label>
+      <textarea id="editChave" placeholder="Ex: Chave na portaria com o Sr. José, ligar antes"></textarea>
+    </div>
+    <input type="hidden" id="editImagem">
+
+    <div class="check-vendido-wrap">
+      <input type="checkbox" id="editVendido">
+      <div class="check-vendido-txt">
+        Marcar como VENDIDO (forçar)
+        <span>Se o sistema do QuintoAndar falhar, marque aqui para forçar a tarja.</span>
+      </div>
+    </div>
+
+    <div class="aviso-massivo">
+      <i class="fas fa-exclamation-triangle"></i>
+      Esta alteração será aplicada em <strong>todos os clientes</strong> que têm esse imóvel (mesmo código).
+    </div>
+    <div class="form-actions-row">
+      <span class="link-label">Link de: <span class="req">*</span></span>
+      <button type="button" class="btn-corretor-escolha" data-corretor="Hugo" onclick="escolherCorretor('Hugo', this)">Hugo</button>
+      <button type="button" class="btn-corretor-escolha" data-corretor="Carolina" onclick="escolherCorretor('Carolina', this)">Carol</button>
+      <button class="btn btn-salvar-imovel" id="btnSalvarImovel" onclick="salvarEdicaoImovel()">
+        <i class="fas fa-save"></i> Salvar em todos os clientes
+      </button>
+      <button class="btn-cancelar-editor" onclick="fecharModalEditarImovel()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL CONFIRMAR CLONAGEM ===== -->
+<div class="modal-backdrop" id="modalConfirmarClonagem">
+  <div class="modal-admin" style="max-width: 620px;">
+    <button class="btn-fechar" onclick="fecharModalConfirmarClonagem()"><i class="fas fa-times"></i></button>
+    <h2><i class="fas fa-copy"></i> Confirmar clonagem em lote</h2>
+    <p class="sub" id="confirmarClonagemSub">—</p>
+
+    <div class="progresso-clonagem-wrap" id="progressoClonagemWrap">
+      <div class="lbl">
+        <span id="progressoLbl">Preparando…</span>
+        <span id="progressoPct">0%</span>
+      </div>
+      <div class="barra-ext"><div class="barra-int" id="progressoBarra"></div></div>
+      <div class="detalhe" id="progressoDetalhe"></div>
+      <div class="log" id="progressoLog"></div>
+    </div>
+
+    <div class="campo-admin">
+      <label>Clientes de destino <span class="req">*</span></label>
+      <div class="lista-clientes-destino" id="listaClientesDestino">
+        <div class="ms-vazia" style="text-align:center;padding:20px;color:var(--muted);font-size:0.82rem;">
+          <i class="fas fa-spinner fa-spin"></i> Carregando clientes...
+        </div>
+      </div>
+    </div>
+
+    <div class="acoes-modal" style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;padding-top:8px;border-top:1px solid var(--borda);margin-top:8px;">
+      <button class="btn-modal limpar" style="padding:10px 20px;border-radius:10px;border:none;font-family:inherit;font-weight:700;font-size:0.86rem;cursor:pointer;background:var(--cinza-claro);color:var(--texto-escuro);" onclick="fecharModalConfirmarClonagem()">
+        Cancelar
+      </button>
+      <button class="btn-modal aplicar" id="btnConfirmarClonagemLote" style="padding:10px 20px;border-radius:10px;border:none;font-family:inherit;font-weight:700;font-size:0.86rem;cursor:pointer;background:var(--roxo);color:#fff;display:inline-flex;align-items:center;gap:6px;" onclick="executarClonagemLote()">
+        <i class="fas fa-copy"></i> Clonar agora
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL CLIENTES VINCULADOS ===== -->
+<div class="modal-backdrop" id="modalClientesVinculados">
+  <div class="modal-admin">
+    <button class="btn-fechar" onclick="fecharModalClientesVinculados()"><i class="fas fa-times"></i></button>
+    <h2><i class="fas fa-users"></i> Clientes vinculados</h2>
+    <p class="sub" id="clientesVinculadosSub">—</p>
+    <div id="clientesVinculadosLista"></div>
+  </div>
+</div>
+
+<!-- ===== MODAL BUSCA AVANÇADA ===== -->
+<div class="modal-backdrop" id="modalBuscaAvancada">
+  <div class="modal-busca-avancada">
+    <button class="btn-fechar" onclick="fecharModalBuscaAvancada()"><i class="fas fa-times"></i></button>
+    <h3><i class="fas fa-sliders-h"></i> Busca avançada</h3>
+    <p class="sub">Combine filtros para encontrar exatamente o que procura.</p>
+
+    <div class="secao-titulo">🏠 Tipo de imóvel</div>
+    <div class="chips-tipo-imovel" id="chipsTipoImovel">
+      <button type="button" class="chip-tipo-imovel" data-tipo="padrao"><i class="fas fa-building"></i> Apartamento Padrão</button>
+      <button type="button" class="chip-tipo-imovel" data-tipo="cobertura"><i class="fas fa-city"></i> Cobertura</button>
+      <button type="button" class="chip-tipo-imovel" data-tipo="area-privativa"><i class="fas fa-tree"></i> Área Privativa</button>
+      <button type="button" class="chip-tipo-imovel" data-tipo="casa"><i class="fas fa-home"></i> Casa</button>
+    </div>
+
+    <div class="secao-titulo">📍 Localização</div>
+    <div class="filtro-grupo">
+      <label>Bairros (selecione quantos quiser)</label>
+      <div class="multi-select-wrap">
+        <button type="button" class="multi-select-trigger" id="btnMultiBairros" onclick="toggleMultiBairros(event)">
+          <span class="txt-trigger" id="txtMultiBairros">Todos os bairros</span>
+          <span class="contador-bairros" id="contadorBairros" style="display:none;">0</span>
+          <i class="fas fa-chevron-down"></i>
+        </button>
+        <div class="multi-select-dropdown" id="dropdownBairros">
+          <div class="ms-acoes-rapidas">
+            <button type="button" onclick="selecionarTodosBairros()">Selecionar todos</button>
+            <button type="button" onclick="limparSelecaoBairros()">Limpar</button>
+          </div>
+          <div id="listaBairrosCheckboxes"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="secao-titulo">💰 Faixa de preço</div>
+    <div class="range-preco-wrap">
+      <div class="range-valores">
+        <div class="campo-valor">
+          <label>Mínimo (R$)</label>
+          <input type="number" id="precoMinInput" placeholder="0" min="0" step="5000">
+        </div>
+        <span class="traco-meio">—</span>
+        <div class="campo-valor">
+          <label>Máximo (R$)</label>
+          <input type="number" id="precoMaxInput" placeholder="Sem limite" min="0" step="5000">
+        </div>
+      </div>
+      <div class="slider-container">
+        <div class="slider-track"></div>
+        <div class="slider-range" id="sliderRange"></div>
+        <input type="range" id="precoMinRange" min="0" max="2000000" step="10000" value="0">
+        <input type="range" id="precoMaxRange" min="0" max="2000000" step="10000" value="2000000">
+      </div>
+      <div class="range-info-texto">
+        <span>R$ 0</span>
+        <span>R$ 2.000.000+</span>
+      </div>
+    </div>
+
+    <div class="secao-titulo">🏠 Características</div>
+    <div class="filtros-grid-2">
+      <div class="filtro-grupo">
+        <label for="filtroQuartos">Quartos (mínimo)</label>
+        <select id="filtroQuartos">
+          <option value="">Qualquer</option>
+          <option value="1">1+</option>
+          <option value="2">2+</option>
+          <option value="3">3+</option>
+          <option value="4">4+</option>
+          <option value="5">5+</option>
+        </select>
+      </div>
+      <div class="filtro-grupo">
+        <label for="filtroVagas">Vagas (mínimo)</label>
+        <select id="filtroVagas">
+          <option value="">Qualquer</option>
+          <option value="1">1+</option>
+          <option value="2">2+</option>
+          <option value="3">3+</option>
+          <option value="4">4+</option>
+        </select>
+      </div>
+      <div class="filtro-grupo">
+        <label for="filtroMetragem">Metragem mínima (m²)</label>
+        <input type="number" id="filtroMetragem" placeholder="Ex: 80" min="0" step="10">
+      </div>
+      <div class="filtro-grupo">
+        <label for="filtroCondominioMax">Condomínio máx. (R$)</label>
+        <input type="number" id="filtroCondominioMax" placeholder="Sem limite" min="0" step="50">
+      </div>
+    </div>
+
+    <div class="secao-titulo">📊 Ordenação</div>
+    <div class="filtros-grid-2">
+      <div class="filtro-grupo" style="grid-column: 1 / -1;">
+        <label for="filtroOrdenacao">Ordenar por</label>
+        <select id="filtroOrdenacao">
+          <option value="recentes">Mais recentes</option>
+          <option value="menor-preco">Menor preço</option>
+          <option value="maior-preco">Maior preço</option>
+          <option value="maior-metragem">Maior metragem</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="acoes-modal">
+      <button class="btn-modal limpar" onclick="limparFiltros()"><i class="fas fa-times"></i> Limpar</button>
+      <button class="btn-modal aplicar" onclick="aplicarFiltrosAvancados()"><i class="fas fa-check"></i> Aplicar filtros</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL SENHA ADMIN ===== -->
+<div class="modal-backdrop" id="modalSenhaAdmin">
+  <div class="modal-admin">
+    <button class="btn-fechar" onclick="fecharModalSenhaAdmin()"><i class="fas fa-times"></i></button>
+    <h2><i class="fas fa-shield-alt"></i> Acesso restrito</h2>
+    <p class="sub">Digite a senha de administrador para ativar o modo de edição.</p>
+    <div class="erro-senha" id="erroSenha">Senha incorreta. Tente novamente.</div>
+    <div class="campo-admin">
+      <label for="inputSenhaAdmin">Senha</label>
+      <input type="password" id="inputSenhaAdmin" placeholder="••••••••" onkeydown="if(event.key==='Enter') validarSenhaAdmin()">
+    </div>
+    <button class="btn-admin-primary" id="btnEntrarAdmin" onclick="validarSenhaAdmin()">
+      <i class="fas fa-unlock"></i> Entrar no modo admin
+    </button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* =====================================================
+   CONFIG
+===================================================== */
+const API_URL = 'https://script.google.com/macros/s/AKfycbzuCjg_5ZJDMWWKmjYp1ThW34iWS0YouviWFdiMGx8W3yApv0F1fdUcjeZdjm0s6Mg/exec';
+const WHATSAPP_FALLBACK = '5531996070930';
+const WHATSAPP_HUGO = '5531996070930';
+const WHATSAPP_CAROL = '5531996273985';
+const IMOVEIS_CACHE_KEY = 'lr_imoveis_admin_cache_v2';
+const IMOVEIS_CACHE_TTL = 5 * 60 * 1000;
+const ADMIN_SENHA_CORRETA = 'Cal@562938';
+const ADMIN_SENHA_KEY = 'lr_admin_senha_salva'; // ✅ Salva no localStorage
+
+const BUSCAR_BASE = 'https://corretor.quintoandar.com.br/informacoes-de-entrada';
+
+const FINAIS_LINK = {
+  'Hugo':     'HugoFelipePereiraRibeiro-3M2K',
+  'Carolina': 'CarolinaLima-ZADT'
+};
+
+const state = {
+  imoveisUnicos: [],
+  imoveisFiltrados: [],
+  todosImoveis: [],
+  clientes: [],
+  modoView: 'lista1',
+  imovelAtual: null,
+  filtroAtivo: false,
+  modoAdmin: false,
+  filtroFalhas: false,
+  imovelEditando: null,
+  imoveisMarcadosClonar: [],
+  ocultarVendidos: false,
+  _corretorEscolhido: '',
+  _linkDebounce: null,
+  _codigoLinkAtual: '',
+  _filtrosAplicados: {
+    bairros: [],
+    precoMin: null,
+    precoMax: null,
+    quartos: '',
+    vagas: '',
+    metragem: '',
+    condominioMax: '',
+    ordenacao: 'recentes',
+    tipos: []
+  },
+  _totalVendidosGlobal: 0
+};
+
+const $ = id => document.getElementById(id);
+
+function toast(msg, tipo=''){
+  const t = $('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + tipo;
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+function esc(s){
+  return String(s == null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+function parseNumeroBR(valor){
+  if(valor === null || valor === undefined || valor === '') return 0;
+  if(typeof valor === 'number') return valor;
+  let str = String(valor).trim();
+  if(!str) return 0;
+  str = str.replace(/R\$\s*/gi, '').trim().replace(/\s/g, '');
+  if(str.includes(',')){
+    str = str.replace(/\./g, '').replace(',', '.');
+    const n = parseFloat(str);
+    return isNaN(n) ? 0 : n;
+  }
+  if(str.includes('.')){
+    const partes = str.split('.');
+    if(partes[partes.length - 1].length === 3){
+      str = str.replace(/\./g, '');
+      const n = parseInt(str, 10);
+      return isNaN(n) ? 0 : n;
+    } else {
+      const n = parseFloat(str);
+      return isNaN(n) ? 0 : n;
+    }
+  }
+  const n = parseInt(str.replace(/\D/g, ''), 10);
+  return isNaN(n) ? 0 : n;
+}
+
+function fmtPreco(valor){
+  const n = parseNumeroBR(valor);
+  if(!n || n <= 0) return 'Consulte';
+  return n.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+function fmtValorLimpo(valor){
+  const n = parseNumeroBR(valor);
+  if(!n || n <= 0) return '';
+  return n.toLocaleString('pt-BR', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+}
+
+function extrairTipoImovel(descricao){
+  if(!descricao) return '';
+  const matches = String(descricao).match(/\*+([^*\n]+)\*+/g);
+  if(!matches) return '';
+  for(const m of matches){
+    const texto = m.replace(/\*/g, '').trim().toLowerCase();
+    if(texto.includes('vendido')) continue;
+    if(texto.includes('cobertura')) return 'Cobertura';
+    if(texto.includes('area privativa') || texto.includes('área privativa')) return 'Área Privativa';
+    if(texto.includes('casa')) return 'Casa';
+  }
+  return '';
+}
+
+function isVendido(imovel){
+  if (!imovel) return false;
+  const v = String(imovel.vendido || '').trim().toLowerCase();
+  if (!v) return false;
+  return v === 'sim' || v === 's' || v === 'yes' || v === 'y' ||
+         v === 'true' || v === 't' || v === '1' || v === 'x' ||
+         v === 'vendido' || v === 'v';
+}
+
+function extrairQuartos(descricao){
+  if(!descricao) return 0;
+  const s = String(descricao).toLowerCase();
+  const m = s.match(/(\d+)\s*(quartos?|qts?|quars?|qtos?|quartitos?)/i);
+  return m ? parseInt(m[1], 10) : 0;
+}
+function extrairVagas(descricao){
+  if(!descricao) return 0;
+  const s = String(descricao).toLowerCase();
+  const m = s.match(/(\d+)\s*(vagas?|vgs?|garagens?|garagem)/i);
+  return m ? parseInt(m[1], 10) : 0;
+}
+function extrairMetragem(descricao){
+  if(!descricao) return 0;
+  const s = String(descricao).toLowerCase();
+  const m = s.match(/(\d+[,.]?\d*)\s*(m²|m2|metros?|mts?)/i);
+  if(!m) return 0;
+  const num = String(m[1]).replace(',', '.');
+  const n = parseFloat(num);
+  return isNaN(n) ? 0 : Math.round(n);
+}
+
+function obterChaveTexto(im) {
+  if (!im) return '';
+  return String(im.chaveTexto || im.chave || im.Chave || im.chave_texto || '').trim();
+}
+
+function extrairNumeroApto(chaveTexto){
+  if(!chaveTexto) return '';
+  const primeiraLinha = String(chaveTexto).split(/\r?\n/)[0] || '';
+  const m = primeiraLinha.match(/(?:apto?|ap|apartamento)?\s*[•·:]?\s*(\d{1,6})/i);
+  return m ? m[1] : '';
+}
+
+function infoAptoImovel(im){
+  let numero = '';
+  if(im.apto) numero = String(im.apto).replace(/\D/g, '');
+  if(!numero) numero = extrairNumeroApto(obterChaveTexto(im));
+  return { numero };
+}
+
+function temMultiplosAptos(im) {
+  const chave = obterChaveTexto(im);
+  if (!chave) return false;
+  const primeiraLinha = chave.split(/\r?\n/)[0] || '';
+  const matches = primeiraLinha.match(/\d{1,6}/g);
+  return !!(matches && matches.length > 1);
+}
+
+function obterFalhasDoImovel(im) {
+  const falhas = [];
+  if (!im) return falhas;
+  if (!String(im.rua || '').trim()) falhas.push('Falta Rua');
+  if (!String(im.numero || '').trim()) falhas.push('Falta Número');
+  if (!String(im.bairro || '').trim()) falhas.push('Falta Bairro');
+  const preco = parseNumeroBR(im.preco);
+  if (preco <= 0) falhas.push('Falta Preço');
+  if (temMultiplosAptos(im)) falhas.push('Múltiplos Aptos (ex: 1103 / 302)');
+  return falhas;
+}
+
+function imovelTemFalha(im) { return obterFalhasDoImovel(im).length > 0; }
+
+function primeiraLinhaDescricao(descricao){
+  if(!descricao) return '';
+  const linhas = String(descricao).split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
+  if(linhas.length === 0) return '';
+  let linha = linhas[0].replace(/\*+[^*]*\*+/g, '').replace(/\s{2,}/g, ' ').trim();
+  linha = linha.replace(/^\s*·\s*|\s*·\s*$/g, '').trim();
+  return linha;
+}
+
+function duasLinhasDescricao(descricao){
+  if(!descricao) return '';
+  const linhas = String(descricao).split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
+  if(linhas.length === 0) return '';
+  const limpas = linhas.map(l => l.replace(/\*+[^*]*\*+/g, '').replace(/\s{2,}/g, ' ').replace(/^\s*·\s*|\s*·\s*$/g, '').trim()).filter(l => l.length > 0);
+  if(limpas.length === 0) return '';
+  if(limpas.length === 1) return limpas[0];
+  return limpas[0] + ' · ' + limpas[1];
+}
+
+function normalizaTexto(s){
+  return String(s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
+}
+function normalizaTel(t){ return String(t || '').replace(/\D/g, ''); }
+function fmtTel(t){
+  const n = normalizaTel(t);
+  if(n.length === 11) return `(${n.slice(0,2)}) ${n.slice(2,3)} ${n.slice(3,7)}-${n.slice(7)}`;
+  if(n.length === 10) return `(${n.slice(0,2)}) ${n.slice(2,6)}-${n.slice(6)}`;
+  return String(t || '');
+}
+
+function urlImagem(im){
+  const img = String(im.imagem || '').trim();
+  if(!img) return '';
+  const m = img.match(/\/d\/([^\/]+)/);
+  if(m && m[1]) return `https://drive.google.com/thumbnail?id=${m[1]}&sz=w800`;
+  const m2 = img.match(/[?&]id=([^&]+)/);
+  if(m2 && m2[1]) return `https://drive.google.com/thumbnail?id=${m2[1]}&sz=w800`;
+  return img;
+}
+
+function extrairCodigoDoLink(url){
+  if(!url) return '';
+  const match = String(url).match(/\/(\d{6,})\/?(?:[?#].*)?$/);
+  if(match) return match[1];
+  const match2 = String(url).match(/(\d{6,})/);
+  return match2 ? match2[1] : '';
+}
+
+function detectarCorretorDoLink(link){
+  if(!link) return '';
+  for(const [nome, sufixo] of Object.entries(FINAIS_LINK)){
+    if(link.includes(sufixo)) return nome;
+  }
+  return '';
+}
+
+function getWhatsappCorretor(im){
+  const corretor = detectarCorretorDoLink(im.link || '');
+  if(corretor === 'Hugo') return WHATSAPP_HUGO;
+  if(corretor === 'Carolina') return WHATSAPP_CAROL;
+  return WHATSAPP_FALLBACK;
+}
+
+async function apiGet(action, params = {}, opts = {}){
+  const timeoutMs = opts.timeout || 60000;
+  const qs = new URLSearchParams({ action, _t: Date.now(), ...params }).toString();
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(new Error('timeout')), timeoutMs);
+  try {
+    const resp = await fetch(API_URL + '?' + qs, {
+      method: 'GET', mode: 'cors',
+      headers: { 'Accept': 'application/json' },
+      redirect: 'follow', signal: controller.signal
+    });
+    clearTimeout(timer);
+    if(!resp.ok) throw new Error('HTTP ' + resp.status);
+    return await resp.json();
+  } catch(e){
+    clearTimeout(timer);
+    if (e && e.name === 'AbortError') throw new Error('A requisição demorou demais. Tente novamente.');
+    throw e;
+  }
+}
+
+/* =====================================================
+   CACHE DE IMÓVEIS
+===================================================== */
+function lerCacheImoveis() {
+  try {
+    const raw = localStorage.getItem(IMOVEIS_CACHE_KEY);
+    if (!raw) return null;
+    const obj = JSON.parse(raw);
+    if (!obj || !obj.ts || !obj.data) return null;
+    if (Date.now() - obj.ts > IMOVEIS_CACHE_TTL) return null;
+    return obj.data;
+  } catch(e) { return null; }
+}
+
+function salvarCacheImoveis(data) {
+  try { localStorage.setItem(IMOVEIS_CACHE_KEY, JSON.stringify({ ts: Date.now(), data })); } catch(e) {}
+}
+function limparCacheImoveis() {
+  try { localStorage.removeItem(IMOVEIS_CACHE_KEY); } catch(e) {}
+}
+
+async function carregarImoveis(forceRefresh = false){
+  if (!forceRefresh) {
+    const cached = lerCacheImoveis();
+    if (cached && Array.isArray(cached) && cached.length > 0) {
+      state.imoveisUnicos = cached;
+      finalizarCarregamento();
+      atualizarImoveisEmBackground();
+      return;
+    }
+  }
+  try {
+    const res = await apiGet('listarImoveisPublicos', {}, { timeout: 45000 });
+    if(!res.ok){ mostrarErroCarregamento(res.error || 'Erro ao carregar imóveis'); return; }
+    state.imoveisUnicos = res.data || [];
+    salvarCacheImoveis(state.imoveisUnicos);
+    finalizarCarregamento();
+  } catch(e){
+    mostrarErroCarregamento(e.message);
+  }
+}
+
+async function atualizarImoveisEmBackground(){
+  try {
+    const res = await apiGet('listarImoveisPublicos', {}, { timeout: 45000 });
+    if (!res.ok || !res.data) return;
+    const atual = state.imoveisUnicos;
+    const novo = res.data;
+    const mudou = atual.length !== novo.length || (atual[0] && novo[0] && atual[0].id !== novo[0].id) || (atual[atual.length-1] && novo[novo.length-1] && atual[atual.length-1].id !== novo[novo.length-1].id);
+    if (!mudou) return;
+    state.imoveisUnicos = novo;
+    salvarCacheImoveis(novo);
+    finalizarCarregamento();
+  } catch(e){}
+}
+
+async function carregarTodosImoveisAdmin(){
+  try {
+    const res = await apiGet('listarTodosImoveis', { senha: obterSenhaAdmin() });
+    if(res.ok && res.data) state.todosImoveis = res.data;
+  } catch(e){ console.warn(e); }
+}
+
+async function carregarClientesAdmin(){
+  try {
+    const res = await apiGet('listarClientes', { senha: obterSenhaAdmin() });
+    if(res.ok && res.data) state.clientes = res.data;
+  } catch(e){ console.warn(e); }
+}
+
+function mostrarErroCarregamento(msg){
+  $('contadorImoveis').innerHTML = '<i class="fas fa-exclamation-triangle"></i> Erro ao carregar';
+  $('cardsGrid').innerHTML = `
+    <div class="empty-state">
+      <i class="fas fa-exclamation-triangle"></i>
+      <h3>Não foi possível carregar os imóveis</h3>
+      <p>${esc(msg)}</p>
+      <button onclick="carregarImoveis(true)" style="margin-top:14px;padding:10px 20px;background:var(--azul-quinto);color:#fff;border:none;border-radius:10px;font-family:inherit;font-weight:700;cursor:pointer;">Tentar novamente</button>
+    </div>
+  `;
+}
+
+function finalizarCarregamento(){
+  const totalVendidos = state.imoveisUnicos.filter(im => isVendido(im)).length;
+  state._totalVendidosGlobal = totalVendidos;
+  atualizarBotaoOcultarVendidos();
+  popularCheckboxesBairros();
+  aplicarFiltros();
+}
+
+function atualizarBotaoOcultarVendidos() {
+  const btn = $('btnOcultarVendidos');
+  const totalVend = state._totalVendidosGlobal || 0;
+  if (state.ocultarVendidos) {
+    btn.classList.add('ativo');
+    btn.innerHTML = `<i class="fas fa-eye-slash"></i> Mostrar vendidos ${totalVend > 0 ? `(${totalVend})` : ''}`;
+  } else {
+    btn.classList.remove('ativo');
+    btn.innerHTML = `<i class="fas fa-eye"></i> Ocultar vendidos ${totalVend > 0 ? `(${totalVend})` : ''}`;
+  }
+}
+
+function agruparBairros(){
+  const bairros = {};
+  state.imoveisUnicos.forEach(im => {
+    const b = im.bairro;
+    if(b) bairros[b] = (bairros[b] || 0) + 1;
+  });
+  return Object.entries(bairros).sort((a, b) => a[0].localeCompare(b[0], 'pt-BR'));
+}
+
+function popularCheckboxesBairros(){
+  const container = $('listaBairrosCheckboxes');
+  if (!container) return;
+  const bairros = agruparBairros();
+  const selecionados = state._filtrosAplicados.bairros || [];
+
+  if (bairros.length === 0) {
+    container.innerHTML = '<div class="ms-vazia">Nenhum bairro disponível</div>';
+    return;
+  }
+
+  container.innerHTML = bairros.map(([b, n]) => `
+    <label class="ms-item ${selecionados.includes(b) ? 'ativo' : ''}">
+      <input type="checkbox" ${selecionados.includes(b) ? 'checked' : ''} onchange="toggleBairroCheck(this, '${esc(b).replace(/'/g, "\\'")}')">
+      <span>${esc(b)}</span>
+      <span class="qtd-b">${n}</span>
+    </label>
+  `).join('');
+
+  atualizarTextoMultiBairros();
+}
+
+function toggleMultiBairros(e){
+  e.stopPropagation();
+  const trigger = $('btnMultiBairros');
+  const dropdown = $('dropdownBairros');
+  const aberto = dropdown.classList.toggle('aberto');
+  trigger.classList.toggle('aberto', aberto);
+}
+
+function toggleBairroCheck(checkbox, bairro){
+  const label = checkbox.closest('.ms-item');
+  const lista = state._filtrosAplicados.bairros || [];
+  if (checkbox.checked) {
+    if (!lista.includes(bairro)) lista.push(bairro);
+    label.classList.add('ativo');
+  } else {
+    const idx = lista.indexOf(bairro);
+    if (idx > -1) lista.splice(idx, 1);
+    label.classList.remove('ativo');
+  }
+  state._filtrosAplicados.bairros = lista;
+  atualizarTextoMultiBairros();
+}
+
+function atualizarTextoMultiBairros(){
+  const lista = state._filtrosAplicados.bairros || [];
+  const txt = $('txtMultiBairros');
+  const contador = $('contadorBairros');
+  if (lista.length === 0) {
+    txt.textContent = 'Todos os bairros';
+    txt.classList.remove('tem-valor');
+    contador.style.display = 'none';
+  } else if (lista.length === 1) {
+    txt.textContent = lista[0];
+    txt.classList.add('tem-valor');
+    contador.style.display = 'none';
+  } else {
+    txt.textContent = `${lista.length} bairros selecionados`;
+    txt.classList.add('tem-valor');
+    contador.textContent = lista.length;
+    contador.style.display = 'inline-block';
+  }
+}
+
+function selecionarTodosBairros(){
+  state._filtrosAplicados.bairros = agruparBairros().map(([b]) => b);
+  popularCheckboxesBairros();
+}
+function limparSelecaoBairros(){
+  state._filtrosAplicados.bairros = [];
+  popularCheckboxesBairros();
+}
+
+document.addEventListener('click', (e) => {
+  const dropdown = $('dropdownBairros');
+  const trigger = $('btnMultiBairros');
+  if (dropdown && dropdown.classList.contains('aberto')) {
+    if (!e.target.closest('.multi-select-wrap')) {
+      dropdown.classList.remove('aberto');
+      trigger.classList.remove('aberto');
+    }
+  }
+});
+
+/* =====================================================
+   SLIDER DE PREÇO
+===================================================== */
+const PRECO_MAX_SLIDER = 2000000;
+const PRECO_STEP = 10000;
+
+function initSliderPreco() {
+  const minR = $('precoMinRange'), maxR = $('precoMaxRange');
+  const minI = $('precoMinInput'), maxI = $('precoMaxInput');
+  const range = $('sliderRange');
+  function atualizarVisual() {
+    let vMin = parseInt(minR.value, 10), vMax = parseInt(maxR.value, 10);
+    if (vMin > vMax - PRECO_STEP) { vMin = vMax - PRECO_STEP; minR.value = vMin; }
+    if (vMax < vMin + PRECO_STEP) { vMax = vMin + PRECO_STEP; maxR.value = vMax; }
+    const pMin = (vMin / PRECO_MAX_SLIDER) * 100, pMax = (vMax / PRECO_MAX_SLIDER) * 100;
+    range.style.left = pMin + '%'; range.style.width = (pMax - pMin) + '%';
+    if (document.activeElement !== minI) minI.value = vMin > 0 ? vMin : '';
+    if (document.activeElement !== maxI) maxI.value = vMax < PRECO_MAX_SLIDER ? vMax : '';
+  }
+  minR.addEventListener('input', atualizarVisual); maxR.addEventListener('input', atualizarVisual);
+  minI.addEventListener('input', () => { const v = parseFloat(minI.value) || 0; minR.value = Math.min(v, PRECO_MAX_SLIDER); atualizarVisual(); });
+  maxI.addEventListener('input', () => { const v = parseFloat(maxI.value) || PRECO_MAX_SLIDER; maxR.value = Math.min(Math.max(v, 0), PRECO_MAX_SLIDER); atualizarVisual(); });
+  atualizarVisual();
+}
+
+function setarSliderPreco(min, max) {
+  const minR = $('precoMinRange'), maxR = $('precoMaxRange');
+  const minI = $('precoMinInput'), maxI = $('precoMaxInput'), range = $('sliderRange');
+  minR.value = Math.min(Math.max(min || 0, 0), PRECO_MAX_SLIDER); maxR.value = Math.min(Math.max(max || PRECO_MAX_SLIDER, 0), PRECO_MAX_SLIDER);
+  minI.value = min > 0 ? min : ''; maxI.value = max && max < PRECO_MAX_SLIDER ? max : '';
+  const pMin = (minR.value / PRECO_MAX_SLIDER) * 100, pMax = (maxR.value / PRECO_MAX_SLIDER) * 100;
+  range.style.left = pMin + '%'; range.style.width = (pMax - pMin) + '%';
+}
+
+/* =====================================================
+   FILTROS
+===================================================== */
+function temFiltroAtivo(){
+  const busca = $('filtroBusca').value.trim();
+  const f = state._filtrosAplicados;
+  return !!(busca || (f.bairros && f.bairros.length) || f.precoMin || f.precoMax || f.quartos || f.vagas || f.metragem || f.condominioMax || (f.tipos && f.tipos.length));
+}
+
+function bateComTipos(descricao, tipos){
+  if(!tipos || tipos.length === 0) return true;
+  const marcadores = { casa: false, cobertura: false, 'area-privativa': false };
+  const matches = String(descricao || '').match(/\*+([^*\n]+)\*+/g);
+  if(matches){
+    for(const m of matches){
+      const t = normalizaTexto(m.replace(/\*/g, '').trim());
+      if(t.includes('vendido')) continue;
+      if(t.includes('cobertura')) marcadores.cobertura = true;
+      if(t.includes('area privativa') || t.includes('área privativa') || t === 'area privativa') marcadores['area-privativa'] = true;
+      if(t.includes('casa')) marcadores.casa = true;
+    }
+  }
+  for(const tipo of tipos){
+    if(tipo === 'padrao'){ if(!marcadores.cobertura && !marcadores['area-privativa'] && !marcadores.casa) return true; }
+    else if(tipo === 'casa' && marcadores.casa) return true;
+    else if(tipo === 'cobertura' && marcadores.cobertura) return true;
+    else if(tipo === 'area-privativa' && marcadores['area-privativa']) return true;
+  }
+  return false;
+}
+
+function aplicarFiltros(){
+  const busca = normalizaTexto($('filtroBusca').value);
+  const f = state._filtrosAplicados;
+  const bairros = f.bairros || [];
+  const precoMin = f.precoMin || 0, precoMax = f.precoMax || 0;
+  const quartosMin = parseInt(f.quartos || '0', 10) || 0;
+  const vagasMin = parseInt(f.vagas || '0', 10) || 0;
+  const metragemMin = parseInt(f.metragem || '0', 10) || 0;
+  const condominioMax = parseFloat(f.condominioMax || '0') || 0;
+  const ordenacao = f.ordenacao || 'recentes';
+  const tipos = f.tipos || [];
+
+  state.filtroAtivo = temFiltroAtivo();
+  let arr = [...state.imoveisUnicos];
+
+  if(busca){
+    arr = arr.filter(im => {
+      const alvo = normalizaTexto((im.codigo || '') + ' ' + (im.rua || '') + ' ' + (im.bairro || '') + ' ' + (im.titulo || '') + ' ' + (im.descricao || ''));
+      return alvo.includes(busca);
+    });
+  }
+
+  if(bairros.length > 0){
+    const set = new Set(bairros.map(b => normalizaTexto(b)));
+    arr = arr.filter(im => set.has(normalizaTexto(im.bairro)));
+  }
+
+  if(tipos.length > 0) arr = arr.filter(im => bateComTipos(im.descricao || '', tipos));
+  if(precoMin > 0) arr = arr.filter(im => parseNumeroBR(im.preco) >= precoMin);
+  if(precoMax > 0) arr = arr.filter(im => parseNumeroBR(im.preco) <= precoMax);
+  if(quartosMin > 0) arr = arr.filter(im => extrairQuartos(im.descricao) >= quartosMin);
+  if(vagasMin > 0) arr = arr.filter(im => extrairVagas(im.descricao) >= vagasMin);
+  if(metragemMin > 0) arr = arr.filter(im => extrairMetragem(im.descricao) >= metragemMin);
+  if(condominioMax > 0) arr = arr.filter(im => { const c = parseNumeroBR(im.condominio); return c === 0 || c <= condominioMax; });
+
+  if(state.ocultarVendidos){
+    arr = arr.filter(im => !isVendido(im));
+  }
+
+  if(state.modoAdmin && state.filtroFalhas){
+    arr = arr.filter(im => imovelTemFalha(mesclarCompleto(im)));
+  }
+
+  arr.sort((a, b) => {
+    if(ordenacao === 'menor-preco') return parseNumeroBR(a.preco) - parseNumeroBR(b.preco);
+    if(ordenacao === 'maior-preco') return parseNumeroBR(b.preco) - parseNumeroBR(a.preco);
+    if(ordenacao === 'maior-metragem') return extrairMetragem(b.descricao) - extrairMetragem(a.descricao);
+    return new Date(b.dataCadastro||0) - new Date(a.dataCadastro||0);
+  });
+
+  state.imoveisFiltrados = arr;
+  renderizarCards();
+  atualizarBadgeFiltros();
+  atualizarContadorImoveis();
+}
+
+function atualizarContadorImoveis(){
+  const total = state.imoveisFiltrados.length;
+  const ocultouVendidos = state.ocultarVendidos;
+  const totalVendidos = state._totalVendidosGlobal || 0;
+  let txt = `${total} ${total === 1 ? 'imóvel disponível' : 'imóveis disponíveis'}`;
+  if (ocultouVendidos && totalVendidos > 0) txt += ` · ${totalVendidos} vendido(s) oculto(s)`;
+  $('contadorImoveis').innerHTML = `<i class="fas fa-home"></i> ${txt}`;
+  if(state.modoAdmin) atualizarAdminInfo();
+}
+
+function atualizarAdminInfo(){
+  const el = $('adminTotalInfo');
+  if(el) el.textContent = state.imoveisFiltrados.length + ' imóveis';
+}
+
+function atualizarBadgeFiltros(){
+  const f = state._filtrosAplicados;
+  let count = 0;
+  if(f.bairros && f.bairros.length) count++;
+  if(f.precoMin || f.precoMax) count++;
+  if(f.quartos) count++;
+  if(f.vagas) count++;
+  if(f.metragem) count++;
+  if(f.condominioMax) count++;
+  if(f.tipos && f.tipos.length) count++;
+  const badge = $('badgeFiltrosAtivos');
+  const btn = $('btnBuscaAvancada');
+  if(badge) badge.textContent = count;
+  if(btn) btn.classList.toggle('tem-filtro', count > 0);
+}
+
+function limparFiltros(){
+  state._filtrosAplicados = { bairros: [], precoMin: null, precoMax: null, quartos: '', vagas: '', metragem: '', condominioMax: '', ordenacao: 'recentes', tipos: [] };
+  $('filtroBusca').value = '';
+  $('filtroQuartos').value = '';
+  $('filtroVagas').value = '';
+  $('filtroMetragem').value = '';
+  $('filtroCondominioMax').value = '';
+  $('filtroOrdenacao').value = 'recentes';
+  setarSliderPreco(0, PRECO_MAX_SLIDER);
+  document.querySelectorAll('#chipsTipoImovel .chip-tipo-imovel').forEach(b => b.classList.remove('ativo'));
+  popularCheckboxesBairros();
+  aplicarFiltros();
+}
+
+function toggleOcultarVendidos(){
+  state.ocultarVendidos = !state.ocultarVendidos;
+  atualizarBotaoOcultarVendidos();
+  aplicarFiltros();
+}
+
+function toggleFiltroFalhas(){
+  if(!state.modoAdmin) return;
+  state.filtroFalhas = !state.filtroFalhas;
+  const btn = $('btnFalhas');
+  if(state.filtroFalhas){ btn.classList.add('ativo'); toast('Mostrando apenas imóveis com falhas', 'error'); }
+  else { btn.classList.remove('ativo'); }
+  aplicarFiltros();
+}
+
+function abrirModalBuscaAvancada(){
+  const f = state._filtrosAplicados;
+  $('filtroQuartos').value = f.quartos || '';
+  $('filtroVagas').value = f.vagas || '';
+  $('filtroMetragem').value = f.metragem || '';
+  $('filtroCondominioMax').value = f.condominioMax || '';
+  $('filtroOrdenacao').value = f.ordenacao || 'recentes';
+  setarSliderPreco(f.precoMin || 0, f.precoMax || PRECO_MAX_SLIDER);
+  document.querySelectorAll('#chipsTipoImovel .chip-tipo-imovel').forEach(b => {
+    b.classList.toggle('ativo', (f.tipos || []).includes(b.dataset.tipo));
+  });
+  popularCheckboxesBairros();
+  $('modalBuscaAvancada').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+
+function fecharModalBuscaAvancada(){ $('modalBuscaAvancada').classList.remove('show'); document.body.style.overflow = ''; }
+
+document.querySelectorAll('#chipsTipoImovel .chip-tipo-imovel').forEach(btn => {
+  btn.addEventListener('click', () => btn.classList.toggle('ativo'));
+});
+
+function aplicarFiltrosAvancados(){
+  const tiposAtivos = Array.from(document.querySelectorAll('#chipsTipoImovel .chip-tipo-imovel.ativo')).map(b => b.dataset.tipo);
+  const minV = parseFloat($('precoMinRange').value) || 0;
+  const maxV = parseFloat($('precoMaxRange').value) || 0;
+  const min = minV > 0 ? minV : null;
+  const max = maxV > 0 && maxV < PRECO_MAX_SLIDER ? maxV : null;
+
+  state._filtrosAplicados = {
+    bairros: state._filtrosAplicados.bairros || [],
+    precoMin: min,
+    precoMax: max,
+    quartos: $('filtroQuartos').value,
+    vagas: $('filtroVagas').value,
+    metragem: $('filtroMetragem').value,
+    condominioMax: $('filtroCondominioMax').value,
+    ordenacao: $('filtroOrdenacao').value,
+    tipos: tiposAtivos
+  };
+  fecharModalBuscaAvancada();
+  aplicarFiltros();
+}
+
+/* =====================================================
+   RENDERIZAÇÃO DOS CARDS
+===================================================== */
+function renderizarCards(){
+  const grid = $('cardsGrid');
+  const arr = state.imoveisFiltrados;
+
+  if(arr.length === 0){
+    grid.innerHTML = `
+      <div class="empty-state">
+        <i class="fas fa-search"></i>
+        <h3>Nenhum imóvel encontrado</h3>
+        <p>Tente ajustar os filtros ou limpar a busca.</p>
+      </div>
+    `;
+    return;
+  }
+
+  grid.innerHTML = arr.map(im => cardHTML(mesclarCompleto(im))).join('');
+}
+
+function cardHTML(im){
+  const extras = [];
+  const c = parseNumeroBR(im.condominio);
+  const i = parseNumeroBR(im.iptu);
+  const infoApto = infoAptoImovel(im);
+  const vendido = isVendido(im);
+  const falhas = obterFalhasDoImovel(im);
+  const temFalhaApto = temMultiplosAptos(im);
+  const codigo = String(im.codigo || '').trim();
+  const estaMarcado = codigo && state.imoveisMarcadosClonar.includes(codigo);
+
+  if(c > 0) extras.push(`<span class="feat">Cond ${esc(fmtValorLimpo(im.condominio))}</span>`);
+  if(i > 0) extras.push(`<span class="feat">IPTU ${esc(fmtValorLimpo(im.iptu))}</span>`);
+  if(vendido) extras.push(`<span class="feat feat-vendido">VENDIDO</span>`);
+
+  const fotoStyle = im.imagem ? `background-image: url('${esc(urlImagem(im))}');` : 'background: linear-gradient(135deg, #e8edff, #d0d7e6);';
+  const fotoIcone = im.imagem ? '' : '<i class="fas fa-image"></i>';
+  const rua = im.rua || im.titulo || 'Endereço não informado';
+  const bairro = im.bairro || '';
+  const descTopo = primeiraLinhaDescricao(im.descricao);
+  const descDuasLinhas = duasLinhasDescricao(im.descricao);
+  const tipo = extrairTipoImovel(im.descricao);
+
+  let aptoAdmin = '';
+  if(temFalhaApto) aptoAdmin = `<span class="apto-erro"><i class="fas fa-exclamation-triangle"></i> Erro no Apto</span>`;
+  else if(infoApto.numero) aptoAdmin = `<span class="apto-admin"><i class="fas fa-door-open"></i> Apto ${esc(infoApto.numero)}</span>`;
+
+  const adminAcoes = `
+    <div class="admin-acoes">
+      <button class="btn-a btn-editar" onclick="event.stopPropagation(); abrirModalEditarImovel('${esc(codigo)}')">
+        <i class="fas fa-edit"></i> Editar
+      </button>
+      <button class="btn-a btn-clonar ${estaMarcado ? 'marcado' : ''}" onclick="event.stopPropagation(); toggleMarcarClonagem('${esc(codigo)}')">
+        <i class="fas ${estaMarcado ? 'fa-check' : 'fa-copy'}"></i> ${estaMarcado ? 'Marcado' : 'Clonar'}
+      </button>
+      <button class="btn-a btn-clientes" onclick="event.stopPropagation(); abrirModalClientesVinculados('${esc(codigo)}')">
+        <i class="fas fa-users"></i> Clientes
+      </button>
+      <button class="btn-a btn-entrada" ${!codigo ? 'disabled' : ''} onclick="event.stopPropagation(); window.open('${BUSCAR_BASE}/${esc(codigo)}','_blank','noopener')">
+        <i class="fas fa-key"></i> Entrada
+      </button>
+      <button class="btn-a btn-anuncio" onclick="event.stopPropagation(); ${im.link ? `window.open('${esc(im.link)}','_blank','noopener')` : `alert('Sem link de anúncio')`}">
+        <i class="fas fa-external-link-alt"></i> Ver anúncio
+      </button>
+    </div>
+  `;
+
+  const codigoLinha = im.codigo ? `<div class="codigo-linha"><span class="codigo-badge"><i class="fas fa-hashtag"></i> ${esc(im.codigo)}</span></div>` : '';
+  const tarjaVendido = vendido ? '<div class="tarja-vendido"></div>' : '';
+
+  let tarjaFalhaHtml = '';
+  if (state.modoAdmin && state.filtroFalhas && falhas.length > 0) {
+    tarjaFalhaHtml = `
+      <div class="tarja-falha">
+        <div class="falha-titulo"><i class="fas fa-exclamation-triangle"></i> Corrigir:</div>
+        <ul class="falha-lista">${falhas.map(f => `<li>• ${esc(f)}</li>`).join('')}</ul>
+        <span class="falha-codigo">#${esc(im.codigo || 'S/N')}</span>
+      </div>
+    `;
+  }
+
+  const dataId = String(im.id || '');
+  const dataCodigo = codigo;
+
+  return `
+    <div class="imovel-card ${estaMarcado ? 'card-marcado-clonar' : ''}" data-id="${esc(dataId)}" data-codigo="${esc(dataCodigo)}">
+      ${tarjaFalhaHtml}
+      <div class="foto" onclick="abrirDetalhes('${esc(dataCodigo)}')" style="cursor:pointer; ${fotoStyle}">
+        ${fotoIcone}
+        ${descTopo ? `<span class="badge-descricao" title="${esc(descTopo)}">${esc(descTopo)}</span>` : ''}
+        ${tipo ? `<span class="badge-tipo">${esc(tipo)}</span>` : ''}
+        ${tarjaVendido}
+      </div>
+      <div class="corpo">
+        ${codigoLinha}
+        
+        <div class="preco-linha">
+          <div class="preco" onclick="abrirDetalhes('${esc(dataCodigo)}')" style="cursor:pointer;">
+            <span class="tipo">Venda</span>
+            ${esc(fmtPreco(im.preco))}
+          </div>
+          <button class="btn-share-card" onclick="compartilharImovelCard('${esc(dataCodigo)}')" title="Compartilhar">
+            <i class="fas fa-share-alt"></i>
+          </button>
+        </div>
+
+        <div class="endereco-linha" onclick="abrirDetalhes('${esc(dataCodigo)}')" style="cursor:pointer;">
+          <span class="rua">${esc(rua)}</span>
+          ${bairro ? `<span class="bairro-destaque">· ${esc(bairro)}</span>` : ''}
+          ${aptoAdmin}
+        </div>
+        ${descDuasLinhas ? `<div class="descricao-2linhas" onclick="abrirDetalhes('${esc(dataCodigo)}')" style="cursor:pointer;">${esc(descDuasLinhas)}</div>` : ''}
+        ${extras.length ? `<div class="condo-info">${extras.join('')}</div>` : ''}
+      </div>
+      ${adminAcoes}
+    </div>
+  `;
+}
+
+/* =====================================================
+   DETALHES
+===================================================== */
+function abrirDetalhes(ref){
+  const im = acharImovelPorQualquerRef(ref);
+  if(!im) return;
+  const imFull = mesclarCompleto(im);
+  state.imovelAtual = imFull;
+
+  const vendido = isVendido(imFull);
+
+  if(imFull.imagem){
+    $('detalheFoto').style.backgroundImage = `url('${urlImagem(imFull)}')`;
+    $('detalheFoto').innerHTML = vendido ? '<div class="tarja-vendido"></div>' : '';
+  } else {
+    $('detalheFoto').style.backgroundImage = '';
+    $('detalheFoto').innerHTML = '<i class="fas fa-image"></i>' + (vendido ? '<div class="tarja-vendido"></div>' : '');
+  }
+
+  $('detalheCodigo').textContent = '#' + (imFull.codigo || '---');
+  const tipo = extrairTipoImovel(imFull.descricao);
+  if(tipo){ $('detalheTipo').textContent = tipo; $('detalheTipo').style.display = 'inline-flex'; }
+  else { $('detalheTipo').style.display = 'none'; }
+
+  if(vendido) $('detalheVendido').style.display = 'inline-flex';
+  else $('detalheVendido').style.display = 'none';
+
+  $('detalhePreco').textContent = fmtPreco(imFull.preco);
+  const rua = imFull.rua || imFull.titulo || 'Endereço não informado';
+  const bairro = imFull.bairro || '';
+  $('detalheEndereco').innerHTML = `<i class="fas fa-map-marker-alt"></i> ${esc(rua)}${bairro ? `<span class="bairro-destaque">· ${esc(bairro)}</span>` : ''}`;
+  $('detalheDescricao').textContent = imFull.descricao || 'Sem descrição disponível.';
+
+  const gastos = [];
+  const c = parseNumeroBR(imFull.condominio);
+  const ip = parseNumeroBR(imFull.iptu);
+  if(c > 0) gastos.push(`<span><strong>Condomínio:</strong> ${esc(fmtPreco(imFull.condominio))}/mês</span>`);
+  if(ip > 0) gastos.push(`<span><strong>IPTU:</strong> ${esc(fmtPreco(imFull.iptu))}/mês</span>`);
+  if(gastos.length){ $('detalheGastos').style.display = 'flex'; $('detalheGastos').innerHTML = gastos.join(''); }
+  else { $('detalheGastos').style.display = 'none'; }
+
+  const whatsNum = getWhatsappCorretor(imFull);
+  const corretorNome = detectarCorretorDoLink(imFull.link || '');
+  const msg = encodeURIComponent(`Olá${corretorNome ? ' ' + corretorNome : ''}! Tenho interesse no imóvel #${imFull.codigo}${bairro ? ' no ' + bairro : ''}. Podem me passar mais informações?`);
+  $('detalheZap').href = `https://wa.me/${whatsNum}?text=${msg}`;
+
+  if(vendido) {
+    $('detalheAnuncio').href = '#';
+    $('detalheAnuncio').style.display = 'inline-flex'; $('detalheAnuncio').style.opacity = '0.5'; $('detalheAnuncio').style.pointerEvents = 'none';
+    $('detalheAnuncio').innerHTML = '<i class="fas fa-external-link-alt"></i> Anúncio Indisponível';
+  } else if(imFull.link){
+    $('detalheAnuncio').href = imFull.link;
+    $('detalheAnuncio').style.display = 'inline-flex'; $('detalheAnuncio').style.opacity = '1'; $('detalheAnuncio').style.pointerEvents = 'auto';
+    $('detalheAnuncio').innerHTML = '<i class="fas fa-external-link-alt"></i> Ver anúncio completo';
+  } else if(imFull.codigo){
+    $('detalheAnuncio').href = `https://www.quintoandar.com.br/imovel/${imFull.codigo}`;
+    $('detalheAnuncio').style.display = 'inline-flex'; $('detalheAnuncio').style.opacity = '1'; $('detalheAnuncio').style.pointerEvents = 'auto';
+    $('detalheAnuncio').innerHTML = '<i class="fas fa-external-link-alt"></i> Ver anúncio completo';
+  } else {
+    $('detalheAnuncio').style.display = 'none';
+  }
+
+  $('modalDetalhes').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+
+function fecharDetalhes(){ $('modalDetalhes').classList.remove('show'); document.body.style.overflow = ''; state.imovelAtual = null; }
+
+function compartilharImovel(){
+  const im = state.imovelAtual;
+  if(!im) return;
+  const url = window.location.origin + window.location.pathname + '?codigo=' + encodeURIComponent(im.codigo);
+  const texto = `Olha esse imóvel: #${im.codigo}${im.bairro ? ' no ' + im.bairro : ''} — ${fmtPreco(im.preco)}\n${url}`;
+  if(navigator.share) navigator.share({ title: 'Imóvel Lima Ribeiro', text: texto, url: url }).catch(()=>{});
+  else copiarTexto(texto);
+}
+
+function compartilharImovelCard(codigo) {
+  const im = acharImovelPorCodigo(codigo);
+  if(!im) return;
+  const url = window.location.origin + window.location.pathname + '?codigo=' + encodeURIComponent(im.codigo);
+  const texto = `Olha esse imóvel: #${im.codigo}${im.bairro ? ' no ' + im.bairro : ''} — ${fmtPreco(im.preco)}\n${url}`;
+  if(navigator.share) navigator.share({ title: 'Imóvel Lima Ribeiro', text: texto, url: url }).catch(()=>{});
+  else copiarTexto(texto);
+}
+
+function copiarTexto(txt){
+  if(navigator.clipboard && window.isSecureContext){
+    navigator.clipboard.writeText(txt).then(() => toast('Texto copiado!', 'success')).catch(() => fallbackCopy(txt));
+  } else fallbackCopy(txt);
+}
+function fallbackCopy(txt){
+  const ta = document.createElement('textarea');
+  ta.value = txt; ta.style.position = 'fixed'; ta.style.opacity = '0';
+  document.body.appendChild(ta); ta.select();
+  try { document.execCommand('copy'); toast('Texto copiado!', 'success'); }
+  catch(e){ toast('Não foi possível copiar', 'error'); }
+  document.body.removeChild(ta);
+}
+
+function acharImovelPorCodigo(codigo) {
+  if (!codigo) return null;
+  const cod = String(codigo).trim();
+  let im = state.imoveisFiltrados.find(x => String(x.codigo || '').trim() === cod);
+  if (im) return im;
+  im = state.imoveisUnicos.find(x => String(x.codigo || '').trim() === cod);
+  if (im) return im;
+  im = (state.todosImoveis || []).find(x => String(x.codigo || '').trim() === cod);
+  return im || null;
+}
+
+function acharImovelPorQualquerRef(ref) {
+  if (!ref) return null;
+  const porCodigo = acharImovelPorCodigo(ref);
+  if (porCodigo) return porCodigo;
+  let im = state.imoveisFiltrados.find(x => String(x.id) === String(ref));
+  if (im) return im;
+  im = state.imoveisUnicos.find(x => String(x.id) === String(ref));
+  if (im) return im;
+  im = (state.todosImoveis || []).find(x => String(x.id) === String(ref));
+  return im || null;
+}
+
+function mesclarCompleto(im) {
+  if (!im) return {};
+  const completo = (state.todosImoveis || []).find(x => String(x.codigo || '').trim() === String(im.codigo || '').trim()) || {};
+  return { ...im, ...completo };
+}
+
+/* =====================================================
+   ADMIN — Sessão e Senha Salva
+===================================================== */
+const ADMIN_SESSION_KEY = 'lr_admin_session';
+
+function obterSenhaAdmin() {
+  return localStorage.getItem(ADMIN_SENHA_KEY) || ADMIN_SENHA_CORRETA;
+}
+
+function manterSessaoAdmin() {
+  if (state.modoAdmin) sessionStorage.setItem(ADMIN_SESSION_KEY, 'ativo');
+  else sessionStorage.removeItem(ADMIN_SESSION_KEY);
+}
+
+function abrirModalSenhaAdmin(){
+  if(state.modoAdmin){
+    if(confirm('Você já está em modo ADMIN.\n\nDeseja SAIR do modo admin?')) sairModoAdmin();
+    return;
+  }
+  $('inputSenhaAdmin').value = '';
+  $('erroSenha').classList.remove('show');
+  $('modalSenhaAdmin').classList.add('show');
+  setTimeout(() => $('inputSenhaAdmin').focus(), 100);
+}
+function fecharModalSenhaAdmin(){ $('modalSenhaAdmin').classList.remove('show'); }
+
+function validarSenhaAdmin(){
+  const senha = $('inputSenhaAdmin').value.trim();
+  const senhaSalva = obterSenhaAdmin();
+  if(senha === senhaSalva){ 
+    localStorage.setItem(ADMIN_SENHA_KEY, senha); // ✅ Salva para a próxima vez
+    fecharModalSenhaAdmin(); 
+    entrarModoAdmin(); 
+  }
+  else { 
+    $('erroSenha').classList.add('show'); 
+    $('inputSenhaAdmin').value = ''; 
+    $('inputSenhaAdmin').focus(); 
+  }
+}
+
+async function entrarModoAdmin(){
+  state.modoAdmin = true;
+  manterSessaoAdmin();
+  $('btnAdminGear').classList.add('ativo');
+  $('adminBanner').classList.add('show');
+  $('btnFalhas').style.display = 'inline-flex';
+  toast('Modo admin ativado! 🔓', 'success');
+  await Promise.all([carregarTodosImoveisAdmin(), carregarClientesAdmin()]);
+  atualizarAdminInfo();
+  renderizarCards();
+  calcularFalhasAdmin();
+}
+
+function sairModoAdmin(){
+  state.modoAdmin = false;
+  state.filtroFalhas = false;
+  state.imoveisMarcadosClonar = [];
+  manterSessaoAdmin();
+  $('btnAdminGear').classList.remove('ativo');
+  $('adminBanner').classList.remove('show');
+  $('btnFalhas').style.display = 'none';
+  $('btnFalhas').classList.remove('ativo');
+  atualizarBarraClonagem();
+  toast('Modo admin desativado', 'success');
+  renderizarCards();
+}
+
+function calcularFalhasAdmin(){
+  const falhas = state.imoveisUnicos.filter(im => imovelTemFalha(mesclarCompleto(im)));
+  const badge = $('badgeFalhasCount');
+  if(badge) badge.textContent = falhas.length;
+  const btn = $('btnFalhas');
+  if(falhas.length > 0) {
+    btn.style.borderColor = 'var(--vermelho)'; btn.style.color = 'var(--vermelho)'; btn.style.background = '#fef2f2';
+  } else {
+    btn.style.borderColor = '#ffedd5'; btn.style.color = 'var(--laranja)'; btn.style.background = '#fff7ed';
+  }
+}
+
+/* =====================================================
+   EDITOR — Padronizado
+===================================================== */
+function abrirModalEditarImovel(ref){
+  const imBase = acharImovelPorQualquerRef(ref);
+  if(!imBase){ toast('Imóvel não encontrado', 'error'); return; }
+
+  state.imovelEditando = imBase;
+  state._corretorEscolhido = '';
+
+  const btnSalvar = $('btnSalvarImovel');
+  btnSalvar.disabled = false;
+  btnSalvar.innerHTML = '<i class="fas fa-save"></i> Salvar em todos os clientes';
+
+  const imCompleto = mesclarCompleto(imBase);
+  const linkSalvo = imCompleto.link || '';
+
+  $('editLink').value       = linkSalvo;
+  $('editRua').value        = imCompleto.rua        || '';
+  $('editNumero').value     = imCompleto.numero     || '';
+  $('editBairro').value     = imCompleto.bairro     || '';
+  $('editPreco').value      = imCompleto.preco      || '';
+  $('editCondominio').value = imCompleto.condominio || '';
+  $('editIptu').value       = imCompleto.iptu       || '';
+  $('editDescricao').value  = imCompleto.descricao  || '';
+  $('editChave').value      = imCompleto.chaveTexto || '';
+  $('editImagem').value     = imCompleto.imagem     || '';
+  $('editVendido').checked  = isVendido(imCompleto);
+
+  let corretorDetectado = '';
+  if(linkSalvo){
+    for(const [nome, sufixo] of Object.entries(FINAIS_LINK)){
+      if(linkSalvo.includes(sufixo)){ corretorDetectado = nome; break; }
+    }
+  }
+  state._corretorEscolhido = corretorDetectado;
+  atualizarBtnsCorretor(corretorDetectado);
+
+  const codigo = String(imCompleto.codigo || '').trim();
+  if(codigo){
+    state._codigoLinkAtual = codigo;
+    $('btnBuscarEntrada').disabled = false;
+    $('codigoBadge').textContent = '#' + codigo;
+  } else {
+    const cod = extrairCodigoDoLink(linkSalvo);
+    state._codigoLinkAtual = cod;
+    $('btnBuscarEntrada').disabled = !cod;
+    $('codigoBadge').textContent = cod ? '#' + cod : 'sem código';
+  }
+  atualizarPreview(imCompleto.imagem || '');
+
+  const chaveDoImovel = imCompleto.chaveTexto || '';
+  const infoAptoEd = infoAptoImovel(imCompleto);
+  const temFalhaApto = temMultiplosAptos(imCompleto);
+  const infoAptoBox = $('infoAptoEditor');
+  if(infoAptoEd.numero || temFalhaApto){
+    infoAptoBox.style.display = 'flex';
+    if(temFalhaApto) {
+      infoAptoBox.classList.add('erro');
+      $('aptoEditorNumero').textContent = chaveDoImovel.split('\n')[0];
+      $('aptoEditorAndar').textContent = 'Múltiplos números!';
+    } else {
+      infoAptoBox.classList.remove('erro');
+      $('aptoEditorNumero').textContent = infoAptoEd.numero;
+      $('aptoEditorAndar').textContent = '—';
+    }
+  } else {
+    infoAptoBox.style.display = 'none';
+  }
+
+  const total = contarClientesVinculados(codigo);
+  $('editarSubInfo').textContent = `#${codigo || '---'} · ${imCompleto.bairro || ''} — ${total} cliente(s) vinculado(s)`;
+
+  $('modalEditarImovel').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+
+function fecharModalEditarImovel(){
+  $('modalEditarImovel').classList.remove('show');
+  document.body.style.overflow = '';
+  state.imovelEditando = null;
+  state._corretorEscolhido = '';
+  state._codigoLinkAtual = '';
+}
+
+function atualizarPreview(url){
+  const img = $('previewImg');
+  const semImg = $('semImgTxt');
+  if(url && /^https?:\/\//.test(url)){ img.src = url; img.style.display = 'block'; if(semImg) semImg.style.display = 'none'; }
+  else { img.src = ''; img.style.display = 'none'; if(semImg) semImg.style.display = ''; }
+}
+
+function atualizarBtnsCorretor(valor){
+  document.querySelectorAll('.btn-corretor-escolha').forEach(btn => {
+    btn.classList.toggle('ativo', btn.dataset.corretor === valor);
+  });
+}
+function escolherCorretor(nome, el){ state._corretorEscolhido = nome; atualizarBtnsCorretor(nome); }
+
+function onLinkImovelChanged(){
+  clearTimeout(state._linkDebounce);
+  const url = $('editLink').value.trim();
+  if(!url) return;
+  const codigo = extrairCodigoDoLink(url);
+  if(codigo){ state._codigoLinkAtual = codigo; $('btnBuscarEntrada').disabled = false; $('codigoBadge').textContent = '#' + codigo; }
+  if(!/^https?:\/\//.test(url)) return;
+  state._linkDebounce = setTimeout(async () => {
+    const res = await apiGet('buscarImagem', { url });
+    if(res.ok && res.imagem){ $('editImagem').value = res.imagem; atualizarPreview(res.imagem); }
+  }, 900);
+}
+
+function onLinkBlur(){
+  const url = $('editLink').value.trim();
+  if(!url) return;
+  const codigo = extrairCodigoDoLink(url);
+  if(codigo){ state._codigoLinkAtual = codigo; $('btnBuscarEntrada').disabled = false; $('codigoBadge').textContent = '#' + codigo; }
+}
+
+function abrirBuscarEntradaForm(){
+  const codigo = state._codigoLinkAtual;
+  if(!codigo){ toast('Cole um link com código primeiro', 'error'); return; }
+  window.open(`${BUSCAR_BASE}/${codigo}`, '_blank', 'noopener');
+}
+
+async function salvarEdicaoImovel(){
+  const im = state.imovelEditando;
+  if(!im) return;
+  if(!im.codigo){ toast('Este imóvel não tem código — não é possível editar em massa', 'error'); return; }
+  if(!state._corretorEscolhido){ toast('Escolha o corretor (Hugo ou Carol) antes de salvar', 'error'); return; }
+
+  const btn = $('btnSalvarImovel');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Salvando...';
+
+  let linkFinal = $('editLink').value.trim();
+  if(linkFinal && state._corretorEscolhido){
+    const sufixo = FINAIS_LINK[state._corretorEscolhido] || '';
+    if(sufixo){
+      const partes = linkFinal.split('/');
+      if(partes.length > 1){ partes[partes.length - 1] = sufixo; linkFinal = partes.join('/'); }
+    }
+  }
+
+  const params = {
+    senha: obterSenhaAdmin(), codigo: im.codigo,
+    rua: $('editRua').value.trim(), numero: $('editNumero').value.trim(),
+    bairro: $('editBairro').value.trim(), preco: $('editPreco').value.trim(),
+    condominio: $('editCondominio').value.trim(), iptu: $('editIptu').value.trim(),
+    link: linkFinal, imagem: $('editImagem').value.trim(),
+    descricao: $('editDescricao').value, chaveTexto: $('editChave').value.trim(),
+    vendido: $('editVendido').checked
+  };
+
+  try {
+    const res = await apiGet('atualizarImovelPorCodigo', params);
+    if(!res.ok){
+      toast(res.error || 'Erro ao salvar', 'error');
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-save"></i> Salvar em todos os clientes';
+      return;
+    }
+    toast(`✅ Atualizado em ${res.total} cliente(s)!`, 'success');
+    fecharModalEditarImovel();
+    limparCacheImoveis();
+    await carregarImoveis(true);
+    if(state.modoAdmin){ await carregarTodosImoveisAdmin(); calcularFalhasAdmin(); }
+  } catch(e){
+    toast('Erro ao salvar: ' + e.message, 'error');
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-save"></i> Salvar em todos os clientes';
+  }
+}
+
+/* =====================================================
+   CLONAGEM EM LOTE — Menu Suspenso e Revisão
+===================================================== */
+function toggleMarcarClonagem(codigo){
+  if(!codigo){ toast('Imóvel sem código', 'error'); return; }
+  const idx = state.imoveisMarcadosClonar.indexOf(codigo);
+  if(idx > -1){
+    state.imoveisMarcadosClonar.splice(idx, 1);
+    toast(`Imóvel #${codigo} desmarcado`);
+  } else {
+    state.imoveisMarcadosClonar.push(codigo);
+    toast(`Imóvel #${codigo} marcado para clonar`, 'success');
+  }
+  atualizarBarraClonagem();
+  renderizarCards();
+}
+
+function limparMarcadosClonagem(e){
+  if(e) e.stopPropagation();
+  state.imoveisMarcadosClonar = [];
+  atualizarBarraClonagem();
+  renderizarCards();
+  toast('Marcações limpas');
+}
+
+function atualizarBarraClonagem(){
+  const wrap = $('barraClonagemWrap');
+  const cont = $('contadorClonagem');
+  const n = state.imoveisMarcadosClonar.length;
+
+  if(n > 0 && state.modoAdmin) {
+    wrap.classList.add('show');
+    cont.textContent = n;
+    
+    // ✅ Preenche o menu suspenso com os dados dos imóveis selecionados
+    const listaDiv = $('barraClonagemLista');
+    listaDiv.innerHTML = state.imoveisMarcadosClonar.map(cod => {
+      const im = acharImovelPorCodigo(cod);
+      if(!im) return '';
+      const apto = infoAptoImovel(im).numero || 'S/N';
+      const desc = primeiraLinhaDescricao(im.descricao) || 'Sem descrição.';
+      return `
+        <div class="clonar-item-lista">
+          <img class="thumb" src="${esc(urlImagem(im) || 'https://via.placeholder.com/50')}" onerror="this.style.display='none'">
+          <div class="dados">
+            <div class="titulo">${esc(im.rua || im.titulo || 'Endereço')}, ${esc(apto)} - ${esc(im.bairro || '')}</div>
+            <div class="end">Ref: #${esc(cod)}</div>
+            <div class="desc">"${esc(desc)}"</div>
+            <div class="valor">${esc(fmtPreco(im.preco))}</div>
+          </div>
+          <button class="btn-remover" onclick="toggleMarcarClonagem('${esc(cod)}')" title="Remover da lista">
+            <i class="fas fa-times-circle"></i>
+          </button>
+        </div>
+      `;
+    }).join('');
+    
+  } else {
+    wrap.classList.remove('show');
+    $('barraClonagemLista').classList.remove('show');
+    $('iconToggleLista').className = 'fas fa-chevron-up';
+  }
+}
+
+// ✅ Toggle para abrir/fechar o menu suspenso
+function toggleListaClonagem(e) {
+  if(e.target.closest('button')) return; // Se clicou em um botão, não abre/fecha
+  const lista = $('barraClonagemLista');
+  const icon = $('iconToggleLista');
+  const isOpen = lista.classList.toggle('show');
+  icon.className = isOpen ? 'fas fa-chevron-down' : 'fas fa-chevron-up';
+}
+
+async function abrirModalConfirmarClonagem(e){
+  if(e) e.stopPropagation();
+  const n = state.imoveisMarcadosClonar.length;
+  if(n === 0){ toast('Marque ao menos 1 imóvel', 'error'); return; }
+
+  $('progressoClonagemWrap').classList.remove('show');
+  $('progressoLbl').textContent = 'Preparando…';
+  $('progressoPct').textContent = '0%';
+  $('progressoBarra').style.width = '0%';
+  $('progressoDetalhe').textContent = '';
+  $('progressoLog').innerHTML = '';
+  $('btnConfirmarClonagemLote').disabled = false;
+  $('btnConfirmarClonagemLote').innerHTML = '<i class="fas fa-copy"></i> Clonar agora';
+
+  $('confirmarClonagemSub').textContent = `${n} imóvel(is) marcado(s). Escolha os clientes de destino abaixo.`;
+
+  if(state.clientes.length === 0) await carregarClientesAdmin();
+
+  const container = $('listaClientesDestino');
+  const clientesOrd = [...state.clientes].sort((a,b) => (a.nome||'').localeCompare(b.nome||'', 'pt-BR'));
+  if(clientesOrd.length === 0){
+    container.innerHTML = '<div class="ms-vazia" style="text-align:center;padding:20px;color:var(--muted);">Nenhum cliente cadastrado.</div>';
+  } else {
+    container.innerHTML = clientesOrd.map(c => `
+      <label class="ms-item">
+        <input type="checkbox" value="${esc(normalizaTel(c.telefone))}" data-nome="${esc(c.nome || '')}">
+        <span class="nome-cli">${esc(c.nome || 'Sem nome')}</span>
+        <span class="tel-cli">${esc(fmtTel(c.telefone))}</span>
+      </label>
+    `).join('');
+  }
+
+  $('modalConfirmarClonagem').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+
+function fecharModalConfirmarClonagem(){
+  $('modalConfirmarClonagem').classList.remove('show');
+  document.body.style.overflow = '';
+}
+
+async function executarClonagemLote(){
+  const marcados = [...state.imoveisMarcadosClonar];
+  if(marcados.length === 0){ toast('Nenhum imóvel marcado', 'error'); return; }
+
+  const destinos = Array.from(document.querySelectorAll('#listaClientesDestino input[type="checkbox"]:checked'))
+    .map(i => ({ tel: i.value, nome: i.getAttribute('data-nome') || '' }));
+  if(destinos.length === 0){ toast('Selecione ao menos 1 cliente de destino', 'error'); return; }
+
+  const btn = $('btnConfirmarClonagemLote');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Clonando...';
+
+  const wrap = $('progressoClonagemWrap');
+  const barra = $('progressoBarra');
+  const pct = $('progressoPct');
+  const lbl = $('progressoLbl');
+  const detalhe = $('progressoDetalhe');
+  const log = $('progressoLog');
+  wrap.classList.add('show');
+  log.innerHTML = '';
+
+  const totalOps = marcados.length * destinos.length;
+  let ok = 0, fail = 0, done = 0;
+  const startT = Date.now();
+
+  function appendLog(txt, cls=''){
+    const linha = document.createElement('div');
+    if(cls) linha.className = cls;
+    linha.textContent = txt;
+    log.appendChild(linha);
+    log.scrollTop = log.scrollHeight;
+  }
+
+  if(state.todosImoveis.length === 0) await carregarTodosImoveisAdmin();
+
+  for(const codigo of marcados){
+    const orig = state.todosImoveis.find(x => String(x.codigo || '').trim() === String(codigo).trim());
+    const telOrigem = orig ? normalizaTel(orig.telefone) : '';
+
+    if(!telOrigem){
+      fail += destinos.length;
+      done += destinos.length;
+      appendLog(`✗ #${codigo} — origem não identificada`, 'erro');
+      continue;
+    }
+
+    for(const dest of destinos){
+      done++;
+      const p = Math.round((done / totalOps) * 100);
+      barra.style.width = p + '%';
+      pct.textContent = p + '%';
+      lbl.textContent = `Clonando ${done} de ${totalOps}...`;
+      detalhe.textContent = `#${codigo} → ${dest.nome || fmtTel(dest.tel)}`;
+
+      if(normalizaTel(dest.tel) === telOrigem){
+        fail++;
+        appendLog(`⊘ #${codigo} → ${dest.nome} (mesmo cliente, ignorado)`, 'erro');
+        await delay(120);
+        continue;
+      }
+
+      try {
+        const res = await apiGet('clonarImoveisVitrine', {
+          senha: obterSenhaAdmin(),
+          telefoneOrigem: telOrigem,
+          telefoneDestino: dest.tel,
+          imovelIds: (orig && orig.id) ? orig.id : codigo
+        }, { timeout: 90000 });
+        if(res.ok){
+          ok++;
+          appendLog(`✓ #${codigo} → ${dest.nome || fmtTel(dest.tel)}`, 'ok');
+        } else {
+          fail++;
+          appendLog(`✗ #${codigo} → ${dest.nome || fmtTel(dest.tel)} — ${res.error || 'erro'}`, 'erro');
+        }
+      } catch(e){
+        fail++;
+        appendLog(`✗ #${codigo} → ${dest.nome || fmtTel(dest.tel)} — ${e.message}`, 'erro');
+      }
+      await delay(350);
+    }
+  }
+
+  const dur = ((Date.now() - startT)/1000).toFixed(1);
+  lbl.textContent = `Concluído em ${dur}s — ${ok} sucesso(s), ${fail} falha(s)`;
+  barra.style.width = '100%';
+  pct.textContent = '100%';
+  detalhe.textContent = `Total: ${totalOps} operação(ões)`;
+  appendLog(`— Fim: ${ok} ok / ${fail} falha(s) —`, ok > 0 ? 'ok' : 'erro');
+
+  toast(`Clonagem concluída: ${ok} sucesso(s), ${fail} falha(s)`, ok > 0 ? 'success' : 'error');
+
+  btn.disabled = false;
+  btn.innerHTML = '<i class="fas fa-check"></i> Fechar e recarregar';
+
+  btn.onclick = async () => {
+    fecharModalConfirmarClonagem();
+    limparMarcadosClonagem();
+    limparCacheImoveis();
+    await carregarImoveis(true);
+    if(state.modoAdmin){ await carregarTodosImoveisAdmin(); calcularFalhasAdmin(); }
+    btn.onclick = executarClonagemLote;
+  };
+}
+
+function delay(ms){ return new Promise(r => setTimeout(r, ms)); }
+
+/* =====================================================
+   CLIENTES VINCULADOS
+===================================================== */
+function contarClientesVinculados(codigo){
+  if(!codigo) return 0;
+  const tels = new Set();
+  (state.todosImoveis || []).forEach(im => {
+    if(String(im.codigo || '').trim() === String(codigo).trim()) tels.add(normalizaTel(im.telefone));
+  });
+  return tels.size;
+}
+
+async function abrirModalClientesVinculados(codigo){
+  if(!codigo){ toast('Imóvel sem código', 'error'); return; }
+  if(state.todosImoveis.length === 0){
+    $('clientesVinculadosLista').innerHTML = '<div style="text-align:center;padding:20px;color:var(--texto-cinza);"><i class="fas fa-spinner fa-spin"></i> Carregando...</div>';
+    await carregarTodosImoveisAdmin();
+  }
+  if(state.clientes.length === 0) await carregarClientesAdmin();
+
+  const vinculados = {};
+  (state.todosImoveis || []).forEach(im => {
+    if(String(im.codigo || '').trim() !== String(codigo).trim()) return;
+    const tel = normalizaTel(im.telefone);
+    if(!tel) return;
+    if(!vinculados[tel]){
+      const cli = state.clientes.find(c => normalizaTel(c.telefone) === tel);
+      vinculados[tel] = { telefone: tel, nome: cli?.nome || im.clienteNome || '(sem cadastro)', corretor: cli?.corretor || im.corretor || '' };
+    }
+  });
+
+  const lista = Object.values(vinculados);
+  $('clientesVinculadosSub').textContent = `${lista.length} cliente(s) têm o imóvel #${codigo} na vitrine.`;
+
+  if(lista.length === 0){
+    $('clientesVinculadosLista').innerHTML = `
+      <div style="text-align:center; padding:30px 20px; color:var(--texto-cinza);">
+        <i class="fas fa-user-slash" style="font-size:2.4rem; color:var(--borda-forte); margin-bottom:12px; display:block;"></i>
+        <p style="font-size:0.88rem;">Nenhum cliente vinculado a este imóvel.</p>
+      </div>
+    `;
+  } else {
+    $('clientesVinculadosLista').innerHTML = lista.map(c => {
+      const inicial = (c.nome || 'C').trim().charAt(0).toUpperCase();
+      return `
+        <a class="cliente-chip" href="https://wa.me/55${c.telefone}" target="_blank" rel="noopener">
+          <div class="avatar">${esc(inicial)}</div>
+          <div class="nome">
+            ${esc(c.nome)}
+            ${c.corretor ? `<span class="corretor-tag">${esc(c.corretor)}</span>` : ''}
+            <div class="tel">${esc(fmtTel(c.telefone))}</div>
+          </div>
+          <i class="fab fa-whatsapp"></i>
+        </a>
+      `;
+    }).join('');
+  }
+  $('modalClientesVinculados').classList.add('show');
+}
+function fecharModalClientesVinculados(){ $('modalClientesVinculados').classList.remove('show'); }
+
+/* =====================================================
+   INIT
+===================================================== */
+async function init(){
+  initSliderPreco();
+  $('filtroBusca').addEventListener('input', debounce(aplicarFiltros, 400));
+
+  $('modalDetalhes').addEventListener('click', (e) => { if(e.target === $('modalDetalhes')) fecharDetalhes(); });
+  ['modalSenhaAdmin','modalEditarImovel','modalClientesVinculados','modalBuscaAvancada','modalConfirmarClonagem'].forEach(id => {
+    const el = $(id);
+    if(el) el.addEventListener('click', (e) => { if(e.target === el) el.classList.remove('show'); });
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if(e.key === 'Escape'){
+      if($('modalDetalhes').classList.contains('show')) fecharDetalhes();
+      if($('modalSenhaAdmin').classList.contains('show')) fecharModalSenhaAdmin();
+      if($('modalEditarImovel').classList.contains('show')) fecharModalEditarImovel();
+      if($('modalClientesVinculados').classList.contains('show')) fecharModalClientesVinculados();
+      if($('modalBuscaAvancada').classList.contains('show')) fecharModalBuscaAvancada();
+      if($('modalConfirmarClonagem').classList.contains('show')) fecharModalConfirmarClonagem();
+    }
+  });
+
+  window.addEventListener('scroll', () => { $('btnTopo').classList.toggle('show', window.scrollY > 400); });
+
+  // ✅ Carrega imóveis
+  await carregarImoveis();
+
+  // ✅ Se tem senha salva no localStorage, já entra no modo admin automaticamente!
+  if (localStorage.getItem(ADMIN_SENHA_KEY) || sessionStorage.getItem(ADMIN_SESSION_KEY) === 'ativo') {
+    entrarModoAdmin();
+  }
+}
+
+function debounce(fn, ms){
+  let t;
+  return function(...args){ clearTimeout(t); t = setTimeout(() => fn.apply(this, args), ms); };
+}
+
+// Exposição global
+window.abrirDetalhes = abrirDetalhes;
+window.fecharDetalhes = fecharDetalhes;
+window.compartilharImovel = compartilharImovel;
+window.compartilharImovelCard = compartilharImovelCard;
+window.abrirModalSenhaAdmin = abrirModalSenhaAdmin;
+window.fecharModalSenhaAdmin = fecharModalSenhaAdmin;
+window.validarSenhaAdmin = validarSenhaAdmin;
+window.sairModoAdmin = sairModoAdmin;
+window.abrirModalEditarImovel = abrirModalEditarImovel;
+window.fecharModalEditarImovel = fecharModalEditarImovel;
+window.salvarEdicaoImovel = salvarEdicaoImovel;
+window.escolherCorretor = escolherCorretor;
+window.onLinkImovelChanged = onLinkImovelChanged;
+window.onLinkBlur = onLinkBlur;
+window.abrirBuscarEntradaForm = abrirBuscarEntradaForm;
+window.abrirModalClientesVinculados = abrirModalClientesVinculados;
+window.fecharModalClientesVinculados = fecharModalClientesVinculados;
+window.abrirModalBuscaAvancada = abrirModalBuscaAvancada;
+window.fecharModalBuscaAvancada = fecharModalBuscaAvancada;
+window.aplicarFiltrosAvancados = aplicarFiltrosAvancados;
+window.limparFiltros = limparFiltros;
+window.toggleMultiBairros = toggleMultiBairros;
+window.toggleBairroCheck = toggleBairroCheck;
+window.selecionarTodosBairros = selecionarTodosBairros;
+window.limparSelecaoBairros = limparSelecaoBairros;
+window.toggleMarcarClonagem = toggleMarcarClonagem;
+window.limparMarcadosClonagem = limparMarcadosClonagem;
+window.toggleListaClonagem = toggleListaClonagem;
+window.abrirModalConfirmarClonagem = abrirModalConfirmarClonagem;
+window.fecharModalConfirmarClonagem = fecharModalConfirmarClonagem;
+window.executarClonagemLote = executarClonagemLote;
+window.carregarImoveis = carregarImoveis;
+window.toggleOcultarVendidos = toggleOcultarVendidos;
+window.toggleFiltroFalhas = toggleFiltroFalhas;
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
