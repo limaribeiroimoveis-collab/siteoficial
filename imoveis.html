@@ -1831,13 +1831,40 @@ function infoAptoImovel(im){
   };
 }
 
+/* ✅ AJUSTE: Procura o campo chave em qualquer uma das variações */
+function obterChaveTexto(im) {
+  if (!im) return '';
+  return String(im.chaveTexto || im.chave || im.Chave || im.chave_texto || '').trim();
+}
+
 /* ✅ VERIFICA SE TEM MÚLTIPLOS NÚMEROS NA CHAVE (ex: 1103 / 302) */
 function temMultiplosAptos(im) {
-  if (!im || !im.chaveTexto) return false;
-  const primeiraLinha = String(im.chaveTexto).split(/\r?\n/)[0] || '';
+  const chave = obterChaveTexto(im);
+  if (!chave) return false;
+  const primeiraLinha = chave.split(/\r?\n/)[0] || '';
   const matches = primeiraLinha.match(/\d{1,6}/g);
   if (matches && matches.length > 1) return true;
   return false;
+}
+
+/* ✅ RETORNA A LISTA DE FALHAS DO IMÓVEL */
+function obterFalhasDoImovel(im) {
+  const falhas = [];
+  if (!im) return falhas;
+
+  if (!String(im.rua || '').trim()) falhas.push('Falta Rua');
+  if (!String(im.numero || '').trim()) falhas.push('Falta Número');
+  if (!String(im.bairro || '').trim()) falhas.push('Falta Bairro');
+  
+  // ✅ Verifica o campo chave de forma flexível
+  if (!obterChaveTexto(im)) falhas.push('Falta Chave');
+  
+  const preco = parseNumeroBR(im.preco);
+  if (preco <= 0) falhas.push('Falta Preço');
+
+  if (temMultiplosAptos(im)) falhas.push('Múltiplos Aptos (ex: 1103 / 302)');
+
+  return falhas;
 }
 
 /* ✅ RETORNA A LISTA DE FALHAS DO IMÓVEL */
