@@ -1849,7 +1849,7 @@ function temMultiplosAptos(im) {
   return false;
 }
 
-/* ✅ RETORNA A LISTA DE FALHAS DO IMÓVEL (Única e correta) */
+/* ✅ RETORNA A LISTA DE FALHAS DO IMÓVEL */
 function obterFalhasDoImovel(im) {
   const falhas = [];
   if (!im) return falhas;
@@ -1858,8 +1858,7 @@ function obterFalhasDoImovel(im) {
   if (!String(im.numero || '').trim()) falhas.push('Falta Número');
   if (!String(im.bairro || '').trim()) falhas.push('Falta Bairro');
   
-  // ✅ Usa a função flexível para checar a chave
-  if (!obterChaveTexto(im)) falhas.push('Falta Chave');
+  // ⚠️ Removida a checagem de "Falta Chave" porque o backend público não envia esse campo.
   
   const preco = parseNumeroBR(im.preco);
   if (preco <= 0) falhas.push('Falta Preço');
