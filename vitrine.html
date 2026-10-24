@@ -33,118 +33,105 @@
   .container{ max-width: 1400px; margin: 0 auto; padding: 16px; padding-bottom: calc(var(--navbar-h) + 20px + env(safe-area-inset-bottom)); }
   @media(max-width:640px){ .container{ padding: 10px; } }
 
-  .ico{ width: 1em; height: 1em; display: inline-block; vertical-align: middle; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
-
   /* HEADER */
   header.app-header{ background: #fff; color: var(--text); box-shadow: 0 1px 4px rgba(0,0,0,.05); position: sticky; top: 0; z-index: 100; border-bottom: 1px solid var(--border); }
-  .header-inner{ max-width: 1400px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; min-height: 56px; }
-  .brand{ display: flex; align-items: center; gap: 8px; }
+  .header-inner{ max-width: 1400px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 14px; min-height: 56px; }
+  .brand{ display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
   .brand-icon{ width: 32px; height: 32px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: .85rem; color: #fff; font-weight: 800; }
-  .brand-title{ font-size: 1rem; font-weight: 800; letter-spacing: -.5px; }
-  .header-actions{ display: flex; align-items: center; gap: 10px; }
-  .user-info{ font-size: .75rem; font-weight: 600; color: var(--text-soft); background: var(--bg); padding: 6px 12px; border-radius: 999px; border: 1px solid var(--border); }
-
-  /* LOGIN */
-  .login-wrap{ display: flex; justify-content: center; align-items: center; min-height: 82vh; padding: 16px; }
-  .login-card{ background: var(--card); padding: 36px 28px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,.05); width: 100%; max-width: 400px; border: 1px solid var(--border); }
-  .login-logo{ width: 64px; height: 64px; margin: 0 auto 18px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; color: #fff; box-shadow: 0 4px 12px rgba(30,58,95,.2); }
-  .login-card h2{ margin-bottom: 6px; color: var(--text); font-size: 1.3rem; text-align: center; font-weight: 800; }
-  .login-card .sub{ color: var(--muted); margin-bottom: 26px; font-size: .88rem; text-align: center; }
+  .brand-title{ font-size: 1rem; font-weight: 800; letter-spacing: -.5px; display: none; }
+  @media(min-width:400px){ .brand-title{ display: block; } }
   
-  input, textarea{ width: 100%; padding: 12px 14px; border: 1px solid var(--border); border-radius: 8px; font-size: .95rem; font-family: inherit; transition: all .15s; background: #fff; color: var(--text); }
+  .btn-site{ background: var(--success); color: #fff; text-decoration: none; font-size: .75rem; font-weight: 700; padding: 8px 12px; border-radius: 999px; display: flex; align-items: center; gap: 6px; white-space: nowrap; transition: background .15s; }
+  .btn-site:hover{ background: #15803d; }
+
+  /* SAUDAÇÃO */
+  .saudacao{ font-size: .85rem; color: var(--text-soft); font-weight: 600; margin: 12px 4px 0; }
+
+  /* LOGIN / LOADING */
+  .login-wrap{ display: flex; justify-content: center; align-items: center; min-height: 80vh; padding: 16px; }
+  .login-card{ background: var(--card); padding: 36px 28px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,.05); width: 100%; max-width: 400px; border: 1px solid var(--border); }
+  .login-logo{ width: 64px; height: 64px; margin: 0 auto 18px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; color: #fff; }
+  .login-card h2{ margin-bottom: 6px; font-size: 1.3rem; text-align: center; font-weight: 800; }
+  .login-card .sub{ color: var(--muted); margin-bottom: 26px; font-size: .88rem; text-align: center; }
+  input, textarea{ width: 100%; padding: 12px 14px; border: 1px solid var(--border); border-radius: 8px; font-size: .95rem; font-family: inherit; background: #fff; }
   input:focus, textarea:focus{ outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-soft); }
-  label{ display: block; font-size: .75rem; font-weight: 700; margin-bottom: 6px; color: var(--text-soft); text-transform: uppercase; letter-spacing: .5px; }
+  label{ display: block; font-size: .75rem; font-weight: 700; margin-bottom: 6px; color: var(--text-soft); text-transform: uppercase; }
   .form-group{ margin-bottom: 16px; }
   .code-input{ text-align: center; font-size: 1.5rem; font-weight: 800; letter-spacing: .4rem; text-transform: uppercase; padding: 14px; }
-  
-  .btn{ display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 12px 18px; border-radius: 8px; border: none; cursor: pointer; font-size: .9rem; font-weight: 700; transition: all .15s; font-family: inherit; }
-  .btn:disabled{ opacity: .5; cursor: not-allowed; }
+  .btn{ display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 12px 18px; border-radius: 8px; border: none; cursor: pointer; font-size: .9rem; font-weight: 700; transition: all .15s; }
+  .btn:disabled{ opacity: .5; }
   .btn-primary{ background: var(--primary); color: #fff; }
-  .btn-primary:hover:not(:disabled){ background: var(--primary-dark); }
   .btn-ghost{ background: #fff; color: var(--text-soft); border: 1px solid var(--border); }
-  .btn-ghost:hover:not(:disabled){ background: var(--bg); }
   .btn-full{ width: 100%; }
-
-  /* LOADING */
-  .loading-screen{ display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 85vh; padding: 24px; text-align: center; }
-  .spinner{ width: 36px; height: 36px; border: 3px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin .7s linear infinite; margin-top: 20px; }
+  .spinner{ width: 36px; height: 36px; border: 3px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin .7s linear infinite; }
+  .spinner-btn{ width: 14px; height: 14px; border: 2px solid rgba(255,255,255,.4); border-top-color: #fff; border-radius: 50%; animation: spin .7s linear infinite; display: inline-block; }
   @keyframes spin{ to{ transform: rotate(360deg); } }
-  .spinner-btn{ width: 14px; height: 14px; border: 2px solid rgba(255,255,255,.4); border-top-color: #fff; border-radius: 50%; animation: spin .7s linear infinite; display: inline-block; vertical-align: middle; }
 
-  /* SECTION TITLES */
-  .section{ margin-top: 24px; animation: fadeInUp .35s ease-out both; }
+  /* SECTIONS */
+  .section{ margin-top: 20px; animation: fadeInUp .35s ease-out both; }
   @keyframes fadeInUp{ from{ opacity: 0; transform: translateY(8px); } to{ opacity: 1; transform: translateY(0); } }
   .section-header{ display: flex; align-items: center; gap: 8px; margin-bottom: 12px; padding: 0 4px; }
-  .section-title{ font-size: 1rem; font-weight: 800; color: var(--text); display: inline-flex; align-items: center; gap: 6px; letter-spacing: -.02em; }
+  .section-title{ font-size: 1rem; font-weight: 800; display: inline-flex; align-items: center; gap: 6px; }
   .section-count{ font-size: .7rem; color: var(--muted); background: #fff; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--border); font-weight: 700; }
-
-  /* CARROSSEL NOVIDADES/VISITAS */
-  .carrossel-scroll{ display: flex; gap: 12px; overflow-x: auto; padding: 4px 4px 12px; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  .carrossel-scroll{ display: flex; gap: 12px; overflow-x: auto; padding: 4px 4px 12px; scroll-snap-type: x mandatory; scrollbar-width: none; }
   .carrossel-scroll::-webkit-scrollbar{ display: none; }
   .carrossel-scroll > *{ scroll-snap-align: start; flex: 0 0 auto; width: 220px; }
-  @media(min-width:768px){ .carrossel-scroll > *{ width: 260px; } }
 
-  .visita-card{ background: #fff; border-radius: var(--radius-card); border: 1px solid var(--border); padding: 16px; box-shadow: 0 2px 8px rgba(0,0,0,.03); display: flex; flex-direction: column; gap: 8px; position: relative; border-top: 3px solid var(--danger); }
-  .visita-card-titulo{ font-size: .65rem; font-weight: 800; color: var(--danger); text-transform: uppercase; letter-spacing: .5px; display: flex; align-items: center; gap: 4px; }
-  .visita-card-linhas .endereco{ font-weight: 800; font-size: .85rem; color: var(--text); line-height: 1.3; margin-bottom: 4px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .visita-card{ background: #fff; border-radius: var(--radius-card); border: 1px solid var(--border); padding: 16px; box-shadow: 0 2px 8px rgba(0,0,0,.03); border-top: 3px solid var(--danger); }
+  .visita-card-titulo{ font-size: .65rem; font-weight: 800; color: var(--danger); text-transform: uppercase; margin-bottom: 6px; }
+  .visita-card-linhas .endereco{ font-weight: 800; font-size: .85rem; margin-bottom: 4px; }
   .visita-card-linhas .quando{ background: var(--bg); padding: 4px 8px; border-radius: 6px; font-weight: 700; font-size: .75rem; display: inline-block; }
 
-  .novo-card{ background: #fff; border-radius: var(--radius-card); border: 1px solid #bbf7d0; overflow: hidden; box-shadow: 0 2px 8px rgba(22,163,74,.08); cursor: pointer; transition: transform .2s; }
-  .novo-card:hover{ transform: translateY(-2px); }
+  .novo-card{ background: #fff; border-radius: var(--radius-card); border: 1px solid #bbf7d0; overflow: hidden; cursor: pointer; }
   .novo-card-img{ width: 100%; height: 120px; object-fit: cover; display: block; }
-  .novo-card-body{ padding: 10px 12px; }
-  .novo-card-endereco{ font-size: .8rem; font-weight: 800; color: var(--text); line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 4px; }
+  .novo-card-body{ padding: 10px; }
+  .novo-card-endereco{ font-size: .8rem; font-weight: 800; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .novo-card-preco{ font-size: .9rem; font-weight: 800; color: var(--success); }
 
-  /* FILTROS E TOPO */
-  .top-controls{ display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin: 16px 0 10px; padding: 0 4px; z-index: 50; position: relative; }
+  /* TOPO CONTROLS */
+  .top-controls{ display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin: 16px 0 10px; padding: 0 4px; position: relative; z-index: 50; }
   .btn-filter{ display: inline-flex; align-items: center; gap: 6px; background: #fff; border: 1px solid var(--border); padding: 8px 12px; border-radius: 8px; font-size: .78rem; font-weight: 700; color: var(--text); cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,.02); transition: all .15s; }
   .btn-filter:hover{ background: var(--bg); }
   .btn-filter.active{ background: var(--primary); color: #fff; border-color: var(--primary); }
-  .btn-filter .badge-sel{ background: rgba(255,255,255,.2); color: #fff; border-radius: 999px; font-size: .65rem; padding: 0 6px; font-weight: 800; }
-  .btn-filter:not(.active) .badge-sel{ background: var(--primary); color: #fff; }
+  .badge-sel{ background: var(--primary); color: #fff; border-radius: 999px; font-size: .65rem; padding: 0 6px; font-weight: 800; }
+  .btn-filter.active .badge-sel{ background: rgba(255,255,255,.2); }
   .btn-limpar{ background: transparent; border: none; font-size: .75rem; font-weight: 700; color: var(--danger); cursor: pointer; text-decoration: underline; }
 
   /* DROPDOWN BAIRROS */
   .filtro-dropdown{ position: absolute; top: 44px; left: 4px; background: #fff; border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,.1); width: min(320px, 92vw); max-height: 60vh; overflow-y: auto; padding: 8px; display: none; z-index: 1000; }
   .filtro-dropdown.show{ display: block; }
-  .filtro-item{ display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px; cursor: pointer; font-size: .85rem; transition: background .15s; user-select: none; }
+  .filtro-item{ display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px; cursor: pointer; font-size: .85rem; user-select: none; }
   .filtro-item:hover{ background: var(--bg); }
   .filtro-item .chk{ width: 18px; height: 18px; border: 1.5px solid var(--muted); border-radius: 4px; display: flex; align-items: center; justify-content: center; background: #fff; font-size: .7rem; color: #fff; }
   .filtro-item.active .chk{ background: var(--primary); border-color: var(--primary); }
   .filtro-item .nome-bairro{ flex: 1; font-weight: 600; }
   .filtro-item .cnt-bairro{ background: var(--bg); color: var(--text-soft); font-size: .7rem; font-weight: 800; padding: 1px 8px; border-radius: 999px; }
 
-  /* GRID DE IMÓVEIS (1 e 2 colunas) */
-  .grid{ display: grid; grid-template-columns: repeat(1, 1fr); gap: 16px; margin-top: 8px; transition: all .3s; }
-  .grid.grid-2col{ grid-template-columns: repeat(2, 1fr) !important; gap: 10px; }
-  @media(min-width:640px){ .grid:not(.grid-2col){ grid-template-columns: repeat(2, 1fr); gap: 20px; } }
-  @media(min-width:900px){ .grid:not(.grid-2col){ grid-template-columns: repeat(3, 1fr); } }
-  @media(min-width:1200px){ .grid:not(.grid-2col){ grid-template-columns: repeat(4, 1fr); } }
-  
-  /* Mobile começa sempre em 2 colunas */
-  @media(max-width:639px){ .grid{ grid-template-columns: repeat(2, 1fr) !important; gap: 10px; } }
+  /* GRID DE IMÓVEIS */
+  .grid{ display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 8px; transition: all .3s; }
+  @media(min-width:640px){ .grid{ gap: 16px; } }
+  @media(min-width:900px){ .grid{ grid-template-columns: repeat(3, 1fr); } }
+  @media(min-width:1200px){ .grid{ grid-template-columns: repeat(4, 1fr); } }
+  .grid.modo-1col{ grid-template-columns: 1fr !important; gap: 16px; }
 
   /* CARD ESTILO INSTAGRAM */
   .card{ background: var(--card); border-radius: var(--radius-card); border: 1px solid var(--border); overflow: hidden; display: flex; flex-direction: column; transition: transform .2s, box-shadow .2s; animation: cardIn .35s ease-out both; }
   .card:hover{ box-shadow: 0 8px 24px rgba(0,0,0,.06); }
   @keyframes cardIn{ from{ opacity: 0; transform: translateY(6px); } to{ opacity: 1; transform: translateY(0); } }
 
-  /* CARD NÃO GOSTEI (Desativado) */
   .card.card-nao-gostei{ opacity: .4; filter: grayscale(100%); }
   .card.card-nao-gostei:hover{ opacity: .6; filter: grayscale(80%); }
-  
   .card.card-vendido{ opacity: .6; filter: grayscale(80%); pointer-events: none; }
 
   /* Topo do Card */
-  .card-header{ display: flex; align-items: flex-start; justify-content: space-between; padding: 12px 12px 8px; gap: 8px; }
-  .card-header-titles{ display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }
-  .card-bairro{ font-size: .82rem; font-weight: 800; color: var(--text); line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .card-rua{ font-size: .75rem; font-weight: 500; color: var(--text-soft); line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .card-header{ display: flex; flex-direction: column; padding: 12px 12px 8px; gap: 2px; }
+  .card-header-top{ display: flex; align-items: center; justify-content: space-between; gap: 8px; min-width: 0; }
+  .card-bairro{ font-size: .82rem; font-weight: 800; color: var(--text); line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1; }
+  .card-rua{ font-size: .75rem; font-weight: 500; color: var(--text-soft); line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; }
   
-  .btn-share-min{ background: transparent; border: none; padding: 4px; color: var(--text); cursor: pointer; border-radius: 50%; transition: background .15s; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+  .btn-share-min{ background: transparent; border: none; padding: 4px; color: var(--text); cursor: pointer; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; }
   .btn-share-min:hover{ background: var(--bg); }
-  .btn-share-min svg{ width: 20px; height: 20px; stroke-width: 2; }
+  .btn-share-min svg{ width: 18px; height: 18px; stroke-width: 2; }
 
   /* Imagem do Card */
   .card-img-wrap{ width: 100%; aspect-ratio: 4 / 3; overflow: hidden; background: var(--bg); position: relative; }
@@ -152,30 +139,28 @@
   .card:hover .card-img{ transform: scale(1.03); }
 
   /* BADGES */
-  .badge-vendido{ position: absolute; top: 15%; left: 50%; transform: translate(-50%, -50%) rotate(-10deg); background: rgba(220,38,38,.95); color: #fff; font-size: .9rem; font-weight: 900; letter-spacing: 1.5px; padding: 8px 20px; border-radius: 6px; border: 2px solid #fff; box-shadow: 0 4px 12px rgba(0,0,0,.3); z-index: 6; text-transform: uppercase; }
+  .badge-vendido{ position: absolute; top: 15%; left: 50%; transform: translate(-50%, -50%) rotate(-10deg); background: rgba(220,38,38,.95); color: #fff; font-size: .9rem; font-weight: 900; letter-spacing: 1.5px; padding: 8px 20px; border-radius: 6px; border: 2px solid #fff; z-index: 6; text-transform: uppercase; }
   .badge-desativado{ position: absolute; top: 10px; left: 10px; background: #000; color: #fff; font-size: .6rem; font-weight: 800; padding: 4px 10px; border-radius: 4px; z-index: 6; text-transform: uppercase; letter-spacing: .5px; }
-  .badge-novo{ position: absolute; top: 10px; left: 10px; background: var(--success); color: #fff; font-size: .6rem; font-weight: 800; padding: 4px 10px; border-radius: 999px; z-index: 5; box-shadow: 0 2px 6px rgba(22,163,74,.4); }
-  .card-heart-top{ position: absolute; top: 10px; right: 10px; width: 32px; height: 32px; background: rgba(255,255,255,.9); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; box-shadow: 0 2px 8px rgba(0,0,0,.2); z-index: 7; animation: heartIn .3s cubic-bezier(.34,1.56,.64,1) both; }
+  .badge-novo{ position: absolute; top: 10px; left: 10px; background: var(--success); color: #fff; font-size: .6rem; font-weight: 800; padding: 4px 10px; border-radius: 999px; z-index: 5; }
+  .card-heart-top{ position: absolute; top: 10px; right: 10px; width: 32px; height: 32px; background: rgba(255,255,255,.9); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; z-index: 7; animation: heartIn .3s cubic-bezier(.34,1.56,.64,1) both; }
   @keyframes heartIn{ from{ opacity: 0; transform: scale(.3); } to{ opacity: 1; transform: scale(1); } }
   .card-tag-topo{ position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,.6); backdrop-filter: blur(4px); color: #fff; font-size: .6rem; font-weight: 700; text-transform: uppercase; padding: 4px 8px; border-radius: 4px; z-index: 5; }
 
   /* CARROSSEL FAKE */
-  .carousel-fake{ position: absolute; left: 0; right: 0; bottom: 40px; display: flex; align-items: center; justify-content: space-between; padding: 0 10px; z-index: 5; pointer-events: auto; }
-  .carousel-fake .arrow{ width: 28px; height: 28px; border-radius: 50%; background: rgba(255,255,255,.9); color: #111; display: flex; align-items: center; justify-content: center; font-size: 1rem; font-weight: 900; cursor: pointer; border: none; box-shadow: 0 2px 6px rgba(0,0,0,.2); transition: transform .15s; }
-  .carousel-fake .arrow:hover{ transform: scale(1.1); }
+  .carousel-fake{ position: absolute; left: 0; right: 0; bottom: 40px; display: flex; align-items: center; justify-content: space-between; padding: 0 10px; z-index: 5; }
+  .carousel-fake .arrow{ width: 28px; height: 28px; border-radius: 50%; background: rgba(255,255,255,.9); color: #111; display: flex; align-items: center; justify-content: center; font-size: 1rem; font-weight: 900; cursor: pointer; border: none; }
   .carousel-fake .dots{ display: flex; gap: 4px; align-items: center; justify-content: center; flex: 1; }
   .carousel-fake .dot{ width: 5px; height: 5px; border-radius: 50%; background: rgba(255,255,255,.5); }
   .carousel-fake .dot.active{ background: #fff; width: 12px; border-radius: 3px; }
 
-  .card-overlay-specs{ position: absolute; left: 0; right: 0; bottom: 0; background: linear-gradient(to top, rgba(0,0,0,.8) 0%, rgba(0,0,0,.4) 70%, transparent 100%); color: #fff; font-size: .72rem; font-weight: 600; padding: 20px 10px 8px; z-index: 3; pointer-events: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .card-overlay-specs{ position: absolute; left: 0; right: 0; bottom: 0; background: linear-gradient(to top, rgba(0,0,0,.8) 0%, rgba(0,0,0,.4) 70%, transparent 100%); color: #fff; font-size: .72rem; font-weight: 600; padding: 20px 10px 8px; z-index: 3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
   /* Corpo do Card */
   .card-body{ padding: 10px 12px; display: flex; flex-direction: column; gap: 4px; }
   .card-preco{ font-size: 1.1rem; font-weight: 800; color: var(--text); letter-spacing: -.03em; }
   
-  /* Condominio e IPTU na mesma linha */
-  .card-preco-sec{ font-size: .7rem; color: var(--text-soft); font-weight: 500; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
-  .card-preco-sec .sep{ color: var(--border); }
+  .card-preco-sec{ font-size: .7rem; color: var(--text-soft); font-weight: 500; display: flex; gap: 8px; flex-wrap: nowrap; align-items: center; }
+  .card-preco-sec span{ white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
   .card-desc-texto{ font-size: .75rem; color: var(--text-soft); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-top: 2px; }
   .card-desc.expandido .card-desc-texto{ -webkit-line-clamp: unset; }
@@ -194,7 +179,6 @@
   .btn-wa-outline{ display: flex; align-items: center; justify-content: center; gap: 6px; margin: 0 12px 12px; background: #fff; border: 1.5px solid var(--wa); color: var(--wa); border-radius: 8px; padding: 8px 10px; font-size: .75rem; font-weight: 700; cursor: pointer; transition: all .15s; text-align: center; }
   .btn-wa-outline:hover{ background: var(--wa); color: #fff; }
   .btn-wa-outline svg{ width: 16px; height: 16px; fill: currentColor; flex-shrink: 0; }
-
   .btn-reativar-full{ margin: 0 12px 12px; background: var(--bg); color: var(--text); border: 1px solid var(--border); padding: 10px; border-radius: 8px; font-size: .8rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; }
 
   /* MENSAGENS VAZIAS */
@@ -208,21 +192,13 @@
   .erro-conexao p{ font-size: .85rem; color: var(--muted); margin-bottom: 20px; }
   .btn-recarregar{ background: var(--primary); color: #fff; border: none; padding: 12px 24px; border-radius: 8px; font-size: .9rem; font-weight: 700; cursor: pointer; }
 
-  .toast{ position: fixed; bottom: calc(var(--navbar-h) + 20px); left: 50%; transform: translate(-50%, 20px); background: var(--text); color: #fff; padding: 12px 20px; border-radius: 8px; box-shadow: 0 8px 24px rgba(0,0,0,.2); opacity: 0; transition: all .3s; z-index: 2000; font-size: .85rem; font-weight: 600; text-align: center; pointer-events: none; }
+  .toast{ position: fixed; bottom: calc(var(--navbar-h) + 20px); left: 50%; transform: translate(-50%, 20px); background: var(--text); color: #fff; padding: 12px 20px; border-radius: 8px; box-shadow: 0 8px 24px rgba(0,0,0,.2); opacity: 0; transition: all .3s; z-index: 2000; font-size: .85rem; font-weight: 600; pointer-events: none; }
   .toast.show{ opacity: 1; transform: translate(-50%, 0); }
   .toast.success{ background: var(--success); }
   .toast.error{ background: var(--danger); }
   .hidden{ display: none !important; }
 
-  /* SKELETON */
-  .skeleton-card{ background: #fff; border-radius: var(--radius-card); border: 1px solid var(--border); overflow: hidden; }
-  .skeleton-img{ width: 100%; aspect-ratio: 4 / 3; background: #e5e7eb; }
-  .skeleton-body{ padding: 14px; display: flex; flex-direction: column; gap: 10px; }
-  .skeleton-line{ height: 12px; border-radius: 4px; background: #e5e7eb; }
-  .skeleton-line.short{ width: 40%; }
-  .skeleton-line.long{ width: 80%; }
-
-  /* BOTTOM NAV (ESTILO INSTAGRAM ESCURO) */
+  /* BOTTOM NAV */
   .bottom-nav{ position: fixed; bottom: 0; left: 0; right: 0; height: calc(var(--navbar-h) + env(safe-area-inset-bottom)); padding-bottom: env(safe-area-inset-bottom); background: var(--primary); border-top: 1px solid var(--primary-dark); display: none; z-index: 900; justify-content: space-around; align-items: center; }
   .bottom-nav.show{ display: flex; }
   .nav-btn{ display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; background: transparent; border: none; cursor: pointer; color: rgba(255,255,255,.5); padding: 8px 2px; height: 100%; flex: 1; transition: color .15s; }
@@ -230,6 +206,13 @@
   .nav-btn svg{ width: 22px; height: 22px; stroke-width: 2; stroke: currentColor; fill: none; stroke-linecap: round; stroke-linejoin: round; }
   .nav-btn.active svg{ stroke-width: 2.5; fill: rgba(255,255,255,.2); }
   .nav-lbl{ font-size: .55rem; font-weight: 700; white-space: nowrap; }
+
+  /* SEARCH BAR FLUTUANTE */
+  .search-bar-floating { position: fixed; bottom: calc(var(--navbar-h) + env(safe-area-inset-bottom)); left: 0; right: 0; background: #fff; padding: 12px 16px; box-shadow: 0 -4px 16px rgba(0,0,0,.1); z-index: 899; display: flex; gap: 8px; align-items: center; transform: translateY(100%); transition: transform .3s; }
+  .search-bar-floating.show { transform: translateY(0); }
+  .search-bar-floating input { flex: 1; padding: 10px 14px; border-radius: 999px; background: var(--bg); border: 1px solid transparent; font-size: .9rem; }
+  .search-bar-floating input:focus { border-color: var(--primary); background: #fff; }
+  .btn-close-search { background: var(--bg); border: none; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text); }
 
   /* MODAIS */
   .modal-backdrop{ position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 1500; display: none; align-items: flex-end; justify-content: center; backdrop-filter: blur(2px); }
@@ -266,14 +249,15 @@
       <div class="brand-icon">LR</div>
       <div class="brand-title">Lima Ribeiro</div>
     </div>
-    <div class="header-actions">
-      <span class="user-info" id="userInfo"></span>
-    </div>
+    <a href="https://limaribeiroimoveis.com.br/imoveis" target="_blank" class="btn-site">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+      Veja todos os imóveis
+    </a>
   </div>
 </header>
 
 <!-- VIEWS -->
-<div class="loading-screen hidden" id="loadingView"><div class="spinner"></div></div>
+<div class="loading-screen hidden" id="loadingView" style="display:flex;justify-content:center;align-items:center;min-height:80vh;"><div class="spinner"></div></div>
 
 <div class="login-wrap hidden" id="loginView">
   <div class="login-card">
@@ -304,6 +288,8 @@
 
 <div class="container hidden" id="vitrineView">
   
+  <div class="saudacao" id="saudacaoUser"></div>
+
   <div class="section hidden" id="sectionVisitas">
     <div class="section-header">
       <div class="section-title">📍 Visitas confirmadas</div>
@@ -320,11 +306,11 @@
     <div class="carrossel-scroll" id="novidadesWrap"></div>
   </div>
 
-  <!-- CONTROLES (BUSCA, FILTRO, COLUNAS) -->
+  <!-- CONTROLES -->
   <div class="top-controls" id="topControls">
     <button class="btn-filter" id="btnFiltroBairro" onclick="toggleFiltroDropdown(event)">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
-      Bairro <span class="badge-sel hidden" id="badgeFiltro">0</span>
+      Filtre por Bairros <span class="badge-sel hidden" id="badgeFiltro">0</span>
     </button>
     <button class="btn-filter" id="btnToggleColunas" onclick="toggleColunas()">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
@@ -348,13 +334,19 @@
   </div>
 </div>
 
-<!-- NAVBAR INFERIOR AZUL ESCURO -->
+<!-- BARRA DE BUSCA FLUTUANTE -->
+<div class="search-bar-floating" id="searchBarFloating">
+  <input type="search" id="buscaInput" placeholder="Buscar por rua, bairro..." oninput="renderizarImoveis()">
+  <button class="btn-close-search" onclick="fecharBusca()">✕</button>
+</div>
+
+<!-- NAVBAR INFERIOR -->
 <nav class="bottom-nav" id="bottomNav">
   <button class="nav-btn active" id="navInicio" onclick="navIr('inicio')">
     <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
     <span class="nav-lbl">Início</span>
   </button>
-  <button class="nav-btn" id="navBuscar" onclick="navIr('buscar')">
+  <button class="nav-btn" id="navBuscar" onclick="toggleBusca()">
     <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
     <span class="nav-lbl">Buscar</span>
   </button>
@@ -370,13 +362,13 @@
     <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
     <span class="nav-lbl">Não Gostei</span>
   </button>
-  <button class="nav-btn" id="navWhatsApp" onclick="navIr('corretor')">
-    <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-    <span class="nav-lbl">WhatsApp</span>
+  <button class="nav-btn" id="navVendidos" onclick="navIr('vendidos')">
+    <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+    <span class="nav-lbl">Vendidos</span>
   </button>
 </nav>
 
-<!-- MODAL GOSTEI -->
+<!-- MODAIS -->
 <div class="modal-backdrop" id="modalGostei" onclick="if(event.target===this) fecharModalGostei()">
   <div class="modal">
     <button class="modal-close" onclick="fecharModalGostei()">×</button>
@@ -389,7 +381,6 @@
   </div>
 </div>
 
-<!-- MODAL VISITA -->
 <div class="modal-backdrop" id="modalVisita" onclick="if(event.target===this) fecharModalVisita()">
   <div class="modal">
     <button class="modal-close" onclick="fecharModalVisita()">×</button>
@@ -445,7 +436,7 @@ const state = {
   imoveis: [], filtroNav: null, bairrosSelecionados: new Set(),
   salvandoIds: {}, vistos: new Set(), ultimoAcesso: 0,
   modalImovelId: null, visitaDia: '', visitaTurno: '',
-  modo2Colunas: true // Começa com 2 no mobile
+  modo1Coluna: false // Falso = padrão 2 colunas no celular e 3/4 no PC
 };
 
 const $ = id => document.getElementById(id);
@@ -630,13 +621,13 @@ async function loginComRetryForte(tel, senha){
 
 async function reprocessarComLink(tel, senha){
   state.telefone = tel; state.deviceToken = null; state.clienteInfo = null; state.imoveis = [];
-  mostrarView('vitrineView'); $('userInfo').textContent = fmtTel(tel); mostrarSkeleton();
+  mostrarView('vitrineView'); $('saudacaoUser').textContent = 'Olá, ' + fmtTel(tel); mostrarSkeleton();
   const res = await loginComRetryForte(tel, senha);
   if(res.ok){
     state.deviceToken = res.deviceToken || ''; state.clienteInfo = { nome: res.nome, apelido: res.apelido };
     localStorage.setItem(TEL_KEY, tel); localStorage.setItem(TOKEN_KEY, state.deviceToken);
     if(res.nome) localStorage.setItem(NOME_KEY, res.nome); gravarLinkOriginal(tel, senha);
-    $('userInfo').textContent = res.nome ? res.nome.split(' ')[0] : fmtTel(tel);
+    $('saudacaoUser').textContent = 'Olá, ' + (res.nome ? res.nome.split(' ')[0] : fmtTel(tel));
     if(res.imoveis?.length){ state.imoveis = res.imoveis.sort((a,b) => new Date(b.dataCadastro||0) - new Date(a.dataCadastro||0)); gravarCache(state.imoveis); atualizarTela(); limparUrl(); limparOriginalUrl(); return; }
     await carregarImoveis(); limparUrl(); limparOriginalUrl(); return;
   }
@@ -656,7 +647,7 @@ async function entrarCliente(){
   btn.disabled = false; btn.textContent = 'Entrar na vitrine';
   if(!res.ok){
     if(erroEhDispositivoVinculado(res.error)){ mostrarBloqueioDispositivo(); return; }
-    if(erroEhConexao(res.error)){ gravarOriginalUrl(tel, senha); mostrarView('vitrineView'); $('userInfo').textContent = fmtTel(tel); mostrarErroConexaoComLink(); return; }
+    if(erroEhConexao(res.error)){ gravarOriginalUrl(tel, senha); mostrarView('vitrineView'); $('saudacaoUser').textContent = 'Olá, ' + fmtTel(tel); mostrarErroConexaoComLink(); return; }
     toast(res.error || 'Erro', 'error'); return;
   }
   state.deviceToken = res.deviceToken || ''; state.clienteInfo = { nome: res.nome, apelido: res.apelido };
@@ -667,7 +658,7 @@ async function entrarCliente(){
 
 async function irParaVitrine(){
   mostrarView('vitrineView');
-  $('userInfo').textContent = state.clienteInfo?.nome ? state.clienteInfo.nome.split(' ')[0] : fmtTel(state.telefone);
+  $('saudacaoUser').textContent = 'Olá, ' + (state.clienteInfo?.nome ? state.clienteInfo.nome.split(' ')[0] : fmtTel(state.telefone));
   const cache = lerCache();
   if(cache?.data?.length){ state.imoveis = cache.data; atualizarTela(); if(cache.fresh) return; } else { mostrarSkeleton(); }
   await carregarImoveis();
@@ -750,10 +741,10 @@ function toggleBairro(chave){
 function limparFiltroBairros(){ state.bairrosSelecionados.clear(); renderizarFiltroDropdown(); renderizarImoveis(); }
 
 function toggleColunas(){
-  state.modo2Colunas = !state.modo2Colunas;
+  state.modo1Coluna = !state.modo1Coluna;
   const grid = $('gridImoveis'); const btn = $('btnToggleColunas'); const txt = $('txtToggleColunas');
-  if(state.modo2Colunas){ grid.classList.add('grid-2col'); btn.classList.add('active'); txt.textContent = 'Ver 1 por linha'; }
-  else { grid.classList.remove('grid-2col'); btn.classList.remove('active'); txt.textContent = 'Ver 2 por linha'; }
+  if(state.modo1Coluna){ grid.classList.add('modo-1col'); btn.classList.add('active'); txt.textContent = 'Ver 2 por linha'; }
+  else { grid.classList.remove('modo-1col'); btn.classList.remove('active'); txt.textContent = 'Ver 1 por linha'; }
 }
 
 function renderizarImoveis(){
@@ -762,6 +753,7 @@ function renderizarImoveis(){
   if(state.filtroNav === 'gostei') lista = lista.filter(i => !imovelVendido_(i) && i.status === 'gostei');
   else if(state.filtroNav === 'visitar') lista = lista.filter(i => !imovelVendido_(i) && i.status === 'quero-visitar');
   else if(state.filtroNav === 'nao-gostei') lista = lista.filter(i => !imovelVendido_(i) && i.status === 'nao-gostei');
+  else if(state.filtroNav === 'vendidos') lista = lista.filter(i => imovelVendido_(i));
   else {
     lista.sort((a,b) => {
       const va = imovelVendido_(a) ? 3 : 0, vb = imovelVendido_(b) ? 3 : 0; if(va !== vb) return va - vb;
@@ -833,13 +825,13 @@ function cardHTML(im, idx){
     <div class="card ${extraClass}" data-id="${im.id}" style="animation-delay:${idx*30}ms" onclick="${vendido ? '' : `clicarCard('${im.id}')`}">
       
       <div class="card-header">
-        <div class="card-header-titles">
-          <div class="card-bairro">${esc(im.bairro || 'Bairro')}</div>
-          <div class="card-rua" title="${esc(im.rua || im.titulo || 'Endereço')}">${esc(im.rua || im.titulo || 'Endereço')}</div>
+        <div class="card-header-top">
+          <div class="card-bairro" title="${esc(im.bairro || 'Bairro')}">${esc(im.bairro || 'Bairro')}</div>
+          <button class="btn-share-min" onclick="event.stopPropagation(); compartilharImovel('${im.id}')" title="Compartilhar">
+            ${svgShare}
+          </button>
         </div>
-        <button class="btn-share-min" onclick="event.stopPropagation(); compartilharImovel('${im.id}')" title="Compartilhar">
-          ${svgShare}
-        </button>
+        <div class="card-rua" title="${esc(im.rua || im.titulo || 'Endereço')}">${esc(im.rua || im.titulo || 'Endereço')}</div>
       </div>
 
       <div class="card-img-wrap" ${im.link && !vendido ? `onclick="event.stopPropagation(); window.open('${esc(im.link)}','_blank');"` : ''}>
@@ -867,9 +859,9 @@ function cardHTML(im, idx){
         <div class="card-preco">${precoFmt || 'Consulte'}</div>
         
         <div class="card-preco-sec">
-          ${im.condominio ? `<span>Cond. R$ ${esc(im.condominio)}</span>` : ''}
+          ${im.condominio ? `<span>Cond. ${esc(im.condominio)}</span>` : ''}
           ${im.condominio && im.iptu ? `<span class="sep">|</span>` : ''}
-          ${im.iptu ? `<span>IPTU R$ ${esc(im.iptu)}</span>` : ''}
+          ${im.iptu ? `<span>IPTU ${esc(im.iptu)}</span>` : ''}
         </div>
         
         ${im.descricao ? `
@@ -1008,22 +1000,30 @@ async function enviarSolicitacaoVisita(){
   fecharModalVisita(); toast('Solicitação enviada!', 'success');
 }
 
-function navIr(destino){
-  ['navInicio','navBuscar','navFavoritos','navVisitar','navNaoGostei','navWhatsApp'].forEach(id => $(id).classList.remove('active'));
-  
-  if(destino === 'corretor'){
-    const corretor = corretorDoCliente(); const zap = ZAP_CORRETORES[corretor];
-    const msg = `Olá ${corretor}! Sou *${state.clienteInfo?.nome||'Cliente'}* e estou olhando a vitrine.`;
-    window.open(`https://wa.me/${zap}?text=${encodeURIComponent(msg)}`, '_blank');
-    setTimeout(()=>{ if(state.filtroNav==='gostei') $('navFavoritos').classList.add('active'); else if(state.filtroNav==='visitar') $('navVisitar').classList.add('active'); else if(state.filtroNav==='nao-gostei') $('navNaoGostei').classList.add('active'); else $('navInicio').classList.add('active'); }, 100);
-    return;
-  }
+/* ====== NAVEGAÇÃO E BUSCA ====== */
+function toggleBusca(){
+  const barra = $('searchBarFloating');
+  barra.classList.toggle('show');
+  if(barra.classList.contains('show')){ setTimeout(() => $('buscaInput').focus(), 100); $('navBuscar').classList.add('active'); }
+  else { $('buscaInput').value = ''; renderizarImoveis(); $('navBuscar').classList.remove('active'); }
+}
 
+function fecharBusca(){
+  $('searchBarFloating').classList.remove('show');
+  $('buscaInput').value = ''; renderizarImoveis(); $('navBuscar').classList.remove('active');
+}
+
+function navIr(destino){
+  // Se clicar em qualquer nav, fecha a barra de busca
+  fecharBusca();
+
+  ['navInicio','navBuscar','navFavoritos','navVisitar','navNaoGostei','navVendidos'].forEach(id => $(id).classList.remove('active'));
+  
   if(destino === 'inicio'){ state.filtroNav = null; $('navInicio').classList.add('active'); }
-  else if(destino === 'buscar'){ state.filtroNav = null; $('navBuscar').classList.add('active'); setTimeout(() => $('topControls').scrollIntoView({ behavior: 'smooth' }), 50); return; }
   else if(destino === 'gostei'){ state.filtroNav = 'gostei'; $('navFavoritos').classList.add('active'); }
   else if(destino === 'visitar'){ state.filtroNav = 'visitar'; $('navVisitar').classList.add('active'); }
   else if(destino === 'nao-gostei'){ state.filtroNav = 'nao-gostei'; $('navNaoGostei').classList.add('active'); }
+  else if(destino === 'vendidos'){ state.filtroNav = 'vendidos'; $('navVendidos').classList.add('active'); }
   
   renderizarImoveis(); window.scrollTo({ top: 0, behavior: 'smooth' });
 }
@@ -1044,9 +1044,9 @@ function limparFiltro(){ state.filtroNav = null; state.bairrosSelecionados.clear
     const cache = lerCache();
     if(cache?.data?.length && telSalvo === telUrl){
       state.imoveis = cache.data; state.deviceToken = localStorage.getItem(TOKEN_KEY); state.clienteInfo = { nome: localStorage.getItem(NOME_KEY) };
-      mostrarView('vitrineView'); $('userInfo').textContent = state.clienteInfo.nome ? state.clienteInfo.nome.split(' ')[0] : fmtTel(telUrl); atualizarTela();
+      mostrarView('vitrineView'); $('saudacaoUser').textContent = 'Olá, ' + (state.clienteInfo.nome ? state.clienteInfo.nome.split(' ')[0] : fmtTel(telUrl)); atualizarTela();
     } else {
-      mostrarView('vitrineView'); $('userInfo').textContent = fmtTel(telUrl); mostrarSkeleton();
+      mostrarView('vitrineView'); $('saudacaoUser').textContent = 'Olá, ' + fmtTel(telUrl); mostrarSkeleton();
     }
     
     const res = await loginComRetryForte(telUrl, senhaUrl);
@@ -1054,7 +1054,7 @@ function limparFiltro(){ state.filtroNav = null; state.bairrosSelecionados.clear
       state.deviceToken = res.deviceToken || ''; state.clienteInfo = { nome: res.nome, apelido: res.apelido };
       localStorage.setItem(TEL_KEY, telUrl); localStorage.setItem(TOKEN_KEY, state.deviceToken);
       if(res.nome) localStorage.setItem(NOME_KEY, res.nome);
-      $('userInfo').textContent = res.nome ? res.nome.split(' ')[0] : fmtTel(telUrl); salvarUltimoAcesso(); limparUrl(); limparOriginalUrl();
+      $('saudacaoUser').textContent = 'Olá, ' + (res.nome ? res.nome.split(' ')[0] : fmtTel(telUrl)); salvarUltimoAcesso(); limparUrl(); limparOriginalUrl();
       if(res.imoveis?.length){ state.imoveis = res.imoveis.sort((a,b)=>new Date(b.dataCadastro||0)-new Date(a.dataCadastro||0)); gravarCache(state.imoveis); atualizarTela(); return; }
       await carregarImoveis(); return;
     }
@@ -1065,7 +1065,7 @@ function limparFiltro(){ state.filtroNav = null; state.bairrosSelecionados.clear
   const cache = lerCache(), telSalvo = localStorage.getItem(TEL_KEY), tokenSalvo = localStorage.getItem(TOKEN_KEY), nomeSalvo = localStorage.getItem(NOME_KEY);
   if(cache?.data?.length && telSalvo){
     state.telefone = telSalvo; state.deviceToken = tokenSalvo; state.clienteInfo = { nome: nomeSalvo }; state.imoveis = cache.data;
-    mostrarView('vitrineView'); $('userInfo').textContent = nomeSalvo ? nomeSalvo.split(' ')[0] : fmtTel(telSalvo); atualizarTela();
+    mostrarView('vitrineView'); $('saudacaoUser').textContent = 'Olá, ' + (nomeSalvo ? nomeSalvo.split(' ')[0] : fmtTel(telSalvo)); atualizarTela();
   } else { mostrarView('loginView'); setTimeout(()=>$('inputTelefone').focus(),200); }
 })();
 </script>
