@@ -181,7 +181,7 @@
   label .req{ color: var(--danger); }
   .form-group{ margin-bottom: 16px; }
 
-  /* ===== MODAL NOVO/EDITAR IMÓVEL ===== */
+  /* ===== SPLIT VIEW: MODAL ESQUERDA ===== */
   .admin-panel{
     background: #fff; border-radius: var(--radius-lg);
     box-shadow: var(--shadow-lg);
@@ -195,8 +195,25 @@
     z-index: 1500;
     border: 1px solid var(--border);
     display: none;
+    transition: left .3s ease, transform .3s ease, width .3s ease;
   }
   .admin-panel.show{ display: block; }
+
+  /* Quando split ativo: modal encolhe e vai pra esquerda */
+  .admin-panel.split-ativo{
+    left: 16px;
+    transform: translate(0, -50%);
+    width: calc(50vw - 24px);
+    max-width: 620px;
+  }
+  @media(max-width: 900px){
+    .admin-panel.split-ativo{
+      left: 12px;
+      width: calc(100vw - 24px);
+      max-width: none;
+    }
+  }
+
   .admin-panel-inner{ padding: 20px 22px 22px; }
   .admin-panel-header{
     position: sticky; top: 0; z-index: 5;
@@ -220,43 +237,94 @@
   }
   .admin-panel-header .close-x:hover{ background: #cbd5e1; color: var(--text); }
 
-  .admin-panel-backdrop{
+  /* Overlay escuro (fica entre o modal e o popup) */
+  .split-overlay{
     position: fixed; inset: 0;
-    background: rgba(15,23,42,.6);
-    backdrop-filter: blur(3px);
+    background: rgba(15,23,42,.45);
+    backdrop-filter: blur(2px);
     z-index: 1400;
     display: none;
   }
-  .admin-panel-backdrop.show{ display: block; }
+  .split-overlay.show{ display: block; }
 
-  .form-row-4{ display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 10px; margin-bottom: 12px; }
-  .form-row-3{ display: grid; grid-template-columns: 2fr 1fr 1.2fr; gap: 10px; margin-bottom: 12px; }
-  .form-row-3b{ display: grid; grid-template-columns: 1fr 0.7fr 0.7fr 1.2fr; gap: 10px; margin-bottom: 12px; }
-  .form-row-2-img{ display: grid; grid-template-columns: 200px 1fr; gap: 14px; margin-bottom: 12px; align-items: start; }
-  @media(max-width:820px){
-    .form-row-4{ grid-template-columns: 1fr 1fr; }
-    .form-row-3{ grid-template-columns: 1fr; }
-    .form-row-3b{ grid-template-columns: 1fr 1fr; }
-    .form-row-2-img{ grid-template-columns: 1fr; }
+  /* ===== PAINEL DIREITO (status do popup) ===== */
+  .split-painel-direito{
+    position: fixed;
+    top: 16px; right: 16px;
+    width: calc(50vw - 24px);
+    height: calc(100vh - 32px);
+    background: #fff;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    z-index: 1450;
+    display: none;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    flex-direction: column;
   }
-  @media(max-width:640px){
-    .form-row-4{ grid-template-columns: 1fr; }
-    .form-row-3b{ grid-template-columns: 1fr 1fr; }
+  .split-painel-direito.show{ display: flex; }
+  @media(max-width: 900px){
+    .split-painel-direito{ display: none !important; }
   }
-
-  .img-preview-box{
-    width: 100%; aspect-ratio: 4/3;
-    background: var(--bg-alt); border: 1px dashed var(--border-strong);
-    border-radius: var(--radius-sm);
+  .split-painel-header{
+    background: var(--bg-alt);
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 8px;
+  }
+  .split-painel-header .titulo{
+    font-size: .82rem; font-weight: 700; color: var(--text);
+    display: flex; align-items: center; gap: 6px;
+    flex: 1; min-width: 0; overflow: hidden;
+  }
+  .split-painel-header .titulo span{
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .split-painel-header .acoes-split{
+    display: flex; gap: 4px; flex-shrink: 0;
+  }
+  .split-painel-header .btn-split{
+    width: 30px; height: 30px; border-radius: var(--radius-sm);
+    border: 1px solid var(--border-strong); background: #fff;
+    color: var(--text-soft); cursor: pointer;
     display: flex; align-items: center; justify-content: center;
-    overflow: hidden; position: relative;
+    transition: all .15s;
   }
-  .img-preview-box img{
-    width: 100%; height: 100%; object-fit: cover; display: block;
+  .split-painel-header .btn-split:hover{ background: var(--purple); color: #fff; border-color: var(--purple); }
+  .split-painel-corpo{
+    flex: 1; position: relative; overflow: hidden; background: #f8fafc;
+    padding: 24px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 16px; text-align: center;
   }
-  .img-preview-box .sem-img{
-    color: var(--muted); font-size: .72rem; text-align: center;
-    padding: 10px; line-height: 1.4;
+  .split-painel-corpo .icone-grande{
+    width: 64px; height: 64px; color: var(--purple); opacity: .7;
+  }
+  .split-painel-corpo .status-msg{
+    font-size: .88rem; font-weight: 700; color: var(--text);
+    max-width: 380px; line-height: 1.4;
+  }
+  .split-painel-corpo .status-detalhe{
+    font-size: .78rem; color: var(--text-soft); max-width: 380px; line-height: 1.5;
+  }
+  .split-painel-corpo .status-detalhe a{
+    color: var(--purple); font-weight: 700; text-decoration: underline;
+    word-break: break-all;
+  }
+  .split-painel-corpo .status-detalhe code{
+    background: var(--bg-alt); padding: 2px 6px; border-radius: 4px;
+    font-family: var(--mono); font-size: .72rem;
+    word-break: break-all;
+  }
+  .split-painel-status-badge{
+    display: inline-flex; align-items: center; gap: 5px;
+    background: var(--success-soft); color: var(--success);
+    padding: 6px 14px; border-radius: 20px;
+    font-size: .76rem; font-weight: 700;
+  }
+  .split-painel-status-badge.aguardando{
+    background: var(--warn-soft); color: var(--warn);
   }
 
   /* ===== TIPO IMÓVEL — CHIPS ===== */
@@ -276,7 +344,40 @@
     background: var(--purple); color: #fff; border-color: var(--purple);
     box-shadow: 0 2px 8px rgba(109,40,217,.25);
   }
-  .chip-tipo .req-dot{ color: var(--danger); font-weight: 800; margin-left: 2px; }
+
+  .form-row-4{ display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+  .form-row-3{ display: grid; grid-template-columns: 2fr 1fr 1.2fr; gap: 10px; margin-bottom: 12px; }
+  .form-row-3b{ display: grid; grid-template-columns: 1fr 0.7fr 0.7fr 1.2fr; gap: 10px; margin-bottom: 12px; }
+  .form-row-2-img{ display: grid; grid-template-columns: 200px 1fr; gap: 14px; margin-bottom: 12px; align-items: start; }
+  @media(max-width:820px){
+    .form-row-4{ grid-template-columns: 1fr 1fr; }
+    .form-row-3{ grid-template-columns: 1fr; }
+    .form-row-3b{ grid-template-columns: 1fr 1fr; }
+    .form-row-2-img{ grid-template-columns: 1fr; }
+  }
+  @media(max-width:640px){
+    .form-row-4{ grid-template-columns: 1fr; }
+    .form-row-3b{ grid-template-columns: 1fr 1fr; }
+  }
+  .admin-panel.split-ativo .form-row-4{ grid-template-columns: 1fr 1fr; }
+  .admin-panel.split-ativo .form-row-3b{ grid-template-columns: 1fr 1fr; }
+  .admin-panel.split-ativo .form-row-2-img{ grid-template-columns: 1fr; }
+  .admin-panel.split-ativo .form-row-3{ grid-template-columns: 1fr; }
+
+  .img-preview-box{
+    width: 100%; aspect-ratio: 4/3;
+    background: var(--bg-alt); border: 1px dashed var(--border-strong);
+    border-radius: var(--radius-sm);
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden; position: relative;
+  }
+  .img-preview-box img{
+    width: 100%; height: 100%; object-fit: cover; display: block;
+  }
+  .img-preview-box .sem-img{
+    color: var(--muted); font-size: .72rem; text-align: center;
+    padding: 10px; line-height: 1.4;
+  }
 
   .btn-buscar-entrada{
     width: 100%; margin-bottom: 12px;
@@ -377,7 +478,6 @@
   .card.card-agendado{ background: #f0fdf4; border-color: #bbf7d0; }
   .card.card-agendado:hover{ background: #dcfce7; border-color: #86efac; }
 
-  /* ===== CARD VENDIDO ===== */
   .card.card-vendido{
     background: #fff1f2;
     border-color: #fecaca;
@@ -403,9 +503,34 @@
     pointer-events: none;
     white-space: nowrap;
   }
-  .card-status-vendido{
-    background: #b91c1c !important;
+  .card-status-vendido{ background: #b91c1c !important; }
+
+  .btn-vendido-toggle{
+    position: absolute;
+    top: 44px; right: 8px;
+    z-index: 6;
+    background: rgba(220,38,38,.92);
+    color: #fff;
+    border: 2px solid #fff;
+    border-radius: 8px;
+    padding: 4px 9px;
+    font-size: .6rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .3px;
+    cursor: pointer;
+    font-family: inherit;
+    box-shadow: 0 2px 8px rgba(220,38,38,.4);
+    display: inline-flex; align-items: center; gap: 4px;
+    transition: all .15s;
+    white-space: nowrap;
   }
+  .btn-vendido-toggle:hover{ background: #b91c1c; transform: scale(1.05); }
+  .btn-vendido-toggle.desmarcar{
+    background: rgba(22,163,74,.92);
+    box-shadow: 0 2px 8px rgba(22,163,74,.4);
+  }
+  .btn-vendido-toggle.desmarcar:hover{ background: #15803d; }
 
   .card.card-novo{ animation: cardNovo .4s ease-out; }
   @keyframes cardNovo{ from{ transform: scale(.94); opacity: 0; } to{ transform: scale(1); opacity: 1; } }
@@ -743,417 +868,28 @@
     margin-bottom: 6px; cursor: pointer; transition: all .12s;
   }
   .clonar-item:hover{ border-color: var(--purple); }
+
+  /* ===== POPUP STATUS / INSTRUÇÕES ===== */
+  .popup-instrucoes{
+    background: #fef3c7;
+    border: 1px solid #fde68a;
+    color: #78350f;
+    padding: 10px 12px;
+    border-radius: 6px;
+    font-size: .74rem;
+    line-height: 1.5;
+    margin-top: 8px;
+  }
+  .popup-instrucoes strong{ color: #92400e; }
+  .popup-instrucoes code{
+    background: rgba(0,0,0,.08);
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-family: var(--mono);
+    font-size: .7rem;
+  }
 </style>
 </head>
-
-<body>
-
-<header class="app-header">
-  <div class="header-inner">
-    <div class="brand">
-      <div class="brand-icon">VA</div>
-      <div class="brand-text">
-        <div class="brand-title">Vitrine Admin</div>
-        <div class="brand-sub">Editar imóveis</div>
-      </div>
-    </div>
-    <div class="header-right">
-      <button class="btn-header editar-cliente" onclick="abrirEditarClienteAtual()" title="Editar dados do cliente">
-        <svg class="ico" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-        <span class="lbl-txt">Editar cliente</span>
-      </button>
-      <button class="btn-header atualizar" id="btnAtualizarHeader" onclick="recarregarVitrine()" title="Recarregar imóveis deste cliente">
-        <svg class="ico" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
-        <span class="lbl-txt">Atualizar</span>
-      </button>
-      <button class="btn-header" onclick="abrirAtividade()" title="Ver atividade do cliente">
-        <svg class="ico" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-        <span class="lbl-txt">Atividade</span>
-      </button>
-      <button class="btn-header" onclick="toggleAcessosSection()" title="Acessos do cliente">
-        <svg class="ico" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-        <span class="lbl-txt">Acessos</span>
-        <span class="badge-num" id="acessosBadgeNum">0</span>
-      </button>
-      <button class="btn-header" onclick="abrirClonarVitrine()" title="Clonar imóveis para outro cliente">
-        <svg class="ico" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-        <span class="lbl-txt">Clonar</span>
-      </button>
-    </div>
-  </div>
-</header>
-
-<div id="loadingView" class="loading-wrap">
-  <div class="spinner-lg"></div>
-  <p>Carregando vitrine do cliente...</p>
-</div>
-
-<div id="erroView" class="erro-wrap hidden">
-  <h2 id="erroTitulo">Não foi possível abrir</h2>
-  <p id="erroTexto">Verifique o link e tente novamente.</p>
-  <button class="btn btn-primary btn-full" onclick="window.close()">Fechar aba</button>
-</div>
-
-<div id="conteudoView" class="hidden">
-  <div class="cliente-bar" id="clienteBar">
-    <div class="info">
-      <div class="nome-cli" id="cbNome">—</div>
-      <div class="meta" id="cbMeta"></div>
-    </div>
-  </div>
-
-  <div class="container">
-    <div class="admin-panel" id="adminPanel">
-      <div class="admin-panel-header">
-        <h3 id="adminPanelTitle">Adicionar imóvel</h3>
-        <button class="close-x" onclick="fecharPainelImovel()" title="Fechar">
-          <svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-        </button>
-      </div>
-      <div class="admin-panel-inner">
-        <input type="hidden" id="editingId">
-
-        <!-- TIPO (chips) -->
-        <label style="margin-bottom:8px;">Tipo de imóvel <span class="req">*</span></label>
-        <div class="tipo-chips-wrap" id="tipoChipsWrap">
-          <button type="button" class="chip-tipo" data-tipo="Apartamento Padrão" onclick="escolherTipoImovel('Apartamento Padrão', this)">Apartamento Padrão</button>
-          <button type="button" class="chip-tipo" data-tipo="Cobertura" onclick="escolherTipoImovel('Cobertura', this)">Cobertura</button>
-          <button type="button" class="chip-tipo" data-tipo="Área Privativa" onclick="escolherTipoImovel('Área Privativa', this)">Área Privativa</button>
-          <button type="button" class="chip-tipo" data-tipo="Casa" onclick="escolherTipoImovel('Casa', this)">Casa</button>
-        </div>
-
-        <div class="form-row-4">
-          <div>
-            <label>Link do anúncio</label>
-            <input type="url" id="adLink" onblur="onLinkBlur()" oninput="onLinkImovelChanged()" placeholder="https://...">
-          </div>
-          <div>
-            <label>Preço</label>
-            <input type="text" id="adPreco" inputmode="numeric" placeholder="450.000,00" oninput="mascaraPreco(this)">
-          </div>
-          <div>
-            <label>Condomínio</label>
-            <input type="text" id="adCondominio" inputmode="numeric" placeholder="800,00" oninput="mascaraPreco(this)">
-          </div>
-          <div>
-            <label>IPTU</label>
-            <input type="text" id="adIPTU" inputmode="numeric" placeholder="1.200,00" oninput="mascaraPreco(this)">
-          </div>
-        </div>
-
-        <div class="form-row-3b">
-          <div>
-            <label>Rua <span class="req">*</span></label>
-            <input type="text" id="adRua">
-          </div>
-          <div>
-            <label>Número <span class="req">*</span></label>
-            <input type="text" id="adNumero">
-          </div>
-          <div>
-            <label>Apto <span class="req">*</span></label>
-            <input type="text" id="adApto" placeholder="Ex: 402">
-          </div>
-          <div>
-            <label>Bairro <span class="req">*</span></label>
-            <input type="text" id="adBairro">
-          </div>
-        </div>
-
-        <div class="form-row-2-img">
-          <div>
-            <label>Miniatura</label>
-            <div class="img-preview-box" id="imgPreviewBox">
-              <div class="sem-img" id="semImgTxt">Cole um link<br>para buscar a imagem</div>
-              <img id="previewImg" class="hidden" alt="Preview">
-            </div>
-          </div>
-          <div>
-            <label>Descrição</label>
-            <textarea id="adDescricao" style="min-height:110px;" placeholder="Descrição do imóvel..."></textarea>
-          </div>
-        </div>
-
-        <button type="button" class="btn-buscar-entrada" id="btnBuscarEntrada" onclick="abrirBuscarEntradaForm()" disabled>
-          <svg class="ico" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-          Buscar entrada <span class="codigo-badge" id="codigoBadge">sem código</span>
-        </button>
-
-        <div class="form-row-4" style="grid-template-columns: 0.9fr 1.3fr 1.8fr;">
-          <div>
-            <label>Bloco</label>
-            <input type="text" id="adBloco" placeholder="Opcional">
-          </div>
-          <div>
-            <label>Chave (onde pegar) <span class="req">*</span></label>
-            <input type="text" id="adChaveTexto" placeholder="Ex: Chave na portaria">
-          </div>
-          <div>
-            <label>Complemento da chave</label>
-            <input type="text" id="adChaveComplemento" placeholder="Ex: Falar com Sr. José">
-          </div>
-        </div>
-
-        <input type="hidden" id="adImagem">
-
-        <div class="form-actions-row">
-          <span class="link-label">
-            Link de: <span class="req">*</span>
-          </span>
-          <button type="button" class="btn-corretor-escolha" data-corretor="Hugo" onclick="escolherCorretor('Hugo', this)">Hugo</button>
-          <button type="button" class="btn-corretor-escolha" data-corretor="Carolina" onclick="escolherCorretor('Carolina', this)">Carol</button>
-          <button class="btn btn-purple btn-salvar-imovel" id="btnSalvarImovel" style="flex:1; min-width:180px;" onclick="salvarImovel()" disabled>
-            <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
-            Salvar imóvel
-          </button>
-          <button class="btn btn-ghost" onclick="fecharPainelImovel()">Cancelar</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="admin-panel hidden" id="acessosSection" style="position:relative; top:auto; left:auto; transform:none; max-width:none; max-height:none; display:block;">
-      <div class="admin-panel-header">
-        <h3 style="display:flex; align-items:center; gap:9px;">
-          <svg class="ico" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-          Acessos do cliente
-        </h3>
-        <div style="display:flex; gap:6px;">
-          <button class="btn btn-primary btn-xs" onclick="abrirNovoAcesso()">
-            <svg class="ico ico-sm" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            Criar acesso
-          </button>
-          <button class="btn btn-purple btn-xs" onclick="criarAcessoAdminAqui()">
-            <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-            Criar acesso admin
-          </button>
-          <button class="close-x" onclick="toggleAcessosSection()">
-            <svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-          </button>
-        </div>
-      </div>
-      <div class="admin-panel-inner">
-        <div id="acessosList"></div>
-      </div>
-    </div>
-
-    <div class="admin-toolbar">
-      <button class="btn btn-purple" onclick="abrirPainelNovoImovel()">
-        <svg class="ico ico-sm" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        Adicionar novo imóvel
-      </button>
-      <span class="spacer"></span>
-    </div>
-
-    <div class="mt-3">
-      <input type="search" id="buscaInput" placeholder="Buscar endereço ou descrição..." oninput="renderizarImoveis()">
-    </div>
-
-    <div class="filters" id="filters">
-      <button class="filter-btn" data-filter="recentes" onclick="setFiltro('recentes', this)">Recentes</button>
-      <button class="filter-btn active" data-filter="todos" onclick="setFiltro('todos', this)">Todos <span class="filter-count" id="cnt-todos">0</span></button>
-      <button class="filter-btn" data-filter="pendente" onclick="setFiltro('pendente', this)">Aguardando <span class="filter-count" id="cnt-pendente">0</span></button>
-      <button class="filter-btn" data-filter="quero-visitar" onclick="setFiltro('quero-visitar', this)">Quero visitar <span class="filter-count" id="cnt-quero-visitar">0</span></button>
-      <button class="filter-btn" data-filter="gostei" onclick="setFiltro('gostei', this)">Gostei <span class="filter-count" id="cnt-gostei">0</span></button>
-      <button class="filter-btn" data-filter="nao-gostei" onclick="setFiltro('nao-gostei', this)">Não gostei <span class="filter-count" id="cnt-nao-gostei">0</span></button>
-      <button class="filter-btn btn-desativados" data-filter="desativados" onclick="setFiltro('desativados', this)">Desativados <span class="filter-count" id="cnt-desativados">0</span></button>
-    </div>
-
-    <div class="grid" id="gridImoveis"></div>
-    <div class="empty-state hidden" id="emptyState">
-      <h3 id="emptyTitulo">Nenhum imóvel aqui</h3>
-      <p id="emptyMsg">Nada para mostrar neste filtro.</p>
-    </div>
-  </div>
-</div>
-
-<!-- Modal Editar Cliente -->
-<div class="modal-backdrop" id="clienteModalBackdrop" onclick="if(event.target===this) fecharClienteModal()">
-  <div class="modal" style="max-width:560px;">
-    <button class="modal-close" onclick="fecharClienteModal()"><svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-    <h2>Editar cliente</h2>
-    <div class="form-group"><label>Telefone</label><input type="tel" id="cliTelefone" disabled style="background:var(--bg); color:var(--text-soft);"></div>
-    <div class="form-group"><label>Nome completo <span class="req">*</span></label><input type="text" id="cliNome"></div>
-    <div class="form-group"><label>Corretor <span class="req">*</span></label><select id="cliCorretor"></select></div>
-    <div class="form-row" style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:12px;">
-      <div class="form-group"><label>TQC</label><select id="cliTQC"><option value="">Não</option><option value="Sim">Sim</option></select></div>
-      <div class="form-group"><label>Investidor</label><select id="cliCAR"><option value="">Não</option><option value="Sim">Sim</option></select></div>
-      <div class="form-group"><label>Inativo</label><select id="cliInativo"><option value="">Não</option><option value="Sim">Sim</option></select></div>
-    </div>
-    <div class="form-group">
-      <label>Observações internas</label>
-      <textarea id="cliObservacao" style="min-height:120px;"></textarea>
-    </div>
-    <div style="display:flex; gap:8px; justify-content:flex-end;">
-      <button type="button" class="btn btn-ghost" onclick="fecharClienteModal()">Cancelar</button>
-      <button type="button" class="btn btn-purple" id="btnSalvarCliente" onclick="salvarCliente()">
-        <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
-        Salvar
-      </button>
-    </div>
-  </div>
-</div>
-
-<div class="modal-backdrop" id="chaveModalBackdrop" onclick="if(event.target===this) fecharChaveModal()">
-  <div class="modal" style="max-width:520px;">
-    <button class="modal-close" onclick="fecharChaveModal()"><svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-    <h2><svg class="ico" viewBox="0 0 24 24"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg> Onde pegar a chave</h2>
-    <p class="text-muted" style="margin-bottom:16px; font-size:.82rem;" id="chaveModalSub">—</p>
-    <div id="chaveModalTexto" style="background:var(--warn-soft); border:1px solid #e2d3a8; border-radius:var(--radius); padding:16px; font-size:.9rem; line-height:1.6; white-space:pre-wrap; color:#5a4a25;"></div>
-  </div>
-</div>
-
-<div class="modal-backdrop" id="visitaBackdrop" onclick="if(event.target===this) fecharVisitaModal()">
-  <div class="modal" style="max-width:480px;">
-    <button class="modal-close" onclick="fecharVisitaModal()"><svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-    <h2><svg class="ico" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Registrar visita realizada</h2>
-    <input type="hidden" id="visitaImovelId">
-    <div class="form-group"><label>Data da visita <span class="req">*</span></label><input type="date" id="visitaData"></div>
-    <div class="form-group"><label>O que o cliente achou?</label><textarea id="visitaAvaliacao"></textarea></div>
-    <div style="display:flex; gap:8px;">
-      <button class="btn btn-primary" style="flex:1" onclick="salvarVisita(event)">Salvar</button>
-      <button class="btn btn-ghost" id="btnLimparVisita" onclick="limparVisita()">Limpar</button>
-    </div>
-  </div>
-</div>
-
-<div class="modal-backdrop" id="agendarBackdrop" onclick="if(event.target===this) fecharAgendarModal()">
-  <div class="modal" style="max-width:560px;">
-    <button class="modal-close" onclick="fecharAgendarModal()"><svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-    <h2><svg class="ico" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> Agendar visita</h2>
-    <input type="hidden" id="agendarImovelId">
-    <div class="form-group"><label>Data e hora <span class="req">*</span></label><input type="datetime-local" id="agendarDataHora"><div style="font-size:.68rem; color:var(--muted); margin-top:4px;">Somente hoje e datas futuras</div></div>
-    <div class="form-row-3">
-      <div class="form-group"><label>Rua <span class="req">*</span></label><input type="text" id="agendarRua"></div>
-      <div class="form-group"><label>Número <span class="req">*</span></label><input type="text" id="agendarNumero"></div>
-      <div class="form-group"><label>Bairro</label><input type="text" id="agendarBairro"></div>
-    </div>
-    <div style="display:flex; gap:8px;">
-      <button class="btn btn-primary" style="flex:1" onclick="salvarAgendamento(event)">Agendar</button>
-      <button class="btn btn-ghost" id="btnCancelarAgendamento" onclick="cancelarAgendamento()">Cancelar agendamento</button>
-    </div>
-  </div>
-</div>
-
-<div class="modal-backdrop" id="senhaGeradaBackdrop" onclick="if(event.target===this) fecharSenhaGerada()">
-  <div class="modal" style="max-width:460px; text-align:center;">
-    <button class="modal-close" onclick="fecharSenhaGerada()"><svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-    <div style="width:64px; height:64px; margin:0 auto 14px; border-radius:50%; background:var(--success-soft); color:var(--success); display:flex; align-items:center; justify-content:center;">
-      <svg class="ico" style="width:32px;height:32px;" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-    </div>
-    <h2 style="justify-content:center;" id="senhaGeradaTitulo">Acesso criado</h2>
-    <p class="text-muted" style="margin-bottom:18px; font-size:.82rem;" id="senhaGeradaSub">Use o botão abaixo para gerar o texto e enviar ao cliente.</p>
-    <div style="background:var(--bg); border:1px dashed var(--border-strong); border-radius:var(--radius); padding:16px; margin-bottom:16px; text-align:center;">
-      <div style="font-size:.68rem; color:var(--muted); font-weight:700; text-transform:uppercase; letter-spacing:.5px; margin-bottom:6px;">Apelido</div>
-      <div id="senhaGeradaApelido" style="font-size:.92rem; font-weight:700; margin-bottom:16px; color:var(--text);"></div>
-      <div style="font-size:.68rem; color:var(--muted); font-weight:700; text-transform:uppercase; letter-spacing:.5px; margin-bottom:6px;">Senha</div>
-      <div id="senhaGeradaValor" style="font-family:var(--mono); font-size:1.7rem; font-weight:700; letter-spacing:6px; color:var(--purple);"></div>
-    </div>
-    <button class="btn btn-purple btn-full" onclick="gerarTextoWhatsAppSenhaGerada()">
-      <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
-      Texto para WhatsApp
-    </button>
-    <button class="btn btn-ghost btn-full mt-2" onclick="fecharSenhaGerada()">Fechar</button>
-  </div>
-</div>
-
-<div class="modal-backdrop" id="novoAcessoBackdrop" onclick="if(event.target===this) fecharNovoAcesso()">
-  <div class="modal" style="max-width:480px;">
-    <button class="modal-close" onclick="fecharNovoAcesso()"><svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-    <h2><svg class="ico" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Criar novo acesso</h2>
-    <div class="form-group">
-      <label>Apelido do dispositivo <span class="req">*</span></label>
-      <input type="text" id="novoAcessoApelido" maxlength="40">
-      <div class="text-muted mt-2" style="font-size:.72rem;">Ex: "Celular", "PC trabalho"</div>
-    </div>
-    <div style="display:flex; gap:8px;">
-      <button class="btn btn-purple" style="flex:1" onclick="criarAcesso(event)">Gerar senha</button>
-      <button class="btn btn-ghost" onclick="fecharNovoAcesso()">Cancelar</button>
-    </div>
-  </div>
-</div>
-
-<div class="modal-backdrop" id="atividadeBackdrop" onclick="if(event.target===this) fecharAtividade()">
-  <div class="modal" style="max-width:720px;">
-    <button class="modal-close" onclick="fecharAtividade()"><svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-    <h2><svg class="ico" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg> Atividade — <span id="ativNomeCliente" style="color:var(--text-soft);font-weight:600;"></span></h2>
-    <div id="ativResumo" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-bottom: 16px;"></div>
-    <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:12px; padding-bottom:12px; border-bottom:1px solid var(--border);">
-      <button class="btn btn-ghost btn-xs" onclick="setFiltroAtividade('todos', this)">Tudo</button>
-      <button class="btn btn-ghost btn-xs" onclick="setFiltroAtividade('acessos', this)">🔐 Acessos</button>
-      <button class="btn btn-ghost btn-xs" onclick="setFiltroAtividade('cliente', this)">👤 Cliente</button>
-      <button class="btn btn-ghost btn-xs" onclick="setFiltroAtividade('admin', this)">🛡️ Admin</button>
-    </div>
-    <div id="ativTimeline" style="max-height:50vh; overflow-y:auto;">
-      <div class="loading-inline"><div class="spinner-lg" style="width:34px;height:34px;"></div></div>
-    </div>
-  </div>
-</div>
-
-<div class="modal-backdrop" id="clonarVitrineBackdrop" onclick="if(event.target===this) fecharClonarVitrine()">
-  <div class="modal" style="max-width:640px;">
-    <button class="modal-close" onclick="fecharClonarVitrine()"><svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-    <h2><svg class="ico" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Clonar vitrine</h2>
-    <p class="text-muted" style="margin-bottom:16px; font-size:.82rem;" id="clonarVitrineSub">—</p>
-    <div class="form-group"><label>Cliente de destino <span class="req">*</span></label><select id="clonarClienteDestino"></select></div>
-    <div class="form-group">
-      <label>Imóveis a enviar</label>
-      <div style="display:flex; gap:8px; margin-bottom:10px; flex-wrap:wrap; align-items:center;">
-        <button type="button" class="btn btn-soft btn-xs" onclick="clonarMarcarTodos(true)">Marcar todos</button>
-        <button type="button" class="btn btn-ghost btn-xs" onclick="clonarMarcarTodos(false)">Desmarcar todos</button>
-        <span style="margin-left:auto; font-size:.74rem; color:var(--muted); font-weight:600;" id="clonarContador">0 de 0 selecionados</span>
-      </div>
-      <div id="clonarListaImoveis" style="max-height:340px; overflow-y:auto; border:1px solid var(--border); border-radius:var(--radius); background:var(--bg); padding:8px;"></div>
-    </div>
-    <div style="display:flex; gap:8px; margin-top:16px;">
-      <button class="btn btn-purple" style="flex:1" id="btnConfirmarClonagem" onclick="confirmarClonagem()">
-        <svg class="ico ico-sm" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-        Clonar imóveis selecionados
-      </button>
-      <button class="btn btn-ghost" onclick="fecharClonarVitrine()">Cancelar</button>
-    </div>
-  </div>
-</div>
-
-<div class="modal-backdrop" id="excluirOuDesativarBackdrop">
-  <div class="modal" style="max-width:460px;">
-    <button class="modal-close" onclick="fecharExcluirOuDesativar()"><svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-    <h2><svg class="ico" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> O que deseja fazer?</h2>
-    <p class="text-muted" style="margin-bottom:16px; font-size:.82rem;" id="excluirOuDesativarSub">Escolha entre desativar (recomendado, você pode reativar depois) ou excluir permanentemente.</p>
-    <div style="display:flex; flex-direction:column; gap:10px;">
-      <button class="btn btn-warn" style="justify-content:flex-start; padding:14px 18px;" onclick="confirmarDesativar()">
-        <svg class="ico ico-lg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
-        <span style="font-weight:700; margin-left:8px;">Desativar (recomendado)</span>
-      </button>
-      <button class="btn btn-danger" style="justify-content:flex-start; padding:14px 18px;" onclick="confirmarExcluir()">
-        <svg class="ico ico-lg" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
-        <span style="font-weight:700; margin-left:8px;">Excluir permanentemente</span>
-      </button>
-      <button class="btn btn-ghost" onclick="fecharExcluirOuDesativar()">Cancelar</button>
-    </div>
-  </div>
-</div>
-
-<div class="confirm-backdrop" id="confirmBackdrop">
-  <div class="confirm-box">
-    <div class="icon-wrap" id="confirmIconWrap">
-      <svg class="ico ico-lg" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-    </div>
-    <h3 id="confirmTitulo">Confirmar ação</h3>
-    <p id="confirmTexto">Tem certeza?</p>
-    <div class="confirm-actions">
-      <button class="btn btn-ghost" id="confirmBtnNao">Cancelar</button>
-      <button class="btn btn-purple" id="confirmBtnSim">Confirmar</button>
-    </div>
-  </div>
-</div>
-
-<div class="saving-bar" id="savingBar">
-  <div class="spin"></div>
-  <span id="savingTexto">Salvando...</span>
-</div>
-
-<div class="toast" id="toast"></div>
-
 <script>
 /* =====================================================
    CONFIG
@@ -1195,7 +931,11 @@ const state = {
   _corretorEscolhido: '',
   _tipoEscolhido: '',
   _excluirDesativarId: null,
-  _salvarTimeout: null
+  _salvarTimeout: null,
+  _popupQuintoAndar: null,
+  _popupWatcherTimer: null,
+  _splitAtivo: false,
+  _ultimoLinkPopup: ''
 };
 
 const $ = id => document.getElementById(id);
@@ -1295,7 +1035,6 @@ function camposEndereco_(im){
 }
 function isDesativado(im){ return String(im.desativado || '').toLowerCase() === 'sim'; }
 
-/* ✅ Vendido — só olha o campo vindo do backend (não mais asteriscos) */
 function isVendido(im){
   if(!im) return false;
   const v = String(im.vendido || '').trim().toLowerCase();
@@ -1322,7 +1061,6 @@ function extrairCodigoDoLink(url){
   return match2 ? match2[1] : '';
 }
 
-/* ✅ Extrai tipo do imóvel da 1ª linha da descrição (entre asteriscos) */
 function extrairTipoImovel(descricao){
   if(!descricao) return '';
   const linhas = String(descricao).split(/\r?\n/).map(l => l.trim()).filter(Boolean);
@@ -1340,7 +1078,6 @@ function extrairTipoImovel(descricao){
   return '';
 }
 
-/* ✅ Remove tipo da descrição (para não duplicar ao salvar) */
 function descricaoSemTipo(descricao){
   if(!descricao) return '';
   const linhas = String(descricao).split(/\r?\n/);
@@ -1350,7 +1087,6 @@ function descricaoSemTipo(descricao){
   return linhas.join('\n').replace(/^\s+/, '');
 }
 
-/* ✅ Extrai Apto da 1ª linha e Bloco da 2ª linha do chaveTexto */
 function extrairAptoBlocoChave(chaveTexto){
   if(!chaveTexto) return { apto: '', bloco: '', resto: '' };
   const linhas = String(chaveTexto).split(/\r?\n/);
@@ -1369,7 +1105,6 @@ function extrairAptoBlocoChave(chaveTexto){
   return { apto, bloco, resto: restoLinhas.join('\n') };
 }
 
-/* ✅ Monta chaveTexto final: linha 1 = apto; linha 2 = bloco (se houver); depois complemento */
 function montarChaveTexto(apto, bloco, complemento){
   const linhas = [];
   if(apto) linhas.push(String(apto).trim());
@@ -1378,7 +1113,6 @@ function montarChaveTexto(apto, bloco, complemento){
   return linhas.join('\n');
 }
 
-/* ✅ Extrai o número do apto do chaveTexto para exibir no card */
 function extrairAptoExibicao(im){
   if(!im) return '';
   if(im.apto) return String(im.apto).replace(/\D/g, '');
@@ -1415,6 +1149,222 @@ function hojeISO(){
   const off = d.getTimezoneOffset();
   const local = new Date(d.getTime() - off * 60000);
   return local.toISOString().slice(0,10);
+}
+
+/* =====================================================
+   POPUP QUINTOANDAR (Chrome)
+   - Abre AUTOMATICAMENTE ao colar link
+   - Posicionado na METADE DIREITA da tela
+   - Sem barra de endereço, sem menus, sem abas
+   - Se o mesmo popup já estiver aberto, atualiza a URL
+===================================================== */
+function calcularFeaturesPopup(){
+  // Calcula dimensões baseado no tamanho da tela
+  const screenW = window.screen.availWidth;
+  const screenH = window.screen.availHeight;
+
+  // Popup ocupa metade direita da tela, com margem
+  const largura = Math.max(600, Math.floor(screenW / 2) - 16);
+  const altura = Math.max(500, screenH - 32);
+  const top = Math.max(0, Math.floor((screenH - altura) / 2));
+  const left = Math.floor(screenW / 2) + 8;
+
+  // Sem menus, sem toolbar, sem barra de endereço, sem abas
+  const features = [
+    'width=' + largura,
+    'height=' + altura,
+    'top=' + top,
+    'left=' + left,
+    'menubar=no',
+    'toolbar=no',
+    'location=no',
+    'status=no',
+    'resizable=yes',
+    'scrollbars=yes',
+    'noopener=no' // precisa manter referência para manipular depois
+  ].join(',');
+
+  return { features, largura, altura, top, left };
+}
+
+function abrirPopupQuintoAndarComUrl(url){
+  if(!url) return null;
+
+  // Se já tem popup aberto, só atualiza
+  if(state._popupQuintoAndar && !state._popupQuintoAndar.closed){
+    try {
+      if(state._popupQuintoAndar.location.href !== url){
+        state._popupQuintoAndar.location.href = url;
+      }
+      state._popupQuintoAndar.focus();
+      atualizarPainelDireitoStatus('aberto', url);
+      return state._popupQuintoAndar;
+    } catch(e){
+      // Fallback se não conseguir acessar location
+      state._popupQuintoAndar = null;
+    }
+  }
+
+  // Abre novo popup posicionado
+  const { features } = calcularFeaturesPopup();
+  const popup = window.open(url, 'quintoAndarRef', features);
+
+  if(popup && !popup.closed){
+    state._popupQuintoAndar = popup;
+    state._ultimoLinkPopup = url;
+    atualizarPainelDireitoStatus('aberto', url);
+
+    // Monitora se foi fechado
+    iniciarWatcherPopup();
+
+    // Tenta focar
+    setTimeout(() => {
+      try { popup.focus(); } catch(e){}
+    }, 100);
+
+    return popup;
+  } else {
+    // Popup bloqueado
+    atualizarPainelDireitoStatus('bloqueado', url);
+    toast('Chrome bloqueou o popup. Permita popups para este site clicando no ícone ao lado da URL.', 'error');
+    return null;
+  }
+}
+
+function iniciarWatcherPopup(){
+  if(state._popupWatcherTimer) clearInterval(state._popupWatcherTimer);
+  state._popupWatcherTimer = setInterval(() => {
+    if(state._popupQuintoAndar && state._popupQuintoAndar.closed){
+      state._popupQuintoAndar = null;
+      clearInterval(state._popupWatcherTimer);
+      state._popupWatcherTimer = null;
+      atualizarPainelDireitoStatus('fechado', '');
+      // Se o split estiver ativo e o popup foi fechado, fecha o split
+      if(state._splitAtivo){
+        fecharSplitPainel();
+        toast('Popup fechado — painel voltou ao normal');
+      }
+    }
+  }, 1000);
+}
+
+function atualizarPainelDireitoStatus(status, url){
+  const corpo = $('splitPainelCorpo');
+  const titulo = $('splitTitulo');
+  if(!corpo) return;
+
+  const codigo = extrairCodigoDoLink(url) || '—';
+  if(titulo) titulo.textContent = 'QuintoAndar · #' + codigo;
+
+  if(status === 'aberto'){
+    corpo.innerHTML = `
+      <svg class="icone-grande" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--success);">
+        <polyline points="20 6 9 17 4 12"/>
+      </svg>
+      <span class="split-painel-status-badge">
+        ✓ Popup aberto na direita
+      </span>
+      <p class="status-msg">O QuintoAndar está aberto numa janela separada</p>
+      <p class="status-detalhe">
+        A página oficial foi aberta numa <strong>janela do Chrome</strong> ao lado direito.
+        Se ela ficou atrás do seu navegador, clique em <code>Trazer popup pra frente</code> (ícone ↑ acima)
+        ou use <code>Alt + Tab</code>.
+      </p>
+      <div class="popup-instrucoes">
+        <strong>💡 Dica para manter sempre na frente:</strong><br>
+        No Windows, clique na janela do popup e pressione <code>Win + ↑</code> para maximizar ou
+        arraste até a borda direita da tela. Para "fixar" de verdade, use a extensão gratuita
+        <strong>"Always on Top"</strong> do Chrome Web Store.
+      </div>
+      <p class="status-detalhe">
+        Link: <a href="${esc(url)}" target="_blank" rel="noopener">${esc(url)}</a>
+      </p>
+    `;
+  } else if(status === 'bloqueado'){
+    corpo.innerHTML = `
+      <svg class="icone-grande" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--danger);">
+        <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+      </svg>
+      <p class="status-msg">Popup bloqueado pelo navegador</p>
+      <p class="status-detalhe">
+        O Chrome bloqueou a abertura automática. Clique no ícone de <strong>popup bloqueado</strong>
+        ao lado da barra de endereço e escolha <strong>"Sempre permitir popups para este site"</strong>.
+        Depois tente novamente.
+      </p>
+      <button class="btn btn-purple" onclick="abrirPopupQuintoAndar()" style="padding:10px 18px;">
+        Tentar novamente
+      </button>
+      <p class="status-detalhe">
+        Link: <a href="${esc(url)}" target="_blank" rel="noopener">${esc(url)}</a>
+      </p>
+    `;
+  } else {
+    corpo.innerHTML = `
+      <svg class="icone-grande" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+        <polyline points="15 3 21 3 21 9"/>
+        <line x1="10" y1="14" x2="21" y2="3"/>
+      </svg>
+      <p class="status-msg">Pop-up do QuintoAndar</p>
+      <p class="status-detalhe">Cole um link no formulário ao lado e o popup abrirá automaticamente na direita da tela.</p>
+    `;
+  }
+}
+
+function trazerPopupPraFrente(){
+  if(state._popupQuintoAndar && !state._popupQuintoAndar.closed){
+    try {
+      state._popupQuintoAndar.focus();
+      toast('Popup trazido para frente', 'success');
+    } catch(e){
+      toast('Não foi possível focar o popup', 'error');
+    }
+  } else {
+    toast('Nenhum popup aberto no momento', 'error');
+  }
+}
+
+function abrirPopupQuintoAndar(){
+  const codigo = state._codigoLinkAtual;
+  if(!codigo){
+    toast('Cole um link do QuintoAndar primeiro', 'error');
+    return;
+  }
+  const url = `${BUSCAR_BASE}/${codigo}`;
+  abrirPopupQuintoAndarComUrl(url);
+}
+
+/* =====================================================
+   SPLIT VIEW — painel + popup automático
+===================================================== */
+function abrirSplitPainel(url){
+  const painel = $('splitPainelDireito');
+  const adminPanel = $('adminPanel');
+  if(!painel || !adminPanel) return;
+
+  // Em telas muito pequenas, só abre popup
+  if(window.innerWidth < 900){
+    abrirPopupQuintoAndarComUrl(url);
+    return;
+  }
+
+  painel.classList.add('show');
+  adminPanel.classList.add('split-ativo');
+  state._splitAtivo = true;
+
+  // Abre o popup automaticamente
+  const popup = abrirPopupQuintoAndarComUrl(url);
+  if(popup){
+    atualizarPainelDireitoStatus('aberto', url);
+  }
+}
+
+function fecharSplitPainel(){
+  const painel = $('splitPainelDireito');
+  const adminPanel = $('adminPanel');
+  if(painel) painel.classList.remove('show');
+  if(adminPanel) adminPanel.classList.remove('split-ativo');
+  state._splitAtivo = false;
 }
 
 /* =====================================================
@@ -1685,7 +1635,7 @@ function renderizarImoveis(){
     );
   }
 
-  /* ✅ VENDIDOS VÃO PARA O FIM DA LISTA (respeitando o filtro atual) */
+  /* VENDIDOS VÃO PARA O FIM DA LISTA */
   const vendidos = lista.filter(im => isVendido(im));
   const naoVendidos = lista.filter(im => !isVendido(im));
   lista = [...naoVendidos, ...vendidos];
@@ -1731,11 +1681,14 @@ function cardImovelHTML(im){
     ? `<div class="card-tag-topo">${esc(specsInfo.badge)}</div>`
     : '';
 
-  /* ✅ Número do apartamento no card */
   const aptoExibicao = extrairAptoExibicao(im);
   const aptoHtml = aptoExibicao
     ? `<div class="badge-apto">🚪 Apto ${esc(aptoExibicao)}</div>`
     : '';
+
+  const btnVendidoHtml = `<button class="btn-vendido-toggle ${vendido ? 'desmarcar' : ''}" onclick="event.stopPropagation(); toggleVendido('${id}')" title="${vendido ? 'Desmarcar como vendido' : 'Marcar como vendido'}">
+    ${vendido ? '✓ Vendido' : '💲 Vendido'}
+  </button>`;
 
   const temAgendamentoAtivo = !!im.dataVisitaAgendada && !desativado && !vendido;
   const cardExtraClass =
@@ -1829,6 +1782,7 @@ function cardImovelHTML(im){
   return `
     <div class="card${cardExtraClass}" data-id="${id}">
       ${statusLabel ? `<div class="card-status-strip ${statusClass}"><span>${statusLabel}</span></div>` : ''}
+      ${btnVendidoHtml}
 
       <div class="card-img-wrap">
         <img class="card-img" src="${esc(img)}" ${imgClickAttr} onerror="this.src='https://via.placeholder.com/400x300/e2e8f0/64748b?text=Sem+imagem'">
@@ -1858,7 +1812,6 @@ function cardImovelHTML(im){
       ` : ''}
 
       ${acoesHtml}
-
       ${agHtml}
       ${visHtml}
 
@@ -1887,8 +1840,39 @@ function cardImovelHTML(im){
 }
 
 /* =====================================================
-   AÇÕES DE IMÓVEL
+   AÇÕES
 ===================================================== */
+async function toggleVendido(id){
+  const im = state.imoveis.find(i => i.id === id);
+  if(!im) return;
+  if(!im.codigo){
+    toast('Imóvel sem código — não é possível marcar como vendido', 'error');
+    return;
+  }
+  const vendido = isVendido(im);
+  const cfg = vendido
+    ? { titulo: 'Desmarcar vendido?', texto: 'O imóvel voltará a aparecer como disponível.', btnSim: 'Desmarcar', tipo: 'success' }
+    : { titulo: 'Marcar como vendido?', texto: 'O imóvel será marcado como VENDIDO para todos os clientes que têm este código.', btnSim: 'Marcar vendido', tipo: 'danger' };
+  const ok = await confirmarAcao(cfg);
+  if(!ok) return;
+
+  marcarSalvando(true);
+  const res = await api('atualizarImovelPorCodigo', {
+    senha: SENHA_ADMIN,
+    codigo: im.codigo,
+    vendido: !vendido
+  });
+  marcarSalvando(false);
+
+  if(!res.ok){
+    toast(res.error || 'Erro ao atualizar', 'error');
+    return;
+  }
+  im.vendido = vendido ? '' : 'Sim';
+  toast(vendido ? 'Desmarcado como vendido' : '✅ Marcado como VENDIDO', 'success');
+  renderizarImoveis();
+}
+
 async function marcarStatus(id, acao){
   const im = state.imoveis.find(i => i.id === id);
   if(!im) return;
@@ -2045,6 +2029,7 @@ function abrirPainelNovoImovel(){
 function fecharPainelImovel(){
   $('adminPanel').classList.remove('show');
   document.body.style.overflow = '';
+  fecharSplitPainel();
   limparFormAdmin();
 }
 function limparFormAdmin(){
@@ -2064,6 +2049,7 @@ function limparFormAdmin(){
   $('adImagem').value = '';
   state._corretorEscolhido = '';
   state._tipoEscolhido = '';
+  state._ultimoLinkPopup = '';
   atualizarPreview('');
   atualizarBotaoBuscarEntrada('');
   atualizarBtnsCorretor('');
@@ -2078,25 +2064,21 @@ function atualizarBtnsCorretor(valor){
     btn.classList.toggle('ativo', btn.dataset.corretor === valor);
   });
 }
-
 function escolherCorretor(nome, el){
   state._corretorEscolhido = nome;
   atualizarBtnsCorretor(nome);
   validarBotaoSalvar();
 }
-
 function escolherTipoImovel(tipo, el){
   state._tipoEscolhido = tipo;
   atualizarBtnsTipo(tipo);
   validarBotaoSalvar();
 }
-
 function atualizarBtnsTipo(valor){
   document.querySelectorAll('#tipoChipsWrap .chip-tipo').forEach(btn => {
     btn.classList.toggle('ativo', btn.dataset.tipo === valor);
   });
 }
-
 function validarBotaoSalvar(){
   const rua = $('adRua').value.trim();
   const numero = $('adNumero').value.trim();
@@ -2107,7 +2089,6 @@ function validarBotaoSalvar(){
   const corretor = state._corretorEscolhido;
   const ehCasa = tipoEscolhido === 'Casa';
   const aptoOk = ehCasa || !!apto;
-
   const podeSalvar = rua && numero && bairro && chave && tipoEscolhido && corretor && aptoOk;
   $('btnSalvarImovel').disabled = !podeSalvar;
 }
@@ -2125,7 +2106,6 @@ function atualizarPreview(url){
     if(semImg) semImg.style.display = '';
   }
 }
-
 function atualizarBotaoBuscarEntrada(codigo){
   state._codigoLinkAtual = codigo || '';
   const btn = $('btnBuscarEntrada');
@@ -2139,11 +2119,31 @@ function atualizarBotaoBuscarEntrada(codigo){
     badge.textContent = 'sem código';
   }
 }
-
 function abrirBuscarEntradaForm(){
   const codigo = state._codigoLinkAtual;
   if(!codigo){ toast('Cole um link com código primeiro', 'error'); return; }
-  window.open(`${BUSCAR_BASE}/${codigo}`, '_blank', 'noopener');
+  const url = `${BUSCAR_BASE}/${codigo}`;
+  abrirSplitPainel(url);
+}
+
+/* ==== AO COLAR LINK, ABRE O POPUP AUTOMATICAMENTE ==== */
+function onLinkPaste(ev){
+  setTimeout(() => {
+    const url = $('adLink').value.trim();
+    if(!url) return;
+    const codigo = extrairCodigoDoLink(url);
+    if(!codigo) return;
+
+    atualizarBotaoBuscarEntrada(codigo);
+
+    // ✅ Abre split + popup AUTOMATICAMENTE ao colar
+    const urlQA = `${BUSCAR_BASE}/${codigo}`;
+    abrirSplitPainel(urlQA);
+
+    // E já busca imagem / pré-preenche
+    buscarImagemDoLink(url, false);
+    tentarPreencherPorCodigo(codigo);
+  }, 50);
 }
 
 async function onLinkBlur(){
@@ -2152,6 +2152,8 @@ async function onLinkBlur(){
   const codigo = extrairCodigoDoLink(url);
   atualizarBotaoBuscarEntrada(codigo);
   if(codigo){
+    const urlQA = `${BUSCAR_BASE}/${codigo}`;
+    abrirSplitPainel(urlQA);
     await tentarPreencherPorCodigo(codigo);
   }
 }
@@ -2192,27 +2194,22 @@ async function tentarPreencherPorCodigo(codigo){
   $('adDescricao').value = descricaoSemTipo(achado.descricao || '');
   $('adImagem').value = achado.imagem || '';
 
-  /* ✅ Preenche apto/bloco/complemento a partir do chaveTexto */
   const info = extrairAptoBlocoChave(achado.chaveTexto || '');
   if(info.apto) $('adApto').value = info.apto;
   if(info.bloco) $('adBloco').value = info.bloco;
   if(info.resto) $('adChaveComplemento').value = info.resto;
 
-  /* ✅ Tipo da descrição */
   const tipoAchado = extrairTipoImovel(achado.descricao || '');
   if(tipoAchado && TIPOS_IMOVEL_VALIDOS.includes(tipoAchado)){
     state._tipoEscolhido = tipoAchado;
     atualizarBtnsTipo(tipoAchado);
   }
-
   if(achado.imagem) atualizarPreview(achado.imagem);
-
   if(achado.corretor){
     const nomeCurto = chaveCorretorGrupo_(achado.corretor);
     const btn = document.querySelector(`.btn-corretor-escolha[data-corretor="${nomeCurto}"]`);
     if(btn){ escolherCorretor(nomeCurto, btn); }
   }
-
   validarBotaoSalvar();
   toast('✨ Dados do imóvel preenchidos automaticamente!', 'success');
 }
@@ -2235,7 +2232,7 @@ async function buscarImagemDoLink(url, mostrarToast){
     if(mostrarToast) toast('Imagem encontrada!', 'success');
   } else {
     if(mostrarToast){
-      semImg.innerHTML = 'Cole um link<br>para buscar a imagem';
+      if(semImg) semImg.innerHTML = 'Cole um link<br>para buscar a imagem';
       toast('Não encontrada', 'error');
     }
   }
@@ -2260,18 +2257,11 @@ async function salvarImovel(){
   const link = $('adLink').value.trim();
   const tipo = state._tipoEscolhido;
   let imagem = $('adImagem').value.trim();
-
   const editandoId = $('editingId').value || '';
   const editando = !!editandoId;
 
-  if(!state._corretorEscolhido){
-    toast('Escolha o corretor (Hugo ou Carol) antes de salvar', 'error');
-    return;
-  }
-  if(!tipo){
-    toast('Escolha o tipo de imóvel', 'error');
-    return;
-  }
+  if(!state._corretorEscolhido){ toast('Escolha o corretor', 'error'); return; }
+  if(!tipo){ toast('Escolha o tipo de imóvel', 'error'); return; }
   if(!tel || tel.length < 10){ toast('Telefone do cliente inválido', 'error'); return; }
   if(!rua){ toast('Informe a rua', 'error'); return; }
   if(!numero){ toast('Informe o número', 'error'); return; }
@@ -2279,21 +2269,16 @@ async function salvarImovel(){
   if(!bairro){ toast('Informe o bairro', 'error'); return; }
   if(!chaveTexto){ toast('Informe a informação de chave', 'error'); return; }
 
-  let statusAtual = 'pendente';
-  let observacaoAtual = '';
-  let dataVisitaAtual = '';
-  let avaliacaoVisitaAtual = '';
-  let visitaFeitaAtual = 'Não';
-  let dataVisitaAgendadaAtual = '';
-  let desativadoAtual = '';
-  let vendidoAtual = '';
+  let statusAtual = 'pendente', observacaoAtual = '', dataVisitaAtual = '';
+  let avaliacaoVisitaAtual = '', visitaFeitaAtual = 'Não';
+  let dataVisitaAgendadaAtual = '', desativadoAtual = '', vendidoAtual = '';
   let idOriginal = editandoId;
 
   if(editando){
     const imOriginal = state.imoveis.find(i => String(i.id) === String(editandoId));
     if(imOriginal){
       statusAtual = imOriginal.status || 'pendente';
-      observacaoAtual = imOriginal.observacao || '';
+      observacaoAtual = String(imOriginal.observacao || '');
       dataVisitaAtual = imOriginal.dataVisita || '';
       avaliacaoVisitaAtual = imOriginal.avaliacaoVisita || '';
       visitaFeitaAtual = imOriginal.visitaFeita || 'Não';
@@ -2303,11 +2288,9 @@ async function salvarImovel(){
     }
   }
 
-  /* ✅ Monta descrição: tipo entre asteriscos na 1ª linha + descrição limpa */
   const descricaoLimpa = descricaoSemTipo($('adDescricao').value);
   const descricaoFinal = montarDescricaoComTipo(descricaoLimpa, tipo);
 
-  /* ✅ Monta chaveTexto: linha 1 = apto; linha 2 = bloco; depois complemento */
   const chaveFinal = montarChaveTexto(
     tipo === 'Casa' ? '' : apto,
     bloco,
@@ -2327,21 +2310,13 @@ async function salvarImovel(){
   }
 
   const dados = {
-    id: idOriginal,
-    telefone: tel,
-    rua: rua,
-    numero: numero,
-    bairro: bairro,
+    id: idOriginal, telefone: tel, rua, numero, bairro,
     preco: $('adPreco').value.trim(),
     condominio: $('adCondominio').value.trim(),
     iptu: $('adIPTU').value.trim(),
-    descricao: descricaoFinal,
-    link: linkFinal,
-    imagem,
-    chaveTexto: chaveFinal,
-    status: statusAtual,
-    observacao: observacaoAtual,
-    corretor: state._corretorEscolhido
+    descricao: descricaoFinal, link: linkFinal, imagem,
+    chaveTexto: chaveFinal, status: statusAtual,
+    observacao: observacaoAtual, corretor: state._corretorEscolhido
   };
 
   const btn = $('btnSalvarImovel');
@@ -2357,41 +2332,29 @@ async function salvarImovel(){
   }
 
   marcarSalvando(true);
-
   const timeoutPromise = new Promise((resolve) => {
-    state._salvarTimeout = setTimeout(() => {
-      resolve({ ok: false, error: 'TIMEOUT_15S' });
-    }, TIMEOUT_SALVAR);
+    state._salvarTimeout = setTimeout(() => resolve({ ok: false, error: 'TIMEOUT_15S' }), TIMEOUT_SALVAR);
   });
-
   const savePromise = api('salvarImovel', { senha: SENHA_ADMIN, ...dados });
 
   let res;
-  try {
-    res = await Promise.race([savePromise, timeoutPromise]);
-  } finally {
-    if(state._salvarTimeout){
-      clearTimeout(state._salvarTimeout);
-      state._salvarTimeout = null;
-    }
+  try { res = await Promise.race([savePromise, timeoutPromise]); }
+  finally {
+    if(state._salvarTimeout){ clearTimeout(state._salvarTimeout); state._salvarTimeout = null; }
     marcarSalvando(false);
   }
 
   if(res && res.error === 'TIMEOUT_15S'){
-    btn.disabled = false;
-    btn.innerHTML = htmlOriginal;
-    toast('⏱️ Demorou demais (15s). Seus dados estão preservados. Tente salvar novamente.', 'error');
+    btn.disabled = false; btn.innerHTML = htmlOriginal;
+    toast('⏱️ Demorou demais (15s). Seus dados estão preservados. Tente novamente.', 'error');
     return;
   }
-
   if(!res.ok){
-    btn.disabled = false;
-    btn.innerHTML = htmlOriginal;
+    btn.disabled = false; btn.innerHTML = htmlOriginal;
     toast(res.error || 'Erro ao salvar — tente novamente', 'error');
     return;
   }
 
-  /* ✅ Se está editando, preserva campos que não são do form (visitas, agendamento, vendido, etc.) */
   if(editando){
     const imOriginal = state.imoveis.find(i => String(i.id) === String(editandoId));
     if(imOriginal){
@@ -2437,14 +2400,12 @@ function editarImovel(id){
   $('adCondominio').value = im.condominio || '';
   $('adIPTU').value = im.iptu || '';
 
-  /* ✅ Extrai apto/bloco/complemento do chaveTexto */
   const info = extrairAptoBlocoChave(im.chaveTexto || '');
   $('adApto').value = info.apto || '';
   $('adBloco').value = info.bloco || '';
   $('adChaveComplemento').value = info.resto || '';
   $('adChaveTexto').value = info.apto || info.bloco || info.resto ? '' : (im.chaveTexto || '');
 
-  /* ✅ Extrai tipo da descrição */
   const tipoExistente = extrairTipoImovel(im.descricao || '');
   if(tipoExistente && TIPOS_IMOVEL_VALIDOS.includes(tipoExistente)){
     state._tipoEscolhido = tipoExistente;
@@ -2453,10 +2414,7 @@ function editarImovel(id){
     state._tipoEscolhido = '';
     atualizarBtnsTipo('');
   }
-
-  /* ✅ Descrição sem o tipo (para não duplicar) */
   $('adDescricao').value = descricaoSemTipo(im.descricao || '');
-
   $('adImagem').value = im.imagem || '';
   if(im.imagem) atualizarPreview(im.imagem);
   if(im.codigo) atualizarBotaoBuscarEntrada(im.codigo);
@@ -2470,7 +2428,6 @@ function editarImovel(id){
     state._corretorEscolhido = '';
     atualizarBtnsCorretor('');
   }
-
   validarBotaoSalvar();
   $('btnSalvarImovel').innerHTML = '<svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Atualizar';
   $('adminPanelTitle').textContent = 'Editar imóvel';
@@ -2480,7 +2437,7 @@ function editarImovel(id){
 
 function abrirBuscar(codigo){
   const url = codigo ? `${BUSCAR_BASE}/${codigo}` : BUSCAR_BASE;
-  window.open(url, '_blank');
+  abrirSplitPainel(url);
 }
 
 /* =====================================================
@@ -2495,9 +2452,7 @@ function abrirVisitaModal(id){
   $('btnLimparVisita').style.display = im.visitaFeita === 'Sim' ? 'inline-flex' : 'none';
   $('visitaBackdrop').classList.add('show');
 }
-function registrarVisitaDoAgendamento(id){
-  abrirVisitaModal(id);
-}
+function registrarVisitaDoAgendamento(id){ abrirVisitaModal(id); }
 function fecharVisitaModal(){ $('visitaBackdrop').classList.remove('show'); }
 
 async function salvarVisita(ev){
@@ -2518,9 +2473,7 @@ async function salvarVisita(ev){
       im.dataVisitaAgendada = '';
     }
     toast('Visita registrada', 'success');
-  } else {
-    toast(res.error || 'Erro', 'error');
-  }
+  } else toast(res.error || 'Erro', 'error');
   marcarSalvando(false);
   if(btn) btn.disabled = false;
   fecharVisitaModal();
@@ -2530,10 +2483,7 @@ async function salvarVisita(ev){
 async function limparVisita(){
   const id = $('visitaImovelId').value;
   if(!id) return;
-  const ok = await confirmarAcao({
-    titulo: 'Desfazer visita?', texto: 'A visita será removida.',
-    btnSim: 'Desfazer', tipo: 'warn'
-  });
+  const ok = await confirmarAcao({ titulo:'Desfazer visita?', texto:'A visita será removida.', btnSim:'Desfazer', tipo:'warn' });
   if(!ok) return;
   marcarSalvando(true);
   const res = await api('limparVisita', { id });
@@ -2576,11 +2526,9 @@ async function salvarAgendamento(ev){
   const agora = new Date();
   const hojeZero = new Date(agora.getFullYear(), agora.getMonth(), agora.getDate());
   const dataZero = new Date(dataEscolhida.getFullYear(), dataEscolhida.getMonth(), dataEscolhida.getDate());
-
   if(dataZero < hojeZero){ toast('Não é possível agendar em datas passadas', 'error'); return; }
   if(dataZero.getTime() === hojeZero.getTime()){
-    const tolerancia = 5 * 60 * 1000;
-    if(dataEscolhida.getTime() < (agora.getTime() - tolerancia)){
+    if(dataEscolhida.getTime() < (agora.getTime() - 5 * 60 * 1000)){
       toast('Horário já passou. Escolha um horário futuro.', 'error');
       return;
     }
@@ -2589,10 +2537,7 @@ async function salvarAgendamento(ev){
   const btn = ev?.target; if(btn) btn.disabled = true;
   marcarSalvando(true);
   const iso = dataEscolhida.toISOString();
-  const res = await api('agendarVisita', {
-    senha: SENHA_ADMIN, id, dataAgendada: iso,
-    rua, numero, bairro
-  });
+  const res = await api('agendarVisita', { senha: SENHA_ADMIN, id, dataAgendada: iso, rua, numero, bairro });
   marcarSalvando(false);
   if(btn) btn.disabled = false;
   if(!res.ok){ toast(res.error || 'Erro', 'error'); return; }
@@ -2610,7 +2555,7 @@ async function salvarAgendamento(ev){
 async function cancelarAgendamento(){
   const id = $('agendarImovelId').value;
   if(!id) return;
-  const ok = await confirmarAcao({ titulo: 'Cancelar agendamento?', texto: 'A visita será removida.', btnSim: 'Cancelar', tipo: 'danger' });
+  const ok = await confirmarAcao({ titulo:'Cancelar agendamento?', texto:'A visita será removida.', btnSim:'Cancelar', tipo:'danger' });
   if(!ok) return;
   marcarSalvando(true);
   const res = await api('cancelarAgendamento', { senha: SENHA_ADMIN, id });
@@ -2624,7 +2569,7 @@ async function cancelarAgendamento(){
 }
 
 async function cancelarAgendamentoDireto(id){
-  const ok = await confirmarAcao({ titulo: 'Cancelar agendamento?', texto: 'A visita será removida.', btnSim: 'Cancelar', tipo: 'danger' });
+  const ok = await confirmarAcao({ titulo:'Cancelar agendamento?', texto:'A visita será removida.', btnSim:'Cancelar', tipo:'danger' });
   if(!ok) return;
   marcarSalvando(true);
   const res = await api('cancelarAgendamento', { senha: SENHA_ADMIN, id });
@@ -2727,9 +2672,7 @@ function renderizarAcessos(){
             Texto WhatsApp
           </button>
           <button class="btn btn-ghost btn-xs" onclick="trocarSenhaAcesso('${esc(a.id)}')">Trocar senha</button>
-          <button class="btn btn-ghost btn-xs" onclick="bloquearAcesso('${esc(a.id)}')">
-            ${a.status === 'Bloqueado' ? 'Desbloquear' : 'Bloquear'}
-          </button>
+          <button class="btn btn-ghost btn-xs" onclick="bloquearAcesso('${esc(a.id)}')">${a.status === 'Bloqueado' ? 'Desbloquear' : 'Bloquear'}</button>
           <button class="btn btn-danger btn-xs" onclick="removerAcesso('${esc(a.id)}')">Remover</button>
         </div>
       </div>`;
@@ -2765,45 +2708,25 @@ async function criarAcesso(ev){
 async function criarAcessoAdminAqui(){
   const c = state.clienteAtual;
   if(!c){ toast('Cliente não carregado', 'error'); return; }
-  const ok = await confirmarAcao({
-    titulo: 'Criar acesso admin?',
-    texto: 'Será gerado um acesso de administrador para este cliente. Se já existir, será mantido.',
-    btnSim: 'Criar acesso admin', tipo: 'warn'
-  });
+  const ok = await confirmarAcao({ titulo:'Criar acesso admin?', texto:'Será gerado um acesso de administrador para este cliente.', btnSim:'Criar', tipo:'warn' });
   if(!ok) return;
   marcarSalvando(true);
   const res = await api('salvarCliente', {
-    senha: SENHA_ADMIN,
-    telefone: TELEFONE_CLIENTE,
-    nome: c.nome || '',
-    corretor: c.corretor || '',
-    tqc: c.tqc || '',
-    car: c.car || '',
-    inativo: c.inativo || '',
-    linkVitrine: c.linkVitrine || '',
-    observacao: c.observacao || ''
+    senha: SENHA_ADMIN, telefone: TELEFONE_CLIENTE,
+    nome: c.nome || '', corretor: c.corretor || '',
+    tqc: c.tqc || '', car: c.car || '', inativo: c.inativo || '',
+    linkVitrine: c.linkVitrine || '', observacao: c.observacao || ''
   });
   marcarSalvando(false);
-  if(!res.ok){ toast(res.error || 'Erro ao criar acesso admin', 'error'); return; }
-  if(res.senhaAdmin){
-    $('senhaGeradaTitulo').textContent = 'Acesso admin criado';
-    $('senhaGeradaSub').textContent = 'Envie a senha abaixo para o admin do cliente.';
-    $('senhaGeradaApelido').textContent = 'Admin';
-    $('senhaGeradaValor').textContent = res.senhaAdmin;
-    $('senhaGeradaBackdrop').classList.add('show');
-  } else {
-    toast('Cliente atualizado. Recarregue os acessos pra conferir.', 'success');
-  }
+  if(!res.ok){ toast(res.error || 'Erro', 'error'); return; }
+  toast('Cliente atualizado', 'success');
   carregarAcessos();
 }
 
 function fecharSenhaGerada(){ $('senhaGeradaBackdrop').classList.remove('show'); }
 
 async function trocarSenhaAcesso(acessoId){
-  const ok = await confirmarAcao({
-    titulo: 'Gerar nova senha?', texto: 'A senha atual deixará de funcionar imediatamente.',
-    btnSim: 'Gerar nova senha', tipo: 'warn'
-  });
+  const ok = await confirmarAcao({ titulo:'Gerar nova senha?', texto:'A senha atual deixará de funcionar.', btnSim:'Gerar nova senha', tipo:'warn' });
   if(!ok) return;
   marcarSalvando(true);
   const res = await api('trocarSenhaAcesso', { senha: SENHA_ADMIN, acessoId });
@@ -2819,10 +2742,7 @@ async function trocarSenhaAcesso(acessoId){
 }
 
 async function bloquearAcesso(acessoId){
-  const ok = await confirmarAcao({
-    titulo: 'Bloquear/desbloquear acesso?', texto: 'O status do acesso será alterado.',
-    btnSim: 'Confirmar', tipo: 'warn'
-  });
+  const ok = await confirmarAcao({ titulo:'Bloquear/desbloquear acesso?', texto:'O status será alterado.', btnSim:'Confirmar', tipo:'warn' });
   if(!ok) return;
   marcarSalvando(true);
   const res = await api('bloquearAcesso', { senha: SENHA_ADMIN, acessoId });
@@ -2833,10 +2753,7 @@ async function bloquearAcesso(acessoId){
 }
 
 async function removerAcesso(acessoId){
-  const ok = await confirmarAcao({
-    titulo: 'Remover acesso?', texto: 'O cliente não poderá mais entrar com essa senha.',
-    btnSim: 'Remover', tipo: 'danger'
-  });
+  const ok = await confirmarAcao({ titulo:'Remover acesso?', texto:'O cliente não poderá mais entrar com essa senha.', btnSim:'Remover', tipo:'danger' });
   if(!ok) return;
   marcarSalvando(true);
   const res = await api('removerAcesso', { senha: SENHA_ADMIN, acessoId });
@@ -2881,7 +2798,7 @@ async function abrirAtividade(){
   ]);
   marcarSalvando(false);
   if(!resLog.ok && !resHist.ok){
-    $('ativTimeline').innerHTML = '<div class="empty-state"><p>Erro ao carregar atividade</p></div>';
+    $('ativTimeline').innerHTML = '<div class="empty-state"><p>Erro ao carregar</p></div>';
     return;
   }
   const eventos = [];
@@ -2966,7 +2883,7 @@ function renderizarTimeline(){
     return;
   }
   container.innerHTML = eventos.map(e => {
-    let icon = e.tipo === 'acesso' ? (e.isAdmin ? '🛡️' : '🔐') : (e.isAdmin ? '👤' : '✅');
+    const icon = e.tipo === 'acesso' ? (e.isAdmin ? '🛡️' : '🔐') : (e.isAdmin ? '👤' : '✅');
     const bg = e.tipo === 'acesso' ? (e.isAdmin ? 'var(--purple-soft)' : 'var(--success-soft)') : (e.isAdmin ? 'var(--primary-soft)' : 'var(--info-soft)');
     const cor = e.tipo === 'acesso' ? (e.isAdmin ? 'var(--purple)' : 'var(--success)') : (e.isAdmin ? 'var(--primary)' : 'var(--info)');
     return `
@@ -3023,10 +2940,8 @@ async function salvarCliente(){
   btn.innerHTML = '<span class="loader"></span> Salvando...';
   marcarSalvando(true);
   const res = await api('salvarCliente', {
-    senha: SENHA_ADMIN, telefone: tel, nome, corretor,
-    tqc, car, inativo,
-    linkVitrine: state.clienteAtual?.linkVitrine || '',
-    observacao
+    senha: SENHA_ADMIN, telefone: tel, nome, corretor, tqc, car, inativo,
+    linkVitrine: state.clienteAtual?.linkVitrine || '', observacao
   });
   marcarSalvando(false);
   btn.disabled = false;
@@ -3035,12 +2950,7 @@ async function salvarCliente(){
   fecharClienteModal();
   toast('Cliente salvo', 'success');
   if(state.clienteAtual){
-    state.clienteAtual.nome = nome;
-    state.clienteAtual.corretor = corretor;
-    state.clienteAtual.tqc = tqc;
-    state.clienteAtual.car = car;
-    state.clienteAtual.inativo = inativo;
-    state.clienteAtual.observacao = observacao;
+    Object.assign(state.clienteAtual, { nome, corretor, tqc, car, inativo, observacao });
   }
   atualizarBarraCliente();
 }
@@ -3065,17 +2975,14 @@ async function abrirClonarVitrine(){
     .sort((a,b) => (a.nome||'').localeCompare(b.nome||'', 'pt-BR'));
   sel.innerHTML = '<option value="">— Selecione o cliente de destino —</option>' +
     destino.map(c => `<option value="${esc(normalizaTel(c.telefone))}">${esc(c.nome || 'Sem nome')} · ${esc(fmtTel(c.telefone))}</option>`).join('');
-  $('clonarVitrineSub').textContent =
-    `Origem: ${nomeCompletoCliente_(state.clienteAtual?.nome || '', TELEFONE_CLIENTE)} · ${imoveisDisponiveis.length} imóveis disponíveis`;
+  $('clonarVitrineSub').textContent = `Origem: ${nomeCompletoCliente_(state.clienteAtual?.nome || '', TELEFONE_CLIENTE)} · ${imoveisDisponiveis.length} imóveis disponíveis`;
   renderizarListaClonagem(imoveisDisponiveis);
   $('clonarVitrineBackdrop').classList.add('show');
 }
-
 function fecharClonarVitrine(){
   $('clonarVitrineBackdrop').classList.remove('show');
   state._clonarSelecionados = new Set();
 }
-
 function renderizarListaClonagem(imoveis){
   const lista = $('clonarListaImoveis');
   if(!imoveis) imoveis = state.imoveis.filter(im => !isDesativado(im));
@@ -3105,35 +3012,27 @@ function renderizarListaClonagem(imoveis){
   }).join('');
   atualizarContadorClonagem();
 }
-
 function toggleClonarImovel(id, marcado){
   if(marcado) state._clonarSelecionados.add(id);
   else state._clonarSelecionados.delete(id);
   atualizarContadorClonagem();
 }
-
 function clonarMarcarTodos(marcar){
   const imoveis = state.imoveis.filter(im => !isDesativado(im));
   if(marcar) imoveis.forEach(i => state._clonarSelecionados.add(i.id));
   else state._clonarSelecionados.clear();
   renderizarListaClonagem(imoveis);
 }
-
 function atualizarContadorClonagem(){
   const total = state.imoveis.filter(im => !isDesativado(im)).length;
   $('clonarContador').textContent = `${state._clonarSelecionados.size} de ${total} selecionados`;
 }
-
 async function confirmarClonagem(){
   const destinoTel = $('clonarClienteDestino').value;
   if(!destinoTel){ toast('Selecione o cliente de destino', 'error'); return; }
   if(state._clonarSelecionados.size === 0){ toast('Selecione pelo menos 1 imóvel', 'error'); return; }
   const imoveis = state.imoveis.filter(im => state._clonarSelecionados.has(im.id));
-  const ok = await confirmarAcao({
-    titulo: 'Confirmar clonagem?',
-    texto: `${imoveis.length} imóvel(is) serão copiados para a vitrine do cliente de destino.`,
-    btnSim: 'Clonar', tipo: 'primary'
-  });
+  const ok = await confirmarAcao({ titulo:'Confirmar clonagem?', texto:`${imoveis.length} imóvel(is) serão copiados para o cliente destino.`, btnSim:'Clonar', tipo:'primary' });
   if(!ok) return;
   const btn = $('btnConfirmarClonagem');
   btn.disabled = true;
@@ -3159,7 +3058,7 @@ async function confirmarClonagem(){
 function copiarTexto(texto){
   if(navigator.clipboard && window.isSecureContext){
     navigator.clipboard.writeText(texto)
-      .then(() => toast('Texto copiado! Cole no WhatsApp', 'success'))
+      .then(() => toast('Texto copiado!', 'success'))
       .catch(() => fallbackCopy(texto));
   } else fallbackCopy(texto);
 }
