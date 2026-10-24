@@ -104,8 +104,9 @@
     display: flex; align-items: center; justify-content: space-between;
     gap: 14px; flex-wrap: wrap;
     border-radius: 20px 20px 0 0;
+    cursor: pointer;
   }
-  .barra-clonagem-header .info { display: flex; align-items: center; gap: 10px; font-size: 0.9rem; font-weight: 700; flex: 1; min-width: 0; cursor: pointer; }
+  .barra-clonagem-header .info { display: flex; align-items: center; gap: 10px; font-size: 0.9rem; font-weight: 700; flex: 1; min-width: 0; }
   .barra-clonagem-header .info i { font-size: 1.15rem; flex-shrink: 0; }
   .barra-clonagem-header .info .cont { background: rgba(255,255,255,0.25); padding: 2px 10px; border-radius: 20px; font-size: 0.8rem; }
   .barra-clonagem-header .acoes-barra { display: flex; gap: 8px; flex-wrap: wrap; }
@@ -134,7 +135,7 @@
   .clonar-item-lista .dados .end { font-size: 0.74rem; color: var(--texto-cinza); font-weight: 600; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .clonar-item-lista .dados .desc { font-size: 0.7rem; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .clonar-item-lista .dados .valor { font-size: 0.8rem; font-weight: 800; color: var(--azul-quinto); margin-top: 2px; }
-  .clonar-item-lista .btn-remover { background: transparent; border: none; color: var(--vermelho); cursor: pointer; padding: 6px; font-size: 1.1rem; border-radius: 50%; transition: 0.15s; display: flex; align-items: center; justify-content: center; }
+  .clonar-item-lista .btn-remover { background: transparent; border: none; color: var(--vermelho); cursor: pointer; padding: 6px; font-size: 1.1rem; border-radius: 50%; transition: 0.15s; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
   .clonar-item-lista .btn-remover:hover { background: #fee2e2; }
 
   /* Card Marcado para Clonagem */
@@ -223,7 +224,6 @@
   .imovel-card .codigo-linha .codigo-badge { display: inline-flex; align-items: center; gap: 4px; background: #1a1a2e; color: #fff; padding: 3px 9px; border-radius: 6px; font-size: 0.68rem; font-weight: 700; font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.4px; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15); }
   .imovel-card .codigo-linha .codigo-badge i { color: #fbbf24; font-size: 0.62rem; }
 
-  /* ✅ Linha do Preço com botão de compartilhar alinhado à direita */
   .imovel-card .preco-linha { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
   .imovel-card .preco { font-size: 1.25rem; font-weight: 800; color: var(--azul-quinto); letter-spacing: -0.5px; line-height: 1.1; }
   .imovel-card .preco .tipo { font-size: 0.7rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.4px; display: block; margin-bottom: 2px; }
@@ -262,6 +262,13 @@
   .imovel-card .admin-acoes .btn-a.btn-clientes:hover { background: #e0e4ef; }
   .imovel-card .admin-acoes .btn-a.btn-entrada { background: #fff; color: var(--laranja); border: 1.5px solid var(--laranja); }
   .imovel-card .admin-acoes .btn-a.btn-entrada:hover { background: var(--laranja); color: #fff; }
+  
+  /* ✅ Botão Vendido e Anúncio ocupam a linha toda */
+  .imovel-card .admin-acoes .btn-a.btn-vendido { background: #fff; color: #b91c1c; border: 1.5px solid #fecaca; grid-column: 1 / -1; }
+  .imovel-card .admin-acoes .btn-a.btn-vendido:hover { background: #fef2f2; }
+  .imovel-card .admin-acoes .btn-a.btn-vendido.desmarcar { background: #f0fdf4; color: #15803d; border-color: #86efac; }
+  .imovel-card .admin-acoes .btn-a.btn-vendido.desmarcar:hover { background: #dcfce7; }
+  
   .imovel-card .admin-acoes .btn-a.btn-anuncio { background: #fff; color: var(--azul-quinto); border: 1.5px solid var(--azul-quinto); grid-column: 1 / -1; }
   .imovel-card .admin-acoes .btn-a.btn-anuncio:hover { background: var(--azul-quinto); color: #fff; }
   .imovel-card .admin-acoes .btn-a:disabled { opacity: 0.4; cursor: not-allowed; }
@@ -270,14 +277,16 @@
   .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.55); backdrop-filter: blur(4px); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 16px; overflow-y: auto; }
   .modal-backdrop.show { display: flex; }
 
-  .modal-detalhes { background: #fff; border-radius: var(--radius-lg); max-width: 900px; width: 100%; max-height: 92vh; overflow: hidden; box-shadow: var(--sombra-forte); position: relative; animation: fadeUp 0.25s ease; display: flex; flex-direction: column; }
+  .modal-detalhes { background: #fff; border-radius: var(--radius-lg); max-width: 900px; width: 100%; max-height: 92vh; box-shadow: var(--sombra-forte); position: relative; animation: fadeUp 0.25s ease; display: flex; overflow: hidden; }
+  
+  /* ✅ CORRIGIDO: Imagem não estica e fica 50/50 no PC, e 100% no mobile */
   @media (max-width: 768px) { .modal-detalhes { flex-direction: column; overflow-y: auto; } }
 
   @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
   .modal-detalhes .btn-fechar { position: absolute; top: 14px; right: 14px; background: rgba(255, 255, 255, 0.9); border: none; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; font-size: 1rem; color: var(--texto-escuro); display: flex; align-items: center; justify-content: center; z-index: 10; box-shadow: 0 2px 10px rgba(0,0,0,0.15); transition: 0.15s; }
   .modal-detalhes .btn-fechar:hover { background: #fff; transform: scale(1.05); }
 
-  .modal-detalhes .foto-lateral { width: 50%; background: var(--cinza-claro); background-size: cover; background-position: center; position: relative; min-height: 300px; display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 2rem; }
+  .modal-detalhes .foto-lateral { width: 50%; background: var(--cinza-claro); background-size: cover; background-position: center; position: relative; min-height: 400px; display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 2rem; flex-shrink: 0; }
   @media (max-width: 768px) { .modal-detalhes .foto-lateral { width: 100%; height: 240px; min-height: auto; } }
   
   .modal-detalhes .foto-lateral .tarja-vendido { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; overflow: hidden; background: linear-gradient(135deg, rgba(220, 38, 38, 0.05) 0%, rgba(220, 38, 38, 0.1) 100%); }
@@ -309,7 +318,7 @@
   .modal-detalhes .acoes .btn-share { background: var(--cinza-claro); color: var(--texto-escuro); flex: 0 0 auto; min-width: auto; padding: 13px 16px; }
   .modal-detalhes .acoes .btn-share:hover { background: #e0e4ef; }
 
-  /* ===== MODAL EDITOR PADRONIZADO ===== */
+  /* ===== MODAL EDITOR PADRONIZADO (IGUAL AO NOVO IMÓVEL) ===== */
   .modal-editor { background: #fff; border-radius: var(--radius-lg); max-width: 1000px; width: 100%; max-height: 94vh; overflow-y: auto; box-shadow: var(--sombra-forte); position: relative; animation: fadeUp 0.25s ease; padding: 24px; }
   .modal-editor .btn-fechar { position: absolute; top: 14px; right: 14px; background: var(--cinza-claro); border: none; width: 34px; height: 34px; border-radius: 50%; cursor: pointer; font-size: 0.9rem; color: var(--texto-escuro); display: flex; align-items: center; justify-content: center; transition: 0.15s; z-index: 5; }
   .modal-editor .btn-fechar:hover { background: #e0e4ef; transform: scale(1.05); }
@@ -368,12 +377,6 @@
   .campo-info-apto strong { color: var(--azul-quinto); font-weight: 800; }
   .campo-info-apto.erro { background: #fef2f2; border-color: #fecaca; color: var(--vermelho); }
   .campo-info-apto.erro i, .campo-info-apto.erro strong { color: var(--vermelho); }
-
-  .check-vendido-wrap { display: flex; align-items: center; gap: 10px; background: #fef2f2; border: 1.5px solid #fecaca; padding: 12px 16px; border-radius: 10px; margin-bottom: 16px; cursor: pointer; transition: all 0.15s; }
-  .check-vendido-wrap:hover { background: #fee2e2; }
-  .check-vendido-wrap input[type="checkbox"] { width: 20px; height: 20px; accent-color: var(--vermelho); cursor: pointer; flex-shrink: 0; }
-  .check-vendido-txt { font-size: 0.85rem; font-weight: 700; color: var(--vermelho); line-height: 1.3; }
-  .check-vendido-txt span { display: block; font-size: 0.75rem; font-weight: 500; color: #b91c1c; margin-top: 2px; }
 
   .aviso-massivo { display: flex; align-items: flex-start; gap: 10px; background: #fef3c7; border-left: 3px solid var(--laranja); color: #78350f; padding: 12px 16px; border-radius: 8px; font-size: 0.82rem; line-height: 1.5; margin-bottom: 16px; }
   .aviso-massivo i { color: var(--laranja); font-size: 1rem; margin-top: 2px; flex-shrink: 0; }
@@ -662,6 +665,7 @@
         <input type="text" id="editIptu" inputmode="numeric" placeholder="1.200,00">
       </div>
     </div>
+    
     <div class="form-row-2-img">
       <div>
         <label style="display:block; font-size:0.74rem; font-weight:600; margin-bottom:6px; color:var(--texto-cinza); text-transform:uppercase; letter-spacing:0.4px;">Miniatura</label>
@@ -675,37 +679,44 @@
         <textarea id="editDescricao" style="min-height:150px;" placeholder="Descrição do imóvel..."></textarea>
       </div>
     </div>
+    
     <button type="button" class="btn-buscar-entrada" id="btnBuscarEntrada" onclick="abrirBuscarEntradaForm()" disabled>
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
       Buscar entrada <span class="codigo-badge" id="codigoBadge">sem código</span>
     </button>
-    <div class="form-row-3">
+
+    <!-- ✅ Estrutura de Rua, Número, Bloco e Apto (Idêntico ao Inserir Novo) -->
+    <div class="form-row-4">
       <div class="form-group-modal">
         <label>Rua <span class="req">*</span></label>
         <input type="text" id="editRua">
       </div>
       <div class="form-group-modal">
-        <label>Número</label>
+        <label>Número <span class="req">*</span></label>
         <input type="text" id="editNumero">
       </div>
       <div class="form-group-modal">
-        <label>Bairro</label>
+        <label>Bloco</label>
+        <input type="text" id="editBloco" placeholder="Bloco" maxlength="10" oninput="this.value = this.value.replace(/[^0-9A-Za-z]/g, '').toUpperCase()">
+      </div>
+      <div class="form-group-modal">
+        <label>Apartamento</label>
+        <input type="text" id="editApto" placeholder="Apto" maxlength="10" oninput="this.value = this.value.replace(/[^0-9A-Za-z]/g, '').toUpperCase()">
+      </div>
+    </div>
+
+    <div class="form-row-bairro" style="margin-bottom: 14px;">
+      <div class="form-group-modal">
+        <label>Bairro <span class="req">*</span></label>
         <input type="text" id="editBairro">
       </div>
     </div>
+    
     <div class="form-group-modal">
       <label>Chave (onde pegar)</label>
       <textarea id="editChave" placeholder="Ex: Chave na portaria com o Sr. José, ligar antes"></textarea>
     </div>
     <input type="hidden" id="editImagem">
-
-    <div class="check-vendido-wrap">
-      <input type="checkbox" id="editVendido">
-      <div class="check-vendido-txt">
-        Marcar como VENDIDO (forçar)
-        <span>Se o sistema do QuintoAndar falhar, marque aqui para forçar a tarja.</span>
-      </div>
-    </div>
 
     <div class="aviso-massivo">
       <i class="fas fa-exclamation-triangle"></i>
@@ -912,7 +923,7 @@ const WHATSAPP_CAROL = '5531996273985';
 const IMOVEIS_CACHE_KEY = 'lr_imoveis_admin_cache_v2';
 const IMOVEIS_CACHE_TTL = 5 * 60 * 1000;
 const ADMIN_SENHA_CORRETA = 'Cal@562938';
-const ADMIN_SENHA_KEY = 'lr_admin_senha_salva'; // ✅ Salva no localStorage
+const ADMIN_SENHA_KEY = 'lr_admin_senha_salva';
 
 const BUSCAR_BASE = 'https://corretor.quintoandar.com.br/informacoes-de-entrada';
 
@@ -1644,6 +1655,12 @@ function cardHTML(im){
   if(temFalhaApto) aptoAdmin = `<span class="apto-erro"><i class="fas fa-exclamation-triangle"></i> Erro no Apto</span>`;
   else if(infoApto.numero) aptoAdmin = `<span class="apto-admin"><i class="fas fa-door-open"></i> Apto ${esc(infoApto.numero)}</span>`;
 
+  const btnVendidoHtml = `
+    <button class="btn-a btn-vendido ${vendido ? 'desmarcar' : ''}" onclick="event.stopPropagation(); toggleVendido('${esc(codigo)}')" title="${vendido ? 'Desmarcar vendido' : 'Marcar como vendido'}">
+      <i class="fas ${vendido ? 'fa-undo' : 'fa-tag'}"></i> ${vendido ? 'Desmarcar Vendido' : 'Marcar como Vendido'}
+    </button>
+  `;
+
   const adminAcoes = `
     <div class="admin-acoes">
       <button class="btn-a btn-editar" onclick="event.stopPropagation(); abrirModalEditarImovel('${esc(codigo)}')">
@@ -1658,6 +1675,7 @@ function cardHTML(im){
       <button class="btn-a btn-entrada" ${!codigo ? 'disabled' : ''} onclick="event.stopPropagation(); window.open('${BUSCAR_BASE}/${esc(codigo)}','_blank','noopener')">
         <i class="fas fa-key"></i> Entrada
       </button>
+      ${btnVendidoHtml}
       <button class="btn-a btn-anuncio" onclick="event.stopPropagation(); ${im.link ? `window.open('${esc(im.link)}','_blank','noopener')` : `alert('Sem link de anúncio')`}">
         <i class="fas fa-external-link-alt"></i> Ver anúncio
       </button>
@@ -1952,7 +1970,18 @@ function abrirModalEditarImovel(ref){
   $('editDescricao').value  = imCompleto.descricao  || '';
   $('editChave').value      = imCompleto.chaveTexto || '';
   $('editImagem').value     = imCompleto.imagem     || '';
-  $('editVendido').checked  = isVendido(imCompleto);
+
+  // ✅ Preenche bloco e apto
+  const infoAptoEd = infoAptoImovel(imCompleto);
+  $('editApto').value = infoAptoEd.numero || '';
+  
+  const chaveDoImovel = imCompleto.chaveTexto || '';
+  const linhasChave = chaveDoImovel.split(/\r?\n/);
+  let bloco = '';
+  if (linhasChave.length > 1 && /bl(oco)?/i.test(linhasChave[1])) {
+    bloco = linhasChave[1].replace(/bl(oco)?\s*/i, '').trim();
+  }
+  $('editBloco').value = bloco;
 
   let corretorDetectado = '';
   if(linkSalvo){
@@ -1976,8 +2005,6 @@ function abrirModalEditarImovel(ref){
   }
   atualizarPreview(imCompleto.imagem || '');
 
-  const chaveDoImovel = imCompleto.chaveTexto || '';
-  const infoAptoEd = infoAptoImovel(imCompleto);
   const temFalhaApto = temMultiplosAptos(imCompleto);
   const infoAptoBox = $('infoAptoEditor');
   if(infoAptoEd.numero || temFalhaApto){
@@ -2069,14 +2096,22 @@ async function salvarEdicaoImovel(){
     }
   }
 
+  // ✅ Reconstrói a ChaveTexto (Apto e Bloco na 1ª e 2ª linha)
+  const aptoDigitado = $('editApto').value.trim().toUpperCase();
+  const blocoDigitado = $('editBloco').value.trim().toUpperCase();
+  const chaveTextoLivre = $('editChave').value.trim();
+  
+  let chaveFinal = aptoDigitado;
+  if (blocoDigitado) chaveFinal += '\nBloco ' + blocoDigitado;
+  if (chaveTextoLivre) chaveFinal += '\n' + chaveTextoLivre;
+  
   const params = {
     senha: obterSenhaAdmin(), codigo: im.codigo,
     rua: $('editRua').value.trim(), numero: $('editNumero').value.trim(),
     bairro: $('editBairro').value.trim(), preco: $('editPreco').value.trim(),
     condominio: $('editCondominio').value.trim(), iptu: $('editIptu').value.trim(),
     link: linkFinal, imagem: $('editImagem').value.trim(),
-    descricao: $('editDescricao').value, chaveTexto: $('editChave').value.trim(),
-    vendido: $('editVendido').checked
+    descricao: $('editDescricao').value, chaveTexto: chaveFinal
   };
 
   try {
@@ -2096,6 +2131,38 @@ async function salvarEdicaoImovel(){
     toast('Erro ao salvar: ' + e.message, 'error');
     btn.disabled = false;
     btn.innerHTML = '<i class="fas fa-save"></i> Salvar em todos os clientes';
+  }
+}
+
+/* =====================================================
+   MARCAR COMO VENDIDO NO CARD
+===================================================== */
+async function toggleVendido(codigo){
+  const im = acharImovelPorCodigo(codigo);
+  if(!im) return;
+
+  const vendido = isVendido(im);
+  if(!codigo){ toast('Este imóvel não tem código', 'error'); return; }
+
+  const novoStatus = !vendido;
+  const backup = im.vendido;
+  im.vendido = novoStatus ? 'Sim' : '';
+  renderizarCards(); // Atualiza visualmente rápido
+
+  try {
+    const res = await apiGet('atualizarImovelPorCodigo', {
+      senha: obterSenhaAdmin(), codigo: codigo, vendido: novoStatus
+    });
+    if(!res.ok){
+      im.vendido = backup; renderizarCards();
+      toast(res.error || 'Erro ao salvar', 'error'); return;
+    }
+    toast(novoStatus ? '🏷️ Imóvel marcado como Vendido' : '↻ Imóvel desmarcado', 'success');
+    limparCacheImoveis();
+    if(state.modoAdmin) await carregarTodosImoveisAdmin();
+  } catch(e){
+    im.vendido = backup; renderizarCards();
+    toast('Erro de conexão', 'error');
   }
 }
 
@@ -2407,10 +2474,8 @@ async function init(){
 
   window.addEventListener('scroll', () => { $('btnTopo').classList.toggle('show', window.scrollY > 400); });
 
-  // ✅ Carrega imóveis
   await carregarImoveis();
 
-  // ✅ Se tem senha salva no localStorage, já entra no modo admin automaticamente!
   if (localStorage.getItem(ADMIN_SENHA_KEY) || sessionStorage.getItem(ADMIN_SESSION_KEY) === 'ativo') {
     entrarModoAdmin();
   }
@@ -2456,6 +2521,7 @@ window.executarClonagemLote = executarClonagemLote;
 window.carregarImoveis = carregarImoveis;
 window.toggleOcultarVendidos = toggleOcultarVendidos;
 window.toggleFiltroFalhas = toggleFiltroFalhas;
+window.toggleVendido = toggleVendido;
 
 document.addEventListener('DOMContentLoaded', init);
 </script>
