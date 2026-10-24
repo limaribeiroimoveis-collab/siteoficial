@@ -2145,8 +2145,14 @@ function aplicarFiltros(){
     arr = arr.filter(im => !im.vendido && !isVendido(im.descricao));
   }
 
+  // ✅ AQUI ESTÁ A CORREÇÃO DO FILTRO DE FALHAS
   if(state.modoAdmin && state.filtroFalhas){
-    arr = arr.filter(im => imovelTemFalha(im));
+    arr = arr.filter(im => {
+      // Busca os dados completos do imóvel (que tem a chave) para testar as falhas
+      const imCompleto = state.todosImoveis.find(x => String(x.codigo || '').trim() === String(im.codigo || '').trim()) || {};
+      const imParaTeste = { ...im, ...imCompleto }; // Junta os dados públicos com os do admin
+      return imovelTemFalha(imParaTeste);
+    });
   }
 
   arr.sort((a, b) => {
