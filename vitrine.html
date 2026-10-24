@@ -622,30 +622,6 @@
     to{ opacity: 1; transform: scale(1); }
   }
 
-  /* ✅ Badge de ANDAR — canto inferior direito da foto */
-  .card-andar-badge{
-    position: absolute;
-    bottom: 8px;
-    right: 8px;
-    background: rgba(30,58,95,.92);
-    color: #fff;
-    font-size: .6rem;
-    font-weight: 800;
-    letter-spacing: .3px;
-    padding: 4px 9px;
-    border-radius: 6px;
-    z-index: 4;
-    box-shadow: 0 2px 6px rgba(0,0,0,.3);
-    white-space: nowrap;
-    pointer-events: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 3px;
-    line-height: 1.2;
-    border: 1px solid rgba(255,255,255,.15);
-  }
-  .card-andar-badge .andar-ico{ font-size: .7rem; line-height: 1; }
-
   .card-body{ padding: 10px 10px 8px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
   .card-title{
     font-size: .78rem; font-weight: 700; line-height: 1.3; color: var(--text);
@@ -663,8 +639,26 @@
   .card-preco-sec{
     font-size: .66rem; color: var(--muted); font-weight: 600;
     display: flex; flex-wrap: wrap; gap: 6px;
+    align-items: center;
   }
   .card-preco-sec .sep{ color: var(--border-strong); }
+  .card-preco-sec .card-andar-pill{
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    background: var(--primary);
+    color: #fff;
+    font-size: .6rem;
+    font-weight: 800;
+    letter-spacing: .2px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    white-space: nowrap;
+    line-height: 1.3;
+    box-shadow: 0 1px 3px rgba(30,58,95,.25);
+  }
+  .card-preco-sec .card-andar-pill .andar-ico{ font-size: .68rem; line-height: 1; }
 
   .card-actions{
     display: grid; grid-template-columns: repeat(3, 1fr);
@@ -2785,10 +2779,10 @@ function cardHTML(im, idx){
     ? `<div class="card-tag-topo">${esc(specsInfo.badge)}</div>`
     : '';
 
-  // ✅ ANDAR — extrai do chaveTexto/descrição
+  // ✅ ANDAR — extrai do chaveTexto/descrição (vai na linha do Cond/IPTU, alinhado à direita)
   const andar = extrairAndar(im.chaveTexto, im.descricao);
-  const andarHtml = andar
-    ? `<div class="card-andar-badge"><span class="andar-ico">🏢</span>${esc(andar)}</div>`
+  const andarPillHtml = andar
+    ? `<span class="card-andar-pill" title="Andar"><span class="andar-ico">🏢</span>${esc(andar)}</span>`
     : '';
 
   // ✅ Tarja de VENDIDO
@@ -2867,17 +2861,17 @@ function cardHTML(im, idx){
              onerror="this.src='https://via.placeholder.com/400x300/e2e8f0/64748b?text=Sem+imagem'">
         ${badgeTagHtml}
         ${specsHtml}
-        ${andarHtml}
       </div>
 
       <div class="card-body">
         <div class="card-title">${enderecoCliente}</div>
         ${precoFmt ? `<div class="card-preco">${esc(precoFmt)}</div>` : ''}
-        ${temPrecoSec ? `
+        ${(temPrecoSec || andar) ? `
           <div class="card-preco-sec">
             ${condFmt ? `Cond. ${esc(condFmt)}` : ''}
             ${condFmt && iptuFmt ? '<span class="sep">·</span>' : ''}
             ${iptuFmt ? `IPTU ${esc(iptuFmt)}` : ''}
+            ${andarPillHtml}
           </div>
         ` : ''}
       </div>
