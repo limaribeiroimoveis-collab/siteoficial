@@ -7,10 +7,6 @@
 <title>LR Imóveis - Quinto Andar</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏢</text></svg>">
 
-<meta property="og:image" content="https://cdn.awsli.com.br/1608/1608652/arquivos/vitrinelrimoveis.jpg">
-<meta property="og:title" content="LR Imóveis - Quinto Andar">
-<meta property="og:description" content="Vitrine Exclusiva - Veja os imóveis que separei para você.">
-
 <script>
   window.__WARMUP_URL__ = 'https://script.google.com/macros/s/AKfycbzuCjg_5ZJDMWWKmjYp1ThW34iWS0YouviWFdiMGx8W3yApv0F1fdUcjeZdjm0s6Mg/exec';
   (function warmup(){
@@ -22,21 +18,20 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
   :root{
     --primary:#1e3a5f; --primary-dark:#152a45; --primary-soft:#f0f4f8;
-    --accent:#8b7355;
     --success:#16a34a; --danger:#dc2626; --warn:#d97706;
     --bg:#f4f5f7; --card:#ffffff;
     --text:#111827; --text-soft:#4b5563; --muted:#9ca3af;
     --border:#e5e7eb;
     --radius-card: 14px;
     --font: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
-    --navbar-h: 62px;
+    --navbar-h: 65px;
     --wa:#25D366;
   }
   html, body { height: 100%; }
   body{ font-family: var(--font); background: var(--bg); color: var(--text); -webkit-font-smoothing: antialiased; line-height: 1.5; font-size: 14px; }
   
-  .container{ max-width: 1400px; margin: 0 auto; padding: 16px; padding-bottom: calc(var(--navbar-h) + 60px + env(safe-area-inset-bottom)); }
-  @media(max-width:640px){ .container{ padding: 10px; padding-bottom: calc(var(--navbar-h) + 50px + env(safe-area-inset-bottom)); } }
+  .container{ max-width: 1400px; margin: 0 auto; padding: 16px; padding-bottom: calc(var(--navbar-h) + 20px + env(safe-area-inset-bottom)); }
+  @media(max-width:640px){ .container{ padding: 10px; } }
 
   .ico{ width: 1em; height: 1em; display: inline-block; vertical-align: middle; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
 
@@ -48,11 +43,6 @@
   .brand-title{ font-size: 1rem; font-weight: 800; letter-spacing: -.5px; }
   .header-actions{ display: flex; align-items: center; gap: 10px; }
   .user-info{ font-size: .75rem; font-weight: 600; color: var(--text-soft); background: var(--bg); padding: 6px 12px; border-radius: 999px; border: 1px solid var(--border); }
-  .btn-lupa{ background: transparent; border: none; color: var(--text); cursor: pointer; padding: 5px; }
-  
-  .busca-expansivel{ display: none; padding: 0 14px 12px; background: #fff; border-bottom: 1px solid var(--border); }
-  .busca-expansivel.show{ display: block; }
-  .busca-expansivel input{ background: var(--bg); border: 1px solid var(--border); font-size: .9rem; padding: 10px 14px; border-radius: 8px; width: 100%; }
 
   /* LOGIN */
   .login-wrap{ display: flex; justify-content: center; align-items: center; min-height: 82vh; padding: 16px; }
@@ -76,7 +66,7 @@
   .btn-full{ width: 100%; }
 
   /* LOADING */
-  .loading-screen{ display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 85vh; padding: 24px; text-align: center; padding-bottom: calc(24px + var(--navbar-h) + 40px + env(safe-area-inset-bottom)); }
+  .loading-screen{ display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 85vh; padding: 24px; text-align: center; }
   .spinner{ width: 36px; height: 36px; border: 3px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin .7s linear infinite; margin-top: 20px; }
   @keyframes spin{ to{ transform: rotate(360deg); } }
   .spinner-btn{ width: 14px; height: 14px; border: 2px solid rgba(255,255,255,.4); border-top-color: #fff; border-radius: 50%; animation: spin .7s linear infinite; display: inline-block; vertical-align: middle; }
@@ -106,11 +96,16 @@
   .novo-card-endereco{ font-size: .8rem; font-weight: 800; color: var(--text); line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 4px; }
   .novo-card-preco{ font-size: .9rem; font-weight: 800; color: var(--success); }
 
-  /* FILTRO DROPDOWN */
-  .filtro-wrap{ position: relative; margin: 16px 0 8px; display: flex; gap: 8px; align-items: center; z-index: 50; padding: 0 4px; }
-  .filtro-btn{ display: inline-flex; align-items: center; gap: 8px; background: #fff; border: 1px solid var(--border); padding: 8px 14px; border-radius: 10px; font-size: .8rem; font-weight: 700; color: var(--text); cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,.02); }
-  .filtro-btn .badge-sel{ background: var(--primary); color: #fff; border-radius: 999px; font-size: .65rem; padding: 0 6px; font-weight: 800; }
-  .filtro-limpar{ background: transparent; border: none; cursor: pointer; font-size: .75rem; font-weight: 700; color: var(--danger); }
+  /* FILTROS E TOPO */
+  .top-controls{ display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin: 16px 0 10px; padding: 0 4px; z-index: 50; position: relative; }
+  .btn-filter{ display: inline-flex; align-items: center; gap: 6px; background: #fff; border: 1px solid var(--border); padding: 8px 12px; border-radius: 8px; font-size: .78rem; font-weight: 700; color: var(--text); cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,.02); transition: all .15s; }
+  .btn-filter:hover{ background: var(--bg); }
+  .btn-filter.active{ background: var(--primary); color: #fff; border-color: var(--primary); }
+  .btn-filter .badge-sel{ background: rgba(255,255,255,.2); color: #fff; border-radius: 999px; font-size: .65rem; padding: 0 6px; font-weight: 800; }
+  .btn-filter:not(.active) .badge-sel{ background: var(--primary); color: #fff; }
+  .btn-limpar{ background: transparent; border: none; font-size: .75rem; font-weight: 700; color: var(--danger); cursor: pointer; text-decoration: underline; }
+
+  /* DROPDOWN BAIRROS */
   .filtro-dropdown{ position: absolute; top: 44px; left: 4px; background: #fff; border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,.1); width: min(320px, 92vw); max-height: 60vh; overflow-y: auto; padding: 8px; display: none; z-index: 1000; }
   .filtro-dropdown.show{ display: block; }
   .filtro-item{ display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px; cursor: pointer; font-size: .85rem; transition: background .15s; user-select: none; }
@@ -121,83 +116,77 @@
   .filtro-item .cnt-bairro{ background: var(--bg); color: var(--text-soft); font-size: .7rem; font-weight: 800; padding: 1px 8px; border-radius: 999px; }
 
   /* GRID */
-  .grid{ display: grid; grid-template-columns: repeat(1, 1fr); gap: 16px; margin-top: 8px; }
-  @media(min-width:600px){ .grid{ grid-template-columns: repeat(2, 1fr); gap: 20px; } }
-  @media(min-width:900px){ .grid{ grid-template-columns: repeat(3, 1fr); } }
-  @media(min-width:1200px){ .grid{ grid-template-columns: repeat(4, 1fr); } }
+  .grid{ display: grid; grid-template-columns: repeat(1, 1fr); gap: 16px; margin-top: 8px; transition: all .3s; }
+  .grid.grid-2col{ grid-template-columns: repeat(2, 1fr) !important; gap: 10px; }
+  @media(min-width:640px){ .grid:not(.grid-2col){ grid-template-columns: repeat(2, 1fr); gap: 20px; } }
+  @media(min-width:900px){ .grid:not(.grid-2col){ grid-template-columns: repeat(3, 1fr); } }
+  @media(min-width:1200px){ .grid:not(.grid-2col){ grid-template-columns: repeat(4, 1fr); } }
+  
+  @media(max-width:639px){ .grid{ grid-template-columns: repeat(2, 1fr) !important; gap: 10px; } }
 
-  /* ===== NOVO CARD ESTILO INSTAGRAM ===== */
+  /* CARD ESTILO INSTAGRAM */
   .card{ background: var(--card); border-radius: var(--radius-card); border: 1px solid var(--border); overflow: hidden; display: flex; flex-direction: column; transition: transform .2s, box-shadow .2s; animation: cardIn .35s ease-out both; }
   .card:hover{ box-shadow: 0 8px 24px rgba(0,0,0,.06); }
   @keyframes cardIn{ from{ opacity: 0; transform: translateY(6px); } to{ opacity: 1; transform: translateY(0); } }
 
-  .card.card-nao-gostei{ opacity: .3; filter: grayscale(100%); }
-  .card.card-nao-gostei:hover{ opacity: .5; filter: grayscale(50%); }
+  /* CARD NÃO GOSTEI (Desativado) */
+  .card.card-nao-gostei{ opacity: .4; filter: grayscale(100%); }
+  .card.card-nao-gostei:hover{ opacity: .6; filter: grayscale(80%); }
   
   .card.card-vendido{ opacity: .6; filter: grayscale(80%); pointer-events: none; }
 
-  /* Header do Card (Estilo Insta) */
-  .card-header{ display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; gap: 10px; }
-  .card-header-title{ font-size: .82rem; font-weight: 800; color: var(--text); line-height: 1.25; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .card-header{ display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; gap: 10px; }
+  .card-header-title{ font-size: .8rem; font-weight: 800; color: var(--text); line-height: 1.25; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
   
-  /* Compartilhar Minimalista */
   .btn-share-min{ background: transparent; border: none; padding: 6px; color: var(--text); cursor: pointer; border-radius: 50%; transition: background .15s; flex-shrink: 0; }
   .btn-share-min:hover{ background: var(--bg); }
   .btn-share-min svg{ width: 20px; height: 20px; stroke-width: 2; }
 
-  /* Imagem do Card */
   .card-img-wrap{ width: 100%; aspect-ratio: 4 / 3; overflow: hidden; background: var(--bg); position: relative; }
   .card-img{ width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .3s ease; }
   .card:hover .card-img{ transform: scale(1.03); }
 
-  /* Tags e Badges na Imagem */
+  /* BADGES */
   .badge-vendido{ position: absolute; top: 15%; left: 50%; transform: translate(-50%, -50%) rotate(-10deg); background: rgba(220,38,38,.95); color: #fff; font-size: .9rem; font-weight: 900; letter-spacing: 1.5px; padding: 8px 20px; border-radius: 6px; border: 2px solid #fff; box-shadow: 0 4px 12px rgba(0,0,0,.3); z-index: 6; text-transform: uppercase; }
-  .badge-novo{ position: absolute; top: 12px; left: 12px; background: var(--success); color: #fff; font-size: .6rem; font-weight: 800; padding: 4px 10px; border-radius: 999px; z-index: 4; box-shadow: 0 2px 6px rgba(22,163,74,.4); }
-  .card-heart-top{ position: absolute; top: 12px; right: 12px; width: 32px; height: 32px; background: rgba(255,255,255,.9); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; box-shadow: 0 2px 8px rgba(0,0,0,.2); z-index: 7; animation: heartIn .3s cubic-bezier(.34,1.56,.64,1) both; }
+  .badge-desativado{ position: absolute; top: 10px; left: 10px; background: #000; color: #fff; font-size: .6rem; font-weight: 800; padding: 4px 10px; border-radius: 4px; z-index: 6; text-transform: uppercase; letter-spacing: .5px; }
+  .badge-novo{ position: absolute; top: 10px; left: 10px; background: var(--success); color: #fff; font-size: .6rem; font-weight: 800; padding: 4px 10px; border-radius: 999px; z-index: 5; box-shadow: 0 2px 6px rgba(22,163,74,.4); }
+  .card-heart-top{ position: absolute; top: 10px; right: 10px; width: 32px; height: 32px; background: rgba(255,255,255,.9); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; box-shadow: 0 2px 8px rgba(0,0,0,.2); z-index: 7; animation: heartIn .3s cubic-bezier(.34,1.56,.64,1) both; }
   @keyframes heartIn{ from{ opacity: 0; transform: scale(.3); } to{ opacity: 1; transform: scale(1); } }
-  .card-tag-topo{ position: absolute; top: 12px; left: 12px; background: rgba(0,0,0,.6); backdrop-filter: blur(4px); color: #fff; font-size: .6rem; font-weight: 700; text-transform: uppercase; padding: 4px 8px; border-radius: 4px; z-index: 5; }
+  .card-tag-topo{ position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,.6); backdrop-filter: blur(4px); color: #fff; font-size: .6rem; font-weight: 700; text-transform: uppercase; padding: 4px 8px; border-radius: 4px; z-index: 5; }
 
-  /* Carrossel Fake (Dentro da Imagem) */
-  .carousel-fake{ position: absolute; left: 0; right: 0; bottom: 40px; display: flex; align-items: center; justify-content: space-between; padding: 0 12px; z-index: 5; pointer-events: auto; }
+  /* CARROSSEL FAKE */
+  .carousel-fake{ position: absolute; left: 0; right: 0; bottom: 40px; display: flex; align-items: center; justify-content: space-between; padding: 0 10px; z-index: 5; pointer-events: auto; }
   .carousel-fake .arrow{ width: 28px; height: 28px; border-radius: 50%; background: rgba(255,255,255,.9); color: #111; display: flex; align-items: center; justify-content: center; font-size: 1rem; font-weight: 900; cursor: pointer; border: none; box-shadow: 0 2px 6px rgba(0,0,0,.2); transition: transform .15s; }
   .carousel-fake .arrow:hover{ transform: scale(1.1); }
   .carousel-fake .dots{ display: flex; gap: 4px; align-items: center; justify-content: center; flex: 1; }
   .carousel-fake .dot{ width: 5px; height: 5px; border-radius: 50%; background: rgba(255,255,255,.5); }
   .carousel-fake .dot.active{ background: #fff; width: 12px; border-radius: 3px; }
 
-  /* Descrição Overlay no rodapé da foto */
-  .card-overlay-specs{ position: absolute; left: 0; right: 0; bottom: 0; background: linear-gradient(to top, rgba(0,0,0,.8) 0%, rgba(0,0,0,.4) 70%, transparent 100%); color: #fff; font-size: .75rem; font-weight: 600; padding: 24px 12px 10px; z-index: 3; pointer-events: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .card-overlay-specs{ position: absolute; left: 0; right: 0; bottom: 0; background: linear-gradient(to top, rgba(0,0,0,.8) 0%, rgba(0,0,0,.4) 70%, transparent 100%); color: #fff; font-size: .72rem; font-weight: 600; padding: 20px 10px 8px; z-index: 3; pointer-events: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-  /* Corpo do Card */
-  .card-body{ padding: 12px 14px; display: flex; flex-direction: column; gap: 6px; }
-  .card-preco{ font-size: 1.15rem; font-weight: 800; color: var(--text); letter-spacing: -.03em; }
-  .card-preco-sec{ font-size: .75rem; color: var(--text-soft); font-weight: 500; display: flex; gap: 8px; }
-  .card-preco-sec span{ display: flex; align-items: center; gap: 3px; }
+  .card-body{ padding: 10px 12px; display: flex; flex-direction: column; gap: 4px; }
+  .card-preco{ font-size: 1.1rem; font-weight: 800; color: var(--text); letter-spacing: -.03em; }
+  .card-preco-sec{ font-size: .7rem; color: var(--text-soft); font-weight: 500; display: flex; gap: 8px; flex-wrap: wrap; }
 
-  /* Descrição longa */
-  .card-desc-texto{ font-size: .8rem; color: var(--text-soft); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-top: 4px; }
+  .card-desc-texto{ font-size: .75rem; color: var(--text-soft); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-top: 2px; }
   .card-desc.expandido .card-desc-texto{ -webkit-line-clamp: unset; }
-  .card-desc-toggle{ background: transparent; border: none; color: var(--muted); font-size: .75rem; font-weight: 600; cursor: pointer; text-align: left; padding: 0; margin-top: 2px; }
-  .card-desc-meta{ display: none; font-size: .7rem; color: var(--muted); gap: 8px; margin-top: 6px; }
-  .card-desc.expandido .card-desc-meta{ display: flex; }
-  .meta-codigo{ background: var(--bg); padding: 2px 6px; border-radius: 4px; font-weight: 700; cursor: pointer; }
+  .card-desc-toggle{ background: transparent; border: none; color: var(--muted); font-size: .7rem; font-weight: 600; cursor: pointer; text-align: left; padding: 0; margin-top: 2px; }
 
-  /* Botões de Ação Estilo Insta (Ícones) */
-  .card-actions{ display: flex; align-items: center; justify-content: space-between; padding: 0 14px 10px; border-top: 1px solid var(--border); margin-top: 8px; padding-top: 10px; }
-  .action-btn{ background: transparent; border: none; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; color: var(--text); font-family: inherit; font-size: .65rem; font-weight: 700; transition: opacity .15s; }
+  /* ÍCONES DE AÇÃO */
+  .card-actions{ display: flex; align-items: center; justify-content: space-between; padding: 0 12px 8px; border-top: 1px solid var(--border); margin-top: 4px; padding-top: 8px; }
+  .action-btn{ background: transparent; border: none; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; color: var(--text); font-family: inherit; font-size: .62rem; font-weight: 700; transition: opacity .15s; }
   .action-btn:hover{ opacity: .7; }
   .action-btn svg{ width: 22px; height: 22px; stroke-width: 1.8; stroke: currentColor; fill: none; stroke-linecap: round; stroke-linejoin: round; }
   .action-btn.act-gostei.ativo svg{ fill: #ef4444; stroke: #ef4444; }
   .action-btn.act-visitar.ativo svg{ fill: var(--primary); stroke: var(--primary); color: var(--primary); }
   .action-btn.act-nao.ativo svg{ fill: var(--text); stroke: var(--text); }
 
-  /* Botão WhatsApp Outline (Profissional) */
-  .btn-wa-outline{ display: flex; align-items: center; justify-content: center; gap: 6px; margin: 0 14px 14px; background: #fff; border: 1.5px solid var(--wa); color: var(--wa); border-radius: 8px; padding: 8px 10px; font-size: .8rem; font-weight: 700; cursor: pointer; transition: all .15s; text-decoration: none; }
+  /* BOTÃO WHATSAPP */
+  .btn-wa-outline{ display: flex; align-items: center; justify-content: center; gap: 6px; margin: 0 12px 12px; background: #fff; border: 1.5px solid var(--wa); color: var(--wa); border-radius: 8px; padding: 8px 10px; font-size: .75rem; font-weight: 700; cursor: pointer; transition: all .15s; }
   .btn-wa-outline:hover{ background: var(--wa); color: #fff; }
   .btn-wa-outline svg{ width: 16px; height: 16px; fill: currentColor; }
 
-  /* Botão Reativar */
-  .btn-reativar-full{ margin: 0 14px 14px; background: var(--bg); color: var(--text); border: 1px solid var(--border); padding: 10px; border-radius: 8px; font-size: .8rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; }
+  .btn-reativar-full{ margin: 0 12px 12px; background: var(--bg); color: var(--text); border: 1px solid var(--border); padding: 10px; border-radius: 8px; font-size: .8rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; }
 
   /* MENSAGENS VAZIAS */
   .empty-state{ text-align: center; padding: 60px 20px; color: var(--muted); background: #fff; border-radius: var(--radius-card); border: 1px solid var(--border); grid-column: 1 / -1; }
@@ -210,12 +199,10 @@
   .erro-conexao p{ font-size: .85rem; color: var(--muted); margin-bottom: 20px; }
   .btn-recarregar{ background: var(--primary); color: #fff; border: none; padding: 12px 24px; border-radius: 8px; font-size: .9rem; font-weight: 700; cursor: pointer; }
 
-  /* TOAST */
   .toast{ position: fixed; bottom: calc(var(--navbar-h) + 20px); left: 50%; transform: translate(-50%, 20px); background: var(--text); color: #fff; padding: 12px 20px; border-radius: 8px; box-shadow: 0 8px 24px rgba(0,0,0,.2); opacity: 0; transition: all .3s; z-index: 2000; font-size: .85rem; font-weight: 600; text-align: center; pointer-events: none; }
   .toast.show{ opacity: 1; transform: translate(-50%, 0); }
   .toast.success{ background: var(--success); }
   .toast.error{ background: var(--danger); }
-
   .hidden{ display: none !important; }
 
   /* SKELETON */
@@ -226,17 +213,18 @@
   .skeleton-line.short{ width: 40%; }
   .skeleton-line.long{ width: 80%; }
 
-  /* NAVBAR MOBILE (Estilo Insta) */
-  .bottom-nav{ position: fixed; bottom: 0; left: 0; right: 0; height: calc(var(--navbar-h) + env(safe-area-inset-bottom)); padding-bottom: env(safe-area-inset-bottom); background: #fff; border-top: 1px solid var(--border); display: none; z-index: 900; justify-content: space-around; align-items: center; }
+  /* BOTTOM NAV (ESTILO INSTAGRAM ESCURO) */
+  .bottom-nav{ position: fixed; bottom: 0; left: 0; right: 0; height: calc(var(--navbar-h) + env(safe-area-inset-bottom)); padding-bottom: env(safe-area-inset-bottom); background: var(--primary); border-top: 1px solid var(--primary-dark); display: none; z-index: 900; justify-content: space-around; align-items: center; }
   .bottom-nav.show{ display: flex; }
-  .nav-btn{ display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; background: transparent; border: none; cursor: pointer; color: var(--muted); padding: 8px; height: 100%; width: 25%; transition: color .15s; }
-  .nav-btn.active{ color: var(--text); }
+  .nav-btn{ display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; background: transparent; border: none; cursor: pointer; color: rgba(255,255,255,.5); padding: 8px; height: 100%; width: 20%; transition: color .15s; }
+  .nav-btn.active{ color: #fff; }
   .nav-btn svg{ width: 24px; height: 24px; stroke-width: 2; stroke: currentColor; fill: none; stroke-linecap: round; stroke-linejoin: round; }
-  .nav-btn.active svg{ stroke-width: 2.5; }
+  .nav-btn.active svg{ stroke-width: 2.5; fill: rgba(255,255,255,.2); }
   .nav-lbl{ font-size: .6rem; font-weight: 700; }
   .nav-btn.nav-corretor{ color: var(--wa); }
+  .nav-btn.nav-corretor.active{ color: var(--wa); }
 
-  /* MODAIS (Estilo Bottom Sheet no Celular) */
+  /* MODAIS */
   .modal-backdrop{ position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 1500; display: none; align-items: flex-end; justify-content: center; backdrop-filter: blur(2px); }
   @media(min-width:600px){ .modal-backdrop{ align-items: center; } }
   .modal-backdrop.show{ display: flex; }
@@ -248,7 +236,6 @@
   .modal h2{ font-size: 1.2rem; font-weight: 800; margin-bottom: 6px; text-align: center; }
   .modal .sub{ font-size: .85rem; color: var(--muted); text-align: center; margin-bottom: 20px; line-height: 1.4; }
 
-  /* DIAS E TURNOS DO MODAL */
   .dias-grid{ display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
   @media(max-width:380px){ .dias-grid{ grid-template-columns: repeat(3, 1fr); } }
   .dia-btn{ background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 10px 4px; cursor: pointer; text-align: center; transition: all .15s; display: flex; flex-direction: column; gap: 2px; }
@@ -274,20 +261,12 @@
     </div>
     <div class="header-actions">
       <span class="user-info" id="userInfo"></span>
-      <button class="btn-lupa" id="btnLupa" onclick="toggleBusca()">
-        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      </button>
     </div>
-  </div>
-  <div class="busca-expansivel" id="buscaExpansivel">
-    <input type="search" id="buscaInput" placeholder="🔍 Buscar por rua, bairro ou descrição..." oninput="renderizarImoveis()">
   </div>
 </header>
 
 <!-- VIEWS -->
-<div class="loading-screen hidden" id="loadingView">
-  <div class="spinner"></div>
-</div>
+<div class="loading-screen hidden" id="loadingView"><div class="spinner"></div></div>
 
 <div class="login-wrap hidden" id="loginView">
   <div class="login-card">
@@ -334,13 +313,17 @@
     <div class="carrossel-scroll" id="novidadesWrap"></div>
   </div>
 
-  <!-- NOVO FILTRO -->
-  <div class="filtro-wrap">
-    <button class="filtro-btn" onclick="toggleFiltroDropdown(event)">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
-      Bairros <span class="badge-sel hidden" id="badgeFiltro">0</span>
+  <!-- NOVO TOPO DE FILTROS -->
+  <div class="top-controls">
+    <button class="btn-filter" id="btnFiltroBairro" onclick="toggleFiltroDropdown(event)">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
+      Escolher por bairro <span class="badge-sel hidden" id="badgeFiltro">0</span>
     </button>
-    <button class="filtro-limpar hidden" id="btnLimparFiltro" onclick="limparFiltroBairros()">Limpar</button>
+    <button class="btn-filter" id="btnToggleColunas" onclick="toggleColunas()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+      Ver 2 por linha
+    </button>
+    <button class="btn-limpar hidden" id="btnLimparFiltro" onclick="limparFiltroBairros()">Limpar Filtros</button>
     
     <div class="filtro-dropdown" id="filtroDropdown">
       <div id="filtroLista"></div>
@@ -358,13 +341,13 @@
   </div>
 </div>
 
-<!-- NAVBAR INFERIOR -->
+<!-- NOVO NAVBAR INFERIOR AZUL -->
 <nav class="bottom-nav" id="bottomNav">
   <button class="nav-btn active" id="navInicio" onclick="navIr('inicio')">
     <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
     <span class="nav-lbl">Início</span>
   </button>
-  <button class="nav-btn" id="navFavoritos" onclick="navIr('favoritos')">
+  <button class="nav-btn" id="navFavoritos" onclick="navIr('gostei')">
     <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
     <span class="nav-lbl">Gostei</span>
   </button>
@@ -372,9 +355,13 @@
     <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
     <span class="nav-lbl">Visitar</span>
   </button>
+  <button class="nav-btn" id="navNaoGostei" onclick="navIr('nao-gostei')">
+    <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    <span class="nav-lbl">Não Gostei</span>
+  </button>
   <button class="nav-btn nav-corretor" id="navCorretor" onclick="navIr('corretor')">
     <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-    <span class="nav-lbl">Corretor</span>
+    <span class="nav-lbl">WhatsApp</span>
   </button>
 </nav>
 
@@ -438,21 +425,16 @@ const ORIGINAL_URL_KEY = 'vitrine_url_original';
 const VISTOS_KEY = 'vitrine_imoveis_vistos';
 const ULTIMO_ACESSO_KEY = 'vitrine_ultimo_acesso';
 const CACHE_TTL = 5 * 60 * 1000;
+const TIMEOUT_API = 30000, TIMEOUT_LOGIN = 25000, NOVO_DIAS = 3;
 
-const TIMEOUT_API = 30000;
-const TIMEOUT_LOGIN = 25000;
-const NOVO_DIAS = 3;
-
-const ZAP_CORRETORES = {
-  'Hugo': '5531996070930',
-  'Carolina': '5531996273985'
-};
+const ZAP_CORRETORES = { 'Hugo': '5531996070930', 'Carolina': '5531996273985' };
 
 const state = {
   telefone: null, deviceToken: null, clienteInfo: null,
   imoveis: [], filtroNav: null, bairrosSelecionados: new Set(),
   salvandoIds: {}, vistos: new Set(), ultimoAcesso: 0,
-  modalImovelId: null, visitaDia: '', visitaTurno: ''
+  modalImovelId: null, visitaDia: '', visitaTurno: '',
+  modo2Colunas: false
 };
 
 const $ = id => document.getElementById(id);
@@ -494,19 +476,12 @@ function extrairSpecsDescricao(descricao){
   if(mBadge && mBadge[1]){ badge = mBadge[1].trim(); linha1 = linha1.replace(mBadge[0], '').trim(); }
   const temM2 = /\d+\s*m[²2]/i.test(linha1);
   const temKw = /\b(quarto|vaga|suíte|suite|sala|banheiro|dormitório|área|terreno)\b/i.test(linha1);
-  const specsValido = (temM2 || (/\d/.test(linha1) && temKw)) ? linha1 : '';
-  return { specs: specsValido, badge: badge };
-}
-
-function fmtData(d){
-  if(!d) return ''; let dt = new Date(d);
-  return isNaN(dt.getTime()) ? '' : String(dt.getDate()).padStart(2,'0') + '/' + String(dt.getMonth()+1).padStart(2,'0');
+  return { specs: (temM2 || (/\d/.test(linha1) && temKw)) ? linha1 : '', badge: badge };
 }
 
 function fmtTel(t){
   const n = normalizaTel(t);
   if(n.length === 11) return `(${n.slice(0,2)}) ${n.slice(2,3)} ${n.slice(3,7)}-${n.slice(7)}`;
-  if(n.length === 10) return `(${n.slice(0,2)}) ${n.slice(2,6)}-${n.slice(6)}`;
   return t;
 }
 
@@ -537,12 +512,8 @@ function enderecoCompleto_(im){
   return t || String(im.titulo || '') || 'Endereço';
 }
 
-function carregarVistos(){
-  try { const raw = localStorage.getItem(VISTOS_KEY); const arr = raw ? JSON.parse(raw) : []; state.vistos = new Set(Array.isArray(arr) ? arr : []); } catch(e){ state.vistos = new Set(); }
-}
-function marcarVisto(id){
-  if(!id) return; state.vistos.add(String(id)); try { localStorage.setItem(VISTOS_KEY, JSON.stringify([...state.vistos])); } catch(e){}
-}
+function carregarVistos(){ try { const raw = localStorage.getItem(VISTOS_KEY); const arr = raw ? JSON.parse(raw) : []; state.vistos = new Set(Array.isArray(arr) ? arr : []); } catch(e){ state.vistos = new Set(); } }
+function marcarVisto(id){ if(!id) return; state.vistos.add(String(id)); try { localStorage.setItem(VISTOS_KEY, JSON.stringify([...state.vistos])); } catch(e){} }
 function carregarUltimoAcesso(){ try { state.ultimoAcesso = parseInt(localStorage.getItem(ULTIMO_ACESSO_KEY) || '0', 10) || 0; } catch(e){ state.ultimoAcesso = 0; } }
 function salvarUltimoAcesso(){ try { state.ultimoAcesso = Date.now(); localStorage.setItem(ULTIMO_ACESSO_KEY, String(state.ultimoAcesso)); } catch(e){} }
 
@@ -554,25 +525,15 @@ function imovelEhNovo(im){
   return state.ultimoAcesso > 0 ? cadastro > state.ultimoAcesso : true;
 }
 
-function imovelVendido_(im){
-  const v = String(im?.vendido || '').trim().toLowerCase();
-  return ['sim','s','true','1','vendido'].includes(v);
-}
+function imovelVendido_(im){ const v = String(im?.vendido || '').trim().toLowerCase(); return ['sim','s','true','1','vendido'].includes(v); }
 
-function lerCache(){
-  try { const raw = localStorage.getItem(CACHE_KEY); if(!raw) return null; const obj = JSON.parse(raw); if(!obj?.ts || !obj?.data) return null; return { data: obj.data, fresh: (Date.now() - obj.ts) < CACHE_TTL }; } catch(e){ return null; }
-}
+function lerCache(){ try { const raw = localStorage.getItem(CACHE_KEY); if(!raw) return null; const obj = JSON.parse(raw); if(!obj?.ts || !obj?.data) return null; return { data: obj.data, fresh: (Date.now() - obj.ts) < CACHE_TTL }; } catch(e){ return null; } }
 function gravarCache(imoveis){ try { localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), data: imoveis })); } catch(e){} }
-function limparCache(){ try { localStorage.removeItem(CACHE_KEY); } catch(e){} }
 
 function gravarLinkOriginal(tel, senha){ try { localStorage.setItem(LINK_KEY, JSON.stringify({ tel, senha, ts: Date.now() })); } catch(e){} }
-function lerLinkOriginal(){
-  try { const raw = localStorage.getItem(LINK_KEY); if(!raw) return null; const obj = JSON.parse(raw); if(!obj?.tel || !obj?.senha) return null; if(Date.now() - obj.ts > 7*24*60*60*1000) return null; return obj; } catch(e){ return null; }
-}
+function lerLinkOriginal(){ try { const raw = localStorage.getItem(LINK_KEY); if(!raw) return null; const obj = JSON.parse(raw); if(!obj?.tel || !obj?.senha) return null; if(Date.now() - obj.ts > 7*24*60*60*1000) return null; return obj; } catch(e){ return null; } }
 function gravarOriginalUrl(tel, senha){ try { sessionStorage.setItem(ORIGINAL_URL_KEY, JSON.stringify({ tel, senha, ts: Date.now() })); } catch(e){} }
-function lerOriginalUrlSalva(){
-  try { const raw = sessionStorage.getItem(ORIGINAL_URL_KEY); if(!raw) return null; const obj = JSON.parse(raw); if(!obj?.tel || !obj?.senha) return null; if(Date.now() - obj.ts > 60*60*1000) return null; return obj; } catch(e){ return null; }
-}
+function lerOriginalUrlSalva(){ try { const raw = sessionStorage.getItem(ORIGINAL_URL_KEY); if(!raw) return null; const obj = JSON.parse(raw); if(!obj?.tel || !obj?.senha) return null; if(Date.now() - obj.ts > 60*60*1000) return null; return obj; } catch(e){ return null; } }
 function limparOriginalUrl(){ try { sessionStorage.removeItem(ORIGINAL_URL_KEY); } catch(e){} }
 
 function getCorretor(im){
@@ -590,20 +551,12 @@ function corretorDoCliente(){
   return 'Hugo';
 }
 
-function erroEhDispositivoVinculado(msg){
-  if(!msg) return false; const s = String(msg).toLowerCase();
-  return [/dispositivo.*(outro|vincul|bloque)/, /sess[ãa]o\s+ativa/, /j[áa]\s+logad/, /bloqueado/].some(re => re.test(s));
-}
-function erroEhConexao(msg){
-  if(!msg) return false; const s = String(msg).toLowerCase();
-  return s.includes('falha ao conectar') || s.includes('failed to fetch') || s.includes('timeout') || s.includes('http 5');
-}
+function erroEhDispositivoVinculado(msg){ if(!msg) return false; return [/dispositivo.*(outro|vincul|bloque)/, /sess[ãa]o\s+ativa/, /j[áa]\s+logad/, /bloqueado/].some(re => re.test(String(msg).toLowerCase())); }
+function erroEhConexao(msg){ if(!msg) return false; const s = String(msg).toLowerCase(); return s.includes('falha ao conectar') || s.includes('failed to fetch') || s.includes('timeout') || s.includes('http 5'); }
 
 function mostrarBloqueioDispositivo(){
   ['loadingView','loginView','vitrineView'].forEach(v => { const el = $(v); if(el) el.classList.add('hidden'); });
-  $('deviceBlockView').classList.remove('hidden');
-  if(state.telefone) $('btnZapLiberar').dataset.telefone = state.telefone;
-  $('bottomNav').classList.remove('show');
+  $('deviceBlockView').classList.remove('hidden'); if(state.telefone) $('btnZapLiberar').dataset.telefone = state.telefone; $('bottomNav').classList.remove('show');
 }
 
 function pedirLiberacaoZap(){
@@ -613,20 +566,12 @@ function pedirLiberacaoZap(){
   window.open(`https://wa.me/${zap}?text=${encodeURIComponent(msg)}`, '_blank');
 }
 
-function voltarParaLogin(){
-  mostrarView('loginView');
-  $('inputSenha').value = ''; if(state.telefone) $('inputTelefone').value = fmtTel(state.telefone);
-  setTimeout(() => $('inputSenha').focus(), 200);
-}
+function voltarParaLogin(){ mostrarView('loginView'); $('inputSenha').value = ''; if(state.telefone) $('inputTelefone').value = fmtTel(state.telefone); setTimeout(() => $('inputSenha').focus(), 200); }
 
 async function apiOnce(action, params, timeoutMs){
   const qs = new URLSearchParams({ action, ...params, _t: Date.now() }).toString();
   const ctrl = new AbortController(), timer = setTimeout(() => ctrl.abort(), timeoutMs);
-  try {
-    const r = await fetch(API_URL + '?' + qs, { method: 'GET', mode: 'cors', signal: ctrl.signal });
-    clearTimeout(timer); if(!r.ok) throw new Error('HTTP ' + r.status);
-    return await r.json();
-  } catch(e){ clearTimeout(timer); throw e; }
+  try { const r = await fetch(API_URL + '?' + qs, { method: 'GET', mode: 'cors', signal: ctrl.signal }); clearTimeout(timer); if(!r.ok) throw new Error('HTTP ' + r.status); return await r.json(); } catch(e){ clearTimeout(timer); throw e; }
 }
 async function api(action, params = {}, timeoutMs = TIMEOUT_API, retries = 1) {
   for(let i=0; i<=retries; i++){
@@ -641,9 +586,7 @@ function mostrarView(id){
   if(id === 'vitrineView') $('bottomNav').classList.add('show'); else $('bottomNav').classList.remove('show');
 }
 
-function limparUrl(){
-  try { const url = new URL(window.location.href); if(url.searchParams.has('tel') || url.searchParams.has('senha')){ url.searchParams.delete('tel'); url.searchParams.delete('senha'); window.history.replaceState({}, document.title, url.pathname); } } catch(e){}
-}
+function limparUrl(){ try { const url = new URL(window.location.href); if(url.searchParams.has('tel') || url.searchParams.has('senha')){ url.searchParams.delete('tel'); url.searchParams.delete('senha'); window.history.replaceState({}, document.title, url.pathname); } } catch(e){} }
 
 function mostrarSkeleton(qtd = 6){
   const grid = $('gridImoveis'); let html = '';
@@ -661,10 +604,7 @@ function mostrarErroConexaoComLink(){
   $('gridImoveis').innerHTML = `<div class="erro-conexao"><div class="icone">${offline ? '📶' : '⏳'}</div><h3>${offline ? 'Sem internet' : 'Estamos preparando...'}</h3><p>Toque em <b>Tentar novamente</b>.</p><button class="btn-recarregar" onclick="tentarDeNovo()">🔄 Tentar novamente</button></div>`;
   $('emptyState').classList.add('hidden');
 }
-function tentarDeNovo(){
-  const link = lerOriginalUrlSalva() || lerLinkOriginal();
-  if(link?.tel) { mostrarSkeleton(); reprocessarComLink(link.tel, link.senha); } else location.reload();
-}
+function tentarDeNovo(){ const link = lerOriginalUrlSalva() || lerLinkOriginal(); if(link?.tel) { mostrarSkeleton(); reprocessarComLink(link.tel, link.senha); } else location.reload(); }
 
 async function loginComRetryForte(tel, senha){
   const esperas = [0, 1500, 3000]; let ultimoRes = null;
@@ -680,19 +620,13 @@ async function loginComRetryForte(tel, senha){
 async function reprocessarComLink(tel, senha){
   state.telefone = tel; state.deviceToken = null; state.clienteInfo = null; state.imoveis = [];
   mostrarView('vitrineView'); $('userInfo').textContent = fmtTel(tel); mostrarSkeleton();
-
   const res = await loginComRetryForte(tel, senha);
   if(res.ok){
-    state.deviceToken = res.deviceToken || '';
-    state.clienteInfo = { nome: res.nome, apelido: res.apelido };
+    state.deviceToken = res.deviceToken || ''; state.clienteInfo = { nome: res.nome, apelido: res.apelido };
     localStorage.setItem(TEL_KEY, tel); localStorage.setItem(TOKEN_KEY, state.deviceToken);
     if(res.nome) localStorage.setItem(NOME_KEY, res.nome); gravarLinkOriginal(tel, senha);
     $('userInfo').textContent = res.nome ? res.nome.split(' ')[0] : fmtTel(tel);
-
-    if(res.imoveis?.length){
-      state.imoveis = res.imoveis.sort((a,b) => new Date(b.dataCadastro||0) - new Date(a.dataCadastro||0));
-      gravarCache(state.imoveis); atualizarTela(); limparUrl(); limparOriginalUrl(); return;
-    }
+    if(res.imoveis?.length){ state.imoveis = res.imoveis.sort((a,b) => new Date(b.dataCadastro||0) - new Date(a.dataCadastro||0)); gravarCache(state.imoveis); atualizarTela(); limparUrl(); limparOriginalUrl(); return; }
     await carregarImoveis(); limparUrl(); limparOriginalUrl(); return;
   }
   if(erroEhDispositivoVinculado(res.error)){ mostrarBloqueioDispositivo(); return; }
@@ -704,26 +638,19 @@ async function entrarCliente(){
   const senha = ($('inputSenha').value || '').toUpperCase().trim();
   if(tel.length < 10){ toast('Telefone inválido', 'error'); return; }
   if(!senha){ toast('Digite a senha', 'error'); return; }
-
   const btn = $('btnEntrar'); btn.disabled = true; btn.innerHTML = '<span class="spinner-btn"></span> Entrando...';
-  try { localStorage.clear(); } catch(e){} // Limpa tudo ao trocar login
-  
+  try { localStorage.clear(); } catch(e){}
   state.telefone = tel; state.deviceToken = null; state.clienteInfo = null; state.imoveis = [];
-
   const res = await loginComRetryForte(tel, senha);
   btn.disabled = false; btn.textContent = 'Entrar na vitrine';
-
   if(!res.ok){
     if(erroEhDispositivoVinculado(res.error)){ mostrarBloqueioDispositivo(); return; }
     if(erroEhConexao(res.error)){ gravarOriginalUrl(tel, senha); mostrarView('vitrineView'); $('userInfo').textContent = fmtTel(tel); mostrarErroConexaoComLink(); return; }
     toast(res.error || 'Erro', 'error'); return;
   }
-
-  state.deviceToken = res.deviceToken || '';
-  state.clienteInfo = { nome: res.nome, apelido: res.apelido };
+  state.deviceToken = res.deviceToken || ''; state.clienteInfo = { nome: res.nome, apelido: res.apelido };
   localStorage.setItem(TEL_KEY, tel); localStorage.setItem(TOKEN_KEY, state.deviceToken);
   if(res.nome) localStorage.setItem(NOME_KEY, res.nome); gravarLinkOriginal(tel, senha);
-  
   toast('Bem-vindo!', 'success'); limparOriginalUrl(); irParaVitrine();
 }
 
@@ -731,9 +658,7 @@ async function irParaVitrine(){
   mostrarView('vitrineView');
   $('userInfo').textContent = state.clienteInfo?.nome ? state.clienteInfo.nome.split(' ')[0] : fmtTel(state.telefone);
   const cache = lerCache();
-  if(cache?.data?.length){
-    state.imoveis = cache.data; atualizarTela(); if(cache.fresh) return;
-  } else { mostrarSkeleton(); }
+  if(cache?.data?.length){ state.imoveis = cache.data; atualizarTela(); if(cache.fresh) return; } else { mostrarSkeleton(); }
   await carregarImoveis();
 }
 
@@ -749,9 +674,7 @@ async function carregarImoveis(){
   gravarCache(state.imoveis); atualizarTela();
 }
 
-function atualizarTela(){
-  renderizarVisitas(); renderizarNovidades(); renderizarFiltroDropdown(); renderizarImoveis();
-}
+function atualizarTela(){ renderizarVisitas(); renderizarNovidades(); renderizarFiltroDropdown(); renderizarImoveis(); }
 
 function renderizarVisitas(){
   const sec = $('sectionVisitas'), wrap = $('visitasWrap'), cnt = $('visitasCount');
@@ -767,7 +690,7 @@ function renderizarVisitas(){
 
 function renderizarNovidades(){
   const sec = $('sectionNovidades'), wrap = $('novidadesWrap'), cnt = $('novidadesCount');
-  const novos = state.imoveis.filter(im => !imovelVendido_(im) && imovelEhNovo(im));
+  const novos = state.imoveis.filter(im => !imovelVendido_(im) && imovelEhNovo(im) && im.status !== 'nao-gostei');
   if(!novos.length){ sec.classList.add('hidden'); return; }
   sec.classList.remove('hidden'); cnt.textContent = novos.length;
   wrap.innerHTML = novos.map(im => `
@@ -780,20 +703,17 @@ function renderizarNovidades(){
 function renderizarFiltroDropdown(){
   const dropdown = $('filtroLista'), badge = $('badgeFiltro'), btnLimpar = $('btnLimparFiltro');
   const mapa = new Map();
-  
   state.imoveis.forEach(im => {
-    if(imovelVendido_(im) || im.status === 'nao-gostei') return; // Filtra apenas ativos
+    if(imovelVendido_(im) || im.status === 'nao-gostei') return;
     const nome = String(im.bairro || '').trim(); if(!nome) return;
     const chave = normalizarBairro(nome);
     if(!mapa.has(chave)) mapa.set(chave, { nome, count: 0 });
     mapa.get(chave).count++;
   });
-
   const bairros = [...mapa.entries()].map(([chave, obj]) => ({ chave, nome: obj.nome, count: obj.count })).sort((a,b) => a.nome.localeCompare(b.nome));
-
-  if(bairros.length === 0){
-    dropdown.innerHTML = `<div style="padding:16px; text-align:center; color:var(--muted); font-size:.8rem;">Nenhum bairro encontrado.</div>`;
-  } else {
+  
+  if(!bairros.length){ dropdown.innerHTML = `<div style="padding:16px; text-align:center; color:var(--muted); font-size:.8rem;">Nenhum bairro ativo.</div>`; }
+  else {
     dropdown.innerHTML = bairros.map(b => {
       const ativo = state.bairrosSelecionados.has(b.chave) ? 'active' : '';
       return `<div class="filtro-item ${ativo}" onclick="toggleBairro('${b.chave}')"><div class="chk">✓</div><div class="nome-bairro">${esc(b.nome)}</div><div class="cnt-bairro">${b.count}</div></div>`;
@@ -801,19 +721,14 @@ function renderizarFiltroDropdown(){
   }
 
   if(state.bairrosSelecionados.size > 0){
-    badge.textContent = state.bairrosSelecionados.size; badge.classList.remove('hidden'); btnLimpar.classList.remove('hidden');
+    badge.textContent = state.bairrosSelecionados.size; badge.classList.remove('hidden'); btnLimpar.classList.remove('hidden'); $('btnFiltroBairro').classList.add('active');
   } else {
-    badge.classList.add('hidden'); btnLimpar.classList.add('hidden');
+    badge.classList.add('hidden'); btnLimpar.classList.add('hidden'); $('btnFiltroBairro').classList.remove('active');
   }
 }
 
-function toggleFiltroDropdown(e){
-  e.stopPropagation();
-  $('filtroDropdown').classList.toggle('show');
-}
-document.addEventListener('click', (e) => {
-  if(!e.target.closest('.filtro-wrap')) $('filtroDropdown').classList.remove('show');
-});
+function toggleFiltroDropdown(e){ e.stopPropagation(); $('filtroDropdown').classList.toggle('show'); }
+document.addEventListener('click', (e) => { if(!e.target.closest('.top-controls')) $('filtroDropdown').classList.remove('show'); });
 
 function toggleBairro(chave){
   if(state.bairrosSelecionados.has(chave)) state.bairrosSelecionados.delete(chave);
@@ -821,15 +736,21 @@ function toggleBairro(chave){
   renderizarFiltroDropdown(); renderizarImoveis();
 }
 
-function limparFiltroBairros(){
-  state.bairrosSelecionados.clear(); renderizarFiltroDropdown(); renderizarImoveis();
+function limparFiltroBairros(){ state.bairrosSelecionados.clear(); renderizarFiltroDropdown(); renderizarImoveis(); }
+
+function toggleColunas(){
+  state.modo2Colunas = !state.modo2Colunas;
+  const grid = $('gridImoveis'); const btn = $('btnToggleColunas');
+  if(state.modo2Colunas){ grid.classList.add('grid-2col'); btn.classList.add('active'); }
+  else { grid.classList.remove('grid-2col'); btn.classList.remove('active'); }
 }
 
 function renderizarImoveis(){
   const grid = $('gridImoveis'); let lista = [...state.imoveis];
 
-  if(state.filtroNav === 'favoritos') lista = lista.filter(i => !imovelVendido_(i) && i.status === 'gostei');
+  if(state.filtroNav === 'gostei') lista = lista.filter(i => !imovelVendido_(i) && i.status === 'gostei');
   else if(state.filtroNav === 'visitar') lista = lista.filter(i => !imovelVendido_(i) && i.status === 'quero-visitar');
+  else if(state.filtroNav === 'nao-gostei') lista = lista.filter(i => !imovelVendido_(i) && i.status === 'nao-gostei');
   else {
     lista.sort((a,b) => {
       const va = imovelVendido_(a) ? 3 : 0, vb = imovelVendido_(b) ? 3 : 0; if(va !== vb) return va - vb;
@@ -839,7 +760,6 @@ function renderizarImoveis(){
   }
 
   if(state.bairrosSelecionados.size > 0) lista = lista.filter(i => state.bairrosSelecionados.has(normalizarBairro(i.bairro)));
-
   const busca = $('buscaInput')?.value.toLowerCase().trim();
   if(busca) lista = lista.filter(i => (i.titulo||'').toLowerCase().includes(busca) || (enderecoSemNumero_(i)).toLowerCase().includes(busca));
 
@@ -847,9 +767,9 @@ function renderizarImoveis(){
 
   if(!lista.length){
     grid.innerHTML = ''; $('emptyState').classList.remove('hidden');
-    $('emptyTitulo').textContent = busca ? 'Nada encontrado' : 'Nenhum imóvel aqui';
-    $('emptyMsg').textContent = busca ? 'Tente outra busca.' : 'Nada para mostrar neste filtro.';
-    $('btnVerTodos').classList.toggle('hidden', !busca && !state.filtroNav && state.bairrosSelecionados.size === 0);
+    $('emptyTitulo').textContent = 'Nenhum imóvel';
+    $('emptyMsg').textContent = 'Nada para mostrar neste filtro.';
+    $('btnVerTodos').classList.toggle('hidden', state.filtroNav === null && state.bairrosSelecionados.size === 0);
     return;
   }
   $('emptyState').classList.add('hidden');
@@ -870,16 +790,16 @@ function cardHTML(im, idx){
   const svgHeart = `<svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`;
   const svgCalendar = `<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>`;
   const svgX = `<svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
-  const svgShare = `<svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>`;
+  const svgShare = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>`;
   const svgWa = `<svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>`;
 
   const isGostei = im.status === 'gostei'; const isVisitar = im.status === 'quero-visitar'; const isNao = im.status === 'nao-gostei';
   
   let acoesHtml = '';
   if(vendido){
-    acoesHtml = `<div class="card-actions" style="justify-content:center;"><span style="font-size:.8rem;font-weight:700;color:var(--muted);">Vendido</span></div>`;
+    acoesHtml = `<div class="card-actions" style="justify-content:center;"><span style="font-size:.8rem;font-weight:700;color:var(--muted);">Indisponível</span></div>`;
   } else if(descartado){
-    acoesHtml = `<div class="card-actions" style="justify-content:center;"><button class="btn-reativar-full" style="margin:0;width:100%;" onclick="marcar('${im.id}','nao-gostei')">↻ Reativar este imóvel</button></div>`;
+    acoesHtml = `<div class="card-actions" style="justify-content:center;"><button class="btn-reativar-full" style="margin:0;width:100%;" onclick="marcar('${im.id}','nao-gostei')">↻ Reativar</button></div>`;
   } else {
     acoesHtml = `
       <div class="card-actions">
@@ -913,11 +833,13 @@ function cardHTML(im, idx){
         <img class="card-img" src="${esc(im.imagem || 'https://via.placeholder.com/400x300?text=Sem+foto')}" loading="lazy">
         
         ${vendido ? `<div class="badge-vendido">VENDIDO</div>` : ''}
-        ${imovelEhNovo(im) && !vendido ? `<div class="badge-novo">NOVO</div>` : ''}
-        ${specsInfo.badge ? `<div class="card-tag-topo">${esc(specsInfo.badge)}</div>` : ''}
+        ${descartado ? `<div class="badge-desativado">DESATIVADO</div>` : ''}
+        ${imovelEhNovo(im) && !vendido && !descartado ? `<div class="badge-novo">NOVO</div>` : ''}
+        
+        ${specsInfo.badge ? `<div class="card-tag-topo" style="left: ${imovelEhNovo(im)||descartado ? '80px' : '10px'}">${esc(specsInfo.badge)}</div>` : ''}
         ${isGostei && !vendido ? `<div class="card-heart-top">❤️</div>` : ''}
 
-        ${!vendido ? `
+        ${!vendido && !descartado ? `
           <div class="carousel-fake" onclick="event.stopPropagation();">
             <button class="arrow" onclick="event.stopPropagation(); window.open('${esc(im.link)}','_blank');">‹</button>
             <div class="dots"><span class="dot active"></span><span class="dot"></span><span class="dot"></span></div>
@@ -947,7 +869,7 @@ function cardHTML(im, idx){
 
       ${!vendido && !descartado ? `
         <button class="btn-wa-outline" onclick="event.stopPropagation(); abrirWhatsDuvida('${im.id}')">
-          ${svgWa} Tirar dúvidas no WhatsApp
+          ${svgWa} Tire dúvidas sobre esse imóvel
         </button>
       ` : ''}
 
@@ -955,11 +877,7 @@ function cardHTML(im, idx){
   `;
 }
 
-function clicarCard(id){
-  const im = state.imoveis.find(i => i.id === id);
-  if(!im || imovelVendido_(im)) return;
-  marcarVisto(id); renderizarNovidades();
-}
+function clicarCard(id){ const im = state.imoveis.find(i => i.id === id); if(!im || imovelVendido_(im)) return; marcarVisto(id); renderizarNovidades(); }
 
 function compartilharImovel(id){
   const im = state.imoveis.find(i => i.id === id); if(!im) return;
@@ -981,7 +899,6 @@ function abrirWhatsDuvida(id){
   marcarVisto(id); renderizarNovidades();
 }
 
-/* ====== TOGGLE E AÇÕES ====== */
 async function marcarGostei(id){
   if(state.salvandoIds[id]) return;
   const im = state.imoveis.find(i => i.id === id); if(!im || imovelVendido_(im)) return;
@@ -1030,23 +947,15 @@ async function marcar(id, acao){
   }
 }
 
-/* ====== MODAIS ====== */
-function abrirModalGostei(id){
-  state.modalImovelId = id; $('modalGostei').classList.add('show');
-}
-function fecharModalGostei(){
-  $('modalGostei').classList.remove('show'); state.modalImovelId = null;
-}
-function modalGosteiIrParaVisita(){
-  const id = state.modalImovelId; fecharModalGostei(); if(id) abrirModalVisita(id);
-}
+function abrirModalGostei(id){ state.modalImovelId = id; $('modalGostei').classList.add('show'); }
+function fecharModalGostei(){ $('modalGostei').classList.remove('show'); state.modalImovelId = null; }
+function modalGosteiIrParaVisita(){ const id = state.modalImovelId; fecharModalGostei(); if(id) abrirModalVisita(id); }
 
 function abrirModalVisita(id){
   const im = state.imoveis.find(i => i.id === id); if(!im || imovelVendido_(im)) return;
   state.modalImovelId = id; state.visitaDia = ''; state.visitaTurno = '';
-  
   const wrap = $('diasWrap'); const hoje = new Date(); let html = '';
-  for(let i = 1; i <= 8; i++){ // 8 DIAS A PARTIR DE AMANHÃ
+  for(let i = 1; i <= 8; i++){
     const d = new Date(hoje); d.setDate(hoje.getDate() + i);
     const iso = d.toISOString().slice(0,10);
     const dow = DIAS_SEMANA[d.getDay()];
@@ -1055,66 +964,50 @@ function abrirModalVisita(id){
     html += `<button type="button" class="dia-btn" data-iso="${iso}" onclick="escolherDia('${iso}', this)"><span class="dow">${dow}</span><span class="dnum">${dnum}</span><span class="dmes">${dmes}</span></button>`;
   }
   wrap.innerHTML = html;
-  
   document.querySelectorAll('.turno-btn').forEach(b => b.classList.remove('active'));
   $('obsVisita').value = ''; $('modalVisita').classList.add('show');
 }
 
-function fecharModalVisita(){
-  $('modalVisita').classList.remove('show'); state.modalImovelId = null; state.visitaDia = ''; state.visitaTurno = '';
-}
-function escolherDia(iso, el){
-  state.visitaDia = iso; document.querySelectorAll('.dia-btn').forEach(b => b.classList.remove('active')); el.classList.add('active');
-}
-function escolherTurno(turno, el){
-  state.visitaTurno = turno; document.querySelectorAll('.turno-btn').forEach(b => b.classList.remove('active')); el.classList.add('active');
-}
+function fecharModalVisita(){ $('modalVisita').classList.remove('show'); state.modalImovelId = null; state.visitaDia = ''; state.visitaTurno = ''; }
+function escolherDia(iso, el){ state.visitaDia = iso; document.querySelectorAll('.dia-btn').forEach(b => b.classList.remove('active')); el.classList.add('active'); }
+function escolherTurno(turno, el){ state.visitaTurno = turno; document.querySelectorAll('.turno-btn').forEach(b => b.classList.remove('active')); el.classList.add('active'); }
 
 async function enviarSolicitacaoVisita(){
   const id = state.modalImovelId; if(!id) return;
   if(!state.visitaDia){ toast('Escolha um dia.', 'error'); return; }
   if(!state.visitaTurno){ toast('Escolha um turno.', 'error'); return; }
-
   const im = state.imoveis.find(i => i.id === id); if(!im) return;
   const btn = $('btnEnviarVisita'); btn.disabled = true; btn.innerHTML = 'Enviando...';
 
   let diasLegivel = state.visitaDia;
   try { const d = new Date(state.visitaDia + 'T12:00:00'); diasLegivel = `${DIAS_SEMANA[d.getDay()]} ${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}`; } catch(e){}
 
-  const res = await api('solicitarVisitaPlanilha', {
-    id, telefone: state.telefone, deviceToken: state.deviceToken,
-    dias: diasLegivel, turno: state.visitaTurno, observacao: $('obsVisita').value.trim()
-  }, TIMEOUT_API, 1);
-
+  const res = await api('solicitarVisitaPlanilha', { id, telefone: state.telefone, deviceToken: state.deviceToken, dias: diasLegivel, turno: state.visitaTurno, observacao: $('obsVisita').value.trim() }, TIMEOUT_API, 1);
   btn.disabled = false; btn.innerHTML = '📩 Enviar solicitação';
 
   if(!res.ok){
     if(erroEhDispositivoVinculado(res.error)) return mostrarBloqueioDispositivo();
     toast(res.error || 'Erro', 'error'); return;
   }
-
-  // Atualiza status local
   im.status = 'quero-visitar'; atualizarTela(); gravarCache(state.imoveis);
   fecharModalVisita(); toast('Solicitação enviada!', 'success');
 }
 
-/* ====== INIT E MÁSCARAS ====== */
-function toggleBusca(){ const b = $('buscaExpansivel'); b.classList.toggle('show'); if(b.classList.contains('show')) setTimeout(()=>$('buscaInput').focus(),100); else { $('buscaInput').value=''; renderizarImoveis(); } }
-
 function navIr(destino){
-  ['navInicio','navFavoritos','navVisitar','navCorretor'].forEach(id => $(id).classList.remove('active'));
+  ['navInicio','navFavoritos','navVisitar','navNaoGostei','navCorretor'].forEach(id => $(id).classList.remove('active'));
   
   if(destino === 'corretor'){
     const corretor = corretorDoCliente(); const zap = ZAP_CORRETORES[corretor];
     const msg = `Olá ${corretor}! Sou *${state.clienteInfo?.nome||'Cliente'}* e estou olhando a vitrine.`;
     window.open(`https://wa.me/${zap}?text=${encodeURIComponent(msg)}`, '_blank');
-    setTimeout(()=>{ if(state.filtroNav==='favoritos') $('navFavoritos').classList.add('active'); else if(state.filtroNav==='visitar') $('navVisitar').classList.add('active'); else $('navInicio').classList.add('active'); }, 100);
+    setTimeout(()=>{ if(state.filtroNav==='gostei') $('navFavoritos').classList.add('active'); else if(state.filtroNav==='visitar') $('navVisitar').classList.add('active'); else if(state.filtroNav==='nao-gostei') $('navNaoGostei').classList.add('active'); else $('navInicio').classList.add('active'); }, 100);
     return;
   }
 
-  if(destino === 'inicio'){ state.filtroNav = null; $('navInicio').classList.add('active'); $('buscaInput').value = ''; }
-  else if(destino === 'favoritos'){ state.filtroNav = 'favoritos'; $('navFavoritos').classList.add('active'); }
+  if(destino === 'inicio'){ state.filtroNav = null; $('navInicio').classList.add('active'); }
+  else if(destino === 'gostei'){ state.filtroNav = 'gostei'; $('navFavoritos').classList.add('active'); }
   else if(destino === 'visitar'){ state.filtroNav = 'visitar'; $('navVisitar').classList.add('active'); }
+  else if(destino === 'nao-gostei'){ state.filtroNav = 'nao-gostei'; $('navNaoGostei').classList.add('active'); }
   
   renderizarImoveis(); window.scrollTo({ top: 0, behavior: 'smooth' });
 }
