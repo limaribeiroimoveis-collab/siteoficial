@@ -2299,7 +2299,12 @@ function renderizarCards(){
     return;
   }
 
-  grid.innerHTML = arr.map(im => cardHTML(im)).join('');
+  // ✅ Mescla os dados antes de renderizar o card
+  grid.innerHTML = arr.map(im => {
+    const imCompleto = (state.modoAdmin ? state.todosImoveis.find(x => String(x.codigo || '').trim() === String(im.codigo || '').trim()) : null) || {};
+    const imParaCard = { ...im, ...imCompleto };
+    return cardHTML(imParaCard);
+  }).join('');
 
   document.querySelectorAll('.imovel-card').forEach(card => {
     card.addEventListener('click', (e) => {
