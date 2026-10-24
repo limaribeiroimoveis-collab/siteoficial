@@ -2145,12 +2145,10 @@ function aplicarFiltros(){
     arr = arr.filter(im => !im.vendido && !isVendido(im.descricao));
   }
 
-  // ✅ AQUI ESTÁ A CORREÇÃO DO FILTRO DE FALHAS
   if(state.modoAdmin && state.filtroFalhas){
     arr = arr.filter(im => {
-      // Busca os dados completos do imóvel (que tem a chave) para testar as falhas
       const imCompleto = state.todosImoveis.find(x => String(x.codigo || '').trim() === String(im.codigo || '').trim()) || {};
-      const imParaTeste = { ...im, ...imCompleto }; // Junta os dados públicos com os do admin
+      const imParaTeste = { ...im, ...imCompleto }; 
       return imovelTemFalha(imParaTeste);
     });
   }
@@ -2318,15 +2316,10 @@ function cardHTML(im){
   const extras = [];
   const c = parseNumeroBR(im.condominio);
   const i = parseNumeroBR(im.iptu);
-  
-  // ✅ MESCLA OS DADOS USANDO O CÓDIGO
-  const imCompleto = (state.modoAdmin ? state.todosImoveis.find(x => String(x.codigo || '').trim() === String(im.codigo || '').trim()) : null) || {};
-  const imParaCard = { ...im, ...imCompleto };
-
-  const infoApto = infoAptoImovel(imParaCard);
-  const vendido = isVendido(imParaCard.descricao) || imParaCard.vendido;
-  const falhas = obterFalhasDoImovel(imParaCard);
-  const temFalhaApto = temMultiplosAptos(imParaCard);
+  const infoApto = infoAptoImovel(im);
+  const vendido = isVendido(im.descricao) || im.vendido;
+  const falhas = obterFalhasDoImovel(im);
+  const temFalhaApto = temMultiplosAptos(im);
 
   if(c > 0) extras.push(`<span class="feat">Cond ${esc(fmtValorLimpo(im.condominio))}</span>`);
   if(i > 0) extras.push(`<span class="feat">IPTU ${esc(fmtValorLimpo(im.iptu))}</span>`);
@@ -2355,26 +2348,26 @@ function cardHTML(im){
 
   const adminAcoes = state.modoAdmin ? `
     <div class="admin-acoes">
-      <button class="btn-a btn-editar" onclick="event.stopPropagation(); abrirModalEditarImovel('${esc(imParaCard.id)}')">
+      <button class="btn-a btn-editar" onclick="event.stopPropagation(); abrirModalEditarImovel('${esc(im.id)}')">
         <i class="fas fa-edit"></i> Editar
       </button>
-      <button class="btn-a btn-clonar" onclick="event.stopPropagation(); abrirModalClonarImovel('${esc(imParaCard.id)}')">
+      <button class="btn-a btn-clonar" onclick="event.stopPropagation(); abrirModalClonarImovel('${esc(im.id)}')">
         <i class="fas fa-copy"></i> Clonar
       </button>
-      <button class="btn-a btn-clientes" onclick="event.stopPropagation(); abrirModalClientesVinculados('${esc(imParaCard.codigo || '')}')">
+      <button class="btn-a btn-clientes" onclick="event.stopPropagation(); abrirModalClientesVinculados('${esc(im.codigo || '')}')">
         <i class="fas fa-users"></i> Clientes
       </button>
-      <button class="btn-a btn-entrada" ${!imParaCard.codigo ? 'disabled' : ''} onclick="event.stopPropagation(); window.open('${BUSCAR_BASE}/${esc(imParaCard.codigo || '')}','_blank','noopener')">
+      <button class="btn-a btn-entrada" ${!im.codigo ? 'disabled' : ''} onclick="event.stopPropagation(); window.open('${BUSCAR_BASE}/${esc(im.codigo || '')}','_blank','noopener')">
         <i class="fas fa-key"></i> Entrada
       </button>
-      <button class="btn-a btn-anuncio" onclick="event.stopPropagation(); ${imParaCard.link ? `window.open('${esc(imParaCard.link)}','_blank','noopener')` : `alert('Sem link de anúncio')`}">
+      <button class="btn-a btn-anuncio" onclick="event.stopPropagation(); ${im.link ? `window.open('${esc(im.link)}','_blank','noopener')` : `alert('Sem link de anúncio')`}">
         <i class="fas fa-external-link-alt"></i> Ver anúncio
       </button>
     </div>
   ` : '';
 
-  const codigoLinha = (state.modoAdmin && imParaCard.codigo)
-    ? `<div class="codigo-linha"><span class="codigo-badge"><i class="fas fa-hashtag"></i> ${esc(imParaCard.codigo)}</span></div>`
+  const codigoLinha = (state.modoAdmin && im.codigo)
+    ? `<div class="codigo-linha"><span class="codigo-badge"><i class="fas fa-hashtag"></i> ${esc(im.codigo)}</span></div>`
     : '';
 
   const tarjaVendido = vendido ? '<div class="tarja-vendido"></div>' : '';
@@ -2387,14 +2380,13 @@ function cardHTML(im){
         <ul class="falha-lista">
           ${falhas.map(f => `<li>• ${esc(f)}</li>`).join('')}
         </ul>
-        <span class="falha-codigo">#${esc(imParaCard.codigo || 'S/N')}</span>
+        <span class="falha-codigo">#${esc(im.codigo || 'S/N')}</span>
       </div>
     `;
   }
 
-  // ✅ USAMOS O imParaCard.id PARA OS CLIQUES DO CARD, MAS O VISUAL PODE USAR O 'im'
   return `
-    <div class="imovel-card" data-id="${esc(imParaCard.id)}">
+    <div class="imovel-card" data-id="${esc(im.id)}">
       ${tarjaFalhaHtml}
       <div class="foto" style="${fotoStyle}">
         ${fotoIcone}
@@ -2426,7 +2418,6 @@ function abrirDetalhes(id){
     || state.imoveisUnicos.find(x => String(x.id) === String(id));
   if(!im) return;
   
-  // ✅ Mescla os dados para detalhes
   const imCompleto = (state.modoAdmin ? state.todosImoveis.find(x => String(x.codigo || '').trim() === String(im.codigo || '').trim()) : null) || {};
   const imParaDetalhes = { ...im, ...imCompleto };
   
