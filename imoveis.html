@@ -1821,7 +1821,9 @@ function fmtAndar(andar){
 function infoAptoImovel(im){
   let numero = '';
   if(im.apto) numero = String(im.apto).replace(/\D/g, '');
-  if(!numero && im.chaveTexto) numero = extrairNumeroApto(im.chaveTexto);
+  
+  // ✅ Usa a função flexível para buscar a chave
+  if(!numero) numero = extrairNumeroApto(obterChaveTexto(im));
   
   const andar = calcularAndar(numero);
   return {
@@ -1847,7 +1849,7 @@ function temMultiplosAptos(im) {
   return false;
 }
 
-/* ✅ RETORNA A LISTA DE FALHAS DO IMÓVEL */
+/* ✅ RETORNA A LISTA DE FALHAS DO IMÓVEL (Única e correta) */
 function obterFalhasDoImovel(im) {
   const falhas = [];
   if (!im) return falhas;
@@ -1856,26 +1858,8 @@ function obterFalhasDoImovel(im) {
   if (!String(im.numero || '').trim()) falhas.push('Falta Número');
   if (!String(im.bairro || '').trim()) falhas.push('Falta Bairro');
   
-  // ✅ Verifica o campo chave de forma flexível
+  // ✅ Usa a função flexível para checar a chave
   if (!obterChaveTexto(im)) falhas.push('Falta Chave');
-  
-  const preco = parseNumeroBR(im.preco);
-  if (preco <= 0) falhas.push('Falta Preço');
-
-  if (temMultiplosAptos(im)) falhas.push('Múltiplos Aptos (ex: 1103 / 302)');
-
-  return falhas;
-}
-
-/* ✅ RETORNA A LISTA DE FALHAS DO IMÓVEL */
-function obterFalhasDoImovel(im) {
-  const falhas = [];
-  if (!im) return falhas;
-
-  if (!String(im.rua || '').trim()) falhas.push('Falta Rua');
-  if (!String(im.numero || '').trim()) falhas.push('Falta Número');
-  if (!String(im.bairro || '').trim()) falhas.push('Falta Bairro');
-  if (!String(im.chaveTexto || '').trim()) falhas.push('Falta Chave');
   
   const preco = parseNumeroBR(im.preco);
   if (preco <= 0) falhas.push('Falta Preço');
