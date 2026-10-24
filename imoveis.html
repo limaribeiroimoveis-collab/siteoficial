@@ -1481,13 +1481,24 @@ function extrairTipoImovel(descricao){
   return '';
 }
 
-function isVendido(descricao){
-  if(!descricao) return false;
+/* ✅ CORRIGIDO — agora aceita o imóvel e prioriza o campo vendido do backend */
+function isVendido(descricao, imovel){
+  // 1) Prioridade: campo "vendido" vindo do backend
+  if (imovel && imovel.vendido !== undefined) {
+    const v = String(imovel.vendido || '').trim().toLowerCase();
+    if (v === 'sim' || v === 's' || v === 'yes' || v === 'y' ||
+        v === 'true' || v === 't' || v === '1' || v === 'x' ||
+        v === 'vendido' || v === 'v') {
+      return true;
+    }
+  }
+  // 2) Fallback: asteriscos na descrição
+  if (!descricao) return false;
   const matches = String(descricao).match(/\*+([^*\n]+)\*+/g);
-  if(!matches) return false;
-  for(const m of matches){
+  if (!matches) return false;
+  for (const m of matches) {
     const texto = m.replace(/\*/g, '').trim().toLowerCase();
-    if(texto.includes('vendido')) return true;
+    if (texto.includes('vendido')) return true;
   }
   return false;
 }
@@ -1765,7 +1776,8 @@ function mostrarErroCarregamento(msg){
 }
 
 function finalizarCarregamento(){
-  const totalVendidos = state.imoveisUnicos.filter(im => im.vendido || isVendido(im.descricao)).length;
+  /* ✅ CORRIGIDO — passa im para isVendido */
+  const totalVendidos = state.imoveisUnicos.filter(im => im.vendido || isVendido(im.descricao, im)).length;
   state._totalVendidosGlobal = totalVendidos;
   atualizarBotaoOcultarVendidos();
   popularCheckboxesBairros();
@@ -2024,7 +2036,8 @@ function aplicarFiltros(){
   }
 
   if(state.ocultarVendidos){
-    arr = arr.filter(im => !im.vendido && !isVendido(im.descricao));
+    /* ✅ CORRIGIDO — passa im para isVendido */
+    arr = arr.filter(im => !im.vendido && !isVendido(im.descricao, im));
   }
 
   if(state.modoAdmin && state.filtroFalhas){
@@ -2205,7 +2218,8 @@ function cardHTML(im){
   const c = parseNumeroBR(im.condominio);
   const i = parseNumeroBR(im.iptu);
   const infoApto = infoAptoImovel(im);
-  const vendido = isVendido(im.descricao) || im.vendido;
+  /* ✅ CORRIGIDO — passa im para isVendido */
+  const vendido = isVendido(im.descricao, im) || im.vendido;
   const falhas = obterFalhasDoImovel(im);
   const temFalhaApto = temMultiplosAptos(im);
   const codigo = String(im.codigo || '').trim();
@@ -2270,7 +2284,6 @@ function cardHTML(im){
     `;
   }
 
-  // Guarda o código no data-attributes (fallback: id) — o clique usa data-id ou data-codigo
   const dataId = String(im.id || '');
   const dataCodigo = codigo;
 
@@ -2306,13 +2319,13 @@ function cardHTML(im){
    DETALHES
 ===================================================== */
 function abrirDetalhes(ref){
-  // ref pode ser id ou código — resolve sempre
   const im = acharImovelPorQualquerRef(ref);
   if(!im) return;
   const imFull = mesclarCompleto(im);
   state.imovelAtual = imFull;
 
-  const vendido = isVendido(imFull.descricao) || imFull.vendido;
+  /* ✅ CORRIGIDO — passa imFull para isVendido */
+  const vendido = isVendido(imFull.descricao, imFull) || imFull.vendido;
 
   if(imFull.imagem){
     $('detalheFoto').style.backgroundImage = `url('${urlImagem(imFull)}')`;
@@ -2489,7 +2502,8 @@ async function abrirMapaParaBairro(bairro){
   $('modoMapa').classList.add('ativo');
 
   let imoveisBairro = state.imoveisUnicos.filter(im => normalizaTexto(im.bairro) === normalizaTexto(bairro));
-  if(state.ocultarVendidos) imoveisBairro = imoveisBairro.filter(im => !im.vendido && !isVendido(im.descricao));
+  /* ✅ CORRIGIDO — passa im para isVendido */
+  if(state.ocultarVendidos) imoveisBairro = imoveisBairro.filter(im => !im.vendido && !isVendido(im.descricao, im));
 
   $('mapaBairroTitulo').textContent = bairro;
   $('mapaQtdBadge').textContent = `${imoveisBairro.length} ${imoveisBairro.length === 1 ? 'imóvel' : 'imóveis'}`;
@@ -2668,7 +2682,7 @@ function abrirModalEditarImovel(ref){
   $('editChave').value      = imCompleto.chaveTexto || '';
   $('editImagem').value     = imCompleto.imagem     || '';
 
-  const isVend = isVendido(imCompleto.descricao) || imCompleto.vendido;
+  const isVend = isVendido(imCompleto.descricao, imCompleto) || imCompleto.vendido;
   $('editVendido').checked = isVend;
 
   let corretorDetectado = '';
@@ -2852,7 +2866,6 @@ async function abrirModalConfirmarClonagem(){
   const n = state.imoveisMarcadosClonar.length;
   if(n === 0){ toast('Marque ao menos 1 imóvel', 'error'); return; }
 
-  // Reseta UI do modal
   $('progressoClonagemWrap').classList.remove('show');
   $('progressoLbl').textContent = 'Preparando…';
   $('progressoPct').textContent = '0%';
@@ -2864,7 +2877,6 @@ async function abrirModalConfirmarClonagem(){
 
   $('confirmarClonagemSub').textContent = `${n} imóvel(is) marcado(s): #${state.imoveisMarcadosClonar.join(', #')}. Escolha os clientes de destino abaixo.`;
 
-  // Carrega clientes se necessário
   if(state.clientes.length === 0) await carregarClientesAdmin();
 
   const container = $('listaClientesDestino');
@@ -2923,11 +2935,9 @@ async function executarClonagemLote(){
     log.scrollTop = log.scrollHeight;
   }
 
-  // Pré-carrega todosImoveis
   if(state.todosImoveis.length === 0) await carregarTodosImoveisAdmin();
 
   for(const codigo of marcados){
-    // Descobre o telefone de origem (primeiro que tenha esse código)
     const orig = state.todosImoveis.find(x => String(x.codigo || '').trim() === String(codigo).trim());
     const telOrigem = orig ? normalizaTel(orig.telefone) : '';
 
@@ -2971,7 +2981,6 @@ async function executarClonagemLote(){
         fail++;
         appendLog(`✗ #${codigo} → ${dest.nome || fmtTel(dest.tel)} — ${e.message}`, 'erro');
       }
-      // Pequeno delay para não sobrecarregar o AppScript
       await delay(350);
     }
   }
@@ -2988,13 +2997,12 @@ async function executarClonagemLote(){
   btn.disabled = false;
   btn.innerHTML = '<i class="fas fa-check"></i> Fechar e recarregar';
 
-  // Troca o handler para fechar+recarregar no próximo clique
   btn.onclick = async () => {
     fecharModalConfirmarClonagem();
     limparMarcadosClonagem();
     await carregarImoveis();
     if(state.modoAdmin){ await carregarTodosImoveisAdmin(); calcularFalhasAdmin(); }
-    btn.onclick = executarClonagemLote; // restaura
+    btn.onclick = executarClonagemLote;
   };
 }
 
