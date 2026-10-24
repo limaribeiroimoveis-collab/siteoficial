@@ -2309,8 +2309,13 @@ function cardHTML(im){
   const i = parseNumeroBR(im.iptu);
   const infoApto = infoAptoImovel(im);
   const vendido = isVendido(im.descricao) || im.vendido;
-  const falhas = obterFalhasDoImovel(im);
-  const temFalhaApto = temMultiplosAptos(im);
+  
+  // ✅ MESCLA OS DADOS DO IMÓVEL COM OS DADOS COMPLETOS (SE ESTIVER NO ADMIN) PARA LER A CHAVE E OUTRAS FALHAS
+  const imCompleto = (state.modoAdmin ? state.todosImoveis.find(x => String(x.codigo || '').trim() === String(im.codigo || '').trim()) : null) || {};
+  const imParaFalhas = { ...im, ...imCompleto };
+
+  const falhas = obterFalhasDoImovel(imParaFalhas);
+  const temFalhaApto = temMultiplosAptos(imParaFalhas);
 
   if(c > 0) extras.push(`<span class="feat">Cond ${esc(fmtValorLimpo(im.condominio))}</span>`);
   if(i > 0) extras.push(`<span class="feat">IPTU ${esc(fmtValorLimpo(im.iptu))}</span>`);
@@ -2817,7 +2822,11 @@ function atualizarAdminInfo(){
 }
 
 function calcularFalhasAdmin(){
-  const falhas = state.imoveisUnicos.filter(im => imovelTemFalha(im));
+  const falhas = state.imoveisUnicos.filter(im => {
+    const imCompleto = state.todosImoveis.find(x => String(x.codigo || '').trim() === String(im.codigo || '').trim()) || {};
+    const imParaFalhas = { ...im, ...imCompleto };
+    return imovelTemFalha(imParaFalhas);
+  });
   const badge = $('badgeFalhasCount');
   if(badge) badge.textContent = falhas.length;
   
