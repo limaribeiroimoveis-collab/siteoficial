@@ -1822,7 +1822,7 @@ function infoAptoImovel(im){
   let numero = '';
   if(im.apto) numero = String(im.apto).replace(/\D/g, '');
   
-  // ✅ Usa a função flexível para buscar a chave
+  // ✅ Usa a função flexível
   if(!numero) numero = extrairNumeroApto(obterChaveTexto(im));
   
   const andar = calcularAndar(numero);
@@ -2318,15 +2318,15 @@ function cardHTML(im){
   const extras = [];
   const c = parseNumeroBR(im.condominio);
   const i = parseNumeroBR(im.iptu);
-  const infoApto = infoAptoImovel(im);
-  const vendido = isVendido(im.descricao) || im.vendido;
   
-  // ✅ MESCLA OS DADOS DO IMÓVEL COM OS DADOS COMPLETOS (SE ESTIVER NO ADMIN) PARA LER A CHAVE E OUTRAS FALHAS
+  // ✅ MESCLA OS DADOS USANDO O CÓDIGO
   const imCompleto = (state.modoAdmin ? state.todosImoveis.find(x => String(x.codigo || '').trim() === String(im.codigo || '').trim()) : null) || {};
-  const imParaFalhas = { ...im, ...imCompleto };
+  const imParaCard = { ...im, ...imCompleto };
 
-  const falhas = obterFalhasDoImovel(imParaFalhas);
-  const temFalhaApto = temMultiplosAptos(imParaFalhas);
+  const infoApto = infoAptoImovel(imParaCard);
+  const vendido = isVendido(imParaCard.descricao) || imParaCard.vendido;
+  const falhas = obterFalhasDoImovel(imParaCard);
+  const temFalhaApto = temMultiplosAptos(imParaCard);
 
   if(c > 0) extras.push(`<span class="feat">Cond ${esc(fmtValorLimpo(im.condominio))}</span>`);
   if(i > 0) extras.push(`<span class="feat">IPTU ${esc(fmtValorLimpo(im.iptu))}</span>`);
@@ -2355,31 +2355,30 @@ function cardHTML(im){
 
   const adminAcoes = state.modoAdmin ? `
     <div class="admin-acoes">
-      <button class="btn-a btn-editar" onclick="event.stopPropagation(); abrirModalEditarImovel('${esc(im.id)}')">
+      <button class="btn-a btn-editar" onclick="event.stopPropagation(); abrirModalEditarImovel('${esc(imParaCard.id)}')">
         <i class="fas fa-edit"></i> Editar
       </button>
-      <button class="btn-a btn-clonar" onclick="event.stopPropagation(); abrirModalClonarImovel('${esc(im.id)}')">
+      <button class="btn-a btn-clonar" onclick="event.stopPropagation(); abrirModalClonarImovel('${esc(imParaCard.id)}')">
         <i class="fas fa-copy"></i> Clonar
       </button>
-      <button class="btn-a btn-clientes" onclick="event.stopPropagation(); abrirModalClientesVinculados('${esc(im.codigo || '')}')">
+      <button class="btn-a btn-clientes" onclick="event.stopPropagation(); abrirModalClientesVinculados('${esc(imParaCard.codigo || '')}')">
         <i class="fas fa-users"></i> Clientes
       </button>
-      <button class="btn-a btn-entrada" ${!im.codigo ? 'disabled' : ''} onclick="event.stopPropagation(); window.open('${BUSCAR_BASE}/${esc(im.codigo || '')}','_blank','noopener')">
+      <button class="btn-a btn-entrada" ${!imParaCard.codigo ? 'disabled' : ''} onclick="event.stopPropagation(); window.open('${BUSCAR_BASE}/${esc(imParaCard.codigo || '')}','_blank','noopener')">
         <i class="fas fa-key"></i> Entrada
       </button>
-      <button class="btn-a btn-anuncio" onclick="event.stopPropagation(); ${im.link ? `window.open('${esc(im.link)}','_blank','noopener')` : `alert('Sem link de anúncio')`}">
+      <button class="btn-a btn-anuncio" onclick="event.stopPropagation(); ${imParaCard.link ? `window.open('${esc(imParaCard.link)}','_blank','noopener')` : `alert('Sem link de anúncio')`}">
         <i class="fas fa-external-link-alt"></i> Ver anúncio
       </button>
     </div>
   ` : '';
 
-  const codigoLinha = (state.modoAdmin && im.codigo)
-    ? `<div class="codigo-linha"><span class="codigo-badge"><i class="fas fa-hashtag"></i> ${esc(im.codigo)}</span></div>`
+  const codigoLinha = (state.modoAdmin && imParaCard.codigo)
+    ? `<div class="codigo-linha"><span class="codigo-badge"><i class="fas fa-hashtag"></i> ${esc(imParaCard.codigo)}</span></div>`
     : '';
 
   const tarjaVendido = vendido ? '<div class="tarja-vendido"></div>' : '';
 
-  // ✅ SE O FILTRO FALHAS ESTIVER ATIVO, MOSTRA A TARJA DE FALHA
   let tarjaFalhaHtml = '';
   if (state.modoAdmin && state.filtroFalhas && falhas.length > 0) {
     tarjaFalhaHtml = `
@@ -2388,13 +2387,14 @@ function cardHTML(im){
         <ul class="falha-lista">
           ${falhas.map(f => `<li>• ${esc(f)}</li>`).join('')}
         </ul>
-        <span class="falha-codigo">#${esc(im.codigo || 'S/N')}</span>
+        <span class="falha-codigo">#${esc(imParaCard.codigo || 'S/N')}</span>
       </div>
     `;
   }
 
+  // ✅ USAMOS O imParaCard.id PARA OS CLIQUES DO CARD, MAS O VISUAL PODE USAR O 'im'
   return `
-    <div class="imovel-card" data-id="${esc(im.id)}">
+    <div class="imovel-card" data-id="${esc(imParaCard.id)}">
       ${tarjaFalhaHtml}
       <div class="foto" style="${fotoStyle}">
         ${fotoIcone}
@@ -2422,24 +2422,29 @@ function cardHTML(im){
 }
 
 function abrirDetalhes(id){
-  const im = state.imoveisFiltrados.find(x => String(x.id) === String(id))
+  let im = state.imoveisFiltrados.find(x => String(x.id) === String(id))
     || state.imoveisUnicos.find(x => String(x.id) === String(id));
   if(!im) return;
-  state.imovelAtual = im;
+  
+  // ✅ Mescla os dados para detalhes
+  const imCompleto = (state.modoAdmin ? state.todosImoveis.find(x => String(x.codigo || '').trim() === String(im.codigo || '').trim()) : null) || {};
+  const imParaDetalhes = { ...im, ...imCompleto };
+  
+  state.imovelAtual = imParaDetalhes;
 
-  const vendido = isVendido(im.descricao) || im.vendido;
+  const vendido = isVendido(imParaDetalhes.descricao) || imParaDetalhes.vendido;
 
-  if(im.imagem){
-    $('detalheFoto').style.backgroundImage = `url('${urlImagem(im)}')`;
+  if(imParaDetalhes.imagem){
+    $('detalheFoto').style.backgroundImage = `url('${urlImagem(imParaDetalhes)}')`;
     $('detalheFoto').innerHTML = vendido ? '<div class="tarja-vendido"></div>' : '';
   } else {
     $('detalheFoto').style.backgroundImage = '';
     $('detalheFoto').innerHTML = '<i class="fas fa-image"></i>' + (vendido ? '<div class="tarja-vendido"></div>' : '');
   }
 
-  $('detalheCodigo').textContent = '#' + (im.codigo || '---');
+  $('detalheCodigo').textContent = '#' + (imParaDetalhes.codigo || '---');
 
-  const tipo = extrairTipoImovel(im.descricao);
+  const tipo = extrairTipoImovel(imParaDetalhes.descricao);
   if(tipo){
     $('detalheTipo').textContent = tipo;
     $('detalheTipo').style.display = 'inline-flex';
@@ -2450,23 +2455,23 @@ function abrirDetalhes(id){
   if(vendido) $('detalheVendido').style.display = 'inline-flex';
   else $('detalheVendido').style.display = 'none';
 
-  $('detalhePreco').textContent = fmtPreco(im.preco);
+  $('detalhePreco').textContent = fmtPreco(imParaDetalhes.preco);
 
-  const rua = im.rua || im.titulo || 'Endereço não informado';
-  const bairro = im.bairro || '';
+  const rua = imParaDetalhes.rua || imParaDetalhes.titulo || 'Endereço não informado';
+  const bairro = imParaDetalhes.bairro || '';
   $('detalheEndereco').innerHTML = `
     <i class="fas fa-map-marker-alt"></i> ${esc(rua)}
     ${bairro ? `<span class="bairro-destaque">· ${esc(bairro)}</span>` : ''}
   `;
 
-  $('detalheDescricao').textContent = im.descricao || 'Sem descrição disponível.';
+  $('detalheDescricao').textContent = imParaDetalhes.descricao || 'Sem descrição disponível.';
 
   const gastos = [];
-  const c = parseNumeroBR(im.condominio);
-  const ip = parseNumeroBR(im.iptu);
-  const infoAptoDetalhe = infoAptoImovel(im);
-  if(c > 0) gastos.push(`<span><strong>Condomínio:</strong> ${esc(fmtPreco(im.condominio))}/mês</span>`);
-  if(ip > 0) gastos.push(`<span><strong>IPTU:</strong> ${esc(fmtPreco(im.iptu))}/mês</span>`);
+  const c = parseNumeroBR(imParaDetalhes.condominio);
+  const ip = parseNumeroBR(imParaDetalhes.iptu);
+  const infoAptoDetalhe = infoAptoImovel(imParaDetalhes);
+  if(c > 0) gastos.push(`<span><strong>Condomínio:</strong> ${esc(fmtPreco(imParaDetalhes.condominio))}/mês</span>`);
+  if(ip > 0) gastos.push(`<span><strong>IPTU:</strong> ${esc(fmtPreco(imParaDetalhes.iptu))}/mês</span>`);
   if(infoAptoDetalhe.andarTxt) gastos.push(`<span><strong>Andar:</strong> ${esc(infoAptoDetalhe.andarTxt)}</span>`);
   if(gastos.length){
     $('detalheGastos').style.display = 'flex';
@@ -2475,10 +2480,10 @@ function abrirDetalhes(id){
     $('detalheGastos').style.display = 'none';
   }
 
-  const whatsNum = getWhatsappCorretor(im);
-  const corretorNome = detectarCorretorDoLink(im.link || '');
+  const whatsNum = getWhatsappCorretor(imParaDetalhes);
+  const corretorNome = detectarCorretorDoLink(imParaDetalhes.link || '');
   const msg = encodeURIComponent(
-    `Olá${corretorNome ? ' ' + corretorNome : ''}! Tenho interesse no imóvel #${im.codigo}${bairro ? ' no ' + bairro : ''}. Podem me passar mais informações?`
+    `Olá${corretorNome ? ' ' + corretorNome : ''}! Tenho interesse no imóvel #${imParaDetalhes.codigo}${bairro ? ' no ' + bairro : ''}. Podem me passar mais informações?`
   );
   $('detalheZap').href = `https://wa.me/${whatsNum}?text=${msg}`;
 
@@ -2489,14 +2494,14 @@ function abrirDetalhes(id){
     $('detalheAnuncio').style.pointerEvents = 'none';
     $('detalheAnuncio').innerHTML = '<i class="fas fa-external-link-alt"></i> Anúncio Indisponível';
   } else {
-    if(im.link){
-      $('detalheAnuncio').href = im.link;
+    if(imParaDetalhes.link){
+      $('detalheAnuncio').href = imParaDetalhes.link;
       $('detalheAnuncio').style.display = 'inline-flex';
       $('detalheAnuncio').style.opacity = '1';
       $('detalheAnuncio').style.pointerEvents = 'auto';
       $('detalheAnuncio').innerHTML = '<i class="fas fa-external-link-alt"></i> Ver anúncio completo';
-    } else if(im.codigo){
-      $('detalheAnuncio').href = `https://www.quintoandar.com.br/imovel/${im.codigo}`;
+    } else if(imParaDetalhes.codigo){
+      $('detalheAnuncio').href = `https://www.quintoandar.com.br/imovel/${imParaDetalhes.codigo}`;
       $('detalheAnuncio').style.display = 'inline-flex';
       $('detalheAnuncio').style.opacity = '1';
       $('detalheAnuncio').style.pointerEvents = 'auto';
@@ -2854,6 +2859,7 @@ function calcularFalhasAdmin(){
 }
 
 function abrirModalEditarImovel(id){
+  // 1. Acha o imóvel na lista atual para pegar o código
   const im = state.imoveisFiltrados.find(x => String(x.id) === String(id))
     || state.imoveisUnicos.find(x => String(x.id) === String(id));
   if(!im){ toast('Imóvel não encontrado', 'error'); return; }
@@ -2865,24 +2871,28 @@ function abrirModalEditarImovel(id){
   btnSalvar.disabled = false;
   btnSalvar.innerHTML = '<i class="fas fa-save"></i> Salvar em todos os clientes';
 
+  // ✅ CORREÇÃO: Busca o imóvel na lista completa pelo CÓDIGO, não pelo ID
   const imCompleto = (state.todosImoveis || []).find(x =>
     String(x.codigo || '').trim() === String(im.codigo || '').trim()
   ) || {};
 
-  const linkSalvo = imCompleto.link || im.link || '';
+  // ✅ Mescla os dados públicos com os dados completos
+  const imParaEditar = { ...im, ...imCompleto };
+
+  const linkSalvo = imParaEditar.link || '';
 
   $('editLink').value       = linkSalvo;
-  $('editRua').value        = imCompleto.rua        || im.rua        || '';
-  $('editNumero').value     = imCompleto.numero     || im.numero     || '';
-  $('editBairro').value     = imCompleto.bairro     || im.bairro     || '';
-  $('editPreco').value      = imCompleto.preco      || im.preco      || '';
-  $('editCondominio').value = imCompleto.condominio || im.condominio || '';
-  $('editIptu').value       = imCompleto.iptu       || im.iptu       || '';
-  $('editDescricao').value  = imCompleto.descricao  || im.descricao  || '';
-  $('editChave').value      = imCompleto.chaveTexto || im.chaveTexto || '';
-  $('editImagem').value     = imCompleto.imagem     || im.imagem     || '';
+  $('editRua').value        = imParaEditar.rua        || '';
+  $('editNumero').value     = imParaEditar.numero     || '';
+  $('editBairro').value     = imParaEditar.bairro     || '';
+  $('editPreco').value      = imParaEditar.preco      || '';
+  $('editCondominio').value = imParaEditar.condominio || '';
+  $('editIptu').value       = imParaEditar.iptu       || '';
+  $('editDescricao').value  = imParaEditar.descricao  || '';
+  $('editChave').value      = imParaEditar.chaveTexto || '';
+  $('editImagem').value     = imParaEditar.imagem     || '';
 
-  const isVend = isVendido(imCompleto.descricao || im.descricao) || imCompleto.vendido || im.vendido;
+  const isVend = isVendido(imParaEditar.descricao) || imParaEditar.vendido;
   $('editVendido').checked = isVend;
 
   let corretorDetectado = '';
@@ -2894,21 +2904,22 @@ function abrirModalEditarImovel(id){
   state._corretorEscolhido = corretorDetectado;
   atualizarBtnsCorretor(corretorDetectado);
 
-  if(im.codigo){
-    state._codigoLinkAtual = im.codigo;
+  if(imParaEditar.codigo){
+    state._codigoLinkAtual = imParaEditar.codigo;
     $('btnBuscarEntrada').disabled = false;
-    $('codigoBadge').textContent = '#' + im.codigo;
+    $('codigoBadge').textContent = '#' + imParaEditar.codigo;
   } else {
     const cod = extrairCodigoDoLink(linkSalvo);
     state._codigoLinkAtual = cod;
     $('btnBuscarEntrada').disabled = !cod;
     $('codigoBadge').textContent = cod ? '#' + cod : 'sem código';
   }
-  atualizarPreview(imCompleto.imagem || im.imagem || '');
+  atualizarPreview(imParaEditar.imagem || '');
 
-  const chaveDoImovel = imCompleto.chaveTexto || im.chaveTexto || '';
-  const infoAptoEd = infoAptoImovel({ chaveTexto: chaveDoImovel, apto: imCompleto.apto || im.apto });
-  const temFalhaApto = temMultiplosAptos({ chaveTexto: chaveDoImovel });
+  // ✅ AQUI ELE USA O imParaEditar (que tem a chave correta)
+  const chaveDoImovel = imParaEditar.chaveTexto || '';
+  const infoAptoEd = infoAptoImovel(imParaEditar);
+  const temFalhaApto = temMultiplosAptos(imParaEditar);
   
   const infoAptoBox = $('infoAptoEditor');
   if(infoAptoEd.numero || temFalhaApto){
@@ -2926,8 +2937,8 @@ function abrirModalEditarImovel(id){
     infoAptoBox.style.display = 'none';
   }
 
-  const total = contarClientesVinculados(im.codigo);
-  $('editarSubInfo').textContent = `#${im.codigo || '---'} · ${im.bairro || ''} — ${total} cliente(s) vinculado(s)`;
+  const total = contarClientesVinculados(imParaEditar.codigo);
+  $('editarSubInfo').textContent = `#${imParaEditar.codigo || '---'} · ${imParaEditar.bairro || ''} — ${total} cliente(s) vinculado(s)`;
 
   $('modalEditarImovel').classList.add('show');
   document.body.style.overflow = 'hidden';
