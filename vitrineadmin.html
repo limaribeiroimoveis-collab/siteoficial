@@ -186,7 +186,7 @@
   label .req{ color: var(--danger); }
   .form-group{ margin-bottom: 16px; }
 
-  /* ===== MODAL NOVO/EDITAR IMÓVEL — MAIS LARGO ===== */
+  /* ===== MODAL NOVO/EDITAR IMÓVEL ===== */
   .admin-panel{
     background: #fff; border-radius: var(--radius-lg);
     box-shadow: var(--shadow-xl);
@@ -229,7 +229,6 @@
   }
   .admin-panel-header .close-x:hover{ background: #cbd5e1; color: var(--text); }
 
-  /* Fundo mais escuro e mais embaçado (blur maior) */
   .admin-panel-backdrop{
     position: fixed; inset: 0;
     background: rgba(15,23,42,.78);
@@ -240,7 +239,6 @@
   }
   .admin-panel-backdrop.show{ display: block; }
 
-  /* Linhas do form — reorganizadas para caber número + bloco lado a lado */
   .form-row-link-price{
     display: grid;
     grid-template-columns: 2.2fr 1fr 1fr 1fr;
@@ -325,35 +323,69 @@
     border: 1px solid var(--border);
   }
 
-  /* ===== CAMPO CHAVE — MAIOR, MOSTRA LINHAS ===== */
-  .chave-field-wrap{
-    position: relative;
+  /* ===== CAMPO CHAVE — 2 blocos readonly + textarea complemento ===== */
+  .chave-composer{
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    background: #fff;
+    overflow: hidden;
   }
-  .chave-field-wrap textarea#adChaveTexto{
-    min-height: 140px;
+  .chave-locked{
+    background: #f1f5f9;
+    padding: 10px 14px;
+    border-bottom: 1px dashed var(--border-strong);
+    display: flex; flex-direction: column; gap: 4px;
+    font-family: var(--mono);
+    font-size: .82rem;
+    color: var(--text-soft);
+  }
+  .chave-locked .linha{
+    display: flex; align-items: center; gap: 8px;
+  }
+  .chave-locked .linha .lock-ico{
+    font-size: .72rem;
+    color: var(--muted);
+    flex-shrink: 0;
+  }
+  .chave-locked .linha .label-mini{
+    font-family: var(--font);
+    font-size: .62rem;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: .4px;
+    min-width: 70px;
+  }
+  .chave-locked .linha .valor-mini{
+    font-weight: 700;
+    color: var(--text);
+    font-family: var(--mono);
+  }
+  .chave-locked .linha.vazia .valor-mini{
+    color: var(--muted);
+    font-style: italic;
+    font-weight: 500;
+  }
+  .chave-composer textarea#adChaveComplemento{
+    border: none;
+    border-radius: 0;
+    min-height: 90px;
     font-family: var(--mono);
     font-size: .82rem;
     line-height: 1.6;
     padding: 12px 14px;
     background: repeating-linear-gradient(
       to bottom,
-      #f8fafc 0px,
+      #fff 0px,
+      #fff 26px,
       #f8fafc 26px,
-      #e2e8f0 26px,
-      #e2e8f0 27px
+      #f8fafc 27px
     );
     resize: vertical;
   }
-  .chave-field-wrap textarea#adChaveTexto:read-only,
-  .chave-field-wrap textarea#adChaveTexto[readonly]{
-    background: repeating-linear-gradient(
-      to bottom,
-      #f8fafc 0px,
-      #f8fafc 26px,
-      #e2e8f0 26px,
-      #e2e8f0 27px
-    );
-    cursor: default;
+  .chave-composer textarea#adChaveComplemento:focus{
+    outline: none;
+    box-shadow: inset 0 0 0 2px rgba(109,40,217,.2);
   }
   .chave-hint{
     display: flex; align-items: center; gap: 6px;
@@ -672,6 +704,35 @@
     background: linear-gradient(135deg, #15803d 0%, #14532d 100%);
   }
 
+  /* ===== BOTÃO VENDIDO NO CARD ===== */
+  .card-actions .btn-action.act-vendido{
+    grid-column: 1 / -1;
+    background: #fff;
+    color: #b91c1c;
+    border: 1.5px solid #fecaca;
+    padding: 9px 12px;
+    font-size: .72rem;
+    font-weight: 800;
+    letter-spacing: .3px;
+    min-height: 38px;
+    flex-direction: row;
+    gap: 6px;
+    transition: all .15s;
+  }
+  .card-actions .btn-action.act-vendido:hover{
+    background: #fef2f2;
+    border-color: #f87171;
+  }
+  .card-actions .btn-action.act-vendido.desmarcar{
+    background: #f0fdf4;
+    color: #15803d;
+    border-color: #86efac;
+  }
+  .card-actions .btn-action.act-vendido.desmarcar:hover{
+    background: #dcfce7;
+    border-color: #4ade80;
+  }
+
   .obs-wrap{ background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 8px 10px; margin: 0 12px 12px; }
   .obs-label{
     font-size: .62rem; font-weight: 700; color: var(--muted);
@@ -944,15 +1005,15 @@
           </div>
           <div>
             <label>Preço</label>
-            <input type="text" id="adPreco" inputmode="numeric" placeholder="450.000,00" oninput="mascaraPreco(this)">
+            <input type="text" id="adPreco" inputmode="numeric" oninput="mascaraPreco(this)">
           </div>
           <div>
             <label>Condomínio</label>
-            <input type="text" id="adCondominio" inputmode="numeric" placeholder="800,00" oninput="mascaraPreco(this)">
+            <input type="text" id="adCondominio" inputmode="numeric" oninput="mascaraPreco(this)">
           </div>
           <div>
             <label>IPTU</label>
-            <input type="text" id="adIPTU" inputmode="numeric" placeholder="1.200,00" oninput="mascaraPreco(this)">
+            <input type="text" id="adIPTU" inputmode="numeric" oninput="mascaraPreco(this)">
           </div>
         </div>
 
@@ -960,19 +1021,19 @@
         <div class="form-row-address">
           <div>
             <label>Rua <span class="req">*</span></label>
-            <input type="text" id="adRua" placeholder="Nome da rua">
+            <input type="text" id="adRua" placeholder="Rua">
           </div>
           <div>
             <label>Número <span class="req">*</span></label>
-            <input type="text" id="adNumero" placeholder="123">
+            <input type="text" id="adNumero" placeholder="Número">
           </div>
           <div>
             <label>Bloco</label>
-            <input type="text" id="adBloco" placeholder="A, B, 1..." maxlength="10" oninput="atualizarChavePreview()">
+            <input type="text" id="adBloco" placeholder="Bloco" maxlength="10" oninput="onBlocoInput(this)">
           </div>
           <div>
-            <label>Apto <span class="req" id="reqApto">*</span></label>
-            <input type="text" id="adApto" placeholder="402" maxlength="10" oninput="atualizarChavePreview()">
+            <label>Apartamento <span class="req" id="reqApto">*</span></label>
+            <input type="text" id="adApto" placeholder="Apartamento" maxlength="10" oninput="onAptoInput(this)">
           </div>
         </div>
 
@@ -980,7 +1041,7 @@
         <div class="form-row-chave" style="margin-bottom:12px;">
           <div>
             <label>Bairro <span class="req">*</span></label>
-            <input type="text" id="adBairro" placeholder="Nome do bairro">
+            <input type="text" id="adBairro" placeholder="Bairro">
           </div>
         </div>
 
@@ -1010,19 +1071,29 @@
           Buscar entrada <span class="codigo-badge" id="codigoBadge">sem código</span>
         </button>
 
-        <!-- CHAVE (onde pegar) — MAIOR, com linhas visíveis -->
+        <!-- CHAVE (onde pegar) — apto + bloco bloqueados, complemento editável -->
         <div class="form-row-chave">
           <div>
             <label>Chave (onde pegar) <span class="req">*</span></label>
-            <div class="chave-field-wrap">
-              <textarea id="adChaveTexto" readonly placeholder="O apto e o bloco aparecerão aqui automaticamente..."></textarea>
-              <div class="chave-hint">
-                <span class="linha-tag">Linha 1</span> <b>Apto</b> (preenchido pelo campo Apto)
-                &nbsp;·&nbsp;
-                <span class="linha-tag">Linha 2</span> <b>Bloco</b> (preenchido pelo campo Bloco)
-                &nbsp;·&nbsp;
-                <span class="linha-tag">Linha 3+</span> <b>Complemento</b> (livre para editar)
+            <div class="chave-composer">
+              <div class="chave-locked" id="chaveLocked">
+                <div class="linha" id="chaveLinhaApto">
+                  <span class="lock-ico">🔒</span>
+                  <span class="label-mini">Apartamento</span>
+                  <span class="valor-mini" id="chaveValorApto">—</span>
+                </div>
+                <div class="linha" id="chaveLinhaBloco">
+                  <span class="lock-ico">🔒</span>
+                  <span class="label-mini">Bloco</span>
+                  <span class="valor-mini" id="chaveValorBloco">—</span>
+                </div>
               </div>
+              <textarea id="adChaveComplemento" placeholder="Onde pegar a chave (ex: na portaria, com o síndico, etc.)..."></textarea>
+            </div>
+            <div class="chave-hint">
+              <span class="linha-tag">Bloqueado</span> Apartamento e Bloco (vêm dos campos acima)
+              &nbsp;·&nbsp;
+              <span class="linha-tag">Livre</span> Complemento abaixo
             </div>
           </div>
         </div>
@@ -1328,7 +1399,8 @@ const state = {
   _corretorEscolhido: '',
   _tipoEscolhido: '',
   _excluirDesativarId: null,
-  _salvarTimeout: null
+  _salvarTimeout: null,
+  _vendidoAtualEdicao: ''
 };
 
 const $ = id => document.getElementById(id);
@@ -1428,7 +1500,10 @@ function camposEndereco_(im){
 }
 function isDesativado(im){ return String(im.desativado || '').toLowerCase() === 'sim'; }
 
-/* ✅ Vendido — só olha o campo vindo do backend */
+/* ============================================================
+   ✅ DETECÇÃO DE VENDIDO — mesma lógica da vitrine do cliente
+   Aceita: sim, s, yes, y, true, t, 1, x, vendido, v
+============================================================ */
 function isVendido(im){
   if(!im) return false;
   const v = String(im.vendido || '').trim().toLowerCase();
@@ -1455,7 +1530,7 @@ function extrairCodigoDoLink(url){
   return match2 ? match2[1] : '';
 }
 
-/* ✅ Extrai tipo do imóvel da 1ª linha da descrição (entre asteriscos) */
+/* ✅ Extrai tipo do imóvel da 1ª linha da descrição */
 function extrairTipoImovel(descricao){
   if(!descricao) return '';
   const linhas = String(descricao).split(/\r?\n/).map(l => l.trim()).filter(Boolean);
@@ -1473,7 +1548,6 @@ function extrairTipoImovel(descricao){
   return '';
 }
 
-/* ✅ Remove tipo da descrição (para não duplicar ao salvar) */
 function descricaoSemTipo(descricao){
   if(!descricao) return '';
   const linhas = String(descricao).split(/\r?\n/);
@@ -1484,13 +1558,10 @@ function descricaoSemTipo(descricao){
 }
 
 /* ============================================================
-   ✅ PARSER A PROVA DE FALHAS — extrai apto/bloco/complemento
-   do chaveTexto.
-   Regra:
-   - Linha 1 (se numérica ou alfanumérica curta) = APTO
-   - Linha 2 (se começar com "Bloco"/"Bl."/"Torre"/"Ed."/etc.) = BLOCO
-   - Resto = COMPLEMENTO
-   Aceita qualquer quantidade de dígitos no apto.
+   ✅ PARSER — extrai apto/bloco/complemento do chaveTexto
+   Linha 1 = apto (se numérica ou alfanumérica curta)
+   Linha 2 = bloco (se começar com "Bloco"/"Bl."/"Torre"/etc.)
+   Resto = complemento
 ============================================================ */
 function extrairAptoBlocoChave(chaveTexto){
   if(!chaveTexto) return { apto: '', bloco: '', resto: '' };
@@ -1502,24 +1573,20 @@ function extrairAptoBlocoChave(chaveTexto){
   let bloco = '';
   let idx = 0;
 
-  // Linha 1: tenta ler como apto
-  // Aceita: "402", "402A", "1204", "Apto 402", "Ap 402", "Casa 2", "Loja 5"
+  // Linha 1: apto (aceita 1-8 dígitos + letra opcional)
   const l1 = linhas[0];
   const mApto = l1.match(/^(?:apto|ap|apartamento|unidade|sala|loja|conjunto|cj|casa)?\s*[°º.:#]?\s*(\d{1,8}[A-Za-z]?)\s*$/i);
   if(mApto && mApto[1]){
-    apto = mApto[1];
+    apto = mApto[1].toUpperCase();
     idx = 1;
-  } else {
-    // Se não bateu como apto mas a linha 1 tem coisa demais, não consome
-    idx = 0;
   }
 
-  // Linha (seguinte): tenta ler como bloco
+  // Próxima linha: bloco
   if(idx < linhas.length){
     const l2 = linhas[idx];
     const mBloco = l2.match(/^(?:bl(?:oco)?|torre|ed(?:if[ií]cio)?|pr[ée]dio)\.?\s*[:#-]?\s*([A-Za-z0-9]{1,10})\s*$/i);
     if(mBloco && mBloco[1]){
-      bloco = mBloco[1];
+      bloco = mBloco[1].toUpperCase();
       idx++;
     }
   }
@@ -1540,7 +1607,7 @@ function montarChaveTexto(apto, bloco, complemento){
   return linhas.join('\n');
 }
 
-/* ✅ Extrai o número do apto para exibição no card (usa im.apto ou parseia chaveTexto) */
+/* ✅ Extrai o número do apto para exibição no card */
 function extrairAptoExibicao(im){
   if(!im) return '';
   if(im.apto) return String(im.apto).trim();
@@ -1593,14 +1660,12 @@ function mascaraPreco(input){
   input.value = reaisFmt + ',' + centavos;
 }
 
-/* ✅ Sanitiza o campo Apto — aceita dígitos + 1 letra opcional (ex: 402A, 1204) */
 function sanitizarApto(input){
   let v = String(input.value || '').replace(/[^0-9A-Za-z]/g, '').toUpperCase();
   if(v.length > 10) v = v.slice(0, 10);
   input.value = v;
 }
 
-/* ✅ Sanitiza o campo Bloco — aceita letras + dígitos */
 function sanitizarBloco(input){
   let v = String(input.value || '').replace(/[^0-9A-Za-z]/g, '').toUpperCase();
   if(v.length > 10) v = v.slice(0, 10);
@@ -1907,10 +1972,10 @@ function cardImovelHTML(im){
     ? `<div class="card-tag-topo">${esc(specsInfo.badge)}</div>`
     : '';
 
-  /* ✅ Número do apartamento no card — SEMPRE visível quando existir */
+  /* ✅ Número do apartamento no card */
   const aptoExibicao = extrairAptoExibicao(im);
   const aptoHtml = aptoExibicao
-    ? `<div class="badge-apto" title="Apartamento"><span class="ap-ico">🚪</span>Apto ${esc(aptoExibicao)}</div>`
+    ? `<div class="badge-apto" title="Apartamento"><span class="ap-ico">🚪</span>Apartamento ${esc(aptoExibicao)}</div>`
     : '';
 
   const temAgendamentoAtivo = !!im.dataVisitaAgendada && !desativado && !vendido;
@@ -2000,6 +2065,18 @@ function cardImovelHTML(im){
       </div>
     `;
 
+  /* ✅ BOTÃO MARCAR/DESMARCAR VENDIDO — sempre visível nos não-desativados */
+  const btnVendidoHtml = !desativado
+    ? `
+      <div class="card-actions" style="grid-template-columns:1fr; padding-top:0;" onclick="event.stopPropagation();">
+        <button class="btn-action act-vendido ${vendido ? 'desmarcar' : ''}" onclick="toggleVendido('${id}')" title="${vendido ? 'Desmarcar vendido' : 'Marcar como vendido'}">
+          <span class="icone">${vendido ? '↻' : '🏷️'}</span>
+          <span>${vendido ? 'Desmarcar vendido' : 'Marcar como vendido'}</span>
+        </button>
+      </div>
+    `
+    : '';
+
   const tarjaVendidoHtml = vendido ? '<div class="card-tarja-vendido">VENDIDO</div>' : '';
 
   return `
@@ -2034,6 +2111,7 @@ function cardImovelHTML(im){
       ` : ''}
 
       ${acoesHtml}
+      ${btnVendidoHtml}
 
       ${agHtml}
       ${visHtml}
@@ -2060,6 +2138,51 @@ function cardImovelHTML(im){
       </div>
     </div>
   `;
+}
+
+/* =====================================================
+   MARCAR / DESMARCAR VENDIDO
+   ✅ Usa apiAtualizarImovelPorCodigo (já existe no backend)
+   ✅ Preserva todos os outros campos
+===================================================== */
+async function toggleVendido(id){
+  const im = state.imoveis.find(i => i.id === id);
+  if(!im) return;
+
+  const vendido = isVendido(im);
+  const codigo = String(im.codigo || '').trim();
+  if(!codigo){
+    toast('Este imóvel não tem código — não é possível marcar como vendido', 'error');
+    return;
+  }
+
+  const cfg = vendido
+    ? { titulo: 'Desmarcar vendido?', texto: 'O imóvel voltará a aparecer como disponível.', btnSim: 'Desmarcar', tipo: 'success' }
+    : { titulo: 'Marcar como vendido?', texto: 'O imóvel ficará com tarja VENDIDO e irá para o fim da lista.', btnSim: 'Marcar vendido', tipo: 'danger' };
+
+  const ok = await confirmarAcao(cfg);
+  if(!ok) return;
+
+  const backupVendido = im.vendido;
+  im.vendido = vendido ? '' : 'Sim';
+  renderizarImoveis();
+
+  marcarSalvando(true);
+  const res = await api('atualizarImovelPorCodigo', {
+    senha: SENHA_ADMIN,
+    codigo: codigo,
+    vendido: !vendido
+  }, TIMEOUT_API, 1);
+  marcarSalvando(false);
+
+  if(!res.ok){
+    im.vendido = backupVendido;
+    renderizarImoveis();
+    toast(res.error || 'Erro ao salvar vendido', 'error');
+    return;
+  }
+
+  toast(vendido ? 'Vendido desmarcado' : 'Imóvel marcado como vendido', 'success');
 }
 
 /* =====================================================
@@ -2231,7 +2354,7 @@ function limparFormAdmin(){
   $('adApto').value = '';
   $('adBairro').value = '';
   $('adBloco').value = '';
-  $('adChaveTexto').value = '';
+  $('adChaveComplemento').value = '';
   $('adPreco').value = '';
   $('adCondominio').value = '';
   $('adIPTU').value = '';
@@ -2239,6 +2362,7 @@ function limparFormAdmin(){
   $('adImagem').value = '';
   state._corretorEscolhido = '';
   state._tipoEscolhido = '';
+  state._vendidoAtualEdicao = '';
   atualizarPreview('');
   atualizarBotaoBuscarEntrada('');
   atualizarBtnsCorretor('');
@@ -2276,7 +2400,6 @@ function atualizarBtnsTipo(valor){
   });
 }
 
-/* ✅ Mostra na 1ª linha da descrição o tipo escolhido */
 function atualizarDescTipoPreview(){
   const tipo = state._tipoEscolhido;
   const elTexto = $('descTipoTexto');
@@ -2295,49 +2418,44 @@ function atualizarDescTipoPreview(){
   }
 }
 
-/* ✅ Requer apto? Sim para todos exceto Casa */
 function atualizarRequisitoApto(){
   const req = $('reqApto');
   const aptoInput = $('adApto');
   if(!req || !aptoInput) return;
   if(state._tipoEscolhido === 'Casa'){
     req.style.display = 'none';
-    aptoInput.placeholder = 'Opcional para Casa';
+    aptoInput.placeholder = 'Apartamento';
   } else {
     req.style.display = '';
-    aptoInput.placeholder = '402';
+    aptoInput.placeholder = 'Apartamento';
   }
 }
 
-/* ✅ Atualiza o campo Chave em tempo real — apto na 1ª linha, bloco na 2ª */
+/* ✅ Atualiza o painel de chave bloqueado (apto e bloco) */
 function atualizarChavePreview(){
   const apto = $('adApto') ? $('adApto').value.trim() : '';
   const bloco = $('adBloco') ? $('adBloco').value.trim() : '';
   const isCasa = state._tipoEscolhido === 'Casa';
 
-  // Preserva o complemento (linhas 3+) que o usuário já tenha digitado
-  const chaveEl = $('adChaveTexto');
-  if(!chaveEl) return;
-  const linhasAtuais = String(chaveEl.value || '').split(/\r?\n/);
-  let complementoAtual = '';
-  if(linhasAtuais.length > 0){
-    // Ignora a 1ª linha (apto) e a 2ª (bloco), mantém o resto
-    let startIdx = 0;
-    // Pula apto se presente
-    if(linhasAtuais[0] && (apto || !isCasa)) startIdx = 1;
-    // Pula bloco se presente
-    if(linhasAtuais[1] && /^(bl(?:oco)?|torre|ed(?:if[ií]cio)?)/i.test(linhasAtuais[1])) startIdx = 2;
-    complementoAtual = linhasAtuais.slice(startIdx).join('\n').trim();
+  const aptoFinal = isCasa ? '' : apto;
+
+  const elApto = $('chaveValorApto');
+  const elBloco = $('chaveValorBloco');
+  const linhaApto = $('chaveLinhaApto');
+  const linhaBloco = $('chaveLinhaBloco');
+
+  if(elApto){
+    elApto.textContent = aptoFinal || '—';
+    if(linhaApto) linhaApto.classList.toggle('vazia', !aptoFinal);
+  }
+  if(elBloco){
+    elBloco.textContent = bloco || '—';
+    if(linhaBloco) linhaBloco.classList.toggle('vazia', !bloco);
   }
 
-  // Se o usuário nunca digitou complemento, mantém o que ele tinha
-  // Se ele JÁ digitou e agora mudou apto/bloco, preserva o complemento
-  const novo = montarChaveTexto(isCasa ? '' : apto, bloco, complementoAtual);
-  chaveEl.value = novo;
   validarBotaoSalvar();
 }
 
-/* ✅ Sanitiza ao sair do campo Apto/Bloco */
 function onAptoInput(el){
   sanitizarApto(el);
   atualizarChavePreview();
@@ -2352,13 +2470,16 @@ function validarBotaoSalvar(){
   const numero = $('adNumero').value.trim();
   const apto = $('adApto').value.trim();
   const bairro = $('adBairro').value.trim();
-  const chave = $('adChaveTexto').value.trim();
+  const complemento = $('adChaveComplemento').value.trim();
   const tipoEscolhido = state._tipoEscolhido;
   const corretor = state._corretorEscolhido;
   const ehCasa = tipoEscolhido === 'Casa';
   const aptoOk = ehCasa || !!apto;
 
-  const podeSalvar = rua && numero && bairro && chave && tipoEscolhido && corretor && aptoOk;
+  /* ✅ Chave deve ter pelo menos apto OU complemento */
+  const chaveOk = !!complemento || aptoOk;
+
+  const podeSalvar = rua && numero && bairro && tipoEscolhido && corretor && aptoOk && chaveOk;
   $('btnSalvarImovel').disabled = !podeSalvar;
 }
 
@@ -2442,10 +2563,11 @@ async function tentarPreencherPorCodigo(codigo){
   $('adDescricao').value = descricaoSemTipo(achado.descricao || '');
   $('adImagem').value = achado.imagem || '';
 
-  /* ✅ Apto/bloco do chaveTexto */
+  /* ✅ Apto/bloco/complemento do chaveTexto */
   const info = extrairAptoBlocoChave(achado.chaveTexto || '');
-  if(info.apto) $('adApto').value = info.apto;
-  if(info.bloco) $('adBloco').value = info.bloco;
+  $('adApto').value = info.apto || '';
+  $('adBloco').value = info.bloco || '';
+  $('adChaveComplemento').value = info.resto || '';
 
   /* ✅ Tipo da descrição */
   const tipoAchado = extrairTipoImovel(achado.descricao || '');
@@ -2464,14 +2586,7 @@ async function tentarPreencherPorCodigo(codigo){
     if(btn){ escolherCorretor(nomeCurto, btn); }
   }
 
-  /* ✅ Reconstrói o chaveTexto com apto/bloco/complemento */
-  const novoChave = montarChaveTexto(
-    state._tipoEscolhido === 'Casa' ? '' : (info.apto || ''),
-    info.bloco || '',
-    info.resto || ''
-  );
-  $('adChaveTexto').value = novoChave;
-
+  atualizarChavePreview();
   validarBotaoSalvar();
   toast('✨ Dados do imóvel preenchidos automaticamente!', 'success');
 }
@@ -2514,6 +2629,7 @@ async function salvarImovel(){
   const apto = $('adApto').value.trim();
   const bairro = $('adBairro').value.trim();
   const bloco = $('adBloco').value.trim();
+  const complemento = $('adChaveComplemento').value.trim();
   const link = $('adLink').value.trim();
   const tipo = state._tipoEscolhido;
   let imagem = $('adImagem').value.trim();
@@ -2534,10 +2650,6 @@ async function salvarImovel(){
   if(!numero){ toast('Informe o número', 'error'); return; }
   if(tipo !== 'Casa' && !apto){ toast('Informe o número do apartamento', 'error'); return; }
   if(!bairro){ toast('Informe o bairro', 'error'); return; }
-
-  // ✅ Extrai complemento do chaveTexto (tudo após apto + bloco)
-  const chaveInfo = extrairAptoBlocoChave($('adChaveTexto').value);
-  const complementoFinal = chaveInfo.resto || '';
 
   let statusAtual = 'pendente';
   let observacaoAtual = '';
@@ -2571,7 +2683,7 @@ async function salvarImovel(){
   const chaveFinal = montarChaveTexto(
     tipo === 'Casa' ? '' : apto,
     bloco,
-    complementoFinal
+    complemento
   );
 
   let linkFinal = link;
@@ -2601,7 +2713,9 @@ async function salvarImovel(){
     chaveTexto: chaveFinal,
     status: statusAtual,
     observacao: observacaoAtual,
-    corretor: state._corretorEscolhido
+    corretor: state._corretorEscolhido,
+    /* ✅ PRESERVA O VENDIDO ATUAL */
+    vendido: vendidoAtual
   };
 
   const btn = $('btnSalvarImovel');
@@ -2696,11 +2810,11 @@ function editarImovel(id){
   $('adCondominio').value = im.condominio || '';
   $('adIPTU').value = im.iptu || '';
 
-  /* ✅ Apto/bloco do chaveTexto */
+  /* ✅ Apto/bloco/complemento do chaveTexto */
   const info = extrairAptoBlocoChave(im.chaveTexto || '');
   $('adApto').value = info.apto || '';
   $('adBloco').value = info.bloco || '';
-  $('adChaveTexto').value = im.chaveTexto || '';
+  $('adChaveComplemento').value = info.resto || '';
 
   /* ✅ Tipo da descrição */
   const tipoExistente = extrairTipoImovel(im.descricao || '');
@@ -2731,6 +2845,10 @@ function editarImovel(id){
     atualizarBtnsCorretor('');
   }
 
+  /* ✅ Guarda o vendido atual para preservar ao salvar */
+  state._vendidoAtualEdicao = im.vendido || '';
+
+  atualizarChavePreview();
   validarBotaoSalvar();
   $('btnSalvarImovel').innerHTML = '<svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Atualizar';
   $('adminPanelTitle').textContent = 'Editar imóvel';
