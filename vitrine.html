@@ -19,7 +19,7 @@
   :root{
     --primary:#1e3a5f; --primary-dark:#152a45; --primary-soft:#f0f4f8;
     --success:#16a34a; --danger:#dc2626; --warn:#d97706;
-    --bg:#f4f5f7; --card:#ffffff;
+    --bg:#e8eaed; --card:#ffffff;
     --text:#111827; --text-soft:#4b5563; --muted:#9ca3af;
     --border:#e5e7eb;
     --radius-card: 14px;
@@ -115,13 +115,14 @@
   .filtro-item .nome-bairro{ flex: 1; font-weight: 600; }
   .filtro-item .cnt-bairro{ background: var(--bg); color: var(--text-soft); font-size: .7rem; font-weight: 800; padding: 1px 8px; border-radius: 999px; }
 
-  /* GRID */
+  /* GRID DE IMÓVEIS (1 e 2 colunas) */
   .grid{ display: grid; grid-template-columns: repeat(1, 1fr); gap: 16px; margin-top: 8px; transition: all .3s; }
   .grid.grid-2col{ grid-template-columns: repeat(2, 1fr) !important; gap: 10px; }
   @media(min-width:640px){ .grid:not(.grid-2col){ grid-template-columns: repeat(2, 1fr); gap: 20px; } }
   @media(min-width:900px){ .grid:not(.grid-2col){ grid-template-columns: repeat(3, 1fr); } }
   @media(min-width:1200px){ .grid:not(.grid-2col){ grid-template-columns: repeat(4, 1fr); } }
   
+  /* Mobile começa sempre em 2 colunas */
   @media(max-width:639px){ .grid{ grid-template-columns: repeat(2, 1fr) !important; gap: 10px; } }
 
   /* CARD ESTILO INSTAGRAM */
@@ -135,13 +136,17 @@
   
   .card.card-vendido{ opacity: .6; filter: grayscale(80%); pointer-events: none; }
 
-  .card-header{ display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; gap: 10px; }
-  .card-header-title{ font-size: .8rem; font-weight: 800; color: var(--text); line-height: 1.25; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  /* Topo do Card */
+  .card-header{ display: flex; align-items: flex-start; justify-content: space-between; padding: 12px 12px 8px; gap: 8px; }
+  .card-header-titles{ display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }
+  .card-bairro{ font-size: .82rem; font-weight: 800; color: var(--text); line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .card-rua{ font-size: .75rem; font-weight: 500; color: var(--text-soft); line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   
-  .btn-share-min{ background: transparent; border: none; padding: 6px; color: var(--text); cursor: pointer; border-radius: 50%; transition: background .15s; flex-shrink: 0; }
+  .btn-share-min{ background: transparent; border: none; padding: 4px; color: var(--text); cursor: pointer; border-radius: 50%; transition: background .15s; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
   .btn-share-min:hover{ background: var(--bg); }
   .btn-share-min svg{ width: 20px; height: 20px; stroke-width: 2; }
 
+  /* Imagem do Card */
   .card-img-wrap{ width: 100%; aspect-ratio: 4 / 3; overflow: hidden; background: var(--bg); position: relative; }
   .card-img{ width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .3s ease; }
   .card:hover .card-img{ transform: scale(1.03); }
@@ -164,9 +169,13 @@
 
   .card-overlay-specs{ position: absolute; left: 0; right: 0; bottom: 0; background: linear-gradient(to top, rgba(0,0,0,.8) 0%, rgba(0,0,0,.4) 70%, transparent 100%); color: #fff; font-size: .72rem; font-weight: 600; padding: 20px 10px 8px; z-index: 3; pointer-events: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
+  /* Corpo do Card */
   .card-body{ padding: 10px 12px; display: flex; flex-direction: column; gap: 4px; }
   .card-preco{ font-size: 1.1rem; font-weight: 800; color: var(--text); letter-spacing: -.03em; }
-  .card-preco-sec{ font-size: .7rem; color: var(--text-soft); font-weight: 500; display: flex; gap: 8px; flex-wrap: wrap; }
+  
+  /* Condominio e IPTU na mesma linha */
+  .card-preco-sec{ font-size: .7rem; color: var(--text-soft); font-weight: 500; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .card-preco-sec .sep{ color: var(--border); }
 
   .card-desc-texto{ font-size: .75rem; color: var(--text-soft); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-top: 2px; }
   .card-desc.expandido .card-desc-texto{ -webkit-line-clamp: unset; }
@@ -182,9 +191,9 @@
   .action-btn.act-nao.ativo svg{ fill: var(--text); stroke: var(--text); }
 
   /* BOTÃO WHATSAPP */
-  .btn-wa-outline{ display: flex; align-items: center; justify-content: center; gap: 6px; margin: 0 12px 12px; background: #fff; border: 1.5px solid var(--wa); color: var(--wa); border-radius: 8px; padding: 8px 10px; font-size: .75rem; font-weight: 700; cursor: pointer; transition: all .15s; }
+  .btn-wa-outline{ display: flex; align-items: center; justify-content: center; gap: 6px; margin: 0 12px 12px; background: #fff; border: 1.5px solid var(--wa); color: var(--wa); border-radius: 8px; padding: 8px 10px; font-size: .75rem; font-weight: 700; cursor: pointer; transition: all .15s; text-align: center; }
   .btn-wa-outline:hover{ background: var(--wa); color: #fff; }
-  .btn-wa-outline svg{ width: 16px; height: 16px; fill: currentColor; }
+  .btn-wa-outline svg{ width: 16px; height: 16px; fill: currentColor; flex-shrink: 0; }
 
   .btn-reativar-full{ margin: 0 12px 12px; background: var(--bg); color: var(--text); border: 1px solid var(--border); padding: 10px; border-radius: 8px; font-size: .8rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; }
 
@@ -216,13 +225,11 @@
   /* BOTTOM NAV (ESTILO INSTAGRAM ESCURO) */
   .bottom-nav{ position: fixed; bottom: 0; left: 0; right: 0; height: calc(var(--navbar-h) + env(safe-area-inset-bottom)); padding-bottom: env(safe-area-inset-bottom); background: var(--primary); border-top: 1px solid var(--primary-dark); display: none; z-index: 900; justify-content: space-around; align-items: center; }
   .bottom-nav.show{ display: flex; }
-  .nav-btn{ display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; background: transparent; border: none; cursor: pointer; color: rgba(255,255,255,.5); padding: 8px; height: 100%; width: 20%; transition: color .15s; }
+  .nav-btn{ display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; background: transparent; border: none; cursor: pointer; color: rgba(255,255,255,.5); padding: 8px 2px; height: 100%; flex: 1; transition: color .15s; }
   .nav-btn.active{ color: #fff; }
-  .nav-btn svg{ width: 24px; height: 24px; stroke-width: 2; stroke: currentColor; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+  .nav-btn svg{ width: 22px; height: 22px; stroke-width: 2; stroke: currentColor; fill: none; stroke-linecap: round; stroke-linejoin: round; }
   .nav-btn.active svg{ stroke-width: 2.5; fill: rgba(255,255,255,.2); }
-  .nav-lbl{ font-size: .6rem; font-weight: 700; }
-  .nav-btn.nav-corretor{ color: var(--wa); }
-  .nav-btn.nav-corretor.active{ color: var(--wa); }
+  .nav-lbl{ font-size: .55rem; font-weight: 700; white-space: nowrap; }
 
   /* MODAIS */
   .modal-backdrop{ position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 1500; display: none; align-items: flex-end; justify-content: center; backdrop-filter: blur(2px); }
@@ -313,17 +320,17 @@
     <div class="carrossel-scroll" id="novidadesWrap"></div>
   </div>
 
-  <!-- NOVO TOPO DE FILTROS -->
-  <div class="top-controls">
+  <!-- CONTROLES (BUSCA, FILTRO, COLUNAS) -->
+  <div class="top-controls" id="topControls">
     <button class="btn-filter" id="btnFiltroBairro" onclick="toggleFiltroDropdown(event)">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
-      Escolher por bairro <span class="badge-sel hidden" id="badgeFiltro">0</span>
+      Bairro <span class="badge-sel hidden" id="badgeFiltro">0</span>
     </button>
     <button class="btn-filter" id="btnToggleColunas" onclick="toggleColunas()">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
-      Ver 2 por linha
+      <span id="txtToggleColunas">Ver 1 por linha</span>
     </button>
-    <button class="btn-limpar hidden" id="btnLimparFiltro" onclick="limparFiltroBairros()">Limpar Filtros</button>
+    <button class="btn-limpar hidden" id="btnLimparFiltro" onclick="limparFiltroBairros()">Limpar</button>
     
     <div class="filtro-dropdown" id="filtroDropdown">
       <div id="filtroLista"></div>
@@ -341,11 +348,15 @@
   </div>
 </div>
 
-<!-- NOVO NAVBAR INFERIOR AZUL -->
+<!-- NAVBAR INFERIOR AZUL ESCURO -->
 <nav class="bottom-nav" id="bottomNav">
   <button class="nav-btn active" id="navInicio" onclick="navIr('inicio')">
     <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
     <span class="nav-lbl">Início</span>
+  </button>
+  <button class="nav-btn" id="navBuscar" onclick="navIr('buscar')">
+    <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <span class="nav-lbl">Buscar</span>
   </button>
   <button class="nav-btn" id="navFavoritos" onclick="navIr('gostei')">
     <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
@@ -359,7 +370,7 @@
     <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
     <span class="nav-lbl">Não Gostei</span>
   </button>
-  <button class="nav-btn nav-corretor" id="navCorretor" onclick="navIr('corretor')">
+  <button class="nav-btn" id="navWhatsApp" onclick="navIr('corretor')">
     <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
     <span class="nav-lbl">WhatsApp</span>
   </button>
@@ -434,7 +445,7 @@ const state = {
   imoveis: [], filtroNav: null, bairrosSelecionados: new Set(),
   salvandoIds: {}, vistos: new Set(), ultimoAcesso: 0,
   modalImovelId: null, visitaDia: '', visitaTurno: '',
-  modo2Colunas: false
+  modo2Colunas: true // Começa com 2 no mobile
 };
 
 const $ = id => document.getElementById(id);
@@ -740,9 +751,9 @@ function limparFiltroBairros(){ state.bairrosSelecionados.clear(); renderizarFil
 
 function toggleColunas(){
   state.modo2Colunas = !state.modo2Colunas;
-  const grid = $('gridImoveis'); const btn = $('btnToggleColunas');
-  if(state.modo2Colunas){ grid.classList.add('grid-2col'); btn.classList.add('active'); }
-  else { grid.classList.remove('grid-2col'); btn.classList.remove('active'); }
+  const grid = $('gridImoveis'); const btn = $('btnToggleColunas'); const txt = $('txtToggleColunas');
+  if(state.modo2Colunas){ grid.classList.add('grid-2col'); btn.classList.add('active'); txt.textContent = 'Ver 1 por linha'; }
+  else { grid.classList.remove('grid-2col'); btn.classList.remove('active'); txt.textContent = 'Ver 2 por linha'; }
 }
 
 function renderizarImoveis(){
@@ -786,7 +797,6 @@ function cardHTML(im, idx){
   
   let extraClass = ''; if(descartado) extraClass += ' card-nao-gostei'; if(vendido) extraClass += ' card-vendido';
 
-  // SVG Icons
   const svgHeart = `<svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`;
   const svgCalendar = `<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>`;
   const svgX = `<svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
@@ -823,7 +833,10 @@ function cardHTML(im, idx){
     <div class="card ${extraClass}" data-id="${im.id}" style="animation-delay:${idx*30}ms" onclick="${vendido ? '' : `clicarCard('${im.id}')`}">
       
       <div class="card-header">
-        <div class="card-header-title">${esc(enderecoSemNumero_(im))}</div>
+        <div class="card-header-titles">
+          <div class="card-bairro">${esc(im.bairro || 'Bairro')}</div>
+          <div class="card-rua" title="${esc(im.rua || im.titulo || 'Endereço')}">${esc(im.rua || im.titulo || 'Endereço')}</div>
+        </div>
         <button class="btn-share-min" onclick="event.stopPropagation(); compartilharImovel('${im.id}')" title="Compartilhar">
           ${svgShare}
         </button>
@@ -852,8 +865,10 @@ function cardHTML(im, idx){
 
       <div class="card-body">
         <div class="card-preco">${precoFmt || 'Consulte'}</div>
+        
         <div class="card-preco-sec">
           ${im.condominio ? `<span>Cond. R$ ${esc(im.condominio)}</span>` : ''}
+          ${im.condominio && im.iptu ? `<span class="sep">|</span>` : ''}
           ${im.iptu ? `<span>IPTU R$ ${esc(im.iptu)}</span>` : ''}
         </div>
         
@@ -994,7 +1009,7 @@ async function enviarSolicitacaoVisita(){
 }
 
 function navIr(destino){
-  ['navInicio','navFavoritos','navVisitar','navNaoGostei','navCorretor'].forEach(id => $(id).classList.remove('active'));
+  ['navInicio','navBuscar','navFavoritos','navVisitar','navNaoGostei','navWhatsApp'].forEach(id => $(id).classList.remove('active'));
   
   if(destino === 'corretor'){
     const corretor = corretorDoCliente(); const zap = ZAP_CORRETORES[corretor];
@@ -1005,6 +1020,7 @@ function navIr(destino){
   }
 
   if(destino === 'inicio'){ state.filtroNav = null; $('navInicio').classList.add('active'); }
+  else if(destino === 'buscar'){ state.filtroNav = null; $('navBuscar').classList.add('active'); setTimeout(() => $('topControls').scrollIntoView({ behavior: 'smooth' }), 50); return; }
   else if(destino === 'gostei'){ state.filtroNav = 'gostei'; $('navFavoritos').classList.add('active'); }
   else if(destino === 'visitar'){ state.filtroNav = 'visitar'; $('navVisitar').classList.add('active'); }
   else if(destino === 'nao-gostei'){ state.filtroNav = 'nao-gostei'; $('navNaoGostei').classList.add('active'); }
