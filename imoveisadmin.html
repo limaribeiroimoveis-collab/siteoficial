@@ -121,6 +121,7 @@
 
   .apto-admin { display: inline-flex; align-items: center; gap: 4px; font-size: 0.72rem; font-weight: 900; color: #fff; background: var(--roxo); padding: 3px 9px; border-radius: 6px; letter-spacing: 0.5px; box-shadow: 0 2px 6px rgba(124, 58, 237, 0.35); text-transform: uppercase; }
   .apto-erro { display: inline-flex; align-items: center; gap: 4px; font-size: 0.72rem; font-weight: 900; color: #fff; background: var(--vermelho); padding: 3px 9px; border-radius: 6px; letter-spacing: 0.5px; box-shadow: 0 2px 6px rgba(220, 38, 38, 0.35); text-transform: uppercase; }
+  .andar-badge { display: inline-flex; align-items: center; gap: 3px; font-size: 0.66rem; font-weight: 800; color: #0f766e; background: #ccfbf1; padding: 2px 8px; border-radius: 6px; letter-spacing: 0.3px; }
 
   .tarja-falha { background: #fef2f2; border: 1px solid #fecaca; border-left: 4px solid var(--vermelho); padding: 8px 12px; margin-bottom: 10px; border-radius: 8px; display: flex; flex-direction: column; gap: 4px; }
   .tarja-falha .falha-titulo { font-size: 0.65rem; font-weight: 800; color: var(--vermelho); text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 4px; }
@@ -369,11 +370,11 @@
   .ms-acoes-rapidas { display: flex; gap: 6px; padding: 6px 4px 8px; border-bottom: 1px solid var(--borda); margin-bottom: 4px; }
   .ms-acoes-rapidas button { flex: 1; padding: 6px 8px; border: 1px solid var(--borda-forte); background: #fff; border-radius: 6px; font-family: inherit; font-size: 0.7rem; font-weight: 700; color: var(--texto-cinza); cursor: pointer; }
 
-  /* ===== NOVO: chips de região ===== */
   .chips-regiao { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
   .chip-regiao { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border: 1.5px solid var(--borda-forte); background: #fff; border-radius: 30px; font-family: inherit; font-size: 0.78rem; font-weight: 700; color: var(--texto-cinza); cursor: pointer; transition: 0.15s; position: relative; }
   .chip-regiao:hover { border-color: #16a34a; color: #16a34a; }
   .chip-regiao.ativa { background: #16a34a; color: #fff; border-color: #16a34a; box-shadow: 0 2px 8px rgba(22, 163, 74, 0.3); }
+  .chip-regiao.parcial { background: #f0fdf4; color: #16a34a; border-color: #16a34a; }
   .chip-regiao .qtd-reg { background: rgba(0,0,0,0.08); padding: 1px 7px; border-radius: 10px; font-size: 0.65rem; font-weight: 800; }
   .chip-regiao.ativa .qtd-reg { background: rgba(255,255,255,0.25); }
 
@@ -459,6 +460,9 @@
     <button class="modo-btn" id="btnFalhas" onclick="toggleFiltroFalhas()" style="display:none;">
       <i class="fas fa-exclamation-triangle"></i> Falhas
       <span class="badge-falhas" id="badgeFalhasCount">0</span>
+    </button>
+    <button class="modo-btn" id="btnDiagnostico" onclick="diagnosticarAndares()" style="display:none; background:#eef2ff; color:var(--azul-quinto); border-color:#c7d2fe;">
+      <i class="fas fa-stethoscope"></i> Diagnóstico andares
     </button>
   </div>
 </div>
@@ -752,7 +756,6 @@
       <button type="button" class="chip-tipo-imovel" data-tipo="casa"><i class="fas fa-home"></i> Casa</button>
     </div>
 
-    <!-- ===== NOVO: REGIÕES ===== -->
     <div class="secao-titulo">🗺️ Região de Belo Horizonte</div>
     <div class="chips-regiao" id="chipsRegiao">
       <button type="button" class="chip-regiao" data-regiao="Centro-Sul">Centro-Sul <span class="qtd-reg"></span></button>
@@ -809,7 +812,7 @@
       <button type="button" class="chip-filtro" data-andar="15">15º+</button>
     </div>
     <p style="font-size:0.68rem;color:var(--muted);margin-bottom:14px;line-height:1.4;">
-      Regra do andar: apto <strong>0–199 → 1º</strong>, <strong>200–299 → 2º</strong>, <strong>300–399 → 3º</strong>, etc. Clique em vários para combinar.
+      Regra: apto <strong>0–199 → 1º</strong>, <strong>200–299 → 2º</strong>, <strong>300–399 → 3º</strong>, etc. Clique em vários para combinar.
     </p>
 
     <div class="secao-titulo">🅿️ Vaga</div>
@@ -948,41 +951,40 @@ const FINAIS_LINK = {
 
 /* =====================================================
    REGIÕES DE BELO HORIZONTE — mapa de bairros
-   (fonte: divisão oficial da PBH, agrupada por regionais)
 ===================================================== */
 const REGIOES_BH = {
   'Centro-Sul': [
     'Anchieta','Barro Preto','Belvedere','Boaventura','Carmo','Centro','Cidade Jardim',
-    'Comiteco','Cruzeiro','Cidade Jardim','Funcionários','Floresta','Gutierrez',
-    'Horto','Lourdes','Luxemburgo','Mangabeiras','Mercado','Pampulha','Prado','Santa Efigênia',
-    'Santa Lúcia','Santo Agostinho','São Bento','São Lucas','São Pedro','Santo Antônio',
-    'Savassi','Serra','Sion','Vila Paris','Cidade Jardim','Mangabeiras'
+    'Comiteco','Cruzeiro','Funcionários','Floresta','Gutierrez','Horto','Lourdes',
+    'Luxemburgo','Mangabeiras','Mercado','Prado','Santa Efigênia','Santa Lúcia',
+    'Santo Agostinho','São Bento','São Lucas','São Pedro','Santo Antônio','Savassi',
+    'Serra','Sion','Vila Paris'
   ],
   'Norte': [
-    'Aparecida','Boa Vista','Candelária','Concórdia','Dom Joaquim','Floramar','Frei Leopoldo',
-    'Guarani','Ipê','Jardim Montanhês','Jaqueline','Lagoa','Lagoinha','Maria Goretti',
-    'Minaslândia','Piratininga','Planalto','Providência','Primeiro de Maio','São Bernardo',
-    'São Cristóvão','São Gonçalo','São João Batista','Tupi','União','Vila Clóris',
-    'Vila Nova','Vila Primeiro de Maio','Cachoeirinha','Colégio Batista','Fernão Dias',
-    'Jardim Guanabara','Jardim São José','Nova Floresta','Paquetá','Santa Inês','Santa Terezinha',
-    'Silveira','Zilah Spósito'
+    'Aparecida','Boa Vista','Candelária','Concórdia','Dom Joaquim','Floramar',
+    'Frei Leopoldo','Guarani','Ipê','Jardim Montanhês','Jaqueline','Lagoa','Lagoinha',
+    'Maria Goretti','Minaslândia','Piratininga','Planalto','Providência','Primeiro de Maio',
+    'São Bernardo','São Cristóvão','São Gonçalo','São João Batista','Tupi','União',
+    'Vila Clóris','Vila Nova','Vila Primeiro de Maio','Cachoeirinha','Colégio Batista',
+    'Fernão Dias','Jardim Guanabara','Jardim São José','Nova Floresta','Paquetá',
+    'Santa Inês','Santa Terezinha','Silveira','Zilah Spósito'
   ],
   'Sul': [
     'Santo Antônio','Sion','São Pedro','Santa Lúcia','Savassi','Serra','Belvedere',
     'Mangabeiras','Luxemburgo','Carmo','Cidade Jardim','Vila Paris','Estoril',
-    'Comiteco','Pampulha','Cidade Jardim'
+    'Comiteco','Pampulha'
   ],
   'Leste': [
     'Boa Vista','Cidade Nova','Colégio Batista','Concórdia','Fernão Dias','Floresta',
     'Horto','Ipiranga','Jardim Guanabara','Mariano de Abreu','Nova Floresta',
     'Palmares','Paraíso','Pompéia','Santa Efigênia','Santa Inês','São Geraldo',
     'São Paulo','Sagrada Família','Vera Cruz','Vila São Paulo','Taquaril',
-    'União','Casa Branca','Cidade Jardim','Santa Tereza'
+    'União','Casa Branca','Santa Tereza'
   ],
   'Oeste': [
     'Alto Barroca','Barroca','Betânia','Buritis','Calafate','Carlos Prates','Cinquentenário',
     'Estrela','Estrela do Oriente','Gameleira','Grajaú','Gutierrez','Jardim América',
-    'Nova Granada','Nova Suíça','Nova Esperança','Oeste','Padre Eustáquio','Palmeiras',
+    'Nova Granada','Nova Suíça','Nova Esperança','Padre Eustáquio','Palmeiras',
     'Prado','Salgado Filho','Santo Agostinho','Serra','Sion','Vista Alegre','Vila Oeste'
   ],
   'Nordeste': [
@@ -1000,7 +1002,7 @@ const REGIOES_BH = {
     'Dom Bosco','Estrela do Oriente','Gameleira','Glória','Gutierrez','Indaiá',
     'Jardim Alvorada','Jardim América','Jardim Montanhês','João Pinheiro','Lagoa',
     'Lagoinha','Monsenhor Messias','Nova Cintra','Nova Esperança','Nova Granada',
-    'Nova Suíça','Oeste','Padre Eustáquio','Palmeiras','Pilar','Pindorama','Prado',
+    'Nova Suíça','Padre Eustáquio','Palmeiras','Pilar','Pindorama','Prado',
     'Rio Branco','Salgado Filho','Santa Maria','Santo Agostinho','São José','Sion',
     'Sumaré','Vila Oeste','Vista Alegre'
   ],
@@ -1171,19 +1173,45 @@ function extrairMetragem(descricao){
   return isNaN(n) ? 0 : Math.round(n);
 }
 
-/**
- * Extrai o andar a partir do número do apartamento.
- * Regra: 0–199 = 1º andar, 200–299 = 2º, 300–399 = 3º, ..., 1500+ = 15º+
- */
+/* =====================================================
+   EXTRAÇÃO DE ANDAR — versão robusta
+   Regra: 0–199 = 1º, 200–299 = 2º, 300–399 = 3º, ...
+===================================================== */
 function extrairAndar(im) {
   if (!im) return 0;
-  const chave = obterChaveTexto(im);
-  if (!chave) return 0;
-  const primeiraLinha = String(chave).split(/\r?\n/)[0] || '';
-  const m = primeiraLinha.match(/(\d{1,8})/);
-  if (!m) return 0;
-  const num = parseInt(m[1], 10);
+
+  let numStr = '';
+
+  // 1) Campo 'apto' direto
+  if (im.apto) {
+    const m = String(im.apto).match(/\d{1,8}/);
+    if (m) numStr = m[0];
+  }
+
+  // 2) Campo chaveTexto — primeira linha
+  if (!numStr) {
+    const chave = obterChaveTexto(im);
+    if (chave) {
+      const primeiraLinha = String(chave).split(/\r?\n/)[0] || '';
+      const nums = primeiraLinha.match(/\d{1,8}/g);
+      if (nums && nums.length > 0) {
+        const candidato = nums.find(n => n.length >= 2) || nums[0];
+        numStr = candidato;
+      }
+    }
+  }
+
+  // 3) Descrição/título
+  if (!numStr) {
+    const alvo = String(im.titulo || '') + ' ' + String(im.descricao || '');
+    const m = alvo.match(/(?:apto?|ap|apartamento|unidade|sala|cobertura|casa|flat)\s*[º°.:#-]?\s*(\d{1,8})/i);
+    if (m) numStr = m[1];
+  }
+
+  if (!numStr) return 0;
+  const num = parseInt(numStr, 10);
   if (isNaN(num) || num <= 0) return 0;
+
   if (num < 200) return 1;
   return Math.floor(num / 100);
 }
@@ -1462,25 +1490,6 @@ function getBairrosDaRegiao(regiao) {
   return REGIOES_BH[regiao] || [];
 }
 
-/**
- * Retorna a região que contém um bairro (comparação normalizada).
- * Se estiver em mais de uma, retorna a primeira.
- */
-function getRegiaoDoBairro(bairro) {
-  const alvo = normalizaTexto(bairro);
-  if (!alvo) return '';
-  for (const reg of Object.keys(REGIOES_BH)) {
-    if (REGIOES_BH[reg].some(b => normalizaTexto(b) === alvo)) return reg;
-  }
-  return '';
-}
-
-/**
- * Atualiza o estado visual dos chips de região conforme os bairros selecionados.
- * Uma região é considerada "ativa" quando TODOS os seus bairros (que existem
- * no catálogo) estão selecionados. Se estiver parcial, marca como "parcial"
- * — visualmente, colocamos a bolinha verde sem background.
- */
 function atualizarChipsRegiao() {
   const bairrosSelecionados = state._filtrosAplicados.bairros || [];
   const setSel = new Set(bairrosSelecionados.map(normalizaTexto));
@@ -1488,13 +1497,12 @@ function atualizarChipsRegiao() {
   document.querySelectorAll('#chipsRegiao .chip-regiao').forEach(btn => {
     const reg = btn.dataset.regiao;
     const bairrosReg = getBairrosDaRegiao(reg);
-    // Considera apenas os bairros que existem no catálogo
-    const bairrosCatálogo = bairrosReg.filter(b => {
+    const bairrosCatalogo = bairrosReg.filter(b => {
       const alvo = normalizaTexto(b);
       return state.imoveisUnicos.some(im => normalizaTexto(im.bairro) === alvo);
     });
-    const totalCat = bairrosCatálogo.length;
-    const marcados = bairrosCatálogo.filter(b => setSel.has(normalizaTexto(b))).length;
+    const totalCat = bairrosCatalogo.length;
+    const marcados = bairrosCatalogo.filter(b => setSel.has(normalizaTexto(b))).length;
 
     const qtdEl = btn.querySelector('.qtd-reg');
     if (qtdEl) qtdEl.textContent = totalCat > 0 ? `${marcados}/${totalCat}` : '';
@@ -1505,12 +1513,8 @@ function atualizarChipsRegiao() {
     } else if (marcados > 0) {
       btn.classList.remove('ativa');
       btn.classList.add('parcial');
-      btn.style.borderColor = '#16a34a';
-      btn.style.color = '#16a34a';
     } else {
       btn.classList.remove('ativa', 'parcial');
-      btn.style.borderColor = '';
-      btn.style.color = '';
     }
   });
 }
@@ -1519,13 +1523,13 @@ function popularChipsRegiao() {
   document.querySelectorAll('#chipsRegiao .chip-regiao').forEach(btn => {
     const reg = btn.dataset.regiao;
     const bairrosReg = getBairrosDaRegiao(reg);
-    const bairrosCatálogo = bairrosReg.filter(b => {
+    const bairrosCatalogo = bairrosReg.filter(b => {
       const alvo = normalizaTexto(b);
       return state.imoveisUnicos.some(im => normalizaTexto(im.bairro) === alvo);
     });
     const qtdEl = btn.querySelector('.qtd-reg');
-    if (qtdEl) qtdEl.textContent = bairrosCatálogo.length > 0 ? `0/${bairrosCatálogo.length}` : '0';
-    btn.style.display = bairrosCatálogo.length > 0 ? '' : 'none';
+    if (qtdEl) qtdEl.textContent = bairrosCatalogo.length > 0 ? `0/${bairrosCatalogo.length}` : '0';
+    btn.style.display = bairrosCatalogo.length > 0 ? '' : 'none';
   });
   atualizarChipsRegiao();
 }
@@ -1533,36 +1537,33 @@ function popularChipsRegiao() {
 function toggleRegiao(regiao) {
   if (!regiao) return;
   const bairrosReg = getBairrosDaRegiao(regiao);
-  const bairrosCatálogo = bairrosReg.filter(b => {
+  const bairrosCatalogo = bairrosReg.filter(b => {
     const alvo = normalizaTexto(b);
     return state.imoveisUnicos.some(im => normalizaTexto(im.bairro) === alvo);
   });
-  if (bairrosCatálogo.length === 0) {
+  if (bairrosCatalogo.length === 0) {
     toast('Nenhum imóvel do catálogo nessa região', 'error');
     return;
   }
 
   const lista = state._filtrosAplicados.bairros || [];
   const setSel = new Set(lista.map(normalizaTexto));
-  const todosMarcados = bairrosCatálogo.every(b => setSel.has(normalizaTexto(b)));
+  const todosMarcados = bairrosCatalogo.every(b => setSel.has(normalizaTexto(b)));
 
   if (todosMarcados) {
-    // desmarca todos da região
-    state._filtrosAplicados.bairros = lista.filter(b => !bairrosCatálogo.some(br => normalizaTexto(br) === normalizaTexto(b)));
+    state._filtrosAplicados.bairros = lista.filter(b => !bairrosCatalogo.some(br => normalizaTexto(br) === normalizaTexto(b)));
     toast(`Região ${regiao} desmarcada`);
   } else {
-    // marca todos da região (sem duplicar)
-    for (const b of bairrosCatálogo) {
+    for (const b of bairrosCatalogo) {
       if (!setSel.has(normalizaTexto(b))) {
         lista.push(b);
         setSel.add(normalizaTexto(b));
       }
     }
     state._filtrosAplicados.bairros = lista;
-    toast(`Região ${regiao} marcada (${bairrosCatálogo.length} bairros)`, 'success');
+    toast(`Região ${regiao} marcada (${bairrosCatalogo.length} bairros)`, 'success');
   }
 
-  // Atualiza a lista de checkboxes e o visual dos chips
   popularCheckboxesBairros();
   atualizarChipsRegiao();
   atualizarTextoMultiBairros();
@@ -1737,7 +1738,6 @@ function aplicarFiltros(){
   const busca = normalizaTexto($('filtroBusca').value);
   const f = state._filtrosAplicados;
   const bairros = f.bairros || [];
-  const regioes = f.regioes || [];
   const precoMin = f.precoMin || 0, precoMax = f.precoMax || 0;
   const quartosMin = parseInt(f.quartos || '0', 10) || 0;
   const metragemMin = parseInt(f.metragem || '0', 10) || 0;
@@ -1854,11 +1854,7 @@ function limparFiltros(){
   document.querySelectorAll('#chipsElevador .chip-filtro').forEach(b => b.classList.remove('ativo'));
   const primeiroElev = document.querySelector('#chipsElevador .chip-filtro[data-elevador=""]');
   if(primeiroElev) primeiroElev.classList.add('ativo');
-  document.querySelectorAll('#chipsRegiao .chip-regiao').forEach(b => {
-    b.classList.remove('ativa', 'parcial');
-    b.style.borderColor = '';
-    b.style.color = '';
-  });
+  document.querySelectorAll('#chipsRegiao .chip-regiao').forEach(b => b.classList.remove('ativa', 'parcial'));
   popularCheckboxesBairros();
   popularChipsRegiao();
   aplicarFiltros();
@@ -1893,7 +1889,6 @@ function abrirModalBuscaAvancada(){
     b.classList.toggle('ativo', (f.tipos || []).includes(b.dataset.tipo));
   });
 
-  // Andares: marca os chips que estão no array
   const andaresAtivos = f.andares || [];
   document.querySelectorAll('#chipsAndar .chip-filtro').forEach(b => {
     b.classList.toggle('ativo', andaresAtivos.includes(b.dataset.andar));
@@ -1925,7 +1920,6 @@ function aplicarFiltrosAvancados(){
   const min = minV > 0 ? minV : null;
   const max = maxV > 0 && maxV < PRECO_MAX_SLIDER ? maxV : null;
 
-  // Regiões selecionadas: mantém as que estão marcadas
   const regioesAtivas = Array.from(document.querySelectorAll('#chipsRegiao .chip-regiao.ativa')).map(b => b.dataset.regiao);
 
   state._filtrosAplicados = {
@@ -1946,6 +1940,42 @@ function aplicarFiltrosAvancados(){
   fecharModalBuscaAvancada();
   aplicarFiltros();
   toast(`Filtros aplicados${andaresAtivos.length ? ' · andares: ' + andaresAtivos.join(',') : ''}`, 'success');
+}
+
+/* =====================================================
+   DIAGNÓSTICO DE ANDARES
+===================================================== */
+function diagnosticarAndares() {
+  const arr = state.imoveisFiltrados.length ? state.imoveisFiltrados : state.imoveisUnicos;
+  if (!arr.length) { toast('Nenhum imóvel carregado', 'error'); return; }
+
+  const linhas = arr.map(im => {
+    const full = mesclarCompleto(im);
+    const andar = extrairAndar(full);
+    const chave = obterChaveTexto(full);
+    const primeira = String(chave).split(/\r?\n/)[0] || '';
+    return {
+      codigo: full.codigo || 'S/N',
+      apto: full.apto || '',
+      chavePrimeira: primeira,
+      andar
+    };
+  });
+
+  const comAndar = linhas.filter(l => l.andar > 0).length;
+  const sem = linhas.filter(l => l.andar <= 0);
+
+  console.table(linhas.slice(0, 100));
+
+  alert(
+    `DIAGNÓSTICO DE ANDAR\n\n` +
+    `Total analisado: ${linhas.length}\n` +
+    `Com andar detectado: ${comAndar}\n` +
+    `Sem andar detectado: ${sem.length}\n\n` +
+    (sem.length ? `Exemplos SEM andar (ver console):\n` +
+      sem.slice(0, 10).map(s => `#${s.codigo} · apto="${s.apto}" · chave1="${s.chavePrimeira}"`).join('\n')
+      : 'Todos os imóveis tiveram andar detectado ✅')
+  );
 }
 
 /* =====================================================
@@ -1979,6 +2009,7 @@ function cardHTML(im){
   const temFalhaApto = temMultiplosAptos(im);
   const codigo = String(im.codigo || '').trim();
   const estaMarcado = codigo && state.imoveisMarcadosClonar.includes(codigo);
+  const andar = extrairAndar(im);
 
   if(c > 0) extras.push(`<span class="feat">Cond ${esc(fmtValorLimpo(im.condominio))}</span>`);
   if(i > 0) extras.push(`<span class="feat">IPTU ${esc(fmtValorLimpo(im.iptu))}</span>`);
@@ -2035,7 +2066,6 @@ function cardHTML(im){
 
   const dataId = String(im.id || '');
   const dataCodigo = codigo;
-  const andar = extrairAndar(im);
 
   return `
     <div class="imovel-card ${estaMarcado ? 'card-marcado-clonar' : ''}" data-id="${esc(dataId)}" data-codigo="${esc(dataCodigo)}">
@@ -2063,7 +2093,7 @@ function cardHTML(im){
           <span class="rua">${esc(rua)}</span>
           ${bairro ? `<span class="bairro-destaque">· ${esc(bairro)}</span>` : ''}
           ${aptoAdmin}
-          ${andar > 0 ? `<span style="font-size:0.66rem;color:var(--muted);font-weight:600;">${andar}º andar</span>` : ''}
+          ${andar > 0 ? `<span class="andar-badge"><i class="fas fa-layer-group"></i> ${andar}º andar</span>` : ''}
         </div>
         ${descDuasLinhas ? `<div class="descricao-2linhas" onclick="abrirDetalhes('${esc(dataCodigo)}')" style="cursor:pointer;">${esc(descDuasLinhas)}</div>` : ''}
         ${extras.length ? `<div class="condo-info">${extras.join('')}</div>` : ''}
@@ -2247,6 +2277,7 @@ async function entrarModoAdmin(){
   $('btnAdminGear').classList.add('ativo');
   $('adminBanner').classList.add('show');
   $('btnFalhas').style.display = 'inline-flex';
+  $('btnDiagnostico').style.display = 'inline-flex';
   toast('Modo admin ativado! 🔓', 'success');
   await Promise.all([carregarTodosImoveisAdmin(), carregarClientesAdmin()]);
   atualizarAdminInfo();
@@ -2263,6 +2294,7 @@ function sairModoAdmin(){
   $('adminBanner').classList.remove('show');
   $('btnFalhas').style.display = 'none';
   $('btnFalhas').classList.remove('ativo');
+  $('btnDiagnostico').style.display = 'none';
   atualizarBarraClonagem();
   toast('Modo admin desativado', 'success');
   renderizarCards();
@@ -2625,7 +2657,7 @@ async function toggleVendidoCard(codigo, estaVendido) {
 }
 
 /* =====================================================
-   CLONAGEM EM LOTE — Barra Flutuante (Carrinho)
+   CLONAGEM EM LOTE — Barra Flutuante
 ===================================================== */
 function toggleMarcarClonagem(codigo){
   if(!codigo){ toast('Imóvel sem código', 'error'); return; }
@@ -2930,7 +2962,6 @@ async function init(){
     btn.addEventListener('click', () => toggleRegiao(btn.dataset.regiao));
   });
 
-  // Vaga / Elevador — limpa "invalido"
   ['editVaga', 'editElevador'].forEach(id => {
     const el = $(id);
     if(el) el.addEventListener('change', function(){
@@ -3007,6 +3038,7 @@ window.carregarImoveis = carregarImoveis;
 window.toggleOcultarVendidos = toggleOcultarVendidos;
 window.toggleFiltroFalhas = toggleFiltroFalhas;
 window.toggleVendidoCard = toggleVendidoCard;
+window.diagnosticarAndares = diagnosticarAndares;
 
 document.addEventListener('DOMContentLoaded', init);
 </script>
