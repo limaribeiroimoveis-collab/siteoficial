@@ -10,6 +10,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
 <style>
+  /* ===== CSS BASE DO ADMIN (MANTIDO) ===== */
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
   :root {
@@ -34,24 +35,10 @@
     --radius-lg: 20px;
   }
 
-  body {
-    background: #e8ecf3;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    color: var(--texto-escuro);
-    line-height: 1.5;
-    overflow-x: hidden;
-    -webkit-font-smoothing: antialiased;
-  }
+  body { background: #e8ecf3; font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; color: var(--texto-escuro); line-height: 1.5; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
 
-  .navbar {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 12px 20px;
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
-    position: sticky; top: 0; z-index: 1000;
-    border-bottom: 1px solid rgba(0, 30, 240, 0.06);
-    gap: 12px; flex-wrap: wrap;
-  }
+  /* NAVBAR E ESTRUTURA GERAL */
+  .navbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 20px; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid rgba(0, 30, 240, 0.06); gap: 12px; flex-wrap: wrap; }
   .navbar .logo-link { display: flex; align-items: center; text-decoration: none; }
   .navbar .logo-img { height: 44px; width: auto; }
   .navbar .nav-links { display: flex; gap: 20px; align-items: center; flex-wrap: wrap; }
@@ -60,116 +47,16 @@
   .navbar .nav-links a.destaque { background: var(--azul-quinto); color: #fff; padding: 8px 16px; border-radius: 40px; font-weight: 600; }
   .navbar .nav-links a.destaque:hover { background: var(--azul-escuro); }
 
-  .btn-admin-gear {
-    position: fixed; top: 76px; right: 16px;
-    z-index: 999; width: 42px; height: 42px;
-    border-radius: 50%; background: rgba(26, 26, 46, 0.82);
-    color: #fff; border: none; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1.1rem; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
-    transition: 0.2s; backdrop-filter: blur(8px);
-  }
+  .btn-admin-gear { position: fixed; top: 76px; right: 16px; z-index: 999; width: 42px; height: 42px; border-radius: 50%; background: rgba(26, 26, 46, 0.82); color: #fff; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25); transition: 0.2s; backdrop-filter: blur(8px); }
   .btn-admin-gear:hover { transform: scale(1.1) rotate(45deg); background: var(--azul-quinto); }
   .btn-admin-gear.ativo { background: var(--verde); animation: pulse-gear 2s infinite; }
-  @keyframes pulse-gear {
-    0%, 100% { box-shadow: 0 4px 16px rgba(22, 163, 74, 0.4); }
-    50% { box-shadow: 0 4px 24px rgba(22, 163, 74, 0.8); }
-  }
+  @keyframes pulse-gear { 0%, 100% { box-shadow: 0 4px 16px rgba(22, 163, 74, 0.4); } 50% { box-shadow: 0 4px 24px rgba(22, 163, 74, 0.8); } }
 
-  .admin-banner {
-    background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
-    color: #fff; padding: 10px 20px;
-    text-align: center; font-size: 0.82rem;
-    font-weight: 700; letter-spacing: 0.3px;
-    z-index: 998; position: relative;
-    box-shadow: 0 4px 12px rgba(22, 163, 74, 0.25);
-    display: flex; align-items: center; justify-content: center;
-    gap: 12px; flex-wrap: wrap;
-  }
+  .admin-banner { background: linear-gradient(135deg, #16a34a 0%, #15803d 100%); color: #fff; padding: 10px 20px; text-align: center; font-size: 0.82rem; font-weight: 700; letter-spacing: 0.3px; z-index: 998; position: relative; box-shadow: 0 4px 12px rgba(22, 163, 74, 0.25); display: none; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; }
+  .admin-banner.show { display: flex; }
   .admin-banner .badge { background: rgba(255, 255, 255, 0.22); padding: 3px 10px; border-radius: 20px; font-size: 0.72rem; }
   .admin-banner .btn-sair-admin { background: rgba(0, 0, 0, 0.25); color: #fff; border: none; padding: 5px 14px; border-radius: 20px; font-family: inherit; font-weight: 700; font-size: 0.72rem; cursor: pointer; transition: 0.2s; }
   .admin-banner .btn-sair-admin:hover { background: rgba(0, 0, 0, 0.4); }
-
-  /* ===== BARRA DE CLONAGEM EXPANSÍVEL ===== */
-  .barra-clonagem-wrap {
-    position: fixed; bottom: 0; left: 0; right: 0;
-    z-index: 1500; display: none; flex-direction: column;
-  }
-  .barra-clonagem-wrap.show { display: flex; }
-  
-  .barra-clonagem-header {
-    background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%);
-    color: #fff; padding: 12px 20px;
-    box-shadow: 0 -6px 24px rgba(124, 58, 237, 0.4);
-    display: flex; align-items: center; justify-content: space-between;
-    gap: 14px; flex-wrap: wrap;
-    border-radius: 20px 20px 0 0;
-  }
-  .barra-clonagem-header .info { display: flex; align-items: center; gap: 10px; font-size: 0.9rem; font-weight: 700; flex: 1; min-width: 0; cursor: pointer; }
-  .barra-clonagem-header .info i { font-size: 1.15rem; flex-shrink: 0; }
-  .barra-clonagem-header .info .cont { background: rgba(255,255,255,0.25); padding: 2px 10px; border-radius: 20px; font-size: 0.8rem; }
-  .barra-clonagem-header .acoes-barra { display: flex; gap: 8px; flex-wrap: wrap; }
-  .barra-clonagem-header .btn-barra { padding: 9px 16px; border-radius: 10px; border: none; font-family: inherit; font-weight: 700; font-size: 0.82rem; cursor: pointer; transition: 0.15s; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
-  .barra-clonagem-header .btn-barra.limpar { background: rgba(255,255,255,0.2); color: #fff; }
-  .barra-clonagem-header .btn-barra.limpar:hover { background: rgba(255,255,255,0.35); }
-  .barra-clonagem-header .btn-barra.confirmar { background: #fff; color: #5b21b6; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
-  .barra-clonagem-header .btn-barra.confirmar:hover { background: #f3f0ff; transform: scale(1.02); }
-
-  .barra-clonagem-lista {
-    background: #fff; max-height: 300px; overflow-y: auto;
-    border-top: 1px solid var(--borda);
-    padding: 10px 20px;
-    box-shadow: 0 -4px 12px rgba(0,0,0,0.05);
-    display: none; flex-direction: column; gap: 8px;
-  }
-  .barra-clonagem-lista.show { display: flex; }
-  .clonar-item-lista {
-    display: flex; align-items: center; gap: 12px;
-    background: var(--cinza-claro); border-radius: 10px; padding: 10px;
-    border: 1px solid var(--borda);
-  }
-  .clonar-item-lista .thumb { width: 50px; height: 50px; border-radius: 8px; object-fit: cover; background: #ddd; flex-shrink: 0; }
-  .clonar-item-lista .dados { flex: 1; min-width: 0; }
-  .clonar-item-lista .dados .titulo { font-size: 0.85rem; font-weight: 800; color: var(--texto-escuro); margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .clonar-item-lista .dados .end { font-size: 0.74rem; color: var(--texto-cinza); font-weight: 600; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .clonar-item-lista .dados .desc { font-size: 0.7rem; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .clonar-item-lista .dados .valor { font-size: 0.8rem; font-weight: 800; color: var(--azul-quinto); margin-top: 2px; }
-  .clonar-item-lista .btn-remover { background: transparent; border: none; color: var(--vermelho); cursor: pointer; padding: 6px; font-size: 1.1rem; border-radius: 50%; transition: 0.15s; display: flex; align-items: center; justify-content: center; }
-  .clonar-item-lista .btn-remover:hover { background: #fee2e2; }
-
-  /* Card Marcado para Clonagem */
-  .imovel-card.card-marcado-clonar {
-    outline: 3px solid var(--roxo) !important;
-    outline-offset: -3px;
-    box-shadow: 0 8px 28px rgba(124, 58, 237, 0.35) !important;
-    position: relative;
-  }
-  .imovel-card.card-marcado-clonar::after {
-    content: '\f00c';
-    font-family: 'Font Awesome 6 Free';
-    font-weight: 900;
-    position: absolute; top: 10px; right: 10px;
-    width: 32px; height: 32px;
-    background: var(--roxo); color: #fff;
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 0.9rem; z-index: 10;
-    box-shadow: 0 4px 12px rgba(124, 58, 237, 0.5);
-    border: 2px solid #fff;
-    pointer-events: none;
-  }
-  .imovel-card .btn-a.btn-clonar.marcado { background: var(--vermelho) !important; color: #fff !important; border-color: var(--vermelho) !important; }
-  .imovel-card .btn-a.btn-clonar.marcado:hover { background: #b91c1c !important; }
-
-  .progresso-clonagem-wrap { background: #f3f0ff; border: 1px solid #c4b5fd; border-radius: 10px; padding: 12px 14px; margin-bottom: 16px; display: none; }
-  .progresso-clonagem-wrap.show { display: block; }
-  .progresso-clonagem-wrap .barra-ext { width: 100%; height: 10px; background: #e9e3ff; border-radius: 6px; overflow: hidden; margin: 8px 0; }
-  .progresso-clonagem-wrap .barra-int { height: 100%; background: linear-gradient(90deg, #7c3aed, #5b21b6); border-radius: 6px; transition: width 0.4s ease; width: 0%; }
-  .progresso-clonagem-wrap .lbl { font-size: 0.78rem; font-weight: 700; color: #5b21b6; display: flex; justify-content: space-between; }
-  .progresso-clonagem-wrap .detalhe { font-size: 0.72rem; color: #7c3aed; margin-top: 4px; font-family: 'SF Mono', Menlo, monospace; }
-  .progresso-clonagem-wrap .log { max-height: 130px; overflow-y: auto; font-family: 'SF Mono', Menlo, monospace; font-size: 0.72rem; color: #5b21b6; background: #fff; border-radius: 6px; padding: 8px; margin-top: 6px; line-height: 1.5; }
-  .progresso-clonagem-wrap .log .ok { color: var(--verde); }
-  .progresso-clonagem-wrap .log .erro { color: var(--vermelho); }
 
   .hero-imoveis { background: linear-gradient(135deg, #001EF0 0%, #0044ff 100%); color: #fff; padding: 18px 20px; text-align: center; }
   .hero-imoveis .hero-inner { display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; max-width: 1200px; margin: 0 auto; }
@@ -178,6 +65,7 @@
 
   .container { max-width: 1400px; margin: 0 auto; padding: 0 20px; }
 
+  /* FILTROS E BUSCA */
   .modo-selector { display: flex; justify-content: center; gap: 10px; margin-top: 18px; margin-bottom: 4px; flex-wrap: wrap; }
   .modo-btn { display: inline-flex; align-items: center; gap: 8px; background: #fff; border: 1.5px solid var(--borda); border-radius: 40px; padding: 9px 20px; cursor: pointer; font-family: inherit; font-size: 0.84rem; font-weight: 700; color: var(--texto-cinza); transition: all 0.18s; box-shadow: 0 2px 8px rgba(0, 30, 240, 0.04); white-space: nowrap; }
   .modo-btn i { font-size: 0.9rem; }
@@ -197,13 +85,9 @@
   .btn-busca-avancada:hover { background: var(--azul-escuro); }
   .btn-busca-avancada .badge-filtro { background: rgba(255, 255, 255, 0.25); padding: 1px 7px; border-radius: 10px; font-size: 0.68rem; font-weight: 800; display: none; }
   .btn-busca-avancada.tem-filtro .badge-filtro { display: inline-block; }
-  @media (max-width: 640px) {
-    .btn-busca-avancada .lbl-avancada { display: none; }
-    .btn-busca-avancada { padding: 11px 14px; }
-  }
 
-  .conteudo-principal { padding: 20px 0 60px; position: relative; }
-
+  /* CARDS GRID */
+  .conteudo-principal { padding: 20px 0 80px; position: relative; }
   .cards-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 16px; align-content: start; }
   @media(max-width: 1400px) { .cards-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
   @media(max-width: 1100px) { .cards-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
@@ -223,7 +107,6 @@
   .imovel-card .codigo-linha .codigo-badge { display: inline-flex; align-items: center; gap: 4px; background: #1a1a2e; color: #fff; padding: 3px 9px; border-radius: 6px; font-size: 0.68rem; font-weight: 700; font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.4px; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15); }
   .imovel-card .codigo-linha .codigo-badge i { color: #fbbf24; font-size: 0.62rem; }
 
-  /* ✅ Linha do Preço com botão de compartilhar alinhado à direita */
   .imovel-card .preco-linha { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
   .imovel-card .preco { font-size: 1.25rem; font-weight: 800; color: var(--azul-quinto); letter-spacing: -0.5px; line-height: 1.1; }
   .imovel-card .preco .tipo { font-size: 0.7rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.4px; display: block; margin-bottom: 2px; }
@@ -238,17 +121,14 @@
 
   .imovel-card .condo-info { display: flex; gap: 6px; flex-wrap: wrap; padding-top: 8px; border-top: 1px solid var(--borda); font-size: 0.72rem; color: var(--texto-cinza); align-items: center; }
   .imovel-card .condo-info .feat { display: inline-flex; align-items: center; font-weight: 500; }
-  .imovel-card .condo-info .divisor { color: var(--borda-forte); font-weight: 300; margin: 0 2px; }
   .imovel-card .condo-info .feat-vendido { font-weight: 700; color: var(--vermelho); }
 
   .apto-admin { display: inline-flex; align-items: center; gap: 4px; font-size: 0.72rem; font-weight: 900; color: #fff; background: var(--roxo); padding: 3px 9px; border-radius: 6px; letter-spacing: 0.5px; box-shadow: 0 2px 6px rgba(124, 58, 237, 0.35); text-transform: uppercase; }
-  .apto-admin i { font-size: 0.62rem; }
   .apto-erro { display: inline-flex; align-items: center; gap: 4px; font-size: 0.72rem; font-weight: 900; color: #fff; background: var(--vermelho); padding: 3px 9px; border-radius: 6px; letter-spacing: 0.5px; box-shadow: 0 2px 6px rgba(220, 38, 38, 0.35); text-transform: uppercase; }
 
   .tarja-falha { background: #fef2f2; border: 1px solid #fecaca; border-left: 4px solid var(--vermelho); padding: 8px 12px; margin-bottom: 10px; border-radius: 8px; display: flex; flex-direction: column; gap: 4px; }
   .tarja-falha .falha-titulo { font-size: 0.65rem; font-weight: 800; color: var(--vermelho); text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 4px; }
   .tarja-falha .falha-lista { font-size: 0.78rem; color: #991b1b; font-weight: 600; line-height: 1.4; list-style: none; padding: 0; margin: 0; }
-  .tarja-falha .falha-lista li { display: flex; align-items: center; gap: 4px; }
   .tarja-falha .falha-codigo { margin-top: 4px; display: inline-flex; background: #fee2e2; color: #991b1b; padding: 2px 8px; border-radius: 4px; font-family: 'SF Mono', Menlo, monospace; font-size: 0.7rem; font-weight: 800; align-self: flex-start; border: 1px solid #fca5a5; }
 
   .imovel-card .admin-acoes { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; padding: 0 10px 10px; }
@@ -266,117 +146,148 @@
   .imovel-card .admin-acoes .btn-a.btn-anuncio:hover { background: var(--azul-quinto); color: #fff; }
   .imovel-card .admin-acoes .btn-a:disabled { opacity: 0.4; cursor: not-allowed; }
 
-  /* ===== MODAL DETALHES PROFISSIONAL ===== */
+  /* MODAIS GERAIS */
   .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.55); backdrop-filter: blur(4px); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 16px; overflow-y: auto; }
   .modal-backdrop.show { display: flex; }
-
-  .modal-detalhes { background: #fff; border-radius: var(--radius-lg); max-width: 900px; width: 100%; max-height: 92vh; overflow: hidden; box-shadow: var(--sombra-forte); position: relative; animation: fadeUp 0.25s ease; display: flex; flex-direction: column; }
-  @media (max-width: 768px) { .modal-detalhes { flex-direction: column; overflow-y: auto; } }
-
-  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-  .modal-detalhes .btn-fechar { position: absolute; top: 14px; right: 14px; background: rgba(255, 255, 255, 0.9); border: none; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; font-size: 1rem; color: var(--texto-escuro); display: flex; align-items: center; justify-content: center; z-index: 10; box-shadow: 0 2px 10px rgba(0,0,0,0.15); transition: 0.15s; }
-  .modal-detalhes .btn-fechar:hover { background: #fff; transform: scale(1.05); }
-
+  .modal-detalhes { background: #fff; border-radius: var(--radius-lg); max-width: 900px; width: 100%; max-height: 92vh; overflow: hidden; box-shadow: var(--sombra-forte); position: relative; display: flex; flex-direction: column; animation: fadeUp 0.25s ease; }
   .modal-detalhes .foto-lateral { width: 50%; background: var(--cinza-claro); background-size: cover; background-position: center; position: relative; min-height: 300px; display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 2rem; }
-  @media (max-width: 768px) { .modal-detalhes .foto-lateral { width: 100%; height: 240px; min-height: auto; } }
-  
-  .modal-detalhes .foto-lateral .tarja-vendido { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; overflow: hidden; background: linear-gradient(135deg, rgba(220, 38, 38, 0.05) 0%, rgba(220, 38, 38, 0.1) 100%); }
-  .modal-detalhes .foto-lateral .tarja-vendido::before { content: 'VENDIDO'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-20deg); font-size: 2.2rem; font-weight: 800; letter-spacing: 8px; color: #fff; background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%); padding: 10px 30px; border: 4px solid #fff; border-radius: 12px; box-shadow: 0 8px 32px rgba(220, 38, 38, 0.5), 0 0 0 3px rgba(220, 38, 38, 0.25); white-space: nowrap; text-shadow: 0 3px 8px rgba(0, 0, 0, 0.3); }
-
   .modal-detalhes .info-lateral { width: 50%; padding: 32px; display: flex; flex-direction: column; gap: 20px; overflow-y: auto; }
-  @media (max-width: 768px) { .modal-detalhes .info-lateral { width: 100%; padding: 24px; } }
+  .modal-detalhes .btn-fechar { position: absolute; top: 14px; right: 14px; background: rgba(255, 255, 255, 0.9); border: none; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 10; box-shadow: 0 2px 10px rgba(0,0,0,0.15); transition: 0.15s; }
+  .modal-detalhes .btn-fechar:hover { background: #fff; transform: scale(1.05); }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-  .modal-detalhes .topo { display: flex; flex-direction: column; gap: 8px; }
-  .modal-detalhes .topo .codigo-linha { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-  .modal-detalhes .topo .codigo-badge { background: var(--azul-claro); color: var(--azul-quinto); padding: 4px 12px; border-radius: 8px; font-size: 0.78rem; font-weight: 700; font-family: 'SF Mono', Menlo, monospace; letter-spacing: 0.5px; }
-  .modal-detalhes .topo .tipo-badge { background: var(--roxo); color: #fff; padding: 4px 12px; border-radius: 8px; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
-  .modal-detalhes .topo .vendido-badge { background: var(--vermelho); color: #fff; padding: 4px 12px; border-radius: 8px; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
-  .modal-detalhes .topo h2 { font-size: 1.8rem; font-weight: 800; color: var(--azul-quinto); letter-spacing: -0.5px; line-height: 1.1; }
-  .modal-detalhes .topo .endereco-completo { font-size: 0.95rem; color: var(--texto-escuro); font-weight: 500; line-height: 1.5; }
-  .modal-detalhes .topo .endereco-completo i { color: var(--azul-quinto); margin-right: 6px; }
-  .modal-detalhes .topo .endereco-completo .bairro-destaque { color: var(--azul-quinto); font-weight: 800; text-transform: uppercase; letter-spacing: 0.4px; font-size: 0.85rem; margin-left: 6px; }
+  /* =====================================================
+     NOVO MODAL DE EDIÇÃO (BASEADO NO PAINEL MODAL)
+  ===================================================== */
+  .admin-panel { background: #fff; border-radius: 12px; box-shadow: 0 24px 64px rgba(15,23,42,.35), 0 8px 24px rgba(15,23,42,.20); position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: calc(100vw - 32px); max-width: 1240px; max-height: calc(100vh - 40px); overflow-y: auto; z-index: 2100; border: 1px solid #e2e8f0; display: none; }
+  .admin-panel.show { display: block; animation: modalIn .22s ease-out; }
+  @keyframes modalIn { from { opacity: 0; transform: translate(-50%, -48%) scale(.97); } to { opacity: 1; transform: translate(-50%, -50%) scale(1); } }
+  .admin-panel-inner { padding: 18px 24px 22px; }
+  .admin-panel-header { position: sticky; top: 0; z-index: 5; background: #fff; padding: 14px 24px 12px; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; border-radius: 12px 12px 0 0; }
+  .admin-panel-header h3 { display: flex; align-items: center; gap: 9px; font-size: 1.05rem; color: #0f172a; font-weight: 700; letter-spacing: -.01em; margin: 0; }
+  .admin-panel-header .close-x { width: 34px; height: 34px; border-radius: 6px; background: #dde2e8; border: none; cursor: pointer; color: #475569; display: flex; align-items: center; justify-content: center; transition: all .15s; }
+  .admin-panel-header .close-x:hover { background: #cbd5e1; color: #0f172a; }
+
+  /* Grid do Form */
+  .form-row-link-price { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 12px; margin-bottom: 10px; }
+  .form-row-address { display: grid; grid-template-columns: 2fr 1fr 0.9fr 1fr; gap: 12px; margin-bottom: 10px; }
+  .form-row-bairro { display: grid; grid-template-columns: 1fr; gap: 12px; margin-bottom: 10px; }
+  .form-row-img-desc { display: grid; grid-template-columns: 240px 1fr; gap: 14px; margin-bottom: 12px; align-items: start; }
+  @media (max-width: 1024px) { .form-row-link-price { grid-template-columns: 1fr 1fr; } .form-row-address { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 640px) { .form-row-link-price { grid-template-columns: 1fr; } .form-row-address { grid-template-columns: 1fr; } .form-row-img-desc { grid-template-columns: 1fr; } }
+
+  .editor-label { display: block; font-size: .74rem; font-weight: 600; margin-bottom: 6px; color: #475569; text-transform: uppercase; letter-spacing: .4px; }
+  .editor-label .req { color: #8b3a3a; }
+  .editor-input, .editor-textarea { width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: .88rem; font-family: inherit; transition: all .15s; background: #fff; color: #0f172a; }
+  .editor-input:focus, .editor-textarea:focus { outline: none; border-color: #6d28d9; box-shadow: 0 0 0 3px rgba(109,40,217,.1); }
+  .editor-textarea { resize: vertical; min-height: 76px; line-height: 1.5; }
+
+  /* Chips de tipo */
+  .tipo-chips-wrap { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+  .chip-tipo { display: inline-flex; align-items: center; gap: 5px; padding: 7px 13px; border-radius: 30px; border: 2px solid #e2e8f0; background: #fff; font-family: inherit; font-size: .78rem; font-weight: 700; color: #475569; cursor: pointer; transition: all .15s; white-space: nowrap; }
+  .chip-tipo:hover { border-color: #6d28d9; color: #6d28d9; }
+  .chip-tipo.ativo { background: #6d28d9; color: #fff; border-color: #6d28d9; box-shadow: 0 2px 8px rgba(109,40,217,.25); }
+
+  /* Preview Img */
+  .img-preview-box { width: 100%; aspect-ratio: 4/3; background: #dde2e8; border: 1px dashed #cbd5e1; border-radius: 6px; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; }
+  .img-preview-box img { width: 100%; height: 100%; object-fit: cover; display: none; }
+  .img-preview-box .sem-img { color: #94a3b8; font-size: .72rem; text-align: center; padding: 10px; line-height: 1.4; }
+
+  /* Descrição com tipo travado */
+  .desc-tipo-preview { display: flex; align-items: center; gap: 8px; padding: 7px 12px; background: #ede9fe; border-radius: 6px 6px 0 0; border: 1px solid #cbd5e1; border-bottom: none; font-family: ui-monospace, monospace; font-size: .78rem; color: #6d28d9; font-weight: 700; min-height: 32px; }
+  .desc-tipo-preview .empty-txt { color: #94a3b8; font-style: italic; font-weight: 500; }
+  .desc-tipo-preview + textarea.editor-textarea { border-top-left-radius: 0; border-top-right-radius: 0; }
+  #editDescricao { min-height: 108px; font-size: .84rem; line-height: 1.5; padding: 10px 14px; background: #fff; }
+
+  /* Botão buscar entrada */
+  .btn-buscar-entrada { width: 100%; margin-bottom: 10px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: #eef2f7; color: #1e3a5f; border: 1px solid #cbd5e1; padding: 9px 16px; border-radius: 6px; font-size: .82rem; font-weight: 700; cursor: pointer; font-family: inherit; transition: all .15s; }
+  .btn-buscar-entrada:hover:not(:disabled) { background: #dde6ee; border-color: #1e3a5f; }
+  .btn-buscar-entrada:disabled { opacity: .5; cursor: not-allowed; background: #dde2e8; color: #94a3b8; border-color: #e2e8f0; }
+  .btn-buscar-entrada .codigo-badge { font-family: ui-monospace, monospace; font-size: .72rem; background: #fff; padding: 1px 7px; border-radius: 4px; border: 1px solid #e2e8f0; }
+
+  /* Composer da Chave */
+  .chave-composer { border: 1px solid #cbd5e1; border-radius: 6px; background: #fff; overflow: hidden; }
+  .chave-locked { background: #f1f5f9; padding: 8px 14px; border-bottom: 1px dashed #cbd5e1; display: flex; flex-direction: column; gap: 3px; font-family: ui-monospace, monospace; font-size: .82rem; color: #475569; }
+  .chave-locked .linha { display: flex; align-items: center; gap: 8px; }
+  .chave-locked .linha .lock-ico { font-size: .72rem; color: #94a3b8; flex-shrink: 0; }
+  .chave-locked .linha .label-mini { font-family: -apple-system, sans-serif; font-size: .62rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: .4px; min-width: 80px; }
+  .chave-locked .linha .valor-mini { font-weight: 700; color: #0f172a; font-family: ui-monospace, monospace; }
+  .chave-locked .linha.vazia .valor-mini { color: #94a3b8; font-style: italic; font-weight: 500; }
+  #editChaveComplemento { border: none; border-radius: 0; min-height: 76px; font-family: ui-monospace, monospace; font-size: .82rem; line-height: 1.6; padding: 10px 14px; background: repeating-linear-gradient(to bottom, #fff 0px, #fff 26px, #f8fafc 26px, #f8fafc 27px); resize: vertical; width: 100%; }
+  #editChaveComplemento:focus { outline: none; box-shadow: inset 0 0 0 2px rgba(109,40,217,.2); }
   
-  .modal-detalhes .descricao { font-size: 0.9rem; line-height: 1.65; color: var(--texto-cinza); white-space: pre-wrap; }
-  .modal-detalhes .gastos { display: flex; gap: 16px; flex-wrap: wrap; font-size: 0.82rem; color: var(--texto-cinza); padding: 12px 16px; background: #fef3c7; border-left: 3px solid var(--laranja); border-radius: 8px; }
-  .modal-detalhes .gastos strong { color: var(--texto-escuro); }
-  
-  .modal-detalhes .acoes { display: flex; gap: 10px; flex-wrap: wrap; margin-top: auto; padding-top: 10px; }
-  .modal-detalhes .acoes .btn { flex: 1; min-width: 140px; padding: 13px 18px; border-radius: 12px; border: none; font-family: inherit; font-weight: 700; font-size: 0.88rem; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; transition: 0.15s; }
-  .modal-detalhes .acoes .btn-zap { background: #25d366; color: #fff; }
-  .modal-detalhes .acoes .btn-zap:hover { background: #1eb955; transform: translateY(-1px); }
-  .modal-detalhes .acoes .btn-anuncio { background: var(--azul-quinto); color: #fff; }
-  .modal-detalhes .acoes .btn-anuncio:hover { background: var(--azul-escuro); transform: translateY(-1px); }
-  .modal-detalhes .acoes .btn-share { background: var(--cinza-claro); color: var(--texto-escuro); flex: 0 0 auto; min-width: auto; padding: 13px 16px; }
-  .modal-detalhes .acoes .btn-share:hover { background: #e0e4ef; }
-
-  /* ===== MODAL EDITOR PADRONIZADO ===== */
-  .modal-editor { background: #fff; border-radius: var(--radius-lg); max-width: 1000px; width: 100%; max-height: 94vh; overflow-y: auto; box-shadow: var(--sombra-forte); position: relative; animation: fadeUp 0.25s ease; padding: 24px; }
-  .modal-editor .btn-fechar { position: absolute; top: 14px; right: 14px; background: var(--cinza-claro); border: none; width: 34px; height: 34px; border-radius: 50%; cursor: pointer; font-size: 0.9rem; color: var(--texto-escuro); display: flex; align-items: center; justify-content: center; transition: 0.15s; z-index: 5; }
-  .modal-editor .btn-fechar:hover { background: #e0e4ef; transform: scale(1.05); }
-  .modal-editor h3 { font-size: 1.2rem; font-weight: 800; margin-bottom: 18px; display: flex; align-items: center; gap: 10px; color: var(--texto-escuro); padding-right: 44px; flex-wrap: wrap; }
-  .modal-editor h3 i { color: var(--azul-quinto); }
-
-  .form-row-4, .form-row-3, .form-row-2-img { display: grid; gap: 12px; margin-bottom: 14px; }
-  .form-row-4 { grid-template-columns: repeat(4, 1fr); }
-  .form-row-3 { grid-template-columns: 2fr 0.7fr 1.3fr; }
-  .form-row-2-img { grid-template-columns: 260px 1fr; }
-  @media(max-width: 720px) {
-    .form-row-4 { grid-template-columns: 1fr 1fr; }
-    .form-row-3 { grid-template-columns: 1fr; }
-    .form-row-2-img { grid-template-columns: 1fr; }
-  }
-  @media(max-width: 460px) { .form-row-4 { grid-template-columns: 1fr; } }
-
-  .form-group-modal { display: flex; flex-direction: column; gap: 5px; }
-  .form-group-modal label { font-size: 0.72rem; font-weight: 700; color: var(--texto-cinza); text-transform: uppercase; letter-spacing: 0.4px; }
-  .form-group-modal label .req { color: var(--vermelho); }
-  .form-group-modal input,
-  .form-group-modal select,
-  .form-group-modal textarea { width: 100%; padding: 10px 12px; border: 1.5px solid var(--borda-forte); border-radius: 10px; font-size: 0.88rem; font-family: inherit; background: #fff; color: var(--texto-escuro); transition: 0.15s; resize: vertical; }
-  .form-group-modal textarea { min-height: 80px; line-height: 1.5; }
-  .form-group-modal input:focus,
-  .form-group-modal select:focus,
-  .form-group-modal textarea:focus { outline: none; border-color: var(--azul-quinto); box-shadow: 0 0 0 3px rgba(0, 30, 240, 0.1); }
-  .form-group-modal input[readonly] { background: var(--cinza-claro); color: var(--texto-cinza); cursor: not-allowed; }
-
-  .img-preview-box { width: 100%; aspect-ratio: 16 / 10; background: var(--cinza-claro); border: 1.5px dashed var(--borda-forte); border-radius: 10px; overflow: hidden; display: flex; align-items: center; justify-content: center; position: relative; }
-  .img-preview-box img { width: 100%; height: 100%; object-fit: cover; }
-  .img-preview-box .sem-img { color: var(--muted); font-size: 0.78rem; text-align: center; line-height: 1.4; padding: 10px; }
-
-  .btn-buscar-entrada { display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; margin-bottom: 16px; background: #fff; color: var(--azul-quinto); border: 1.5px solid var(--azul-quinto); border-radius: 10px; font-family: inherit; font-size: 0.84rem; font-weight: 700; cursor: pointer; transition: 0.15s; }
-  .btn-buscar-entrada:hover:not(:disabled) { background: var(--azul-quinto); color: #fff; }
-  .btn-buscar-entrada:disabled { opacity: 0.45; cursor: not-allowed; border-color: var(--borda-forte); color: var(--muted); }
-  .btn-buscar-entrada .codigo-badge { background: var(--azul-claro); color: var(--azul-quinto); padding: 2px 8px; border-radius: 6px; font-size: 0.7rem; font-weight: 800; font-family: 'SF Mono', Menlo, monospace; }
-
-  .form-actions-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding-top: 14px; border-top: 1px solid var(--borda); }
-  .form-actions-row .link-label { font-size: 0.78rem; font-weight: 700; color: var(--texto-cinza); text-transform: uppercase; letter-spacing: 0.4px; }
-  .form-actions-row .link-label .req { color: var(--vermelho); }
-
-  .btn-corretor-escolha { padding: 8px 16px; border-radius: 8px; border: 1.5px solid var(--borda-forte); background: #fff; color: var(--texto-cinza); font-family: inherit; font-size: 0.8rem; font-weight: 700; cursor: pointer; transition: 0.15s; }
-  .btn-corretor-escolha:hover { border-color: var(--azul-quinto); color: var(--azul-quinto); }
-  .btn-corretor-escolha.ativo { background: var(--azul-quinto); color: #fff; border-color: var(--azul-quinto); box-shadow: 0 3px 10px rgba(0, 30, 240, 0.25); }
-
-  .btn-salvar-imovel { margin-left: auto; padding: 11px 20px; border-radius: 10px; border: none; background: var(--verde); color: #fff; font-family: inherit; font-size: 0.86rem; font-weight: 700; cursor: pointer; transition: 0.15s; display: inline-flex; align-items: center; gap: 8px; }
-  .btn-salvar-imovel:hover:not(:disabled) { background: #15803d; transform: translateY(-1px); }
-  .btn-salvar-imovel:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
-
-  .btn-cancelar-editor { padding: 11px 18px; border-radius: 10px; border: 1.5px solid var(--borda-forte); background: #fff; color: var(--texto-cinza); font-family: inherit; font-size: 0.86rem; font-weight: 700; cursor: pointer; transition: 0.15s; }
-  .btn-cancelar-editor:hover { background: var(--cinza-claro); color: var(--texto-escuro); }
-
-  .campo-info-apto { display: flex; align-items: center; gap: 10px; background: var(--azul-claro); border: 1.5px solid #c7d2fe; padding: 10px 14px; border-radius: 10px; margin-bottom: 14px; font-size: 0.82rem; color: var(--azul-escuro); font-weight: 600; }
-  .campo-info-apto i { color: var(--azul-quinto); }
-  .campo-info-apto strong { color: var(--azul-quinto); font-weight: 800; }
-  .campo-info-apto.erro { background: #fef2f2; border-color: #fecaca; color: var(--vermelho); }
-  .campo-info-apto.erro i, .campo-info-apto.erro strong { color: var(--vermelho); }
-
+  /* Checkbox Vendido */
   .check-vendido-wrap { display: flex; align-items: center; gap: 10px; background: #fef2f2; border: 1.5px solid #fecaca; padding: 12px 16px; border-radius: 10px; margin-bottom: 16px; cursor: pointer; transition: all 0.15s; }
   .check-vendido-wrap:hover { background: #fee2e2; }
   .check-vendido-wrap input[type="checkbox"] { width: 20px; height: 20px; accent-color: var(--vermelho); cursor: pointer; flex-shrink: 0; }
   .check-vendido-txt { font-size: 0.85rem; font-weight: 700; color: var(--vermelho); line-height: 1.3; }
-  .check-vendido-txt span { display: block; font-size: 0.75rem; font-weight: 500; color: #b91c1c; margin-top: 2px; }
 
-  .aviso-massivo { display: flex; align-items: flex-start; gap: 10px; background: #fef3c7; border-left: 3px solid var(--laranja); color: #78350f; padding: 12px 16px; border-radius: 8px; font-size: 0.82rem; line-height: 1.5; margin-bottom: 16px; }
-  .aviso-massivo i { color: var(--laranja); font-size: 1rem; margin-top: 2px; flex-shrink: 0; }
+  /* Ações Finais */
+  .form-actions-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 12px; padding-top: 12px; border-top: 1px solid #e2e8f0; }
+  .form-actions-row .link-label { font-size: .82rem; font-weight: 700; color: #475569; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
+  .btn-corretor-escolha { display: inline-flex; align-items: center; justify-content: center; padding: 9px 16px; border-radius: 6px; border: 2px solid #e2e8f0; background: #fff; cursor: pointer; font-family: inherit; font-size: .82rem; font-weight: 700; color: #475569; transition: all .15s; white-space: nowrap; min-width: 74px; }
+  .btn-corretor-escolha:hover { border-color: #6d28d9; color: #6d28d9; }
+  .btn-corretor-escolha.ativo { background: #6d28d9; color: #fff; border-color: #6d28d9; box-shadow: 0 2px 8px rgba(109,40,217,.25); }
+
+  .btn-editor { display: inline-flex; align-items: center; justify-content: center; gap: 7px; padding: 10px 16px; border-radius: 6px; border: 1px solid transparent; cursor: pointer; font-size: .85rem; font-weight: 600; transition: all .15s; text-decoration: none; font-family: inherit; white-space: nowrap; }
+  .btn-purple { background: #6d28d9; color: #fff; }
+  .btn-purple:hover:not(:disabled) { background: #5b21b6; }
+  .btn-ghost { background: #fff; color: #475569; border: 1px solid #cbd5e1; }
+  .btn-ghost:hover:not(:disabled) { background: #dde2e8; color: #0f172a; }
+  .btn-sm { padding: 7px 12px; font-size: .78rem; gap: 5px; }
+
+  /* =====================================================
+     BARRA FLUTUANTE DE CLONAGEM (CARRINHO)
+  ===================================================== */
+  .barra-clonagem-wrap { position: fixed; bottom: 0; left: 0; right: 0; z-index: 1500; display: none; flex-direction: column; align-items: center; pointer-events: none; }
+  .barra-clonagem-wrap.show { display: flex; }
+  
+  .barra-clonagem-header { pointer-events: auto; background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); color: #fff; padding: 12px 20px; box-shadow: 0 -6px 24px rgba(124, 58, 237, 0.4); display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; border-radius: 20px 20px 0 0; max-width: 1000px; width: 100%; margin: 0 auto; }
+  .barra-clonagem-header .info { display: flex; align-items: center; gap: 10px; font-size: 0.9rem; font-weight: 700; flex: 1; min-width: 0; cursor: pointer; user-select: none; }
+  .barra-clonagem-header .info i { font-size: 1.15rem; flex-shrink: 0; transition: transform 0.2s; }
+  .barra-clonagem-header .info i.aberto { transform: rotate(180deg); }
+  .barra-clonagem-header .info .cont { background: rgba(255,255,255,0.25); padding: 2px 10px; border-radius: 20px; font-size: 0.8rem; }
+  .barra-clonagem-header .acoes-barra { display: flex; gap: 8px; flex-wrap: wrap; }
+  .barra-clonagem-header .btn-barra { padding: 9px 16px; border-radius: 10px; border: none; font-family: inherit; font-weight: 700; font-size: 0.82rem; cursor: pointer; transition: 0.15s; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+  .barra-clonagem-header .btn-barra.limpar { background: rgba(255,255,255,0.2); color: #fff; }
+  .barra-clonagem-header .btn-barra.limpar:hover { background: rgba(255,255,255,0.35); }
+  .barra-clonagem-header .btn-barra.confirmar { background: #fff; color: #5b21b6; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+  .barra-clonagem-header .btn-barra.confirmar:hover { background: #f3f0ff; transform: scale(1.02); }
+
+  .barra-clonagem-lista { pointer-events: auto; background: #fff; max-height: 300px; overflow-y: auto; border-top: 1px solid var(--borda); padding: 10px 20px; box-shadow: 0 -4px 12px rgba(0,0,0,0.05); display: none; flex-direction: column; gap: 8px; max-width: 1000px; width: 100%; margin: 0 auto; }
+  .barra-clonagem-lista.show { display: flex; }
+  .clonar-item-lista { display: flex; align-items: center; gap: 12px; background: var(--cinza-claro); border-radius: 10px; padding: 10px; border: 1px solid var(--borda); }
+  .clonar-item-lista .thumb { width: 50px; height: 50px; border-radius: 8px; object-fit: cover; background: #ddd; flex-shrink: 0; }
+  .clonar-item-lista .dados { flex: 1; min-width: 0; }
+  .clonar-item-lista .dados .titulo { font-size: 0.85rem; font-weight: 800; color: var(--texto-escuro); margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .clonar-item-lista .dados .end { font-size: 0.74rem; color: var(--texto-cinza); font-weight: 600; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .clonar-item-lista .dados .desc { font-size: 0.7rem; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .clonar-item-lista .dados .valor { font-size: 0.8rem; font-weight: 800; color: var(--azul-quinto); margin-top: 2px; }
+  .clonar-item-lista .btn-remover { background: transparent; border: none; color: var(--vermelho); cursor: pointer; padding: 6px; font-size: 1.1rem; border-radius: 50%; transition: 0.15s; display: flex; align-items: center; justify-content: center; }
+  .clonar-item-lista .btn-remover:hover { background: #fee2e2; }
+
+  .imovel-card.card-marcado-clonar { outline: 3px solid var(--roxo) !important; outline-offset: -3px; box-shadow: 0 8px 28px rgba(124, 58, 237, 0.35) !important; position: relative; }
+  .imovel-card.card-marcado-clonar::after { content: '\f00c'; font-family: 'Font Awesome 6 Free'; font-weight: 900; position: absolute; top: 10px; right: 10px; width: 32px; height: 32px; background: var(--roxo); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; z-index: 10; box-shadow: 0 4px 12px rgba(124, 58, 237, 0.5); border: 2px solid #fff; pointer-events: none; }
+  .imovel-card .btn-a.btn-clonar.marcado { background: var(--vermelho) !important; color: #fff !important; border-color: var(--vermelho) !important; }
+  .imovel-card .btn-a.btn-clonar.marcado:hover { background: #b91c1c !important; }
+
+  /* Modal Confirmar Clonagem (Lista de clientes) */
+  .lista-clientes-destino { max-height: 250px; overflow-y: auto; border: 1px solid var(--borda); border-radius: 8px; padding: 8px; background: #f8fafc; }
+  .lista-clientes-destino .ms-item { display: flex; align-items: center; gap: 10px; padding: 10px; border-radius: 8px; cursor: pointer; transition: 0.1s; font-size: 0.86rem; font-weight: 500; color: var(--texto-escuro); user-select: none; background: #fff; margin-bottom: 4px; border: 1px solid var(--borda); }
+  .lista-clientes-destino .ms-item:hover { background: var(--azul-claro); border-color: var(--azul-quinto); }
+  .lista-clientes-destino .ms-item input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--azul-quinto); cursor: pointer; flex-shrink: 0; margin: 0; }
+  .lista-clientes-destino .ms-item .nome-cli { font-weight: 700; }
+  .lista-clientes-destino .ms-item .tel-cli { margin-left: auto; font-size: 0.75rem; color: var(--muted); }
+
+  .progresso-clonagem-wrap { background: #f3f0ff; border: 1px solid #c4b5fd; border-radius: 10px; padding: 12px 14px; margin-bottom: 16px; display: none; }
+  .progresso-clonagem-wrap.show { display: block; }
+  .progresso-clonagem-wrap .barra-ext { width: 100%; height: 10px; background: #e9e3ff; border-radius: 6px; overflow: hidden; margin: 8px 0; }
+  .progresso-clonagem-wrap .barra-int { height: 100%; background: linear-gradient(90deg, #7c3aed, #5b21b6); border-radius: 6px; transition: width 0.4s ease; width: 0%; }
+  .progresso-clonagem-wrap .lbl { font-size: 0.78rem; font-weight: 700; color: #5b21b6; display: flex; justify-content: space-between; }
+  .progresso-clonagem-wrap .detalhe { font-size: 0.72rem; color: #7c3aed; margin-top: 4px; font-family: 'SF Mono', Menlo, monospace; }
+  .progresso-clonagem-wrap .log { max-height: 130px; overflow-y: auto; font-family: 'SF Mono', Menlo, monospace; font-size: 0.72rem; color: #5b21b6; background: #fff; border-radius: 6px; padding: 8px; margin-top: 6px; line-height: 1.5; }
+  .progresso-clonagem-wrap .log .ok { color: var(--verde); }
+  .progresso-clonagem-wrap .log .erro { color: var(--vermelho); }
 
   /* Outros modais simples */
   .modal-admin { background: #fff; border-radius: var(--radius-lg); max-width: 500px; width: 100%; max-height: 92vh; overflow-y: auto; box-shadow: var(--sombra-forte); position: relative; animation: fadeUp 0.25s ease; padding: 28px; }
@@ -387,13 +298,12 @@
   .modal-admin .sub { color: var(--texto-cinza); font-size: 0.85rem; margin-bottom: 20px; line-height: 1.5; }
   .campo-admin { display: flex; flex-direction: column; gap: 5px; margin-bottom: 14px; }
   .campo-admin label { font-size: 0.72rem; font-weight: 700; color: var(--texto-cinza); text-transform: uppercase; letter-spacing: 0.4px; }
-  .campo-admin label .req { color: var(--vermelho); }
-  .campo-admin input, .campo-admin select { width: 100%; padding: 10px 12px; border: 1.5px solid var(--borda-forte); border-radius: 10px; font-size: 0.88rem; font-family: inherit; background: #fff; color: var(--texto-escuro); transition: 0.15s; }
+  .campo-admin input { width: 100%; padding: 10px 12px; border: 1.5px solid var(--borda-forte); border-radius: 10px; font-size: 0.88rem; font-family: inherit; background: #fff; color: var(--texto-escuro); transition: 0.15s; }
   .btn-admin-primary { background: var(--azul-quinto); color: #fff; border: none; padding: 12px 20px; border-radius: 12px; font-family: inherit; font-weight: 700; font-size: 0.9rem; cursor: pointer; transition: 0.15s; display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; }
-  .btn-admin-primary:hover { background: var(--azul-escuro); transform: translateY(-1px); }
   .erro-senha { display: none; background: #fef2f2; color: var(--vermelho); border: 1px solid #fecaca; padding: 10px 14px; border-radius: 10px; font-size: 0.82rem; font-weight: 600; margin-bottom: 14px; }
   .erro-senha.show { display: block; }
   
+  /* Clientes vinculados */
   .cliente-chip { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-radius: 10px; background: var(--cinza-claro); border: 1px solid var(--borda); margin-bottom: 8px; text-decoration: none; color: var(--texto-escuro); transition: 0.15s; cursor: pointer; }
   .cliente-chip:hover { background: var(--azul-claro); border-color: var(--azul-quinto); transform: translateX(2px); }
   .cliente-chip .avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--azul-quinto); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem; flex-shrink: 0; }
@@ -402,100 +312,76 @@
   .cliente-chip .tel { font-family: 'SF Mono', Menlo, monospace; font-size: 0.74rem; color: var(--texto-cinza); }
   .cliente-chip i.fa-whatsapp { color: #25d366; font-size: 1.2rem; }
 
-  /* Multi select e filtros avançados */
+  /* Busca Avançada e Multi-select */
   .modal-busca-avancada { background: #fff; border-radius: var(--radius-lg); max-width: 620px; width: 100%; max-height: 92vh; overflow-y: auto; box-shadow: var(--sombra-forte); position: relative; animation: fadeUp 0.25s ease; padding: 24px; }
-  .modal-busca-avancada .btn-fechar { position: absolute; top: 14px; right: 14px; background: var(--cinza-claro); border: none; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-size: 0.9rem; color: var(--texto-cinza); display: flex; align-items: center; justify-content: center; transition: 0.15s; }
-  .modal-busca-avancada .btn-fechar:hover { background: #e0e4ef; color: var(--texto-escuro); }
-  .modal-busca-avancada h3 { font-size: 1.1rem; font-weight: 800; color: var(--texto-escuro); display: flex; align-items: center; gap: 10px; margin-bottom: 6px; padding-right: 40px; letter-spacing: -0.02em; }
-  .modal-busca-avancada h3 i { color: var(--azul-quinto); }
-  .modal-busca-avancada .sub { color: var(--texto-cinza); font-size: 0.82rem; margin-bottom: 18px; line-height: 1.5; }
+  .modal-busca-avancada .btn-fechar { position: absolute; top: 14px; right: 14px; background: var(--cinza-claro); border: none; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; color: var(--texto-cinza); display: flex; align-items: center; justify-content: center; transition: 0.15s; }
+  .modal-busca-avancada h3 { font-size: 1.1rem; font-weight: 800; color: var(--texto-escuro); display: flex; align-items: center; gap: 10px; margin-bottom: 6px; padding-right: 40px; }
+  .modal-busca-avancada .sub { color: var(--texto-cinza); font-size: 0.82rem; margin-bottom: 18px; }
   .filtros-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
-  @media(max-width: 520px) { .filtros-grid-2 { grid-template-columns: 1fr; } }
   .filtro-grupo { display: flex; flex-direction: column; gap: 5px; }
-  .filtro-grupo label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; color: var(--muted); }
-  .filtro-grupo select, .filtro-grupo input { width: 100%; padding: 10px 12px; border: 1.5px solid var(--borda-forte); border-radius: 10px; font-size: 0.86rem; font-family: inherit; background: #fff; color: var(--texto-escuro); transition: 0.15s; height: 42px; }
-  .modal-busca-avancada .secao-titulo { font-size: 0.68rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.6px; color: var(--azul-quinto); margin-bottom: 8px; padding-top: 12px; border-top: 1px dashed var(--borda); }
+  .filtro-grupo label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: var(--muted); }
+  .filtro-grupo select, .filtro-grupo input { width: 100%; padding: 10px 12px; border: 1.5px solid var(--borda-forte); border-radius: 10px; font-size: 0.86rem; font-family: inherit; }
+  .modal-busca-avancada .secao-titulo { font-size: 0.68rem; font-weight: 800; text-transform: uppercase; color: var(--azul-quinto); margin-bottom: 8px; padding-top: 12px; border-top: 1px dashed var(--borda); }
   .modal-busca-avancada .secao-titulo:first-of-type { border-top: none; padding-top: 0; }
-  .modal-busca-avancada .acoes-modal { display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap; padding-top: 8px; border-top: 1px solid var(--borda); margin-top: 8px; }
-  .modal-busca-avancada .acoes-modal .btn-modal { padding: 10px 20px; border-radius: 10px; border: none; font-family: inherit; font-weight: 700; font-size: 0.86rem; cursor: pointer; transition: 0.15s; display: inline-flex; align-items: center; gap: 6px; }
+  .modal-busca-avancada .acoes-modal { display: flex; gap: 10px; justify-content: flex-end; padding-top: 8px; border-top: 1px solid var(--borda); margin-top: 8px; }
+  .modal-busca-avancada .acoes-modal .btn-modal { padding: 10px 20px; border-radius: 10px; border: none; font-family: inherit; font-weight: 700; font-size: 0.86rem; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
   .modal-busca-avancada .acoes-modal .btn-modal.limpar { background: var(--cinza-claro); color: var(--texto-escuro); }
-  .modal-busca-avancada .acoes-modal .btn-modal.limpar:hover { background: #e0e4ef; }
   .modal-busca-avancada .acoes-modal .btn-modal.aplicar { background: var(--azul-quinto); color: #fff; }
-  .modal-busca-avancada .acoes-modal .btn-modal.aplicar:hover { background: var(--azul-escuro); }
 
   .chips-tipo-imovel { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
-  .chip-tipo-imovel { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border: 1.5px solid var(--borda-forte); background: #fff; border-radius: 30px; font-family: inherit; font-size: 0.78rem; font-weight: 700; color: var(--texto-cinza); cursor: pointer; transition: 0.15s; white-space: nowrap; }
+  .chip-tipo-imovel { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border: 1.5px solid var(--borda-forte); background: #fff; border-radius: 30px; font-family: inherit; font-size: 0.78rem; font-weight: 700; color: var(--texto-cinza); cursor: pointer; transition: 0.15s; }
   .chip-tipo-imovel:hover { border-color: var(--azul-quinto); color: var(--azul-quinto); }
-  .chip-tipo-imovel.ativo { background: var(--azul-quinto); color: #fff; border-color: var(--azul-quinto); box-shadow: 0 4px 12px rgba(0, 30, 240, 0.2); }
+  .chip-tipo-imovel.ativo { background: var(--azul-quinto); color: #fff; border-color: var(--azul-quinto); }
 
   .multi-select-wrap { position: relative; width: 100%; }
-  .multi-select-trigger { width: 100%; padding: 10px 12px; border: 1.5px solid var(--borda-forte); border-radius: 10px; font-size: 0.86rem; font-family: inherit; background: #fff; color: var(--texto-escuro); cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 8px; transition: 0.15s; text-align: left; min-height: 42px; }
-  .multi-select-trigger:hover { border-color: var(--azul-quinto); }
-  .multi-select-trigger.aberto { border-color: var(--azul-quinto); box-shadow: 0 0 0 3px rgba(0, 30, 240, 0.1); }
+  .multi-select-trigger { width: 100%; padding: 10px 12px; border: 1.5px solid var(--borda-forte); border-radius: 10px; font-size: 0.86rem; font-family: inherit; background: #fff; color: var(--texto-escuro); cursor: pointer; display: flex; align-items: center; justify-content: space-between; min-height: 42px; }
   .multi-select-trigger .txt-trigger { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--texto-cinza); }
   .multi-select-trigger .txt-trigger.tem-valor { color: var(--texto-escuro); font-weight: 600; }
   .multi-select-trigger .contador-bairros { background: var(--azul-quinto); color: #fff; padding: 1px 8px; border-radius: 10px; font-size: 0.68rem; font-weight: 800; flex-shrink: 0; }
-  .multi-select-trigger i { color: var(--muted); font-size: 0.72rem; transition: transform 0.2s; flex-shrink: 0; }
-  .multi-select-trigger.aberto i { transform: rotate(180deg); }
   .multi-select-dropdown { display: none; position: absolute; top: calc(100% + 4px); left: 0; right: 0; background: #fff; border: 1.5px solid var(--borda-forte); border-radius: 12px; box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15); z-index: 100; max-height: 280px; overflow-y: auto; padding: 6px; }
   .multi-select-dropdown.aberto { display: block; }
-  .multi-select-dropdown .ms-item { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 8px; cursor: pointer; transition: 0.1s; font-size: 0.86rem; font-weight: 500; color: var(--texto-escuro); user-select: none; }
+  .multi-select-dropdown .ms-item { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 8px; cursor: pointer; font-size: 0.86rem; font-weight: 500; color: var(--texto-escuro); }
   .multi-select-dropdown .ms-item:hover { background: var(--azul-claro); }
   .multi-select-dropdown .ms-item.ativo { background: var(--azul-claro); font-weight: 700; }
-  .multi-select-dropdown .ms-item input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--azul-quinto); cursor: pointer; flex-shrink: 0; margin: 0; }
-  .multi-select-dropdown .ms-item .qtd-b { margin-left: auto; background: var(--cinza-claro); color: var(--texto-cinza); padding: 2px 8px; border-radius: 999px; font-size: 0.66rem; font-weight: 700; flex-shrink: 0; }
+  .multi-select-dropdown .ms-item input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--azul-quinto); cursor: pointer; margin: 0; }
+  .multi-select-dropdown .ms-item .qtd-b { margin-left: auto; background: var(--cinza-claro); color: var(--texto-cinza); padding: 2px 8px; border-radius: 999px; font-size: 0.66rem; font-weight: 700; }
   .multi-select-dropdown .ms-vazia { text-align: center; padding: 20px; color: var(--muted); font-size: 0.82rem; }
   .ms-acoes-rapidas { display: flex; gap: 6px; padding: 6px 4px 8px; border-bottom: 1px solid var(--borda); margin-bottom: 4px; }
-  .ms-acoes-rapidas button { flex: 1; padding: 6px 8px; border: 1px solid var(--borda-forte); background: #fff; border-radius: 6px; font-family: inherit; font-size: 0.7rem; font-weight: 700; color: var(--texto-cinza); cursor: pointer; transition: 0.15s; }
-  .ms-acoes-rapidas button:hover { background: var(--azul-claro); color: var(--azul-quinto); border-color: var(--azul-quinto); }
+  .ms-acoes-rapidas button { flex: 1; padding: 6px 8px; border: 1px solid var(--borda-forte); background: #fff; border-radius: 6px; font-family: inherit; font-size: 0.7rem; font-weight: 700; color: var(--texto-cinza); cursor: pointer; }
 
   .range-preco-wrap { padding: 4px 0 8px; }
   .range-valores { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
   .range-valores .campo-valor { flex: 1; display: flex; flex-direction: column; gap: 3px; }
-  .range-valores .campo-valor label { font-size: 0.62rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; color: var(--muted); }
-  .range-valores .campo-valor input { width: 100%; padding: 8px 10px; border: 1.5px solid var(--borda-forte); border-radius: 8px; font-size: 0.84rem; font-family: inherit; font-weight: 600; background: #fff; color: var(--texto-escuro); transition: 0.15s; height: 38px; }
+  .range-valores .campo-valor label { font-size: 0.62rem; font-weight: 700; text-transform: uppercase; color: var(--muted); }
+  .range-valores .campo-valor input { width: 100%; padding: 8px 10px; border: 1.5px solid var(--borda-forte); border-radius: 8px; font-size: 0.84rem; font-weight: 600; height: 38px; }
   .range-valores .traco-meio { font-weight: 700; color: var(--muted); font-size: 1rem; margin-top: 18px; }
   .slider-container { position: relative; height: 36px; margin: 0 4px; }
   .slider-track { position: absolute; top: 50%; transform: translateY(-50%); left: 0; right: 0; height: 5px; background: var(--borda-forte); border-radius: 3px; pointer-events: none; }
   .slider-range { position: absolute; top: 50%; transform: translateY(-50%); height: 5px; background: var(--azul-quinto); border-radius: 3px; pointer-events: none; z-index: 1; }
-  .slider-container input[type="range"] { position: absolute; top: 0; left: 0; width: 100%; height: 36px; -webkit-appearance: none; appearance: none; background: transparent; pointer-events: none; margin: 0; z-index: 2; outline: none; }
-  .slider-container input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 22px; height: 22px; border-radius: 50%; background: var(--azul-quinto); border: 3px solid #fff; box-shadow: 0 2px 8px rgba(0, 30, 240, 0.4); cursor: grab; pointer-events: auto; transition: transform 0.15s; }
-  .slider-container input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
-  .slider-container input[type="range"]::-moz-range-thumb { width: 22px; height: 22px; border-radius: 50%; background: var(--azul-quinto); border: 3px solid #fff; box-shadow: 0 2px 8px rgba(0, 30, 240, 0.4); cursor: grab; pointer-events: auto; }
-  .slider-container input[type="range"]::-moz-range-track { background: transparent; border: none; }
+  .slider-container input[type="range"] { position: absolute; top: 0; left: 0; width: 100%; height: 36px; -webkit-appearance: none; appearance: none; background: transparent; pointer-events: none; margin: 0; z-index: 2; }
+  .slider-container input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%; background: var(--azul-quinto); border: 3px solid #fff; box-shadow: 0 2px 8px rgba(0, 30, 240, 0.4); cursor: grab; pointer-events: auto; }
   .slider-container input[type="range"]:nth-child(3) { z-index: 3; }
 
   .loading-principal { text-align: center; padding: 60px 20px; color: var(--texto-cinza); grid-column: 1 / -1; }
   .loading-principal .spinner { width: 44px; height: 44px; border: 4px solid var(--azul-claro); border-top-color: var(--azul-quinto); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 16px; }
-  .loading-principal p { font-size: 0.9rem; font-weight: 500; }
+  @keyframes spin { to { transform: rotate(360deg); } }
   .empty-state { text-align: center; padding: 60px 20px; color: var(--muted); grid-column: 1 / -1; }
   .empty-state i { font-size: 3rem; color: var(--borda-forte); margin-bottom: 14px; display: block; }
-  .empty-state h3 { font-size: 1.05rem; color: var(--texto-cinza); font-weight: 600; margin-bottom: 6px; }
-  .empty-state p { font-size: 0.85rem; }
   .btn-topo { position: fixed; bottom: 24px; right: 24px; width: 48px; height: 48px; border-radius: 50%; background: var(--azul-quinto); color: #fff; border: none; cursor: pointer; font-size: 1rem; display: none; align-items: center; justify-content: center; box-shadow: 0 6px 20px rgba(0, 30, 240, 0.35); z-index: 800; transition: 0.2s; }
   .btn-topo.show { display: flex; }
-  .btn-topo:hover { transform: scale(1.08); background: var(--azul-escuro); }
   .toast { position: fixed; bottom: 24px; left: 50%; transform: translate(-50%, 30px); background: #1a1a2e; color: #fff; padding: 12px 22px; border-radius: 10px; font-size: 0.85rem; font-weight: 600; opacity: 0; transition: 0.3s; z-index: 3000; pointer-events: none; box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
   .toast.show { opacity: 1; transform: translate(-50%, 0); }
   .toast.success { background: var(--verde); }
   .toast.error { background: var(--vermelho); }
 
-  @media (max-width: 640px) {
-    .navbar { padding: 10px 14px; }
-    .navbar .nav-links { display: none; }
-    .hero-imoveis { padding: 14px 14px; }
-    .hero-imoveis h1 { font-size: 1rem; }
-    .hero-imoveis .contador { font-size: 0.7rem; padding: 4px 11px; }
-    .container { padding: 0 12px; }
-    .cards-grid { gap: 10px; }
-    .imovel-card .preco { font-size: 1.1rem; }
-    .modal-editor { padding: 16px; }
-    .modal-editor h3 { font-size: 1rem; }
-    .modal-detalhes .info-lateral { padding: 16px; }
-    .modal-detalhes .topo h2 { font-size: 1.3rem; }
-    .modal-detalhes .acoes .btn { min-width: 100%; }
-    .btn-topo { bottom: 16px; right: 16px; width: 44px; height: 44px; }
-    .btn-admin-gear { top: 68px; right: 12px; width: 38px; height: 38px; font-size: 1rem; }
+  @media (max-width: 768px) {
+    .modal-detalhes { flex-direction: column; overflow-y: auto; }
+    .modal-detalhes .foto-lateral { width: 100%; height: 240px; min-height: auto; }
+    .modal-detalhes .info-lateral { width: 100%; padding: 24px; }
+    .form-row-link-price, .form-row-address, .form-row-img-desc { grid-template-columns: 1fr; }
+    .barra-clonagem-header { border-radius: 20px 20px 0 0; padding: 12px 14px; flex-direction: column; align-items: stretch; text-align: center; }
+    .barra-clonagem-header .info { justify-content: center; }
+    .barra-clonagem-header .acoes-barra { justify-content: center; }
   }
 </style>
 </head>
@@ -578,7 +464,7 @@
   <i class="fas fa-arrow-up"></i>
 </button>
 
-<!-- ===== BARRA DE CLONAGEM EXPANSÍVEL ===== -->
+<!-- ===== BARRA FLUTUANTE DE CLONAGEM ===== -->
 <div class="barra-clonagem-wrap" id="barraClonagemWrap">
   <div class="barra-clonagem-lista" id="barraClonagemLista">
     <!-- Itens selecionados vão aqui via JS -->
@@ -600,103 +486,111 @@
   </div>
 </div>
 
-<!-- ===== MODAL DETALHES PROFISSIONAL ===== -->
-<div class="modal-backdrop" id="modalDetalhes">
-  <div class="modal-detalhes" id="modalDetalhesBox">
-    <button class="btn-fechar" onclick="fecharDetalhes()"><i class="fas fa-times"></i></button>
-    <div class="foto-lateral" id="detalheFoto"></div>
-    <div class="info-lateral">
-      <div class="topo">
-        <div class="codigo-linha">
-          <span class="codigo-badge" id="detalheCodigo">#---</span>
-          <span class="tipo-badge" id="detalheTipo" style="display:none;">Tipo</span>
-          <span class="vendido-badge" id="detalheVendido" style="display:none;">Vendido</span>
-        </div>
-        <h2 id="detalhePreco">R$ ---</h2>
-        <div class="endereco-completo" id="detalheEndereco">
-          <i class="fas fa-map-marker-alt"></i> ---
-        </div>
-      </div>
-      <div class="descricao" id="detalheDescricao"></div>
-      <div class="gastos" id="detalheGastos" style="display:none;"></div>
-      
-      <div class="acoes">
-        <a href="#" target="_blank" class="btn btn-zap" id="detalheZap">
-          <i class="fab fa-whatsapp"></i> Falar com corretor
-        </a>
-        <a href="#" target="_blank" class="btn btn-anuncio" id="detalheAnuncio">
-          <i class="fas fa-external-link-alt"></i> Ver anúncio
-        </a>
-        <button class="btn btn-share" onclick="compartilharImovel()"><i class="fas fa-share-alt"></i></button>
-      </div>
-    </div>
+<!-- ===== MODAL DE EDIÇÃO (BASEADO NO PAINEL MODAL) ===== -->
+<div class="admin-panel" id="modalEditarImovel">
+  <div class="admin-panel-header">
+    <h3><i class="fas fa-edit" style="color:#6d28d9;"></i> Editar imóvel <span style="color:#475569; font-weight:600; font-size:0.85rem; margin-left:8px;" id="editarSubInfo">—</span></h3>
+    <button class="close-x" onclick="fecharModalEditarImovel()"><i class="fas fa-times"></i></button>
   </div>
-</div>
-
-<!-- ===== MODAL EDITOR PADRONIZADO ===== -->
-<div class="modal-backdrop" id="modalEditarImovel">
-  <div class="modal-editor">
-    <button class="btn-fechar" onclick="fecharModalEditarImovel()"><i class="fas fa-times"></i></button>
-    <h3><i class="fas fa-edit"></i> Editar imóvel <span style="color:var(--texto-cinza); font-weight:600; font-size:0.82rem; margin-left:8px;" id="editarSubInfo">—</span></h3>
-
-    <div class="campo-info-apto" id="infoAptoEditor" style="display:none;">
-      <i class="fas fa-door-open"></i>
-      <span>Apartamento: <strong id="aptoEditorNumero">—</strong> · <span id="aptoEditorAndar">—</span></span>
+  <div class="admin-panel-inner">
+    
+    <label style="margin-bottom:8px;">Tipo de imóvel <span class="req">*</span></label>
+    <div class="tipo-chips-wrap" id="chipsTipoEditor">
+      <button type="button" class="chip-tipo" data-tipo="padrao"><i class="fas fa-building"></i> Apartamento Padrão</button>
+      <button type="button" class="chip-tipo" data-tipo="cobertura"><i class="fas fa-city"></i> Cobertura</button>
+      <button type="button" class="chip-tipo" data-tipo="area-privativa"><i class="fas fa-tree"></i> Área Privativa</button>
+      <button type="button" class="chip-tipo" data-tipo="casa"><i class="fas fa-home"></i> Casa</button>
     </div>
 
-    <div class="form-row-4">
-      <div class="form-group-modal">
-        <label>Link do anúncio</label>
-        <input type="url" id="editLink" placeholder="https://..." oninput="onLinkImovelChanged()" onblur="onLinkBlur()">
-      </div>
-      <div class="form-group-modal">
-        <label>Preço</label>
-        <input type="text" id="editPreco" inputmode="numeric" placeholder="450.000,00">
-      </div>
-      <div class="form-group-modal">
-        <label>Condomínio</label>
-        <input type="text" id="editCondominio" inputmode="numeric" placeholder="800,00">
-      </div>
-      <div class="form-group-modal">
-        <label>IPTU</label>
-        <input type="text" id="editIptu" inputmode="numeric" placeholder="1.200,00">
-      </div>
-    </div>
-    <div class="form-row-2-img">
+    <div class="form-row-link-price">
       <div>
-        <label style="display:block; font-size:0.74rem; font-weight:600; margin-bottom:6px; color:var(--texto-cinza); text-transform:uppercase; letter-spacing:0.4px;">Miniatura</label>
-        <div class="img-preview-box" id="imgPreviewBox">
-          <div class="sem-img" id="semImgTxt">Cole um link<br>para buscar a imagem</div>
-          <img id="previewImg" style="display:none;" alt="Preview">
+        <label>Link do anúncio <span class="req">*</span></label>
+        <input type="url" id="editLink" class="editor-input" placeholder="https://..." oninput="onLinkImovelChanged()" onblur="onLinkBlur()">
+      </div>
+      <div>
+        <label>Preço</label>
+        <input type="text" id="editPreco" class="editor-input" inputmode="numeric" placeholder="450.000,00">
+      </div>
+      <div>
+        <label>Condomínio</label>
+        <input type="text" id="editCondominio" class="editor-input" inputmode="numeric" placeholder="800,00">
+      </div>
+      <div>
+        <label>IPTU</label>
+        <input type="text" id="editIptu" class="editor-input" inputmode="numeric" placeholder="1.200,00">
+      </div>
+    </div>
+
+    <div class="form-row-address">
+      <div>
+        <label>Rua <span class="req">*</span></label>
+        <input type="text" id="editRua" class="editor-input">
+      </div>
+      <div>
+        <label>Número <span class="req">*</span></label>
+        <input type="text" id="editNumero" class="editor-input">
+      </div>
+      <div>
+        <label>Bloco</label>
+        <input type="text" id="editBloco" class="editor-input" placeholder="Bloco">
+      </div>
+      <div>
+        <label>Apartamento <span class="req">*</span></label>
+        <input type="text" id="editApto" class="editor-input" placeholder="Apartamento">
+      </div>
+    </div>
+
+    <div class="form-row-bairro">
+      <div>
+        <label>Bairro <span class="req">*</span></label>
+        <input type="text" id="editBairro" class="editor-input">
+      </div>
+    </div>
+
+    <div class="form-row-img-desc">
+      <div>
+        <label>Miniatura</label>
+        <div class="img-preview-box">
+          <img id="editPreviewImg" alt="Preview">
+          <div class="sem-img" id="editSemImg">Cole um link<br>para buscar a imagem</div>
         </div>
       </div>
-      <div>
-        <label style="display:block; font-size:0.74rem; font-weight:600; margin-bottom:6px; color:var(--texto-cinza); text-transform:uppercase; letter-spacing:0.4px;">Descrição</label>
-        <textarea id="editDescricao" style="min-height:150px;" placeholder="Descrição do imóvel..."></textarea>
+      <div class="desc-field-wrap">
+        <label>Descrição</label>
+        <div class="desc-tipo-preview" id="editDescTipoPreview">
+          <i class="fas fa-lock" style="font-size:0.7rem;"></i>
+          <span class="empty-txt">Selecione o tipo acima (fixo na 1ª linha)</span>
+        </div>
+        <textarea id="editDescricao" class="editor-textarea" placeholder="Descreva o imóvel (quartos, vagas, metragem, etc)..."></textarea>
       </div>
     </div>
+
     <button type="button" class="btn-buscar-entrada" id="btnBuscarEntrada" onclick="abrirBuscarEntradaForm()" disabled>
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
       Buscar entrada <span class="codigo-badge" id="codigoBadge">sem código</span>
     </button>
-    <div class="form-row-3">
-      <div class="form-group-modal">
-        <label>Rua <span class="req">*</span></label>
-        <input type="text" id="editRua">
+
+    <label>Chave (onde pegar) <span class="req">*</span></label>
+    <div class="chave-composer">
+      <div class="chave-locked">
+        <div class="linha" id="chaveLinhaApto">
+          <i class="fas fa-lock lock-ico"></i>
+          <span class="label-mini">APARTAMENTO</span>
+          <span class="valor-mini">—</span>
+        </div>
+        <div class="linha" id="chaveLinhaBloco">
+          <i class="fas fa-lock lock-ico"></i>
+          <span class="label-mini">BLOCO</span>
+          <span class="valor-mini">—</span>
+        </div>
       </div>
-      <div class="form-group-modal">
-        <label>Número</label>
-        <input type="text" id="editNumero">
-      </div>
-      <div class="form-group-modal">
-        <label>Bairro</label>
-        <input type="text" id="editBairro">
-      </div>
+      <textarea id="editChaveComplemento" placeholder="Onde pegar a chave (ex: na portaria, com o síndico, etc)..."></textarea>
     </div>
-    <div class="form-group-modal">
-      <label>Chave (onde pegar)</label>
-      <textarea id="editChave" placeholder="Ex: Chave na portaria com o Sr. José, ligar antes"></textarea>
+    <div class="chave-hint" id="chaveHint">
+      <i class="fas fa-info-circle"></i>
+      <span id="chaveHintTexto">Apto e Bloco travados. O texto de complemento é lido daqui.</span>
     </div>
+
     <input type="hidden" id="editImagem">
 
     <div class="check-vendido-wrap">
@@ -707,23 +601,55 @@
       </div>
     </div>
 
-    <div class="aviso-massivo">
-      <i class="fas fa-exclamation-triangle"></i>
-      Esta alteração será aplicada em <strong>todos os clientes</strong> que têm esse imóvel (mesmo código).
-    </div>
     <div class="form-actions-row">
       <span class="link-label">Link de: <span class="req">*</span></span>
       <button type="button" class="btn-corretor-escolha" data-corretor="Hugo" onclick="escolherCorretor('Hugo', this)">Hugo</button>
       <button type="button" class="btn-corretor-escolha" data-corretor="Carolina" onclick="escolherCorretor('Carolina', this)">Carol</button>
-      <button class="btn btn-salvar-imovel" id="btnSalvarImovel" onclick="salvarEdicaoImovel()">
-        <i class="fas fa-save"></i> Salvar em todos os clientes
-      </button>
-      <button class="btn-cancelar-editor" onclick="fecharModalEditarImovel()">Cancelar</button>
+      
+      <div style="margin-left: auto; display: flex; gap: 8px;">
+        <button class="btn btn-purple" id="btnSalvarImovel" onclick="salvarEdicaoImovel()">
+          <i class="fas fa-save"></i> Salvar no cliente
+        </button>
+        <button class="btn btn-ghost" onclick="fecharModalEditarImovel()">Cancelar</button>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- ===== MODAL CONFIRMAR CLONAGEM ===== -->
+<!-- ===== MODAL DETALHES ===== -->
+<div class="modal-backdrop" id="modalDetalhes">
+  <div class="modal-detalhes" id="modalDetalhesBox">
+    <button class="btn-fechar" onclick="fecharDetalhes()"><i class="fas fa-times"></i></button>
+    <div class="foto-lateral" id="detalheFoto"></div>
+    <div class="info-lateral">
+      <div class="topo">
+        <div class="codigo-linha">
+          <span class="codigo-badge" id="detalheCodigo">#---</span>
+          <span class="tipo-badge" id="detalheTipo" style="display:none;">Tipo</span>
+          <span class="vendido-badge" id="detalheVendido" style="display:none; background:var(--vermelho); color:#fff; padding:4px 12px; border-radius:8px; font-size:0.72rem; font-weight:700; text-transform:uppercase;">Vendido</span>
+        </div>
+        <h2 id="detalhePreco">R$ ---</h2>
+        <div class="endereco-completo" id="detalheEndereco" style="font-size: 0.95rem; color: var(--texto-escuro); font-weight: 500; line-height: 1.5;">
+          <i class="fas fa-map-marker-alt"></i> ---
+        </div>
+      </div>
+      <div class="descricao" id="detalheDescricao" style="font-size: 0.9rem; line-height: 1.65; color: var(--texto-cinza); white-space: pre-wrap;"></div>
+      <div class="gastos" id="detalheGastos" style="display:none; font-size: 0.82rem; padding: 12px; background: #fef3c7; border-left: 3px solid var(--laranja); border-radius: 8px;"></div>
+      
+      <div class="acoes" style="display:flex; gap:10px; flex-wrap:wrap; margin-top:auto; padding-top:10px;">
+        <a href="#" target="_blank" class="btn btn-zap" id="detalheZap" style="flex:1; min-width:140px; padding:13px; border-radius:12px; background:#25d366; color:#fff; font-weight:700; text-decoration:none; display:flex; align-items:center; justify-content:center; gap:8px;">
+          <i class="fab fa-whatsapp"></i> Falar com corretor
+        </a>
+        <a href="#" target="_blank" class="btn btn-anuncio" id="detalheAnuncio" style="flex:1; min-width:140px; padding:13px; border-radius:12px; background:var(--azul-quinto); color:#fff; font-weight:700; text-decoration:none; display:flex; align-items:center; justify-content:center; gap:8px;">
+          <i class="fas fa-external-link-alt"></i> Ver anúncio
+        </a>
+        <button class="btn btn-share" onclick="compartilharImovel()" style="padding:13px 16px; border-radius:12px; background:var(--cinza-claro); border:none; cursor:pointer;"><i class="fas fa-share-alt"></i></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL CONFIRMAR CLONAGEM (LISTA DE CLIENTES) ===== -->
 <div class="modal-backdrop" id="modalConfirmarClonagem">
   <div class="modal-admin" style="max-width: 620px;">
     <button class="btn-fechar" onclick="fecharModalConfirmarClonagem()"><i class="fas fa-times"></i></button>
@@ -741,7 +667,7 @@
     </div>
 
     <div class="campo-admin">
-      <label>Clientes de destino <span class="req">*</span></label>
+      <label>Clientes de destino (selecione quantos quiser) <span class="req">*</span></label>
       <div class="lista-clientes-destino" id="listaClientesDestino">
         <div class="ms-vazia" style="text-align:center;padding:20px;color:var(--muted);font-size:0.82rem;">
           <i class="fas fa-spinner fa-spin"></i> Carregando clientes...
@@ -749,11 +675,11 @@
       </div>
     </div>
 
-    <div class="acoes-modal" style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;padding-top:8px;border-top:1px solid var(--borda);margin-top:8px;">
-      <button class="btn-modal limpar" style="padding:10px 20px;border-radius:10px;border:none;font-family:inherit;font-weight:700;font-size:0.86rem;cursor:pointer;background:var(--cinza-claro);color:var(--texto-escuro);" onclick="fecharModalConfirmarClonagem()">
+    <div style="display:flex; gap:10px; justify-content:flex-end; padding-top:8px; border-top:1px solid var(--borda); margin-top:8px;">
+      <button class="btn-editor btn-ghost" onclick="fecharModalConfirmarClonagem()">
         Cancelar
       </button>
-      <button class="btn-modal aplicar" id="btnConfirmarClonagemLote" style="padding:10px 20px;border-radius:10px;border:none;font-family:inherit;font-weight:700;font-size:0.86rem;cursor:pointer;background:var(--roxo);color:#fff;display:inline-flex;align-items:center;gap:6px;" onclick="executarClonagemLote()">
+      <button class="btn-editor btn-purple" id="btnConfirmarClonagemLote" onclick="executarClonagemLote()">
         <i class="fas fa-copy"></i> Clonar agora
       </button>
     </div>
@@ -822,10 +748,6 @@
         <div class="slider-range" id="sliderRange"></div>
         <input type="range" id="precoMinRange" min="0" max="2000000" step="10000" value="0">
         <input type="range" id="precoMaxRange" min="0" max="2000000" step="10000" value="2000000">
-      </div>
-      <div class="range-info-texto">
-        <span>R$ 0</span>
-        <span>R$ 2.000.000+</span>
       </div>
     </div>
 
@@ -903,7 +825,7 @@
 
 <script>
 /* =====================================================
-   CONFIG
+   CONFIGURAÇÕES
 ===================================================== */
 const API_URL = 'https://script.google.com/macros/s/AKfycbzuCjg_5ZJDMWWKmjYp1ThW34iWS0YouviWFdiMGx8W3yApv0F1fdUcjeZdjm0s6Mg/exec';
 const WHATSAPP_FALLBACK = '5531996070930';
@@ -912,7 +834,8 @@ const WHATSAPP_CAROL = '5531996273985';
 const IMOVEIS_CACHE_KEY = 'lr_imoveis_admin_cache_v2';
 const IMOVEIS_CACHE_TTL = 5 * 60 * 1000;
 const ADMIN_SENHA_CORRETA = 'Cal@562938';
-const ADMIN_SENHA_KEY = 'lr_admin_senha_salva'; // ✅ Salva no localStorage
+const ADMIN_SENHA_KEY = 'lr_admin_senha_salva';
+const ADMIN_SESSION_KEY = 'lr_admin_session';
 
 const BUSCAR_BASE = 'https://corretor.quintoandar.com.br/informacoes-de-entrada';
 
@@ -948,7 +871,8 @@ const state = {
     ordenacao: 'recentes',
     tipos: []
   },
-  _totalVendidosGlobal: 0
+  _totalVendidosGlobal: 0,
+  _tipoEditorSelecionado: ''
 };
 
 const $ = id => document.getElementById(id);
@@ -1023,9 +947,7 @@ function isVendido(imovel){
   if (!imovel) return false;
   const v = String(imovel.vendido || '').trim().toLowerCase();
   if (!v) return false;
-  return v === 'sim' || v === 's' || v === 'yes' || v === 'y' ||
-         v === 'true' || v === 't' || v === '1' || v === 'x' ||
-         v === 'vendido' || v === 'v';
+  return v === 'sim' || v === 's' || v === 'yes' || v === 'y' || v === 'true' || v === 't' || v === '1' || v === 'x' || v === 'vendido' || v === 'v';
 }
 
 function extrairQuartos(descricao){
@@ -1729,10 +1651,10 @@ function abrirDetalhes(ref){
 
   if(imFull.imagem){
     $('detalheFoto').style.backgroundImage = `url('${urlImagem(imFull)}')`;
-    $('detalheFoto').innerHTML = vendido ? '<div class="tarja-vendido"></div>' : '';
+    $('detalheFoto').innerHTML = vendido ? '<div class="tarja-vendido" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;"><span style="font-size:2rem;font-weight:800;letter-spacing:8px;color:#fff;background:linear-gradient(135deg,#dc2626,#b91c1c);padding:10px 30px;border:4px solid #fff;border-radius:12px;transform:rotate(-20deg);">VENDIDO</span></div>' : '';
   } else {
     $('detalheFoto').style.backgroundImage = '';
-    $('detalheFoto').innerHTML = '<i class="fas fa-image"></i>' + (vendido ? '<div class="tarja-vendido"></div>' : '');
+    $('detalheFoto').innerHTML = '<i class="fas fa-image"></i>' + (vendido ? '<div class="tarja-vendido" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;"><span style="font-size:2rem;font-weight:800;letter-spacing:8px;color:#fff;background:linear-gradient(135deg,#dc2626,#b91c1c);padding:10px 30px;border:4px solid #fff;border-radius:12px;transform:rotate(-20deg);">VENDIDO</span></div>' : '');
   }
 
   $('detalheCodigo').textContent = '#' + (imFull.codigo || '---');
@@ -1746,7 +1668,7 @@ function abrirDetalhes(ref){
   $('detalhePreco').textContent = fmtPreco(imFull.preco);
   const rua = imFull.rua || imFull.titulo || 'Endereço não informado';
   const bairro = imFull.bairro || '';
-  $('detalheEndereco').innerHTML = `<i class="fas fa-map-marker-alt"></i> ${esc(rua)}${bairro ? `<span class="bairro-destaque">· ${esc(bairro)}</span>` : ''}`;
+  $('detalheEndereco').innerHTML = `<i class="fas fa-map-marker-alt"></i> ${esc(rua)}${bairro ? `<span class="bairro-destaque" style="color:var(--azul-quinto); font-weight:800; margin-left:6px;">· ${esc(bairro)}</span>` : ''}`;
   $('detalheDescricao').textContent = imFull.descricao || 'Sem descrição disponível.';
 
   const gastos = [];
@@ -1846,10 +1768,8 @@ function mesclarCompleto(im) {
 }
 
 /* =====================================================
-   ADMIN — Sessão e Senha Salva
+   ADMIN — Sessão e Senha
 ===================================================== */
-const ADMIN_SESSION_KEY = 'lr_admin_session';
-
 function obterSenhaAdmin() {
   return localStorage.getItem(ADMIN_SENHA_KEY) || ADMIN_SENHA_CORRETA;
 }
@@ -1875,7 +1795,7 @@ function validarSenhaAdmin(){
   const senha = $('inputSenhaAdmin').value.trim();
   const senhaSalva = obterSenhaAdmin();
   if(senha === senhaSalva){ 
-    localStorage.setItem(ADMIN_SENHA_KEY, senha); // ✅ Salva para a próxima vez
+    localStorage.setItem(ADMIN_SENHA_KEY, senha);
     fecharModalSenhaAdmin(); 
     entrarModoAdmin(); 
   }
@@ -1926,7 +1846,7 @@ function calcularFalhasAdmin(){
 }
 
 /* =====================================================
-   EDITOR — Padronizado
+   EDITOR — Novo Padrão (Painel Modal)
 ===================================================== */
 function abrirModalEditarImovel(ref){
   const imBase = acharImovelPorQualquerRef(ref);
@@ -1937,23 +1857,66 @@ function abrirModalEditarImovel(ref){
 
   const btnSalvar = $('btnSalvarImovel');
   btnSalvar.disabled = false;
-  btnSalvar.innerHTML = '<i class="fas fa-save"></i> Salvar em todos os clientes';
+  btnSalvar.innerHTML = '<i class="fas fa-save"></i> Salvar no cliente';
 
   const imCompleto = mesclarCompleto(imBase);
   const linkSalvo = imCompleto.link || '';
 
+  // 1. Link, Preço, Cond, IPTU
   $('editLink').value       = linkSalvo;
-  $('editRua').value        = imCompleto.rua        || '';
-  $('editNumero').value     = imCompleto.numero     || '';
-  $('editBairro').value     = imCompleto.bairro     || '';
   $('editPreco').value      = imCompleto.preco      || '';
   $('editCondominio').value = imCompleto.condominio || '';
   $('editIptu').value       = imCompleto.iptu       || '';
+
+  // 2. Rua, Número, Bloco, Apto
+  $('editRua').value        = imCompleto.rua        || '';
+  $('editNumero').value     = imCompleto.numero     || '';
+  $('editBairro').value     = imCompleto.bairro     || '';
+  
+  // Extrai chaveTexto para pegar bloco, apto, complemento
+  const chaveRaw = imCompleto.chaveTexto || '';
+  const linhasChave = chaveRaw.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+  
+  let apto = '';
+  let bloco = '';
+  let complemento = '';
+  
+  // Tenta extrair da chave usando as mesmas regras do backend
+  let consumiuApto = false, consumiuBloco = false;
+  const l1 = linhasChave[0] || '';
+  const prefixoRegex = /^(?:apartamento|apart|apto|apt|ap|unidade|sala|loja|conjunto|cj|casa|cobertura|flat)?\.?\s*[•:.\-#º°]?\s*(\d{1,8}[A-Za-z]?)\s*$/i;
+  const m1 = l1.match(prefixoRegex);
+  if(m1 && m1[1]) { apto = m1[1].toUpperCase(); consumiuApto = true; }
+  
+  for(let i = 0; i < linhasChave.length; i++) {
+    const l = linhasChave[i];
+    if(!consumiuApto && i === 0) continue;
+    if(!consumiuBloco) {
+      const mb = l.match(/^(?:bl(?:oco)?|torre|ed(?:if[ií]cio)?|pr[ée]dio)\.?\s*[:.\-#]?\s*([A-Za-z0-9]{1,10})\s*$/i);
+      if(mb) { bloco = mb[1].toUpperCase(); consumiuBloco = true; continue; }
+    }
+    if(i > 0 || !consumiuApto) {
+      // Junta o restante no complemento
+      complemento += (complemento ? '\n' : '') + l;
+    }
+  }
+
+  $('editBloco').value = bloco;
+  $('editApto').value  = apto;
+  $('editChaveComplemento').value = complemento;
+
+  // Atualiza o composer visual da chave
+  $('chaveLinhaApto').className = apto ? 'linha' : 'linha vazia';
+  $('chaveLinhaApto').querySelector('.valor-mini').textContent = apto || '—';
+  $('chaveLinhaBloco').className = bloco ? 'linha' : 'linha vazia';
+  $('chaveLinhaBloco').querySelector('.valor-mini').textContent = bloco || '—';
+
+  // 3. Descrição
   $('editDescricao').value  = imCompleto.descricao  || '';
-  $('editChave').value      = imCompleto.chaveTexto || '';
   $('editImagem').value     = imCompleto.imagem     || '';
   $('editVendido').checked  = isVendido(imCompleto);
 
+  // Corretor
   let corretorDetectado = '';
   if(linkSalvo){
     for(const [nome, sufixo] of Object.entries(FINAIS_LINK)){
@@ -1963,6 +1926,18 @@ function abrirModalEditarImovel(ref){
   state._corretorEscolhido = corretorDetectado;
   atualizarBtnsCorretor(corretorDetectado);
 
+  // Tipo de imóvel e Desc
+  let tipoDetectado = 'padrao';
+  const tipoDesc = extrairTipoImovel(imCompleto.descricao);
+  if(tipoDesc === 'Cobertura') tipoDetectado = 'cobertura';
+  else if(tipoDesc === 'Área Privativa') tipoDetectado = 'area-privativa';
+  else if(tipoDesc === 'Casa') tipoDetectado = 'casa';
+  
+  state._tipoEditorSelecionado = tipoDetectado;
+  atualizarChipsEditor(tipoDetectado);
+  atualizarPreviewDescricao();
+
+  // Código e Entrada
   const codigo = String(imCompleto.codigo || '').trim();
   if(codigo){
     state._codigoLinkAtual = codigo;
@@ -1975,25 +1950,6 @@ function abrirModalEditarImovel(ref){
     $('codigoBadge').textContent = cod ? '#' + cod : 'sem código';
   }
   atualizarPreview(imCompleto.imagem || '');
-
-  const chaveDoImovel = imCompleto.chaveTexto || '';
-  const infoAptoEd = infoAptoImovel(imCompleto);
-  const temFalhaApto = temMultiplosAptos(imCompleto);
-  const infoAptoBox = $('infoAptoEditor');
-  if(infoAptoEd.numero || temFalhaApto){
-    infoAptoBox.style.display = 'flex';
-    if(temFalhaApto) {
-      infoAptoBox.classList.add('erro');
-      $('aptoEditorNumero').textContent = chaveDoImovel.split('\n')[0];
-      $('aptoEditorAndar').textContent = 'Múltiplos números!';
-    } else {
-      infoAptoBox.classList.remove('erro');
-      $('aptoEditorNumero').textContent = infoAptoEd.numero;
-      $('aptoEditorAndar').textContent = '—';
-    }
-  } else {
-    infoAptoBox.style.display = 'none';
-  }
 
   const total = contarClientesVinculados(codigo);
   $('editarSubInfo').textContent = `#${codigo || '---'} · ${imCompleto.bairro || ''} — ${total} cliente(s) vinculado(s)`;
@@ -2008,11 +1964,12 @@ function fecharModalEditarImovel(){
   state.imovelEditando = null;
   state._corretorEscolhido = '';
   state._codigoLinkAtual = '';
+  state._tipoEditorSelecionado = '';
 }
 
 function atualizarPreview(url){
-  const img = $('previewImg');
-  const semImg = $('semImgTxt');
+  const img = $('editPreviewImg');
+  const semImg = $('editSemImg');
   if(url && /^https?:\/\//.test(url)){ img.src = url; img.style.display = 'block'; if(semImg) semImg.style.display = 'none'; }
   else { img.src = ''; img.style.display = 'none'; if(semImg) semImg.style.display = ''; }
 }
@@ -2023,6 +1980,53 @@ function atualizarBtnsCorretor(valor){
   });
 }
 function escolherCorretor(nome, el){ state._corretorEscolhido = nome; atualizarBtnsCorretor(nome); }
+
+// Chips Editor
+function atualizarChipsEditor(tipo) {
+  document.querySelectorAll('#chipsTipoEditor .chip-tipo').forEach(btn => {
+    btn.classList.toggle('ativo', btn.dataset.tipo === tipo);
+  });
+}
+document.querySelectorAll('#chipsTipoEditor .chip-tipo').forEach(btn => {
+  btn.addEventListener('click', () => {
+    state._tipoEditorSelecionado = btn.dataset.tipo;
+    atualizarChipsEditor(state._tipoEditorSelecionado);
+    atualizarPreviewDescricao();
+  });
+});
+
+function atualizarPreviewDescricao() {
+  const preview = $('editDescTipoPreview');
+  const tipo = state._tipoEditorSelecionado;
+  let label = '';
+  if(tipo === 'padrao') label = 'Apartamento Padrão';
+  else if(tipo === 'cobertura') label = 'Cobertura';
+  else if(tipo === 'area-privativa') label = 'Área Privativa';
+  else if(tipo === 'casa') label = 'Casa';
+
+  if(label) {
+    preview.innerHTML = `<i class="fas fa-lock" style="font-size:0.7rem;"></i> *${label}*`;
+    preview.classList.remove('empty-txt');
+  } else {
+    preview.innerHTML = `<i class="fas fa-lock" style="font-size:0.7rem;"></i> <span class="empty-txt">Selecione o tipo acima (fixo na 1ª linha)</span>`;
+    preview.classList.add('empty-txt');
+  }
+}
+
+// Composer Chave Dinâmico (Apto e Bloco)
+$('editApto').addEventListener('input', (e) => {
+  const val = e.target.value.trim().toUpperCase();
+  const linha = $('chaveLinhaApto');
+  if(val) { linha.className = 'linha'; linha.querySelector('.valor-mini').textContent = val; }
+  else { linha.className = 'linha vazia'; linha.querySelector('.valor-mini').textContent = '—'; }
+});
+$('editBloco').addEventListener('input', (e) => {
+  const val = e.target.value.trim().toUpperCase();
+  const linha = $('chaveLinhaBloco');
+  if(val) { linha.className = 'linha'; linha.querySelector('.valor-mini').textContent = val; }
+  else { linha.className = 'linha vazia'; linha.querySelector('.valor-mini').textContent = '—'; }
+});
+
 
 function onLinkImovelChanged(){
   clearTimeout(state._linkDebounce);
@@ -2069,13 +2073,42 @@ async function salvarEdicaoImovel(){
     }
   }
 
+  // Monta a chaveText completo
+  const aptoVal = $('editApto').value.trim().toUpperCase();
+  const blocoVal = $('editBloco').value.trim().toUpperCase();
+  const complVal = $('editChaveComplemento').value.trim();
+  
+  let chaveArray = [];
+  if(aptoVal) chaveArray.push(aptoVal);
+  if(blocoVal) chaveArray.push('Bloco ' + blocoVal);
+  if(complVal) chaveArray.push(complVal);
+  const chaveTextoFinal = chaveArray.join('\n');
+
+  // Monta a descrição com o tipo em negrito no topo
+  let descTexto = $('editDescricao').value.trim();
+  let tipoLabel = '';
+  if(state._tipoEditorSelecionado === 'padrao') tipoLabel = 'Apartamento Padrão';
+  else if(state._tipoEditorSelecionado === 'cobertura') tipoLabel = 'Cobertura';
+  else if(state._tipoEditorSelecionado === 'area-privativa') tipoLabel = 'Área Privativa';
+  else if(state._tipoEditorSelecionado === 'casa') tipoLabel = 'Casa';
+
+  let descFinal = descTexto;
+  // Remove o tipo antigo se já existir no topo
+  descFinal = descFinal.replace(/^\*+[^*\n]+\*+\n?/i, '').trim();
+  if(tipoLabel) descFinal = `*${tipoLabel}*\n` + descFinal;
+
   const params = {
     senha: obterSenhaAdmin(), codigo: im.codigo,
-    rua: $('editRua').value.trim(), numero: $('editNumero').value.trim(),
-    bairro: $('editBairro').value.trim(), preco: $('editPreco').value.trim(),
-    condominio: $('editCondominio').value.trim(), iptu: $('editIptu').value.trim(),
-    link: linkFinal, imagem: $('editImagem').value.trim(),
-    descricao: $('editDescricao').value, chaveTexto: $('editChave').value.trim(),
+    rua: $('editRua').value.trim(), 
+    numero: $('editNumero').value.trim(),
+    bairro: $('editBairro').value.trim(), 
+    preco: $('editPreco').value.trim(),
+    condominio: $('editCondominio').value.trim(), 
+    iptu: $('editIptu').value.trim(),
+    link: linkFinal, 
+    imagem: $('editImagem').value.trim(),
+    descricao: descFinal, 
+    chaveTexto: chaveTextoFinal,
     vendido: $('editVendido').checked
   };
 
@@ -2084,7 +2117,7 @@ async function salvarEdicaoImovel(){
     if(!res.ok){
       toast(res.error || 'Erro ao salvar', 'error');
       btn.disabled = false;
-      btn.innerHTML = '<i class="fas fa-save"></i> Salvar em todos os clientes';
+      btn.innerHTML = '<i class="fas fa-save"></i> Salvar no cliente';
       return;
     }
     toast(`✅ Atualizado em ${res.total} cliente(s)!`, 'success');
@@ -2095,12 +2128,12 @@ async function salvarEdicaoImovel(){
   } catch(e){
     toast('Erro ao salvar: ' + e.message, 'error');
     btn.disabled = false;
-    btn.innerHTML = '<i class="fas fa-save"></i> Salvar em todos os clientes';
+    btn.innerHTML = '<i class="fas fa-save"></i> Salvar no cliente';
   }
 }
 
 /* =====================================================
-   CLONAGEM EM LOTE — Menu Suspenso e Revisão
+   CLONAGEM EM LOTE — Barra Flutuante (Carrinho)
 ===================================================== */
 function toggleMarcarClonagem(codigo){
   if(!codigo){ toast('Imóvel sem código', 'error'); return; }
@@ -2133,7 +2166,7 @@ function atualizarBarraClonagem(){
     wrap.classList.add('show');
     cont.textContent = n;
     
-    // ✅ Preenche o menu suspenso com os dados dos imóveis selecionados
+    // Preenche o menu suspenso com os dados dos imóveis selecionados
     const listaDiv = $('barraClonagemLista');
     listaDiv.innerHTML = state.imoveisMarcadosClonar.map(cod => {
       const im = acharImovelPorCodigo(cod);
@@ -2163,9 +2196,9 @@ function atualizarBarraClonagem(){
   }
 }
 
-// ✅ Toggle para abrir/fechar o menu suspenso
+// ✅ Toggle para abrir/fechar o menu suspenso do carrinho
 function toggleListaClonagem(e) {
-  if(e.target.closest('button')) return; // Se clicou em um botão, não abre/fecha
+  if(e && e.target.closest('button')) return; 
   const lista = $('barraClonagemLista');
   const icon = $('iconToggleLista');
   const isOpen = lista.classList.toggle('show');
@@ -2407,10 +2440,8 @@ async function init(){
 
   window.addEventListener('scroll', () => { $('btnTopo').classList.toggle('show', window.scrollY > 400); });
 
-  // ✅ Carrega imóveis
   await carregarImoveis();
 
-  // ✅ Se tem senha salva no localStorage, já entra no modo admin automaticamente!
   if (localStorage.getItem(ADMIN_SENHA_KEY) || sessionStorage.getItem(ADMIN_SESSION_KEY) === 'ativo') {
     entrarModoAdmin();
   }
