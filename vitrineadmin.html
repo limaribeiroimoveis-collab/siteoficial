@@ -186,6 +186,37 @@
   label .req{ color: var(--danger); }
   .form-group{ margin-bottom: 16px; }
 
+  /* Selects estilizados (Vaga / Elevador) */
+  .select-padrao{
+    width: 100%; padding: 10px 12px;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    font-size: .88rem; font-family: inherit;
+    background: #fff; color: var(--text);
+    cursor: pointer; transition: all .15s;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 14px;
+    padding-right: 34px;
+  }
+  .select-padrao:focus{
+    outline: none; border-color: var(--purple);
+    box-shadow: 0 0 0 3px rgba(109,40,217,.1);
+  }
+  .select-padrao.invalido{
+    border-color: var(--danger);
+    background-color: #fef2f2;
+    animation: shake .3s ease-in-out;
+  }
+  @keyframes shake{
+    0%, 100%{ transform: translateX(0); }
+    25%{ transform: translateX(-4px); }
+    75%{ transform: translateX(4px); }
+  }
+
   /* ===== MODAL NOVO/EDITAR IMÓVEL ===== */
   .admin-panel{
     background: #fff; border-radius: var(--radius-lg);
@@ -245,6 +276,11 @@
     grid-template-columns: 1fr;
     gap: 12px; margin-bottom: 10px;
   }
+  .form-row-bairro-3{
+    display: grid;
+    grid-template-columns: 1.2fr 1fr 1fr;
+    gap: 12px; margin-bottom: 10px;
+  }
   .form-row-img-desc{
     display: grid;
     grid-template-columns: 240px 1fr;
@@ -254,10 +290,13 @@
   @media(max-width:1024px){
     .form-row-link-price{ grid-template-columns: 1fr 1fr; }
     .form-row-address{ grid-template-columns: 1fr 1fr; }
+    .form-row-bairro-3{ grid-template-columns: 1fr 1fr; }
   }
   @media(max-width:640px){
     .form-row-link-price{ grid-template-columns: 1fr; }
     .form-row-address{ grid-template-columns: 1fr; }
+    .form-row-bairro{ grid-template-columns: 1fr; }
+    .form-row-bairro-3{ grid-template-columns: 1fr; }
     .form-row-img-desc{ grid-template-columns: 1fr; }
   }
 
@@ -589,7 +628,7 @@
   .card-actions .btn-action.act-gostei.ativo{ background: var(--success); border-color: var(--success); color: #fff; }
   .card-actions .btn-action.act-visitar.ativo{ background: var(--warn); border-color: var(--warn); color: #fff; }
   .card-actions .btn-action.act-nao.ativo{ background: var(--danger); border-color: var(--danger); color: #fff; }
-  
+
   .card-actions .btn-action.act-reserva{
     grid-column: 1 / -1;
     background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
@@ -811,10 +850,27 @@
           </div>
         </div>
 
-        <div class="form-row-bairro">
+        <div class="form-row-bairro-3">
           <div>
             <label>Bairro <span class="req">*</span></label>
             <input type="text" id="adBairro" placeholder="Bairro">
+          </div>
+          <div>
+            <label>Vaga <span class="req">*</span></label>
+            <select id="adVaga" class="select-padrao">
+              <option value="">— Selecione —</option>
+              <option value="Presa">Presa</option>
+              <option value="Livre">Livre</option>
+              <option value="Não sei">Não sei</option>
+            </select>
+          </div>
+          <div>
+            <label>Elevador <span class="req">*</span></label>
+            <select id="adElevador" class="select-padrao">
+              <option value="">— Selecione —</option>
+              <option value="Sim">Sim</option>
+              <option value="Não">Não</option>
+            </select>
           </div>
         </div>
 
@@ -878,17 +934,17 @@
           </span>
           <button type="button" class="btn-corretor-escolha" data-corretor="Hugo" onclick="escolherCorretor('Hugo', this)">Hugo</button>
           <button type="button" class="btn-corretor-escolha" data-corretor="Carolina" onclick="escolherCorretor('Carolina', this)">Carol</button>
-          
+
           <button class="btn btn-warn btn-salvar-reserva" id="btnSalvarReserva" style="flex:1; min-width:140px;" onclick="salvarImovel(true)" disabled>
             <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
             Salvar como Reserva
           </button>
-          
+
           <button class="btn btn-purple btn-salvar-imovel" id="btnSalvarImovel" style="flex:1; min-width:180px;" onclick="salvarImovel(false)" disabled>
             <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
             Salvar no cliente
           </button>
-          
+
           <button class="btn btn-ghost" onclick="fecharPainelImovel()">Cancelar</button>
         </div>
       </div>
@@ -1320,12 +1376,17 @@ function extrairTipoImovel(descricao){
   return '';
 }
 
+/**
+ * Remove o *Tipo* da primeira linha da descrição.
+ * Também remove linhas legadas de Vaga/Elevador (para não duplicar).
+ */
 function descricaoSemTipo(descricao){
   if(!descricao) return '';
-  const linhas = String(descricao).split(/\r?\n/);
+  let linhas = String(descricao).split(/\r?\n/);
   if(linhas.length > 0){
     linhas[0] = linhas[0].replace(/\*+[^*\n]+\*+/g, '').trim();
   }
+  linhas = linhas.filter(l => !/^\s*(Vaga|Elevador):\s*/i.test(l));
   return linhas.join('\n').replace(/^\s+/, '');
 }
 
@@ -1711,7 +1772,7 @@ function cardImovelHTML(im){
     'gostei':'Gostei','nao-gostei':'Não gostei',
     'quero-visitar':'Quero visitar','pendente':'Aguardando'
   }[statusAtual] || 'Aguardando'));
-  
+
   const statusClass = reservado ? 'card-status-reserva' : (vendido ? 'card-status-vendido' : ({
     'gostei':'status-gostei','nao-gostei':'status-nao-gostei',
     'quero-visitar':'status-quero-visitar','pendente':'status-pendente'
@@ -1919,7 +1980,7 @@ async function toggleReserva(id){
     : { titulo:'Mover para Reserva?', texto:'O imóvel será ocultado do cliente, mas continuará salvo no seu banco de dados.', btnSim:'Mover para Reserva', tipo:'warn' };
   const ok = await confirmarAcao(cfg);
   if(!ok) return;
-  
+
   const backup = im.desativado;
   im.desativado = reservado ? '' : 'Sim';
   renderizarImoveis();
@@ -2126,6 +2187,10 @@ function limparFormAdmin(){
   $('adDescricao').value = '';
   $('adImagem').value = '';
   $('adReserva').value = '';
+  if($('adVaga')) $('adVaga').value = '';
+  if($('adElevador')) $('adElevador').value = '';
+  if($('adVaga')) $('adVaga').classList.remove('invalido');
+  if($('adElevador')) $('adElevador').classList.remove('invalido');
   state._corretorEscolhido = '';
   state._tipoEscolhido = '';
   atualizarPreview('');
@@ -2134,10 +2199,10 @@ function limparFormAdmin(){
   atualizarBtnsTipo('');
   atualizarDescTipoPreview();
   atualizarChavePreview();
-  
+
   $('btnSalvarImovel').innerHTML = '<svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Salvar no cliente';
   $('btnSalvarReserva').innerHTML = '<svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg> Salvar como Reserva';
-  
+
   $('btnSalvarImovel').disabled = true;
   $('btnSalvarReserva').disabled = true;
   $('adminPanelTitle').textContent = 'Adicionar imóvel';
@@ -2238,14 +2303,17 @@ function validarBotaoSalvar(){
   const apto = $('adApto').value.trim();
   const bairro = $('adBairro').value.trim();
   const complemento = $('adChaveComplemento').value.trim();
+  const vaga = $('adVaga') ? $('adVaga').value.trim() : '';
+  const elevador = $('adElevador') ? $('adElevador').value.trim() : '';
   const tipoEscolhido = state._tipoEscolhido;
   const corretor = state._corretorEscolhido;
   const ehCasa = tipoEscolhido === 'Casa';
   const aptoOk = ehCasa || !!apto;
   const chaveOk = !!complemento || aptoOk;
 
-  const podeSalvar = rua && numero && bairro && tipoEscolhido && corretor && aptoOk && chaveOk;
-  
+  const podeSalvar = rua && numero && bairro && vaga && elevador &&
+                     tipoEscolhido && corretor && aptoOk && chaveOk;
+
   if($('btnSalvarImovel')) $('btnSalvarImovel').disabled = !podeSalvar;
   if($('btnSalvarReserva')) $('btnSalvarReserva').disabled = !podeSalvar;
 }
@@ -2335,6 +2403,15 @@ async function tentarPreencherPorCodigo(codigo){
   $('adBloco').value = info.bloco || '';
   $('adChaveComplemento').value = info.resto || '';
 
+  if($('adVaga')){
+    $('adVaga').value = String(achado.vaga || '').trim();
+    if($('adVaga').value) $('adVaga').classList.remove('invalido');
+  }
+  if($('adElevador')){
+    $('adElevador').value = String(achado.elevador || '').trim();
+    if($('adElevador').value) $('adElevador').classList.remove('invalido');
+  }
+
   const tipoAchado = extrairTipoImovel(achado.descricao || '');
   if(tipoAchado && TIPOS_IMOVEL_VALIDOS.includes(tipoAchado)){
     state._tipoEscolhido = tipoAchado;
@@ -2380,11 +2457,23 @@ async function buscarImagemDoLink(url, mostrarToast){
   }
 }
 
+/**
+ * Monta descrição final: tipo + primeira linha da descrição juntos na MESMA linha.
+ * Resto da descrição continua nas linhas seguintes.
+ */
 function montarDescricaoComTipo(descricaoSemTipoTexto, tipo){
   const tipoLimpo = String(tipo || '').trim();
   const base = String(descricaoSemTipoTexto || '').trim();
   if(!tipoLimpo) return base;
-  return `*${tipoLimpo}*\n${base}`;
+
+  const linhasBase = base ? base.split(/\r?\n/) : [];
+  const primeiraLinha = (linhasBase[0] || '').trim();
+  const restanteLinhas = linhasBase.slice(1);
+
+  let primeira = `*${tipoLimpo}*`;
+  if(primeiraLinha) primeira += ' ' + primeiraLinha;
+
+  return [primeira, ...restanteLinhas].filter(Boolean).join('\n');
 }
 
 async function salvarImovel(isReserva){
@@ -2398,6 +2487,8 @@ async function salvarImovel(isReserva){
   const link = $('adLink').value.trim();
   const tipo = state._tipoEscolhido;
   let imagem = $('adImagem').value.trim();
+  const vaga = $('adVaga') ? $('adVaga').value.trim() : '';
+  const elevador = $('adElevador') ? $('adElevador').value.trim() : '';
 
   const editandoId = $('editingId').value || '';
   const editando = !!editandoId;
@@ -2415,6 +2506,18 @@ async function salvarImovel(isReserva){
   if(!numero){ toast('Informe o número', 'error'); return; }
   if(tipo !== 'Casa' && !apto){ toast('Informe o número do apartamento', 'error'); return; }
   if(!bairro){ toast('Informe o bairro', 'error'); return; }
+  if(!vaga){
+    if($('adVaga')) $('adVaga').classList.add('invalido');
+    toast('Informe o tipo de vaga', 'error');
+    return;
+  }
+  if(!elevador){
+    if($('adElevador')) $('adElevador').classList.add('invalido');
+    toast('Informe se o imóvel tem elevador', 'error');
+    return;
+  }
+  if($('adVaga')) $('adVaga').classList.remove('invalido');
+  if($('adElevador')) $('adElevador').classList.remove('invalido');
 
   let statusAtual = 'pendente';
   let observacaoAtual = '';
@@ -2436,7 +2539,6 @@ async function salvarImovel(isReserva){
       visitaFeitaAtual = imOriginal.visitaFeita || 'Não';
       dataVisitaAgendadaAtual = imOriginal.dataVisitaAgendada || '';
       vendidoAtual = imOriginal.vendido || '';
-      // Only update reserva status if we're editing and explicitly toggling
       if(isReserva !== undefined) {
          desativadoAtual = isReserva ? 'Sim' : '';
       } else {
@@ -2483,7 +2585,9 @@ async function salvarImovel(isReserva){
     observacao: observacaoAtual,
     corretor: state._corretorEscolhido,
     vendido: vendidoAtual,
-    desativado: isReserva ? 'Sim' : '' // Aqui aplicamos a flag de Reserva
+    desativado: isReserva ? 'Sim' : '',
+    vaga: vaga,
+    elevador: elevador
   };
 
   const btn = isReserva ? $('btnSalvarReserva') : $('btnSalvarImovel');
@@ -2544,6 +2648,8 @@ async function salvarImovel(isReserva){
       imOriginal.dataVisitaAgendada = dataVisitaAgendadaAtual;
       imOriginal.desativado = desativadoAtual;
       imOriginal.vendido = vendidoAtual;
+      imOriginal.vaga = vaga;
+      imOriginal.elevador = elevador;
     }
   }
 
@@ -2583,6 +2689,15 @@ function editarImovel(id){
   $('adBloco').value = info.bloco || '';
   $('adChaveComplemento').value = info.resto || '';
 
+  if($('adVaga')){
+    $('adVaga').value = String(im.vaga || '').trim();
+    $('adVaga').classList.remove('invalido');
+  }
+  if($('adElevador')){
+    $('adElevador').value = String(im.elevador || '').trim();
+    $('adElevador').classList.remove('invalido');
+  }
+
   const tipoExistente = extrairTipoImovel(im.descricao || '');
   if(tipoExistente && TIPOS_IMOVEL_VALIDOS.includes(tipoExistente)){
     state._tipoEscolhido = tipoExistente;
@@ -2614,7 +2729,7 @@ function editarImovel(id){
   validarBotaoSalvar();
   $('btnSalvarImovel').innerHTML = '<svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Atualizar';
   $('btnSalvarReserva').innerHTML = '<svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg> Salvar como Reserva';
-  
+
   $('adminPanelTitle').textContent = 'Editar imóvel';
   $('adminPanel').classList.add('show');
   document.body.style.overflow = 'hidden';
@@ -3321,6 +3436,28 @@ window.addEventListener('beforeunload', function(e){
     e.preventDefault();
     e.returnValue = 'Aguarde, estamos salvando...';
     return e.returnValue;
+  }
+});
+
+/* =====================================================
+   VALIDAÇÃO DOS SELECTS VAGA / ELEVADOR
+   Limpa a marcação de "inválido" assim que o usuário escolhe
+   e revalida o botão de salvar.
+===================================================== */
+document.addEventListener('DOMContentLoaded', function(){
+  const vagaSel = $('adVaga');
+  const elevSel = $('adElevador');
+  if(vagaSel){
+    vagaSel.addEventListener('change', function(){
+      if(this.value) this.classList.remove('invalido');
+      validarBotaoSalvar();
+    });
+  }
+  if(elevSel){
+    elevSel.addEventListener('change', function(){
+      if(this.value) this.classList.remove('invalido');
+      validarBotaoSalvar();
+    });
   }
 });
 </script>
