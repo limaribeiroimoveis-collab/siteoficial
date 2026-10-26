@@ -6,7 +6,7 @@
 <meta name="google" content="notranslate">
 <meta name="robots" content="noindex, nofollow">
 <title>Gestor — Lima Ribeiro Imóveis</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%233d2b20'/><text x='50' y='68' font-family='-apple-system,sans-serif' font-size='48' font-weight='800' fill='white' text-anchor='middle'>GE</text></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23f97316'/><text x='50' y='68' font-family='-apple-system,sans-serif' font-size='48' font-weight='800' fill='white' text-anchor='middle'>ADM</text></svg>">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   :root{
@@ -430,7 +430,8 @@
   .btn-evento{ background: var(--purple); color: #fff; border: 1px solid var(--purple); }
   .btn-evento:hover:not(:disabled){ background: #7d3f22; }
 
-  .big-cards{ display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 20px; }
+  .big-cards{ display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-top: 20px; }
+@media(max-width:1100px){ .big-cards{ grid-template-columns: repeat(5, 1fr); gap: 8px; } }
   @media(max-width:780px){ .big-cards{ grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 12px; } }
   @media(max-width:640px){ .big-cards{ grid-template-columns: repeat(2, 1fr); gap: 8px; } }
   .big-card{
@@ -2211,18 +2212,321 @@
     margin-bottom: 14px;
     line-height: 1.5;
   }
-</style>
-</head>
 
+  /* =====================================================
+     ===== ADIÇÕES RODADA 2026-10 — INÍCIO =====
+     Classes NOVAS para:
+     - Modal de preferências (tipos multi-seleção + aquisição)
+     - Card Cutucada (5º card + dias sem cutucada)
+     - Modal de Relatório completo da Agenda
+     ===================================================== */
+
+  /* ---- Modal de preferências: tipos multi-seleção ---- */
+  .prefs-tipo-btn {
+    padding: 10px 8px;
+    background: #fff;
+    border: 2px solid var(--border-strong);
+    border-radius: 8px;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all .15s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    color: var(--text);
+    position: relative;
+  }
+  .prefs-tipo-btn:hover { border-color: var(--primary); }
+  .prefs-tipo-btn.ativo {
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary);
+  }
+  .prefs-tipo-btn.ativo::after {
+    content: '✓';
+    position: absolute;
+    top: 4px; right: 6px;
+    width: 16px; height: 16px;
+    background: var(--success);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: .62rem;
+    font-weight: 900;
+  }
+
+  /* ---- Modal de preferências: aquisição ---- */
+  .prefs-aquis-btn {
+    padding: 10px 12px;
+    background: #fff;
+    border: 2px solid var(--border-strong);
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: .8rem;
+    font-weight: 700;
+    color: var(--text);
+    cursor: pointer;
+    transition: all .15s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-align: left;
+  }
+  .prefs-aquis-btn:hover { border-color: var(--primary); }
+  .prefs-aquis-btn.ativo {
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary);
+  }
+
+  /* ---- Card Cutucada (5º card) ---- */
+  .big-card.card-cutucada .card-ico-wrap {
+    background: #fef3c7;
+    color: #b45309;
+  }
+  .big-card.card-cutucada.active .card-ico-wrap {
+    background: #b45309;
+    color: #fff;
+  }
+  .big-card.card-cutucada .bal {
+    background: #dc2626;
+  }
+  .big-card.card-cutucada .bal.zero {
+    background: var(--bg-alt);
+    color: var(--muted);
+  }
+
+  /* ---- Destaque de dias sem cutucada (na lista do painel) ---- */
+  .cutucada-dias {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 9px;
+    border-radius: 999px;
+    font-size: .7rem;
+    font-weight: 800;
+    letter-spacing: .2px;
+    white-space: nowrap;
+  }
+  .cutucada-dias.ok {
+    background: #dcfce7;
+    color: #166534;
+  }
+  .cutucada-dias.atencao {
+    background: #fef3c7;
+    color: #92400e;
+  }
+  .cutucada-dias.atrasado {
+    background: #fee2e2;
+    color: #991b1b;
+  }
+  .cutucada-dias.nunca {
+    background: #fecaca;
+    color: #7f1d1d;
+    animation: pulse-nunca 1.8s ease-in-out infinite;
+  }
+  @keyframes pulse-nunca {
+    0%, 100% { opacity: 1; }
+    50% { opacity: .75; }
+  }
+
+  /* ---- Selo "Atrasado" no painel cutucada ---- */
+  .cutucada-atrasado-selo {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: .62rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .3px;
+    background: #fecaca;
+    color: #991b1b;
+    border: 1px solid #fca5a5;
+  }
+
+  /* ---- Modal de Relatório Completo ---- */
+  .relatorio-modal {
+    max-width: 780px;
+  }
+  .relatorio-secao {
+    margin-bottom: 18px;
+  }
+  .relatorio-secao:last-child {
+    margin-bottom: 0;
+  }
+  .relatorio-secao-titulo {
+    font-size: .7rem;
+    font-weight: 800;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    margin-bottom: 8px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .relatorio-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .relatorio-grid.full {
+    grid-template-columns: 1fr;
+  }
+  .relatorio-campo {
+    background: var(--bg);
+    padding: 10px 12px;
+    border-radius: var(--radius-sm);
+    border-left: 3px solid var(--border-strong);
+  }
+  .relatorio-campo.destaque {
+    background: var(--primary-soft);
+    border-left-color: var(--primary);
+  }
+  .relatorio-campo.sucesso {
+    background: var(--success-soft);
+    border-left-color: var(--success);
+  }
+  .relatorio-campo.alerta {
+    background: var(--warn-soft);
+    border-left-color: var(--warn);
+  }
+  .relatorio-campo .lbl {
+    font-size: .6rem;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: .4px;
+    margin-bottom: 3px;
+  }
+  .relatorio-campo .val {
+    font-size: .88rem;
+    font-weight: 700;
+    color: var(--text);
+    word-break: break-word;
+    line-height: 1.4;
+  }
+  .relatorio-campo .val.muted {
+    font-style: italic;
+    color: var(--muted);
+    font-weight: 500;
+  }
+  .relatorio-campo .val.small {
+    font-size: .78rem;
+    font-weight: 600;
+  }
+  .relatorio-descricao-box {
+    background: #fefce8;
+    border: 1px solid #fde68a;
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    font-size: .82rem;
+    line-height: 1.6;
+    color: #422006;
+    white-space: pre-wrap;
+    word-break: break-word;
+    max-height: 240px;
+    overflow-y: auto;
+  }
+  .relatorio-descricao-box.vazio {
+    background: var(--bg);
+    border-color: var(--border);
+    color: var(--muted);
+    font-style: italic;
+  }
+  .relatorio-links {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .relatorio-link-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    color: var(--text);
+    font-size: .82rem;
+    font-weight: 600;
+    transition: all .15s;
+  }
+  .relatorio-link-item:hover {
+    background: var(--bg);
+    border-color: var(--border-strong);
+  }
+  .relatorio-link-item .ico {
+    color: var(--primary);
+    flex-shrink: 0;
+  }
+  .relatorio-link-item .txt-link {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-family: var(--mono);
+    font-size: .72rem;
+    color: var(--text-soft);
+    font-weight: 500;
+  }
+  .relatorio-rodape {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    margin-top: 20px;
+    flex-wrap: wrap;
+  }
+
+  /* ---- Botão "Relatório" na agenda ---- */
+  .agenda-row-v2 .btn-relatorio {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: var(--radius-sm);
+    background: #fff;
+    color: var(--purple);
+    border: 1px solid #e0c9b8;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: .76rem;
+    font-weight: 700;
+    transition: all .15s;
+    flex-shrink: 0;
+  }
+  .agenda-row-v2 .btn-relatorio:hover {
+    background: var(--purple-soft);
+    border-color: var(--purple);
+  }
+  .agenda-row-v2 .btn-relatorio .ico {
+    width: 14px;
+    height: 14px;
+  }
+
+  /* =====================================================
+     ===== ADIÇÕES RODADA 2026-10 — FIM =====
+     ===================================================== */
+</style>
 <body>
 
 <header class="app-header">
   <div class="header-inner">
     <div class="brand" onclick="irParaHomeAdmin()" title="Ir para o início">
-      <div class="brand-icon">LR</div>
+      <div class="brand-icon">ADM</div>
       <div class="brand-text">
         <div class="brand-title">Lima Ribeiro</div>
-        <div class="brand-sub">Gestor</div>
+        <div class="brand-sub">Gestor Admin</div>
       </div>
     </div>
 
@@ -2413,6 +2717,18 @@
         <div class="titulo">Clientes</div>
         <div class="sub">Cadastro e gestão</div>
         <div class="agenda-corretores-lista" id="clientesCorretoresLista"></div>
+      </div>
+    </div>
+    <!-- ===== NOVO: Card Cutucada (5º card) ===== -->
+    <div class="big-card card-cutucada" id="cardCutucada" onclick="abrirPainel('cutucada')">
+      <span class="bal zero" id="balCutucada">0</span>
+      <div class="card-ico-wrap">
+        <svg class="ico ico-lg" viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+      </div>
+      <div style="width:100%;">
+        <div class="titulo">Cutucada</div>
+        <div class="sub">Sem interação há 3+ dias</div>
+        <div class="agenda-corretores-lista" id="cutucadaCorretoresLista"></div>
       </div>
     </div>
   </div>
@@ -2629,6 +2945,44 @@
       </div>
     </div>
   </div>
+
+  <!-- ===== NOVO: Painel Cutucada ===== -->
+  <div class="panel hidden" id="panelCutucada">
+    <div class="panel-head">
+      <h2>
+        <svg class="ico ico-lg" viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+        Cutucada — Clientes sem interação
+      </h2>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <button class="btn btn-ghost btn-sm" onclick="recarregarPainel('cutucada')">
+          <svg class="ico ico-sm" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+          Atualizar
+        </button>
+      </div>
+    </div>
+    <div class="panel-body">
+      <div style="background:#fef3c7; border-left:3px solid #f59e0b; padding:10px 14px; border-radius:var(--radius-sm); font-size:.78rem; color:#78350f; margin-bottom:14px; line-height:1.5;">
+        ⚠️ <strong>Clientes ativos</strong> sem cutucada há mais de <strong>3 dias</strong> (ou que <strong>nunca</strong> foram cutucados) aparecem no topo. Clique no cliente para interagir.
+      </div>
+
+      <div class="filtros-wrap" id="filtrosCutucada"></div>
+
+      <div class="busca-cliente-wrap">
+        <input type="search" id="buscaCutucada" placeholder="Buscar nome, telefone..." oninput="onBuscaCutucadaChanged()">
+        <select id="ordenacaoCutucada" onchange="renderizarCutucadas()">
+          <option value="mais-atrasado">Mais tempo sem cutucada</option>
+          <option value="menos-atrasado">Menos tempo sem cutucada</option>
+          <option value="alfabetica">Nome (A-Z)</option>
+        </select>
+      </div>
+
+      <div class="clientes-lista" id="cutucadaLista"></div>
+      <div class="empty-state hidden" id="cutucadaEmpty">
+        <h3>Todos os clientes ativos em dia 🎉</h3>
+        <p>Nenhum cliente ativo está sem cutucada há mais de 3 dias.</p>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- Modal Link Vitrine -->
@@ -2758,78 +3112,145 @@
   </div>
 </div>
 
-<!-- Modal Preferências do Cliente -->
+<!-- ===== NOVO: Modal Preferências do Cliente (padronizado com formulário do cliente) ===== -->
 <div class="modal-backdrop" id="prefsModalBackdrop">
-  <div class="modal" style="max-width:680px;">
-    <button class="modal-close" onclick="fecharPrefsModal()"><svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-    <h2><svg class="ico" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> Preferências de imóvel — <span id="prefsModalNome" style="color:var(--text-soft);font-weight:600;"></span></h2>
-    <p class="text-muted" style="margin-bottom:16px; font-size:.8rem;">Todas as informações são opcionais. Preencha só o que faz sentido para esse cliente.</p>
+  <div class="modal" style="max-width:640px;">
+    <button class="modal-close" onclick="fecharPrefsModal()">
+      <svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <h2 style="display:flex; align-items:center; gap:8px; justify-content:space-between; flex-wrap:wrap; margin-bottom:14px;">
+      <span style="display:flex; align-items:center; gap:8px;">
+        <svg class="ico" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        Preferências — <span id="prefsModalNome" style="color:var(--text-soft); font-weight:600;"></span>
+      </span>
+      <button type="button" class="btn btn-soft btn-xs" onclick="copiarLinkFormulario()" title="Copiar link para o cliente preencher" style="display:inline-flex; align-items:center; gap:5px;">
+        <svg class="ico ico-sm" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        Copiar link
+      </button>
+    </h2>
+    <p class="text-muted" style="margin-bottom:14px; font-size:.78rem;">Os mesmos campos do formulário que o cliente preenche. O último que salvar define a data no histórico.</p>
 
-    <div class="prefs-modal-grid">
-      <div class="form-group full">
-        <label>Bairros de preferência</label>
-        <div class="bairros-add-wrap">
-          <input type="text" id="prefsBairroInput" placeholder="Digite um bairro e clique em +" onkeydown="if(event.key==='Enter'){event.preventDefault();adicionarBairroPrefs();}">
-          <button type="button" onclick="adicionarBairroPrefs()">+ Add</button>
-        </div>
-        <div class="bairros-chips" id="prefsBairrosChips"></div>
-      </div>
+    <!-- BLOCO 1: BAIRROS -->
+    <div class="form-group">
+      <label>Bairros / Regiões</label>
+      <textarea id="prefsBairrosTxt" placeholder="Ex: Savassi, Lourdes, Buritis, próximo ao Hospital Life Center..." rows="2" style="min-height:56px;" maxlength="400"></textarea>
+      <div style="font-size:.68rem; color:var(--muted); margin-top:4px; font-style:italic;">💡 Separe por vírgula. Pode ser bairro, região ou ponto de referência.</div>
+    </div>
 
-      <div class="form-group">
-        <label>Preço do imóvel (R$)</label>
-        <div class="prefs-range">
-          <input type="text" id="prefsPrecoMin" placeholder="Mínimo">
-          <input type="text" id="prefsPrecoMax" placeholder="Máximo">
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label>Condomínio (R$)</label>
-        <div class="prefs-range">
-          <input type="text" id="prefsCondMin" placeholder="Mínimo">
-          <input type="text" id="prefsCondMax" placeholder="Máximo">
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label>Quartos</label>
-        <div class="prefs-opcoes" id="prefsQuartosOpcoes" data-campo="quartos"></div>
-      </div>
-
-      <div class="form-group">
-        <label>Suítes</label>
-        <div class="prefs-opcoes" id="prefsSuitesOpcoes" data-campo="suites"></div>
-      </div>
-
-      <div class="form-group">
-        <label>Vagas</label>
-        <div class="prefs-opcoes" id="prefsVagasOpcoes" data-campo="vagas"></div>
-      </div>
-
-      <div class="form-group">
-        <label>Acessibilidade</label>
-        <div class="prefs-opcoes" id="prefsAcessoOpcoes" data-campo="acessibilidade"></div>
-      </div>
-
-      <div class="form-group">
-        <label>Elevador</label>
-        <div class="prefs-opcoes" id="prefsElevadorOpcoes" data-campo="elevador"></div>
-      </div>
-
-      <div class="form-group full">
-        <label>Tipo</label>
-        <div class="prefs-opcoes" id="prefsTipoOpcoes" data-campo="tipo"></div>
-      </div>
-
-      <div class="form-group full">
-        <label>Outros (texto livre)</label>
-        <textarea id="prefsOutros" placeholder="Ex: varanda gourmet, piscina, andar alto, sol da manhã..." style="min-height:60px;"></textarea>
+    <!-- BLOCO 2: TIPO -->
+    <div class="form-group">
+      <label>Tipo de imóvel <span style="font-weight:500; color:var(--muted); font-size:.72rem;">(pode marcar mais de um)</span></label>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;">
+        <button type="button" class="prefs-tipo-btn" data-tipo="apartamento padrao" onclick="togglePrefsTipo(this)">
+          <span style="font-size:1.2rem; line-height:1;">🏢</span>
+          <span style="font-size:.76rem; font-weight:700;">Apartamento Padrão</span>
+        </button>
+        <button type="button" class="prefs-tipo-btn" data-tipo="apartamento cobertura" onclick="togglePrefsTipo(this)">
+          <span style="font-size:1.2rem; line-height:1;">🏙️</span>
+          <span style="font-size:.76rem; font-weight:700;">Apartamento Cobertura</span>
+        </button>
+        <button type="button" class="prefs-tipo-btn" data-tipo="apartamento area privativa" onclick="togglePrefsTipo(this)">
+          <span style="font-size:1.2rem; line-height:1;">🏘️</span>
+          <span style="font-size:.76rem; font-weight:700;">Apartamento Área Privativa</span>
+        </button>
+        <button type="button" class="prefs-tipo-btn" data-tipo="casa" onclick="togglePrefsTipo(this)">
+          <span style="font-size:1.2rem; line-height:1;">🏡</span>
+          <span style="font-size:.76rem; font-weight:700;">Casa</span>
+        </button>
       </div>
     </div>
 
-    <div style="display:flex; gap:8px; justify-content:flex-end;">
-      <button class="btn btn-ghost" onclick="fecharPrefsModal()">Cancelar</button>
-      <button class="btn btn-primary" id="btnSalvarPrefs" onclick="salvarPrefsCliente()">
+    <!-- BLOCO 3: VALOR -->
+    <div class="form-group">
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+        <div>
+          <label>Valor máximo (R$)</label>
+          <input type="text" id="prefsPrecoMax" placeholder="Ex: 700.000" inputmode="numeric" autocomplete="off">
+        </div>
+        <div id="prefsBlocoCond" style="display:none;">
+          <label>Condomínio aceitável (R$)</label>
+          <input type="text" id="prefsCondMax" placeholder="Ex: 800" inputmode="numeric" autocomplete="off">
+        </div>
+      </div>
+    </div>
+
+    <!-- BLOCO 4: AQUISIÇÃO -->
+    <div class="form-group">
+      <label>Como pretende adquirir</label>
+      <div style="display:flex; flex-direction:column; gap:5px;">
+        <button type="button" class="prefs-aquis-btn" data-aquis="avista" onclick="escolherPrefsAquisicao('avista', this)">
+          <span style="font-size:1rem;">💵</span> Recursos próprios (à vista)
+        </button>
+        <button type="button" class="prefs-aquis-btn" data-aquis="financiado" onclick="escolherPrefsAquisicao('financiado', this)">
+          <span style="font-size:1rem;">🏦</span> Financiado
+        </button>
+        <button type="button" class="prefs-aquis-btn" data-aquis="misto" onclick="escolherPrefsAquisicao('misto', this)">
+          <span style="font-size:1rem;">🔀</span> Parte à vista, parte financiado
+        </button>
+      </div>
+      <div id="prefsMisturaWrap" style="display:none; background:#f5e8d8; border:1px dashed #3d2b20; border-radius:8px; padding:10px; margin-top:8px;">
+        <div style="font-size:.7rem; font-weight:700; color:#3d2b20; margin-bottom:6px;">Como pretende dividir?</div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+          <div>
+            <label style="font-size:.62rem;">% à vista</label>
+            <input type="number" id="prefsMisturaAvista" min="1" max="99" placeholder="30" oninput="calcPrefsMistura()" style="text-align:center;">
+          </div>
+          <div>
+            <label style="font-size:.62rem;">% financiado</label>
+            <input type="number" id="prefsMisturaFinanc" min="1" max="99" placeholder="70" oninput="calcPrefsMistura()" style="text-align:center;">
+          </div>
+        </div>
+        <div id="prefsMisturaInfo" style="margin-top:6px; font-size:.68rem; font-weight:700; color:var(--text-soft); text-align:center;">Digite os dois percentuais (soma 100%)</div>
+      </div>
+    </div>
+
+        <!-- BLOCO 5: CÔMODOS -->
+    <div class="form-group">
+      <label>Quartos</label>
+      <div class="prefs-opcoes" id="prefsQuartosOpcoes" data-campo="quartos"></div>
+    </div>
+    <div class="form-group">
+      <label>Suítes</label>
+      <div class="prefs-opcoes" id="prefsSuitesOpcoes" data-campo="suites"></div>
+    </div>
+    <div class="form-group">
+      <label>Vagas de garagem</label>
+      <div class="prefs-opcoes" id="prefsVagasOpcoes" data-campo="vagas"></div>
+    </div>
+
+    <!-- ===== NOVO: METRAGEM MÍNIMA ===== -->
+    <div class="form-group">
+      <label>📐 Metragem mínima (m²) <span style="font-weight:500; color:var(--muted); font-size:.72rem;">(opcional)</span></label>
+      <input type="text" id="prefsMetragemMin" placeholder="Ex: 115" inputmode="numeric" maxlength="5" autocomplete="off">
+      <div style="font-size:.68rem; color:var(--muted); margin-top:4px; font-style:italic;">💡 Se não tiver preferência, deixe em branco.</div>
+    </div>
+
+    <!-- BLOCO 6: ACESSIBILIDADE -->
+    <div style="background:#f5efe0; border-left:3px solid #8b6f3a; padding:8px 10px; border-radius:6px; font-size:.72rem; color:#5a4a25; line-height:1.45; margin-bottom:14px;">
+      ⚠️ <strong>Atenção:</strong> marcar estas opções <strong>reduz as opções disponíveis</strong>. Marque só se for fundamental.
+    </div>
+    <div class="form-group">
+      <label>Precisa de acessibilidade?</label>
+      <div class="prefs-opcoes" id="prefsAcessoOpcoes" data-campo="acessibilidade"></div>
+    </div>
+    <div class="form-group">
+      <label>É obrigatório ter elevador?</label>
+      <div class="prefs-opcoes" id="prefsElevadorOpcoes" data-campo="elevador"></div>
+    </div>
+    <div class="form-group">
+      <label>Precisa que seja sem escada?</label>
+      <div class="prefs-opcoes" id="prefsSemEscadaOpcoes" data-campo="semEscada"></div>
+    </div>
+
+    <!-- BLOCO 7: EXTRAS -->
+    <div class="form-group">
+      <label>Detalhes extras</label>
+      <textarea id="prefsExtras" placeholder="Ex: varanda gourmet, andar alto, aceita pet, próximo a escola..." style="min-height:70px;" maxlength="600"></textarea>
+    </div>
+
+    <div style="display:flex; gap:8px; justify-content:space-between; margin-top:16px; flex-wrap:wrap;">
+      <button type="button" class="btn btn-ghost" onclick="fecharPrefsModal()">Cancelar</button>
+      <button type="button" class="btn btn-primary" id="btnSalvarPrefs" onclick="salvarPrefsCliente()">
         <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
         Salvar preferências
       </button>
@@ -3148,6 +3569,27 @@
   </div>
 </div>
 
+<!-- ===== NOVO: Modal Relatório Completo (Agenda) ===== -->
+<div class="modal-backdrop" id="relatorioBackdrop">
+  <div class="modal relatorio-modal">
+    <button class="modal-close" onclick="fecharRelatorio()">
+      <svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <h2>
+      <svg class="ico" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg>
+      Relatório — <span id="relatorioNome" style="color:var(--text-soft);font-weight:600;"></span>
+    </h2>
+    <div id="relatorioCorpo"></div>
+    <div class="relatorio-rodape">
+      <button class="btn btn-ghost" onclick="fecharRelatorio()">Fechar</button>
+      <button class="btn btn-primary" onclick="copiarRelatorio()">
+        <svg class="ico ico-sm" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        Copiar relatório
+      </button>
+    </div>
+  </div>
+</div>
+
 <!-- Confirm -->
 <div class="confirm-backdrop" id="confirmBackdrop">
   <div class="confirm-box">
@@ -3236,7 +3678,6 @@
   <div class="spinner"></div>
   <div class="msg">Aguarde, estamos salvando...</div>
 </div>
-
 <script>
 /* =====================================================
    CONFIG
@@ -3248,8 +3689,11 @@ const BUSCAR_BASE = 'https://corretor.quintoandar.com.br/informacoes-de-entrada'
 const VITRINE_URL_BASE = 'https://limaribeiroimoveis.com.br/vitrine.html';
 const VITRINE_ADMIN_URL = 'vitrineadmin.html';
 const IMOVEIS_ADMIN_URL = 'https://limaribeiroimoveis.com.br/imoveis.html?admin=1&senha=Cal%40562938';
+const PREFERENCIAS_URL_BASE = 'https://limaribeiroimoveis.com.br/meuimovel.html';
 const TIMEOUT_API = 90000;
 const TIMEOUT_LOGIN = 60000;
+const AUTO_REFRESH_BADGES_MS = 2 * 60 * 1000; // 2 minutos
+const DIAS_CUTUCADA_ATRASO = 3;
 
 const CORES_PADRAO = {
   'Hugo':     '#1e40af',
@@ -3286,11 +3730,16 @@ const state = {
   },
   filtrosGeralStatus: new Set(),
   filtrosTarefasCorretores: new Set(),
+  filtrosCutucada: {
+    corretores: new Set(),
+    temperaturas: new Set()
+  },
   visaoPainel: { visitar: 'ativas', gostei: 'ativas', tarefas: 'ativas' },
-  carregado: { agenda: false, visitar: false, gostei: false, clientes: false, geral: false, tarefas: false },
+  carregado: { agenda: false, visitar: false, gostei: false, clientes: false, geral: false, tarefas: false, cutucada: false },
   salvando: 0,
   _refreshTimer: null,
   _refreshEmAndamento: false,
+  _autoRefreshBadgesTimer: null,
   _linkVitrineCache: null,
   _atividadeFiltro: 'todos',
   _linkCachePorTel: {},
@@ -3304,7 +3753,9 @@ const state = {
   _captObsAbertas: new Set(),
   _leadsPendentes: 0,
   _captacoesPendentes: 0,
-  /* NOVO — preferências e notas */
+  _notasPendentes: 0,
+  _relatorioAtual: null,
+  /* preferências e notas */
   _prefsCachePorTel: {},
   _prefsTelAtual: null,
   _prefsBairrosTemp: [],
@@ -3314,7 +3765,8 @@ const state = {
   _notaNovaCor: 'amarelo',
   _buscaAvancadaAberta: false,
   _buscaAvancadaBairros: [],
-  _gruposPrefsAbertos: new Set()
+  _gruposPrefsAbertos: new Set(),
+  _buscaCutucadaTimer: null
 };
 
 /* =====================================================
@@ -3731,7 +4183,7 @@ function mostrarView(id){
 }
 function irParaHomeAdmin(){
   if(!state.isAdmin) return;
-  ['agenda','visitar','gostei','clientes'].forEach(p => {
+  ['agenda','visitar','gostei','clientes','cutucada'].forEach(p => {
     const cap = p.charAt(0).toUpperCase() + p.slice(1);
     const el = $('panel' + cap);
     const card = $('card' + cap);
@@ -3746,7 +4198,7 @@ function irParaHomeAdmin(){
 }
 function abrirPainel(painel){
   state.painelAtivo = painel;
-  ['agenda','visitar','gostei','clientes'].forEach(p => {
+  ['agenda','visitar','gostei','clientes','cutucada'].forEach(p => {
     const cap = p.charAt(0).toUpperCase() + p.slice(1);
     const elPanel = $('panel' + cap);
     const elCard = $('card' + cap);
@@ -3757,12 +4209,17 @@ function abrirPainel(painel){
   if(painel === 'visitar' && !state.carregado.visitar) carregarNotificacoes(true);
   if(painel === 'gostei' && !state.carregado.gostei) carregarNotificacoes(true);
   if(painel === 'clientes' && !state.carregado.clientes) carregarClientes(true);
+  if(painel === 'cutucada'){
+    if(!state.carregado.clientes) carregarClientes(true).then(() => renderizarCutucadas());
+    else renderizarCutucadas();
+  }
 }
 async function recarregarPainel(painel){
   if(painel === 'agenda'){ state.carregado.agenda = false; await carregarAgenda(true); }
   if(painel === 'visitar'){ state.carregado.visitar = false; await carregarNotificacoes(true); }
   if(painel === 'gostei'){ state.carregado.gostei = false; await carregarNotificacoes(true); }
   if(painel === 'clientes'){ state.carregado.clientes = false; await carregarClientes(true); }
+  if(painel === 'cutucada'){ state.carregado.clientes = false; await carregarClientes(true); renderizarCutucadas(); }
 }
 function alternarConcluidas(painel){
   state.visaoPainel[painel] = state.visaoPainel[painel] === 'concluidas' ? 'ativas' : 'concluidas';
@@ -3776,7 +4233,7 @@ function alternarConcluidas(painel){
 function abrirLinkTQC(){ window.open(LINK_TQC, '_blank', 'noopener'); }
 function abrirImoveisAdmin(){ window.open(IMOVEIS_ADMIN_URL, '_blank', 'noopener'); }
 
-/* ===== NOVO: Menu mobile ===== */
+/* ===== Menu mobile ===== */
 function abrirMenuMobile(){
   $('menuMobileBackdrop').classList.add('show');
 }
@@ -3791,7 +4248,7 @@ function menuMobileAcao(acao){
   else if(acao === 'sair') sair();
 }
 
-/* ===== NOVO: Atualizar somente badges ===== */
+/* ===== Atualizar somente badges ===== */
 async function atualizarSomenteBadges(){
   const ico = $('icoAtualizar');
   if(ico) ico.classList.add('spin');
@@ -3809,6 +4266,39 @@ async function atualizarSomenteBadges(){
   } finally {
     if(ico) ico.classList.remove('spin');
   }
+}
+
+/* ===== NOVO: Auto-refresh silencioso dos badges (2 min + ao voltar pra aba + ao carregar) ===== */
+async function atualizarBadgesSilencioso(){
+  if(!state.isAdmin) return;
+  if(estaSalvando()) return;
+  if(document.hidden) return;
+  try {
+    // Atualiza os 3 badges do header SEM toast, SEM spinner, SEM loading
+    await Promise.all([
+      atualizarBadgeCaptar(),
+      atualizarBadgeLeads(),
+      carregarNotasBadge()
+    ]);
+    // Atualiza também a contagem do card Cutucada (não faz requisição extra — usa state.clientes)
+    if(state.carregado.clientes) atualizarBalCutucada();
+  } catch(e){
+    // Silencioso: se falhar, mantém o último valor
+    console.warn('[atualizarBadgesSilencioso] erro:', e);
+  }
+}
+function iniciarAutoRefreshBadges(){
+  if(state._autoRefreshBadgesTimer) clearInterval(state._autoRefreshBadgesTimer);
+  // 1) dispara imediatamente ao iniciar
+  setTimeout(() => { atualizarBadgesSilencioso(); }, 1200);
+  // 2) a cada 2 minutos
+  state._autoRefreshBadgesTimer = setInterval(() => {
+    atualizarBadgesSilencioso();
+  }, AUTO_REFRESH_BADGES_MS);
+  // 3) ao voltar pra aba do navegador
+  document.addEventListener('visibilitychange', () => {
+    if(!document.hidden) atualizarBadgesSilencioso();
+  });
 }
 
 async function entrarAdmin(){
@@ -3835,10 +4325,10 @@ async function carregarHomeAdmin(){
   atualizarBadgeCaptar();
   atualizarBadgeLeads();
   carregarNotasBadge();
-  state.carregado = { agenda: false, visitar: false, gostei: false, clientes: false, geral: false, tarefas: false };
+  state.carregado = { agenda: false, visitar: false, gostei: false, clientes: false, geral: false, tarefas: false, cutucada: false };
   await carregarCorretores();
   state.painelAtivo = 'agenda';
-  ['agenda','visitar','gostei','clientes'].forEach(p => {
+  ['agenda','visitar','gostei','clientes','cutucada'].forEach(p => {
     const cap = p.charAt(0).toUpperCase() + p.slice(1);
     const elPanel = $('panel' + cap);
     const elCard = $('card' + cap);
@@ -3848,6 +4338,7 @@ async function carregarHomeAdmin(){
   await carregarAgenda(true);
   carregarResto_();
   iniciarRefreshSilencioso();
+  iniciarAutoRefreshBadges();
 }
 async function carregarResto_(){
   try {
@@ -3872,6 +4363,10 @@ function sair(){
       }
     }, 200);
     return;
+  }
+  if(state._autoRefreshBadgesTimer){
+    clearInterval(state._autoRefreshBadgesTimer);
+    state._autoRefreshBadgesTimer = null;
   }
   localStorage.removeItem(ADMIN_KEY);
   state.isAdmin = false;
@@ -4035,6 +4530,21 @@ function renderizarCorretoresNoCardClientes_(){
   wrap.innerHTML = html;
 }
 
+/* ===== NOVO: prévia de corretores no card Cutucada ===== */
+function renderizarCutucadaCorretores_(){
+  const wrap = $('cutucadaCorretoresLista');
+  if(!wrap) return;
+  const atrasados = (state.clientes || []).filter(c => clienteAtrasado_(c));
+  if(atrasados.length === 0){ wrap.innerHTML = ''; return; }
+  const contagem = {};
+  atrasados.forEach(c => {
+    const corr = chaveCorretorExata_(c.corretor) || '(sem corretor)';
+    if(!contagem[corr]) contagem[corr] = 0;
+    contagem[corr]++;
+  });
+  wrap.innerHTML = montarPreviaCorretores_(contagem, 5);
+}
+
 async function carregarTarefas(mostrarLoading){
   const res = await api('listarTarefas', { senha: state.adminSenha });
   state.tarefas = (res.ok && res.data) ? res.data : [];
@@ -4054,10 +4564,57 @@ async function carregarClientes(mostrarLoading){
   renderizarCorretoresNoCardClientes_();
   renderizarFiltrosClientes();
   renderizarClientes();
+  atualizarBalCutucada();
+  renderizarCutucadaCorretores_();
 }
 function atualizarBalClientes(){
   const el = $('balClientes');
   if(el) el.textContent = state.clientes.length;
+}
+
+/* ===== NOVO: cálculo de dias sem cutucada e card cutucada ===== */
+function calcularDiasSemCutucada(c){
+  if(!c) return null;
+  const cut = parseCutucada_(c.cutucada);
+  if(!cut) return null; // nunca cutucado
+  const d = new Date(cut.dataIso);
+  if(isNaN(d.getTime())) return null;
+  const diff = Math.floor((Date.now() - d.getTime()) / 86400000);
+  return Math.max(0, diff);
+}
+function clienteAtivoParaCutucada_(c){
+  if(!c) return false;
+  const inativo = String(c.inativo || '').toLowerCase() === 'sim';
+  return !inativo;
+}
+function clienteAtrasado_(c){
+  if(!clienteAtivoParaCutucada_(c)) return false;
+  const dias = calcularDiasSemCutucada(c);
+  if(dias === null) return true; // nunca cutucado = atrasado
+  return dias > DIAS_CUTUCADA_ATRASO;
+}
+function atualizarBalCutucada(){
+  const el = $('balCutucada');
+  if(!el) return;
+  const atrasados = (state.clientes || []).filter(c => clienteAtrasado_(c)).length;
+  el.textContent = atrasados > 99 ? '99+' : atrasados;
+  el.classList.toggle('zero', atrasados === 0);
+}
+function cutucadaDiasHTML(c){
+  const dias = calcularDiasSemCutucada(c);
+  if(dias === null){
+    return '<span class="cutucada-dias nunca">⚠️ Nunca cutucado</span>';
+  }
+  if(dias === 0){
+    return '<span class="cutucada-dias ok">✅ Cutucado hoje</span>';
+  }
+  if(dias <= DIAS_CUTUCADA_ATRASO){
+    return `<span class="cutucada-dias ok">✅ ${dias} dia${dias===1?'':'s'} sem cutucada</span>`;
+  }
+  if(dias <= 7){
+    return `<span class="cutucada-dias atencao">⚠️ ${dias} dias sem cutucada</span>`;
+  }
+  return `<span class="cutucada-dias atrasado">🔴 ${dias} dias sem cutucada</span>`;
 }
 
 function renderizarFiltrosClientes(){
@@ -4184,18 +4741,14 @@ function onBuscaClienteChanged(){
   if(busca){
     const b = busca;
     const bTel = normalizaTel(busca);
-    // ✅ NOVO: busca também nas preferências (bairro, valor, quartos, etc.)
     arr = arr.filter(c => {
-      // Nome ou telefone
       if((c.nome || '').toLowerCase().includes(b)) return true;
       if(bTel && normalizaTel(c.telefone).includes(bTel)) return true;
-      // Preferências
       const pref = state._prefsCachePorTel[normalizaTel(c.telefone)];
       if(pref){
         if(pref.bairros && pref.bairros.some(pb => String(pb).toLowerCase().includes(b))) return true;
         if(pref.outros && String(pref.outros).toLowerCase().includes(b)) return true;
         if(pref.tipo && String(pref.tipo).toLowerCase().includes(b)) return true;
-        // valor: aceita "500.000" ou "500000"
         const bNum = parseFloat(String(busca).replace(/[^\d]/g, ''));
         if(bNum > 0){
           const pMin = parseFloat(String(pref.precoMin||'').replace(/[^\d]/g, '')) || 0;
@@ -4258,16 +4811,15 @@ function onBuscaClienteChanged(){
   }
   empty.classList.add('hidden');
   lista.innerHTML = arr.map(c => clienteRowHTML(c)).join('');
-  // ✅ Depois de renderizar, garante que preferências estão carregadas para mostrar no card
   arr.forEach(c => {
     const tel = normalizaTel(c.telefone);
     if(tel && !state._prefsCachePorTel[tel]){
-      carregarPrefsCliente(tel, false); // silencioso, atualiza o card depois
+      carregarPrefsCliente(tel, false);
     }
   });
 }
 
-/* ===== NOVO: HTML do card com faixa de preferências ===== */
+/* ===== HTML do card com faixa de preferências ===== */
 function clienteRowHTML(c){
   const inativo = String(c.inativo||'').toLowerCase() === 'sim';
   const tqc = String(c.tqc||'').toLowerCase() === 'sim';
@@ -4308,7 +4860,6 @@ function clienteRowHTML(c){
       </div>`;
   }
 
-  // ✅ NOVO: resumo de preferências (1 linha no PC)
   const pref = state._prefsCachePorTel[telNormalizado];
   const prefsBarHTML = montarPrefsBarHTML(telNormalizado, pref);
   const prefsExpandidoHTML = montarPrefsExpandidoHTML(telNormalizado, pref);
@@ -4370,7 +4921,7 @@ function clienteRowHTML(c){
         <button class="btn btn-ghost btn-xs" title="Copiar link da vitrine do cliente" onclick="enviarLinkClienteDoCard('${tel}')">
           <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
         </button>
-                <button class="btn btn-ghost btn-xs" title="Ver o que o cliente busca (preferências)" onclick="abrirPrefsDoCard('${tel}')">
+        <button class="btn btn-ghost btn-xs" title="Ver o que o cliente busca (preferências)" onclick="abrirPrefsDoCard('${tel}')">
           <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
         </button>
         <button class="btn btn-purple btn-xs" title="Abrir vitrine admin (editar imóveis do cliente)" onclick="abrirVitrineAdminDoCard('${tel}')">
@@ -4387,7 +4938,7 @@ function clienteRowHTML(c){
   `;
 }
 
-/* ===== NOVO: barra de preferências (1 linha) ===== */
+/* ===== barra de preferências (1 linha) ===== */
 function montarPrefsBarHTML(tel, pref){
   const aberto = state._gruposPrefsAbertos.has(tel);
   if(!pref || (!pref.bairros?.length && !pref.precoMin && !pref.precoMax && !pref.quartos && !pref.suites && !pref.vagas && !pref.tipo && !pref.outros)){
@@ -4420,7 +4971,23 @@ function montarPrefsBarHTML(tel, pref){
   if(pref.elevador && pref.elevador !== 'tanto faz'){
     partes.push(`<span class="pref-item">🛗 <strong>${pref.elevador === 'sim' ? 'Com elevador' : 'Sem elevador'}</strong></span>`);
   }
-  if(pref.tipo && pref.tipo !== 'tanto faz') partes.push(`<span class="pref-item">🏠 <strong>${esc(pref.tipo)}</strong></span>`);
+    // ===== Tipos (principal + extras do "🏠 Também busca:") =====
+  let tiposTexto = '';
+  if(pref.tipo && pref.tipo !== 'tanto faz'){
+    tiposTexto = String(pref.tipo);
+  }
+  if(pref.outros){
+    const matchTipoExtra = String(pref.outros).match(/🏠\s*Também busca:\s*([^\n]+)/i);
+    if(matchTipoExtra){
+      const extras = matchTipoExtra[1].split(',').map(s => s.trim()).filter(Boolean);
+      if(extras.length){
+        tiposTexto = tiposTexto ? (tiposTexto + ', ' + extras.join(', ')) : extras.join(', ');
+      }
+    }
+  }
+  if(tiposTexto){
+    partes.push(`<span class="pref-item">🏠 <strong>${esc(tiposTexto)}</strong></span>`);
+  }
     if(pref.outros) partes.push(`<span class="pref-item pref-item-outros">📝 <strong>${esc(pref.outros)}</strong></span>`);
   return `
     <div class="prefs-bar ${aberto ? 'aberto' : ''}" onclick="togglePrefsBar('${tel}')" title="Clique para expandir/ver todas as preferências">
@@ -4430,7 +4997,7 @@ function montarPrefsBarHTML(tel, pref){
   `;
 }
 
-/* ===== NOVO: painel expandido de preferências ===== */
+/* ===== painel expandido de preferências ===== */
 function montarPrefsExpandidoHTML(tel, pref){
   const aberto = state._gruposPrefsAbertos.has(tel);
   const cls = aberto ? 'show' : '';
@@ -4488,10 +5055,25 @@ function montarPrefsExpandidoHTML(tel, pref){
           <span class="prefs-lbl">🛗 Elevador</span>
           <span class="prefs-val">${pref.elevador || 'tanto faz'}</span>
         </div>
-        <div class="prefs-linha">
-          <span class="prefs-lbl">🏠 Tipo</span>
-          <span class="prefs-val">${pref.tipo || 'tanto faz'}</span>
-        </div>
+                ${(() => {
+          let tiposTexto = '';
+          if(pref.tipo && pref.tipo !== 'tanto faz'){
+            tiposTexto = String(pref.tipo);
+          }
+          if(pref.outros){
+            const matchTipoExtra = String(pref.outros).match(/🏠\s*Também busca:\s*([^\n]+)/i);
+            if(matchTipoExtra){
+              const extras = matchTipoExtra[1].split(',').map(s => s.trim()).filter(Boolean);
+              if(extras.length){
+                tiposTexto = tiposTexto ? (tiposTexto + ', ' + extras.join(', ')) : extras.join(', ');
+              }
+            }
+          }
+          return `<div class="prefs-linha">
+            <span class="prefs-lbl">🏠 Tipo</span>
+            <span class="prefs-val">${esc(tiposTexto || 'tanto faz')}</span>
+          </div>`;
+        })()}
         ${pref.outros ? `
         <div class="prefs-linha" style="grid-column:1/-1">
           <span class="prefs-lbl">📝 Outros</span>
@@ -4508,17 +5090,15 @@ function montarPrefsExpandidoHTML(tel, pref){
   `;
 }
 
-/* ===== NOVO: toggle da barra de preferências ===== */
+/* ===== toggle da barra de preferências ===== */
 function togglePrefsBar(tel){
   const telN = normalizaTel(tel);
   if(state._gruposPrefsAbertos.has(telN)) state._gruposPrefsAbertos.delete(telN);
   else state._gruposPrefsAbertos.add(telN);
-  // Re-renderiza só esse card
-  const row = document.querySelector(`.cliente-row-v2[data-tel="${telN}"]`);
   renderizarClientes();
 }
 
-/* ===== NOVO: carrega preferências do cliente (cache) ===== */
+/* ===== carrega preferências do cliente (cache) ===== */
 async function carregarPrefsCliente(telefone, mostrarToast){
   const tel = normalizaTel(telefone);
   if(!tel) return null;
@@ -4531,40 +5111,192 @@ async function carregarPrefsCliente(telefone, mostrarToast){
   return null;
 }
 
-/* ===== NOVO: abre modal de preferências do card ===== */
+/* ===== NOVA versão: abre modal de preferências preenchendo o modal novo ===== */
 async function abrirPrefsDoCard(telefone){
   const tel = normalizaTel(telefone);
   if(!tel){ toast('Telefone inválido', 'error'); return; }
   const cli = state.clientes.find(c => normalizaTel(c.telefone) === tel);
   const nome = cli ? (cli.nome || '') : '';
   const pref = await carregarPrefsCliente(tel, false);
+
   state._prefsTelAtual = tel;
-  state._prefsModoBusca = false;
-  state._prefsBairrosTemp = pref && pref.bairros ? [...pref.bairros] : [];
+
   $('prefsModalNome').textContent = nomeCompletoCliente_(nome, tel);
-    // Configura formatação automática (só uma vez por campo)
-  configurarInputMoeda('prefsPrecoMin');
+
   configurarInputMoeda('prefsPrecoMax');
-  configurarInputMoeda('prefsCondMin');
   configurarInputMoeda('prefsCondMax');
-  // Formata os valores vindos do banco (700000 → 700.000)
-  $('prefsPrecoMin').value = formatarNumeroParaExibicao(pref?.precoMin);
-  $('prefsPrecoMax').value = formatarNumeroParaExibicao(pref?.precoMax);
-  $('prefsCondMin').value  = formatarNumeroParaExibicao(pref?.condMin);
-  $('prefsCondMax').value  = formatarNumeroParaExibicao(pref?.condMax);
-  $('prefsOutros').value   = pref?.outros   || '';
-  $('prefsBairroInput').value = '';
-  renderizarBairrosPrefs();
+
+  // BAIRROS
+  const bairrosTexto = (pref && pref.bairros && pref.bairros.length)
+    ? pref.bairros.join(', ')
+    : '';
+  $('prefsBairrosTxt').value = bairrosTexto;
+
+  // TIPO
+  const tiposSelecionados = [];
+  if(pref && pref.tipo){
+    const tipoStr = String(pref.tipo).toLowerCase().trim();
+    if(tipoStr.includes('padrao') || tipoStr.includes('padrão')) tiposSelecionados.push('apartamento padrao');
+    else if(tipoStr.includes('cobertura')) tiposSelecionados.push('apartamento cobertura');
+    else if(tipoStr.includes('area privativa') || tipoStr.includes('área privativa')) tiposSelecionados.push('apartamento area privativa');
+    else if(tipoStr.includes('casa')) tiposSelecionados.push('casa');
+    else if(tipoStr.includes('apartamento')) tiposSelecionados.push('apartamento padrao');
+  }
+  if(pref && pref.outros){
+    const match = String(pref.outros).match(/🏠\s*Também busca:\s*([^\n]+)/i);
+    if(match){
+      const extras = match[1].split(',').map(s => s.trim().toLowerCase()).filter(Boolean);
+      extras.forEach(t => {
+        if(t.includes('padrao') || t.includes('padrão')) tiposSelecionados.push('apartamento padrao');
+        else if(t.includes('cobertura')) tiposSelecionados.push('apartamento cobertura');
+        else if(t.includes('area privativa') || t.includes('área privativa')) tiposSelecionados.push('apartamento area privativa');
+        else if(t === 'casa' || t.includes('casa')) tiposSelecionados.push('casa');
+      });
+    }
+  }
+  const tiposUnicos = [...new Set(tiposSelecionados)];
+  document.querySelectorAll('.prefs-tipo-btn').forEach(btn => {
+    btn.classList.toggle('ativo', tiposUnicos.includes(btn.dataset.tipo));
+  });
+  const temApto = tiposUnicos.some(t => t.startsWith('apartamento'));
+  $('prefsBlocoCond').style.display = temApto ? 'block' : 'none';
+
+  // VALOR
+  $('prefsPrecoMax').value = pref && pref.precoMax ? formatarNumeroParaExibicao(pref.precoMax) : '';
+  $('prefsCondMax').value  = pref && pref.condMax  ? formatarNumeroParaExibicao(pref.condMax)  : '';
+
+  // AQUISIÇÃO
+  let aquisicaoDetectada = '';
+  let misturaAvista = '';
+  let misturaFinanc = '';
+  if(pref && pref.outros){
+    const matchAquis = String(pref.outros).match(/💰\s*Aquisição:\s*([^\n]+)/i);
+    if(matchAquis){
+      const txt = matchAquis[1].toLowerCase();
+      if(txt.includes('parte') || txt.includes('+')){
+        aquisicaoDetectada = 'misto';
+        const partes = txt.match(/(\d+)\s*%.*?(\d+)\s*%/);
+        if(partes){
+          misturaAvista = partes[1];
+          misturaFinanc = partes[2];
+        }
+      } else if(txt.includes('financiado')){
+        aquisicaoDetectada = 'financiado';
+      } else if(txt.includes('vista') || txt.includes('próprio') || txt.includes('proprio')){
+        aquisicaoDetectada = 'avista';
+      }
+    }
+  }
+  document.querySelectorAll('.prefs-aquis-btn').forEach(btn => {
+    btn.classList.toggle('ativo', btn.dataset.aquis === aquisicaoDetectada);
+  });
+  if(aquisicaoDetectada === 'misto'){
+    $('prefsMisturaWrap').style.display = 'block';
+    $('prefsMisturaAvista').value = misturaAvista;
+    $('prefsMisturaFinanc').value = misturaFinanc;
+    calcPrefsMistura();
+  } else {
+    $('prefsMisturaWrap').style.display = 'none';
+    $('prefsMisturaAvista').value = '';
+    $('prefsMisturaFinanc').value = '';
+    $('prefsMisturaInfo').textContent = 'Digite os dois percentuais (soma 100%)';
+    $('prefsMisturaInfo').className = 'mistura-info';
+  }
+
+    // QUARTOS/SUÍTES/VAGAS/ACESSIBILIDADE/ELEVADOR
   renderizarOpcoesPrefs('quartos', ['', '1', '2', '3', '4', '5'], pref?.quartos || '');
   renderizarOpcoesPrefs('suites',  ['', '1', '2', '3', '4', '5'], pref?.suites  || '');
   renderizarOpcoesPrefs('vagas',   ['', '0', '1', '2', '3', '4'], pref?.vagas   || '');
+
+  // ===== NOVO: METRAGEM MÍNIMA =====
+  configurarInputMetragem('prefsMetragemMin');
+  let metragemDetectada = '';
+  if(pref && pref.outros){
+    const matchArea = String(pref.outros).match(/📐\s*Área:\s*(\d+)\s*m²/i);
+    if(matchArea) metragemDetectada = matchArea[1];
+  }
+  $('prefsMetragemMin').value = metragemDetectada;
+ 
   renderizarOpcoesPrefs('acessibilidade', ['tanto faz', 'sim', 'nao'], pref?.acessibilidade || 'tanto faz');
   renderizarOpcoesPrefs('elevador',       ['tanto faz', 'sim', 'nao'], pref?.elevador       || 'tanto faz');
-  renderizarOpcoesPrefs('tipo',           ['tanto faz', 'cobertura', 'area privativa', 'apartamento', 'casa'], pref?.tipo || 'tanto faz');
+
+  // SEM ESCADA
+  let semEscadaValor = 'tanto faz';
+  if(pref && pref.outros){
+    const matchEscada = String(pref.outros).match(/🚫\s*Sem escada:\s*(Sim|Não|sim|nao)/i);
+    if(matchEscada){
+      semEscadaValor = matchEscada[1].toLowerCase().includes('sim') ? 'sim' : 'nao';
+    }
+  }
+  renderizarOpcoesPrefs('semEscada', ['tanto faz', 'sim', 'nao'], semEscadaValor);
+
+   // EXTRAS
+  let extrasLimpos = '';
+  if(pref && pref.outros){
+    let txt = String(pref.outros);
+    txt = txt.replace(/^\d{2}\/\d{2}\/\d{2,4}\s+\d{2}:\d{2}hs?\s*\n?/i, '');
+    txt = txt.replace(/📐\s*Área:[^\n]*\n?/gi, '');        // ← NOVO (remove a metragem)
+    txt = txt.replace(/💰\s*Aquisição:[^\n]*\n?/gi, '');
+    txt = txt.replace(/🚫\s*Sem escada:[^\n]*\n?/gi, '');
+    txt = txt.replace(/🏠\s*Também busca:[^\n]*\n?/gi, '');
+    txt = txt.replace(/^📝\s*/gm, '');
+    extrasLimpos = txt.trim();
+  }
+  $('prefsExtras').value = extrasLimpos;
+
   $('prefsModalBackdrop').classList.add('show');
 }
 
-/* ===== NOVO: renderiza opções clicáveis de preferência ===== */
+/* ===== NOVAS funções auxiliares do modal de preferências ===== */
+function togglePrefsTipo(btn){
+  btn.classList.toggle('ativo');
+  // Mostra bloco de condomínio se tiver algum tipo de apartamento marcado
+  const temApto = !!document.querySelector('.prefs-tipo-btn.ativo[data-tipo^="apartamento"]');
+  $('prefsBlocoCond').style.display = temApto ? 'block' : 'none';
+  if(!temApto){
+    $('prefsCondMax').value = '';
+  }
+}
+function escolherPrefsAquisicao(tipo, btn){
+  document.querySelectorAll('.prefs-aquis-btn').forEach(b => b.classList.remove('ativo'));
+  btn.classList.add('ativo');
+  if(tipo === 'misto'){
+    $('prefsMisturaWrap').style.display = 'block';
+  } else {
+    $('prefsMisturaWrap').style.display = 'none';
+    $('prefsMisturaAvista').value = '';
+    $('prefsMisturaFinanc').value = '';
+    $('prefsMisturaInfo').textContent = 'Digite os dois percentuais (soma 100%)';
+    $('prefsMisturaInfo').className = 'mistura-info';
+  }
+}
+function calcPrefsMistura(){
+  const av = parseInt($('prefsMisturaAvista').value || '0', 10);
+  const fi = parseInt($('prefsMisturaFinanc').value || '0', 10);
+  const soma = av + fi;
+  const info = $('prefsMisturaInfo');
+  if(soma === 100 && av > 0 && fi > 0){
+    info.textContent = `✓ ${av}% à vista + ${fi}% financiado`;
+    info.className = 'mistura-info ok';
+  } else if(soma === 0){
+    info.textContent = 'Digite os dois percentuais (soma 100%)';
+    info.className = 'mistura-info';
+  } else {
+    info.textContent = `Soma: ${soma}% — precisa dar 100%`;
+    info.className = 'mistura-info erro';
+  }
+}
+function copiarLinkFormulario(){
+  const tel = state._prefsTelAtual;
+  if(!tel){ toast('Cliente não identificado', 'error'); return; }
+  const cli = state.clientes.find(c => normalizaTel(c.telefone) === tel);
+  const nome = cli ? (cli.nome || '') : '';
+  const url = PREFERENCIAS_URL_BASE + '?tel=' + encodeURIComponent(tel) + '&nome=' + encodeURIComponent(nome);
+  copiarTexto(url);
+  toast('Link copiado! Cole no navegador para abrir', 'success');
+}
+
+/* ===== renderiza opções clicáveis de preferência ===== */
 function renderizarOpcoesPrefs(campo, opcoes, valorAtual){
   const map = {
     quartos: 'prefsQuartosOpcoes',
@@ -4572,7 +5304,7 @@ function renderizarOpcoesPrefs(campo, opcoes, valorAtual){
     vagas:   'prefsVagasOpcoes',
     acessibilidade: 'prefsAcessoOpcoes',
     elevador: 'prefsElevadorOpcoes',
-    tipo: 'prefsTipoOpcoes'
+    semEscada: 'prefsSemEscadaOpcoes'
   };
   const wrap = $(map[campo]);
   if(!wrap) return;
@@ -4582,14 +5314,7 @@ function renderizarOpcoesPrefs(campo, opcoes, valorAtual){
     vagas:   v => v === '' ? 'Tanto faz' : (v === '0' ? '0' : v + '+'),
     acessibilidade: v => v === 'tanto faz' ? 'Tanto faz' : (v === 'sim' ? 'Sim' : 'Não'),
     elevador: v => v === 'tanto faz' ? 'Tanto faz' : (v === 'sim' ? 'Sim' : 'Não'),
-    tipo: v => {
-      if(v === 'tanto faz') return 'Tanto faz';
-      if(v === 'cobertura') return 'Cobertura';
-      if(v === 'area privativa') return 'Área privativa';
-      if(v === 'apartamento') return 'Apartamento';
-      if(v === 'casa') return 'Casa';
-      return v;
-    }
+    semEscada: v => v === 'tanto faz' ? 'Tanto faz' : (v === 'sim' ? 'Sim' : 'Não')
   };
   wrap.innerHTML = opcoes.map(v => `
     <button type="button" class="prefs-opcao ${v === valorAtual ? 'active' : ''}"
@@ -4604,13 +5329,10 @@ function escolherOpcaoPrefs(campo, valor, btn){
   wrap.querySelectorAll('.prefs-opcao').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
 }
-/* ===== Formatação automática de valores em R$ (700000 → 700.000) ===== */
+/* ===== Formatação automática de valores em R$ ===== */
 function formatarValorMoedaInput(input){
-  // Pega só dígitos
   let v = String(input.value || '').replace(/\D/g, '');
-  // Limita a 12 dígitos (bilhões)
   if(v.length > 12) v = v.slice(0, 12);
-  // Aplica separador de milhar com ponto
   if(v.length > 0){
     v = v.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
   }
@@ -4623,14 +5345,12 @@ function formatarValorMoedaInput(input){
   if(!v) return '';
   return v.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 }
- /* ✅ Formata valor pra exibição compacta: 700000 → "700mil" | 1350000 → "1.35milhão" */
 function formatarValorCompacto(valor){
   if(valor === null || valor === undefined || valor === '') return '';
   const num = parseFloat(String(valor).replace(/\D/g, ''));
   if(!num || isNaN(num) || num === 0) return '';
   if(num >= 1000000){
     const v = num / 1000000;
-    // 1.35 → "1.35milhão" | 2 → "2milhões"
     const dec = (v % 1 === 0) ? v.toFixed(0) : v.toFixed(2).replace(/0+$/,'').replace(/\.$/,'');
     return dec + (v >= 2 ? 'milhões' : 'milhão');
   }
@@ -4648,41 +5368,18 @@ function configurarInputMoeda(idInput){
   input.dataset.moedaConfigurada = '1';
   input.addEventListener('input', () => formatarValorMoedaInput(input));
 }
-/* ===== NOVO: bairros (add/remove) ===== */
-function adicionarBairroPrefs(){
-  const inp = $('prefsBairroInput');
-  const v = (inp.value || '').trim();
-  if(!v) return;
-  if(state._prefsBairrosTemp.map(b => b.toLowerCase()).includes(v.toLowerCase())){
-    toast('Esse bairro já foi adicionado', 'error');
-    inp.value = '';
-    return;
-  }
-  state._prefsBairrosTemp.push(v);
-  inp.value = '';
-  renderizarBairrosPrefs();
-  inp.focus();
-}
-function removerBairroPrefs(idx){
-  state._prefsBairrosTemp.splice(idx, 1);
-  renderizarBairrosPrefs();
-}
-function renderizarBairrosPrefs(){
-  const wrap = $('prefsBairrosChips');
-  if(!wrap) return;
-  if(state._prefsBairrosTemp.length === 0){
-    wrap.innerHTML = '<span style="color:var(--muted); font-size:.74rem; font-style:italic;">Nenhum bairro adicionado</span>';
-    return;
-  }
-  wrap.innerHTML = state._prefsBairrosTemp.map((b, i) => `
-    <span class="bairro-chip">
-      ${esc(b)}
-      <span class="x" onclick="removerBairroPrefs(${i})">×</span>
-    </span>
-  `).join('');
+
+ function configurarInputMetragem(idInput){
+  const input = $(idInput);
+  if(!input) return;
+  if(input.dataset.metragemConfigurada === '1') return;
+  input.dataset.metragemConfigurada = '1';
+  input.addEventListener('input', () => {
+    input.value = input.value.replace(/\D/g, '').slice(0, 5);
+  });
 }
 
-/* ===== NOVO: abre prefs a partir do modal do cliente ===== */
+/* ===== abre prefs a partir do modal do cliente ===== */
 async function abrirPrefsDoClienteModal(){
   const tel = normalizaTel($('cliTelefone').value);
   if(!tel || tel.length < 10){
@@ -4692,44 +5389,114 @@ async function abrirPrefsDoClienteModal(){
   await abrirPrefsDoCard(tel);
 }
 
-/* ===== NOVO: salvar preferências ===== */
+/* ===== NOVA versão: salvar preferências (padronizada com formulário do cliente + timestamp no topo do outros) ===== */
 async function salvarPrefsCliente(){
   const tel = state._prefsTelAtual;
   if(!tel){ toast('Cliente não identificado', 'error'); return; }
   const btn = $('btnSalvarPrefs');
   if(btn) btn.disabled = true;
   marcarSalvando(true);
+
+  // === BAIRROS: quebra o textarea em array ===
+  const bairrosTexto = ($('prefsBairrosTxt').value || '').trim();
+  const bairrosArr = bairrosTexto
+    ? bairrosTexto.split(/[,\n;]+/).map(s => s.trim()).filter(Boolean).slice(0, 30)
+    : [];
+
+  // === TIPOS selecionados ===
+  const tiposAtivos = [...document.querySelectorAll('.prefs-tipo-btn.ativo')].map(b => b.dataset.tipo);
+
+  // === AQUISIÇÃO ===
+  const aquisBtn = document.querySelector('.prefs-aquis-btn.ativo');
+  const aquisicao = aquisBtn ? aquisBtn.dataset.aquis : '';
+  const misturaAvista = $('prefsMisturaAvista').value;
+  const misturaFinanc = $('prefsMisturaFinanc').value;
+
+  // === SEM ESCADA ===
+  const semEscadaBtn = document.querySelector('.prefs-opcoes[data-campo="semEscada"] .prefs-opcao.active');
+  const semEscada = semEscadaBtn ? semEscadaBtn.dataset.valor : 'tanto faz';
+
+  // === OUTROS CAMPOS ===
   const getVal = (campo) => {
     const wrap = document.querySelector(`.prefs-opcoes[data-campo="${campo}"]`);
     const ativo = wrap ? wrap.querySelector('.prefs-opcao.active') : null;
     return ativo ? (ativo.dataset.valor || '') : '';
   };
-    const payload = {
+
+  // === MONTA `outros` com TIMESTAMP no topo ===
+  function timestampAgora_(){
+    const d = new Date();
+    const dia = String(d.getDate()).padStart(2, '0');
+    const mes = String(d.getMonth() + 1).padStart(2, '0');
+    const ano = String(d.getFullYear()).slice(-2);
+    const h = String(d.getHours()).padStart(2, '0');
+    const m = String(d.getMinutes()).padStart(2, '0');
+    return `${dia}/${mes}/${ano} ${h}:${m}hs`;
+  }
+    const linhasOutros = [timestampAgora_()];
+
+  // ===== NOVO: METRAGEM MÍNIMA (sempre em 2º lugar, igual ao formulário do cliente) =====
+  const metragemMin = ($('prefsMetragemMin').value || '').replace(/\D/g, '').trim();
+  if(metragemMin){
+    linhasOutros.push(`📐 Área: ${metragemMin}m²`);
+  }
+ 
+  // Aquisição
+  if(aquisicao === 'avista'){
+    linhasOutros.push('💰 Aquisição: Recursos próprios (à vista)');
+  } else if(aquisicao === 'financiado'){
+    linhasOutros.push('💰 Aquisição: Financiado');
+  } else if(aquisicao === 'misto' && misturaAvista && misturaFinanc){
+    linhasOutros.push(`💰 Aquisição: Parte à vista (${misturaAvista}%) + Financiado (${misturaFinanc}%)`);
+  }
+  // Sem escada
+  if(semEscada === 'sim'){
+    linhasOutros.push('🚫 Sem escada: Sim (obrigatório)');
+  }
+  // Extras
+  const extras = ($('prefsExtras').value || '').trim();
+  if(extras){
+    linhasOutros.push(`📝 ${extras}`);
+  }
+  // Tipos extras
+  let tipoParaAPI = '';
+  let tiposExtras = '';
+  if(tiposAtivos.length === 1){
+    tipoParaAPI = tiposAtivos[0];
+  } else if(tiposAtivos.length > 1){
+    tipoParaAPI = tiposAtivos[0];
+    tiposExtras = tiposAtivos.slice(1).join(', ');
+  }
+   if(tiposExtras){
+    linhasOutros.push(`🏠 Também busca: ${tiposExtras} (também ${tipoParaAPI})`);
+  }
+
+  const payload = {
     senha: state.adminSenha,
     telefone: tel,
-    bairros: state._prefsBairrosTemp,
-    // ✅ Limpa pontos e vírgulas antes de enviar — vai como número puro
-    precoMin: $('prefsPrecoMin').value.replace(/\D/g, ''),
+    bairros: bairrosArr,
+    precoMin: '',
     precoMax: $('prefsPrecoMax').value.replace(/\D/g, ''),
-    condMin:  $('prefsCondMin').value.replace(/\D/g, ''),
-    condMax:  $('prefsCondMax').value.replace(/\D/g, ''),
+    condMin: '',
+    condMax: $('prefsCondMax').value.replace(/\D/g, ''),
     quartos: getVal('quartos'),
     suites:  getVal('suites'),
     vagas:   getVal('vagas'),
     acessibilidade: getVal('acessibilidade') || 'tanto faz',
     elevador: getVal('elevador') || 'tanto faz',
-    tipo: getVal('tipo') || 'tanto faz',
-    outros: $('prefsOutros').value.trim()
+    tipo: tipoParaAPI || 'tanto faz',
+    outros: linhasOutros.join('\n')
   };
+
   const res = await api('salvarPreferenciasCliente', payload);
   marcarSalvando(false);
   if(btn) btn.disabled = false;
   if(!res.ok){ toast(res.error || 'Erro ao salvar preferências', 'error'); return; }
   toast('Preferências salvas', 'success');
-  // Atualiza cache local
+
   state._prefsCachePorTel[tel] = {
     telefone: tel,
-    bairros: [...state._prefsBairrosTemp],
+    bairros: bairrosArr,
     precoMin: payload.precoMin,
     precoMax: payload.precoMax,
     condMin: payload.condMin,
@@ -4743,9 +5510,7 @@ async function salvarPrefsCliente(){
     outros: payload.outros
   };
   fecharPrefsModal();
-  // Atualiza o resumo no modal do cliente (se estiver aberto)
   atualizarResumoPrefsNoModalCliente(tel);
-  // Re-renderiza a lista de clientes
   renderizarClientes();
 }
 function atualizarResumoPrefsNoModalCliente(tel){
@@ -4772,7 +5537,7 @@ function fecharPrefsModal(){
   state._prefsModoBusca = false;
 }
 
-/* ===== NOVO: busca avançada ===== */
+/* ===== busca avançada ===== */
 function toggleBuscaAvancada(){
   state._buscaAvancadaAberta = !state._buscaAvancadaAberta;
   const p = $('filtrosAvancadosPanel');
@@ -4781,7 +5546,6 @@ function toggleBuscaAvancada(){
   if(b) b.classList.toggle('ativa', state._buscaAvancadaAberta);
   if(state._buscaAvancadaAberta){
     renderizarBairrosBuscaAvancada();
-    // ✅ Configura formatação dos campos de valor
     configurarInputMoeda('faPreco');
     configurarInputMoeda('faCondominio');
   }
@@ -4839,7 +5603,6 @@ async function executarBuscaAvancada(){
     const payload = {
     senha: state.adminSenha,
     bairros: state._buscaAvancadaBairros,
-    // ✅ Limpa pontos e vírgulas antes de enviar
     preco: $('faPreco').value.replace(/\D/g, ''),
     condominio: $('faCondominio').value.replace(/\D/g, ''),
     quartos: $('faQuartos').value,
@@ -4850,7 +5613,6 @@ async function executarBuscaAvancada(){
     tipo: $('faTipo').value,
     outros: $('faOutros').value.trim()
   };
-  // Se tudo vazio, limpa
   const tudoVazio = (!payload.bairros.length && !payload.preco && !payload.condominio &&
     !payload.quartos && !payload.suites && !payload.vagas &&
     payload.acessibilidade === 'tanto faz' && payload.elevador === 'tanto faz' &&
@@ -4875,7 +5637,6 @@ async function executarBuscaAvancada(){
     return;
   }
   empty.classList.add('hidden');
-  // Mapeia os resultados para o formato esperado pelo clienteRowHTML
   const mapaTel = {};
   state.clientes.forEach(c => { mapaTel[normalizaTel(c.telefone)] = c; });
   const clientesEncontrados = res.data.map(r => {
@@ -4883,16 +5644,152 @@ async function executarBuscaAvancada(){
     return { ...base, ...r };
   });
   lista.innerHTML = clientesEncontrados.map(c => clienteRowHTML(c)).join('');
-  // Cacheia as preferências retornadas
   res.data.forEach(r => {
     const tel = normalizaTel(r.telefone);
     if(tel && r.preferencias) state._prefsCachePorTel[tel] = r.preferencias;
   });
 }
 
-/* ===== NOVO: NOTAS (post-its por corretor) ===== */
+/* ===== NOVO: Painel Cutucada ===== */
+function renderizarFiltrosCutucada(){
+  const wrap = $('filtrosCutucada');
+  if(!wrap) return;
+  const ativos = (state.clientes || []).filter(c => clienteAtivoParaCutucada_(c));
+  const encontrados = new Set();
+  ativos.forEach(c => {
+    const corr = chaveCorretorExata_(c.corretor);
+    if(corr) encontrados.add(corr);
+  });
+  const listaCorretores = [...encontrados].sort((a,b) => a.localeCompare(b,'pt-BR'));
+  const corretoresChips = listaCorretores.map(nome => {
+    const cnt = ativos.filter(c => chaveCorretorExata_(c.corretor) === nome).length;
+    const ativo = state.filtrosCutucada.corretores.has(nome);
+    const cor = corDoCorretor(nome) || '#64748b';
+    return `<button class="chip chip-corretor ${ativo ? 'active' : ''}"
+              style="background:${ativo ? cor : '#fff'}; color:${ativo ? '#fff' : cor}; border-color:${cor}"
+              onclick="toggleFiltroCutucadaCorretor('${esc(nome)}')">
+              ${esc(nome)} <span class="cnt">${cnt}</span>
+            </button>`;
+  }).join('');
+  const t = state.filtrosCutucada.temperaturas;
+  const cntTemp = { quente: 0, morno: 0, frio: 0 };
+  ativos.forEach(c => {
+    const temp = c.temperatura || 'frio';
+    if(cntTemp[temp] !== undefined) cntTemp[temp]++;
+  });
+  wrap.innerHTML = `
+    <div class="filtro-grupo">
+      <span class="lbl">Corretor:</span>
+      ${corretoresChips}
+      ${listaCorretores.length > 0 ? `<button class="chip ${state.filtrosCutucada.corretores.size === 0 ? 'active' : ''}" onclick="limparFiltroCutucadaCorretores()">Todos</button>` : ''}
+    </div>
+    <div class="filtro-grupo filtro-desktop-only">
+      <span class="lbl">Temp:</span>
+      <button class="chip ${t.has('quente') ? 'active' : ''}" onclick="toggleFiltroCutucadaTemp('quente')">🔥 <span class="cnt">${cntTemp.quente}</span></button>
+      <button class="chip ${t.has('morno') ? 'active' : ''}" onclick="toggleFiltroCutucadaTemp('morno')">🌡️ <span class="cnt">${cntTemp.morno}</span></button>
+      <button class="chip ${t.has('frio') ? 'active' : ''}" onclick="toggleFiltroCutucadaTemp('frio')">❄️ <span class="cnt">${cntTemp.frio}</span></button>
+    </div>
+  `;
+}
+function toggleFiltroCutucadaCorretor(nome){
+  if(state.filtrosCutucada.corretores.has(nome)) state.filtrosCutucada.corretores.delete(nome);
+  else state.filtrosCutucada.corretores.add(nome);
+  renderizarFiltrosCutucada();
+  renderizarCutucadas();
+}
+function limparFiltroCutucadaCorretores(){
+  state.filtrosCutucada.corretores.clear();
+  renderizarFiltrosCutucada();
+  renderizarCutucadas();
+}
+function toggleFiltroCutucadaTemp(t){
+  if(state.filtrosCutucada.temperaturas.has(t)) state.filtrosCutucada.temperaturas.delete(t);
+  else state.filtrosCutucada.temperaturas.add(t);
+  renderizarFiltrosCutucada();
+  renderizarCutucadas();
+}
+function onBuscaCutucadaChanged(){
+  clearTimeout(state._buscaCutucadaTimer);
+  state._buscaCutucadaTimer = setTimeout(() => renderizarCutucadas(), 250);
+}
+function renderizarCutucadas(){
+  const lista = $('cutucadaLista');
+  const empty = $('cutucadaEmpty');
+  if(!lista) return;
+  if(!state.carregado.clientes){
+    lista.innerHTML = '<div class="loading-inline"><span class="loader loader-lg"></span><p>Carregando clientes...</p></div>';
+    return;
+  }
+  renderizarFiltrosCutucada();
+
+  const busca = ($('buscaCutucada').value || '').toLowerCase().trim();
+  const ordem = $('ordenacaoCutucada').value;
+
+  let arr = (state.clientes || []).filter(c => clienteAtivoParaCutucada_(c));
+
+  if(state.filtrosCutucada.corretores.size > 0){
+    arr = arr.filter(c => state.filtrosCutucada.corretores.has(chaveCorretorExata_(c.corretor)));
+  }
+  if(state.filtrosCutucada.temperaturas.size > 0){
+    arr = arr.filter(c => state.filtrosCutucada.temperaturas.has(c.temperatura || 'frio'));
+  }
+  if(busca){
+    const b = busca;
+    const bTel = normalizaTel(busca);
+    arr = arr.filter(c => {
+      if((c.nome || '').toLowerCase().includes(b)) return true;
+      if(bTel && normalizaTel(c.telefone).includes(bTel)) return true;
+      return false;
+    });
+  }
+
+  // Ordenação: dias sem cutucada (nunca = sempre no topo quando "mais-atrasado")
+  const diasMap = {};
+  arr.forEach(c => {
+    const d = calcularDiasSemCutucada(c);
+    diasMap[normalizaTel(c.telefone)] = (d === null) ? 99999 : d;
+  });
+  if(ordem === 'mais-atrasado'){
+    arr.sort((a,b) => diasMap[normalizaTel(b.telefone)] - diasMap[normalizaTel(a.telefone)]);
+  } else if(ordem === 'menos-atrasado'){
+    arr.sort((a,b) => diasMap[normalizaTel(a.telefone)] - diasMap[normalizaTel(b.telefone)]);
+  } else {
+    arr.sort((a,b) => (a.nome||'').localeCompare(b.nome||'', 'pt-BR', {sensitivity:'base'}));
+  }
+
+  if(arr.length === 0){
+    lista.innerHTML = '';
+    empty.classList.remove('hidden');
+    return;
+  }
+  empty.classList.add('hidden');
+
+  // Renderiza usando o mesmo HTML do card de clientes + um selo extra de dias
+  lista.innerHTML = arr.map(c => {
+    const baseHTML = clienteRowHTML(c);
+    const seloDias = cutucadaDiasHTML(c);
+    const seloAtrasado = clienteAtrasado_(c)
+      ? '<span class="cutucada-atrasado-selo">⚠️ Atrasado</span>'
+      : '';
+    // Injeta o selo de dias logo após o "nome" (dentro da div.linha2)
+    const htmlComSelo = baseHTML.replace(
+      '<span class="item ult-admin">',
+      `${seloDias} ${seloAtrasado}<span class="item ult-admin">`
+    );
+    return htmlComSelo;
+  }).join('');
+
+  // Pré-carrega preferências (para a barra aparecer)
+  arr.forEach(c => {
+    const tel = normalizaTel(c.telefone);
+    if(tel && !state._prefsCachePorTel[tel]){
+      carregarPrefsCliente(tel, false);
+    }
+  });
+}
+
+/* ===== NOTAS (post-its por corretor) ===== */
 async function abrirNotas(){
-  // Corretor padrão = primeiro da lista
   if(!state._notasCorretorAtivo && state.corretores.length > 0){
     state._notasCorretorAtivo = state.corretores[0].nome;
   }
@@ -5016,7 +5913,6 @@ async function salvarNovaNota(){
   $('notaNovaTexto').value = '';
   $('notaNovaFixada').checked = false;
   escolherCorNovaNota('amarelo');
-  // Recarrega
   delete state._notasCache[corretor];
   await carregarNotasDoCorretor(corretor);
   carregarNotasBadge();
@@ -5100,7 +5996,7 @@ async function excluirNota(id){
   carregarNotasBadge();
 }
 
-/* ===== NOVO: badge de notas (soma de todos os corretores) ===== */
+/* ===== badge de notas ===== */
 async function carregarNotasBadge(){
   try {
     let total = 0;
@@ -5115,6 +6011,7 @@ async function carregarNotasBadge(){
         total += (res.data || []).length;
       }
     }
+    state._notasPendentes = total;
            const badge = $('notasBadgeNum');
     if(badge){
       badge.textContent = total > 99 ? '99+' : total;
@@ -5126,7 +6023,7 @@ async function carregarNotasBadge(){
 }
 
 /* =====================================================
-   CUTUCADAS
+   CUTUCADAS (modal existente — não alterado)
 ===================================================== */
 async function abrirCutucadas(telefone){
   const tel = normalizaTel(telefone);
@@ -5212,6 +6109,8 @@ async function salvarEdicaoCutucada(id){
   cancelarEdicaoCutucada(id);
   atualizarUltimaCutucadaDoCliente_(id, novoTexto);
   renderizarClientes();
+  if(state.painelAtivo === 'cutucada') renderizarCutucadas();
+  atualizarBalCutucada();
 }
 function atualizarUltimaCutucadaDoCliente_(idCutucada, novoTexto){
   const telAtual = window._cutucadaTelAtual;
@@ -5249,6 +6148,9 @@ async function salvarNovaCutucada(){
   $('cutucadaNovaTexto').value = '';
   toast('Cutucada salva ✅', 'success');
   renderizarClientes();
+  if(state.painelAtivo === 'cutucada') renderizarCutucadas();
+  atualizarBalCutucada();
+  renderizarCutucadaCorretores_();
 }
 
 /* =====================================================
@@ -5615,6 +6517,10 @@ function agendaRowHTML(a, conflito){
       <svg class="ico" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
       Editar
     </button>`;
+  const btnRelatorio = `<button class="btn-relatorio" onclick="abrirRelatorio('${id}')" title="Ver relatório completo">
+      <svg class="ico" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg>
+      Relatório
+    </button>`;
   const btnAnuncio = a.codigo
     ? `<button class="acao-btn btn-anuncio" onclick="abrirAnuncioAgenda('${id}')" title="Buscar entrada">
         <svg class="ico" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
@@ -5647,6 +6553,7 @@ function agendaRowHTML(a, conflito){
         <div class="cabecalho-acoes">
           ${btnFinalizar}
           ${btnEditar}
+          ${btnRelatorio}
         </div>
       </div>
       <div class="barra-acoes">
@@ -5676,6 +6583,232 @@ function abrirAnuncioAgenda(id){
   const a = state.agendamentos.find(x => x.id === id);
   if(!a || !a.codigo){ toast('Código do imóvel não disponível', 'error'); return; }
   window.open(`${BUSCAR_BASE}/${a.codigo}`, '_blank', 'noopener');
+}
+
+/* ===== NOVO: Modal Relatório Completo ===== */
+function extrairPrimeiraLinhaChave(txt){
+  if(!txt) return '';
+  const linhas = String(txt).split(/\r?\n/);
+  for(const l of linhas){
+    const t = String(l).trim();
+    if(t) return t;
+  }
+  return '';
+}
+async function abrirRelatorio(id){
+  const a = state.agendamentos.find(x => x.id === id);
+  if(!a){ toast('Agendamento não encontrado', 'error'); return; }
+  const cli = state.clientes.find(c => normalizaTel(c.telefone) === normalizaTel(a.telefone));
+  const nomeCli = cli ? cli.nome : (a.clienteNome || '(sem cadastro)');
+
+  // ✅ CRUZAMENTO: procura o imóvel completo em state.todosImoveis
+  // (o agendamento sozinho não tem preço, condomínio, iptu, descrição, tipo)
+  let imovelCompleto = null;
+
+  // Primeiro, garante que todosImoveis está carregado
+  if(!state.todosImoveis || state.todosImoveis.length === 0){
+    try {
+      const resIm = await api('listarTodosImoveis', { senha: state.adminSenha });
+      if(resIm.ok && resIm.data){
+        state.todosImoveis = resIm.data;
+        state._corretorPorImovelId = {};
+        state.todosImoveis.forEach(im => {
+          state._corretorPorImovelId[String(im.id)] = im.corretor || '';
+        });
+      }
+    } catch(e){
+      console.warn('[abrirRelatorio] erro ao carregar todosImoveis:', e);
+    }
+  }
+
+  // Agora procura o imóvel pelo ID
+  if(state.todosImoveis && state.todosImoveis.length > 0){
+    imovelCompleto = state.todosImoveis.find(im => String(im.id) === String(a.id));
+    // Fallback: procura por código (mais confiável quando há duplicatas)
+    if(!imovelCompleto && a.codigo){
+      imovelCompleto = state.todosImoveis.find(im => String(im.codigo) === String(a.codigo));
+    }
+  }
+
+  $('relatorioNome').textContent = nomeCompletoCliente_(nomeCli, a.telefone);
+  state._relatorioAtual = { agendamento: a, cliente: cli || null, nomeCli, imovelCompleto };
+  $('relatorioCorpo').innerHTML = montarHTMLRelatorio(a, cli, imovelCompleto);
+  $('relatorioBackdrop').classList.add('show');
+}
+function montarHTMLRelatorio(a, cli, imovelCompleto){
+  const im = imovelCompleto || {};
+  const nomeCli = cli ? (cli.nome || '') : (a.clienteNome || '(sem cadastro)');
+  const telCli = a.telefone || '';
+  const corr = resolverCorretor_(a);
+
+  // Pega os dados de endereço/chave do IMÓVEL COMPLETO (mais confiável)
+  const campos = {
+    rua:    String(im.rua        || a.rua        || '').trim(),
+    numero: String(im.numero     || a.numero     || '').trim(),
+    bairro: String(im.bairro     || a.bairro     || '').trim(),
+    chave:  String(im.chaveTexto || a.chaveTexto || '').trim()
+  };
+
+  const codigo      = String(im.codigo     || a.codigo     || '').trim();
+  const tipo        = String(im.tipo       || a.tipo       || '').trim();
+  const preco       = String(im.preco      || a.preco      || '').trim();
+  const condominio  = String(im.condominio || a.condominio || '').trim();
+  const iptu        = String(im.iptu       || a.iptu       || '').trim();
+  const descricao   = String(im.descricao  || a.descricao  || '').trim();
+  const chavePrimeiraLinha = extrairPrimeiraLinhaChave(campos.chave);
+  const dataVisita  = a.dataVisitaAgendada;
+  const linkAnuncio = String(im.link       || a.link       || '').trim();
+  const linkBuscar  = codigo ? `${BUSCAR_BASE}/${codigo}` : '';
+  const tel = normalizaTel(telCli);
+  const telZap = tel ? (tel.startsWith('55') ? tel : '55' + tel) : '';
+
+  function campoHTML(lbl, val, extraCls){
+    const v = String(val || '').trim();
+    return `<div class="relatorio-campo ${extraCls || ''}">
+      <div class="lbl">${lbl}</div>
+      <div class="val ${v ? '' : 'muted'}">${v ? esc(v) : '—'}</div>
+    </div>`;
+  }
+
+  return `
+    <div class="relatorio-secao">
+      <div class="relatorio-secao-titulo">
+        <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        Imóvel
+      </div>
+      <div class="relatorio-grid">
+        ${campoHTML('Código', codigo, 'destaque')}
+        ${campoHTML('Tipo', tipo, 'destaque')}
+      </div>
+      <div style="height:8px;"></div>
+      <div class="relatorio-grid full">
+        ${campoHTML('Endereço completo', [campos.rua, campos.numero].filter(Boolean).join(', ') + (campos.bairro ? ' - ' + campos.bairro : ''))}
+      </div>
+      <div style="height:8px;"></div>
+      <div class="relatorio-grid">
+        ${campoHTML('Preço', preco, 'sucesso')}
+        ${campoHTML('Condomínio', condominio)}
+        ${campoHTML('IPTU', iptu)}
+        ${campoHTML('🔑 Chave (1ª linha)', chavePrimeiraLinha, 'alerta')}
+      </div>
+    </div>
+
+    <div class="relatorio-secao">
+      <div class="relatorio-secao-titulo">
+        <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg>
+        Descrição do imóvel
+      </div>
+      ${descricao
+        ? `<div class="relatorio-descricao-box">${esc(descricao)}</div>`
+        : `<div class="relatorio-descricao-box vazio">—</div>`
+      }
+    </div>
+
+    <div class="relatorio-secao">
+      <div class="relatorio-secao-titulo">
+        <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Cliente e visita
+      </div>
+      <div class="relatorio-grid">
+        ${campoHTML('Cliente', nomeCli)}
+        ${campoHTML('WhatsApp', fmtTel(telCli))}
+        ${campoHTML('Corretor', corr)}
+        ${campoHTML('Data da visita', dataVisita ? fmtDataHora(dataVisita) : '')}
+      </div>
+    </div>
+
+    <div class="relatorio-secao">
+      <div class="relatorio-secao-titulo">
+        <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+        Links úteis
+      </div>
+      <div class="relatorio-links">
+        ${linkAnuncio ? `<a href="${esc(linkAnuncio)}" target="_blank" rel="noopener" class="relatorio-link-item">
+          <svg class="ico" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          <span>Anúncio</span>
+          <span class="txt-link">${esc(linkAnuncio)}</span>
+        </a>` : ''}
+        ${linkBuscar ? `<a href="${esc(linkBuscar)}" target="_blank" rel="noopener" class="relatorio-link-item">
+          <svg class="ico" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <span>Buscar entrada</span>
+          <span class="txt-link">${esc(linkBuscar)}</span>
+        </a>` : ''}
+        ${telZap ? `<a href="https://wa.me/${telZap}" target="_blank" rel="noopener" class="relatorio-link-item">
+          <svg class="ico" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+          <span>WhatsApp do cliente</span>
+          <span class="txt-link">wa.me/${esc(telZap)}</span>
+        </a>` : ''}
+      </div>
+    </div>
+  `;
+}
+function fecharRelatorio(){
+  $('relatorioBackdrop').classList.remove('show');
+  state._relatorioAtual = null;
+}
+function montarTextoRelatorio(a){
+  const im = state.todosImoveis.find(x => String(x.id) === String(a.id))
+          || (a.codigo ? state.todosImoveis.find(x => String(x.codigo) === String(a.codigo)) : null)
+          || {};
+  const cli = state.clientes.find(c => normalizaTel(c.telefone) === normalizaTel(a.telefone));
+  const nomeCli = cli ? (cli.nome || '') : (a.clienteNome || '(sem cadastro)');
+  const corr = resolverCorretor_(a);
+
+  const campos = {
+    rua:    String(im.rua        || a.rua        || '').trim(),
+    numero: String(im.numero     || a.numero     || '').trim(),
+    bairro: String(im.bairro     || a.bairro     || '').trim(),
+    chave:  String(im.chaveTexto || a.chaveTexto || '').trim()
+  };
+
+  const codigo      = String(im.codigo     || a.codigo     || '').trim();
+  const tipo        = String(im.tipo       || a.tipo       || '').trim();
+  const preco       = String(im.preco      || a.preco      || '').trim();
+  const condominio  = String(im.condominio || a.condominio || '').trim();
+  const iptu        = String(im.iptu       || a.iptu       || '').trim();
+  const descricao   = String(im.descricao  || a.descricao  || '').trim();
+  const chavePrimeiraLinha = extrairPrimeiraLinhaChave(campos.chave);
+  const dataVisita  = a.dataVisitaAgendada;
+  const linkAnuncio = String(im.link       || a.link       || '').trim();
+  const linkBuscar  = codigo ? `${BUSCAR_BASE}/${codigo}` : '';
+  const tel = normalizaTel(a.telefone);
+  const telZap = tel ? (tel.startsWith('55') ? tel : '55' + tel) : '';
+
+  const endereco = [campos.rua, campos.numero].filter(Boolean).join(', ') + (campos.bairro ? ' - ' + campos.bairro : '');
+
+  const linhas = [];
+  linhas.push(`🏠 IMÓVEL${codigo ? ' #' + codigo : ''}`);
+  linhas.push('');
+  if(tipo) linhas.push(`🏘️ Tipo: ${tipo}`);
+  if(endereco) linhas.push(`📍 ${endereco}`);
+  if(preco) linhas.push(`💰 Venda: ${preco}`);
+  if(condominio) linhas.push(`🏢 Condomínio: ${condominio}`);
+  if(iptu) linhas.push(`📄 IPTU: ${iptu}`);
+  if(chavePrimeiraLinha) linhas.push(`🔑 Chave: ${chavePrimeiraLinha}`);
+  linhas.push('');
+  if(descricao){
+    linhas.push('📝 Descrição:');
+    linhas.push(descricao);
+    linhas.push('');
+  }
+  linhas.push('👤 CLIENTE');
+  if(nomeCli) linhas.push(`Nome: ${nomeCli}`);
+  if(tel) linhas.push(`WhatsApp: ${fmtTel(tel)}`);
+  if(corr) linhas.push(`Corretor: ${corr}`);
+  if(dataVisita) linhas.push(`📅 Visita: ${fmtDataHora(dataVisita)}`);
+  linhas.push('');
+  linhas.push('🔗 LINKS');
+  if(linkAnuncio) linhas.push(`Anúncio: ${linkAnuncio}`);
+  if(linkBuscar) linhas.push(`Buscar entrada: ${linkBuscar}`);
+  if(telZap) linhas.push(`WhatsApp: https://wa.me/${telZap}`);
+  return linhas.join('\n');
+}
+function copiarRelatorio(){
+  const ctx = state._relatorioAtual;
+  if(!ctx || !ctx.agendamento){ toast('Relatório não encontrado', 'error'); return; }
+  const texto = montarTextoRelatorio(ctx.agendamento);
+  copiarTexto(texto);
+  toast('Relatório copiado! Cole no WhatsApp', 'success');
 }
 
 /* EVENTOS NEUTROS */
@@ -6400,7 +7533,7 @@ async function marcarTratado(imovelId, tipo){
 }
 
 /* =====================================================
-   REFRESH SILENCIOSO
+   REFRESH SILENCIOSO (existente + bal cutucada)
 ===================================================== */
 function iniciarRefreshSilencioso(){
   pararRefreshSilencioso();
@@ -6454,13 +7587,16 @@ async function executarRefreshSilencioso(){
       atualizarBalVisitar();
       atualizarBalGostei();
       atualizarBalAgenda();
+      atualizarBalCutucada();
       renderizarCorretoresNoCardAgenda_();
       renderizarCorretoresNoCardVisitar_();
       renderizarCorretoresNoCardGostei_();
       renderizarCorretoresNoCardClientes_();
+      renderizarCutucadaCorretores_();
       if(state.painelAtivo === 'agenda') renderizarAgenda();
       if(state.painelAtivo === 'visitar' || state.painelAtivo === 'gostei') renderizarNotificacoes();
       if(state.painelAtivo === 'clientes') renderizarClientes();
+      if(state.painelAtivo === 'cutucada') renderizarCutucadas();
     }
   } catch(e){
     console.warn('[refresh silencioso] erro:', e);
@@ -6622,7 +7758,6 @@ async function abrirModalClienteEdit(cli){
   $('btnHistoricoCliente').style.display = 'inline-flex';
   $('btnCriarAcessoAdmin').classList.remove('hidden');
   window._relatorioClienteTel = normalizaTel(cli.telefone);
-  // Carrega prefs para exibir resumo
   const pref = await carregarPrefsCliente(cli.telefone, false);
   atualizarResumoPrefsNoModalCliente(cli.telefone);
   $('clienteModalBackdrop').classList.add('show');
