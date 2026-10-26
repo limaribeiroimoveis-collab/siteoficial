@@ -2513,7 +2513,38 @@
     width: 14px;
     height: 14px;
   }
-
+/* Badges de vaga/elevador no relatório */
+.relatorio-badge-vaga,
+.relatorio-badge-elev {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: .78rem;
+  font-weight: 700;
+  letter-spacing: .2px;
+}
+.relatorio-badge-vaga.livre {
+  background: #dcfce7;
+  color: #166534;
+}
+.relatorio-badge-vaga.presa {
+  background: #fef3c7;
+  color: #92400e;
+}
+.relatorio-badge-vaga.nao-sei {
+  background: #f1f5f9;
+  color: #475569;
+}
+.relatorio-badge-elev.sim {
+  background: #dbeafe;
+  color: #1e40af;
+}
+.relatorio-badge-elev.nao {
+  background: #f1f5f9;
+  color: #475569;
+}
   /* =====================================================
      ===== ADIÇÕES RODADA 2026-10 — FIM =====
      ===================================================== */
@@ -6665,9 +6696,32 @@ function montarHTMLRelatorio(a, cli, imovelCompleto){
   const iptu        = String(im.iptu       || a.iptu       || '').trim();
   const descricao   = String(im.descricao  || a.descricao  || '').trim();
   const chavePrimeiraLinha = extrairPrimeiraLinhaChave(campos.chave);
- // ✅ VAGA (campo novo)
-const vaga       = String(im.vaga || a.vaga || '').trim();
-const elevador   = String(im.elevador || a.elevador || '').trim();
+// ✅ VAGA E ELEVADOR (padronizados: Livre/Presa/Não sei | Sim/Não)
+const vagaRaw     = String(im.vaga     || a.vaga     || '').trim();
+const elevadorRaw = String(im.elevador || a.elevador || '').trim();
+
+const vagaNorm     = vagaRaw.toLowerCase();
+const elevadorNorm = elevadorRaw.toLowerCase();
+
+let vagaHTML = '<span style="color:var(--muted); font-style:italic;">—</span>';
+if (vagaNorm === 'livre') {
+  vagaHTML = '<span class="relatorio-badge-vaga livre">🅿️ Livre</span>';
+} else if (vagaNorm === 'presa') {
+  vagaHTML = '<span class="relatorio-badge-vaga presa">🅿️ Presa</span>';
+} else if (vagaNorm === 'não sei' || vagaNorm === 'nao sei' || vagaNorm === 'não-sei' || vagaNorm === 'nao-sei') {
+  vagaHTML = '<span class="relatorio-badge-vaga nao-sei">🅿️ Não sei</span>';
+} else if (vagaRaw) {
+  vagaHTML = `<span class="relatorio-badge-vaga nao-sei">🅿️ ${esc(vagaRaw)}</span>`;
+}
+
+let elevadorHTML = '<span style="color:var(--muted); font-style:italic;">—</span>';
+if (elevadorNorm === 'sim') {
+  elevadorHTML = '<span class="relatorio-badge-elev sim">🛗 Sim</span>';
+} else if (elevadorNorm === 'não' || elevadorNorm === 'nao') {
+  elevadorHTML = '<span class="relatorio-badge-elev nao">🛗 Não</span>';
+} else if (elevadorRaw) {
+  elevadorHTML = `<span class="relatorio-badge-elev nao">🛗 ${esc(elevadorRaw)}</span>`;
+}
   const dataVisita  = a.dataVisitaAgendada;
   const linkAnuncio = String(im.link       || a.link       || '').trim();
   const linkBuscar  = codigo ? `${BUSCAR_BASE}/${codigo}` : '';
@@ -6716,9 +6770,14 @@ const elevador   = String(im.elevador || a.elevador || '').trim();
         ${campoHTML('Preço', preco, 'sucesso')}
         ${campoHTML('Condomínio', condominio)}
         ${campoHTML('IPTU', iptu)}
-        ${campoHTML('Chave (1ª linha)', chavePrimeiraLinha, 'alerta')}
-        ${campoHTML('Vaga', vaga, 'destaque')}
-${campoHTML('🛗 Elevador', elevador, 'destaque')}
+        ${campoHTML('Chave (1ª linha)', chavePrimeiraLinha, 'alerta')}<div class="relatorio-campo destaque">
+  <div class="lbl">🚗 Vaga</div>
+  <div class="val">${vagaHTML}</div>
+</div>
+<div class="relatorio-campo destaque">
+  <div class="lbl">🛗 Elevador</div>
+  <div class="val">${elevadorHTML}</div>
+</div>
       </div>
     </div>
 
@@ -6819,7 +6878,7 @@ function montarTextoRelatorio(a){
   const iptu        = String(im.iptu       || a.iptu       || '').trim();
   const descricao   = String(im.descricao  || a.descricao  || '').trim();
   const chavePrimeiraLinha = extrairPrimeiraLinhaChave(campos.chave);
-  const vaga     = String(im.vaga     || a.vaga     || '').trim();
+ const vaga     = String(im.vaga     || a.vaga     || '').trim();
 const elevador = String(im.elevador || a.elevador || '').trim();
   const dataVisita  = a.dataVisitaAgendada;
   const linkAnuncio = String(im.link       || a.link       || '').trim();
@@ -6847,7 +6906,7 @@ const elevador = String(im.elevador || a.elevador || '').trim();
   if(condominio) linhas.push(`🏢 Condomínio: ${condominio}`);
   if(iptu) linhas.push(`📄 IPTU: ${iptu}`);
   if(chavePrimeiraLinha) linhas.push(`🔑 Chave: ${chavePrimeiraLinha}`);
-  if(vaga) linhas.push(`🚗 Vaga: ${vaga}`);
+ if(vaga)     linhas.push(`🚗 Vaga: ${vaga}`);
 if(elevador) linhas.push(`🛗 Elevador: ${elevador}`);
   linhas.push('');
   
