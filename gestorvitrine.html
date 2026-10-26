@@ -6665,6 +6665,9 @@ function montarHTMLRelatorio(a, cli, imovelCompleto){
   const iptu        = String(im.iptu       || a.iptu       || '').trim();
   const descricao   = String(im.descricao  || a.descricao  || '').trim();
   const chavePrimeiraLinha = extrairPrimeiraLinhaChave(campos.chave);
+ // ✅ VAGA (campo novo)
+const vaga       = String(im.vaga || a.vaga || '').trim();
+const elevador   = String(im.elevador || a.elevador || '').trim();
   const dataVisita  = a.dataVisitaAgendada;
   const linkAnuncio = String(im.link       || a.link       || '').trim();
   const linkBuscar  = codigo ? `${BUSCAR_BASE}/${codigo}` : '';
@@ -6713,7 +6716,9 @@ function montarHTMLRelatorio(a, cli, imovelCompleto){
         ${campoHTML('Preço', preco, 'sucesso')}
         ${campoHTML('Condomínio', condominio)}
         ${campoHTML('IPTU', iptu)}
-        ${campoHTML('🔑 Chave (1ª linha)', chavePrimeiraLinha, 'alerta')}
+        ${campoHTML('Chave (1ª linha)', chavePrimeiraLinha, 'alerta')}
+        ${campoHTML('Vaga', vaga, 'destaque')}
+${campoHTML('🛗 Elevador', elevador, 'destaque')}
       </div>
     </div>
 
@@ -6814,6 +6819,8 @@ function montarTextoRelatorio(a){
   const iptu        = String(im.iptu       || a.iptu       || '').trim();
   const descricao   = String(im.descricao  || a.descricao  || '').trim();
   const chavePrimeiraLinha = extrairPrimeiraLinhaChave(campos.chave);
+  const vaga     = String(im.vaga     || a.vaga     || '').trim();
+const elevador = String(im.elevador || a.elevador || '').trim();
   const dataVisita  = a.dataVisitaAgendada;
   const linkAnuncio = String(im.link       || a.link       || '').trim();
   const linkBuscar  = codigo ? `${BUSCAR_BASE}/${codigo}` : '';
@@ -6840,6 +6847,8 @@ function montarTextoRelatorio(a){
   if(condominio) linhas.push(`🏢 Condomínio: ${condominio}`);
   if(iptu) linhas.push(`📄 IPTU: ${iptu}`);
   if(chavePrimeiraLinha) linhas.push(`🔑 Chave: ${chavePrimeiraLinha}`);
+  if(vaga) linhas.push(`🚗 Vaga: ${vaga}`);
+if(elevador) linhas.push(`🛗 Elevador: ${elevador}`);
   linhas.push('');
   
   // === DESCRIÇÃO ===
