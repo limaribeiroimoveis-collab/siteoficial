@@ -6601,11 +6601,22 @@ async function abrirRelatorio(id){
   const cli = state.clientes.find(c => normalizaTel(c.telefone) === normalizaTel(a.telefone));
   const nomeCli = cli ? cli.nome : (a.clienteNome || '(sem cadastro)');
 
+  // Busca o cliente completo (com observações) se não estiver no state
+  let clienteCompleto = cli;
+  if(!clienteCompleto || !clienteCompleto.observacao){
+    try {
+      const resCli = await api('buscarCliente', { senha: state.adminSenha, telefone: normalizaTel(a.telefone) });
+      if(resCli.ok && resCli.data){
+        clienteCompleto = resCli.data;
+      }
+    } catch(e){
+      console.warn('[abrirRelatorio] erro ao buscar cliente:', e);
+    }
+  }
+
   // ✅ CRUZAMENTO: procura o imóvel completo em state.todosImoveis
-  // (o agendamento sozinho não tem preço, condomínio, iptu, descrição, tipo)
   let imovelCompleto = null;
 
-  // Primeiro, garante que todosImoveis está carregado
   if(!state.todosImoveis || state.todosImoveis.length === 0){
     try {
       const resIm = await api('listarTodosImoveis', { senha: state.adminSenha });
@@ -6621,18 +6632,16 @@ async function abrirRelatorio(id){
     }
   }
 
-  // Agora procura o imóvel pelo ID
   if(state.todosImoveis && state.todosImoveis.length > 0){
     imovelCompleto = state.todosImoveis.find(im => String(im.id) === String(a.id));
-    // Fallback: procura por código (mais confiável quando há duplicatas)
     if(!imovelCompleto && a.codigo){
       imovelCompleto = state.todosImoveis.find(im => String(im.codigo) === String(a.codigo));
     }
   }
 
   $('relatorioNome').textContent = nomeCompletoCliente_(nomeCli, a.telefone);
-  state._relatorioAtual = { agendamento: a, cliente: cli || null, nomeCli, imovelCompleto };
-  $('relatorioCorpo').innerHTML = montarHTMLRelatorio(a, cli, imovelCompleto);
+  state._relatorioAtual = { agendamento: a, cliente: clienteCompleto || null, nomeCli, imovelCompleto };
+  $('relatorioCorpo').innerHTML = montarHTMLRelatorio(a, clienteCompleto, imovelCompleto);
   $('relatorioBackdrop').classList.add('show');
 }
 function montarHTMLRelatorio(a, cli, imovelCompleto){
@@ -6662,6 +6671,15 @@ function montarHTMLRelatorio(a, cli, imovelCompleto){
   const tel = normalizaTel(telCli);
   const telZap = tel ? (tel.startsWith('55') ? tel : '55' + tel) : '';
 
+  // ✅ OBSERVAÇÕES DO CLIENTE
+  const observacao = cli ? String(cli.observacao || '').trim() : '';
+  const tqc = cli ? String(cli.tqc || '').toLowerCase() === 'sim' : false;
+  const investidor = cli ? String(cli.car || '').toLowerCase() === 'sim' : false;
+  const inativo = cli ? String(cli.inativo || '').toLowerCase() === 'sim' : false;
+  const temperatura = cli ? (cli.temperatura || 'frio') : 'frio';
+  const emojiTemp = emojiTemperatura(temperatura);
+  const corretorCliente = cli ? cli.corretor : corr;
+
   function campoHTML(lbl, val, extraCls){
     const v = String(val || '').trim();
     return `<div class="relatorio-campo ${extraCls || ''}">
@@ -6669,6 +6687,12 @@ function montarHTMLRelatorio(a, cli, imovelCompleto){
       <div class="val ${v ? '' : 'muted'}">${v ? esc(v) : '—'}</div>
     </div>`;
   }
+
+  const tagsCliente = [];
+  if(tqc) tagsCliente.push('<span style="background:#3d2b20; color:#fff; padding:2px 8px; border-radius:4px; font-size:.7rem; font-weight:700;">TQC</span>');
+  if(investidor) tagsCliente.push('<span style="background:#2f6b4f; color:#fff; padding:2px 8px; border-radius:4px; font-size:.7rem; font-weight:700;">INVESTIDOR</span>');
+  if(inativo) tagsCliente.push('<span style="background:#8b3a3a; color:#fff; padding:2px 8px; border-radius:4px; font-size:.7rem; font-weight:700;">INATIVO</span>');
+  tagsCliente.push(`<span style="font-size:.9rem;">${emojiTemp}</span>`);
 
   return `
     <div class="relatorio-secao">
@@ -6712,9 +6736,29 @@ function montarHTMLRelatorio(a, cli, imovelCompleto){
       <div class="relatorio-grid">
         ${campoHTML('Cliente', nomeCli)}
         ${campoHTML('WhatsApp', fmtTel(telCli))}
-        ${campoHTML('Corretor', corr)}
+        ${campoHTML('Corretor', corretorCliente || corr)}
         ${campoHTML('Data da visita', dataVisita ? fmtDataHora(dataVisita) : '')}
       </div>
+      <div style="height:8px;"></div>
+      <div class="relatorio-grid full">
+        <div class="relatorio-campo">
+          <div class="lbl">Tags do cliente</div>
+          <div class="val" style="display:flex; gap:6px; flex-wrap:wrap; align-items:center;">
+            ${tagsCliente.join(' ')}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="relatorio-secao">
+      <div class="relatorio-secao-titulo">
+        <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        Observações do cliente
+      </div>
+      ${observacao
+        ? `<div class="relatorio-descricao-box" style="background:#f8fafc; border-color:#e2e8f0; color:#334155;">${esc(observacao)}</div>`
+        : `<div class="relatorio-descricao-box vazio" style="background:#f8fafc; border-color:#e2e8f0;">Nenhuma observação registrada.</div>`
+      }
     </div>
 
     <div class="relatorio-secao">
@@ -6750,6 +6794,8 @@ function montarTextoRelatorio(a){
   const im = state.todosImoveis.find(x => String(x.id) === String(a.id))
           || (a.codigo ? state.todosImoveis.find(x => String(x.codigo) === String(a.codigo)) : null)
           || {};
+  
+  // ✅ Busca o cliente com observações
   const cli = state.clientes.find(c => normalizaTel(c.telefone) === normalizaTel(a.telefone));
   const nomeCli = cli ? (cli.nome || '') : (a.clienteNome || '(sem cadastro)');
   const corr = resolverCorretor_(a);
@@ -6774,33 +6820,80 @@ function montarTextoRelatorio(a){
   const tel = normalizaTel(a.telefone);
   const telZap = tel ? (tel.startsWith('55') ? tel : '55' + tel) : '';
 
+  // ✅ OBSERVAÇÕES DO CLIENTE
+  const observacao = cli ? String(cli.observacao || '').trim() : '';
+  const tqc = cli ? String(cli.tqc || '').toLowerCase() === 'sim' : false;
+  const investidor = cli ? String(cli.car || '').toLowerCase() === 'sim' : false;
+  const temperatura = cli ? (cli.temperatura || 'frio') : 'frio';
+  const emojiTemp = emojiTemperatura(temperatura);
+
   const endereco = [campos.rua, campos.numero].filter(Boolean).join(', ') + (campos.bairro ? ' - ' + campos.bairro : '');
 
   const linhas = [];
+  
+  // === IMÓVEL ===
   linhas.push(`🏠 IMÓVEL${codigo ? ' #' + codigo : ''}`);
-  linhas.push('');
+  linhas.push('─────────────────────────────');
   if(tipo) linhas.push(`🏘️ Tipo: ${tipo}`);
-  if(endereco) linhas.push(`📍 ${endereco}`);
+  if(endereco) linhas.push(`📍 Endereço: ${endereco}`);
   if(preco) linhas.push(`💰 Venda: ${preco}`);
   if(condominio) linhas.push(`🏢 Condomínio: ${condominio}`);
   if(iptu) linhas.push(`📄 IPTU: ${iptu}`);
   if(chavePrimeiraLinha) linhas.push(`🔑 Chave: ${chavePrimeiraLinha}`);
   linhas.push('');
+  
+  // === DESCRIÇÃO ===
   if(descricao){
-    linhas.push('📝 Descrição:');
+    linhas.push('📝 DESCRIÇÃO DO IMÓVEL');
+    linhas.push('─────────────────────────────');
     linhas.push(descricao);
     linhas.push('');
   }
+  
+  // === CLIENTE ===
   linhas.push('👤 CLIENTE');
+  linhas.push('─────────────────────────────');
   if(nomeCli) linhas.push(`Nome: ${nomeCli}`);
   if(tel) linhas.push(`WhatsApp: ${fmtTel(tel)}`);
   if(corr) linhas.push(`Corretor: ${corr}`);
   if(dataVisita) linhas.push(`📅 Visita: ${fmtDataHora(dataVisita)}`);
+  
+  // Tags do cliente
+  const tags = [];
+  if(tqc) tags.push('TQC');
+  if(investidor) tags.push('INVESTIDOR');
+  tags.push(emojiTemp + ' ' + temperatura.charAt(0).toUpperCase() + temperatura.slice(1));
+  if(tags.length) linhas.push(`🏷️ Tags: ${tags.join(' | ')}`);
   linhas.push('');
-  linhas.push('🔗 LINKS');
-  if(linkAnuncio) linhas.push(`Anúncio: ${linkAnuncio}`);
-  if(linkBuscar) linhas.push(`Buscar entrada: ${linkBuscar}`);
-  if(telZap) linhas.push(`WhatsApp: https://wa.me/${telZap}`);
+  
+  // === OBSERVAÇÕES ===
+  linhas.push('📋 OBSERVAÇÕES DO CLIENTE');
+  linhas.push('─────────────────────────────');
+  if(observacao){
+    linhas.push(observacao);
+  } else {
+    linhas.push('(Nenhuma observação registrada)');
+  }
+  linhas.push('');
+  
+  // === LINKS (separados para não embolar) ===
+  linhas.push('🔗 LINKS ÚTEIS');
+  linhas.push('─────────────────────────────');
+  if(linkAnuncio){
+    linhas.push('📌 Anúncio:');
+    linhas.push(linkAnuncio);
+    linhas.push('');
+  }
+  if(linkBuscar){
+    linhas.push('🔍 Buscar entrada:');
+    linhas.push(linkBuscar);
+    linhas.push('');
+  }
+  if(telZap){
+    linhas.push('💬 WhatsApp do cliente:');
+    linhas.push(`https://wa.me/${telZap}`);
+  }
+  
   return linhas.join('\n');
 }
 function copiarRelatorio(){
