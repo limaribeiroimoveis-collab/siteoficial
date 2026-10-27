@@ -410,7 +410,7 @@
     .form-row-link-price, .form-row-address, .form-row-img-desc { grid-template-columns: 1fr; }
     .barra-clonagem-header { border-radius: 20px 20px 0 0; padding: 12px 14px; flex-direction: column; align-items: stretch; text-align: center; }
     .barra-clonagem-header .info { justify-content: center; }
-    .barra-clonagem-header .acoes-bar { justify-content: center; }
+    .barra-clonagem-header .acoes-barra { justify-content: center; }
   }
 </style>
 </head>
@@ -950,95 +950,20 @@ const FINAIS_LINK = {
 };
 
 /* =====================================================
-   REGIÕES DE BELO HORIZONTE — mapa de bairros
+   REGIÕES DE BELO HORIZONTE
 ===================================================== */
 const REGIOES_BH = {
-  'Centro-Sul': [
-    'Anchieta','Barro Preto','Belvedere','Boaventura','Carmo','Centro','Cidade Jardim',
-    'Comiteco','Cruzeiro','Funcionários','Floresta','Gutierrez','Horto','Lourdes',
-    'Luxemburgo','Mangabeiras','Mercado','Prado','Santa Efigênia','Santa Lúcia',
-    'Santo Agostinho','São Bento','São Lucas','São Pedro','Santo Antônio','Savassi',
-    'Serra','Sion','Vila Paris'
-  ],
-  'Norte': [
-    'Aparecida','Boa Vista','Candelária','Concórdia','Dom Joaquim','Floramar',
-    'Frei Leopoldo','Guarani','Ipê','Jardim Montanhês','Jaqueline','Lagoa','Lagoinha',
-    'Maria Goretti','Minaslândia','Piratininga','Planalto','Providência','Primeiro de Maio',
-    'São Bernardo','São Cristóvão','São Gonçalo','São João Batista','Tupi','União',
-    'Vila Clóris','Vila Nova','Vila Primeiro de Maio','Cachoeirinha','Colégio Batista',
-    'Fernão Dias','Jardim Guanabara','Jardim São José','Nova Floresta','Paquetá',
-    'Santa Inês','Santa Terezinha','Silveira','Zilah Spósito'
-  ],
-  'Sul': [
-    'Santo Antônio','Sion','São Pedro','Santa Lúcia','Savassi','Serra','Belvedere',
-    'Mangabeiras','Luxemburgo','Carmo','Cidade Jardim','Vila Paris','Estoril',
-    'Comiteco','Pampulha'
-  ],
-  'Leste': [
-    'Boa Vista','Cidade Nova','Colégio Batista','Concórdia','Fernão Dias','Floresta',
-    'Horto','Ipiranga','Jardim Guanabara','Mariano de Abreu','Nova Floresta',
-    'Palmares','Paraíso','Pompéia','Santa Efigênia','Santa Inês','São Geraldo',
-    'São Paulo','Sagrada Família','Vera Cruz','Vila São Paulo','Taquaril',
-    'União','Casa Branca','Santa Tereza'
-  ],
-  'Oeste': [
-    'Alto Barroca','Barroca','Betânia','Buritis','Calafate','Carlos Prates','Cinquentenário',
-    'Estrela','Estrela do Oriente','Gameleira','Grajaú','Gutierrez','Jardim América',
-    'Nova Granada','Nova Suíça','Nova Esperança','Padre Eustáquio','Palmeiras',
-    'Prado','Salgado Filho','Santo Agostinho','Serra','Sion','Vista Alegre','Vila Oeste'
-  ],
-  'Nordeste': [
-    'Acaiaca','Araci','Bairro das Indústrias','Bela Vitória','Cachoeirinha','Canaã',
-    'Candelária','Capitão Eduardo','Colégio Batista','Concórdia','Eymard','Fernão Dias',
-    'Floramar','Frei Leopoldo','Goiânia','Gorduras','Heliópolis','Ipê','Jardim Vitória',
-    'Maria Goretti','Maria Helena','Nazareno','Nova Esperança','Nova Granada',
-    'Palmares','Paulo VI','Planalto','Primeiro de Maio','Providência','Ribeiro de Abreu',
-    'São Bernardo','São Cristóvão','São João Batista','São Marcos','São Paulo',
-    'Silveira','Tupi','União','Vila Clóris','Vila Nova','Vila Primeiro de Maio'
-  ],
-  'Noroeste': [
-    'Alípio de Melo','Alto dos Pinheiros','Betânia','Bonfim','Buritis','Caiçara',
-    'Califórnia','Carlos Prates','Cinquentenário','Cidade Industrial','Conjunto Califórnia',
-    'Dom Bosco','Estrela do Oriente','Gameleira','Glória','Gutierrez','Indaiá',
-    'Jardim Alvorada','Jardim América','Jardim Montanhês','João Pinheiro','Lagoa',
-    'Lagoinha','Monsenhor Messias','Nova Cintra','Nova Esperança','Nova Granada',
-    'Nova Suíça','Padre Eustáquio','Palmeiras','Pilar','Pindorama','Prado',
-    'Rio Branco','Salgado Filho','Santa Maria','Santo Agostinho','São José','Sion',
-    'Sumaré','Vila Oeste','Vista Alegre'
-  ],
-  'Sudeste': [
-    'Anchieta','Bairro da Graça','Boa Vista','Cidade Nova','Colégio Batista','Cruzeiro',
-    'Esplanada','Floresta','Horto','Ipiranga','Jardim Guanabara','Mariano de Abreu',
-    'Nova Floresta','Palmares','Paraíso','Pompéia','Santa Efigênia','Santa Inês',
-    'Santa Tereza','São Geraldo','São Lucas','São Paulo','Sagrada Família',
-    'Taquaril','União','Vera Cruz','Vila São Paulo','Casa Branca'
-  ],
-  'Barreiro': [
-    'Aguas Claras','Barreiro','Brasil Industrial','Caiçara','Cardoso','Cinquentenário',
-    'Colorado','Conjunto Bonsucesso','Das Indústrias','Diamante','Estrela do Oriente',
-    'Flávio de Oliveira','Flávio Marques Lisboa','Jardim das Alterosas','Jardim Industrial',
-    'Lageado','Lindéia','Milionários','Miramar','Nova Cintra','Nova Sion','Olhos D\'Água',
-    'Parque Industrial','Pilar','Pongelupe','Santa Helena','Solar do Barreiro',
-    'Teixeira Dias','Tirol','Vila Cemig','Vila Ecológica','Vila Formosa','Vila Nova dos Milionários',
-    'Vila Pinho','Vila Satélite','Vila Vista Alegre'
-  ],
-  'Pampulha': [
-    'Aeroporto','Bandeirantes','Braúnas','Céu Azul','Conjunto Confisco','Copacabana',
-    'Dona Clara','Engenho Nogueira','Frei Eustáquio','Garças','Independência',
-    'Itacolomi','Itapoã','Jaraguá','Jardim Atlântico','José Bonifácio','Lagoa da Pampulha',
-    'Liberdade','Manacás','Minaslândia','Nova Pampulha','Ouro Preto','Paquetá',
-    'Santa Amélia','Santa Branca','Santa Rosa','Santa Terezinha','São Francisco',
-    'São Luiz','São Tomáz','Serrano','Suzana','Trevo','Universitário','Urca','Vila Aeroporto'
-  ],
-  'Venda Nova': [
-    'Aeroporto','Bandeirantes','Canaã','Capitão Eduardo','Centro','Conjunto dos Padres',
-    'Etelvina Carneiro','Florença','Jardim dos Comerciários','Jardim Europa',
-    'Jardim Leblon','Jardim Vitória','Lagoa','Letícia','Mantiqueira','Maria Helena',
-    'Minas Caixa','Monte Azul','Morro Alto','Nova York','Novo Aarão Reis',
-    'Ouro Preto','Padre Eustáquio','Palmares','Paquetá','Planalto','Ribeiro de Abreu',
-    'Rio Branco','Santa Mônica','São João Batista','Serra Verde','Venda Nova',
-    'Vila Bela','Vila dos Anjos','Vila Nova','Vila Satélite'
-  ]
+  'Centro-Sul': ['Anchieta','Barro Preto','Belvedere','Boaventura','Carmo','Centro','Cidade Jardim','Comiteco','Cruzeiro','Funcionários','Floresta','Gutierrez','Horto','Lourdes','Luxemburgo','Mangabeiras','Mercado','Prado','Santa Efigênia','Santa Lúcia','Santo Agostinho','São Bento','São Lucas','São Pedro','Santo Antônio','Savassi','Serra','Sion','Vila Paris'],
+  'Norte': ['Aparecida','Boa Vista','Candelária','Concórdia','Dom Joaquim','Floramar','Frei Leopoldo','Guarani','Ipê','Jardim Montanhês','Jaqueline','Lagoa','Lagoinha','Maria Goretti','Minaslândia','Piratininga','Planalto','Providência','Primeiro de Maio','São Bernardo','São Cristóvão','São Gonçalo','São João Batista','Tupi','União','Vila Clóris','Vila Nova','Vila Primeiro de Maio','Cachoeirinha','Colégio Batista','Fernão Dias','Jardim Guanabara','Jardim São José','Nova Floresta','Paquetá','Santa Inês','Santa Terezinha','Silveira','Zilah Spósito'],
+  'Sul': ['Santo Antônio','Sion','São Pedro','Santa Lúcia','Savassi','Serra','Belvedere','Mangabeiras','Luxemburgo','Carmo','Cidade Jardim','Vila Paris','Estoril','Comiteco','Pampulha'],
+  'Leste': ['Boa Vista','Cidade Nova','Colégio Batista','Concórdia','Fernão Dias','Floresta','Horto','Ipiranga','Jardim Guanabara','Mariano de Abreu','Nova Floresta','Palmares','Paraíso','Pompéia','Santa Efigênia','Santa Inês','São Geraldo','São Paulo','Sagrada Família','Vera Cruz','Vila São Paulo','Taquaril','União','Casa Branca','Santa Tereza'],
+  'Oeste': ['Alto Barroca','Barroca','Betânia','Buritis','Calafate','Carlos Prates','Cinquentenário','Estrela','Estrela do Oriente','Gameleira','Grajaú','Gutierrez','Jardim América','Nova Granada','Nova Suíça','Nova Esperança','Padre Eustáquio','Palmeiras','Prado','Salgado Filho','Santo Agostinho','Serra','Sion','Vista Alegre','Vila Oeste'],
+  'Nordeste': ['Acaiaca','Araci','Bairro das Indústrias','Bela Vitória','Cachoeirinha','Canaã','Candelária','Capitão Eduardo','Colégio Batista','Concórdia','Eymard','Fernão Dias','Floramar','Frei Leopoldo','Goiânia','Gorduras','Heliópolis','Ipê','Jardim Vitória','Maria Goretti','Maria Helena','Nazareno','Nova Esperança','Nova Granada','Palmares','Paulo VI','Planalto','Primeiro de Maio','Providência','Ribeiro de Abreu','São Bernardo','São Cristóvão','São João Batista','São Marcos','São Paulo','Silveira','Tupi','União','Vila Clóris','Vila Nova','Vila Primeiro de Maio'],
+  'Noroeste': ['Alípio de Melo','Alto dos Pinheiros','Betânia','Bonfim','Buritis','Caiçara','Califórnia','Carlos Prates','Cinquentenário','Cidade Industrial','Conjunto Califórnia','Dom Bosco','Estrela do Oriente','Gameleira','Glória','Gutierrez','Indaiá','Jardim Alvorada','Jardim América','Jardim Montanhês','João Pinheiro','Lagoa','Lagoinha','Monsenhor Messias','Nova Cintra','Nova Esperança','Nova Granada','Nova Suíça','Padre Eustáquio','Palmeiras','Pilar','Pindorama','Prado','Rio Branco','Salgado Filho','Santa Maria','Santo Agostinho','São José','Sion','Sumaré','Vila Oeste','Vista Alegre'],
+  'Sudeste': ['Anchieta','Bairro da Graça','Boa Vista','Cidade Nova','Colégio Batista','Cruzeiro','Esplanada','Floresta','Horto','Ipiranga','Jardim Guanabara','Mariano de Abreu','Nova Floresta','Palmares','Paraíso','Pompéia','Santa Efigênia','Santa Inês','Santa Tereza','São Geraldo','São Lucas','São Paulo','Sagrada Família','Taquaril','União','Vera Cruz','Vila São Paulo','Casa Branca'],
+  'Barreiro': ['Aguas Claras','Barreiro','Brasil Industrial','Caiçara','Cardoso','Cinquentenário','Colorado','Conjunto Bonsucesso','Das Indústrias','Diamante','Estrela do Oriente','Flávio de Oliveira','Flávio Marques Lisboa','Jardim das Alterosas','Jardim Industrial','Lageado','Lindéia','Milionários','Miramar','Nova Cintra','Nova Sion','Olhos D\'Água','Parque Industrial','Pilar','Pongelupe','Santa Helena','Solar do Barreiro','Teixeira Dias','Tirol','Vila Cemig','Vila Ecológica','Vila Formosa','Vila Nova dos Milionários','Vila Pinho','Vila Satélite','Vila Vista Alegre'],
+  'Pampulha': ['Aeroporto','Bandeirantes','Braúnas','Céu Azul','Conjunto Confisco','Copacabana','Dona Clara','Engenho Nogueira','Frei Eustáquio','Garças','Independência','Itacolomi','Itapoã','Jaraguá','Jardim Atlântico','José Bonifácio','Lagoa da Pampulha','Liberdade','Manacás','Minaslândia','Nova Pampulha','Ouro Preto','Paquetá','Santa Amélia','Santa Branca','Santa Rosa','Santa Terezinha','São Francisco','São Luiz','São Tomáz','Serrano','Suzana','Trevo','Universitário','Urca','Vila Aeroporto'],
+  'Venda Nova': ['Aeroporto','Bandeirantes','Canaã','Capitão Eduardo','Centro','Conjunto dos Padres','Etelvina Carneiro','Florença','Jardim dos Comerciários','Jardim Europa','Jardim Leblon','Jardim Vitória','Lagoa','Letícia','Mantiqueira','Maria Helena','Minas Caixa','Monte Azul','Morro Alto','Nova York','Novo Aarão Reis','Ouro Preto','Padre Eustáquio','Palmares','Paquetá','Planalto','Ribeiro de Abreu','Rio Branco','Santa Mônica','São João Batista','Serra Verde','Venda Nova','Vila Bela','Vila dos Anjos','Vila Nova','Vila Satélite']
 };
 
 const state = {
@@ -1058,19 +983,9 @@ const state = {
   _linkDebounce: null,
   _codigoLinkAtual: '',
   _filtrosAplicados: {
-    bairros: [],
-    regioes: [],
-    precoMin: null,
-    precoMax: null,
-    quartos: '',
-    vagasQtd: '',
-    vagaTipo: '',
-    elevador: '',
-    andares: [],
-    metragem: '',
-    condominioMax: '',
-    ordenacao: 'recentes',
-    tipos: []
+    bairros: [], regioes: [], precoMin: null, precoMax: null,
+    quartos: '', vagasQtd: '', vagaTipo: '', elevador: '', andares: [],
+    metragem: '', condominioMax: '', ordenacao: 'recentes', tipos: []
   },
   _totalVendidosGlobal: 0,
   _tipoEditorSelecionado: ''
@@ -1131,11 +1046,7 @@ function fmtValorLimpo(valor){
 }
 
 /* =====================================================
-   PARSE / MONTAGEM DA CHAVE (robusto)
-   Aceita formatos:
-     "101\nBloco B\nna portaria"
-     "Apto 101\nBl. B\nportaria"
-     "101 - Bloco B - portaria"  (linha única)
+   PARSE / MONTAGEM DA CHAVE
 ===================================================== */
 function parseChaveTexto(chaveRaw) {
   const out = { apto: '', bloco: '', complemento: '' };
@@ -1144,19 +1055,16 @@ function parseChaveTexto(chaveRaw) {
   const linhas = String(chaveRaw).split(/\r?\n/).map(l => l.trim()).filter(Boolean);
   if (linhas.length === 0) return out;
 
-  // Se veio em linha única com separador " - " tenta dividir
   let linhasRef = linhas;
   if (linhas.length === 1) {
     const partes = linhas[0].split(/\s+[-–—]\s+/).map(p => p.trim()).filter(Boolean);
     if (partes.length > 1) linhasRef = partes;
   }
 
-  const aptoRegex = /^(?:apartamento|apart|apto|apt|ap|unidade|sala|loja|conjunto|cj|casa|cobertura|flat|bloco\s+\w+|torre\s+\w+)?\.?\s*[•·:.\-#º°]?\s*(\d{1,8}[A-Za-z]?)\s*$/i;
+  const aptoRegex = /^(?:apartamento|apart|apto|apt|ap|unidade|sala|loja|conjunto|cj|casa|cobertura|flat)?\.?\s*[•·:.\-#º°]?\s*(\d{1,8}[A-Za-z]?)\s*$/i;
   const blocoRegex = /^(?:bl(?:oco)?|torre|ed(?:if[ií]cio)?|pr[ée]dio)\.?\s*[:.\-#]?\s*([A-Za-z0-9]{1,10})\s*$/i;
 
   const resto = [];
-
-  // 1) Tenta apto na 1ª linha (se houver número)
   let i = 0;
   if (linhasRef.length > 0) {
     const m1 = linhasRef[0].match(aptoRegex);
@@ -1166,7 +1074,6 @@ function parseChaveTexto(chaveRaw) {
     }
   }
 
-  // 2) Procura bloco em qualquer linha restante (preferência pelas primeiras)
   for (let j = i; j < linhasRef.length; j++) {
     const mb = linhasRef[j].match(blocoRegex);
     if (mb && mb[1]) {
@@ -1176,7 +1083,6 @@ function parseChaveTexto(chaveRaw) {
     }
   }
 
-  // 3) Complemento = restante
   for (let j = i; j < linhasRef.length; j++) resto.push(linhasRef[j]);
   out.complemento = resto.join('\n');
   return out;
@@ -1189,7 +1095,6 @@ function montarChaveTexto(apto, bloco, complemento) {
   const c = String(complemento || '').trim();
   if (a) linhas.push(a);
   if (b) {
-    // Se já vier com "Bloco" no começo, respeita
     if (/^(bl(oco)?|torre)/i.test(b)) linhas.push(b);
     else linhas.push('Bloco ' + b.replace(/^bl(?:oco)?\.?\s*/i, '').replace(/^torre\s*/i, '').trim());
   }
@@ -1199,8 +1104,6 @@ function montarChaveTexto(apto, bloco, complemento) {
 
 /* =====================================================
    DESCRIÇÃO ↔ TIPO
-   - Remove TODOS os *...*  da 1ª linha (pode ter mais de 1)
-   - Recoloca o tipo escolhido na 1ª linha, junto com a 1ª linha útil
 ===================================================== */
 function extrairTipoImovel(descricao){
   if(!descricao) return '';
@@ -1223,7 +1126,6 @@ function descricaoSemTipo(descricao){
   if(linhas.length > 0){
     linhas[0] = linhas[0].replace(/\*+[^*\n]+\*+/g, '').replace(/\s{2,}/g, ' ').trim();
   }
-  // remove linhas legadas "Vaga:"/"Elevador:" se existirem
   const filtradas = linhas.filter(l => !/^\s*(Vaga|Elevador):\s*/i.test(l));
   return filtradas.join('\n').replace(/^\s+/, '');
 }
@@ -1509,9 +1411,11 @@ async function atualizarImoveisEmBackground(){
 
 async function carregarTodosImoveisAdmin(){
   try {
-    const res = await apiGet('listarTodosImoveis', { senha: obterSenhaAdmin() });
-    if(res.ok && res.data) state.todosImoveis = res.data;
-  } catch(e){ console.warn(e); }
+    const res = await apiGet('listarTodosImoveis', { senha: obterSenhaAdmin() }, { timeout: 60000 });
+    if(res.ok && res.data){ state.todosImoveis = res.data; return true; }
+    console.warn('[carregarTodosImoveisAdmin] falhou:', res);
+    return false;
+  } catch(e){ console.warn('[carregarTodosImoveisAdmin] erro:', e); return false; }
 }
 
 async function carregarClientesAdmin(){
@@ -1563,17 +1467,11 @@ function agruparBairros(){
   return Object.entries(bairros).sort((a, b) => a[0].localeCompare(b[0], 'pt-BR'));
 }
 
-/* =====================================================
-   REGIÕES — helpers
-===================================================== */
-function getBairrosDaRegiao(regiao) {
-  return REGIOES_BH[regiao] || [];
-}
+function getBairrosDaRegiao(regiao) { return REGIOES_BH[regiao] || []; }
 
 function atualizarChipsRegiao() {
   const bairrosSelecionados = state._filtrosAplicados.bairros || [];
   const setSel = new Set(bairrosSelecionados.map(normalizaTexto));
-
   document.querySelectorAll('#chipsRegiao .chip-regiao').forEach(btn => {
     const reg = btn.dataset.regiao;
     const bairrosReg = getBairrosDaRegiao(reg);
@@ -1583,16 +1481,12 @@ function atualizarChipsRegiao() {
     });
     const totalCat = bairrosCatalogo.length;
     const marcados = bairrosCatalogo.filter(b => setSel.has(normalizaTexto(b))).length;
-
     const qtdEl = btn.querySelector('.qtd-reg');
     if (qtdEl) qtdEl.textContent = totalCat > 0 ? `${marcados}/${totalCat}` : '';
-
     if (totalCat > 0 && marcados === totalCat) {
-      btn.classList.add('ativa');
-      btn.classList.remove('parcial');
+      btn.classList.add('ativa'); btn.classList.remove('parcial');
     } else if (marcados > 0) {
-      btn.classList.remove('ativa');
-      btn.classList.add('parcial');
+      btn.classList.remove('ativa'); btn.classList.add('parcial');
     } else {
       btn.classList.remove('ativa', 'parcial');
     }
@@ -1621,48 +1515,34 @@ function toggleRegiao(regiao) {
     const alvo = normalizaTexto(b);
     return state.imoveisUnicos.some(im => normalizaTexto(im.bairro) === alvo);
   });
-  if (bairrosCatalogo.length === 0) {
-    toast('Nenhum imóvel do catálogo nessa região', 'error');
-    return;
-  }
-
+  if (bairrosCatalogo.length === 0) { toast('Nenhum imóvel nessa região', 'error'); return; }
   const lista = state._filtrosAplicados.bairros || [];
   const setSel = new Set(lista.map(normalizaTexto));
   const todosMarcados = bairrosCatalogo.every(b => setSel.has(normalizaTexto(b)));
-
   if (todosMarcados) {
     state._filtrosAplicados.bairros = lista.filter(b => !bairrosCatalogo.some(br => normalizaTexto(br) === normalizaTexto(b)));
     toast(`Região ${regiao} desmarcada`);
   } else {
     for (const b of bairrosCatalogo) {
-      if (!setSel.has(normalizaTexto(b))) {
-        lista.push(b);
-        setSel.add(normalizaTexto(b));
-      }
+      if (!setSel.has(normalizaTexto(b))) { lista.push(b); setSel.add(normalizaTexto(b)); }
     }
     state._filtrosAplicados.bairros = lista;
     toast(`Região ${regiao} marcada (${bairrosCatalogo.length} bairros)`, 'success');
   }
-
   popularCheckboxesBairros();
   atualizarChipsRegiao();
   atualizarTextoMultiBairros();
 }
 
-/* =====================================================
-   BAIRROS — multi-select
-===================================================== */
 function popularCheckboxesBairros(){
   const container = $('listaBairrosCheckboxes');
   if (!container) return;
   const bairros = agruparBairros();
   const selecionados = state._filtrosAplicados.bairros || [];
-
   if (bairros.length === 0) {
     container.innerHTML = '<div class="ms-vazia">Nenhum bairro disponível</div>';
     return;
   }
-
   container.innerHTML = bairros.map(([b, n]) => `
     <label class="ms-item ${selecionados.includes(b) ? 'ativo' : ''}">
       <input type="checkbox" ${selecionados.includes(b) ? 'checked' : ''} onchange="toggleBairroCheck(this, '${esc(b).replace(/'/g, "\\'")}')">
@@ -1670,7 +1550,6 @@ function popularCheckboxesBairros(){
       <span class="qtd-b">${n}</span>
     </label>
   `).join('');
-
   atualizarTextoMultiBairros();
   atualizarChipsRegiao();
 }
@@ -1773,22 +1652,16 @@ function setarSliderPreco(min, max) {
   range.style.left = pMin + '%'; range.style.width = (pMax - pMin) + '%';
 }
 
-/* =====================================================
-   FILTROS
-===================================================== */
 function temFiltroAtivo(){
   const busca = $('filtroBusca').value.trim();
   const f = state._filtrosAplicados;
   return !!(
     busca ||
-    (f.bairros && f.bairros.length) ||
-    (f.regioes && f.regioes.length) ||
-    f.precoMin || f.precoMax ||
-    f.quartos ||
+    (f.bairros && f.bairros.length) || (f.regioes && f.regioes.length) ||
+    f.precoMin || f.precoMax || f.quartos ||
     f.vagasQtd || f.vagaTipo || f.elevador ||
     (f.andares && f.andares.length) ||
-    f.metragem || f.condominioMax ||
-    (f.tipos && f.tipos.length)
+    f.metragem || f.condominioMax || (f.tipos && f.tipos.length)
   );
 }
 
@@ -1838,32 +1711,22 @@ function aplicarFiltros(){
       return alvo.includes(busca);
     });
   }
-
   if(bairros.length > 0){
     const set = new Set(bairros.map(b => normalizaTexto(b)));
     arr = arr.filter(im => set.has(normalizaTexto(im.bairro)));
   }
-
   if(tipos.length > 0) arr = arr.filter(im => bateComTipos(im.descricao || '', tipos));
-
   if(andares.length > 0) arr = arr.filter(im => imovelBateAndar(im, andares));
   if(vagasQtd) arr = arr.filter(im => imovelBateVagaQtd(im, vagasQtd));
   if(vagaTipo) arr = arr.filter(im => imovelBateVagaTipo(im, vagaTipo));
   if(elevador) arr = arr.filter(im => imovelBateElevador(im, elevador));
-
   if(precoMin > 0) arr = arr.filter(im => parseNumeroBR(im.preco) >= precoMin);
   if(precoMax > 0) arr = arr.filter(im => parseNumeroBR(im.preco) <= precoMax);
   if(quartosMin > 0) arr = arr.filter(im => extrairQuartos(im.descricao) >= quartosMin);
   if(metragemMin > 0) arr = arr.filter(im => extrairMetragem(im.descricao) >= metragemMin);
   if(condominioMax > 0) arr = arr.filter(im => { const c = parseNumeroBR(im.condominio); return c === 0 || c <= condominioMax; });
-
-  if(state.ocultarVendidos){
-    arr = arr.filter(im => !isVendido(im));
-  }
-
-  if(state.modoAdmin && state.filtroFalhas){
-    arr = arr.filter(im => imovelTemFalha(mesclarCompleto(im)));
-  }
+  if(state.ocultarVendidos) arr = arr.filter(im => !isVendido(im));
+  if(state.modoAdmin && state.filtroFalhas) arr = arr.filter(im => imovelTemFalha(mesclarCompleto(im)));
 
   arr.sort((a, b) => {
     if(ordenacao === 'menor-preco') return parseNumeroBR(a.preco) - parseNumeroBR(b.preco);
@@ -1964,20 +1827,16 @@ function abrirModalBuscaAvancada(){
   $('filtroCondominioMax').value = f.condominioMax || '';
   $('filtroOrdenacao').value = f.ordenacao || 'recentes';
   setarSliderPreco(f.precoMin || 0, f.precoMax || PRECO_MAX_SLIDER);
-
   document.querySelectorAll('#chipsTipoImovel .chip-tipo-imovel').forEach(b => {
     b.classList.toggle('ativo', (f.tipos || []).includes(b.dataset.tipo));
   });
-
   const andaresAtivos = f.andares || [];
   document.querySelectorAll('#chipsAndar .chip-filtro').forEach(b => {
     b.classList.toggle('ativo', andaresAtivos.includes(b.dataset.andar));
   });
-
   document.querySelectorAll('#chipsElevador .chip-filtro').forEach(b => {
     b.classList.toggle('ativo', b.dataset.elevador === (f.elevador || ''));
   });
-
   popularCheckboxesBairros();
   popularChipsRegiao();
   $('modalBuscaAvancada').classList.add('show');
@@ -1994,19 +1853,15 @@ function aplicarFiltrosAvancados(){
   const tiposAtivos = Array.from(document.querySelectorAll('#chipsTipoImovel .chip-tipo-imovel.ativo')).map(b => b.dataset.tipo);
   const elevadorAtivo = document.querySelector('#chipsElevador .chip-filtro.ativo');
   const andaresAtivos = Array.from(document.querySelectorAll('#chipsAndar .chip-filtro.ativo')).map(b => b.dataset.andar);
-
   const minV = parseFloat($('precoMinRange').value) || 0;
   const maxV = parseFloat($('precoMaxRange').value) || 0;
   const min = minV > 0 ? minV : null;
   const max = maxV > 0 && maxV < PRECO_MAX_SLIDER ? maxV : null;
-
   const regioesAtivas = Array.from(document.querySelectorAll('#chipsRegiao .chip-regiao.ativa')).map(b => b.dataset.regiao);
-
   state._filtrosAplicados = {
     bairros: state._filtrosAplicados.bairros || [],
     regioes: regioesAtivas,
-    precoMin: min,
-    precoMax: max,
+    precoMin: min, precoMax: max,
     quartos: $('filtroQuartos').value,
     vagasQtd: $('filtroVagasQtd').value,
     vagaTipo: $('filtroVagaTipo').value,
@@ -2022,60 +1877,30 @@ function aplicarFiltrosAvancados(){
   toast(`Filtros aplicados${andaresAtivos.length ? ' · andares: ' + andaresAtivos.join(',') : ''}`, 'success');
 }
 
-/* =====================================================
-   DIAGNÓSTICO DE ANDARES
-===================================================== */
 function diagnosticarAndares() {
   const arr = state.imoveisFiltrados.length ? state.imoveisFiltrados : state.imoveisUnicos;
   if (!arr.length) { toast('Nenhum imóvel carregado', 'error'); return; }
-
   const linhas = arr.map(im => {
     const full = mesclarCompleto(im);
     const andar = extrairAndar(full);
     const chave = obterChaveTexto(full);
     const primeira = String(chave).split(/\r?\n/)[0] || '';
-    return {
-      codigo: full.codigo || 'S/N',
-      apto: full.apto || '',
-      chavePrimeira: primeira,
-      andar
-    };
+    return { codigo: full.codigo || 'S/N', apto: full.apto || '', chavePrimeira: primeira, andar };
   });
-
   const comAndar = linhas.filter(l => l.andar > 0).length;
   const sem = linhas.filter(l => l.andar <= 0);
-
   console.table(linhas.slice(0, 100));
-
-  alert(
-    `DIAGNÓSTICO DE ANDAR\n\n` +
-    `Total analisado: ${linhas.length}\n` +
-    `Com andar detectado: ${comAndar}\n` +
-    `Sem andar detectado: ${sem.length}\n\n` +
-    (sem.length ? `Exemplos SEM andar (ver console):\n` +
-      sem.slice(0, 10).map(s => `#${s.codigo} · apto="${s.apto}" · chave1="${s.chavePrimeira}"`).join('\n')
-      : 'Todos os imóveis tiveram andar detectado ✅')
-  );
+  alert(`DIAGNÓSTICO DE ANDAR\n\nTotal: ${linhas.length}\nCom andar: ${comAndar}\nSem andar: ${sem.length}\n\n` +
+    (sem.length ? sem.slice(0,10).map(s => `#${s.codigo} · apto="${s.apto}" · chave1="${s.chavePrimeira}"`).join('\n') : 'Todos OK ✅'));
 }
 
-/* =====================================================
-   RENDERIZAÇÃO DOS CARDS
-===================================================== */
 function renderizarCards(){
   const grid = $('cardsGrid');
   const arr = state.imoveisFiltrados;
-
   if(arr.length === 0){
-    grid.innerHTML = `
-      <div class="empty-state">
-        <i class="fas fa-search"></i>
-        <h3>Nenhum imóvel encontrado</h3>
-        <p>Tente ajustar os filtros ou limpar a busca.</p>
-      </div>
-    `;
+    grid.innerHTML = `<div class="empty-state"><i class="fas fa-search"></i><h3>Nenhum imóvel encontrado</h3><p>Tente ajustar os filtros ou limpar a busca.</p></div>`;
     return;
   }
-
   grid.innerHTML = arr.map(im => cardHTML(mesclarCompleto(im))).join('');
 }
 
@@ -2088,6 +1913,7 @@ function cardHTML(im){
   const falhas = obterFalhasDoImovel(im);
   const temFalhaApto = temMultiplosAptos(im);
   const codigo = String(im.codigo || '').trim();
+  const idImovel = String(im.id || '').trim();
   const estaMarcado = codigo && state.imoveisMarcadosClonar.includes(codigo);
   const andar = extrairAndar(im);
 
@@ -2109,7 +1935,7 @@ function cardHTML(im){
 
   const adminAcoes = `
     <div class="admin-acoes">
-      <button class="btn-a btn-editar" onclick="event.stopPropagation(); abrirModalEditarImovel('${esc(codigo)}')">
+      <button class="btn-a btn-editar" onclick="event.stopPropagation(); abrirModalEditarImovel('${esc(codigo || idImovel)}')">
         <i class="fas fa-edit"></i> Editar
       </button>
       <button class="btn-a btn-clonar ${estaMarcado ? 'marcado' : ''}" onclick="event.stopPropagation(); toggleMarcarClonagem('${esc(codigo)}')">
@@ -2135,22 +1961,13 @@ function cardHTML(im){
 
   let tarjaFalhaHtml = '';
   if (state.modoAdmin && state.filtroFalhas && falhas.length > 0) {
-    tarjaFalhaHtml = `
-      <div class="tarja-falha">
-        <div class="falha-titulo"><i class="fas fa-exclamation-triangle"></i> Corrigir:</div>
-        <ul class="falha-lista">${falhas.map(f => `<li>• ${esc(f)}</li>`).join('')}</ul>
-        <span class="falha-codigo">#${esc(im.codigo || 'S/N')}</span>
-      </div>
-    `;
+    tarjaFalhaHtml = `<div class="tarja-falha"><div class="falha-titulo"><i class="fas fa-exclamation-triangle"></i> Corrigir:</div><ul class="falha-lista">${falhas.map(f => `<li>• ${esc(f)}</li>`).join('')}</ul><span class="falha-codigo">#${esc(im.codigo || 'S/N')}</span></div>`;
   }
 
-  const dataId = String(im.id || '');
-  const dataCodigo = codigo;
-
   return `
-    <div class="imovel-card ${estaMarcado ? 'card-marcado-clonar' : ''}" data-id="${esc(dataId)}" data-codigo="${esc(dataCodigo)}">
+    <div class="imovel-card ${estaMarcado ? 'card-marcado-clonar' : ''}" data-id="${esc(idImovel)}" data-codigo="${esc(codigo)}">
       ${tarjaFalhaHtml}
-      <div class="foto" onclick="abrirDetalhes('${esc(dataCodigo)}')" style="cursor:pointer; ${fotoStyle}">
+      <div class="foto" onclick="abrirDetalhes('${esc(codigo)}')" style="cursor:pointer; ${fotoStyle}">
         ${fotoIcone}
         ${descTopo ? `<span class="badge-descricao" title="${esc(descTopo)}">${esc(descTopo)}</span>` : ''}
         ${tipo ? `<span class="badge-tipo">${esc(tipo)}</span>` : ''}
@@ -2158,24 +1975,17 @@ function cardHTML(im){
       </div>
       <div class="corpo">
         ${codigoLinha}
-
         <div class="preco-linha">
-          <div class="preco" onclick="abrirDetalhes('${esc(dataCodigo)}')" style="cursor:pointer;">
-            <span class="tipo">Venda</span>
-            ${esc(fmtPreco(im.preco))}
-          </div>
-          <button class="btn-share-card" onclick="compartilharImovelCard('${esc(dataCodigo)}')" title="Compartilhar">
-            <i class="fas fa-share-alt"></i>
-          </button>
+          <div class="preco" onclick="abrirDetalhes('${esc(codigo)}')" style="cursor:pointer;"><span class="tipo">Venda</span>${esc(fmtPreco(im.preco))}</div>
+          <button class="btn-share-card" onclick="compartilharImovelCard('${esc(codigo)}')" title="Compartilhar"><i class="fas fa-share-alt"></i></button>
         </div>
-
-        <div class="endereco-linha" onclick="abrirDetalhes('${esc(dataCodigo)}')" style="cursor:pointer;">
+        <div class="endereco-linha" onclick="abrirDetalhes('${esc(codigo)}')" style="cursor:pointer;">
           <span class="rua">${esc(rua)}</span>
           ${bairro ? `<span class="bairro-destaque">· ${esc(bairro)}</span>` : ''}
           ${aptoAdmin}
           ${andar > 0 ? `<span class="andar-badge"><i class="fas fa-layer-group"></i> ${andar}º andar</span>` : ''}
         </div>
-        ${descDuasLinhas ? `<div class="descricao-2linhas" onclick="abrirDetalhes('${esc(dataCodigo)}')" style="cursor:pointer;">${esc(descDuasLinhas)}</div>` : ''}
+        ${descDuasLinhas ? `<div class="descricao-2linhas" onclick="abrirDetalhes('${esc(codigo)}')" style="cursor:pointer;">${esc(descDuasLinhas)}</div>` : ''}
         ${extras.length ? `<div class="condo-info">${extras.join('')}</div>` : ''}
       </div>
       ${adminAcoes}
@@ -2183,15 +1993,11 @@ function cardHTML(im){
   `;
 }
 
-/* =====================================================
-   DETALHES
-===================================================== */
 function abrirDetalhes(ref){
   const im = acharImovelPorQualquerRef(ref);
   if(!im) return;
   const imFull = mesclarCompleto(im);
   state.imovelAtual = imFull;
-
   const vendido = isVendido(imFull);
 
   if(imFull.imagem){
@@ -2206,10 +2012,8 @@ function abrirDetalhes(ref){
   const tipo = extrairTipoImovel(imFull.descricao);
   if(tipo){ $('detalheTipo').textContent = tipo; $('detalheTipo').style.display = 'inline-flex'; }
   else { $('detalheTipo').style.display = 'none'; }
-
   if(vendido) $('detalheVendido').style.display = 'inline-flex';
   else $('detalheVendido').style.display = 'none';
-
   $('detalhePreco').textContent = fmtPreco(imFull.preco);
   const rua = imFull.rua || imFull.titulo || 'Endereço não informado';
   const bairro = imFull.bairro || '';
@@ -2312,9 +2116,6 @@ function mesclarCompleto(im) {
   return { ...im, ...completo };
 }
 
-/* =====================================================
-   ADMIN — Sessão e Senha
-===================================================== */
 function obterSenhaAdmin() {
   return localStorage.getItem(ADMIN_SENHA_KEY) || ADMIN_SENHA_CORRETA;
 }
@@ -2393,20 +2194,38 @@ function calcularFalhasAdmin(){
 }
 
 /* =====================================================
-   EDITOR — Painel Modal
+   EDITOR — Painel Modal (CORRIGIDO)
+   - Busca SOMENTE na lista admin (dados completos)
+   - Carrega a lista admin se ainda não estiver carregada
 ===================================================== */
-function abrirModalEditarImovel(ref){
-  const imBase = acharImovelPorQualquerRef(ref);
-  if(!imBase){ toast('Imóvel não encontrado', 'error'); return; }
+async function abrirModalEditarImovel(ref){
+  // 1) Garante a lista ADMIN carregada
+  if (state.todosImoveis.length === 0) {
+    toast('Carregando dados completos do imóvel...');
+    await carregarTodosImoveisAdmin();
+  }
+  if (state.todosImoveis.length === 0) {
+    toast('Não foi possível carregar a lista de administração. Verifique a senha.', 'error');
+    return;
+  }
 
-  state.imovelEditando = imBase;
+  // 2) Busca SOMENTE na lista admin, por código OU por id
+  const cod = String(ref || '').trim();
+  let imCompleto = state.todosImoveis.find(x => String(x.codigo || '').trim() === cod);
+  if (!imCompleto) imCompleto = state.todosImoveis.find(x => String(x.id || '').trim() === cod);
+
+  if (!imCompleto) {
+    toast('Imóvel não encontrado na lista de administração', 'error');
+    return;
+  }
+
+  state.imovelEditando = imCompleto;
   state._corretorEscolhido = '';
 
   const btnSalvar = $('btnSalvarImovel');
   btnSalvar.disabled = false;
   btnSalvar.innerHTML = '<i class="fas fa-save"></i> Salvar para todos os clientes';
 
-  const imCompleto = mesclarCompleto(imBase);
   const linkSalvo = imCompleto.link || '';
 
   $('editLink').value       = linkSalvo;
@@ -2423,7 +2242,6 @@ function abrirModalEditarImovel(ref){
   $('editElevador').value = String(imCompleto.elevador || '').trim();
   $('editElevador').classList.remove('invalido');
 
-  // ⬇️ Parsing corrigido: usa parseChaveTexto robusto
   const chaveRaw = imCompleto.chaveTexto || '';
   const parsed = parseChaveTexto(chaveRaw);
 
@@ -2431,25 +2249,22 @@ function abrirModalEditarImovel(ref){
   $('editBloco').value = parsed.bloco;
   $('editChaveComplemento').value = parsed.complemento;
 
-  // Atualiza preview travado
   $('chaveLinhaApto').className = parsed.apto ? 'linha' : 'linha vazia';
   $('chaveLinhaApto').querySelector('.valor-mini').textContent = parsed.apto || '—';
   $('chaveLinhaBloco').className = parsed.bloco ? 'linha' : 'linha vazia';
   $('chaveLinhaBloco').querySelector('.valor-mini').textContent = parsed.bloco || '—';
 
-  // ⬇️ Descrição: sempre sem o *Tipo* antigo (para o user editar limpo)
   const descSemTipo = descricaoSemTipo(imCompleto.descricao || '');
   $('editDescricao').value = descSemTipo;
 
   $('editImagem').value     = imCompleto.imagem     || '';
   $('editVendido').checked  = isVendido(imCompleto);
 
-  // ⬇️ Corretor: detecção consistente (usa detectarCorretorDoLink)
-  const corretorDetectado = detectarCorretorDoLink(linkSalvo);
+  const corretorDetectado = detectarCorretorDoLink(linkSalvo)
+    || (imCompleto.corretor && FINAIS_LINK[imCompleto.corretor] ? imCompleto.corretor : '');
   state._corretorEscolhido = corretorDetectado;
   atualizarBtnsCorretor(corretorDetectado);
 
-  // ⬇️ Tipo: usa extrairTipoImovel (que já retorna o label correto)
   let tipoDetectado = 'padrao';
   const tipoDesc = extrairTipoImovel(imCompleto.descricao);
   if(tipoDesc === 'Cobertura') tipoDetectado = 'cobertura';
@@ -2466,10 +2281,10 @@ function abrirModalEditarImovel(ref){
     $('btnBuscarEntrada').disabled = false;
     $('codigoBadge').textContent = '#' + codigo;
   } else {
-    const cod = extrairCodigoDoLink(linkSalvo);
-    state._codigoLinkAtual = cod;
-    $('btnBuscarEntrada').disabled = !cod;
-    $('codigoBadge').textContent = cod ? '#' + cod : 'sem código';
+    const codLink = extrairCodigoDoLink(linkSalvo);
+    state._codigoLinkAtual = codLink;
+    $('btnBuscarEntrada').disabled = !codLink;
+    $('codigoBadge').textContent = codLink ? '#' + codLink : 'sem código';
   }
   atualizarPreview(imCompleto.imagem || '');
 
@@ -2524,7 +2339,6 @@ function atualizarPreviewDescricao() {
   else if(tipo === 'cobertura') label = 'Cobertura';
   else if(tipo === 'area-privativa') label = 'Área Privativa';
   else if(tipo === 'casa') label = 'Casa';
-
   if(label) {
     preview.innerHTML = `<i class="fas fa-lock" style="font-size:0.7rem;"></i> *${label}*`;
     preview.classList.remove('empty-txt');
@@ -2565,8 +2379,6 @@ function onLinkBlur(){
   if(!url) return;
   const codigo = extrairCodigoDoLink(url);
   if(codigo){ state._codigoLinkAtual = codigo; $('btnBuscarEntrada').disabled = false; $('codigoBadge').textContent = '#' + codigo; }
-
-  // Auto-detecta corretor ao sair do link
   const corretor = detectarCorretorDoLink(url);
   if(corretor && !state._corretorEscolhido){
     state._corretorEscolhido = corretor;
@@ -2580,39 +2392,33 @@ function abrirBuscarEntradaForm(){
   window.open(`${BUSCAR_BASE}/${codigo}`, '_blank', 'noopener');
 }
 
-/**
- * =====================================================
- * SALVAR EDIÇÃO — versão corrigida
- * =====================================================
- */
+/* =====================================================
+   SALVAR EDIÇÃO (CORRIGIDO)
+   - Envia id + codigo
+   - Vendido como string
+   - Logs de debug
+   - Refetch completo ao final
+===================================================== */
 async function salvarEdicaoImovel(){
   const im = state.imovelEditando;
-  if(!im) return;
-  if(!im.codigo){ toast('Este imóvel não tem código — não é possível editar em massa', 'error'); return; }
+  if(!im){ toast('Imóvel não carregado', 'error'); return; }
+  if(!im.codigo && !im.id){ toast('Imóvel sem código e sem id', 'error'); return; }
   if(!state._corretorEscolhido){
     toast('Escolha o corretor (Hugo ou Carol) antes de salvar', 'error');
     return;
   }
 
-  const rua = $('editRua').value.trim();
-  const numero = $('editNumero').value.trim();
-  const bairro = $('editBairro').value.trim();
-  const vaga = $('editVaga').value.trim();
+  const rua      = $('editRua').value.trim();
+  const numero   = $('editNumero').value.trim();
+  const bairro   = $('editBairro').value.trim();
+  const vaga     = $('editVaga').value.trim();
   const elevador = $('editElevador').value.trim();
 
   if(!rua){ toast('Informe a rua', 'error'); return; }
   if(!numero){ toast('Informe o número', 'error'); return; }
   if(!bairro){ toast('Informe o bairro', 'error'); return; }
-  if(!vaga){
-    $('editVaga').classList.add('invalido');
-    toast('Informe o tipo de vaga', 'error');
-    return;
-  }
-  if(!elevador){
-    $('editElevador').classList.add('invalido');
-    toast('Informe se o imóvel tem elevador', 'error');
-    return;
-  }
+  if(!vaga){ $('editVaga').classList.add('invalido'); toast('Informe o tipo de vaga', 'error'); return; }
+  if(!elevador){ $('editElevador').classList.add('invalido'); toast('Informe o elevador', 'error'); return; }
   $('editVaga').classList.remove('invalido');
   $('editElevador').classList.remove('invalido');
 
@@ -2621,7 +2427,6 @@ async function salvarEdicaoImovel(){
   btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Salvando...';
 
   try {
-    // 1) Link com assinatura do corretor
     let linkFinal = $('editLink').value.trim();
     if(linkFinal && state._corretorEscolhido){
       const sufixo = FINAIS_LINK[state._corretorEscolhido] || '';
@@ -2631,13 +2436,11 @@ async function salvarEdicaoImovel(){
       }
     }
 
-    // 2) Chave remontada
-    const aptoVal = $('editApto').value.trim().toUpperCase();
+    const aptoVal  = $('editApto').value.trim().toUpperCase();
     const blocoVal = $('editBloco').value.trim().toUpperCase();
     const complVal = $('editChaveComplemento').value.trim();
     const chaveTextoFinal = montarChaveTexto(aptoVal, blocoVal, complVal);
 
-    // 3) Descrição: sempre sem tipo + tipo escolhido
     const descSemTipo = descricaoSemTipo($('editDescricao').value);
     let tipoLabel = '';
     if(state._tipoEditorSelecionado === 'padrao') tipoLabel = 'Apartamento Padrão';
@@ -2646,17 +2449,15 @@ async function salvarEdicaoImovel(){
     else if(state._tipoEditorSelecionado === 'casa') tipoLabel = 'Casa';
     const descFinal = montarDescricaoFinal(descSemTipo, tipoLabel);
 
-    // 4) VENDIDO convertido para string ("Sim"/"")
-    const vendidoBool = $('editVendido').checked;
-    const vendidoStr = vendidoBool ? 'Sim' : '';
+    const vendidoStr = $('editVendido').checked ? 'Sim' : '';
 
-    // 5) Payload da API
     const params = {
       senha: obterSenhaAdmin(),
-      codigo: im.codigo,
-      rua,
-      numero,
-      bairro,
+      id: im.id || '',
+      codigo: im.codigo || '',
+      rua: rua,
+      numero: numero,
+      bairro: bairro,
       preco: $('editPreco').value.trim(),
       condominio: $('editCondominio').value.trim(),
       iptu: $('editIptu').value.trim(),
@@ -2669,31 +2470,39 @@ async function salvarEdicaoImovel(){
       elevador: elevador
     };
 
-    const res = await apiGet('atualizarImovelPorCodigo', params);
+    console.log('[salvarEdicaoImovel] payload:', params);
+
+    const res = await apiGet('atualizarImovelPorCodigo', params, { timeout: 90000 });
+    console.log('[salvarEdicaoImovel] resposta:', res);
+
     if(!res.ok){
-      toast(res.error || 'Erro ao salvar', 'error');
+      toast('Erro: ' + (res.error || 'falha ao salvar'), 'error');
       btn.disabled = false;
       btn.innerHTML = '<i class="fas fa-save"></i> Salvar para todos os clientes';
       return;
     }
-    toast(`✅ Atualizado em ${res.total} cliente(s)!`, 'success');
+
+    toast(`✅ Atualizado em ${res.total ?? 1} cliente(s)!`, 'success');
     fecharModalEditarImovel();
     limparCacheImoveis();
-    await carregarImoveis(true);
-    if(state.modoAdmin){ await carregarTodosImoveisAdmin(); calcularFalhasAdmin(); }
+
+    await Promise.all([ carregarImoveis(true), carregarTodosImoveisAdmin() ]);
+    aplicarFiltros();
+    if(state.modoAdmin) calcularFalhasAdmin();
+
   } catch(e){
-    toast('Erro ao salvar: ' + e.message, 'error');
+    console.error('[salvarEdicaoImovel] erro:', e);
+    toast('Erro: ' + e.message, 'error');
     btn.disabled = false;
     btn.innerHTML = '<i class="fas fa-save"></i> Salvar para todos os clientes';
   }
 }
 
 /* =====================================================
-   MARCAR / DESMARCAR VENDIDO NO CARD
+   MARCAR / DESMARCAR VENDIDO (sintaxe corrigida)
 ===================================================== */
 async function toggleVendidoCard(codigo, estaVendido) {
   if (!codigo) { toast('Imóvel sem código', 'error'); return; }
-
   const confirmMsg = estaVendido
     ? `Desmarcar o imóvel #${codigo} como vendido?\n\nEle voltará a aparecer como disponível para todos os clientes.`
     : `Marcar o imóvel #${codigo} como vendido?\n\nEle será atualizado em TODOS os clientes vinculados.`;
@@ -2704,7 +2513,6 @@ async function toggleVendidoCard(codigo, estaVendido) {
   if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Salvando...'; }
 
   try {
-    // String 'Sim' / '' — formato esperado pela API
     const vendidoStr = !estaVendido ? 'Sim' : '';
 
     const res = await apiGet(
@@ -2734,7 +2542,7 @@ async function toggleVendidoCard(codigo, estaVendido) {
 }
 
 /* =====================================================
-   CLONAGEM EM LOTE — Barra Flutuante
+   CLONAGEM EM LOTE
 ===================================================== */
 function toggleMarcarClonagem(codigo){
   if(!codigo){ toast('Imóvel sem código', 'error'); return; }
@@ -2766,7 +2574,6 @@ function atualizarBarraClonagem(){
   if(n > 0 && state.modoAdmin) {
     wrap.classList.add('show');
     cont.textContent = n;
-
     const listaDiv = $('barraClonagemLista');
     listaDiv.innerHTML = state.imoveisMarcadosClonar.map(cod => {
       const im = acharImovelPorCodigo(cod);
@@ -2788,7 +2595,6 @@ function atualizarBarraClonagem(){
         </div>
       `;
     }).join('');
-
   } else {
     wrap.classList.remove('show');
     $('barraClonagemLista').classList.remove('show');
@@ -2808,7 +2614,6 @@ async function abrirModalConfirmarClonagem(e){
   if(e) e.stopPropagation();
   const n = state.imoveisMarcadosClonar.length;
   if(n === 0){ toast('Marque ao menos 1 imóvel', 'error'); return; }
-
   $('progressoClonagemWrap').classList.remove('show');
   $('progressoLbl').textContent = 'Preparando…';
   $('progressoPct').textContent = '0%';
@@ -2817,11 +2622,9 @@ async function abrirModalConfirmarClonagem(e){
   $('progressoLog').innerHTML = '';
   $('btnConfirmarClonagemLote').disabled = false;
   $('btnConfirmarClonagemLote').innerHTML = '<i class="fas fa-copy"></i> Clonar agora';
-
   $('confirmarClonagemSub').textContent = `${n} imóvel(is) marcado(s). Escolha os clientes de destino abaixo.`;
 
   if(state.clientes.length === 0) await carregarClientesAdmin();
-
   const container = $('listaClientesDestino');
   const clientesOrd = [...state.clientes].sort((a,b) => (a.nome||'').localeCompare(b.nome||'', 'pt-BR'));
   if(clientesOrd.length === 0){
@@ -2835,7 +2638,6 @@ async function abrirModalConfirmarClonagem(e){
       </label>
     `).join('');
   }
-
   $('modalConfirmarClonagem').classList.add('show');
   document.body.style.overflow = 'hidden';
 }
@@ -2848,7 +2650,6 @@ function fecharModalConfirmarClonagem(){
 async function executarClonagemLote(){
   const marcados = [...state.imoveisMarcadosClonar];
   if(marcados.length === 0){ toast('Nenhum imóvel marcado', 'error'); return; }
-
   const destinos = Array.from(document.querySelectorAll('#listaClientesDestino input[type="checkbox"]:checked'))
     .map(i => ({ tel: i.value, nome: i.getAttribute('data-nome') || '' }));
   if(destinos.length === 0){ toast('Selecione ao menos 1 cliente de destino', 'error'); return; }
@@ -2883,14 +2684,12 @@ async function executarClonagemLote(){
   for(const codigo of marcados){
     const orig = state.todosImoveis.find(x => String(x.codigo || '').trim() === String(codigo).trim());
     const telOrigem = orig ? normalizaTel(orig.telefone) : '';
-
     if(!telOrigem){
       fail += destinos.length;
       done += destinos.length;
       appendLog(`✗ #${codigo} — origem não identificada`, 'erro');
       continue;
     }
-
     for(const dest of destinos){
       done++;
       const p = Math.round((done / totalOps) * 100);
@@ -2898,14 +2697,12 @@ async function executarClonagemLote(){
       pct.textContent = p + '%';
       lbl.textContent = `Clonando ${done} de ${totalOps}...`;
       detalhe.textContent = `#${codigo} → ${dest.nome || fmtTel(dest.tel)}`;
-
       if(normalizaTel(dest.tel) === telOrigem){
         fail++;
         appendLog(`⊘ #${codigo} → ${dest.nome} (mesmo cliente, ignorado)`, 'erro');
         await delay(120);
         continue;
       }
-
       try {
         const res = await apiGet('clonarImoveisVitrine', {
           senha: obterSenhaAdmin(),
@@ -2913,13 +2710,8 @@ async function executarClonagemLote(){
           telefoneDestino: dest.tel,
           imovelIds: (orig && orig.id) ? orig.id : codigo
         }, { timeout: 90000 });
-        if(res.ok){
-          ok++;
-          appendLog(`✓ #${codigo} → ${dest.nome || fmtTel(dest.tel)}`, 'ok');
-        } else {
-          fail++;
-          appendLog(`✗ #${codigo} → ${dest.nome || fmtTel(dest.tel)} — ${res.error || 'erro'}`, 'erro');
-        }
+        if(res.ok){ ok++; appendLog(`✓ #${codigo} → ${dest.nome || fmtTel(dest.tel)}`, 'ok'); }
+        else { fail++; appendLog(`✗ #${codigo} → ${dest.nome || fmtTel(dest.tel)} — ${res.error || 'erro'}`, 'erro'); }
       } catch(e){
         fail++;
         appendLog(`✗ #${codigo} → ${dest.nome || fmtTel(dest.tel)} — ${e.message}`, 'erro');
@@ -2934,12 +2726,9 @@ async function executarClonagemLote(){
   pct.textContent = '100%';
   detalhe.textContent = `Total: ${totalOps} operação(ões)`;
   appendLog(`— Fim: ${ok} ok / ${fail} falha(s) —`, ok > 0 ? 'ok' : 'erro');
-
   toast(`Clonagem concluída: ${ok} sucesso(s), ${fail} falha(s)`, ok > 0 ? 'success' : 'error');
-
   btn.disabled = false;
   btn.innerHTML = '<i class="fas fa-check"></i> Fechar e recarregar';
-
   btn.onclick = async () => {
     fecharModalConfirmarClonagem();
     limparMarcadosClonagem();
@@ -2971,7 +2760,6 @@ async function abrirModalClientesVinculados(codigo){
     await carregarTodosImoveisAdmin();
   }
   if(state.clientes.length === 0) await carregarClientesAdmin();
-
   const vinculados = {};
   (state.todosImoveis || []).forEach(im => {
     if(String(im.codigo || '').trim() !== String(codigo).trim()) return;
@@ -2982,28 +2770,17 @@ async function abrirModalClientesVinculados(codigo){
       vinculados[tel] = { telefone: tel, nome: cli?.nome || im.clienteNome || '(sem cadastro)', corretor: cli?.corretor || im.corretor || '' };
     }
   });
-
   const lista = Object.values(vinculados);
   $('clientesVinculadosSub').textContent = `${lista.length} cliente(s) têm o imóvel #${codigo} na vitrine.`;
-
   if(lista.length === 0){
-    $('clientesVinculadosLista').innerHTML = `
-      <div style="text-align:center; padding:30px 20px; color:var(--texto-cinza);">
-        <i class="fas fa-user-slash" style="font-size:2.4rem; color:var(--borda-forte); margin-bottom:12px; display:block;"></i>
-        <p style="font-size:0.88rem;">Nenhum cliente vinculado a este imóvel.</p>
-      </div>
-    `;
+    $('clientesVinculadosLista').innerHTML = `<div style="text-align:center; padding:30px 20px; color:var(--texto-cinza);"><i class="fas fa-user-slash" style="font-size:2.4rem; color:var(--borda-forte); margin-bottom:12px; display:block;"></i><p style="font-size:0.88rem;">Nenhum cliente vinculado a este imóvel.</p></div>`;
   } else {
     $('clientesVinculadosLista').innerHTML = lista.map(c => {
       const inicial = (c.nome || 'C').trim().charAt(0).toUpperCase();
       return `
         <a class="cliente-chip" href="https://wa.me/55${c.telefone}" target="_blank" rel="noopener">
           <div class="avatar">${esc(inicial)}</div>
-          <div class="nome">
-            ${esc(c.nome)}
-            ${c.corretor ? `<span class="corretor-tag">${esc(c.corretor)}</span>` : ''}
-            <div class="tel">${esc(fmtTel(c.telefone))}</div>
-          </div>
+          <div class="nome">${esc(c.nome)}${c.corretor ? `<span class="corretor-tag">${esc(c.corretor)}</span>` : ''}<div class="tel">${esc(fmtTel(c.telefone))}</div></div>
           <i class="fab fa-whatsapp"></i>
         </a>
       `;
@@ -3018,39 +2795,30 @@ function fecharModalClientesVinculados(){ $('modalClientesVinculados').classList
 ===================================================== */
 async function init(){
   initSliderPreco();
-
   document.querySelectorAll('#chipsAndar .chip-filtro').forEach(btn => {
-    btn.addEventListener('click', () => {
-      btn.classList.toggle('ativo');
-    });
+    btn.addEventListener('click', () => btn.classList.toggle('ativo'));
   });
-
   document.querySelectorAll('#chipsElevador .chip-filtro').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('#chipsElevador .chip-filtro').forEach(b => b.classList.remove('ativo'));
       btn.classList.add('ativo');
     });
   });
-
   document.querySelectorAll('#chipsRegiao .chip-regiao').forEach(btn => {
     btn.addEventListener('click', () => toggleRegiao(btn.dataset.regiao));
   });
-
   ['editVaga', 'editElevador'].forEach(id => {
     const el = $(id);
     if(el) el.addEventListener('change', function(){
       if(this.value) this.classList.remove('invalido');
     });
   });
-
   $('filtroBusca').addEventListener('input', debounce(aplicarFiltros, 400));
-
   $('modalDetalhes').addEventListener('click', (e) => { if(e.target === $('modalDetalhes')) fecharDetalhes(); });
   ['modalSenhaAdmin','modalEditarImovel','modalClientesVinculados','modalBuscaAvancada','modalConfirmarClonagem'].forEach(id => {
     const el = $(id);
     if(el) el.addEventListener('click', (e) => { if(e.target === el) el.classList.remove('show'); });
   });
-
   document.addEventListener('keydown', (e) => {
     if(e.key === 'Escape'){
       if($('modalDetalhes').classList.contains('show')) fecharDetalhes();
@@ -3061,11 +2829,8 @@ async function init(){
       if($('modalConfirmarClonagem').classList.contains('show')) fecharModalConfirmarClonagem();
     }
   });
-
   window.addEventListener('scroll', () => { $('btnTopo').classList.toggle('show', window.scrollY > 400); });
-
   await carregarImoveis();
-
   if (localStorage.getItem(ADMIN_SENHA_KEY) || sessionStorage.getItem(ADMIN_SESSION_KEY) === 'ativo') {
     entrarModoAdmin();
   }
