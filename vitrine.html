@@ -122,6 +122,10 @@
   .card.card-nao-gostei{ opacity: .4; filter: grayscale(100%); }
   .card.card-nao-gostei:hover{ opacity: .6; filter: grayscale(80%); }
   .card.card-vendido{ opacity: .6; filter: grayscale(80%); pointer-events: none; }
+  
+  /* NOVO - CARD VISITAR (Fundo Marrom Claro) */
+  .card.card-quero-visitar { background-color: #fdfaf6; border-color: #e8d8c8; }
+  .card.card-quero-visitar .card-header { background-color: transparent; }
 
   /* Topo do Card */
   .card-header{ display: flex; flex-direction: column; padding: 12px 12px 8px; gap: 2px; }
@@ -142,6 +146,10 @@
   .badge-vendido{ position: absolute; top: 15%; left: 50%; transform: translate(-50%, -50%) rotate(-10deg); background: rgba(220,38,38,.95); color: #fff; font-size: .9rem; font-weight: 900; letter-spacing: 1.5px; padding: 8px 20px; border-radius: 6px; border: 2px solid #fff; z-index: 6; text-transform: uppercase; }
   .badge-desativado{ position: absolute; top: 10px; left: 10px; background: #000; color: #fff; font-size: .6rem; font-weight: 800; padding: 4px 10px; border-radius: 4px; z-index: 6; text-transform: uppercase; letter-spacing: .5px; }
   .badge-novo{ position: absolute; top: 10px; left: 10px; background: var(--success); color: #fff; font-size: .6rem; font-weight: 800; padding: 4px 10px; border-radius: 999px; z-index: 5; }
+  
+  /* NOVO - BADGE VISITAR */
+  .badge-visitar-solicitado { position: absolute; top: 10px; right: 10px; background: var(--success); color: #fff; font-size: .6rem; font-weight: 800; padding: 4px 10px; border-radius: 999px; z-index: 6; text-transform: uppercase; box-shadow: 0 2px 6px rgba(22,163,74,.3); }
+
   .card-heart-top{ position: absolute; top: 10px; right: 10px; width: 32px; height: 32px; background: rgba(255,255,255,.9); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; z-index: 7; animation: heartIn .3s cubic-bezier(.34,1.56,.64,1) both; }
   @keyframes heartIn{ from{ opacity: 0; transform: scale(.3); } to{ opacity: 1; transform: scale(1); } }
   .card-tag-topo{ position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,.6); backdrop-filter: blur(4px); color: #fff; font-size: .6rem; font-weight: 700; text-transform: uppercase; padding: 4px 8px; border-radius: 4px; z-index: 5; }
@@ -529,6 +537,15 @@ function imovelEhNovo(im){
 
 function imovelVendido_(im){ const v = String(im?.vendido || '').trim().toLowerCase(); return ['sim','s','true','1','vendido'].includes(v); }
 
+// NOVO: Verifica se o imóvel está reservado (desativado/oculto na vitrine)
+function imovelReservado_(im) {
+  if (!im) return false;
+  const v = String(im.vendido || '').trim().toLowerCase();
+  const desat = String(im.desativado || '').trim().toLowerCase();
+  // Retorna true se for "sim" para desativado/reserva
+  return ['sim','s','true','1','reserva','reservado'].includes(v) || ['sim','s','true','1'].includes(desat);
+}
+
 function lerCache(){ try { const raw = localStorage.getItem(CACHE_KEY); if(!raw) return null; const obj = JSON.parse(raw); if(!obj?.ts || !obj?.data) return null; return { data: obj.data, fresh: (Date.now() - obj.ts) < CACHE_TTL }; } catch(e){ return null; } }
 function gravarCache(imoveis){ try { localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), data: imoveis })); } catch(e){} }
 
@@ -680,7 +697,8 @@ function atualizarTela(){ renderizarVisitas(); renderizarNovidades(); renderizar
 
 function renderizarVisitas(){
   const sec = $('sectionVisitas'), wrap = $('visitasWrap'), cnt = $('visitasCount');
-  const vis = state.imoveis.filter(im => !imovelVendido_(im) && im.dataVisitaAgendada && new Date(im.dataVisitaAgendada) >= new Date(Date.now() - 2*60*60*1000));
+  // Filtra para não mostrar reservados
+  const vis = state.imoveis.filter(im => !imovelVendido_(im) && !imovelReservado_(im) && im.dataVisitaAgendada && new Date(im.dataVisitaAgendada) >= new Date(Date.now() - 2*60*60*1000));
   if(!vis.length){ sec.classList.add('hidden'); return; }
   sec.classList.remove('hidden'); cnt.textContent = vis.length;
   vis.sort((a,b) => new Date(a.dataVisitaAgendada) - new Date(b.dataVisitaAgendada));
@@ -692,7 +710,8 @@ function renderizarVisitas(){
 
 function renderizarNovidades(){
   const sec = $('sectionNovidades'), wrap = $('novidadesWrap'), cnt = $('novidadesCount');
-  const novos = state.imoveis.filter(im => !imovelVendido_(im) && imovelEhNovo(im) && im.status !== 'nao-gostei');
+  // Filtra para não mostrar reservados
+  const novos = state.imoveis.filter(im => !imovelVendido_(im) && !imovelReservado_(im) && imovelEhNovo(im) && im.status !== 'nao-gostei');
   if(!novos.length){ sec.classList.add('hidden'); return; }
   sec.classList.remove('hidden'); cnt.textContent = novos.length;
   wrap.innerHTML = novos.map(im => `
@@ -706,7 +725,8 @@ function renderizarFiltroDropdown(){
   const dropdown = $('filtroLista'), badge = $('badgeFiltro'), btnLimpar = $('btnLimparFiltro');
   const mapa = new Map();
   state.imoveis.forEach(im => {
-    if(imovelVendido_(im) || im.status === 'nao-gostei') return;
+    // Filtra para não contar reservados nos bairros
+    if(imovelVendido_(im) || imovelReservado_(im) || im.status === 'nao-gostei') return;
     const nome = String(im.bairro || '').trim(); if(!nome) return;
     const chave = normalizarBairro(nome);
     if(!mapa.has(chave)) mapa.set(chave, { nome, count: 0 });
@@ -749,14 +769,19 @@ function toggleColunas(){
 
 function renderizarImoveis(){
   const grid = $('gridImoveis'); let lista = [...state.imoveis];
+  
+  // 1º Filtro Global: Nunca mostrar Reservados nem Vendidos na Vitrine ativa
+  if (state.filtroNav !== 'vendidos') {
+    lista = lista.filter(i => !imovelReservado_(i) && !imovelVendido_(i));
+  }
 
-  if(state.filtroNav === 'gostei') lista = lista.filter(i => !imovelVendido_(i) && i.status === 'gostei');
-  else if(state.filtroNav === 'visitar') lista = lista.filter(i => !imovelVendido_(i) && i.status === 'quero-visitar');
-  else if(state.filtroNav === 'nao-gostei') lista = lista.filter(i => !imovelVendido_(i) && i.status === 'nao-gostei');
+  if(state.filtroNav === 'gostei') lista = lista.filter(i => i.status === 'gostei');
+  else if(state.filtroNav === 'visitar') lista = lista.filter(i => i.status === 'quero-visitar');
+  else if(state.filtroNav === 'nao-gostei') lista = lista.filter(i => i.status === 'nao-gostei');
   else if(state.filtroNav === 'vendidos') lista = lista.filter(i => imovelVendido_(i));
   else {
+    // Ordenação padrão: Apenas "nao-gostei" vai pro fim, os outros mantém a ordem de dataCadastro
     lista.sort((a,b) => {
-      const va = imovelVendido_(a) ? 3 : 0, vb = imovelVendido_(b) ? 3 : 0; if(va !== vb) return va - vb;
       const oa = (a.status === 'nao-gostei') ? 2 : 0, ob = (b.status === 'nao-gostei') ? 2 : 0; if(oa !== ob) return oa - ob;
       return new Date(b.dataCadastro||0) - new Date(a.dataCadastro||0);
     });
@@ -787,7 +812,20 @@ function cardHTML(im, idx){
   const specsInfo = extrairSpecsDescricao(im.descricao);
   const precoFmt = formatarPreco(im.preco);
   
-  let extraClass = ''; if(descartado) extraClass += ' card-nao-gostei'; if(vendido) extraClass += ' card-vendido';
+  // NOVO: Verifica se deve ocultar a tarja (Ex: Apartamento Padrão)
+  let badgeTexto = specsInfo.badge;
+  let ocultarBadge = false;
+  if (badgeTexto) {
+    const bNormalizado = badgeTexto.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+    if (bNormalizado.includes("apartamento padrao") || bNormalizado.includes("apto padrao")) {
+      ocultarBadge = true;
+    }
+  }
+
+  let extraClass = ''; 
+  if(descartado) extraClass += ' card-nao-gostei'; 
+  if(vendido) extraClass += ' card-vendido';
+  if(im.status === 'quero-visitar') extraClass += ' card-quero-visitar'; // NOVO - Cor marrom
 
   const svgHeart = `<svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`;
   const svgCalendar = `<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>`;
@@ -841,8 +879,10 @@ function cardHTML(im, idx){
         ${descartado ? `<div class="badge-desativado">DESATIVADO</div>` : ''}
         ${imovelEhNovo(im) && !vendido && !descartado ? `<div class="badge-novo">NOVO</div>` : ''}
         
-        ${specsInfo.badge ? `<div class="card-tag-topo" style="left: ${imovelEhNovo(im)||descartado ? '80px' : '10px'}">${esc(specsInfo.badge)}</div>` : ''}
+        ${specsInfo.badge && !ocultarBadge ? `<div class="card-tag-topo" style="left: ${imovelEhNovo(im)||descartado ? '80px' : '10px'}">${esc(specsInfo.badge)}</div>` : ''}
         ${isGostei && !vendido ? `<div class="card-heart-top">❤️</div>` : ''}
+        
+        ${isVisitar && !vendido ? `<div class="badge-visitar-solicitado">Visita Solicitada</div>` : ''}
 
         ${!vendido && !descartado ? `
           <div class="carousel-fake" onclick="event.stopPropagation();">
@@ -908,7 +948,7 @@ function abrirWhatsDuvida(id){
 
 async function marcarGostei(id){
   if(state.salvandoIds[id]) return;
-  const im = state.imoveis.find(i => i.id === id); if(!im || imovelVendido_(im)) return;
+  const im = state.imoveis.find(i => i.id === id); if(!im || imovelVendido_(im) || imovelReservado_(im)) return;
   
   const eraGostei = im.status === 'gostei';
   const novaAcao = eraGostei ? 'pendente' : 'gostei';
@@ -932,7 +972,7 @@ async function marcarGostei(id){
 
 async function marcar(id, acao){
   if(state.salvandoIds[id]) return;
-  const im = state.imoveis.find(i => i.id === id); if(!im || imovelVendido_(im)) return;
+  const im = state.imoveis.find(i => i.id === id); if(!im || imovelVendido_(im) || imovelReservado_(im)) return;
   
   if(acao === 'nao-gostei'){
     const eraNao = im.status === 'nao-gostei';
@@ -959,7 +999,7 @@ function fecharModalGostei(){ $('modalGostei').classList.remove('show'); state.m
 function modalGosteiIrParaVisita(){ const id = state.modalImovelId; fecharModalGostei(); if(id) abrirModalVisita(id); }
 
 function abrirModalVisita(id){
-  const im = state.imoveis.find(i => i.id === id); if(!im || imovelVendido_(im)) return;
+  const im = state.imoveis.find(i => i.id === id); if(!im || imovelVendido_(im) || imovelReservado_(im)) return;
   state.modalImovelId = id; state.visitaDia = ''; state.visitaTurno = '';
   const wrap = $('diasWrap'); const hoje = new Date(); let html = '';
   for(let i = 1; i <= 8; i++){
