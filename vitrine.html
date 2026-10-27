@@ -123,7 +123,7 @@
   .card.card-nao-gostei:hover{ opacity: .6; filter: grayscale(80%); }
   .card.card-vendido{ opacity: .6; filter: grayscale(80%); pointer-events: none; }
   
-  /* NOVO - CARD VISITAR (Fundo Marrom Mais Destacado) */
+  /* CARD VISITAR (Fundo Marrom Mais Destacado) */
   .card.card-quero-visitar { background-color: #e2ccb2; border-color: #c9a57b; box-shadow: 0 4px 12px rgba(160,120,80,0.15); }
   .card.card-quero-visitar .card-actions { border-top-color: #c9a57b; }
   .card.card-quero-visitar .card-header { background-color: transparent; }
@@ -150,7 +150,7 @@
   .badge-desativado{ position: absolute; top: 10px; left: 10px; background: #000; color: #fff; font-size: .6rem; font-weight: 800; padding: 4px 10px; border-radius: 4px; z-index: 6; text-transform: uppercase; letter-spacing: .5px; }
   .badge-novo{ position: absolute; top: 10px; left: 10px; background: var(--success); color: #fff; font-size: .6rem; font-weight: 800; padding: 4px 10px; border-radius: 999px; z-index: 5; }
   
-  /* NOVO - BADGE VISITAR */
+  /* BADGE VISITAR */
   .badge-visitar-solicitado { position: absolute; top: 10px; right: 10px; background: var(--success); color: #fff; font-size: .6rem; font-weight: 800; padding: 4px 10px; border-radius: 999px; z-index: 6; text-transform: uppercase; box-shadow: 0 2px 6px rgba(22,163,74,.3); }
 
   .card-heart-top{ position: absolute; top: 10px; right: 10px; width: 32px; height: 32px; background: rgba(255,255,255,.9); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; z-index: 7; animation: heartIn .3s cubic-bezier(.34,1.56,.64,1) both; }
@@ -425,6 +425,19 @@
   </div>
 </div>
 
+<!-- NOVO MODAL: CANCELAR VISITA -->
+<div class="modal-backdrop" id="modalCancelarVisita" onclick="if(event.target===this) fecharModalCancelarVisita()">
+  <div class="modal">
+    <button class="modal-close" onclick="fecharModalCancelarVisita()">×</button>
+    <h2>⚠️ Cancelar visita?</h2>
+    <p class="sub">Você já solicitou uma visita para este imóvel. Tem certeza de que deseja cancelar essa solicitação?</p>
+    <div style="display:flex; flex-direction:column; gap:10px;">
+      <button class="btn btn-ghost btn-full" onclick="fecharModalCancelarVisita()">Não, manter visita</button>
+      <button class="btn btn-primary btn-full" id="btnConfirmarCancelamento" style="background:var(--danger);" onclick="confirmarCancelamentoVisita()">Sim, cancelar visita</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -540,12 +553,11 @@ function imovelEhNovo(im){
 
 function imovelVendido_(im){ const v = String(im?.vendido || '').trim().toLowerCase(); return ['sim','s','true','1','vendido'].includes(v); }
 
-// NOVO: Verifica se o imóvel está reservado (desativado/oculto na vitrine)
+// Verifica se o imóvel está reservado (desativado/oculto na vitrine)
 function imovelReservado_(im) {
   if (!im) return false;
   const v = String(im.vendido || '').trim().toLowerCase();
   const desat = String(im.desativado || '').trim().toLowerCase();
-  // Retorna true se for "sim" para desativado/reserva
   return ['sim','s','true','1','reserva','reservado'].includes(v) || ['sim','s','true','1'].includes(desat);
 }
 
@@ -639,18 +651,15 @@ async function loginComRetryForte(tel, senha){
   return ultimoRes;
 }
 
-// NOVO: Função que busca a lista do admin em segundo plano e sincroniza os dados de reserva
+// Função que busca a lista do admin em segundo plano e sincroniza os dados de reserva
 async function sincronizarReservasAdmin() {
   if (!state.telefone) return;
   try {
-    // Busca os imóveis na API do admin (que tem os dados corretos de reserva)
     const resAdmin = await api('adminListar', { senha: 'Cal@562938' }, TIMEOUT_API, 1);
     if (!resAdmin.ok || !resAdmin.data) return;
 
-    // Filtra apenas os imóveis do cliente logado no admin
     const imoveisAdminDoCliente = resAdmin.data.filter(i => normalizaTel(i.telefone) === state.telefone);
 
-    // Cria um mapa dos imóveis reservados no admin
     const reservadosIds = new Set();
     imoveisAdminDoCliente.forEach(im => {
       if (String(im.desativado).toLowerCase() === 'sim') {
@@ -658,21 +667,20 @@ async function sincronizarReservasAdmin() {
       }
     });
 
-    if (reservadosIds.size === 0) return; // Se não tem reserva, nem mexe na tela
+    if (reservadosIds.size === 0) return;
 
-    // Remove os imóveis reservados da tela do cliente
     let removeu = false;
     state.imoveis = state.imoveis.filter(im => {
       if (reservadosIds.has(String(im.id))) {
         removeu = true;
-        return false; // Remove o imóvel
+        return false;
       }
       return true;
     });
 
     if (removeu) {
-      gravarCache(state.imoveis); // Atualiza o cache com os imóveis que sobraram
-      atualizarTela(); // Redesenha a tela para o cliente não ver o card
+      gravarCache(state.imoveis);
+      atualizarTela();
     }
   } catch (e) {
     console.warn('Aviso: não foi possível sincronizar reservas em segundo plano.', e);
@@ -734,8 +742,6 @@ async function carregarImoveis(){
   if(!res.data?.length && state.imoveis.length) return;
   state.imoveis = (res.data || []).sort((a,b) => new Date(b.dataCadastro||0) - new Date(a.dataCadastro||0));
   gravarCache(state.imoveis); atualizarTela();
-  
-  // NOVO: Dispara a checagem de reservas em segundo plano
   sincronizarReservasAdmin();
 }
 
@@ -743,7 +749,6 @@ function atualizarTela(){ renderizarVisitas(); renderizarNovidades(); renderizar
 
 function renderizarVisitas(){
   const sec = $('sectionVisitas'), wrap = $('visitasWrap'), cnt = $('visitasCount');
-  // Filtra para não mostrar reservados
   const vis = state.imoveis.filter(im => !imovelVendido_(im) && !imovelReservado_(im) && im.dataVisitaAgendada && new Date(im.dataVisitaAgendada) >= new Date(Date.now() - 2*60*60*1000));
   if(!vis.length){ sec.classList.add('hidden'); return; }
   sec.classList.remove('hidden'); cnt.textContent = vis.length;
@@ -756,7 +761,6 @@ function renderizarVisitas(){
 
 function renderizarNovidades(){
   const sec = $('sectionNovidades'), wrap = $('novidadesWrap'), cnt = $('novidadesCount');
-  // Filtra para não mostrar reservados
   const novos = state.imoveis.filter(im => !imovelVendido_(im) && !imovelReservado_(im) && imovelEhNovo(im) && im.status !== 'nao-gostei');
   if(!novos.length){ sec.classList.add('hidden'); return; }
   sec.classList.remove('hidden'); cnt.textContent = novos.length;
@@ -771,7 +775,6 @@ function renderizarFiltroDropdown(){
   const dropdown = $('filtroLista'), badge = $('badgeFiltro'), btnLimpar = $('btnLimparFiltro');
   const mapa = new Map();
   state.imoveis.forEach(im => {
-    // Filtra para não contar reservados nos bairros
     if(imovelVendido_(im) || imovelReservado_(im) || im.status === 'nao-gostei') return;
     const nome = String(im.bairro || '').trim(); if(!nome) return;
     const chave = normalizarBairro(nome);
@@ -816,7 +819,6 @@ function toggleColunas(){
 function renderizarImoveis(){
   const grid = $('gridImoveis'); let lista = [...state.imoveis];
   
-  // 1º Filtro Global: Nunca mostrar Reservados nem Vendidos na Vitrine ativa
   if (state.filtroNav !== 'vendidos') {
     lista = lista.filter(i => !imovelReservado_(i) && !imovelVendido_(i));
   }
@@ -826,7 +828,6 @@ function renderizarImoveis(){
   else if(state.filtroNav === 'nao-gostei') lista = lista.filter(i => i.status === 'nao-gostei');
   else if(state.filtroNav === 'vendidos') lista = lista.filter(i => imovelVendido_(i));
   else {
-    // Ordenação padrão: Apenas "nao-gostei" vai pro fim, os outros mantém a ordem de dataCadastro
     lista.sort((a,b) => {
       const oa = (a.status === 'nao-gostei') ? 2 : 0, ob = (b.status === 'nao-gostei') ? 2 : 0; if(oa !== ob) return oa - ob;
       return new Date(b.dataCadastro||0) - new Date(a.dataCadastro||0);
@@ -858,7 +859,6 @@ function cardHTML(im, idx){
   const specsInfo = extrairSpecsDescricao(im.descricao);
   const precoFmt = formatarPreco(im.preco);
   
-  // NOVO: Verifica se deve ocultar a tarja (Ex: Apartamento Padrão)
   let badgeTexto = specsInfo.badge;
   let ocultarBadge = false;
   if (badgeTexto) {
@@ -871,7 +871,7 @@ function cardHTML(im, idx){
   let extraClass = ''; 
   if(descartado) extraClass += ' card-nao-gostei'; 
   if(vendido) extraClass += ' card-vendido';
-  if(im.status === 'quero-visitar') extraClass += ' card-quero-visitar'; // NOVO - Cor marrom
+  if(im.status === 'quero-visitar') extraClass += ' card-quero-visitar';
 
   const svgHeart = `<svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`;
   const svgCalendar = `<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>`;
@@ -893,7 +893,8 @@ function cardHTML(im, idx){
           ${salvando ? '<span class="spinner-btn" style="border-color:#ef4444;border-top-color:transparent;"></span>' : svgHeart}
           <span>Gostei</span>
         </button>
-        <button class="action-btn act-visitar ${isVisitar?'ativo':''}" onclick="abrirModalVisita('${im.id}')">
+        <!-- NOVO: Intercepta o clique para checar se já tem visita solicitada -->
+        <button class="action-btn act-visitar ${isVisitar?'ativo':''}" onclick="interceptarCliqueVisita('${im.id}')">
           ${svgCalendar}
           <span>Visitar</span>
         </button>
@@ -1044,6 +1045,69 @@ function abrirModalGostei(id){ state.modalImovelId = id; $('modalGostei').classL
 function fecharModalGostei(){ $('modalGostei').classList.remove('show'); state.modalImovelId = null; }
 function modalGosteiIrParaVisita(){ const id = state.modalImovelId; fecharModalGostei(); if(id) abrirModalVisita(id); }
 
+// NOVO: Intercepta o clique no botão "Visitar" do card
+function interceptarCliqueVisita(id) {
+  const im = state.imoveis.find(i => i.id === id);
+  if (!im) return;
+  // Se o status atual for 'quero-visitar', abre o modal de cancelamento
+  if (im.status === 'quero-visitar') {
+    state.modalImovelId = id;
+    $('modalCancelarVisita').classList.add('show');
+  } else {
+    // Se não, segue o fluxo normal de agendamento
+    abrirModalVisita(id);
+  }
+}
+
+// NOVO: Fecha o modal de cancelamento
+function fecharModalCancelarVisita() {
+  $('modalCancelarVisita').classList.remove('show');
+  state.modalImovelId = null;
+}
+
+// NOVO: Cancela a visita (volta status para pendente)
+async function confirmarCancelamentoVisita() {
+  const id = state.modalImovelId;
+  if (!id) return;
+  const im = state.imoveis.find(i => i.id === id);
+  if (!im) return;
+
+  const btn = $('btnConfirmarCancelamento');
+  btn.disabled = true;
+  btn.innerHTML = 'Cancelando...';
+
+  const prevStatus = im.status;
+  im.status = 'pendente'; // Volta para o status inicial
+
+  try {
+    // Atualiza o AppScript que a visita foi cancelada
+    const res = await api('atualizarStatus', {
+      id,
+      telefone: state.telefone,
+      acao: 'pendente',
+      deviceToken: state.deviceToken
+    }, TIMEOUT_API, 1);
+
+    if (!res.ok) {
+      // Se der erro na API, desfaz a alteração local
+      im.status = prevStatus;
+      toast(res.error || 'Erro ao cancelar. Tente novamente.', 'error');
+    } else {
+      // Deu certo! Atualiza a tela
+      toast('Visita cancelada com sucesso.', 'success');
+      atualizarTela();
+      gravarCache(state.imoveis);
+    }
+  } catch (e) {
+    im.status = prevStatus;
+    toast('Falha de conexão ao cancelar.', 'error');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Sim, cancelar visita';
+    fecharModalCancelarVisita();
+  }
+}
+
 function abrirModalVisita(id){
   const im = state.imoveis.find(i => i.id === id); if(!im || imovelVendido_(im) || imovelReservado_(im)) return;
   state.modalImovelId = id; state.visitaDia = ''; state.visitaTurno = '';
@@ -1100,7 +1164,6 @@ function fecharBusca(){
 }
 
 function navIr(destino){
-  // Se clicar em qualquer nav, fecha a barra de busca
   fecharBusca();
 
   ['navInicio','navBuscar','navFavoritos','navVisitar','navNaoGostei','navVendidos'].forEach(id => $(id).classList.remove('active'));
@@ -1152,7 +1215,7 @@ function limparFiltro(){ state.filtroNav = null; state.bairrosSelecionados.clear
   if(cache?.data?.length && telSalvo){
     state.telefone = telSalvo; state.deviceToken = tokenSalvo; state.clienteInfo = { nome: nomeSalvo }; state.imoveis = cache.data;
     mostrarView('vitrineView'); $('saudacaoUser').textContent = 'Olá, ' + (nomeSalvo ? nomeSalvo.split(' ')[0] : fmtTel(telSalvo)); atualizarTela();
-    sincronizarReservasAdmin(); // NOVO: Verifica se há reservas ocultas ativas no cache
+    sincronizarReservasAdmin();
   } else { mostrarView('loginView'); setTimeout(()=>$('inputTelefone').focus(),200); }
 })();
 </script>
