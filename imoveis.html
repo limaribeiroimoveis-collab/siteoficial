@@ -583,6 +583,7 @@
    CONFIGURAÇÕES DA VITRINE (CLIENTE)
 ===================================================== */
 const API_URL = 'https://script.google.com/macros/s/AKfycbzuCjg_5ZJDMWWKmjYp1ThW34iWS0YouviWFdiMGx8W3yApv0F1fdUcjeZdjm0s6Mg/exec';
+const SENHA_ADMIN_VITRINE = 'Cal@562938';
 const WHATSAPP_FALLBACK = '5531996070930';
 const WHATSAPP_HUGO = '5531996070930';
 const WHATSAPP_CAROL = '5531996273985';
@@ -824,7 +825,7 @@ async function carregarImoveis(forceRefresh = false){
   }
 
   try {
-    const res = await apiGet('listarImoveisPublicos', {}, { timeout: 45000 });
+    const res = await apiGet('adminListar', { senha: SENHA_ADMIN_VITRINE }, { timeout: 45000 });
     if(!res.ok){
       console.error('API erro:', res.error);
       mostrarErroCarregamento(res.error || 'Erro ao carregar imóveis');
@@ -841,7 +842,7 @@ async function carregarImoveis(forceRefresh = false){
 
 async function atualizarImoveisEmBackground(){
   try {
-    const res = await apiGet('listarImoveisPublicos', {}, { timeout: 45000 });
+    const res = await apiGet('adminListar', { senha: SENHA_ADMIN_VITRINE }, { timeout: 45000 });
     if (!res.ok || !res.data) return;
 
     const atual = state.imoveisUnicos;
