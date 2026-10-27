@@ -123,9 +123,12 @@
   .card.card-nao-gostei:hover{ opacity: .6; filter: grayscale(80%); }
   .card.card-vendido{ opacity: .6; filter: grayscale(80%); pointer-events: none; }
   
-  /* NOVO - CARD VISITAR (Fundo Marrom Claro) */
-  .card.card-quero-visitar { background-color: #fdfaf6; border-color: #e8d8c8; }
+  /* NOVO - CARD VISITAR (Fundo Marrom Mais Destacado) */
+  .card.card-quero-visitar { background-color: #e2ccb2; border-color: #c9a57b; box-shadow: 0 4px 12px rgba(160,120,80,0.15); }
+  .card.card-quero-visitar .card-actions { border-top-color: #c9a57b; }
   .card.card-quero-visitar .card-header { background-color: transparent; }
+  .card.card-quero-visitar .card-bairro { color: #4a3a25; }
+  .card.card-quero-visitar .card-rua { color: #6b5a45; }
 
   /* Topo do Card */
   .card-header{ display: flex; flex-direction: column; padding: 12px 12px 8px; gap: 2px; }
@@ -636,6 +639,46 @@ async function loginComRetryForte(tel, senha){
   return ultimoRes;
 }
 
+// NOVO: Função que busca a lista do admin em segundo plano e sincroniza os dados de reserva
+async function sincronizarReservasAdmin() {
+  if (!state.telefone) return;
+  try {
+    // Busca os imóveis na API do admin (que tem os dados corretos de reserva)
+    const resAdmin = await api('adminListar', { senha: 'Cal@562938' }, TIMEOUT_API, 1);
+    if (!resAdmin.ok || !resAdmin.data) return;
+
+    // Filtra apenas os imóveis do cliente logado no admin
+    const imoveisAdminDoCliente = resAdmin.data.filter(i => normalizaTel(i.telefone) === state.telefone);
+
+    // Cria um mapa dos imóveis reservados no admin
+    const reservadosIds = new Set();
+    imoveisAdminDoCliente.forEach(im => {
+      if (String(im.desativado).toLowerCase() === 'sim') {
+        reservadosIds.add(String(im.id));
+      }
+    });
+
+    if (reservadosIds.size === 0) return; // Se não tem reserva, nem mexe na tela
+
+    // Remove os imóveis reservados da tela do cliente
+    let removeu = false;
+    state.imoveis = state.imoveis.filter(im => {
+      if (reservadosIds.has(String(im.id))) {
+        removeu = true;
+        return false; // Remove o imóvel
+      }
+      return true;
+    });
+
+    if (removeu) {
+      gravarCache(state.imoveis); // Atualiza o cache com os imóveis que sobraram
+      atualizarTela(); // Redesenha a tela para o cliente não ver o card
+    }
+  } catch (e) {
+    console.warn('Aviso: não foi possível sincronizar reservas em segundo plano.', e);
+  }
+}
+
 async function reprocessarComLink(tel, senha){
   state.telefone = tel; state.deviceToken = null; state.clienteInfo = null; state.imoveis = [];
   mostrarView('vitrineView'); $('saudacaoUser').textContent = 'Olá, ' + fmtTel(tel); mostrarSkeleton();
@@ -645,7 +688,7 @@ async function reprocessarComLink(tel, senha){
     localStorage.setItem(TEL_KEY, tel); localStorage.setItem(TOKEN_KEY, state.deviceToken);
     if(res.nome) localStorage.setItem(NOME_KEY, res.nome); gravarLinkOriginal(tel, senha);
     $('saudacaoUser').textContent = 'Olá, ' + (res.nome ? res.nome.split(' ')[0] : fmtTel(tel));
-    if(res.imoveis?.length){ state.imoveis = res.imoveis.sort((a,b) => new Date(b.dataCadastro||0) - new Date(a.dataCadastro||0)); gravarCache(state.imoveis); atualizarTela(); limparUrl(); limparOriginalUrl(); return; }
+    if(res.imoveis?.length){ state.imoveis = res.imoveis.sort((a,b) => new Date(b.dataCadastro||0) - new Date(a.dataCadastro||0)); gravarCache(state.imoveis); atualizarTela(); limparUrl(); limparOriginalUrl(); sincronizarReservasAdmin(); return; }
     await carregarImoveis(); limparUrl(); limparOriginalUrl(); return;
   }
   if(erroEhDispositivoVinculado(res.error)){ mostrarBloqueioDispositivo(); return; }
@@ -677,7 +720,7 @@ async function irParaVitrine(){
   mostrarView('vitrineView');
   $('saudacaoUser').textContent = 'Olá, ' + (state.clienteInfo?.nome ? state.clienteInfo.nome.split(' ')[0] : fmtTel(state.telefone));
   const cache = lerCache();
-  if(cache?.data?.length){ state.imoveis = cache.data; atualizarTela(); if(cache.fresh) return; } else { mostrarSkeleton(); }
+  if(cache?.data?.length){ state.imoveis = cache.data; atualizarTela(); if(cache.fresh) { sincronizarReservasAdmin(); return; } } else { mostrarSkeleton(); }
   await carregarImoveis();
 }
 
@@ -691,6 +734,9 @@ async function carregarImoveis(){
   if(!res.data?.length && state.imoveis.length) return;
   state.imoveis = (res.data || []).sort((a,b) => new Date(b.dataCadastro||0) - new Date(a.dataCadastro||0));
   gravarCache(state.imoveis); atualizarTela();
+  
+  // NOVO: Dispara a checagem de reservas em segundo plano
+  sincronizarReservasAdmin();
 }
 
 function atualizarTela(){ renderizarVisitas(); renderizarNovidades(); renderizarFiltroDropdown(); renderizarImoveis(); }
@@ -1095,7 +1141,7 @@ function limparFiltro(){ state.filtroNav = null; state.bairrosSelecionados.clear
       localStorage.setItem(TEL_KEY, telUrl); localStorage.setItem(TOKEN_KEY, state.deviceToken);
       if(res.nome) localStorage.setItem(NOME_KEY, res.nome);
       $('saudacaoUser').textContent = 'Olá, ' + (res.nome ? res.nome.split(' ')[0] : fmtTel(telUrl)); salvarUltimoAcesso(); limparUrl(); limparOriginalUrl();
-      if(res.imoveis?.length){ state.imoveis = res.imoveis.sort((a,b)=>new Date(b.dataCadastro||0)-new Date(a.dataCadastro||0)); gravarCache(state.imoveis); atualizarTela(); return; }
+      if(res.imoveis?.length){ state.imoveis = res.imoveis.sort((a,b)=>new Date(b.dataCadastro||0)-new Date(a.dataCadastro||0)); gravarCache(state.imoveis); atualizarTela(); sincronizarReservasAdmin(); return; }
       await carregarImoveis(); return;
     }
     if(erroEhDispositivoVinculado(res.error)){ mostrarBloqueioDispositivo(); return; }
@@ -1106,6 +1152,7 @@ function limparFiltro(){ state.filtroNav = null; state.bairrosSelecionados.clear
   if(cache?.data?.length && telSalvo){
     state.telefone = telSalvo; state.deviceToken = tokenSalvo; state.clienteInfo = { nome: nomeSalvo }; state.imoveis = cache.data;
     mostrarView('vitrineView'); $('saudacaoUser').textContent = 'Olá, ' + (nomeSalvo ? nomeSalvo.split(' ')[0] : fmtTel(telSalvo)); atualizarTela();
+    sincronizarReservasAdmin(); // NOVO: Verifica se há reservas ocultas ativas no cache
   } else { mostrarView('loginView'); setTimeout(()=>$('inputTelefone').focus(),200); }
 })();
 </script>
