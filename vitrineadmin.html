@@ -496,8 +496,11 @@
   .card.destacado{ border-color: var(--purple); box-shadow: 0 0 0 3px rgba(109,40,217,.18), var(--shadow-md); }
   .card.card-nao-gostei{ opacity: .35; filter: grayscale(90%); background: #f7f8fa; }
   .card.card-nao-gostei:hover{ opacity: .6; filter: grayscale(50%); }
-  .card.card-reserva{ opacity: .45; filter: grayscale(80%); background: #f1f5f9; border-left: 4px solid var(--warn); }
-  .card.card-reserva:hover{ opacity: .7; filter: grayscale(40%); }
+  
+  /* CORREÇÃO: Removido o opacity/filter/background/borda do card reserva */
+  .card.card-reserva {}
+  .card.card-reserva:hover {}
+
   .card.card-agendado{ background: #f0fdf4; border-color: #bbf7d0; }
   .card.card-agendado:hover{ background: #dcfce7; border-color: #86efac; }
 
@@ -515,14 +518,10 @@
     box-shadow: 0 4px 20px rgba(220,38,38,.5), 0 0 0 2px rgba(220,38,38,.3);
     text-shadow: 0 2px 5px rgba(0,0,0,.3); pointer-events: none; white-space: nowrap;
   }
-  .card-tarja-reserva{
-    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-10deg); z-index: 5;
-    background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
-    color: #fff; font-size: 1.1rem; font-weight: 900; letter-spacing: 4px;
-    padding: 8px 22px; border: 3px solid #fff; border-radius: 8px;
-    box-shadow: 0 4px 20px rgba(217,119,6,.4);
-    text-shadow: 0 2px 5px rgba(0,0,0,.3); pointer-events: none; white-space: nowrap;
-  }
+  
+  /* CORREÇÃO: A tarja do meio da foto foi removida do HTML, mas mantemos o CSS caso queira no futuro */
+  .card-tarja-reserva{ display: none; }
+  
   .card-status-vendido{ background: #b91c1c !important; }
   .card-status-reserva{ background: #b45309 !important; }
 
@@ -1721,6 +1720,7 @@ function renderizarImoveis(){
     if(state.filtro === 'recentes'){
       lista.sort((a,b) => new Date(b.dataCadastro||0) - new Date(a.dataCadastro||0));
     } else if(state.filtro === 'todos'){
+      // CORREÇÃO: Adicionado "nao-gostei" na última posição da ordenação
       const ordem = { 'pendente': 0, 'quero-visitar': 1, 'gostei': 2, 'nao-gostei': 3 };
       lista.sort((a,b) => {
         const oa = ordem[(a.status || 'pendente')] ?? 99;
@@ -1788,7 +1788,15 @@ function cardImovelHTML(im){
 
   const specsInfo = extrairSpecsDescricao(im.descricao);
   const specsHtml = specsInfo.specs ? `<div class="card-overlay-specs">${esc(specsInfo.specs)}</div>` : '';
-  const badgeTagHtml = specsInfo.badge ? `<div class="card-tag-topo">${esc(specsInfo.badge)}</div>` : '';
+  
+  // CORREÇÃO: Ocultar a tag "Apartamento Padrão" (apenas ela)
+  let badgeTagHtml = '';
+  if (specsInfo.badge) {
+    const normBadge = specsInfo.badge.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+    if (!normBadge.includes('apartamento padrao')) {
+      badgeTagHtml = `<div class="card-tag-topo">${esc(specsInfo.badge)}</div>`;
+    }
+  }
 
   const aptoExibicao = extrairAptoExibicao(im);
   const aptoHtml = aptoExibicao
@@ -1898,7 +1906,9 @@ function cardImovelHTML(im){
   }
 
   const tarjaVendidoHtml = vendido ? '<div class="card-tarja-vendido">VENDIDO</div>' : '';
-  const tarjaReservaHtml = reservado ? '<div class="card-tarja-reserva">RESERVA</div>' : '';
+  
+  // CORREÇÃO: Removida a tarja do meio da foto (tarjaReservaHtml)
+  const tarjaReservaHtml = '';
 
   return `
     <div class="card${cardExtraClass}" data-id="${id}">
