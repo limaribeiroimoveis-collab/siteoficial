@@ -244,6 +244,28 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
   }
   .triagem-bloco .triagem-sub strong { color: var(--azul); font-weight: 700; }
 
+  /* Aviso de tranquilidade (pergunta 1) */
+  .aviso-tranquilo {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-top: 12px;
+    padding: 12px 14px;
+    background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
+    border: 1px solid #bbf7d0;
+    border-radius: 12px;
+    font-size: 0.76rem;
+    color: #166534;
+    line-height: 1.55;
+  }
+  .aviso-tranquilo i {
+    color: var(--verde);
+    font-size: 1rem;
+    margin-top: 1px;
+    flex-shrink: 0;
+  }
+  .aviso-tranquilo strong { color: #14532d; font-weight: 800; }
+
   .triagem-opcoes {
     display: grid; grid-template-columns: 1fr; gap: 8px;
   }
@@ -330,7 +352,7 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
     align-items: flex-start; gap: 8px;
   }
   .aviso-info.visivel { display: flex; }
-  .aviso-info.azul-fixo { display: flex; } /* sempre visível */
+  .aviso-info.azul-fixo { display: flex; }
   .aviso-info i { color: var(--azul); margin-top: 2px; flex-shrink: 0; }
   .aviso-info strong { color: #1e3a8a; }
 
@@ -698,35 +720,51 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
           <!-- ============ FASE 1 ============ -->
           <div id="formularioWrap">
             <div class="form-titulo">
-              <i class="fas fa-home"></i> Vamos começar sua avaliação
+              <i class="fas fa-home"></i> Vamos começar sua análise gratuita
             </div>
             <p class="form-sub">
               Responda <strong>4 perguntas rápidas</strong> e depois alguns dados do imóvel.
+              É <strong>só uma análise de valor de mercado</strong> — sem compromisso de venda.
               Leva menos de 2 minutos.
             </p>
 
             <form id="formCaptacao" novalidate onsubmit="enviarFormulario(event)">
 
-              <!-- TRIAGEM 1 — PROPRIETÁRIO -->
+              <!-- TRIAGEM 1 — VÍNCULO COM O IMÓVEL (SUTIL, SEM "CORRETOR") -->
               <div class="triagem-bloco">
                 <div class="triagem-titulo">
                   <span class="num">1</span>
-                  Você é o proprietário deste imóvel?
+                  Qual é o seu vínculo com este imóvel?
                   <span class="obrig">*</span>
+                </div>
+                <div class="triagem-sub">
+                  Precisamos saber para direcionar a análise ao responsável pelo imóvel.
                 </div>
                 <div class="triagem-opcoes" id="opcoesProprietario">
                   <button type="button" class="opcao" data-val="proprietario">
                     <span class="bolinha"></span>
-                    Sim, sou o proprietário (ou coproprietário)
+                    <span class="texto-opcao">
+                      <strong>Sou o proprietário (ou coproprietário)</strong>
+                      <span>O imóvel está no meu nome</span>
+                    </span>
                   </button>
                   <button type="button" class="opcao" data-val="familiar">
                     <span class="bolinha"></span>
-                    Não, sou familiar/representante do proprietário
+                    <span class="texto-opcao">
+                      <strong>Sou familiar ou representante autorizado</strong>
+                      <span>Cuido do imóvel em nome do proprietário</span>
+                    </span>
                   </button>
-                  <button type="button" class="opcao" data-val="corretor">
-                    <span class="bolinha"></span>
-                    Não, sou corretor ou apenas consultando
-                  </button>
+                </div>
+                <!-- AVISO DE TRANQUILIDADE — deixa claro que é só análise -->
+                <div class="aviso-tranquilo">
+                  <i class="fas fa-shield-alt"></i>
+                  <span>
+                    <strong>Fique tranquilo(a):</strong> esta é apenas uma
+                    <strong>análise gratuita do valor de mercado</strong> do seu imóvel —
+                    não é um cadastro de venda. Se depois você quiser confirmar a venda,
+                    um consultor vai <strong>pedir sua autorização primeiro pelo WhatsApp</strong>.
+                  </span>
                 </div>
               </div>
 
@@ -853,7 +891,7 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
 
               <button type="submit" class="btn-enviar" id="btnEnviar" disabled>
                 <i class="fas fa-calculator"></i>
-                <span>Começar a Calcular o Valor do Imóvel</span>
+                <span>Quero receber minha avaliação grátis</span>
               </button>
 
               <div class="seguranca">
@@ -1205,7 +1243,7 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
     // ============================================================
     function validarFormulario(){
       // Triagem
-      if (!triagem.proprietario) return { ok:false, msg:'Informe se você é o proprietário.' };
+      if (!triagem.proprietario) return { ok:false, msg:'Informe seu vínculo com o imóvel.' };
       if (!triagem.cidade)       return { ok:false, msg:'Informe a cidade do imóvel.' };
       if (triagem.cidade === 'Outra cidade') {
         return { ok:false, msg:'Atendemos apenas Belo Horizonte e Nova Lima.' };
@@ -1351,7 +1389,7 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
         } else {
           $('blocoApartamento').style.display = 'none';
           $('campoCondominio').style.display = 'none';
-          respostas.tipoApto = ''; // reseta se mudar pra casa
+          respostas.tipoApto = '';
           document.querySelectorAll('#chipsTipoApto .chip').forEach(b => b.classList.remove('ativo'));
         }
       });
@@ -1397,7 +1435,6 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
           if(v < 0) v = 0;
           if(v > 20) v = 20;
 
-          // Lógica inteligente de suítes
           if (campo === 'suites') {
              const qtdQuartos = respostas.quartos || 0;
              if (v > qtdQuartos) {
@@ -1405,7 +1442,6 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
              }
           }
 
-          // Se diminuir quartos, as suítes não podem ser maiores
           if (campo === 'quartos') {
             const qtdSuites = respostas.suites || 0;
             if (qtdSuites > v) {
@@ -1414,7 +1450,6 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
             }
           }
 
-          // Exibe bloco tipo de vaga só se vagas > 0
           if (campo === 'vagas') {
             $('blocoVagas').style.display = v > 0 ? 'block' : 'none';
           }
@@ -1461,7 +1496,6 @@ src="https://www.facebook.com/tr?id=4643758592560521&ev=PageView&noscript=1"
 
       if(typeof fbq !== 'undefined'){ fbq('track', 'CompleteRegistration'); }
 
-      // Mostra tela de loading
       $('fase2Wrap').style.display = 'none';
       $('loadingWrap').style.display = 'flex';
       $('colunaForm').scrollIntoView({ behavior: 'smooth', block: 'start' });
