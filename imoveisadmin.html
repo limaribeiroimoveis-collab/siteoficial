@@ -2693,6 +2693,7 @@ async function salvarEdicaoImovel(){
 ===================================================== */
 async function toggleVendidoCard(codigo, estaVendido) {
   if (!codigo) { toast('Imóvel sem código', 'error'); return; }
+
   const confirmMsg = estaVendido
     ? `Desmarcar o imóvel #${codigo} como vendido?\n\nEle voltará a aparecer como disponível para todos os clientes.`
     : `Marcar o imóvel #${codigo} como vendido?\n\nEle será atualizado em TODOS os clientes vinculados.`;
@@ -2703,10 +2704,18 @@ async function toggleVendidoCard(codigo, estaVendido) {
   if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Salvando...'; }
 
   try {
-    const res = await apiGet('atualizarImovelPorCodigo', {
-      senha: obterSenhaAdmin(),
-      codigo: codigo,
-      vendido: !estaVendido ? 'Sim' : ''  // ⬅️ String, não boolean    }, { timeout: 90000 });
+    // String 'Sim' / '' — formato esperado pela API
+    const vendidoStr = !estaVendido ? 'Sim' : '';
+
+    const res = await apiGet(
+      'atualizarImovelPorCodigo',
+      {
+        senha: obterSenhaAdmin(),
+        codigo: codigo,
+        vendido: vendidoStr
+      },
+      { timeout: 90000 }
+    );
 
     if (!res.ok) {
       toast(res.error || 'Erro ao atualizar', 'error');
