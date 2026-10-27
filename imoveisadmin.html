@@ -410,7 +410,7 @@
     .form-row-link-price, .form-row-address, .form-row-img-desc { grid-template-columns: 1fr; }
     .barra-clonagem-header { border-radius: 20px 20px 0 0; padding: 12px 14px; flex-direction: column; align-items: stretch; text-align: center; }
     .barra-clonagem-header .info { justify-content: center; }
-    .barra-clonagem-header .acoes-barra { justify-content: center; }
+    .barra-clonagem-header .acoes-bar { justify-content: center; }
   }
 </style>
 </head>
@@ -1130,6 +1130,78 @@ function fmtValorLimpo(valor){
   return n.toLocaleString('pt-BR', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
 }
 
+/* =====================================================
+   PARSE / MONTAGEM DA CHAVE (robusto)
+   Aceita formatos:
+     "101\nBloco B\nna portaria"
+     "Apto 101\nBl. B\nportaria"
+     "101 - Bloco B - portaria"  (linha única)
+===================================================== */
+function parseChaveTexto(chaveRaw) {
+  const out = { apto: '', bloco: '', complemento: '' };
+  if (!chaveRaw) return out;
+
+  const linhas = String(chaveRaw).split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+  if (linhas.length === 0) return out;
+
+  // Se veio em linha única com separador " - " tenta dividir
+  let linhasRef = linhas;
+  if (linhas.length === 1) {
+    const partes = linhas[0].split(/\s+[-–—]\s+/).map(p => p.trim()).filter(Boolean);
+    if (partes.length > 1) linhasRef = partes;
+  }
+
+  const aptoRegex = /^(?:apartamento|apart|apto|apt|ap|unidade|sala|loja|conjunto|cj|casa|cobertura|flat|bloco\s+\w+|torre\s+\w+)?\.?\s*[•·:.\-#º°]?\s*(\d{1,8}[A-Za-z]?)\s*$/i;
+  const blocoRegex = /^(?:bl(?:oco)?|torre|ed(?:if[ií]cio)?|pr[ée]dio)\.?\s*[:.\-#]?\s*([A-Za-z0-9]{1,10})\s*$/i;
+
+  const resto = [];
+
+  // 1) Tenta apto na 1ª linha (se houver número)
+  let i = 0;
+  if (linhasRef.length > 0) {
+    const m1 = linhasRef[0].match(aptoRegex);
+    if (m1 && m1[1] && !blocoRegex.test(linhasRef[0])) {
+      out.apto = m1[1].toUpperCase();
+      i = 1;
+    }
+  }
+
+  // 2) Procura bloco em qualquer linha restante (preferência pelas primeiras)
+  for (let j = i; j < linhasRef.length; j++) {
+    const mb = linhasRef[j].match(blocoRegex);
+    if (mb && mb[1]) {
+      out.bloco = mb[1].toUpperCase();
+      i = j + 1;
+      break;
+    }
+  }
+
+  // 3) Complemento = restante
+  for (let j = i; j < linhasRef.length; j++) resto.push(linhasRef[j]);
+  out.complemento = resto.join('\n');
+  return out;
+}
+
+function montarChaveTexto(apto, bloco, complemento) {
+  const linhas = [];
+  const a = String(apto || '').trim();
+  const b = String(bloco || '').trim();
+  const c = String(complemento || '').trim();
+  if (a) linhas.push(a);
+  if (b) {
+    // Se já vier com "Bloco" no começo, respeita
+    if (/^(bl(oco)?|torre)/i.test(b)) linhas.push(b);
+    else linhas.push('Bloco ' + b.replace(/^bl(?:oco)?\.?\s*/i, '').replace(/^torre\s*/i, '').trim());
+  }
+  if (c) linhas.push(c);
+  return linhas.join('\n');
+}
+
+/* =====================================================
+   DESCRIÇÃO ↔ TIPO
+   - Remove TODOS os *...*  da 1ª linha (pode ter mais de 1)
+   - Recoloca o tipo escolhido na 1ª linha, junto com a 1ª linha útil
+===================================================== */
 function extrairTipoImovel(descricao){
   if(!descricao) return '';
   const matches = String(descricao).match(/\*+([^*\n]+)\*+/g);
@@ -1140,8 +1212,31 @@ function extrairTipoImovel(descricao){
     if(texto.includes('cobertura')) return 'Cobertura';
     if(texto.includes('area privativa') || texto.includes('área privativa')) return 'Área Privativa';
     if(texto.includes('casa')) return 'Casa';
+    if(texto.includes('padrao') || texto.includes('apartamento')) return 'Apartamento Padrão';
   }
   return '';
+}
+
+function descricaoSemTipo(descricao){
+  if(!descricao) return '';
+  const linhas = String(descricao).split(/\r?\n/);
+  if(linhas.length > 0){
+    linhas[0] = linhas[0].replace(/\*+[^*\n]+\*+/g, '').replace(/\s{2,}/g, ' ').trim();
+  }
+  // remove linhas legadas "Vaga:"/"Elevador:" se existirem
+  const filtradas = linhas.filter(l => !/^\s*(Vaga|Elevador):\s*/i.test(l));
+  return filtradas.join('\n').replace(/^\s+/, '');
+}
+
+function montarDescricaoFinal(texto, tipoLabel) {
+  const base = String(texto || '').trim();
+  if (!tipoLabel) return base;
+  const linhasBase = base ? base.split(/\r?\n/) : [];
+  const primeira = (linhasBase[0] || '').trim();
+  const restante = linhasBase.slice(1);
+  let cab = `*${tipoLabel}*`;
+  if (primeira) cab += ' ' + primeira;
+  return [cab, ...restante].filter(Boolean).join('\n');
 }
 
 function isVendido(imovel){
@@ -1173,22 +1268,13 @@ function extrairMetragem(descricao){
   return isNaN(n) ? 0 : Math.round(n);
 }
 
-/* =====================================================
-   EXTRAÇÃO DE ANDAR — versão robusta
-   Regra: 0–199 = 1º, 200–299 = 2º, 300–399 = 3º, ...
-===================================================== */
 function extrairAndar(im) {
   if (!im) return 0;
-
   let numStr = '';
-
-  // 1) Campo 'apto' direto
   if (im.apto) {
     const m = String(im.apto).match(/\d{1,8}/);
     if (m) numStr = m[0];
   }
-
-  // 2) Campo chaveTexto — primeira linha
   if (!numStr) {
     const chave = obterChaveTexto(im);
     if (chave) {
@@ -1200,18 +1286,14 @@ function extrairAndar(im) {
       }
     }
   }
-
-  // 3) Descrição/título
   if (!numStr) {
     const alvo = String(im.titulo || '') + ' ' + String(im.descricao || '');
     const m = alvo.match(/(?:apto?|ap|apartamento|unidade|sala|cobertura|casa|flat)\s*[º°.:#-]?\s*(\d{1,8})/i);
     if (m) numStr = m[1];
   }
-
   if (!numStr) return 0;
   const num = parseInt(numStr, 10);
   if (isNaN(num) || num <= 0) return 0;
-
   if (num < 200) return 1;
   return Math.floor(num / 100);
 }
@@ -1236,14 +1318,12 @@ function imovelBateVagaQtd(im, vagasQtd) {
 
 function imovelBateVagaTipo(im, vagaTipo) {
   if (!vagaTipo) return true;
-  const tipo = String(im.vaga || '').trim();
-  return tipo === vagaTipo;
+  return String(im.vaga || '').trim() === vagaTipo;
 }
 
 function imovelBateElevador(im, elevador) {
   if (!elevador) return true;
-  const e = String(im.elevador || '').trim();
-  return e === elevador;
+  return String(im.elevador || '').trim() === elevador;
 }
 
 function obterChaveTexto(im) {
@@ -2343,53 +2423,33 @@ function abrirModalEditarImovel(ref){
   $('editElevador').value = String(imCompleto.elevador || '').trim();
   $('editElevador').classList.remove('invalido');
 
+  // ⬇️ Parsing corrigido: usa parseChaveTexto robusto
   const chaveRaw = imCompleto.chaveTexto || '';
-  const linhasChave = chaveRaw.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+  const parsed = parseChaveTexto(chaveRaw);
 
-  let apto = '';
-  let bloco = '';
-  let complemento = '';
+  $('editApto').value  = parsed.apto;
+  $('editBloco').value = parsed.bloco;
+  $('editChaveComplemento').value = parsed.complemento;
 
-  let consumiuApto = false, consumiuBloco = false;
-  const l1 = linhasChave[0] || '';
-  const prefixoRegex = /^(?:apartamento|apart|apto|apt|ap|unidade|sala|loja|conjunto|cj|casa|cobertura|flat)?\.?\s*[•:.\-#º°]?\s*(\d{1,8}[A-Za-z]?)\s*$/i;
-  const m1 = l1.match(prefixoRegex);
-  if(m1 && m1[1]) { apto = m1[1].toUpperCase(); consumiuApto = true; }
+  // Atualiza preview travado
+  $('chaveLinhaApto').className = parsed.apto ? 'linha' : 'linha vazia';
+  $('chaveLinhaApto').querySelector('.valor-mini').textContent = parsed.apto || '—';
+  $('chaveLinhaBloco').className = parsed.bloco ? 'linha' : 'linha vazia';
+  $('chaveLinhaBloco').querySelector('.valor-mini').textContent = parsed.bloco || '—';
 
-  for(let i = 0; i < linhasChave.length; i++) {
-    const l = linhasChave[i];
-    if(!consumiuApto && i === 0) continue;
-    if(!consumiuBloco) {
-      const mb = l.match(/^(?:bl(?:oco)?|torre|ed(?:if[ií]cio)?|pr[ée]dio)\.?\s*[:.\-#]?\s*([A-Za-z0-9]{1,10})\s*$/i);
-      if(mb) { bloco = mb[1].toUpperCase(); consumiuBloco = true; continue; }
-    }
-    if(i > 0 || !consumiuApto) {
-      complemento += (complemento ? '\n' : '') + l;
-    }
-  }
+  // ⬇️ Descrição: sempre sem o *Tipo* antigo (para o user editar limpo)
+  const descSemTipo = descricaoSemTipo(imCompleto.descricao || '');
+  $('editDescricao').value = descSemTipo;
 
-  $('editBloco').value = bloco;
-  $('editApto').value  = apto;
-  $('editChaveComplemento').value = complemento;
-
-  $('chaveLinhaApto').className = apto ? 'linha' : 'linha vazia';
-  $('chaveLinhaApto').querySelector('.valor-mini').textContent = apto || '—';
-  $('chaveLinhaBloco').className = bloco ? 'linha' : 'linha vazia';
-  $('chaveLinhaBloco').querySelector('.valor-mini').textContent = bloco || '—';
-
-  $('editDescricao').value  = imCompleto.descricao  || '';
   $('editImagem').value     = imCompleto.imagem     || '';
   $('editVendido').checked  = isVendido(imCompleto);
 
-  let corretorDetectado = '';
-  if(linkSalvo){
-    for(const [nome, sufixo] of Object.entries(FINAIS_LINK)){
-      if(linkSalvo.includes(sufixo)){ corretorDetectado = nome; break; }
-    }
-  }
+  // ⬇️ Corretor: detecção consistente (usa detectarCorretorDoLink)
+  const corretorDetectado = detectarCorretorDoLink(linkSalvo);
   state._corretorEscolhido = corretorDetectado;
   atualizarBtnsCorretor(corretorDetectado);
 
+  // ⬇️ Tipo: usa extrairTipoImovel (que já retorna o label correto)
   let tipoDetectado = 'padrao';
   const tipoDesc = extrairTipoImovel(imCompleto.descricao);
   if(tipoDesc === 'Cobertura') tipoDetectado = 'cobertura';
@@ -2505,6 +2565,13 @@ function onLinkBlur(){
   if(!url) return;
   const codigo = extrairCodigoDoLink(url);
   if(codigo){ state._codigoLinkAtual = codigo; $('btnBuscarEntrada').disabled = false; $('codigoBadge').textContent = '#' + codigo; }
+
+  // Auto-detecta corretor ao sair do link
+  const corretor = detectarCorretorDoLink(url);
+  if(corretor && !state._corretorEscolhido){
+    state._corretorEscolhido = corretor;
+    atualizarBtnsCorretor(corretor);
+  }
 }
 
 function abrirBuscarEntradaForm(){
@@ -2513,11 +2580,19 @@ function abrirBuscarEntradaForm(){
   window.open(`${BUSCAR_BASE}/${codigo}`, '_blank', 'noopener');
 }
 
+/**
+ * =====================================================
+ * SALVAR EDIÇÃO — versão corrigida
+ * =====================================================
+ */
 async function salvarEdicaoImovel(){
   const im = state.imovelEditando;
   if(!im) return;
   if(!im.codigo){ toast('Este imóvel não tem código — não é possível editar em massa', 'error'); return; }
-  if(!state._corretorEscolhido){ toast('Escolha o corretor (Hugo ou Carol) antes de salvar', 'error'); return; }
+  if(!state._corretorEscolhido){
+    toast('Escolha o corretor (Hugo ou Carol) antes de salvar', 'error');
+    return;
+  }
 
   const rua = $('editRua').value.trim();
   const numero = $('editNumero').value.trim();
@@ -2545,61 +2620,55 @@ async function salvarEdicaoImovel(){
   btn.disabled = true;
   btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Salvando...';
 
-  let linkFinal = $('editLink').value.trim();
-  if(linkFinal && state._corretorEscolhido){
-    const sufixo = FINAIS_LINK[state._corretorEscolhido] || '';
-    if(sufixo){
-      const partes = linkFinal.split('/');
-      if(partes.length > 1){ partes[partes.length - 1] = sufixo; linkFinal = partes.join('/'); }
-    }
-  }
-
-  const aptoVal = $('editApto').value.trim().toUpperCase();
-  const blocoVal = $('editBloco').value.trim().toUpperCase();
-  const complVal = $('editChaveComplemento').value.trim();
-
-  let chaveArray = [];
-  if(aptoVal) chaveArray.push(aptoVal);
-  if(blocoVal) chaveArray.push('Bloco ' + blocoVal);
-  if(complVal) chaveArray.push(complVal);
-  const chaveTextoFinal = chaveArray.join('\n');
-
-  let descTexto = $('editDescricao').value.trim();
-  let tipoLabel = '';
-  if(state._tipoEditorSelecionado === 'padrao') tipoLabel = 'Apartamento Padrão';
-  else if(state._tipoEditorSelecionado === 'cobertura') tipoLabel = 'Cobertura';
-  else if(state._tipoEditorSelecionado === 'area-privativa') tipoLabel = 'Área Privativa';
-  else if(state._tipoEditorSelecionado === 'casa') tipoLabel = 'Casa';
-
-  descTexto = descTexto.replace(/^\*+[^*\n]+\*+\s*/i, '').trim();
-
-  let descFinal = descTexto;
-  if(tipoLabel){
-    const linhasBase = descTexto ? descTexto.split(/\r?\n/) : [];
-    const primeira = (linhasBase[0] || '').trim();
-    const resto = linhasBase.slice(1);
-    descFinal = [`*${tipoLabel}*${primeira ? ' ' + primeira : ''}`, ...resto].filter(Boolean).join('\n');
-  }
-
-  const params = {
-    senha: obterSenhaAdmin(),
-    codigo: im.codigo,
-    rua,
-    numero,
-    bairro,
-    preco: $('editPreco').value.trim(),
-    condominio: $('editCondominio').value.trim(),
-    iptu: $('editIptu').value.trim(),
-    link: linkFinal,
-    imagem: $('editImagem').value.trim(),
-    descricao: descFinal,
-    chaveTexto: chaveTextoFinal,
-    vendido: $('editVendido').checked,
-    vaga: vaga,
-    elevador: elevador
-  };
-
   try {
+    // 1) Link com assinatura do corretor
+    let linkFinal = $('editLink').value.trim();
+    if(linkFinal && state._corretorEscolhido){
+      const sufixo = FINAIS_LINK[state._corretorEscolhido] || '';
+      if(sufixo){
+        const partes = linkFinal.split('/');
+        if(partes.length > 1){ partes[partes.length - 1] = sufixo; linkFinal = partes.join('/'); }
+      }
+    }
+
+    // 2) Chave remontada
+    const aptoVal = $('editApto').value.trim().toUpperCase();
+    const blocoVal = $('editBloco').value.trim().toUpperCase();
+    const complVal = $('editChaveComplemento').value.trim();
+    const chaveTextoFinal = montarChaveTexto(aptoVal, blocoVal, complVal);
+
+    // 3) Descrição: sempre sem tipo + tipo escolhido
+    const descSemTipo = descricaoSemTipo($('editDescricao').value);
+    let tipoLabel = '';
+    if(state._tipoEditorSelecionado === 'padrao') tipoLabel = 'Apartamento Padrão';
+    else if(state._tipoEditorSelecionado === 'cobertura') tipoLabel = 'Cobertura';
+    else if(state._tipoEditorSelecionado === 'area-privativa') tipoLabel = 'Área Privativa';
+    else if(state._tipoEditorSelecionado === 'casa') tipoLabel = 'Casa';
+    const descFinal = montarDescricaoFinal(descSemTipo, tipoLabel);
+
+    // 4) VENDIDO convertido para string ("Sim"/"")
+    const vendidoBool = $('editVendido').checked;
+    const vendidoStr = vendidoBool ? 'Sim' : '';
+
+    // 5) Payload da API
+    const params = {
+      senha: obterSenhaAdmin(),
+      codigo: im.codigo,
+      rua,
+      numero,
+      bairro,
+      preco: $('editPreco').value.trim(),
+      condominio: $('editCondominio').value.trim(),
+      iptu: $('editIptu').value.trim(),
+      link: linkFinal,
+      imagem: $('editImagem').value.trim(),
+      descricao: descFinal,
+      chaveTexto: chaveTextoFinal,
+      vendido: vendidoStr,
+      vaga: vaga,
+      elevador: elevador
+    };
+
     const res = await apiGet('atualizarImovelPorCodigo', params);
     if(!res.ok){
       toast(res.error || 'Erro ao salvar', 'error');
@@ -2637,8 +2706,7 @@ async function toggleVendidoCard(codigo, estaVendido) {
     const res = await apiGet('atualizarImovelPorCodigo', {
       senha: obterSenhaAdmin(),
       codigo: codigo,
-      vendido: !estaVendido
-    }, { timeout: 90000 });
+      vendido: !estaVendido ? 'Sim' : ''  // ⬅️ String, não boolean    }, { timeout: 90000 });
 
     if (!res.ok) {
       toast(res.error || 'Erro ao atualizar', 'error');
@@ -2942,14 +3010,12 @@ function fecharModalClientesVinculados(){ $('modalClientesVinculados').classList
 async function init(){
   initSliderPreco();
 
-  // Chips de andar — MULTI-SELEÇÃO
   document.querySelectorAll('#chipsAndar .chip-filtro').forEach(btn => {
     btn.addEventListener('click', () => {
       btn.classList.toggle('ativo');
     });
   });
 
-  // Chips de elevador
   document.querySelectorAll('#chipsElevador .chip-filtro').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('#chipsElevador .chip-filtro').forEach(b => b.classList.remove('ativo'));
@@ -2957,7 +3023,6 @@ async function init(){
     });
   });
 
-  // Chips de região
   document.querySelectorAll('#chipsRegiao .chip-regiao').forEach(btn => {
     btn.addEventListener('click', () => toggleRegiao(btn.dataset.regiao));
   });
