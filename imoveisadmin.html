@@ -1182,13 +1182,11 @@ function extrairAndar(im) {
 
   let numStr = '';
 
-  // 1) Campo 'apto' direto
   if (im.apto) {
     const m = String(im.apto).match(/\d{1,8}/);
     if (m) numStr = m[0];
   }
 
-  // 2) Campo chaveTexto — primeira linha
   if (!numStr) {
     const chave = obterChaveTexto(im);
     if (chave) {
@@ -1201,7 +1199,6 @@ function extrairAndar(im) {
     }
   }
 
-  // 3) Descrição/título
   if (!numStr) {
     const alvo = String(im.titulo || '') + ' ' + String(im.descricao || '');
     const m = alvo.match(/(?:apto?|ap|apartamento|unidade|sala|cobertura|casa|flat)\s*[º°.:#-]?\s*(\d{1,8})/i);
@@ -1403,7 +1400,7 @@ async function carregarImoveis(forceRefresh = false){
     }
   }
   try {
-    const res = await apiGet('listarImoveisPublicos', {}, { timeout: 45000 });
+    const res = await apiGet('adminListar', { senha: obterSenhaAdmin() }, { timeout: 45000 });
     if(!res.ok){ mostrarErroCarregamento(res.error || 'Erro ao carregar imóveis'); return; }
     state.imoveisUnicos = res.data || [];
     salvarCacheImoveis(state.imoveisUnicos);
@@ -1415,7 +1412,7 @@ async function carregarImoveis(forceRefresh = false){
 
 async function atualizarImoveisEmBackground(){
   try {
-    const res = await apiGet('listarImoveisPublicos', {}, { timeout: 45000 });
+    const res = await apiGet('adminListar', { senha: obterSenhaAdmin() }, { timeout: 45000 });
     if (!res.ok || !res.data) return;
     const atual = state.imoveisUnicos;
     const novo = res.data;
@@ -2226,9 +2223,17 @@ function acharImovelPorQualquerRef(ref) {
   return im || null;
 }
 
+/**
+ * MESCLA os dados do imóvel (que vem do listarImoveisPublicos/admListar, campo "resumido")
+ * com os dados COMPLETOS do admin (listarTodosImoveis, que tem vaga, elevador, chaveTexto, etc).
+ * O admin sempre sobrescreve os campos vazios do resumo, garantindo que os campos
+ * completos apareçam no modal de edição.
+ */
 function mesclarCompleto(im) {
   if (!im) return {};
-  const completo = (state.todosImoveis || []).find(x => String(x.codigo || '').trim() === String(im.codigo || '').trim()) || {};
+  const completo = (state.todosImoveis || []).find(x => String(x.codigo || '').trim() === String(im.codigo || '').trim());
+  if (!completo) return { ...im };
+  // Admin sobrescreve, mas mantém campos que só existem no resumo (ex: clienteNome)
   return { ...im, ...completo };
 }
 
@@ -2338,11 +2343,16 @@ function abrirModalEditarImovel(ref){
   $('editNumero').value     = imCompleto.numero     || '';
   $('editBairro').value     = imCompleto.bairro     || '';
 
-  $('editVaga').value = String(imCompleto.vaga || '').trim();
+  // Vaga e Elevador (vêm do adminListar / listarTodosImoveis)
+  const vagaVal = String(imCompleto.vaga || '').trim();
+  $('editVaga').value = vagaVal;
   $('editVaga').classList.remove('invalido');
-  $('editElevador').value = String(imCompleto.elevador || '').trim();
+
+  const elevadorVal = String(imCompleto.elevador || '').trim();
+  $('editElevador').value = elevadorVal;
   $('editElevador').classList.remove('invalido');
 
+  // Chave texto: parsear em apto, bloco e complemento
   const chaveRaw = imCompleto.chaveTexto || '';
   const linhasChave = chaveRaw.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
 
@@ -2367,6 +2377,9 @@ function abrirModalEditarImovel(ref){
       complemento += (complemento ? '\n' : '') + l;
     }
   }
+
+  // Se o campo imCompleto.apto existir, ele é mais confiável (vem do Admin)
+  if (imCompleto.apto && !apto) apto = String(imCompleto.apto).toUpperCase();
 
   $('editBloco').value = bloco;
   $('editApto').value  = apto;
@@ -2942,14 +2955,12 @@ function fecharModalClientesVinculados(){ $('modalClientesVinculados').classList
 async function init(){
   initSliderPreco();
 
-  // Chips de andar — MULTI-SELEÇÃO
   document.querySelectorAll('#chipsAndar .chip-filtro').forEach(btn => {
     btn.addEventListener('click', () => {
       btn.classList.toggle('ativo');
     });
   });
 
-  // Chips de elevador
   document.querySelectorAll('#chipsElevador .chip-filtro').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('#chipsElevador .chip-filtro').forEach(b => b.classList.remove('ativo'));
@@ -2957,7 +2968,6 @@ async function init(){
     });
   });
 
-  // Chips de região
   document.querySelectorAll('#chipsRegiao .chip-regiao').forEach(btn => {
     btn.addEventListener('click', () => toggleRegiao(btn.dataset.regiao));
   });
