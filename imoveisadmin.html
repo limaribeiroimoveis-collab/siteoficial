@@ -1381,7 +1381,8 @@ async function carregarImoveis(forceRefresh = false){
     }
   }
   try {
-    const res = await apiGet('listarImoveisPublicos', {}, { timeout: 45000 });
+    // ⬇️ adminListar COM senha — retorna TODOS os imóveis (inclusive os da coluna Q bloqueada)
+    const res = await apiGet('adminListar', { senha: SENHA_ADMIN_VITRINE }, { timeout: 45000 });
     if(!res.ok){ mostrarErroCarregamento(res.error || 'Erro ao carregar imóveis'); return; }
     state.imoveisUnicos = res.data || [];
     salvarCacheImoveis(state.imoveisUnicos);
@@ -1393,11 +1394,14 @@ async function carregarImoveis(forceRefresh = false){
 
 async function atualizarImoveisEmBackground(){
   try {
-    const res = await apiGet('listarImoveisPublicos', {}, { timeout: 45000 });
+    // ⬇️ adminListar COM senha — mantém o mesmo filtro do carregarImoveis
+    const res = await apiGet('adminListar', { senha: SENHA_ADMIN_VITRINE }, { timeout: 45000 });
     if (!res.ok || !res.data) return;
     const atual = state.imoveisUnicos;
     const novo = res.data;
-    const mudou = atual.length !== novo.length || (atual[0] && novo[0] && atual[0].id !== novo[0].id) || (atual[atual.length-1] && novo[novo.length-1] && atual[atual.length-1].id !== novo[novo.length-1].id);
+    const mudou = atual.length !== novo.length ||
+      (atual[0] && novo[0] && atual[0].id !== novo[0].id) ||
+      (atual[atual.length-1] && novo[novo.length-1] && atual[atual.length-1].id !== novo[novo.length-1].id);
     if (!mudou) return;
     state.imoveisUnicos = novo;
     salvarCacheImoveis(novo);
