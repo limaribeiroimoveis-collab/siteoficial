@@ -949,9 +949,6 @@ const FINAIS_LINK = {
   'Carolina': 'CarolinaLima-ZADT'
 };
 
-/* =====================================================
-   REGIÕES DE BELO HORIZONTE
-===================================================== */
 const REGIOES_BH = {
   'Centro-Sul': ['Anchieta','Barro Preto','Belvedere','Boaventura','Carmo','Centro','Cidade Jardim','Comiteco','Cruzeiro','Funcionários','Floresta','Gutierrez','Horto','Lourdes','Luxemburgo','Mangabeiras','Mercado','Prado','Santa Efigênia','Santa Lúcia','Santo Agostinho','São Bento','São Lucas','São Pedro','Santo Antônio','Savassi','Serra','Sion','Vila Paris'],
   'Norte': ['Aparecida','Boa Vista','Candelária','Concórdia','Dom Joaquim','Floramar','Frei Leopoldo','Guarani','Ipê','Jardim Montanhês','Jaqueline','Lagoa','Lagoinha','Maria Goretti','Minaslândia','Piratininga','Planalto','Providência','Primeiro de Maio','São Bernardo','São Cristóvão','São Gonçalo','São João Batista','Tupi','União','Vila Clóris','Vila Nova','Vila Primeiro de Maio','Cachoeirinha','Colégio Batista','Fernão Dias','Jardim Guanabara','Jardim São José','Nova Floresta','Paquetá','Santa Inês','Santa Terezinha','Silveira','Zilah Spósito'],
@@ -1354,7 +1351,7 @@ async function apiGet(action, params = {}, opts = {}){
 }
 
 /* =====================================================
-   CACHE DE IMÓVEIS
+   CACHE
 ===================================================== */
 function lerCacheImoveis() {
   try {
@@ -1366,7 +1363,6 @@ function lerCacheImoveis() {
     return obj.data;
   } catch(e) { return null; }
 }
-
 function salvarCacheImoveis(data) {
   try { localStorage.setItem(IMOVEIS_CACHE_KEY, JSON.stringify({ ts: Date.now(), data })); } catch(e) {}
 }
@@ -1618,9 +1614,6 @@ document.addEventListener('click', (e) => {
   }
 });
 
-/* =====================================================
-   SLIDER DE PREÇO
-===================================================== */
 const PRECO_MAX_SLIDER = 2000000;
 const PRECO_STEP = 10000;
 
@@ -2194,12 +2187,9 @@ function calcularFalhasAdmin(){
 }
 
 /* =====================================================
-   EDITOR — Painel Modal (CORRIGIDO)
-   - Busca SOMENTE na lista admin (dados completos)
-   - Carrega a lista admin se ainda não estiver carregada
+   EDITOR — abre via lista admin (dados completos)
 ===================================================== */
 async function abrirModalEditarImovel(ref){
-  // 1) Garante a lista ADMIN carregada
   if (state.todosImoveis.length === 0) {
     toast('Carregando dados completos do imóvel...');
     await carregarTodosImoveisAdmin();
@@ -2209,15 +2199,10 @@ async function abrirModalEditarImovel(ref){
     return;
   }
 
-  // 2) Busca SOMENTE na lista admin, por código OU por id
   const cod = String(ref || '').trim();
   let imCompleto = state.todosImoveis.find(x => String(x.codigo || '').trim() === cod);
   if (!imCompleto) imCompleto = state.todosImoveis.find(x => String(x.id || '').trim() === cod);
-
-  if (!imCompleto) {
-    toast('Imóvel não encontrado na lista de administração', 'error');
-    return;
-  }
+  if (!imCompleto) { toast('Imóvel não encontrado na lista de administração', 'error'); return; }
 
   state.imovelEditando = imCompleto;
   state._corretorEscolhido = '';
@@ -2227,24 +2212,23 @@ async function abrirModalEditarImovel(ref){
   btnSalvar.innerHTML = '<i class="fas fa-save"></i> Salvar para todos os clientes';
 
   const linkSalvo = imCompleto.link || '';
-
   $('editLink').value       = linkSalvo;
   $('editPreco').value      = imCompleto.preco      || '';
   $('editCondominio').value = imCompleto.condominio || '';
   $('editIptu').value       = imCompleto.iptu       || '';
-
   $('editRua').value        = imCompleto.rua        || '';
   $('editNumero').value     = imCompleto.numero     || '';
   $('editBairro').value     = imCompleto.bairro     || '';
 
-  $('editVaga').value = String(imCompleto.vaga || '').trim();
+  // VAGA / ELEVADOR — normaliza caso o backend venha com nomes alternativos
+  const vagaVal = String(imCompleto.vaga ?? imCompleto.Vaga ?? imCompleto.tipoVaga ?? '').trim();
+  const elevVal = String(imCompleto.elevador ?? imCompleto.Elevador ?? imCompleto.elevador_sn ?? '').trim();
+  $('editVaga').value = vagaVal;
   $('editVaga').classList.remove('invalido');
-  $('editElevador').value = String(imCompleto.elevador || '').trim();
+  $('editElevador').value = elevVal;
   $('editElevador').classList.remove('invalido');
 
-  const chaveRaw = imCompleto.chaveTexto || '';
-  const parsed = parseChaveTexto(chaveRaw);
-
+  const parsed = parseChaveTexto(imCompleto.chaveTexto || '');
   $('editApto').value  = parsed.apto;
   $('editBloco').value = parsed.bloco;
   $('editChaveComplemento').value = parsed.complemento;
@@ -2254,11 +2238,9 @@ async function abrirModalEditarImovel(ref){
   $('chaveLinhaBloco').className = parsed.bloco ? 'linha' : 'linha vazia';
   $('chaveLinhaBloco').querySelector('.valor-mini').textContent = parsed.bloco || '—';
 
-  const descSemTipo = descricaoSemTipo(imCompleto.descricao || '');
-  $('editDescricao').value = descSemTipo;
-
-  $('editImagem').value     = imCompleto.imagem     || '';
-  $('editVendido').checked  = isVendido(imCompleto);
+  $('editDescricao').value = descricaoSemTipo(imCompleto.descricao || '');
+  $('editImagem').value    = imCompleto.imagem    || '';
+  $('editVendido').checked = isVendido(imCompleto);
 
   const corretorDetectado = detectarCorretorDoLink(linkSalvo)
     || (imCompleto.corretor && FINAIS_LINK[imCompleto.corretor] ? imCompleto.corretor : '');
@@ -2270,7 +2252,6 @@ async function abrirModalEditarImovel(ref){
   if(tipoDesc === 'Cobertura') tipoDetectado = 'cobertura';
   else if(tipoDesc === 'Área Privativa') tipoDetectado = 'area-privativa';
   else if(tipoDesc === 'Casa') tipoDetectado = 'casa';
-
   state._tipoEditorSelecionado = tipoDetectado;
   atualizarChipsEditor(tipoDetectado);
   atualizarPreviewDescricao();
@@ -2393,16 +2374,13 @@ function abrirBuscarEntradaForm(){
 }
 
 /* =====================================================
-   SALVAR EDIÇÃO (CORRIGIDO)
-   - Envia id + codigo
-   - Vendido como string
-   - Logs de debug
-   - Refetch completo ao final
+   SALVAR EDIÇÃO — usa `salvarImovel` (mesma action do outro HTML)
+   Inclui vaga + elevador no payload
 ===================================================== */
 async function salvarEdicaoImovel(){
   const im = state.imovelEditando;
   if(!im){ toast('Imóvel não carregado', 'error'); return; }
-  if(!im.codigo && !im.id){ toast('Imóvel sem código e sem id', 'error'); return; }
+  if(!im.id){ toast('Imóvel sem ID — não é possível editar', 'error'); return; }
   if(!state._corretorEscolhido){
     toast('Escolha o corretor (Hugo ou Carol) antes de salvar', 'error');
     return;
@@ -2417,10 +2395,24 @@ async function salvarEdicaoImovel(){
   if(!rua){ toast('Informe a rua', 'error'); return; }
   if(!numero){ toast('Informe o número', 'error'); return; }
   if(!bairro){ toast('Informe o bairro', 'error'); return; }
-  if(!vaga){ $('editVaga').classList.add('invalido'); toast('Informe o tipo de vaga', 'error'); return; }
-  if(!elevador){ $('editElevador').classList.add('invalido'); toast('Informe o elevador', 'error'); return; }
+  if(!vaga){
+    $('editVaga').classList.add('invalido');
+    toast('Informe o tipo de vaga', 'error');
+    return;
+  }
+  if(!elevador){
+    $('editElevador').classList.add('invalido');
+    toast('Informe o elevador', 'error');
+    return;
+  }
   $('editVaga').classList.remove('invalido');
   $('editElevador').classList.remove('invalido');
+
+  const telefoneDoImovel = normalizaTel(im.telefone || im.Telefone || '');
+  if(!telefoneDoImovel){
+    toast('Imóvel sem telefone — impossível salvar', 'error');
+    return;
+  }
 
   const btn = $('btnSalvarImovel');
   btn.disabled = true;
@@ -2451,28 +2443,32 @@ async function salvarEdicaoImovel(){
 
     const vendidoStr = $('editVendido').checked ? 'Sim' : '';
 
-    const params = {
-      senha: obterSenhaAdmin(),
-      id: im.id || '',
-      codigo: im.codigo || '',
+    // ⬇️ Payload do `salvarImovel` — a MESMA action que funciona no outro HTML
+    const dados = {
+      id: im.id,
+      telefone: telefoneDoImovel,
       rua: rua,
       numero: numero,
       bairro: bairro,
       preco: $('editPreco').value.trim(),
       condominio: $('editCondominio').value.trim(),
       iptu: $('editIptu').value.trim(),
+      descricao: descFinal,
       link: linkFinal,
       imagem: $('editImagem').value.trim(),
-      descricao: descFinal,
       chaveTexto: chaveTextoFinal,
+      status: im.status || 'pendente',
+      observacao: im.observacao || '',
+      corretor: state._corretorEscolhido,
       vendido: vendidoStr,
+      desativado: im.desativado || '',
       vaga: vaga,
       elevador: elevador
     };
 
-    console.log('[salvarEdicaoImovel] payload:', params);
+    console.log('[salvarEdicaoImovel] payload:', dados);
 
-    const res = await apiGet('atualizarImovelPorCodigo', params, { timeout: 90000 });
+    const res = await apiGet('salvarImovel', { senha: obterSenhaAdmin(), ...dados }, { timeout: 90000 });
     console.log('[salvarEdicaoImovel] resposta:', res);
 
     if(!res.ok){
@@ -2482,10 +2478,9 @@ async function salvarEdicaoImovel(){
       return;
     }
 
-    toast(`✅ Atualizado em ${res.total ?? 1} cliente(s)!`, 'success');
+    toast('✅ Imóvel atualizado!', 'success');
     fecharModalEditarImovel();
     limparCacheImoveis();
-
     await Promise.all([ carregarImoveis(true), carregarTodosImoveisAdmin() ]);
     aplicarFiltros();
     if(state.modoAdmin) calcularFalhasAdmin();
@@ -2499,7 +2494,7 @@ async function salvarEdicaoImovel(){
 }
 
 /* =====================================================
-   MARCAR / DESMARCAR VENDIDO (sintaxe corrigida)
+   VENDIDO
 ===================================================== */
 async function toggleVendidoCard(codigo, estaVendido) {
   if (!codigo) { toast('Imóvel sem código', 'error'); return; }
@@ -2514,23 +2509,16 @@ async function toggleVendidoCard(codigo, estaVendido) {
 
   try {
     const vendidoStr = !estaVendido ? 'Sim' : '';
-
     const res = await apiGet(
       'atualizarImovelPorCodigo',
-      {
-        senha: obterSenhaAdmin(),
-        codigo: codigo,
-        vendido: vendidoStr
-      },
+      { senha: obterSenhaAdmin(), codigo: codigo, vendido: vendidoStr },
       { timeout: 90000 }
     );
-
     if (!res.ok) {
       toast(res.error || 'Erro ao atualizar', 'error');
       if (btn) { btn.disabled = false; btn.innerHTML = htmlOrig; }
       return;
     }
-
     toast(`✅ #${codigo} ${estaVendido ? 'desmarcado' : 'marcado'} como vendido (${res.total || 1} cliente(s))`, 'success');
     limparCacheImoveis();
     await carregarImoveis(true);
@@ -2741,9 +2729,6 @@ async function executarClonagemLote(){
 
 function delay(ms){ return new Promise(r => setTimeout(r, ms)); }
 
-/* =====================================================
-   CLIENTES VINCULADOS
-===================================================== */
 function contarClientesVinculados(codigo){
   if(!codigo) return 0;
   const tels = new Set();
@@ -2790,9 +2775,6 @@ async function abrirModalClientesVinculados(codigo){
 }
 function fecharModalClientesVinculados(){ $('modalClientesVinculados').classList.remove('show'); }
 
-/* =====================================================
-   INIT
-===================================================== */
 async function init(){
   initSliderPreco();
   document.querySelectorAll('#chipsAndar .chip-filtro').forEach(btn => {
