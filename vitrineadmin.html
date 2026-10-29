@@ -1697,14 +1697,15 @@ function cardImovelHTML(im){
 
     const blocoInfo = extrairAptoBlocoChave(im.chaveTexto || '');
   const apto = blocoInfo.apto || '';
-  const bloco = blocoInfo.bloco || '';
+    const bloco = blocoInfo.bloco || '—';  // traço quando vazio
   const chaveComplemento = blocoInfo.resto || '';
   // ⚠️ No card exibimos SÓ o complemento (sem Apto/Bloco, que já aparecem no grid de dados)
   const chaveCompleta = chaveComplemento;
 
-  const precoFmt = formatarMoeda(im.preco);
-  const condFmt = formatarMoeda(im.condominio);
-  const iptuFmt = formatarMoeda(im.iptu);
+   // Se vazio, exibe R$ 0,00
+  const precoFmt = formatarMoeda(im.preco) || 'R$ 0,00';
+  const condFmt  = formatarMoeda(im.condominio) || 'R$ 0,00';
+  const iptuFmt  = formatarMoeda(im.iptu) || 'R$ 0,00';
 
   const vaga = String(im.vaga || '').trim();
   const elevador = String(im.elevador || '').trim();
