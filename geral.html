@@ -825,14 +825,12 @@
   <div class="admin-panel-inner">
     <input type="hidden" id="editingId">
 
-    <!-- CAMPO DE CLIENTE - SÓ APARECE EM NOVO IMÓVEL -->
     <div id="clienteFieldWrap" style="margin-bottom: 10px;">
       <label>Cliente dono <span style="font-weight:500; color:var(--muted); font-size:.7rem;">(opcional — pode deixar em branco)</span></label>
       <input type="text" id="adCliente" list="listaClientesDatalist" placeholder="Nome ou telefone..." autocomplete="off" oninput="validarBotaoSalvar()">
       <datalist id="listaClientesDatalist"></datalist>
     </div>
 
-    <!-- AVISO AO EDITAR -->
     <div id="editAviso" class="hidden" style="margin-bottom: 10px; padding: 10px 12px; background: #fef9ec; border: 1px solid #fde68a; border-radius: 6px; font-size: .8rem; color: #78350f; display: flex; align-items: center; gap: 8px;">
       <svg style="width: 18px; height: 18px; flex-shrink: 0;" viewBox="0 0 24 24" fill="none" stroke="#b45309" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
@@ -1232,47 +1230,69 @@ function atualizarBadgesClientes(){
 }
 
 /* =========================================================
-   LÓGICA DE INFORMAÇÃO FALTANDO
-   BLOCO NÃO É OBRIGATÓRIO
-   APARTAMENTO NÃO É OBRIGATÓRIO SE FOR CASA
+   LÓGICA DE INFORMAÇÃO FALTANDO - CORRIGIDA
+   Casa não exige apartamento nem condomínio
+   Bloco nunca ativa
+   Suíte 0 é válida
    ========================================================= */
 function temInformacaoFaltando(im) {
   if (isVendido(im)) return [];
   const faltas = [];
   
+  const tipo = extrairTipoImovel(im.descricao || '');
+  const isCasa = tipo === 'Casa';
+  
+  // 1. Preço
   const preco = String(im.preco || '').trim();
-  if (!preco || preco === '0,00' || preco === 'R$ 0,00' || parseNumeroBR(preco) === 0) faltas.push('Preço');
+  if (!preco || preco === '0,00' || preco === 'R$ 0,00' || parseNumeroBR(preco) === 0) {
+    faltas.push('Preço');
+  }
   
-  const cond = String(im.condominio || '').trim();
-  if (!cond || cond === '0,00' || cond === 'R$ 0,00') faltas.push('Condomínio');
+  // 2. Condomínio — SÓ PARA NÃO-CASA
+  if (!isCasa) {
+    const cond = String(im.condominio || '').trim();
+    if (!cond || cond === '0,00' || cond === 'R$ 0,00') {
+      faltas.push('Condomínio');
+    }
+  }
   
+  // 3. IPTU
   const iptu = String(im.iptu || '').trim();
-  if (!iptu || iptu === '0,00' || iptu === 'R$ 0,00') faltas.push('IPTU');
+  if (!iptu || iptu === '0,00' || iptu === 'R$ 0,00') {
+    faltas.push('IPTU');
+  }
   
+  // 4-6. Rua, Número, Bairro
   if (!String(im.rua || '').trim()) faltas.push('Rua');
   if (!String(im.numero || '').trim()) faltas.push('Número');
   if (!String(im.bairro || '').trim()) faltas.push('Bairro');
   
-  const tipo = extrairTipoImovel(im.descricao || '');
+  // 7. Apartamento — SÓ PARA NÃO-CASA
   const infoChave = extrairAptoBlocoChave(im.chaveTexto || '');
+  if (!isCasa) {
+    if (!infoChave.apto) faltas.push('Apartamento');
+  }
+  // Bloco: NUNCA ativa
   
-  // Apartamento NÃO é obrigatório se for Casa
-  if (tipo !== 'Casa' && !infoChave.apto) faltas.push('Apartamento');
-  
-  // Bloco NÃO é obrigatório
-  
+  // 8. Chave
   if (!String(im.chaveTexto || '').trim()) faltas.push('Chave');
   
+  // 9. Suítes (zero é válido)
   const suites = String(im.suites || '').trim();
   if (suites === '' || suites === '—') faltas.push('Suítes');
   
+  // 10. Vaga
   const vaga = String(im.vaga || '').trim();
   if (!vaga || vaga === '—' || !['Livre','Presa','Não sei'].includes(vaga)) faltas.push('Vaga');
   
+  // 11. Elevador
   const elevador = String(im.elevador || '').trim();
   if (!elevador || elevador === '—' || !['Sim','Não'].includes(elevador)) faltas.push('Elevador');
   
+  // 12. Tipo
   if (!tipo) faltas.push('Tipo');
+  
+  // 13. Descrição
   if (!String(im.descricao || '').trim()) faltas.push('Descrição');
   
   return faltas;
@@ -1927,7 +1947,6 @@ function editarImovel(id){
   limparForm(); $('editingId').value = im.id;
   state._editandoCodigoAtual = String(im.codigo || '').trim();
   
-  // ESCONDE O CAMPO DE CLIENTE AO EDITAR (evita desvincular)
   $('clienteFieldWrap').classList.add('hidden');
   $('editAviso').classList.remove('hidden');
   
@@ -2002,7 +2021,6 @@ async function salvarImovel(){
   const descricaoLimpa = descricaoSemTipo($('adDescricao').value), descricaoFinal = `*${tipo}* ` + descricaoLimpa;
   const chaveFinal = montarChaveTexto($('adApto').value, $('adBloco').value, $('adChaveComplemento').value);
   
-  // ⚠️ SÓ PEGA O TELEFONE SE NÃO ESTIVER EDITANDO (evita desvincular)
   let tel = '';
   if (!editandoId) {
     const clienteStr = $('adCliente').value;
@@ -2023,10 +2041,8 @@ async function salvarImovel(){
     vaga: String($('adVaga').value).trim(), elevador: String($('adElevador').value).trim(), suites: String($('adSuites').value)
   };
   
-  // Se estiver editando, remove telefone do payload para o AppScript preservar o original
   if (editandoId) {
     delete dados.telefone;
-    // Também remove campos de "novo" que não devem ser reenviados
     delete dados.status;
     delete dados.vendido;
     delete dados.desativado;
@@ -2037,8 +2053,6 @@ async function salvarImovel(){
   const res = await api('salvarImovel', dados);
   
   if(res.ok && editandoId){ 
-    // Segunda chamada para atualizar TODAS as linhas com esse código
-    // sem tocar no telefone (vínculo preservado)
     await api('atualizarImovelPorCodigo', { 
       senha: SENHA_ADMIN, 
       codigo: state._editandoCodigoAtual || extrairCodigoDoLink(dados.link), 
@@ -2063,10 +2077,6 @@ async function salvarImovel(){
   fecharPainelImovel(); await recarregar();
 }
 
-// =========================================================
-// TESTE DE SUÍTE NO CONSOLE
-// Uso: testarSuite("CODIGO_DO_IMOVEL", "2")
-// =========================================================
 window.testarSuite = async function(codigo, suitesValue) {
   if (!codigo) { console.error('❌ Informe o código do imóvel (não o ID)'); return; }
   console.log(`%c[TESTE SUÍTE] Código=${codigo}, Suíte=${suitesValue}`, 'color: #7c3aed; font-weight: bold; font-size: 14px;');
@@ -2077,11 +2087,7 @@ window.testarSuite = async function(codigo, suitesValue) {
   console.log('[TESTE] Imóvel encontrado:', im.titulo);
   console.log('[TESTE] Suíte atual:', im.suites);
   
-  const res = await api('atualizarImovelPorCodigo', { 
-    senha: SENHA_ADMIN, 
-    codigo: codigo, 
-    suites: String(suitesValue)
-  });
+  const res = await api('atualizarImovelPorCodigo', { senha: SENHA_ADMIN, codigo: codigo, suites: String(suitesValue) });
   
   console.log('[TESTE] Resposta do AppScript:', res);
   
