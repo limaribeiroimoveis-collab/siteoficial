@@ -4,30 +4,107 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <title>Escolha seus Bairros - BH e Vila da Serra</title>
-
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-
 <style>
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   html, body { margin: 0; padding: 0; height: 100%; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-  
   #app { display: flex; flex-direction: column; height: 100vh; height: 100dvh; }
-  
-  /* Faixa de instrução */
-  #instrucao {
+  #map { flex: 1; width: 100%; position: relative; }
+
+  /* Botão "i" flutuante */
+  #btn-info {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 1000;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
     background: #1e3a8a;
     color: #fff;
-    padding: 10px 14px;
-    font-size: 14px;
-    line-height: 1.35;
-    text-align: center;
-    box-shadow: 0 2px 6px rgba(0,0,0,.2);
-    z-index: 1000;
+    border: none;
+    font-size: 20px;
+    font-weight: bold;
+    font-style: italic;
+    font-family: Georgia, serif;
+    cursor: pointer;
+    box-shadow: 0 3px 10px rgba(0,0,0,.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
-  #instrucao strong { color: #fde047; }
+  #btn-info:active { background: #1e40af; }
 
-  /* Mapa */
-  #map { flex: 1; width: 100%; }
+  /* Modal de instruções */
+  #modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.55);
+    z-index: 2000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  #modal-overlay.ativo { display: flex; }
+  #modal {
+    background: #fff;
+    border-radius: 16px;
+    max-width: 420px;
+    width: 100%;
+    padding: 24px 20px 20px;
+    box-shadow: 0 20px 50px rgba(0,0,0,.4);
+    animation: aparecer .2s ease-out;
+  }
+  @keyframes aparecer {
+    from { transform: scale(.92); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+  #modal h2 {
+    margin: 0 0 14px;
+    font-size: 20px;
+    color: #1e3a8a;
+    text-align: center;
+  }
+  #modal .passo {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 14px;
+    align-items: flex-start;
+  }
+  #modal .num {
+    background: #1e3a8a;
+    color: #fff;
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 14px;
+  }
+  #modal .passo p {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.4;
+    color: #374151;
+  }
+  #modal .passo p strong { color: #111827; }
+  #btn-entendi {
+    width: 100%;
+    background: #16a34a;
+    color: #fff;
+    border: none;
+    padding: 14px;
+    font-size: 16px;
+    font-weight: 700;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-top: 6px;
+  }
+  #btn-entendi:active { background: #15803d; }
 
   /* Rodapé */
   #footer {
@@ -58,21 +135,29 @@
     background: #dcfce7;
     color: #166534;
     border: 1px solid #86efac;
-    padding: 4px 10px;
+    padding: 5px 8px 5px 10px;
     border-radius: 999px;
     font-size: 13px;
     font-weight: 600;
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
   }
   .tag .x {
     cursor: pointer;
     font-weight: bold;
-    color: #166534;
-    font-size: 15px;
+    color: #fff;
+    background: #16a34a;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
     line-height: 1;
   }
+  .tag .x:active { background: #15803d; }
   .vazio { color: #9ca3af; font-style: italic; font-size: 13px; }
 
   #btn-confirmar {
@@ -90,26 +175,38 @@
   #btn-confirmar:active { background: #15803d; }
   #btn-confirmar:disabled { background: #d1d5db; color: #6b7280; cursor: not-allowed; }
 
-  /* Ajuste dos pinos */
-  .pino-icon { 
-    background: transparent; 
-    border: none; 
+  /* Aviso temporário no mapa (toast) */
+  #toast {
+    position: absolute;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(17,24,39,.92);
+    color: #fff;
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    z-index: 1500;
+    opacity: 0;
+    transition: opacity .25s;
+    pointer-events: none;
+    white-space: nowrap;
+    max-width: 90%;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
+  #toast.visivel { opacity: 1; }
 </style>
 </head>
 <body>
 
 <div id="app">
-  <!-- Instrução rápida -->
-  <div id="instrucao">
-    👆 <strong>Toque nos pinos</strong> para marcar os bairros onde quer que eu procure seu imóvel ideal em <strong>BH + Vila da Serra</strong>.<br>
-    Depois toque em <strong>Confirmar e Enviar</strong>.
+  <div id="map">
+    <button id="btn-info" aria-label="Instruções">i</button>
+    <div id="toast"></div>
   </div>
 
-  <!-- Mapa -->
-  <div id="map"></div>
-
-  <!-- Rodapé -->
   <div id="footer">
     <h3>Bairros escolhidos</h3>
     <div id="lista-nomes"><span class="vazio">Nenhum bairro selecionado ainda.</span></div>
@@ -117,149 +214,229 @@
   </div>
 </div>
 
+<!-- MODAL -->
+<div id="modal-overlay">
+  <div id="modal">
+    <h2>Como escolher seus bairros</h2>
+    <div class="passo">
+      <div class="num">1</div>
+      <p>Use <strong>dois dedos</strong> (ou role o mouse) para dar <strong>zoom</strong> no mapa e encontrar a região que te interessa.</p>
+    </div>
+    <div class="passo">
+      <div class="num">2</div>
+      <p>Dê <strong>dois toques rápidos</strong> em cima do bairro desejado. Ele será adicionado à lista abaixo.</p>
+    </div>
+    <div class="passo">
+      <div class="num">3</div>
+      <p>Errou? Toque no <strong>×</strong> ao lado do nome para remover. Pode escolher quantos bairros quiser.</p>
+    </div>
+    <div class="passo">
+      <div class="num">4</div>
+      <p>Quando terminar, toque em <strong>Confirmar e Enviar</strong>.</p>
+    </div>
+    <button id="btn-entendi">Entendi, vamos lá!</button>
+  </div>
+</div>
+
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
   // ============================================================
-  // LISTA DE BAIRROS (edite aqui para incluir/remover)
-  // Foco: TODA Belo Horizonte + Vila da Serra (Nova Lima)
+  // CONFIG
   // ============================================================
-  const bairros = [
-    // ---- BELO HORIZONTE (regiões principais) ----
-    // Centro-Sul (foco do corretor, próxima à Vila da Serra/Belvedere)
-    { nome: "Belvedere", lat: -19.9733, lng: -43.9454, regiao: "Centro-Sul" },
-    { nome: "Lourdes", lat: -19.9289, lng: -43.9386, regiao: "Centro-Sul" },
-    { nome: "Savassi", lat: -19.9360, lng: -43.9345, regiao: "Centro-Sul" },
-    { nome: "Funcionários", lat: -19.9320, lng: -43.9310, regiao: "Centro-Sul" },
-    { nome: "Mangabeiras", lat: -19.9510, lng: -43.9330, regiao: "Centro-Sul" },
-    { nome: "Serra do Curral", lat: -19.9660, lng: -43.9330, regiao: "Centro-Sul" },
-    { nome: "Sion", lat: -19.9580, lng: -43.9330, regiao: "Centro-Sul" },
-    { nome: "Cruzeiro", lat: -19.9420, lng: -43.9300, regiao: "Centro-Sul" },
-    { nome: "Anchieta", lat: -19.9430, lng: -43.9370, regiao: "Centro-Sul" },
-    { nome: "Carmo", lat: -19.9420, lng: -43.9410, regiao: "Centro-Sul" },
-    { nome: "Santa Efigênia", lat: -19.9280, lng: -43.9230, regiao: "Centro-Sul" },
-    { nome: "São Lucas", lat: -19.9280, lng: -43.9150, regiao: "Centro-Sul" },
-    { nome: "Cidade Jardim", lat: -19.9550, lng: -43.9300, regiao: "Centro-Sul" },
-
-    // Oeste
-    { nome: "Buritis", lat: -19.9660, lng: -43.9700, regiao: "Oeste" },
-    { nome: "Estoril", lat: -19.9640, lng: -43.9750, regiao: "Oeste" },
-    { nome: "Gutierrez", lat: -19.9450, lng: -43.9600, regiao: "Oeste" },
-    { nome: "Barro Preto", lat: -19.9280, lng: -43.9500, regiao: "Oeste" },
-    { nome: "Prado", lat: -19.9250, lng: -43.9650, regiao: "Oeste" },
-    { nome: "Nova Granada", lat: -19.9490, lng: -43.9800, regiao: "Oeste" },
-    { nome: "Ouro Preto", lat: -19.9420, lng: -43.9900, regiao: "Oeste" },
-    { nome: "Betânia", lat: -19.9600, lng: -43.9900, regiao: "Oeste" },
-    { nome: "Salgado Filho", lat: -19.9350, lng: -43.9700, regiao: "Oeste" },
-    { nome: "Gameleira", lat: -19.9330, lng: -43.9750, regiao: "Oeste" },
-
-    // Centro
-    { nome: "Centro", lat: -19.9191, lng: -43.9386, regiao: "Centro" },
-    { nome: "Floresta", lat: -19.9120, lng: -43.9280, regiao: "Centro" },
-    { nome: "Lagoinha", lat: -19.9120, lng: -43.9450, regiao: "Centro" },
-    { nome: "Carlos Prates", lat: -19.9100, lng: -43.9550, regiao: "Centro" },
-    { nome: "Bonfim", lat: -19.9050, lng: -43.9350, regiao: "Centro" },
-
-    // Leste
-    { nome: "Santa Tereza", lat: -19.9200, lng: -43.9150, regiao: "Leste" },
-    { nome: "Horto", lat: -19.9150, lng: -43.9050, regiao: "Leste" },
-    { nome: "Sagrada Família", lat: -19.9050, lng: -43.9100, regiao: "Leste" },
-    { nome: "Colégio Batista", lat: -19.9150, lng: -43.9250, regiao: "Leste" },
-    { nome: "Cidade Nova", lat: -19.9100, lng: -43.9200, regiao: "Leste" },
-    { nome: "Vera Cruz", lat: -19.9050, lng: -43.9200, regiao: "Leste" },
-    { nome: "Esplanada", lat: -19.9100, lng: -43.9300, regiao: "Leste" },
-    { nome: "Caetano Furquim", lat: -19.8950, lng: -43.9200, regiao: "Leste" },
-
-    // Nordeste
-    { nome: "Cidade Nova (NE)", lat: -19.8950, lng: -43.9050, regiao: "Nordeste" },
-    { nome: "Renascença", lat: -19.8900, lng: -43.9100, regiao: "Nordeste" },
-    { nome: "Silveira", lat: -19.8800, lng: -43.9150, regiao: "Nordeste" },
-    { nome: "São Paulo", lat: -19.8850, lng: -43.9300, regiao: "Nordeste" },
-    { nome: "União", lat: -19.8750, lng: -43.9200, regiao: "Nordeste" },
-
-    // Noroeste
-    { nome: "Pampulha", lat: -19.8500, lng: -43.9800, regiao: "Pampulha" },
-    { nome: "São Luiz", lat: -19.8600, lng: -43.9700, regiao: "Pampulha" },
-    { nome: "Itapoã", lat: -19.8650, lng: -43.9500, regiao: "Pampulha" },
-    { nome: "Santa Amélia", lat: -19.8500, lng: -43.9600, regiao: "Pampulha" },
-    { nome: "Bandeirantes", lat: -19.8700, lng: -43.9650, regiao: "Pampulha" },
-    { nome: "Indaiá", lat: -19.8500, lng: -43.9650, regiao: "Pampulha" },
-    { nome: "Dona Clara", lat: -19.8700, lng: -43.9750, regiao: "Pampulha" },
-    { nome: "Jaraguá", lat: -19.8800, lng: -43.9800, regiao: "Pampulha" },
-    { nome: "Céu Azul", lat: -19.8600, lng: -43.9850, regiao: "Pampulha" },
-
-    // Norte
-    { nome: "São Bernardo", lat: -19.8600, lng: -43.9300, regiao: "Norte" },
-    { nome: "Planalto", lat: -19.8500, lng: -43.9300, regiao: "Norte" },
-    { nome: "Venda Nova", lat: -19.8200, lng: -43.9600, regiao: "Norte" },
-    { nome: "Cachoeirinha", lat: -19.8600, lng: -43.9300, regiao: "Norte" },
-    { nome: "Floramar", lat: -19.8400, lng: -43.9400, regiao: "Norte" },
-
-    // Barreiro (Sul/Sudoeste)
-    { nome: "Barreiro", lat: -19.9800, lng: -43.9900, regiao: "Barreiro" },
-    { nome: "Tirol", lat: -19.9700, lng: -43.9800, regiao: "Barreiro" },
-    { nome: "Bonsucesso", lat: -19.9800, lng: -43.9700, regiao: "Barreiro" },
-    { nome: "Miramar", lat: -19.9900, lng: -43.9800, regiao: "Barreiro" },
-
-    // Venda Nova
-    { nome: "Venda Nova", lat: -19.8200, lng: -43.9600, regiao: "Venda Nova" },
-    { nome: "Mantiqueira", lat: -19.8100, lng: -43.9500, regiao: "Venda Nova" },
-    { nome: "Rio Branco", lat: -19.8300, lng: -43.9500, regiao: "Venda Nova" },
-
-    // ---- VILA DA SERRA (Nova Lima) ----
-    { nome: "Vila da Serra", lat: -19.9850, lng: -43.9500, regiao: "Nova Lima" },
-    { nome: "Vila da Serra - Alphaville", lat: -19.9900, lng: -43.9450, regiao: "Nova Lima" },
-    { nome: "Vila da Serra - Belvedere", lat: -19.9820, lng: -43.9520, regiao: "Nova Lima" },
-    { nome: "Vila da Serra - Vale dos Cristais", lat: -19.9920, lng: -43.9480, regiao: "Nova Lima" },
-    { nome: "Vila da Serra - Bosque", lat: -19.9870, lng: -43.9450, regiao: "Nova Lima" },
+  const LIMITES_BH = {
+    // Caixa aproximada: BH + Vila da Serra (Nova Lima)
+    minLat: -20.05, maxLat: -19.75,
+    minLng: -44.10, maxLng: -43.80
+  };
+  
+  // Bairros que NÃO atendemos (ex: Contagem) - bloqueia
+  // (Como não temos polígonos, usamos validação por texto do Nominatim)
+  const BAIRROS_BLOQUEADOS = [
+    // Contagem (exemplos)
+    'contagem', 'eldorado', 'cidade industrial', 'ressaca', 'água branca',
+    'santa luzia', 'ibitir', 'cabo verde', 'cinquenta', 'kennedy',
+    // Adicione mais se necessário
   ];
+
+  // ============================================================
+  // ESTADO
+  // ============================================================
+  const selecionados = new Map(); // nome -> {lat, lng, marker}
+  const listaEl = document.getElementById('lista-nomes');
+  const btnConfirmar = document.getElementById('btn-confirmar');
+  const toastEl = document.getElementById('toast');
 
   // ============================================================
   // MAPA
   // ============================================================
   const map = L.map('map', {
     zoomControl: false,
-    attributionControl: false
-  }).setView([-19.9400, -43.9450], 11); // Foco em BH + Vila da Serra
+    attributionControl: false,
+    doubleClickZoom: false  // IMPORTANTE: desativa o zoom por duplo clique
+  }).setView([-19.9400, -43.9450], 12);
 
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19
   }).addTo(map);
 
-  // Zoom no canto inferior direito (melhor para celular)
   L.control.zoom({ position: 'bottomright' }).addTo(map);
 
   // ============================================================
-  // ÍCONES
+  // TOAST (aviso rápido)
   // ============================================================
-  function criarIcone(cor) {
-    const corHex = cor === 'verde' ? '#16a34a' : '#ef4444';
-    const corBorda = cor === 'verde' ? '#14532d' : '#991b1b';
-    return L.divIcon({
-      className: 'pino-icon',
-      html: `<svg width="28" height="38" viewBox="0 0 28 38" xmlns="http://www.w3.org/2000/svg">
-        <path d="M14 0C6.27 0 0 6.27 0 14c0 10.5 14 24 14 24s14-13.5 14-24C28 6.27 21.73 0 14 0z" fill="${corHex}" stroke="${corBorda}" stroke-width="1.5"/>
-        <circle cx="14" cy="14" r="5" fill="#fff"/>
-      </svg>`,
-      iconSize: [28, 38],
-      iconAnchor: [14, 38],
-      popupAnchor: [0, -34]
-    });
+  let toastTimer;
+  function toast(msg, duracao = 2200) {
+    toastEl.textContent = msg;
+    toastEl.classList.add('visivel');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toastEl.classList.remove('visivel'), duracao);
   }
 
-  const iconeVermelho = criarIcone('vermelho');
-  const iconeVerde = criarIcone('verde');
+  // ============================================================
+  // ÍCONE do marcador após seleção
+  // ============================================================
+  function criarIconeSelecionado() {
+    return L.divIcon({
+      className: 'pino-selecionado',
+      html: `<svg width="30" height="40" viewBox="0 0 30 40" xmlns="http://www.w3.org/2000/svg">
+        <path d="M15 0C6.72 0 0 6.72 0 15c0 11 15 25 15 25s15-14 15-25C30 6.72 23.28 0 15 0z" fill="#16a34a" stroke="#14532d" stroke-width="1.5"/>
+        <circle cx="15" cy="15" r="5.5" fill="#fff"/>
+      </svg>`,
+      iconSize: [30, 40],
+      iconAnchor: [15, 40]
+    });
+  }
+  const iconeVerde = criarIconeSelecionado();
 
   // ============================================================
-  // ESTADO
+  // GEOCODING REVERSO (Nominatim)
   // ============================================================
-  const selecionados = new Set(); // nomes dos bairros
-  const marcadores = {}; // nome -> marcador
+  let ultimaRequisicao = 0;
+  async function obterBairro(lat, lng) {
+    // Respeita rate limit de 1 req/seg
+    const agora = Date.now();
+    const espera = Math.max(0, 1100 - (agora - ultimaRequisicao));
+    if (espera > 0) await new Promise(r => setTimeout(r, espera));
+    ultimaRequisicao = Date.now();
 
-  const listaEl = document.getElementById('lista-nomes');
-  const btnConfirmar = document.getElementById('btn-confirmar');
+    const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}&zoom=16&addressdetails=1&accept-language=pt-BR`;
+    
+    try {
+      const resp = await fetch(url, {
+        headers: { 'Accept': 'application/json' }
+      });
+      if (!resp.ok) throw new Error('Falha na resposta');
+      const data = await resp.json();
+      return data;
+    } catch (err) {
+      console.error('Erro Nominatim:', err);
+      return null;
+    }
+  }
 
   // ============================================================
-  // RENDERIZAÇÃO DO RODAPÉ
+  // DUPLO CLIQUE / DUPLO TOQUE
+  // ============================================================
+  // Leaflet já tem evento 'dblclick' que funciona em mobile como duplo toque.
+  // Mas por segurança, também tratamos com nosso próprio detector de toques.
+  
+  let ultimoToque = { tempo: 0, lat: 0, lng: 0 };
+  
+  map.on('click', async (e) => {
+    const agora = Date.now();
+    const dt = agora - ultimoToque.tempo;
+    const dist = map.distance(
+      [e.latlng.lat, e.latlng.lng],
+      [ultimoToque.lat, ultimoToque.lng]
+    );
+    
+    // Considera duplo toque se < 400ms e < 30m de distância
+    if (dt < 400 && dist < 30) {
+      ultimoToque.tempo = 0;
+      await processarToque(e.latlng);
+    } else {
+      ultimoToque = { tempo: agora, lat: e.latlng.lat, lng: e.latlng.lng };
+    }
+  });
+
+  // Fallback: também escuta o dblclick nativo do Leaflet
+  map.on('dblclick', async (e) => {
+    await processarToque(e.latlng);
+  });
+
+  // ============================================================
+  // PROCESSA O TOQUE (identifica o bairro)
+  // ============================================================
+  async function processarToque(latlng) {
+    const { lat, lng } = latlng;
+
+    // Valida se está dentro da área atendida
+    if (lat < LIMITES_BH.minLat || lat > LIMITES_BH.maxLat ||
+        lng < LIMITES_BH.minLng || lng > LIMITES_BH.maxLng) {
+      toast('Fora da área atendida (BH + Vila da Serra)');
+      return;
+    }
+
+    toast('Identificando bairro...', 5000);
+
+    const data = await obterBairro(lat, lng);
+    
+    if (!data || !data.address) {
+      toast('Não consegui identificar o bairro aqui');
+      return;
+    }
+
+    const end = data.address;
+    // Tenta pegar o bairro (suburb ou neighbourhood)
+    const bairro = end.suburb || end.neighbourhood || end.city_district || end.town || end.village;
+    const cidade = end.city || end.town || end.municipality || '';
+
+    if (!bairro) {
+      toast('Não consegui identificar o bairro aqui');
+      return;
+    }
+
+    // Verifica se é de Contagem ou outra cidade fora
+    const cidadeLower = cidade.toLowerCase();
+    if (cidadeLower.includes('contagem') || 
+        cidadeLower.includes('santa luzia') ||
+        cidadeLower.includes('ribeirão das neves') ||
+        cidadeLower.includes('betim')) {
+      toast(`Fora da área: ${bairro} (${cidade})`);
+      return;
+    }
+
+    // Verifica bairros bloqueados
+    const bairroLower = bairro.toLowerCase();
+    if (BAIRROS_BLOQUEADOS.some(b => bairroLower.includes(b))) {
+      toast(`Bairro não atendido: ${bairro}`);
+      return;
+    }
+
+    // Nome final: "Bairro (Cidade)" se for Nova Lima, senão só "Bairro"
+    const nomeFinal = cidadeLower.includes('nova lima')
+      ? `${bairro} (Nova Lima)`
+      : bairro;
+
+    // Já selecionado?
+    if (selecionados.has(nomeFinal)) {
+      toast(`"${nomeFinal}" já está na lista`);
+      return;
+    }
+
+    // Adiciona marcador verde
+    const marker = L.marker([lat, lng], {
+      icon: iconeVerde,
+      interactive: false
+    }).addTo(map);
+
+    selecionados.set(nomeFinal, { lat, lng, marker });
+    atualizarRodape();
+    toast(`✓ ${nomeFinal} adicionado`);
+  }
+
+  // ============================================================
+  // RODAPÉ
   // ============================================================
   function atualizarRodape() {
     if (selecionados.size === 0) {
@@ -269,79 +446,67 @@
     }
 
     listaEl.innerHTML = '';
-    selecionados.forEach(nome => {
+    selecionados.forEach((dados, nome) => {
       const tag = document.createElement('span');
       tag.className = 'tag';
-      tag.innerHTML = `${nome} <span class="x" data-nome="${nome}">×</span>`;
+      
+      const texto = document.createElement('span');
+      texto.textContent = nome;
+      
+      const x = document.createElement('span');
+      x.className = 'x';
+      x.textContent = '×';
+      x.setAttribute('role', 'button');
+      x.setAttribute('aria-label', 'Remover ' + nome);
+      x.addEventListener('click', () => removerBairro(nome));
+      
+      tag.appendChild(texto);
+      tag.appendChild(x);
       listaEl.appendChild(tag);
     });
 
     btnConfirmar.disabled = false;
-
-    // Delegação de clique para remover
-    listaEl.querySelectorAll('.x').forEach(x => {
-      x.addEventListener('click', (e) => {
-        const nome = e.target.dataset.nome;
-        removerBairro(nome);
-      });
-    });
-  }
-
-  // ============================================================
-  // AÇÕES
-  // ============================================================
-  function adicionarBairro(nome) {
-    if (selecionados.has(nome)) return;
-    selecionados.add(nome);
-    marcadores[nome].setIcon(iconeVerde);
-    atualizarRodape();
   }
 
   function removerBairro(nome) {
-    if (!selecionados.has(nome)) return;
+    const dados = selecionados.get(nome);
+    if (!dados) return;
+    map.removeLayer(dados.marker);
     selecionados.delete(nome);
-    marcadores[nome].setIcon(iconeVermelho);
     atualizarRodape();
-  }
-
-  function toggleBairro(nome) {
-    if (selecionados.has(nome)) removerBairro(nome);
-    else adicionarBairro(nome);
+    toast(`"${nome}" removido`);
   }
 
   // ============================================================
-  // CRIA OS MARCADORES
+  // MODAL
   // ============================================================
-  bairros.forEach(b => {
-    const marker = L.marker([b.lat, b.lng], {
-      icon: iconeVermelho,
-      title: b.nome
-    }).addTo(map);
+  const overlay = document.getElementById('modal-overlay');
+  const btnEntendi = document.getElementById('btn-entendi');
+  const btnInfo = document.getElementById('btn-info');
 
-    // Tooltip com nome (aparece no hover, útil no desktop)
-    marker.bindTooltip(b.nome, { direction: 'top', offset: [0, -34] });
+  function abrirModal() { overlay.classList.add('ativo'); }
+  function fecharModal() { overlay.classList.remove('ativo'); }
 
-    marker.on('click', () => toggleBairro(b.nome));
+  btnEntendi.addEventListener('click', fecharModal);
+  btnInfo.addEventListener('click', abrirModal);
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) fecharModal();
+  });
 
-    marcadores[b.nome] = marker;
+  // Abre ao carregar (primeira vez)
+  window.addEventListener('load', () => {
+    setTimeout(abrirModal, 300);
   });
 
   // ============================================================
-  // BOTÃO CONFIRMAR (ainda sem envio real)
+  // CONFIRMAR
   // ============================================================
   btnConfirmar.addEventListener('click', () => {
-    const lista = Array.from(selecionados);
+    const lista = Array.from(selecionados.keys());
     if (lista.length === 0) return;
-
-    // Resumo por enquanto — depois trocamos por envio real
     const resumo = `Bairros escolhidos:\n\n• ${lista.join('\n• ')}\n\n(Total: ${lista.length})`;
     alert(resumo + '\n\n👉 Próximo passo: integrar com WhatsApp/planilha.');
   });
-
-  // ============================================================
-  // AJUSTE INICIAL
-  // ============================================================
-  atualizarRodape();
 </script>
 </body>
 </html>
