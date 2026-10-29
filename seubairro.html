@@ -5,21 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <title>Escolha qual será seu bairro</title>
 
-<!-- ============================================================
-     🔴 OPEN GRAPH — PREVIEW NO WHATSAPP
-     Substitua a URL abaixo pela imagem que você criou e hospedou
-     Tamanho recomendado: 1200 x 630 px
-     ============================================================ -->
+<!-- OPEN GRAPH -->
 <meta property="og:type" content="website">
 <meta property="og:title" content="Escolha qual será seu bairro">
 <meta property="og:description" content="Selecione os bairros de seu interesse e encontre seu imóvel ideal.">
-<!-- 🔴 COLE AQUI a URL pública da sua imagem (Imgur, GitHub, etc) -->
+<!-- 🔴 COLE AQUI a URL pública da sua imagem -->
 <meta property="og:image" content="https://i.imgur.com/COLE_SUA_IMAGEM_AQUI.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:type" content="image/png">
-
-<!-- Twitter Card (fallback) -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Escolha qual será seu bairro">
 <meta name="twitter:description" content="Selecione os bairros de seu interesse e encontre seu imóvel ideal.">
@@ -203,24 +197,82 @@
   }
   .secao .obrig { color: #ef4444; }
 
-  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  /* ============ CHIPS — CORRIGIDO ============
+     O check agora usa ::after com posição absoluta
+     (não desloca o texto quando marcado) */
+  .chips {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    align-items: stretch;
+  }
   .chip {
+    position: relative;
     padding: 10px 14px; border-radius: 10px;
     background: #f3f4f6; color: #374151;
     border: 1.5px solid transparent;
     font-size: 14px; font-weight: 600;
     cursor: pointer; user-select: none;
-    transition: all .12s;
-    display: inline-flex; align-items: center; gap: 6px;
-    line-height: 1.2;
+    transition: background .12s, color .12s, border-color .12s;
+    display: inline-flex; align-items: center; justify-content: center;
+    line-height: 1.2; text-align: center;
   }
-  .chip:active { transform: scale(.97); }
+  .chip:active { background: #e5e7eb; }
   .chip.marcado {
     background: #ecfdf5; color: #065f46;
     border-color: #10b981;
+    /* check via ::after fica no canto, não desloca texto */
+    padding-right: 28px;
   }
-  .chip.marcado::before {
-    content: "✓"; font-weight: bold; font-size: 13px;
+  .chip.marcado::after {
+    content: "✓";
+    position: absolute;
+    right: 8px; top: 50%;
+    transform: translateY(-50%);
+    font-weight: bold; font-size: 13px;
+    color: #10b981;
+  }
+
+  /* GRUPO QUARTOS — todos em uma linha */
+  .chips[data-grupo="quartos"] { flex-wrap: nowrap; gap: 6px; }
+  .chips[data-grupo="quartos"] .chip {
+    flex: 1; padding: 10px 6px; font-size: 13px;
+  }
+  .chips[data-grupo="quartos"] .chip.marcado {
+    padding-right: 6px; padding-left: 18px;
+  }
+  .chips[data-grupo="quartos"] .chip.marcado::after {
+    right: auto; left: 4px;
+  }
+
+  /* GRUPO CONDOMÍNIO — máx 2 linhas, chips proporcionais */
+  .chips[data-grupo="condominio"] .chip {
+    flex: 1 1 calc(50% - 4px);
+    min-width: 0;
+  }
+
+  /* GRUPO PAGAMENTO — máx 2 linhas, chips proporcionais */
+  .chips[data-grupo="pagamento"] .chip {
+    flex: 1 1 calc(50% - 4px);
+    min-width: 0;
+    padding: 12px 10px;
+    font-size: 13px;
+  }
+
+  /* GRUPO TIPOS — não muda layout ao marcar */
+  .chips[data-grupo="tipos"] .chip {
+    flex: 1 1 calc(50% - 4px);
+    min-width: 0;
+  }
+
+  /* GRUPO VAGAS — compacto */
+  .chips[data-grupo="vagas"] .chip {
+    flex: 1;
+    padding: 10px 8px; font-size: 13px;
+  }
+  .chips[data-grupo="vagas"] .chip.marcado {
+    padding-right: 8px; padding-left: 20px;
+  }
+  .chips[data-grupo="vagas"] .chip.marcado::after {
+    right: auto; left: 6px;
   }
 
   .campo-texto {
@@ -268,14 +320,13 @@
 <body>
 
 <div id="app">
-  <!-- ============ PÁGINA 1 - MAPA ============ -->
+  <!-- PÁGINA 1 - MAPA -->
   <div id="pagina-mapa">
     <div id="map-wrap">
       <div id="map"></div>
       <button id="btn-info" aria-label="Instruções">i</button>
       <div id="toast"></div>
     </div>
-
     <div id="footer-mapa">
       <h3>Bairros escolhidos</h3>
       <div id="lista-nomes"><span class="vazio">Nenhum bairro selecionado ainda.</span></div>
@@ -283,7 +334,7 @@
     </div>
   </div>
 
-  <!-- ============ PÁGINA 2 - FORMULÁRIO ============ -->
+  <!-- PÁGINA 2 - FORMULÁRIO -->
   <div id="pagina-form" class="oculta">
     <div id="form-header">
       <button id="btn-voltar" aria-label="Voltar">←</button>
@@ -368,7 +419,7 @@
         </div>
       </div>
 
-      <!-- 8. Condomínio — AJUSTADO -->
+      <!-- 8. Condomínio -->
       <div class="secao">
         <h3>Valor médio aceito de condomínio <span class="obrig">*</span></h3>
         <p class="dica">Quanto menor o valor, mais limitada é a busca.</p>
@@ -389,7 +440,7 @@
         <div class="erro-msg" data-erro="valor">Digite o valor máximo.</div>
       </div>
 
-      <!-- 10. Forma de pagamento — AJUSTADO (sem Tanto faz) -->
+      <!-- 10. Forma de pagamento -->
       <div class="secao">
         <h3>Forma de pagamento <span class="obrig">*</span></h3>
         <div class="chips" data-grupo="pagamento" data-multiplo="false">
@@ -417,7 +468,7 @@
   </div>
 </div>
 
-<!-- ============ MODAL DE INSTRUÇÕES ============ -->
+<!-- MODAL INSTRUÇÕES -->
 <div id="modal-overlay" class="modal-overlay">
   <div class="modal">
     <h2>Como escolher seus bairros</h2>
@@ -441,7 +492,7 @@
   </div>
 </div>
 
-<!-- ============ MODAL DE AVISO (< 3 bairros) ============ -->
+<!-- MODAL AVISO -->
 <div id="modal-aviso" class="modal-overlay">
   <div class="modal">
     <h2 class="modal-aviso-titulo" id="aviso-titulo">Você escolheu 1 bairro</h2>
@@ -457,9 +508,6 @@
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-  // ============================================================
-  // CONFIG
-  // ============================================================
   const LIMITES_BH = { minLat: -20.05, maxLat: -19.75, minLng: -44.10, maxLng: -43.80 };
   const BAIRROS_BLOQUEADOS = [
     'contagem', 'eldorado', 'cidade industrial', 'ressaca', 'água branca',
@@ -475,13 +523,10 @@
   const paginaMapa = document.getElementById('pagina-mapa');
   const paginaForm = document.getElementById('pagina-form');
 
-  // ============================================================
   // MAPA
-  // ============================================================
   const map = L.map('map', {
     zoomControl: false, attributionControl: false, doubleClickZoom: false
   }).setView([-19.9400, -43.9450], 12);
-
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
   L.control.zoom({ position: 'bottomright' }).addTo(map);
 
@@ -505,30 +550,20 @@
   }
   const iconeVerde = criarIconeSelecionado();
 
-  // ============================================================
-  // GEOCODING REVERSO
-  // ============================================================
   let ultimaRequisicao = 0;
   async function obterBairro(lat, lng) {
     const agora = Date.now();
     const espera = Math.max(0, 1100 - (agora - ultimaRequisicao));
     if (espera > 0) await new Promise(r => setTimeout(r, espera));
     ultimaRequisicao = Date.now();
-
     const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}&zoom=16&addressdetails=1&accept-language=pt-BR`;
     try {
       const resp = await fetch(url, { headers: { 'Accept': 'application/json' } });
       if (!resp.ok) throw new Error('Falha');
       return await resp.json();
-    } catch (err) {
-      console.error(err);
-      return null;
-    }
+    } catch (err) { console.error(err); return null; }
   }
 
-  // ============================================================
-  // DUPLO TOQUE
-  // ============================================================
   let ultimoToque = { tempo: 0, lat: 0, lng: 0 };
   map.on('click', async (e) => {
     const agora = Date.now();
@@ -547,47 +582,36 @@
     const { lat, lng } = latlng;
     if (lat < LIMITES_BH.minLat || lat > LIMITES_BH.maxLat ||
         lng < LIMITES_BH.minLng || lng > LIMITES_BH.maxLng) {
-      toast('Fora da área atendida (BH + Vila da Serra)');
-      return;
+      toast('Fora da área atendida (BH + Vila da Serra)'); return;
     }
     toast('Identificando bairro...', 5000);
     const data = await obterBairro(lat, lng);
     if (!data || !data.address) { toast('Não consegui identificar o bairro aqui'); return; }
-
     const end = data.address;
     const bairro = end.suburb || end.neighbourhood || end.city_district || end.town || end.village;
     const cidade = end.city || end.town || end.municipality || '';
     if (!bairro) { toast('Não consegui identificar o bairro aqui'); return; }
-
     const cidadeLower = cidade.toLowerCase();
     if (cidadeLower.includes('contagem') || cidadeLower.includes('santa luzia') ||
         cidadeLower.includes('ribeirão das neves') || cidadeLower.includes('betim')) {
-      toast(`Fora da área: ${bairro} (${cidade})`);
-      return;
+      toast(`Fora da área: ${bairro} (${cidade})`); return;
     }
     const bairroLower = bairro.toLowerCase();
     if (BAIRROS_BLOQUEADOS.some(b => bairroLower.includes(b))) {
-      toast(`Bairro não atendido: ${bairro}`);
-      return;
+      toast(`Bairro não atendido: ${bairro}`); return;
     }
-
     const nomeFinal = cidadeLower.includes('nova lima') ? `${bairro} (Nova Lima)` : bairro;
     if (selecionados.has(nomeFinal)) { toast(`"${nomeFinal}" já está na lista`); return; }
-
     const marker = L.marker([lat, lng], { icon: iconeVerde, interactive: false }).addTo(map);
     selecionados.set(nomeFinal, { lat, lng, marker });
     atualizarRodape();
     toast(`✓ ${nomeFinal} adicionado`);
   }
 
-  // ============================================================
-  // RODAPÉ
-  // ============================================================
   function atualizarRodape() {
     if (selecionados.size === 0) {
       listaEl.innerHTML = '<span class="vazio">Nenhum bairro selecionado ainda.</span>';
-      btnContinuar.disabled = true;
-      return;
+      btnContinuar.disabled = true; return;
     }
     listaEl.innerHTML = '';
     selecionados.forEach((dados, nome) => {
@@ -614,13 +638,10 @@
     toast(`"${nome}" removido`);
   }
 
-  // ============================================================
-  // MODAL INSTRUÇÕES
-  // ============================================================
+  // MODAIS
   const overlayInstr = document.getElementById('modal-overlay');
   const btnEntendi = document.getElementById('btn-entendi');
   const btnInfo = document.getElementById('btn-info');
-
   function abrirInstr() { overlayInstr.classList.add('ativo'); }
   function fecharInstr() { overlayInstr.classList.remove('ativo'); }
   btnEntendi.addEventListener('click', fecharInstr);
@@ -628,58 +649,43 @@
   overlayInstr.addEventListener('click', (e) => { if (e.target === overlayInstr) fecharInstr(); });
   window.addEventListener('load', () => setTimeout(abrirInstr, 300));
 
-  // ============================================================
-  // MODAL AVISO
-  // ============================================================
   const overlayAviso = document.getElementById('modal-aviso');
   const avisoTitulo = document.getElementById('aviso-titulo');
   const btnAvisoContinuar = document.getElementById('btn-aviso-continuar');
   const btnAvisoMais = document.getElementById('btn-aviso-mais');
-
   function abrirAviso(qtd) {
     avisoTitulo.textContent = `Você escolheu ${qtd} ${qtd === 1 ? 'bairro' : 'bairros'}`;
     overlayAviso.classList.add('ativo');
   }
   function fecharAviso() { overlayAviso.classList.remove('ativo'); }
-
-  btnAvisoContinuar.addEventListener('click', () => {
-    fecharAviso();
-    irParaFormulario();
-  });
+  btnAvisoContinuar.addEventListener('click', () => { fecharAviso(); irParaFormulario(); });
   btnAvisoMais.addEventListener('click', fecharAviso);
   overlayAviso.addEventListener('click', (e) => { if (e.target === overlayAviso) fecharAviso(); });
 
-  // ============================================================
   // NAVEGAÇÃO
-  // ============================================================
   btnContinuar.addEventListener('click', () => {
     const qtd = selecionados.size;
     if (qtd === 0) return;
     if (qtd < 3) abrirAviso(qtd);
     else irParaFormulario();
   });
-
   function irParaFormulario() {
     paginaMapa.classList.add('oculta');
     paginaForm.classList.remove('oculta');
     document.getElementById('form-body').scrollTop = 0;
   }
-
   document.getElementById('btn-voltar').addEventListener('click', () => {
     paginaForm.classList.add('oculta');
     paginaMapa.classList.remove('oculta');
   });
 
-  // ============================================================
   // CHIPS
-  // ============================================================
   document.querySelectorAll('.chips').forEach(grupo => {
     const multiplo = grupo.dataset.multiplo === 'true';
     grupo.querySelectorAll('.chip').forEach(chip => {
       chip.addEventListener('click', () => {
-        if (multiplo) {
-          chip.classList.toggle('marcado');
-        } else {
+        if (multiplo) chip.classList.toggle('marcado');
+        else {
           grupo.querySelectorAll('.chip').forEach(c => c.classList.remove('marcado'));
           chip.classList.add('marcado');
         }
@@ -690,33 +696,26 @@
     });
   });
 
-  // ============================================================
   // METRAGEM
-  // ============================================================
   const inputMetragem = document.getElementById('input-metragem');
   inputMetragem.addEventListener('input', () => {
     inputMetragem.value = inputMetragem.value.replace(/\D/g, '');
     document.querySelector('[data-erro="metragem"]').classList.remove('visivel');
   });
 
-  // ============================================================
-  // VALOR (formatação + extenso)
-  // ============================================================
+  // VALOR + EXTENSO
   const inputValor = document.getElementById('input-valor');
   const valorExtenso = document.getElementById('valor-extenso');
-
   function formatarReais(numero) {
     if (!numero) return '';
     return numero.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', minimumFractionDigits: 0, maximumFractionDigits: 0 });
   }
-
   function numeroPorExtenso(numero) {
     if (!numero || numero === 0) return '';
     const unidades = ['', 'um', 'dois', 'três', 'quatro', 'cinco', 'seis', 'sete', 'oito', 'nove'];
     const especiais = ['dez', 'onze', 'doze', 'treze', 'quatorze', 'quinze', 'dezesseis', 'dezessete', 'dezoito', 'dezenove'];
     const dezenas = ['', '', 'vinte', 'trinta', 'quarenta', 'cinquenta', 'sessenta', 'setenta', 'oitenta', 'noventa'];
     const centenas = ['', 'cento', 'duzentos', 'trezentos', 'quatrocentos', 'quinhentos', 'seiscentos', 'setecentos', 'oitocentos', 'novecentos'];
-
     function grupo3(n) {
       let s = '';
       const c = Math.floor(n / 100);
@@ -735,37 +734,27 @@
       }
       return s;
     }
-
     const milhoes = Math.floor(numero / 1000000);
     const milhares = Math.floor((numero % 1000000) / 1000);
     const resto = numero % 1000;
-
     const partes = [];
     if (milhoes > 0) partes.push(grupo3(milhoes) + (milhoes === 1 ? ' milhão' : ' milhões'));
     if (milhares > 0) partes.push(grupo3(milhares) + (milhares === 1 ? ' mil' : ' mil'));
     if (resto > 0) partes.push(grupo3(resto));
-
     if (partes.length === 0) return '';
     let texto = partes.join(' e ');
     return texto + (numero === 1 ? ' real' : ' reais');
   }
-
   inputValor.addEventListener('input', (e) => {
     let v = e.target.value.replace(/\D/g, '');
-    if (!v) {
-      inputValor.value = '';
-      valorExtenso.textContent = '';
-      return;
-    }
+    if (!v) { inputValor.value = ''; valorExtenso.textContent = ''; return; }
     const numero = parseInt(v, 10);
     inputValor.value = formatarReais(numero);
     valorExtenso.textContent = numeroPorExtenso(numero);
     document.querySelector('[data-erro="valor"]').classList.remove('visivel');
   });
 
-  // ============================================================
-  // VALIDAÇÃO E ENVIO
-  // ============================================================
+  // VALIDAÇÃO
   function obterSelecaoGrupo(nome) {
     const grupo = document.querySelector(`[data-grupo="${nome}"]`);
     if (!grupo) return null;
@@ -773,41 +762,30 @@
     if (grupo.dataset.multiplo === 'true') return marcados;
     return marcados[0] || null;
   }
-
   function validarFormulario() {
     const erros = [];
-
     const tipos = obterSelecaoGrupo('tipos');
     if (!tipos || tipos.length === 0) {
       erros.push('tipos');
       document.querySelector('[data-erro="tipos"]').classList.add('visivel');
     }
-
     const metragem = inputMetragem.value.trim();
     if (!metragem || parseInt(metragem) === 0) {
       erros.push('metragem');
       document.querySelector('[data-erro="metragem"]').classList.add('visivel');
       inputMetragem.classList.add('erro');
-    } else {
-      inputMetragem.classList.remove('erro');
-    }
-
+    } else { inputMetragem.classList.remove('erro'); }
     const valor = inputValor.value.trim();
     if (!valor || valor === 'R$ 0') {
       erros.push('valor');
       document.querySelector('[data-erro="valor"]').classList.add('visivel');
       inputValor.classList.add('erro');
-    } else {
-      inputValor.classList.remove('erro');
-    }
-
-    // NOVO: valida pagamento (obrigatório, sem padrão)
+    } else { inputValor.classList.remove('erro'); }
     const pagamento = obterSelecaoGrupo('pagamento');
     if (!pagamento) {
       erros.push('pagamento');
       document.querySelector('[data-erro="pagamento"]').classList.add('visivel');
     }
-
     return erros;
   }
 
@@ -818,7 +796,6 @@
       if (primeiro) primeiro.scrollIntoView({ behavior: 'smooth', block: 'center' });
       return;
     }
-
     preferencias = {
       bairros: Array.from(selecionados.keys()),
       tipos: obterSelecaoGrupo('tipos'),
@@ -833,7 +810,6 @@
       formaPagamento: obterSelecaoGrupo('pagamento'),
       observacoes: document.getElementById('input-obs').value.trim()
     };
-
     const resumo = JSON.stringify(preferencias, null, 2);
     alert('Preferências coletadas:\n\n' + resumo + '\n\n👉 Próximo passo: integrar com WhatsApp/planilha.');
     console.log('Preferências completas:', preferencias);
