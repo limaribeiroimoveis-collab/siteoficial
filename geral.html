@@ -571,7 +571,7 @@
         <button class="filter-btn active" data-filter="todos" onclick="setFiltro('todos', this)">Todos <span class="filter-count" id="cnt-todos">0</span></button>
         <button class="filter-btn" data-filter="pendente" onclick="setFiltro('pendente', this)">Ativos <span class="filter-count" id="cnt-pendente">0</span></button>
         <button class="filter-btn" data-filter="vendido" onclick="setFiltro('vendido', this)">Vendidos <span class="filter-count" id="cnt-vendido">0</span></button>
-        <button class="filter-btn" data-filter="sem-codigo" onclick="setFiltro('sem-codigo', this)">Sem código <span class="filter-count" id="cnt-sem-codigo">0</span></button>
+        <button class="filter-btn" data-filter="corrigir" onclick="setFiltro('corrigir', this)">Corrigir <span class="filter-count" id="cnt-corrigir">0</span></button>
       </div>
       
       <div class="cliente-filter-wrap">
@@ -782,10 +782,10 @@
   <div class="admin-panel-inner">
     <input type="hidden" id="editingId">
 
-    <!-- Cliente dono (Input Híbrido com Datalist) -->
+    <!-- Cliente dono (Input Híbrido com Datalist) - 100% OPCIONAL -->
     <div style="margin-bottom: 10px;">
-      <label>Cliente dono <span style="font-weight:500; color:var(--muted); font-size:.7rem;">(opcional — digite para buscar)</span></label>
-      <input type="text" id="adCliente" list="listaClientesDatalist" placeholder="Nome ou telefone..." autocomplete="off">
+      <label>Cliente dono <span style="font-weight:500; color:var(--muted); font-size:.7rem;">(opcional — pode deixar em branco)</span></label>
+      <input type="text" id="adCliente" list="listaClientesDatalist" placeholder="Nome ou telefone..." autocomplete="off" oninput="validarBotaoSalvar()">
       <datalist id="listaClientesDatalist">
         <!-- Preenchido via JS -->
       </datalist>
@@ -793,7 +793,7 @@
 
     <div class="form-row-link-price">
       <div><label>Link do anúncio</label><input type="url" id="adLink" onblur="onLinkBlur()" oninput="onLinkImovelChanged()" placeholder="https://..."></div>
-      <div><label>Preço</label><input type="text" id="adPreco" inputmode="numeric" oninput="mascaraPreco(this)"></div>
+      <div><label>Preço</label><input type="text" id="adPreco" inputmode="numeric" oninput="mascaraPreco(this); validarBotaoSalvar()"></div>
       <div><label>Condomínio</label><input type="text" id="adCondominio" inputmode="numeric" oninput="mascaraPreco(this)"></div>
       <div><label>IPTU</label><input type="text" id="adIPTU" inputmode="numeric" oninput="mascaraPreco(this)"></div>
       <div>
@@ -805,17 +805,17 @@
     </div>
 
     <div class="form-row-address">
-      <div><label>Rua <span class="req">*</span></label><input type="text" id="adRua"></div>
-      <div><label>Número <span class="req">*</span></label><input type="text" id="adNumero"></div>
+      <div><label>Rua <span class="req">*</span></label><input type="text" id="adRua" oninput="validarBotaoSalvar()"></div>
+      <div><label>Número <span class="req">*</span></label><input type="text" id="adNumero" oninput="validarBotaoSalvar()"></div>
       <div><label>Bloco</label><input type="text" id="adBloco" maxlength="10" oninput="onBlocoInput(this)"></div>
       <div><label>Apartamento <span class="req" id="reqApto">*</span></label><input type="text" id="adApto" maxlength="10" oninput="onAptoInput(this)"></div>
     </div>
 
     <div class="form-row-bairro-tipo">
-      <div><label>Bairro <span class="req">*</span></label><input type="text" id="adBairro"></div>
+      <div><label>Bairro <span class="req">*</span></label><input type="text" id="adBairro" oninput="validarBotaoSalvar()"></div>
       <div>
         <label>Suítes <span class="req">*</span></label>
-        <select id="adSuites">
+        <select id="adSuites" onchange="validarBotaoSalvar()">
           <option value="">—</option>
           <option value="0">0</option>
           <option value="1">1</option>
@@ -827,7 +827,7 @@
       </div>
       <div>
         <label>Vaga <span class="req">*</span></label>
-        <select id="adVaga">
+        <select id="adVaga" onchange="validarBotaoSalvar()">
           <option value="">—</option>
           <option value="Presa">Presa</option>
           <option value="Livre">Livre</option>
@@ -836,7 +836,7 @@
       </div>
       <div>
         <label>Elevador <span class="req">*</span></label>
-        <select id="adElevador">
+        <select id="adElevador" onchange="validarBotaoSalvar()">
           <option value="">—</option>
           <option value="Sim">Sim</option>
           <option value="Não">Não</option>
@@ -869,7 +869,7 @@
             <span class="lock-ico">🔒</span>
             <span id="descTipoTexto" class="empty-txt">Selecione o tipo acima</span>
           </div>
-          <textarea id="adDescricao"></textarea>
+          <textarea id="adDescricao" oninput="validarBotaoSalvar()"></textarea>
         </div>
       </div>
     </div>
@@ -890,7 +890,7 @@
               <span class="valor-mini" id="chaveValorBloco">—</span>
             </div>
           </div>
-          <textarea id="adChaveComplemento" placeholder="Onde pegar a chave..."></textarea>
+          <textarea id="adChaveComplemento" placeholder="Onde pegar a chave..." oninput="validarBotaoSalvar()"></textarea>
         </div>
       </div>
       <div>
@@ -1194,13 +1194,30 @@ function atualizarBadgesClientes(){
 }
 
 /* FILTROS E RENDER */
+function temInformacaoFaltando(im) {
+  if (isVendido(im)) return false;
+  const faltas = [];
+  if (!String(im.rua || '').trim()) faltas.push('Rua');
+  if (!String(im.numero || '').trim()) faltas.push('Número');
+  if (!String(im.bairro || '').trim()) faltas.push('Bairro');
+  if (!String(im.preco || '').trim()) faltas.push('Preço');
+  if (!String(im.imagem || '').trim()) faltas.push('Imagem');
+  const info = extrairAptoBlocoChave(im.chaveTexto || '');
+  if (!info.apto && !info.bloco && !String(im.chaveTexto||'').trim()) faltas.push('Chave');
+  return faltas;
+}
+
 function atualizarContadores(){
-  let todos = 0, pendente = 0, vendido = 0, semCodigo = 0;
+  let todos = 0, pendente = 0, vendido = 0, corrigir = 0;
   state.imoveis.forEach(im => {
-    todos++; if(isVendido(im)) vendido++; else pendente++;
-    if(!String(im.codigo || '').trim()) semCodigo++;
+    todos++; 
+    if(isVendido(im)) vendido++; 
+    else {
+      pendente++;
+      if (temInformacaoFaltando(im).length > 0) corrigir++;
+    }
   });
-  const map = { 'todos': todos, 'pendente': pendente, 'vendido': vendido, 'sem-codigo': semCodigo };
+  const map = { 'todos': todos, 'pendente': pendente, 'vendido': vendido, 'corrigir': corrigir };
   Object.keys(map).forEach(k => { const el = $('cnt-' + k); if(el) el.textContent = map[k]; });
 }
 
@@ -1383,27 +1400,11 @@ function limparFiltros(){
   atualizarTextoMultiBairros(); atualizarChipsRegiao(); abrirModalFiltro(); aplicarFiltrosAvancados();
 }
 
-/* REGRA DE INFORMAÇÃO FALTANDO */
-function temInformacaoFaltando(im) {
-  if (isVendido(im)) return false;
-  const faltas = [];
-  if (!String(im.rua || '').trim()) faltas.push('Rua');
-  if (!String(im.numero || '').trim()) faltas.push('Número');
-  if (!String(im.bairro || '').trim()) faltas.push('Bairro');
-  if (!String(im.preco || '').trim()) faltas.push('Preço');
-  if (!String(im.imagem || '').trim()) faltas.push('Imagem');
-  
-  const info = extrairAptoBlocoChave(im.chaveTexto || '');
-  if (!info.apto && !info.bloco && !String(im.chaveTexto||'').trim()) faltas.push('Chave');
-  
-  return faltas;
-}
-
 function renderizar(){
   const grid = $('grid'); let lista = [...state.imoveis];
   if(state.filtroStatus === 'pendente') lista = lista.filter(im => !isVendido(im));
   else if(state.filtroStatus === 'vendido') lista = lista.filter(im => isVendido(im));
-  else if(state.filtroStatus === 'sem-codigo') lista = lista.filter(im => !String(im.codigo || '').trim());
+  else if(state.filtroStatus === 'corrigir') lista = lista.filter(im => !isVendido(im) && temInformacaoFaltando(im).length > 0);
 
   const busca = ($('buscaInput').value || '').toLowerCase().trim();
   if(busca) lista = lista.filter(i => (i.titulo || '').toLowerCase().includes(busca) || (i.codigo || '').toLowerCase().includes(busca) || (i.bairro || '').toLowerCase().includes(busca));
@@ -1714,6 +1715,7 @@ function atualizarChavePreview(){
 }
 function onAptoInput(el){ sanitizarApto(el); atualizarChavePreview(); }
 function onBlocoInput(el){ sanitizarBloco(el); atualizarChavePreview(); }
+
 function validarBotaoSalvar(){
   const ok = $('adRua').value.trim() && $('adNumero').value.trim() && $('adBairro').value.trim() && $('adSuites').value && $('adVaga').value && $('adElevador').value && $('adTipo').value;
   $('btnSalvarImovel').disabled = !ok;
@@ -1729,14 +1731,19 @@ async function salvarImovel(){
     const dlOption = Array.from(document.querySelectorAll('#listaClientesDatalist option')).find(o => o.value === clienteStr);
     if(dlOption) tel = dlOption.dataset.tel; else tel = normalizaTel(clienteStr);
   }
+  
+  // Corretor Automático (Fallback)
+  const corretorSelecionado = state.corretores[0]?.nome || '';
+
   const dados = {
     senha: SENHA_ADMIN, id: editandoId, telefone: tel,
     rua: $('adRua').value.trim(), numero: $('adNumero').value.trim(), bairro: $('adBairro').value.trim(),
     preco: $('adPreco').value.trim(), condominio: $('adCondominio').value.trim(), iptu: $('adIPTU').value.trim(),
     descricao: descricaoFinal, link: $('adLink').value.trim(), imagem: $('adImagem').value.trim(), chaveTexto: chaveFinal,
-    status: 'pendente', corretor: state.corretores[0]?.nome || '', vendido: '', desativado: '',
+    status: 'pendente', corretor: corretorSelecionado, vendido: '', desativado: '',
     vaga: $('adVaga').value.trim(), elevador: $('adElevador').value.trim(), suites: $('adSuites').value
   };
+  
   $('btnSalvarImovel').disabled = true; $('btnSalvarImovel').innerHTML = 'Salvando...';
   const res = await api('salvarImovel', dados);
   if(res.ok && editandoId){ await api('atualizarImovelPorCodigo', { senha: SENHA_ADMIN, codigo: extrairCodigoDoLink(dados.link), preco: dados.preco, condominio: dados.condominio, iptu: dados.iptu, descricao: dados.descricao, imagem: dados.imagem, chaveTexto: dados.chaveTexto, link: dados.link, vaga: dados.vaga, elevador: dados.elevador }); }
