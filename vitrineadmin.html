@@ -676,6 +676,100 @@
   .empty-state{ text-align:center; padding:50px 20px; color:var(--muted); }
   .empty-state h3{ font-size:.95rem; margin-bottom:4px; color:var(--text-soft); font-weight:600; }
   .empty-state p{ font-size:.84rem; }
+
+  /* ===== BOTÃO GERAL (header) ===== */
+  .btn-header.geral{
+    color: #fde68a;
+    border-color: rgba(251,191,36,.55);
+    background: rgba(251,191,36,.18);
+  }
+  .btn-header.geral:hover{
+    background: rgba(251,191,36,.35);
+    color: #fff;
+    border-color: rgba(251,191,36,.85);
+  }
+
+  /* ===== BOTÃO MATCH (topbar) ===== */
+  .topbar .btn-match{
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 14px;
+    background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+    color: #fff; border: none;
+    border-radius: var(--radius-sm);
+    font-family: inherit; font-size: .76rem; font-weight: 800;
+    letter-spacing: .3px; text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(249,115,22,.35);
+    transition: all .15s;
+    flex-shrink: 0;
+  }
+  .topbar .btn-match:hover{ background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%); box-shadow: 0 4px 12px rgba(249,115,22,.45); }
+  .topbar .btn-match .num{
+    background: #fff; color: #ea580c;
+    border-radius: 999px; padding: 1px 8px;
+    font-size: .72rem; font-weight: 900;
+    min-width: 22px; text-align: center;
+    letter-spacing: 0;
+  }
+  .topbar .btn-match .num.zero{
+    background: rgba(255,255,255,.25); color: #fff;
+  }
+
+  /* ===== MODAL MATCH ===== */
+  .match-item{
+    display: flex; gap: 12px;
+    padding: 10px;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    margin-bottom: 8px;
+    transition: all .15s;
+    position: relative;
+  }
+  .match-item:hover{ border-color: var(--border-strong); box-shadow: var(--shadow-sm); }
+  .match-item .m-img{
+    width: 90px; height: 90px; flex-shrink: 0;
+    border-radius: var(--radius-sm);
+    overflow: hidden; background: var(--bg-alt);
+  }
+  .match-item .m-img img{ width: 100%; height: 100%; object-fit: cover; display: block; }
+  .match-item .m-body{ flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+  .match-item .m-title{
+    font-size: .82rem; font-weight: 700; color: var(--text);
+    line-height: 1.3; letter-spacing: -.005em;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .match-item .m-meta{
+    font-size: .7rem; color: var(--text-soft);
+    display: flex; gap: 8px; flex-wrap: wrap; align-items: baseline;
+  }
+  .match-item .m-meta .cod{ font-family: var(--mono); color: var(--muted); font-weight: 700; }
+  .match-item .m-meta .preco{ color: var(--success-bright); font-weight: 800; font-size: .82rem; }
+  .match-item .m-meta .vaga-elev{ font-size: .66rem; }
+  .match-item .m-specs{
+    font-size: .68rem; color: var(--text-soft);
+    display: flex; gap: 10px; flex-wrap: wrap;
+  }
+  .match-item .m-warn{
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: .62rem; font-weight: 700;
+    padding: 2px 7px; border-radius: 4px;
+    background: #fef3c7; color: #92400e;
+    align-self: flex-start;
+  }
+  .match-item .m-actions{
+    display: flex; gap: 4px; flex-wrap: wrap;
+    margin-top: auto; padding-top: 4px;
+  }
+  .match-item .m-actions .btn{ padding: 5px 10px; font-size: .7rem; }
+  .match-empty{
+    text-align: center; padding: 40px 20px;
+    color: var(--muted); font-size: .84rem;
+  }
+  .match-empty svg{ width: 40px; height: 40px; margin: 0 auto 10px; color: var(--border-strong); }
+
+ 
 </style>
 </head>
 
@@ -691,6 +785,14 @@
       </div>
     </div>
     <div class="header-right">
+           <button class="btn-header geral" onclick="abrirPaginaGeral()" title="Catálogo geral de todos os imóveis">
+        <svg class="ico" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="2" y1="12" x2="22" y2="12"></line>
+          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+        </svg>
+        <span class="lbl-txt">Geral</span>
+      </button>
       <button class="btn-header ver-cliente" onclick="abrirVerCliente()" title="Ver dados do cliente">
         <svg class="ico" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
         <span class="lbl-txt">Ver cliente</span>
@@ -745,7 +847,13 @@
         <button class="filter-btn" data-filter="nao-gostei" onclick="setFiltro('nao-gostei', this)">Não gostei <span class="filter-count" id="cnt-nao-gostei">0</span></button>
         <button class="filter-btn btn-reservas" data-filter="reservas" onclick="setFiltro('reservas', this)">Reservas <span class="filter-count" id="cnt-reservas">0</span></button>
       </div>
-
+      <button class="btn-match" id="btnMatchTopbar" onclick="abrirModalMatch()" title="Imóveis que combinam com este cliente">
+        <svg class="ico ico-sm" viewBox="0 0 24 24" style="stroke:#fff;">
+          <circle cx="8" cy="12" r="5"></circle>
+          <circle cx="16" cy="12" r="5"></circle>
+        </svg>
+        Match <span class="num zero" id="matchBadgeNum">0</span>
+      </button>
       <div class="search-wrap">
         <input type="search" id="buscaInput" placeholder="Buscar..." oninput="renderizarImoveis()">
       </div>
@@ -943,7 +1051,29 @@
     </div>
   </div>
 </div>
+<!-- ===== MODAL MATCH ===== -->
+<div class="modal-backdrop" id="matchModalBackdrop" onclick="if(event.target===this) fecharModalMatch()">
+  <div class="modal" style="max-width:720px;">
+    <button class="modal-close" onclick="fecharModalMatch()"><svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <h2 style="display:flex; align-items:center; gap:9px;">
+      <svg class="ico" viewBox="0 0 24 24" style="stroke:#ea580c;">
+        <circle cx="8" cy="12" r="5"></circle>
+        <circle cx="16" cy="12" r="5"></circle>
+      </svg>
+      Match — <span id="matchModalNome" style="color:var(--text-soft);font-weight:600;"></span>
+    </h2>
+    <p class="text-muted" style="margin-bottom:14px; font-size:.8rem;">
+      Imóveis do sistema que combinam com as preferências deste cliente. Os mais recentes aparecem no topo.
+    </p>
+    <div id="matchModalLista" style="max-height:60vh; overflow-y:auto; padding-right:4px;">
+      <div class="loading-wrap" style="min-height:auto; padding:30px 0;">
+        <div class="spinner-lg" style="width:34px;height:34px;"></div>
+      </div>
+    </div>
+  </div>
+</div>
 
+ 
 <!-- MODAL ATIVIDADE -->
 <div class="modal-backdrop" id="atividadeBackdrop" onclick="if(event.target===this) fecharAtividade()">
   <div class="modal" style="max-width:720px;">
@@ -1524,6 +1654,7 @@ async function carregarTudo(){
   carregarContagemClientes();   // ← NOVO (não bloqueia a renderização)
   renderizarImoveis();
   carregarAcessos();
+   carregarBadgeMatch(true);
 }
 
 async function carregarContagemClientes(){
@@ -1552,6 +1683,7 @@ async function recarregarVitrine(){
   renderizarImoveis();
   atualizarCloneFloating();
   toast('Vitrine atualizada', 'success');
+   carregarBadgeMatch(true);
 }
 
 function atualizarBarraCliente(){
@@ -3246,6 +3378,217 @@ document.addEventListener('DOMContentLoaded', function(){
     });
   }
 });
+
+ /* =====================================================
+   MATCH — v27 (vitrine admin)
+   ===================================================== */
+function abrirPaginaGeral(){
+  const senha = encodeURIComponent(SENHA_ADMIN || '');
+  window.open('geral.html?senha=' + senha, '_blank', 'noopener');
+}
+
+let _matchCarregadoPara = null;
+async function carregarBadgeMatch(force){
+  if(!TELEFONE_CLIENTE) return;
+  if(!force && _matchCarregadoPara === TELEFONE_CLIENTE) return;
+  _matchCarregadoPara = TELEFONE_CLIENTE;
+  try {
+    const res = await api('listarMatchesDoCliente', { senha: SENHA_ADMIN, telefone: TELEFONE_CLIENTE });
+    const total = (res.ok && res.data) ? res.data.length : 0;
+    const el = $('matchBadgeNum');
+    if(el){
+      el.textContent = total > 99 ? '99+' : total;
+      el.classList.toggle('zero', total === 0);
+    }
+  } catch(e){
+    console.warn('[carregarBadgeMatch] erro:', e);
+  }
+}
+
+async function abrirModalMatch(){
+  if(!TELEFONE_CLIENTE){ toast('Cliente não identificado', 'error'); return; }
+  const nomeCliente = state.clienteAtual?.nome || '';
+  $('matchModalNome').textContent = nomeCompletoCliente_(nomeCliente, TELEFONE_CLIENTE);
+  $('matchModalLista').innerHTML = '<div class="loading-wrap" style="min-height:auto; padding:30px 0;"><div class="spinner-lg" style="width:34px;height:34px;"></div></div>';
+  $('matchModalBackdrop').classList.add('show');
+  marcarSalvando(true);
+  const res = await api('listarMatchesDoCliente', { senha: SENHA_ADMIN, telefone: TELEFONE_CLIENTE });
+  marcarSalvando(false);
+  if(!res.ok){
+    $('matchModalLista').innerHTML = '<div class="match-empty"><p>Erro ao carregar matches.</p></div>';
+    return;
+  }
+  const lista = res.data || [];
+  if(lista.length === 0){
+    $('matchModalLista').innerHTML = `
+      <div class="match-empty">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="8" cy="12" r="5"></circle>
+          <circle cx="16" cy="12" r="5"></circle>
+        </svg>
+        <p>Nenhum imóvel compatível no momento.</p>
+      </div>`;
+    return;
+  }
+  $('matchModalLista').innerHTML = lista.map(im => matchItemHTML(im)).join('');
+}
+
+function matchItemHTML(im){
+  const img = im.imagem || 'https://via.placeholder.com/90x90/e2e8f0/64748b?text=—';
+  const codigo = String(im.codigo || '').trim();
+  const preco = formatarMoeda(im.preco) || 'R$ 0,00';
+  const cond = formatarMoeda(im.condominio);
+  const vaga = String(im.vaga || '').trim();
+  const elev = String(im.elevador || '').trim();
+  const quartos = String(im.quartos || '').trim();
+  const suites = String(im.suites || '').trim();
+  const vagas = String(im.vagas || '').trim();
+  const specs = [];
+  if(quartos) specs.push(quartos + ' quarto' + (quartos !== '1' ? 's' : ''));
+  if(suites) specs.push(suites + ' suíte' + (suites !== '1' ? 's' : ''));
+  if(vagas) specs.push(vagas + ' vaga' + (vagas !== '1' ? 's' : ''));
+  const vagaElev = [];
+  if(vaga) vagaElev.push('Vaga: ' + vaga);
+  if(elev) vagaElev.push('Elevador: ' + elev);
+
+  const id = esc(im.id);
+  return `
+    <div class="match-item" data-codigo="${esc(codigo)}">
+      <div class="m-img">
+        <img src="${esc(img)}" onerror="this.src='https://via.placeholder.com/90x90/e2e8f0/64748b?text=—'">
+      </div>
+      <div class="m-body">
+        <div class="m-title">${esc(im.titulo) || 'Sem endereço'}</div>
+        <div class="m-meta">
+          ${codigo ? `<span class="cod">#${esc(codigo)}</span>` : ''}
+          <span class="preco">${esc(preco)}</span>
+          ${cond ? `<span>Cond: ${esc(cond)}</span>` : ''}
+        </div>
+        ${specs.length ? `<div class="m-specs">${specs.map(s => `<span>${esc(s)}</span>`).join('')}</div>` : ''}
+        ${vagaElev.length ? `<div class="m-specs"><span class="vaga-elev">${vagaElev.map(v => esc(v)).join(' · ')}</span></div>` : ''}
+        ${im.incompleto ? '<span class="m-warn">⚠️ Dados incompletos</span>' : ''}
+        <div class="m-actions">
+          <button class="btn btn-purple" onclick="matchEnviarParaVitrine('${id}', '${esc(codigo)}')">
+            <svg class="ico ico-sm" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Enviar para vitrine
+          </button>
+          <button class="btn btn-ghost" onclick="matchDescartar('${esc(codigo)}', this)">
+            <svg class="ico ico-sm" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            Descartar
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+async function matchEnviarParaVitrine(idImovel, codigo){
+  const ok = await confirmarAcao({
+    titulo: 'Enviar para vitrine?',
+    texto: 'Uma cópia deste imóvel será adicionada à vitrine do cliente.',
+    btnSim: 'Enviar', tipo: 'primary'
+  });
+  if(!ok) return;
+  marcarSalvando(true);
+  // Reaproveita a clonagem existente — copia do próprio imóvel para este cliente
+  const res = await api('clonarImoveisVitrine', {
+    senha: SENHA_ADMIN,
+    telefoneOrigem: '', // será ajustado abaixo
+    telefoneDestino: TELEFONE_CLIENTE,
+    imovelIds: idImovel
+  });
+  // Se a clonagem padrão exige origem, faz direto via salvarImovel
+  if(!res.ok){
+    // fallback: busca o imóvel completo e salva como novo para este cliente
+    const todosRes = await api('listarTodosImoveis', { senha: SENHA_ADMIN });
+    const im = (todosRes.ok && todosRes.data) ? todosRes.data.find(x => String(x.id) === String(idImovel)) : null;
+    if(!im){
+      marcarSalvando(false);
+      toast('Imóvel não encontrado', 'error');
+      return;
+    }
+    const salvarRes = await api('salvarImovel', {
+      senha: SENHA_ADMIN,
+      id: '',
+      telefone: TELEFONE_CLIENTE,
+      rua: im.rua || '',
+      numero: im.numero || '',
+      bairro: im.bairro || '',
+      preco: im.preco || '',
+      condominio: im.condominio || '',
+      iptu: im.iptu || '',
+      descricao: im.descricao || '',
+      link: im.link || '',
+      imagem: im.imagem || '',
+      chaveTexto: im.chaveTexto || '',
+      status: 'pendente',
+      observacao: '',
+      corretor: im.corretor || '',
+      vendido: '',
+      desativado: '',
+      vaga: im.vaga || '',
+      elevador: im.elevador || ''
+    });
+    marcarSalvando(false);
+    if(!salvarRes.ok){
+      toast(salvarRes.error || 'Erro ao enviar', 'error');
+      return;
+    }
+  } else {
+    marcarSalvando(false);
+  }
+  // Marca o par como enviado (mesma aba de descartes, mas com origem 'enviado')
+  await api('descartarMatch', { senha: SENHA_ADMIN, telefone: TELEFONE_CLIENTE, codigo: codigo, origem: 'enviado' });
+  toast('Imóvel enviado para a vitrine!', 'success');
+  const elItem = document.querySelector(`.match-item[data-codigo="${esc(codigo)}"]`);
+  if(elItem) elItem.remove();
+  carregarBadgeMatch(true);
+  await recarregarVitrine();
+  const lista = $('matchModalLista');
+  if(lista && lista.querySelectorAll('.match-item').length === 0){
+    lista.innerHTML = `
+      <div class="match-empty">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="8" cy="12" r="5"></circle>
+          <circle cx="16" cy="12" r="5"></circle>
+        </svg>
+        <p>Todos os matches foram tratados!</p>
+      </div>`;
+  }
+}
+
+async function matchDescartar(codigo, btn){
+  if(!codigo){ toast('Código inválido', 'error'); return; }
+  const ok = await confirmarAcao({
+    titulo: 'Descartar match?',
+    texto: 'Este imóvel não aparecerá mais como sugestão para este cliente.',
+    btnSim: 'Descartar', tipo: 'danger'
+  });
+  if(!ok) return;
+  marcarSalvando(true);
+  const res = await api('descartarMatch', { senha: SENHA_ADMIN, telefone: TELEFONE_CLIENTE, codigo: codigo, origem: 'descartado' });
+  marcarSalvando(false);
+  if(!res.ok){ toast(res.error || 'Erro', 'error'); return; }
+  toast('Match descartado', 'success');
+  const elItem = btn.closest('.match-item');
+  if(elItem) elItem.remove();
+  carregarBadgeMatch(true);
+  const lista = $('matchModalLista');
+  if(lista && lista.querySelectorAll('.match-item').length === 0){
+    lista.innerHTML = `
+      <div class="match-empty">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="8" cy="12" r="5"></circle>
+          <circle cx="16" cy="12" r="5"></circle>
+        </svg>
+        <p>Nenhum match restante.</p>
+      </div>`;
+  }
+}
+
+function fecharModalMatch(){
+  $('matchModalBackdrop').classList.remove('show');
+}
 </script>
 </body>
 </html>
