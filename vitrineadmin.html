@@ -1126,6 +1126,7 @@ const state = {
   imoveis: [],
   corretores: [],
   acessos: [],
+   contagemClientes: {},
   filtro: 'todos',
   salvando: 0,
   _atividadeFiltro: 'todos',
@@ -1136,6 +1137,7 @@ const state = {
   _corretorEscolhido: '',
   _tipoEscolhido: '',
   _salvarTimeout: null
+ 
 };
 
 const $ = id => document.getElementById(id);
@@ -1507,12 +1509,22 @@ async function carregarTudo(){
   state.imoveis = todos
     .filter(i => normalizaTel(i.telefone) === TELEFONE_CLIENTE)
     .sort((a,b) => new Date(b.dataCadastro||0) - new Date(a.dataCadastro||0));
-  atualizarBarraCliente();
+ atualizarBarraCliente();
   atualizarContadoresImoveis();
+  carregarContagemClientes();   // ← NOVO (não bloqueia a renderização)
   renderizarImoveis();
   carregarAcessos();
 }
 
+async function carregarContagemClientes(){
+  marcarSalvando(true);
+  const res = await api('contarClientesPorImovel', { senha: SENHA_ADMIN });
+  marcarSalvando(false);
+  if(res.ok && res.data){
+    state.contagemClientes = res.data;
+    renderizarImoveis();
+  }
+}
 async function recarregarVitrine(){
   const btn = $('btnAtualizarHeader');
   if(btn) btn.classList.add('girando');
@@ -1525,7 +1537,8 @@ async function recarregarVitrine(){
   state.imoveis = todos
     .filter(i => normalizaTel(i.telefone) === TELEFONE_CLIENTE)
     .sort((a,b) => new Date(b.dataCadastro||0) - new Date(a.dataCadastro||0));
-  atualizarContadoresImoveis();
+   atualizarContadoresImoveis();
+  carregarContagemClientes();   // ← NOVO
   renderizarImoveis();
   atualizarCloneFloating();
   toast('Vitrine atualizada', 'success');
@@ -1672,11 +1685,12 @@ function cardImovelHTML(im){
 
   const imgClickAttr = im.link ? `onclick="window.open('${esc(im.link)}', '_blank', 'noopener');"` : '';
 
-  const apto = (extrairAptoBlocoChave(im.chaveTexto || '').apto) || '';
-  const blocoInfo = extrairAptoBlocoChave(im.chaveTexto || '');
+    const blocoInfo = extrairAptoBlocoChave(im.chaveTexto || '');
+  const apto = blocoInfo.apto || '';
   const bloco = blocoInfo.bloco || '';
   const chaveComplemento = blocoInfo.resto || '';
-  const chaveCompleta = [apto, bloco ? 'Bloco ' + bloco : '', chaveComplemento].filter(Boolean).join('\n');
+  // ⚠️ No card exibimos SÓ o complemento (sem Apto/Bloco, que já aparecem no grid de dados)
+  const chaveCompleta = chaveComplemento;
 
   const precoFmt = formatarMoeda(im.preco);
   const condFmt = formatarMoeda(im.condominio);
@@ -1804,7 +1818,9 @@ function cardImovelHTML(im){
       </div>`;
   }
 
-  // botões de código → clientes
+    // botões de código → clientes
+  const qtdClientes = codigo ? (state.contagemClientes[codigo] || 0) : 0;
+  const textoClientes = qtdClientes === 1 ? '1 Cliente' : (qtdClientes > 1 ? qtdClientes + ' Clientes' : 'Clientes');
   const codeActionsHtml = codigo ? `
     <div class="card-code-row" onclick="event.stopPropagation();">
       <span class="card-code-chip" onclick="copiarCodigo('${esc(codigo)}', this)">#${esc(codigo)}</span>
@@ -1814,7 +1830,7 @@ function cardImovelHTML(im){
       </button>
       <button class="card-code-btn btn-clientes" onclick="abrirClientesImovel('${esc(codigo)}', '${esc(im.titulo || '')}')" title="Clientes que têm esse imóvel na vitrine">
         <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-        Clientes
+        <strong style="font-weight:800;">${qtdClientes}</strong> ${textoClientes.replace(/^\d+\s/, '')}
       </button>
     </div>
   ` : '';
