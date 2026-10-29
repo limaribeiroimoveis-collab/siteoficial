@@ -37,8 +37,8 @@
     -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
     line-height: 1.5; font-size: 14px;
   }
-  .container{ max-width: 1320px; margin: 0 auto; padding: 20px; }
-  @media(max-width:640px){ .container{ padding: 12px; } }
+  .container{ max-width: 1560px; margin: 0 auto; padding: 16px; }
+  @media(max-width:640px){ .container{ padding: 10px; } }
 
   .ico{
     display: inline-block; width: 16px; height: 16px;
@@ -49,40 +49,41 @@
   .ico-sm{ width: 14px; height: 14px; vertical-align: -3px; }
   .ico-lg{ width: 20px; height: 20px; }
 
+  /* ============ HEADER ============ */
   header.app-header{
-    background: #4c1d95; color: #fff; padding: 10px 16px;
+    background: #4c1d95; color: #fff; padding: 8px 16px;
     box-shadow: 0 1px 3px rgba(0,0,0,.12);
-    position: sticky; top: 0; z-index: 100;
+    position: sticky; top: 0; z-index: 200;
     border-bottom: 1px solid rgba(255,255,255,.06);
   }
   .header-inner{
-    max-width: 1320px; margin: 0 auto;
+    max-width: 1560px; margin: 0 auto;
     display: flex; align-items: center; justify-content: space-between;
     gap: 12px; flex-wrap: nowrap; min-height: 40px;
   }
   .brand{ display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
   .brand-icon{
-    width: 32px; height: 32px; background: #fff; border-radius: 7px;
+    width: 30px; height: 30px; background: #fff; border-radius: 7px;
     display: flex; align-items: center; justify-content: center;
-    font-size: .78rem; color: var(--purple); font-weight: 800;
+    font-size: .72rem; color: var(--purple); font-weight: 800;
     letter-spacing: .5px; flex-shrink: 0;
   }
   .brand-text{ display: flex; flex-direction: column; line-height: 1.05; }
-  .brand-title{ font-size: .85rem; font-weight: 700; letter-spacing: .2px; color: #fff; }
-  .brand-sub{ font-size: .58rem; opacity: .6; letter-spacing: 1.5px; text-transform: uppercase; margin-top: 2px; }
+  .brand-title{ font-size: .8rem; font-weight: 700; letter-spacing: .2px; color: #fff; }
+  .brand-sub{ font-size: .55rem; opacity: .6; letter-spacing: 1.5px; text-transform: uppercase; margin-top: 2px; }
 
   .header-right{ display: flex; align-items: center; gap: 6px; flex-shrink: 0; flex-wrap: wrap; }
   .btn-header{
     background: transparent; color: #ddd6fe;
     border: 1px solid rgba(255,255,255,.15);
-    padding: 6px 11px; border-radius: 6px; cursor: pointer;
-    font-size: .74rem; font-weight: 600;
+    padding: 6px 10px; border-radius: 6px; cursor: pointer;
+    font-size: .72rem; font-weight: 600;
     transition: all .15s; font-family: inherit;
-    display: inline-flex; align-items: center; gap: 7px; white-space: nowrap;
+    display: inline-flex; align-items: center; gap: 6px; white-space: nowrap;
   }
   .btn-header:hover{ background: rgba(255,255,255,.1); color: #fff; border-color: rgba(255,255,255,.25); }
-  .btn-header.editar-cliente{ color: #fbbf24; border-color: rgba(251,191,36,.35); }
-  .btn-header.editar-cliente:hover{ background: rgba(251,191,36,.15); color: #fff; }
+  .btn-header.ver-cliente{ color: #93c5fd; border-color: rgba(147,197,253,.35); }
+  .btn-header.ver-cliente:hover{ background: rgba(147,197,253,.15); color: #fff; }
   .btn-header.atualizar{ color: #86efac; border-color: rgba(134,239,172,.35); }
   .btn-header.atualizar:hover{ background: rgba(134,239,172,.15); color: #fff; }
   .btn-header.atualizar.girando .ico{ animation: girar .8s linear infinite; }
@@ -90,21 +91,84 @@
   .btn-header .badge-num{
     background: var(--purple); color: #fff;
     padding: 1px 6px; border-radius: 4px;
-    font-size: .62rem; font-weight: 800;
+    font-size: .6rem; font-weight: 800;
     min-width: 18px; text-align: center;
   }
-
-  @media(max-width:820px){
+  @media(max-width:900px){
     .brand-text{ display: none; }
-    .brand-icon{ width: 28px; height: 28px; font-size: .7rem; }
+    .brand-icon{ width: 28px; height: 28px; font-size: .68rem; }
   }
   @media(max-width:640px){
-    header.app-header{ padding: 8px 10px; }
-    .btn-header{ padding: 6px 8px; font-size: .7rem; gap: 0; }
+    header.app-header{ padding: 6px 8px; }
+    .btn-header{ padding: 5px 7px; font-size: .66rem; gap: 0; }
     .btn-header .lbl-txt{ display: none; }
   }
 
-  .loading-wrap{ display: flex; justify-content: center; align-items: center; min-height: 70vh; flex-direction: column; gap: 16px; color: var(--purple); }
+  /* ============ TOP BAR (linha única) ============ */
+  .topbar{
+    background: #fff; border-bottom: 1px solid var(--border);
+    position: sticky; top: 48px; z-index: 150;
+    box-shadow: var(--shadow-xs);
+  }
+  .topbar-inner{
+    max-width: 1560px; margin: 0 auto; padding: 8px 16px;
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  }
+  .topbar .cli-badge{
+    display: flex; align-items: center; gap: 8px;
+    flex-shrink: 0; padding-right: 10px;
+    border-right: 1px solid var(--border);
+  }
+  .topbar .cli-nome{ font-weight: 700; color: var(--text); font-size: .86rem; }
+  .topbar .cli-tel{ font-size: .74rem; color: var(--text-soft); font-variant-numeric: tabular-nums; }
+  .topbar .cli-corr{ font-size: .7rem; background: var(--primary-soft); color: var(--primary); padding: 2px 7px; border-radius: 4px; font-weight: 700; }
+  .topbar .cli-temp{ font-size: .72rem; font-weight: 700; padding: 2px 7px; border-radius: 4px; }
+  .topbar .cli-temp.quente{ background: #fee2e2; color: #b91c1c; }
+  .topbar .cli-temp.morno{ background: #fef3c7; color: #92400e; }
+  .topbar .cli-temp.frio{ background: #dbeafe; color: #1e40af; }
+  .topbar .cli-tags{ display: flex; gap: 4px; flex-wrap: wrap; }
+
+  .topbar .filters-inline{
+    display: flex; gap: 4px; flex-wrap: wrap; flex: 1;
+    min-width: 0;
+  }
+  .topbar .filter-btn{
+    padding: 6px 10px; border-radius: var(--radius-sm);
+    border: 1px solid var(--border); background: #fff; cursor: pointer;
+    font-size: .72rem; font-weight: 600; color: var(--text-soft);
+    transition: all .15s; font-family: inherit;
+    display: inline-flex; align-items: center; gap: 4px;
+    white-space: nowrap;
+  }
+  .topbar .filter-btn:hover{ border-color: var(--purple); color: var(--purple); }
+  .topbar .filter-btn.active{ background: var(--purple); color: #fff; border-color: var(--purple); }
+  .topbar .filter-btn.btn-reservas.active{ background: #d97706; border-color: #d97706; }
+  .filter-count{
+    background: rgba(15,23,42,.08); padding: 0 6px;
+    border-radius: 4px; font-size: .64rem; min-width: 16px; text-align: center; font-weight: 700;
+  }
+  .topbar .filter-btn.active .filter-count{ background: rgba(255,255,255,.25); }
+
+  .topbar .search-wrap{
+    flex-shrink: 0; width: 220px;
+  }
+  .topbar .search-wrap input{
+    padding: 7px 10px; font-size: .8rem;
+  }
+  .topbar .btn-add{
+    flex-shrink: 0;
+    padding: 8px 14px; font-size: .8rem;
+  }
+  @media(max-width:1100px){
+    .topbar .search-wrap{ width: 180px; }
+    .topbar .cli-badge{ border-right: none; padding-right: 0; }
+  }
+  @media(max-width:820px){
+    .topbar .filters-inline{ order: 3; width: 100%; }
+    .topbar .search-wrap{ width: 100%; }
+  }
+
+  .loading-wrap{ display: flex; justify-content: center; align-items: center; min-height: 60vh; flex-direction: column; gap: 16px; color: var(--purple); }
   .loading-wrap p{ color: var(--text-soft); font-size: .9rem; }
   .spinner-lg{
     width: 46px; height: 46px;
@@ -116,27 +180,10 @@
   .erro-wrap h2{ font-size: 1.1rem; margin-bottom: 10px; color: var(--text); }
   .erro-wrap p{ font-size: .88rem; color: var(--text-soft); margin-bottom: 20px; line-height: 1.55; }
 
-  .cliente-bar{
-    background: #fff; border-bottom: 1px solid var(--border);
-    padding: 12px 16px;
-    display: flex; align-items: center; justify-content: flex-start;
-    gap: 12px; flex-wrap: wrap;
-    position: sticky; top: 52px; z-index: 90;
-    box-shadow: var(--shadow-xs);
-  }
-  .cliente-bar .info{ display: flex; align-items: center; gap: 12px; flex-wrap: wrap; min-width: 0; font-size: .85rem; }
-  .cliente-bar .nome-cli{ font-weight: 700; color: var(--text); font-size: .95rem; letter-spacing: -.01em; }
-  .cliente-bar .meta{ display: flex; align-items: center; gap: 10px; font-size: .74rem; color: var(--text-soft); flex-wrap: wrap; }
-  @media(max-width:640px){
-    .cliente-bar{ padding: 10px 12px; top: 48px; }
-    .cliente-bar .nome-cli{ font-size: .88rem; }
-    .cliente-bar .meta{ font-size: .7rem; gap: 6px; }
-  }
-
   .btn{
-    display: inline-flex; align-items: center; justify-content: center; gap: 7px;
-    padding: 10px 16px; border-radius: var(--radius-sm); border: 1px solid transparent;
-    cursor: pointer; font-size: .85rem; font-weight: 600;
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    padding: 9px 14px; border-radius: var(--radius-sm); border: 1px solid transparent;
+    cursor: pointer; font-size: .82rem; font-weight: 600;
     transition: all .15s; text-decoration: none; font-family: inherit;
     white-space: nowrap; letter-spacing: -.005em;
   }
@@ -156,19 +203,15 @@
   .btn-soft{ background: var(--primary-soft); color: var(--primary); border: 1px solid transparent; }
   .btn-soft:hover:not(:disabled){ background: #dde6ee; }
   .btn-full{ width: 100%; }
-  .btn-sm{ padding: 7px 12px; font-size: .78rem; gap: 5px; }
-  .btn-xs{ padding: 5px 9px; font-size: .72rem; gap: 4px; }
+  .btn-sm{ padding: 6px 10px; font-size: .76rem; gap: 4px; }
+  .btn-xs{ padding: 4px 8px; font-size: .7rem; gap: 3px; }
 
-  .admin-toolbar{
-    display: flex; gap: 8px; flex-wrap: wrap;
-    margin-top: 14px; margin-bottom: 6px;
-    align-items: center;
-  }
+  .admin-toolbar{ display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; align-items: center; }
   .admin-toolbar .spacer{ flex: 1; }
 
   input, textarea, select{
-    width: 100%; padding: 10px 12px; border: 1px solid var(--border-strong);
-    border-radius: var(--radius-sm); font-size: .88rem; font-family: inherit;
+    width: 100%; padding: 9px 11px; border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm); font-size: .86rem; font-family: inherit;
     transition: all .15s; background: #fff; color: var(--text);
   }
   input:focus, textarea:focus, select:focus{
@@ -180,35 +223,27 @@
   }
   textarea{ resize: vertical; min-height: 76px; line-height: 1.5; }
   label{
-    display: block; font-size: .74rem; font-weight: 600; margin-bottom: 6px;
+    display: block; font-size: .72rem; font-weight: 600; margin-bottom: 5px;
     color: var(--text-soft); text-transform: uppercase; letter-spacing: .4px;
   }
   label .req{ color: var(--danger); }
-  .form-group{ margin-bottom: 16px; }
+  .form-group{ margin-bottom: 14px; }
 
-  /* Selects estilizados (Vaga / Elevador) */
   .select-padrao{
-    width: 100%; padding: 10px 12px;
+    width: 100%; padding: 9px 11px;
     border: 1px solid var(--border-strong);
     border-radius: var(--radius-sm);
-    font-size: .88rem; font-family: inherit;
+    font-size: .86rem; font-family: inherit;
     background: #fff; color: var(--text);
     cursor: pointer; transition: all .15s;
-    appearance: none;
-    -webkit-appearance: none;
+    appearance: none; -webkit-appearance: none;
     background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'/%3e%3c/svg%3e");
-    background-repeat: no-repeat;
-    background-position: right 10px center;
-    background-size: 14px;
-    padding-right: 34px;
+    background-repeat: no-repeat; background-position: right 10px center;
+    background-size: 14px; padding-right: 34px;
   }
-  .select-padrao:focus{
-    outline: none; border-color: var(--purple);
-    box-shadow: 0 0 0 3px rgba(109,40,217,.1);
-  }
+  .select-padrao:focus{ outline: none; border-color: var(--purple); box-shadow: 0 0 0 3px rgba(109,40,217,.1); }
   .select-padrao.invalido{
-    border-color: var(--danger);
-    background-color: #fef2f2;
+    border-color: var(--danger); background-color: #fef2f2;
     animation: shake .3s ease-in-out;
   }
   @keyframes shake{
@@ -217,76 +252,45 @@
     75%{ transform: translateX(4px); }
   }
 
-  /* ===== MODAL NOVO/EDITAR IMÓVEL ===== */
   .admin-panel{
     background: #fff; border-radius: var(--radius-lg);
     box-shadow: var(--shadow-xl);
-    position: fixed;
-    top: 50%; left: 50%;
+    position: fixed; top: 50%; left: 50%;
     transform: translate(-50%, -50%);
-    width: calc(100vw - 32px);
-    max-width: 1240px;
-    max-height: calc(100vh - 40px);
-    overflow-y: auto;
-    z-index: 1500;
-    border: 1px solid var(--border);
-    display: none;
+    width: calc(100vw - 32px); max-width: 1240px;
+    max-height: calc(100vh - 40px); overflow-y: auto;
+    z-index: 1500; border: 1px solid var(--border); display: none;
   }
   .admin-panel.show{ display: block; animation: modalIn .22s ease-out; }
   @keyframes modalIn{
     from{ opacity: 0; transform: translate(-50%, -48%) scale(.97); }
     to{ opacity: 1; transform: translate(-50%, -50%) scale(1); }
   }
-  .admin-panel-inner{ padding: 18px 24px 22px; }
+  .admin-panel-inner{ padding: 16px 22px 20px; }
   .admin-panel-header{
-    position: sticky; top: 0; z-index: 5;
-    background: #fff;
-    padding: 14px 24px 12px;
-    border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; z-index: 5; background: #fff;
+    padding: 12px 22px 10px; border-bottom: 1px solid var(--border);
     display: flex; align-items: center; justify-content: space-between;
     gap: 12px; flex-wrap: wrap;
     border-radius: var(--radius-lg) var(--radius-lg) 0 0;
   }
   .admin-panel-header h3{
-    display: flex; align-items: center; gap: 9px;
-    font-size: 1.05rem; color: var(--text); font-weight: 700;
-    letter-spacing: -.01em; margin: 0;
+    display: flex; align-items: center; gap: 8px;
+    font-size: 1rem; color: var(--text); font-weight: 700; letter-spacing: -.01em; margin: 0;
   }
   .admin-panel-header .close-x{
-    width: 34px; height: 34px; border-radius: var(--radius-sm);
+    width: 32px; height: 32px; border-radius: var(--radius-sm);
     background: var(--bg-alt); border: none; cursor: pointer;
     color: var(--text-soft); display: flex; align-items: center; justify-content: center;
     transition: all .15s;
   }
   .admin-panel-header .close-x:hover{ background: #cbd5e1; color: var(--text); }
 
-  /* Layout compacto */
-  .form-row-link-price{
-    display: grid;
-    grid-template-columns: 2fr 1fr 1fr 1fr;
-    gap: 12px; margin-bottom: 10px;
-  }
-  .form-row-address{
-    display: grid;
-    grid-template-columns: 2fr 1fr 0.9fr 1fr;
-    gap: 12px; margin-bottom: 10px;
-  }
-  .form-row-bairro{
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 12px; margin-bottom: 10px;
-  }
-  .form-row-bairro-3{
-    display: grid;
-    grid-template-columns: 1.2fr 1fr 1fr;
-    gap: 12px; margin-bottom: 10px;
-  }
-  .form-row-img-desc{
-    display: grid;
-    grid-template-columns: 240px 1fr;
-    gap: 14px; margin-bottom: 12px;
-    align-items: start;
-  }
+  .form-row-link-price{ display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 12px; margin-bottom: 8px; }
+  .form-row-address{ display: grid; grid-template-columns: 2fr 1fr .9fr 1fr; gap: 12px; margin-bottom: 8px; }
+  .form-row-bairro{ display: grid; grid-template-columns: 1fr; gap: 12px; margin-bottom: 8px; }
+  .form-row-bairro-3{ display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 12px; margin-bottom: 8px; }
+  .form-row-img-desc{ display: grid; grid-template-columns: 240px 1fr; gap: 14px; margin-bottom: 10px; align-items: start; }
   @media(max-width:1024px){
     .form-row-link-price{ grid-template-columns: 1fr 1fr; }
     .form-row-address{ grid-template-columns: 1fr 1fr; }
@@ -295,7 +299,6 @@
   @media(max-width:640px){
     .form-row-link-price{ grid-template-columns: 1fr; }
     .form-row-address{ grid-template-columns: 1fr; }
-    .form-row-bairro{ grid-template-columns: 1fr; }
     .form-row-bairro-3{ grid-template-columns: 1fr; }
     .form-row-img-desc{ grid-template-columns: 1fr; }
   }
@@ -307,183 +310,117 @@
     display: flex; align-items: center; justify-content: center;
     overflow: hidden; position: relative;
   }
-  .img-preview-box img{
-    width: 100%; height: 100%; object-fit: cover; display: block;
-  }
-  .img-preview-box .sem-img{
-    color: var(--muted); font-size: .72rem; text-align: center;
-    padding: 10px; line-height: 1.4;
-  }
+  .img-preview-box img{ width: 100%; height: 100%; object-fit: cover; display: block; }
+  .img-preview-box .sem-img{ color: var(--muted); font-size: .72rem; text-align: center; padding: 10px; line-height: 1.4; }
 
-  .tipo-chips-wrap{
-    display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px;
-  }
+  .tipo-chips-wrap{ display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
   .chip-tipo{
     display: inline-flex; align-items: center; gap: 5px;
-    padding: 7px 13px; border-radius: 30px;
+    padding: 6px 12px; border-radius: 30px;
     border: 2px solid var(--border); background: #fff;
-    font-family: inherit; font-size: .78rem; font-weight: 700;
-    color: var(--text-soft); cursor: pointer; transition: all .15s;
-    white-space: nowrap;
+    font-family: inherit; font-size: .76rem; font-weight: 700;
+    color: var(--text-soft); cursor: pointer; transition: all .15s; white-space: nowrap;
   }
   .chip-tipo:hover{ border-color: var(--purple); color: var(--purple); }
-  .chip-tipo.ativo{
-    background: var(--purple); color: #fff; border-color: var(--purple);
-    box-shadow: 0 2px 8px rgba(109,40,217,.25);
-  }
+  .chip-tipo.ativo{ background: var(--purple); color: #fff; border-color: var(--purple); box-shadow: 0 2px 8px rgba(109,40,217,.25); }
 
   .btn-buscar-entrada{
-    width: 100%; margin-bottom: 10px;
+    width: 100%; margin-bottom: 8px;
     display: inline-flex; align-items: center; justify-content: center; gap: 8px;
     background: var(--primary-soft); color: var(--primary);
     border: 1px solid var(--border-strong);
-    padding: 9px 16px; border-radius: var(--radius-sm);
-    font-size: .82rem; font-weight: 700; cursor: pointer;
+    padding: 8px 14px; border-radius: var(--radius-sm);
+    font-size: .8rem; font-weight: 700; cursor: pointer;
     font-family: inherit; transition: all .15s;
   }
   .btn-buscar-entrada:hover:not(:disabled){ background: #dde6ee; border-color: var(--primary); }
-  .btn-buscar-entrada:disabled{
-    opacity: .5; cursor: not-allowed;
-    background: var(--bg-alt); color: var(--muted); border-color: var(--border);
-  }
+  .btn-buscar-entrada:disabled{ opacity: .5; cursor: not-allowed; background: var(--bg-alt); color: var(--muted); border-color: var(--border); }
   .btn-buscar-entrada .codigo-badge{
-    font-family: var(--mono); font-size: .72rem;
-    background: #fff; padding: 1px 7px; border-radius: 4px;
-    border: 1px solid var(--border);
+    font-family: var(--mono); font-size: .7rem;
+    background: #fff; padding: 1px 7px; border-radius: 4px; border: 1px solid var(--border);
   }
 
-  .chave-composer{
-    border: 1px solid var(--border-strong);
-    border-radius: var(--radius-sm);
-    background: #fff;
-    overflow: hidden;
-  }
+  .chave-composer{ border: 1px solid var(--border-strong); border-radius: var(--radius-sm); background: #fff; overflow: hidden; }
   .chave-locked{
-    background: #f1f5f9;
-    padding: 8px 14px;
+    background: #f1f5f9; padding: 8px 14px;
     border-bottom: 1px dashed var(--border-strong);
     display: flex; flex-direction: column; gap: 3px;
-    font-family: var(--mono);
-    font-size: .82rem;
-    color: var(--text-soft);
+    font-family: var(--mono); font-size: .8rem; color: var(--text-soft);
   }
-  .chave-locked .linha{
-    display: flex; align-items: center; gap: 8px;
-  }
-  .chave-locked .linha .lock-ico{
-    font-size: .72rem; color: var(--muted); flex-shrink: 0;
-  }
+  .chave-locked .linha{ display: flex; align-items: center; gap: 8px; }
+  .chave-locked .linha .lock-ico{ font-size: .72rem; color: var(--muted); flex-shrink: 0; }
   .chave-locked .linha .label-mini{
-    font-family: var(--font); font-size: .62rem; font-weight: 700;
-    color: var(--muted); text-transform: uppercase; letter-spacing: .4px;
-    min-width: 80px;
+    font-family: var(--font); font-size: .6rem; font-weight: 700;
+    color: var(--muted); text-transform: uppercase; letter-spacing: .4px; min-width: 80px;
   }
-  .chave-locked .linha .valor-mini{
-    font-weight: 700; color: var(--text); font-family: var(--mono);
-  }
-  .chave-locked .linha.vazia .valor-mini{
-    color: var(--muted); font-style: italic; font-weight: 500;
-  }
+  .chave-locked .linha .valor-mini{ font-weight: 700; color: var(--text); font-family: var(--mono); }
+  .chave-locked .linha.vazia .valor-mini{ color: var(--muted); font-style: italic; font-weight: 500; }
   .chave-composer textarea#adChaveComplemento{
-    border: none; border-radius: 0; min-height: 76px;
-    font-family: var(--mono); font-size: .82rem; line-height: 1.6;
-    padding: 10px 14px;
+    border: none; border-radius: 0; min-height: 68px;
+    font-family: var(--mono); font-size: .8rem; line-height: 1.6; padding: 10px 14px;
     background: repeating-linear-gradient(to bottom, #fff 0px, #fff 26px, #f8fafc 26px, #f8fafc 27px);
     resize: vertical;
   }
-  .chave-composer textarea#adChaveComplemento:focus{
-    outline: none; box-shadow: inset 0 0 0 2px rgba(109,40,217,.2);
-  }
+  .chave-composer textarea#adChaveComplemento:focus{ outline: none; box-shadow: inset 0 0 0 2px rgba(109,40,217,.2); }
   .chave-hint{
     display: flex; align-items: center; gap: 6px;
-    font-size: .68rem; color: var(--text-soft); margin-top: 4px; line-height: 1.4;
-    padding: 5px 10px; background: var(--purple-soft);
+    font-size: .66rem; color: var(--text-soft); margin-top: 4px; line-height: 1.4;
+    padding: 4px 10px; background: var(--purple-soft);
     border-radius: 6px; border-left: 3px solid var(--purple);
   }
-  .chave-hint b{ color: var(--purple); }
   .chave-hint .linha-tag{
-    display: inline-block; font-family: var(--mono); font-size: .6rem;
+    display: inline-block; font-family: var(--mono); font-size: .58rem;
     background: #fff; padding: 1px 6px; border-radius: 3px;
     border: 1px solid var(--border); color: var(--text-soft); font-weight: 700;
   }
 
-  .desc-field-wrap textarea#adDescricao{
-    min-height: 108px; font-size: .84rem; line-height: 1.5;
-    padding: 10px 14px 10px 14px; background: #fff;
-  }
+  .desc-field-wrap textarea#adDescricao{ min-height: 100px; font-size: .82rem; line-height: 1.5; padding: 10px 14px; background: #fff; }
   .desc-tipo-preview{
-    display: flex; align-items: center; gap: 8px; padding: 7px 12px;
+    display: flex; align-items: center; gap: 8px; padding: 6px 12px;
     background: var(--purple-soft); border-radius: 6px 6px 0 0;
     border: 1px solid var(--border-strong); border-bottom: none;
-    font-family: var(--mono); font-size: .78rem; color: var(--purple);
-    font-weight: 700; min-height: 32px;
+    font-family: var(--mono); font-size: .76rem; color: var(--purple);
+    font-weight: 700; min-height: 30px;
   }
-  .desc-tipo-preview .lock-ico{ font-size: .85rem; }
+  .desc-tipo-preview .lock-ico{ font-size: .82rem; }
   .desc-tipo-preview .empty-txt{ color: var(--muted); font-style: italic; font-weight: 500; }
-  .desc-tipo-preview + textarea#adDescricao{
-    border-top-left-radius: 0; border-top-right-radius: 0;
-  }
+  .desc-tipo-preview + textarea#adDescricao{ border-top-left-radius: 0; border-top-right-radius: 0; }
 
   .form-actions-row{
     display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
-    margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border);
+    margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border);
   }
   .form-actions-row .link-label{
-    font-size: .82rem; font-weight: 700; color: var(--text-soft);
+    font-size: .8rem; font-weight: 700; color: var(--text-soft);
     display: inline-flex; align-items: center; gap: 4px; white-space: nowrap;
   }
   .form-actions-row .link-label .req{ color: var(--danger); }
   .btn-corretor-escolha{
     display: inline-flex; align-items: center; justify-content: center;
-    padding: 9px 16px; border-radius: var(--radius-sm);
+    padding: 8px 14px; border-radius: var(--radius-sm);
     border: 2px solid var(--border); background: #fff;
-    cursor: pointer; font-family: inherit;
-    font-size: .82rem; font-weight: 700; color: var(--text-soft);
-    transition: all .15s; white-space: nowrap; min-width: 74px;
+    cursor: pointer; font-family: inherit; font-size: .8rem; font-weight: 700;
+    color: var(--text-soft); transition: all .15s; white-space: nowrap; min-width: 70px;
   }
   .btn-corretor-escolha:hover{ border-color: var(--purple); color: var(--purple); }
-  .btn-corretor-escolha.ativo{
-    background: var(--purple); color: #fff; border-color: var(--purple);
-    box-shadow: 0 2px 8px rgba(109,40,217,.25);
-  }
+  .btn-corretor-escolha.ativo{ background: var(--purple); color: #fff; border-color: var(--purple); box-shadow: 0 2px 8px rgba(109,40,217,.25); }
   @media(max-width:640px){
     .form-actions-row{ gap: 6px; }
-    .btn-corretor-escolha{ padding: 8px 10px; font-size: .75rem; min-width: 60px; }
+    .btn-corretor-escolha{ padding: 7px 10px; font-size: .74rem; min-width: 58px; }
     .form-actions-row .btn-salvar-imovel{ flex: 1 1 100%; order: 99; margin-top: 4px; }
   }
 
-  .filters{
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-    gap: 8px; margin: 14px 0 4px;
-  }
-  .filters .filter-btn{
-    padding: 8px 10px; border-radius: var(--radius-sm);
-    border: 1px solid var(--border); background: #fff; cursor: pointer;
-    font-size: .74rem; font-weight: 600; color: var(--text-soft);
-    transition: all .15s; font-family: inherit;
-    display: inline-flex; align-items: center; justify-content: center; gap: 5px;
-    width: 100%;
-  }
-  .filters .filter-btn:hover{ border-color: var(--purple); color: var(--purple); }
-  .filters .filter-btn.active{ background: var(--purple); color: #fff; border-color: var(--purple); }
-  .filters .filter-btn.btn-reservas.active{ background: #d97706; border-color: #d97706; }
-  .filter-count{
-    background: rgba(15,23,42,.08); padding: 1px 7px;
-    border-radius: 4px; font-size: .66rem; min-width: 18px; text-align: center; font-weight: 700;
-  }
-  .filters .filter-btn.active .filter-count{ background: rgba(255,255,255,.25); }
-
+  /* ============ GRID 3 COLUNAS ============ */
   .grid{
     display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: 14px;
-    margin-top: 16px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    margin-top: 14px;
   }
-  @media(max-width:1400px){ .grid{ grid-template-columns: repeat(4, minmax(0, 1fr)); } }
-  @media(max-width:1100px){ .grid{ grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-  @media(max-width:820px){ .grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; } }
-  @media(max-width:420px){ .grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; } }
+  @media(max-width:1200px){ .grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media(max-width:760px){ .grid{ grid-template-columns: 1fr; } }
 
+  /* ============ CARD HORIZONTAL ============ */
   .card{
     background: #fff; border-radius: var(--radius-lg);
     overflow: hidden; box-shadow: var(--shadow-sm);
@@ -494,75 +431,27 @@
   }
   .card:hover{ box-shadow: var(--shadow-md); border-color: var(--border-strong); }
   .card.destacado{ border-color: var(--purple); box-shadow: 0 0 0 3px rgba(109,40,217,.18), var(--shadow-md); }
-  .card.card-nao-gostei{ opacity: .35; filter: grayscale(90%); background: #f7f8fa; }
-  .card.card-nao-gostei:hover{ opacity: .6; filter: grayscale(50%); }
-  
-  /* CORREÇÃO: Removido o opacity/filter/background/borda do card reserva */
-  .card.card-reserva {}
-  .card.card-reserva:hover {}
-
+  .card.card-nao-gostei{ opacity: .5; filter: grayscale(60%); background: #f8f9fb; }
+  .card.card-nao-gostei:hover{ opacity: .8; filter: grayscale(30%); }
   .card.card-agendado{ background: #f0fdf4; border-color: #bbf7d0; }
   .card.card-agendado:hover{ background: #dcfce7; border-color: #86efac; }
-
-  /* ===== CARD VENDIDO ===== */
   .card.card-vendido{
-    background: #fff1f2; border-color: #fecaca; opacity: .92;
+    background: #fff5f5; border-color: #fecaca; opacity: .85;
   }
   .card.card-vendido:hover{ opacity: 1; border-color: #f87171; }
-  .card.card-vendido .card-img{ filter: grayscale(35%) brightness(0.92); }
-  .card-tarja-vendido{
-    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-15deg); z-index: 5;
-    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
-    color: #fff; font-size: 1.3rem; font-weight: 900; letter-spacing: 6px;
-    padding: 10px 28px; border: 3px solid #fff; border-radius: 8px;
-    box-shadow: 0 4px 20px rgba(220,38,38,.5), 0 0 0 2px rgba(220,38,38,.3);
-    text-shadow: 0 2px 5px rgba(0,0,0,.3); pointer-events: none; white-space: nowrap;
-  }
-  
-  /* CORREÇÃO: A tarja do meio da foto foi removida do HTML, mas mantemos o CSS caso queira no futuro */
-  .card-tarja-reserva{ display: none; }
-  
-  .card-status-vendido{ background: #b91c1c !important; }
-  .card-status-reserva{ background: #b45309 !important; }
+  .card.card-vendido .card-img{ filter: grayscale(45%) brightness(.92); }
+  .card.card-vendido .card-main{ opacity: .85; }
+
+  .card.card-reserva{ background: #fffbeb; border-color: #fde68a; }
+  .card.card-reserva:hover{ border-color: #f59e0b; }
 
   .card.card-novo{ animation: cardNovo .4s ease-out; }
   @keyframes cardNovo{ from{ transform: scale(.94); opacity: 0; } to{ transform: scale(1); opacity: 1; } }
 
-  .card-img-wrap{
-    width: 100%; aspect-ratio: 4 / 3; overflow: hidden;
-    background: var(--bg-alt); position: relative;
-  }
-  .card-img{
-    width: 100%; height: 100%; object-fit: cover;
-    display: block; transition: transform .3s ease;
-    cursor: pointer;
-  }
-  .card:hover .card-img{ transform: scale(1.04); }
-
-  .card-overlay-specs{
-    position: absolute; left: 8px; right: 8px; bottom: 8px;
-    background: rgba(15,23,42,.55); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
-    color: #fff; font-size: .68rem; font-weight: 700; line-height: 1.3;
-    padding: 5px 10px; border-radius: 8px; letter-spacing: .2px;
-    box-shadow: 0 2px 6px rgba(0,0,0,.15); z-index: 3;
-    pointer-events: none; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
-    text-shadow: 0 1px 2px rgba(0,0,0,.4);
-  }
-
-  .card-tag-topo{
-    position: absolute; top: 8px; left: 8px;
-    background: linear-gradient(135deg, #8b7355 0%, #6d5a42 100%);
-    color: #fff; font-size: .55rem; font-weight: 800; letter-spacing: .4px;
-    text-transform: uppercase; padding: 3px 8px; border-radius: 6px; z-index: 5;
-    box-shadow: 0 2px 6px rgba(0,0,0,.35); white-space: nowrap;
-    max-width: calc(100% - 60px); overflow: hidden; text-overflow: ellipsis;
-    pointer-events: none; line-height: 1.2;
-  }
-
   .card-status-strip{
     position: absolute; top: 8px; right: 8px;
-    padding: 4px 9px; border-radius: 999px;
-    font-size: .58rem; font-weight: 800; text-transform: uppercase; letter-spacing: .4px;
+    padding: 3px 8px; border-radius: 999px;
+    font-size: .55rem; font-weight: 800; text-transform: uppercase; letter-spacing: .4px;
     color: #fff; z-index: 4; box-shadow: 0 2px 6px rgba(0,0,0,.18); white-space: nowrap;
   }
   .status-gostei{ background: var(--success); }
@@ -571,128 +460,168 @@
   .status-pendente{ display: none; }
   .status-reserva{ background: #b45309; }
 
-  .badge-apto{
-    display: inline-flex; align-items: center; gap: 4px;
-    background: rgba(109,40,217,.95); color: #fff;
-    padding: 3px 9px; border-radius: 999px;
-    font-size: .64rem; font-weight: 800; letter-spacing: .3px;
-    white-space: nowrap; border: 1px solid rgba(255,255,255,.2);
-    box-shadow: 0 1px 3px rgba(109,40,217,.35); line-height: 1.4; vertical-align: middle;
+  .card-tarja-vendido{
+    position: absolute; top: 50%; left: 60px; transform: translateY(-50%) rotate(-15deg); z-index: 5;
+    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+    color: #fff; font-size: .9rem; font-weight: 900; letter-spacing: 4px;
+    padding: 6px 18px; border: 2px solid #fff; border-radius: 6px;
+    box-shadow: 0 4px 20px rgba(220,38,38,.5);
+    text-shadow: 0 2px 5px rgba(0,0,0,.3); pointer-events: none; white-space: nowrap;
   }
-  .badge-apto .ap-ico{ font-size: .72rem; line-height: 1; }
 
-  .card-body{ padding: 12px 12px 8px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
-  .card-top-meta{ display: flex; align-items: center; gap: 5px; flex-wrap: wrap; }
-  .card-date{ font-size: .62rem; color: var(--muted); background: var(--bg-alt); padding: 2px 7px; border-radius: 4px; font-weight: 600; }
-  .card-code{
-    font-size: .62rem; color: var(--text-soft); background: var(--bg-alt);
-    padding: 2px 7px; border-radius: 4px; font-weight: 700;
-    cursor: pointer; border: 1px solid var(--border); transition: all .15s; font-family: var(--mono);
+  .card-main{ display: flex; gap: 0; min-height: 210px; }
+
+  .card-img-wrap{
+    width: 130px; flex-shrink: 0; overflow: hidden;
+    background: var(--bg-alt); position: relative;
   }
-  .card-code:hover{ background: #fff; color: var(--purple); border-color: var(--purple); }
-  .card-code.copiado{ background: var(--success-soft); color: var(--success); border-color: #b8dfc7; }
+  .card-img{
+    width: 100%; height: 100%; object-fit: cover;
+    display: block; transition: transform .3s ease; cursor: pointer;
+  }
+  .card:hover .card-img{ transform: scale(1.04); }
+
+  .card-body{ padding: 10px 12px 8px; flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+
+  .card-header-row{ display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+  .card-title-block{ min-width: 0; flex: 1; }
   .card-title{
-    font-size: .86rem; font-weight: 700; line-height: 1.3; color: var(--text);
-    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
-    overflow: hidden; letter-spacing: -.005em;
+    font-size: .85rem; font-weight: 700; line-height: 1.3; color: var(--text);
+    letter-spacing: -.005em; word-break: break-word;
   }
+  .card-code-chip{
+    font-size: .6rem; color: var(--text-soft); background: var(--bg-alt);
+    padding: 1px 6px; border-radius: 4px; font-weight: 700; font-family: var(--mono);
+    cursor: pointer; transition: all .15s; display: inline-block; margin-top: 2px;
+  }
+  .card-code-chip:hover{ background: #fff; color: var(--purple); border: 1px solid var(--purple); }
+  .card-code-chip.copiado{ background: var(--success-soft); color: var(--success); }
 
-  .card-price-row{
-    display: flex; align-items: center; justify-content: space-between;
-    gap: 8px; margin-top: 2px; flex-wrap: wrap;
+  /* GRID DE DADOS DO CARD */
+  .card-data-grid{
+    display: grid; grid-template-columns: 1fr 1fr; gap: 3px 10px;
+    font-size: .72rem; line-height: 1.4;
   }
-  .card-price{ font-size: 1rem; font-weight: 800; color: var(--success-bright); min-width: 0; }
+  .card-data-item{ display: flex; align-items: baseline; gap: 4px; min-width: 0; }
+  .card-data-item.full{ grid-column: 1 / -1; }
+  .card-data-item .dlabel{
+    font-size: .58rem; font-weight: 700; color: var(--muted);
+    text-transform: uppercase; letter-spacing: .3px; flex-shrink: 0;
+  }
+  .card-data-item .dvalue{
+    color: var(--text); font-weight: 600; overflow: hidden;
+    text-overflow: ellipsis; white-space: nowrap;
+  }
+  .card-data-item .dvalue.preco{ color: var(--success-bright); font-weight: 800; font-size: .85rem; }
+  .card-data-item .dvalue.mono{ font-family: var(--mono); font-size: .7rem; }
+
+  .card-chave-block{
+    background: #f8fafc; border: 1px solid var(--border); border-radius: 6px;
+    padding: 5px 8px; font-size: .68rem; line-height: 1.4;
+    margin-top: 3px;
+  }
+  .card-chave-block .chave-lbl{
+    font-size: .56rem; font-weight: 700; color: var(--muted);
+    text-transform: uppercase; letter-spacing: .3px; margin-bottom: 2px;
+  }
+  .card-chave-block .chave-txt{
+    font-family: var(--mono); color: var(--text); font-size: .68rem;
+    white-space: pre-wrap; word-break: break-word;
+    display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .card-chave-block.expandido .chave-txt{ display: block; -webkit-line-clamp: unset; overflow: visible; }
+  .card-chave-toggle{
+    background: transparent; border: none; color: var(--purple);
+    font-size: .62rem; font-weight: 600; cursor: pointer; padding: 2px 0;
+    font-family: inherit; margin-top: 2px;
+  }
 
   .card-desc{
-    font-size: .74rem; color: var(--text-soft); line-height: 1.45;
+    font-size: .7rem; color: var(--text-soft); line-height: 1.4;
     display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
-    overflow: hidden; cursor: pointer; white-space: pre-wrap;
+    overflow: hidden; white-space: pre-wrap; word-break: break-word;
   }
   .card-desc.expandido{ display: block; -webkit-line-clamp: unset; overflow: visible; }
 
-  .card-actions{
-    display: grid; grid-template-columns: repeat(3, 1fr);
-    gap: 4px; padding: 0 10px 10px;
+  /* BOTÕES DE STATUS DO CARD */
+  .card-status-actions{
+    display: flex; gap: 4px; padding: 0 10px 8px;
   }
-  .card-actions .btn-action{
-    padding: 8px 4px; border-radius: var(--radius-sm);
+  .card-status-actions .btn-action{
+    flex: 1; padding: 6px 4px; border-radius: var(--radius-sm);
     border: 1px solid var(--border); background: #f8fafc;
-    cursor: pointer; font-family: inherit; font-size: .7rem; font-weight: 700;
-    transition: all .15s; display: flex; flex-direction: column;
-    align-items: center; justify-content: center; gap: 2px;
-    min-height: 44px; color: var(--text-soft); line-height: 1.15;
+    cursor: pointer; font-family: inherit; font-size: .66rem; font-weight: 700;
+    transition: all .15s; display: flex; align-items: center; justify-content: center; gap: 3px;
+    min-height: 32px; color: var(--text-soft); line-height: 1.15;
   }
-  .card-actions .btn-action .icone{ font-size: .95rem; line-height: 1; }
-  .card-actions .btn-action:hover{ background: var(--bg-alt); }
-  .card-actions .btn-action.act-gostei.ativo{ background: var(--success); border-color: var(--success); color: #fff; }
-  .card-actions .btn-action.act-visitar.ativo{ background: var(--warn); border-color: var(--warn); color: #fff; }
-  .card-actions .btn-action.act-nao.ativo{ background: var(--danger); border-color: var(--danger); color: #fff; }
+  .card-status-actions .btn-action:hover{ background: var(--bg-alt); }
+  .card-status-actions .btn-action.act-gostei.ativo{ background: var(--success); border-color: var(--success); color: #fff; }
+  .card-status-actions .btn-action.act-visitar.ativo{ background: var(--warn); border-color: var(--warn); color: #fff; }
+  .card-status-actions .btn-action.act-nao.ativo{ background: var(--danger); border-color: var(--danger); color: #fff; }
 
-  .card-actions .btn-action.act-reserva{
-    grid-column: 1 / -1;
-    background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
-    color: #fff; border: none; padding: 10px 12px;
-    font-size: .74rem; font-weight: 800; letter-spacing: .3px;
-    min-height: 40px; flex-direction: row; gap: 6px;
+  /* LINHA COMPACTA DE AÇÕES DE ADMINISTRAÇÃO */
+  .card-admin-actions{
+    display: flex; gap: 4px; padding: 0 10px 8px; flex-wrap: wrap;
   }
-  .card-actions .btn-action.act-reserva:hover{ background: linear-gradient(135deg, #b45309 0%, #92400e 100%); }
-
-  .card-actions .btn-action.act-reativar{
-    grid-column: 1 / -1;
-    background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
-    color: #fff; border: none; padding: 10px 12px;
-    font-size: .74rem; font-weight: 800; letter-spacing: .3px;
-    min-height: 40px; flex-direction: row; gap: 6px;
+  .card-admin-actions .adm-btn{
+    flex: 1; min-width: 0;
+    padding: 5px 6px; border-radius: var(--radius-sm);
+    border: 1px solid var(--border); background: #fff;
+    font-size: .62rem; font-weight: 700; color: var(--text-soft);
+    cursor: pointer; transition: all .12s; font-family: inherit;
+    display: inline-flex; align-items: center; justify-content: center; gap: 3px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
-  .card-actions .btn-action.act-reativar:hover{ background: linear-gradient(135deg, #15803d 0%, #14532d 100%); }
+  .card-admin-actions .adm-btn:hover{ background: var(--bg-alt); color: var(--text); }
+  .card-admin-actions .adm-btn.btn-vendido{ color: #b91c1c; border-color: #fecaca; }
+  .card-admin-actions .adm-btn.btn-vendido:hover{ background: #fef2f2; }
+  .card-admin-actions .adm-btn.btn-vendido.desmarcar{ color: #15803d; border-color: #86efac; }
+  .card-admin-actions .adm-btn.btn-vendido.desmarcar:hover{ background: #f0fdf4; }
+  .card-admin-actions .adm-btn.btn-reserva{ color: #b45309; border-color: #fde68a; }
+  .card-admin-actions .adm-btn.btn-reserva:hover{ background: #fffbeb; }
+  .card-admin-actions .adm-btn.btn-clonar{ color: var(--purple); border-color: #ddd6fe; }
+  .card-admin-actions .adm-btn.btn-clonar:hover{ background: var(--purple-soft); }
+  .card-admin-actions .adm-btn.btn-clonar.ativo{ background: var(--purple); color: #fff; border-color: var(--purple); }
+  .card-admin-actions .adm-btn.btn-clonar:disabled{ opacity: .35; cursor: not-allowed; }
+  .card-admin-actions .adm-btn.btn-editar{ color: var(--primary); border-color: #bfdbfe; }
+  .card-admin-actions .adm-btn.btn-editar:hover{ background: var(--primary-soft); }
+  .card-admin-actions .adm-btn.btn-reativar{ color: #15803d; border-color: #86efac; flex: 1; }
+  .card-admin-actions .adm-btn.btn-reativar:hover{ background: #f0fdf4; }
 
-  .card-actions .btn-action.act-vendido{
-    grid-column: 1 / -1;
-    background: #fff; color: #b91c1c; border: 1.5px solid #fecaca;
-    padding: 9px 12px; font-size: .72rem; font-weight: 800; letter-spacing: .3px;
-    min-height: 38px; flex-direction: row; gap: 6px; transition: all .15s;
+  .card-footer-actions{
+    display: flex; gap: 4px; padding: 0 10px 10px;
   }
-  .card-actions .btn-action.act-vendido:hover{ background: #fef2f2; border-color: #f87171; }
-  .card-actions .btn-action.act-vendido.desmarcar{ background: #f0fdf4; color: #15803d; border-color: #86efac; }
-  .card-actions .btn-action.act-vendido.desmarcar:hover{ background: #dcfce7; border-color: #4ade80; }
 
-  .obs-wrap{ background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 8px 10px; margin: 0 12px 12px; }
-  .obs-label{ font-size: .62rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .4px; margin-bottom: 5px; display: flex; align-items: center; gap: 5px; }
-  .obs-text{ font-size: .74rem; color: var(--text); line-height: 1.45; white-space: pre-wrap; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
-  .obs-text.expandido{ display: block; -webkit-line-clamp: unset; overflow: visible; }
-  .obs-toggle{ display: inline-flex; align-items: center; gap: 3px; background: transparent; border: none; color: var(--purple); font-size: .68rem; font-weight: 600; cursor: pointer; margin-top: 4px; padding: 1px 0; font-family: inherit; }
-  .obs-edit-btn{ background: transparent; border: none; color: var(--muted); font-size: .62rem; font-weight: 600; cursor: pointer; padding: 2px 6px; border-radius: 4px; font-family: inherit; margin-left: auto; display: inline-flex; align-items: center; gap: 3px; }
-  .obs-edit-btn:hover{ background: #fff; color: var(--purple); }
-  .obs-textarea{ min-height: 60px; font-size: .78rem; display: none; }
-  .obs-edit-actions{ display: none; gap: 5px; margin-top: 8px; }
-  .obs-wrap.editing .obs-text{ display: none; }
-  .obs-wrap.editing .obs-toggle{ display: none; }
-  .obs-wrap.editing .obs-textarea{ display: block; }
-  .obs-wrap.editing .obs-edit-actions{ display: flex; }
-  .obs-empty{ color: var(--muted); font-style: italic; font-size: .72rem; cursor: pointer; padding: 2px 0; }
-  .obs-empty:hover{ color: var(--purple); }
+  /* Agendamento / visita dentro do card */
+  .agendamento-box, .visita-box{
+    margin: 0 10px 8px; border-radius: var(--radius-sm);
+    padding: 7px 10px; font-size: .7rem;
+  }
+  .agendamento-box{ background: var(--info-soft); border: 1px solid #c9d6e4; }
+  .visita-box{ background: var(--success-soft); border: 1px solid #b8dfc7; }
+  .agendamento-box .titulo, .visita-box .titulo{
+    font-size: .6rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .4px; margin-bottom: 4px;
+  }
+  .agendamento-box .titulo{ color: var(--info); }
+  .visita-box .titulo{ color: var(--success); }
+  .agendamento-info{ margin-bottom: 5px; line-height: 1.35; }
 
-  .agendamento-box{ background: var(--info-soft); border: 1px solid #c9d6e4; border-radius: var(--radius-sm); padding: 10px 12px; margin: 0 12px 12px; }
-  .agendamento-box .titulo{ font-size: .64rem; font-weight: 700; color: var(--info); text-transform: uppercase; letter-spacing: .4px; margin-bottom: 6px; display: flex; align-items: center; gap: 5px; }
-  .agendamento-info{ font-size: .78rem; color: var(--text); margin-bottom: 8px; line-height: 1.4; padding: 6px 10px; background: #fff; border-radius: var(--radius-sm); border: 1px solid #d5e0ec; }
-  .agendamento-actions{ display: flex; gap: 5px; flex-wrap: wrap; }
-  .agendamento-actions .btn{ padding: 5px 9px; font-size: .7rem; border-radius: var(--radius-sm); }
-  .visita-box{ background: var(--success-soft); border: 1px solid #b8dfc7; border-radius: var(--radius-sm); padding: 10px 12px; margin: 0 12px 12px; }
-  .visita-box .titulo{ font-size: .64rem; font-weight: 700; color: var(--success); text-transform: uppercase; letter-spacing: .4px; margin-bottom: 6px; display: flex; align-items: center; gap: 5px; }
-  .visita-info{ font-size: .74rem; color: #2d4a3a; margin-bottom: 6px; line-height: 1.4; }
-
-  .card-footer{ padding: 0 12px 12px; display: flex; flex-direction: column; gap: 6px; }
-  .card-footer-actions{ display: flex; gap: 5px; flex-wrap: wrap; }
-  .card-footer-actions .btn{ flex: 1; min-width: 0; padding: 7px 8px; font-size: .72rem; }
-
-  #acessosSection{ border-left-color: var(--warn); }
-  .acesso-card{ background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; margin-bottom: 10px; }
-  .acesso-senha-wrap{ display: flex; align-items: center; gap: 8px; background: #fff; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px 12px; margin-bottom: 10px; font-family: var(--mono); }
-
-  .loading-inline{ text-align: center; padding: 40px 20px; color: var(--purple); }
-  .empty-state{ text-align: center; padding: 50px 20px; color: var(--muted); }
-  .empty-state .empty-ico{ width: 48px; height: 48px; margin: 0 auto 12px; color: var(--border-strong); }
-  .empty-state h3{ font-size: .95rem; margin-bottom: 4px; color: var(--text-soft); font-weight: 600; }
+  /* Botão clone flutuante */
+  .clone-floating{
+    position: fixed; bottom: 20px; right: 20px; z-index: 900;
+    background: var(--purple); color: #fff;
+    padding: 12px 20px; border-radius: 40px;
+    box-shadow: 0 8px 24px rgba(109,40,217,.4);
+    font-size: .86rem; font-weight: 700; cursor: pointer;
+    border: 2px solid rgba(255,255,255,.2);
+    display: none; align-items: center; gap: 10px;
+    font-family: inherit; transition: all .2s;
+  }
+  .clone-floating:hover{ background: #5b21b6; transform: translateY(-2px); }
+  .clone-floating.show{ display: inline-flex; animation: floatIn .25s ease-out; }
+  @keyframes floatIn{ from{ opacity: 0; transform: translateY(12px); } to{ opacity: 1; transform: translateY(0); } }
+  .clone-floating .num{ background: #fff; color: var(--purple); border-radius: 20px; padding: 2px 9px; font-size: .82rem; }
 
   .modal-backdrop{ position: fixed; inset: 0; background: rgba(15,23,42,.6); z-index: 1000; display: none; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(3px); }
   .modal-backdrop.show{ display: flex; }
@@ -724,14 +653,25 @@
   .text-muted{ color: var(--muted); }
   .text-center{ text-align: center; }
 
-  .saving-bar{ position: fixed; bottom: 20px; right: 20px; z-index: 500; background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 14px; box-shadow: var(--shadow-lg); display: none; align-items: center; gap: 10px; font-size: .78rem; font-weight: 600; color: var(--text-soft); }
+  .saving-bar{ position: fixed; bottom: 20px; left: 20px; z-index: 500; background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 14px; box-shadow: var(--shadow-lg); display: none; align-items: center; gap: 10px; font-size: .78rem; font-weight: 600; color: var(--text-soft); }
   .saving-bar.mostrar{ display: flex; }
   .saving-bar .spin{ width: 16px; height: 16px; border: 2px solid rgba(109,40,217,.25); border-top-color: var(--purple); border-radius: 50%; animation: girar .7s linear infinite; }
 
   .clonar-item{ display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: #fff; border: 1px solid var(--border); border-radius: var(--radius-sm); margin-bottom: 6px; cursor: pointer; transition: all .12s; }
   .clonar-item:hover{ border-color: var(--purple); }
+  .clonar-item.disabled{ opacity: .5; cursor: not-allowed; background: #f1f5f9; }
+  .clonar-item.disabled:hover{ border-color: var(--border); }
 
   .loader{ display:inline-block;width:14px;height:14px; border:2px solid currentColor;border-top-color:transparent;border-radius:50%; animation:girar .6s linear infinite; }
+
+  /* Info rows do modal "ver cliente" */
+  .info-grid{ display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-bottom: 16px; }
+  .info-item{ background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 8px 12px; }
+  .info-item .lbl{ font-size: .6rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .4px; margin-bottom: 3px; }
+  .info-item .val{ font-size: .84rem; font-weight: 600; color: var(--text); word-break: break-word; }
+  .info-block-title{ font-size: .76rem; font-weight: 700; color: var(--purple); text-transform: uppercase; letter-spacing: .5px; margin: 16px 0 8px; padding-bottom: 4px; border-bottom: 1px solid var(--border); }
+
+  .search-input{ padding: 7px 10px; font-size: .8rem; }
 </style>
 </head>
 
@@ -743,19 +683,19 @@
       <div class="brand-icon">VA</div>
       <div class="brand-text">
         <div class="brand-title">Vitrine Admin</div>
-        <div class="brand-sub">Editar imóveis</div>
+        <div class="brand-sub">Painel de imóveis</div>
       </div>
     </div>
     <div class="header-right">
-      <button class="btn-header editar-cliente" onclick="abrirEditarClienteAtual()" title="Editar dados do cliente">
-        <svg class="ico" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-        <span class="lbl-txt">Editar cliente</span>
+      <button class="btn-header ver-cliente" onclick="abrirVerCliente()" title="Ver dados do cliente">
+        <svg class="ico" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <span class="lbl-txt">Ver cliente</span>
       </button>
-      <button class="btn-header atualizar" id="btnAtualizarHeader" onclick="recarregarVitrine()" title="Recarregar imóveis deste cliente">
+      <button class="btn-header atualizar" id="btnAtualizarHeader" onclick="recarregarVitrine()" title="Recarregar">
         <svg class="ico" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
         <span class="lbl-txt">Atualizar</span>
       </button>
-      <button class="btn-header" onclick="abrirAtividade()" title="Ver atividade do cliente">
+      <button class="btn-header" onclick="abrirAtividade()" title="Ver atividade">
         <svg class="ico" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
         <span class="lbl-txt">Atividade</span>
       </button>
@@ -763,10 +703,6 @@
         <svg class="ico" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
         <span class="lbl-txt">Acessos</span>
         <span class="badge-num" id="acessosBadgeNum">0</span>
-      </button>
-      <button class="btn-header" onclick="abrirClonarVitrine()" title="Clonar imóveis para outro cliente">
-        <svg class="ico" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-        <span class="lbl-txt">Clonar</span>
       </button>
     </div>
   </div>
@@ -784,14 +720,42 @@
 </div>
 
 <div id="conteudoView" class="hidden">
-  <div class="cliente-bar" id="clienteBar">
-    <div class="info">
-      <div class="nome-cli" id="cbNome">—</div>
-      <div class="meta" id="cbMeta"></div>
+  <!-- TOPBAR: cliente + filtros + busca + adicionar -->
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="cli-badge">
+        <div>
+          <div class="cli-nome" id="cbNome">—</div>
+          <div class="cli-tel" id="cbTel">—</div>
+        </div>
+        <span class="cli-corr hidden" id="cbCorretor"></span>
+        <span class="cli-temp" id="cbTemp"></span>
+        <div class="cli-tags" id="cbTags"></div>
+      </div>
+
+      <div class="filters-inline" id="filters">
+        <button class="filter-btn" data-filter="recentes" onclick="setFiltro('recentes', this)">Recentes</button>
+        <button class="filter-btn active" data-filter="todos" onclick="setFiltro('todos', this)">Todos <span class="filter-count" id="cnt-todos">0</span></button>
+        <button class="filter-btn" data-filter="pendente" onclick="setFiltro('pendente', this)">Aguardando <span class="filter-count" id="cnt-pendente">0</span></button>
+        <button class="filter-btn" data-filter="quero-visitar" onclick="setFiltro('quero-visitar', this)">Quero visitar <span class="filter-count" id="cnt-quero-visitar">0</span></button>
+        <button class="filter-btn" data-filter="gostei" onclick="setFiltro('gostei', this)">Gostei <span class="filter-count" id="cnt-gostei">0</span></button>
+        <button class="filter-btn" data-filter="nao-gostei" onclick="setFiltro('nao-gostei', this)">Não gostei <span class="filter-count" id="cnt-nao-gostei">0</span></button>
+        <button class="filter-btn btn-reservas" data-filter="reservas" onclick="setFiltro('reservas', this)">Reservas <span class="filter-count" id="cnt-reservas">0</span></button>
+      </div>
+
+      <div class="search-wrap">
+        <input type="search" id="buscaInput" class="search-input" placeholder="Buscar..." oninput="renderizarImoveis()">
+      </div>
+
+      <button class="btn btn-purple btn-add" onclick="abrirPainelNovoImovel()">
+        <svg class="ico ico-sm" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Adicionar
+      </button>
     </div>
   </div>
 
   <div class="container">
+    <!-- Painel cadastro -->
     <div class="admin-panel" id="adminPanel">
       <div class="admin-panel-header">
         <h3 id="adminPanelTitle">Adicionar imóvel</h3>
@@ -802,8 +766,7 @@
       <div class="admin-panel-inner">
         <input type="hidden" id="editingId">
 
-        <!-- TIPO (chips) -->
-        <label style="margin-bottom:8px;">Tipo de imóvel <span class="req">*</span></label>
+        <label style="margin-bottom:6px;">Tipo de imóvel <span class="req">*</span></label>
         <div class="tipo-chips-wrap" id="tipoChipsWrap">
           <button type="button" class="chip-tipo" data-tipo="Apartamento Padrão" onclick="escolherTipoImovel('Apartamento Padrão', this)">Apartamento Padrão</button>
           <button type="button" class="chip-tipo" data-tipo="Cobertura" onclick="escolherTipoImovel('Cobertura', this)">Cobertura</button>
@@ -888,7 +851,7 @@
                 <span class="lock-ico">🔒</span>
                 <span id="descTipoTexto" class="empty-txt">Selecione o tipo acima (fixo na 1ª linha)</span>
               </div>
-              <textarea id="adDescricao" placeholder="Descreva o imóvel (quartos, vagas, metragem, etc.)..."></textarea>
+              <textarea id="adDescricao" placeholder="Descreva o imóvel..."></textarea>
             </div>
           </div>
         </div>
@@ -914,10 +877,10 @@
                   <span class="valor-mini" id="chaveValorBloco">—</span>
                 </div>
               </div>
-              <textarea id="adChaveComplemento" placeholder="Onde pegar a chave (ex: na portaria, com o síndico, etc.)..."></textarea>
+              <textarea id="adChaveComplemento" placeholder="Onde pegar a chave..."></textarea>
             </div>
             <div class="chave-hint">
-              <span class="linha-tag">Bloqueado</span> Apartamento e Bloco (vêm dos campos acima)
+              <span class="linha-tag">Bloqueado</span> Apartamento e Bloco
               &nbsp;·&nbsp;
               <span class="linha-tag">Livre</span> Complemento abaixo
             </div>
@@ -925,16 +888,13 @@
         </div>
 
         <input type="hidden" id="adImagem">
-        <input type="hidden" id="adReserva" value="">
 
         <div class="form-actions-row">
-          <span class="link-label">
-            Link de: <span class="req">*</span>
-          </span>
+          <span class="link-label">Link de: <span class="req">*</span></span>
           <button type="button" class="btn-corretor-escolha" data-corretor="Hugo" onclick="escolherCorretor('Hugo', this)">Hugo</button>
           <button type="button" class="btn-corretor-escolha" data-corretor="Carolina" onclick="escolherCorretor('Carolina', this)">Carol</button>
 
-          <button class="btn btn-warn btn-salvar-reserva" id="btnSalvarReserva" style="flex:1; min-width:140px;" onclick="salvarImovel(true)" disabled>
+          <button class="btn btn-warn" id="btnSalvarReserva" style="flex:1; min-width:140px;" onclick="salvarImovel(true)" disabled>
             <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
             Salvar como Reserva
           </button>
@@ -974,142 +934,33 @@
       </div>
     </div>
 
-    <div class="admin-toolbar">
-      <button class="btn btn-purple" onclick="abrirPainelNovoImovel()">
-        <svg class="ico ico-sm" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        Adicionar novo imóvel
-      </button>
-      <span class="spacer"></span>
-    </div>
-
-    <div class="mt-3">
-      <input type="search" id="buscaInput" placeholder="Buscar endereço ou descrição..." oninput="renderizarImoveis()">
-    </div>
-
-    <div class="filters" id="filters">
-      <button class="filter-btn" data-filter="recentes" onclick="setFiltro('recentes', this)">Recentes</button>
-      <button class="filter-btn active" data-filter="todos" onclick="setFiltro('todos', this)">Todos <span class="filter-count" id="cnt-todos">0</span></button>
-      <button class="filter-btn" data-filter="pendente" onclick="setFiltro('pendente', this)">Aguardando <span class="filter-count" id="cnt-pendente">0</span></button>
-      <button class="filter-btn" data-filter="quero-visitar" onclick="setFiltro('quero-visitar', this)">Quero visitar <span class="filter-count" id="cnt-quero-visitar">0</span></button>
-      <button class="filter-btn" data-filter="gostei" onclick="setFiltro('gostei', this)">Gostei <span class="filter-count" id="cnt-gostei">0</span></button>
-      <button class="filter-btn" data-filter="nao-gostei" onclick="setFiltro('nao-gostei', this)">Não gostei <span class="filter-count" id="cnt-nao-gostei">0</span></button>
-      <button class="filter-btn btn-reservas" data-filter="reservas" onclick="setFiltro('reservas', this)">Reservas <span class="filter-count" id="cnt-reservas">0</span></button>
-    </div>
-
     <div class="grid" id="gridImoveis"></div>
-    <div class="empty-state hidden" id="emptyState">
-      <h3 id="emptyTitulo">Nenhum imóvel aqui</h3>
-      <p id="emptyMsg">Nada para mostrar neste filtro.</p>
+    <div class="empty-state hidden" id="emptyState" style="text-align:center; padding:50px 20px; color:var(--muted);">
+      <h3 id="emptyTitulo" style="font-size:.95rem; margin-bottom:4px; color:var(--text-soft); font-weight:600;">Nenhum imóvel aqui</h3>
+      <p id="emptyMsg" style="font-size:.84rem;">Nada para mostrar neste filtro.</p>
     </div>
   </div>
 </div>
 
-<!-- Modal Editar Cliente -->
-<div class="modal-backdrop" id="clienteModalBackdrop" onclick="if(event.target===this) fecharClienteModal()">
-  <div class="modal" style="max-width:560px;">
-    <button class="modal-close" onclick="fecharClienteModal()"><svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-    <h2>Editar cliente</h2>
-    <div class="form-group"><label>Telefone</label><input type="tel" id="cliTelefone" disabled style="background:var(--bg); color:var(--text-soft);"></div>
-    <div class="form-group"><label>Nome completo <span class="req">*</span></label><input type="text" id="cliNome"></div>
-    <div class="form-group"><label>Corretor <span class="req">*</span></label><select id="cliCorretor"></select></div>
-    <div class="form-row" style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:12px;">
-      <div class="form-group"><label>TQC</label><select id="cliTQC"><option value="">Não</option><option value="Sim">Sim</option></select></div>
-      <div class="form-group"><label>Investidor</label><select id="cliCAR"><option value="">Não</option><option value="Sim">Sim</option></select></div>
-      <div class="form-group"><label>Inativo</label><select id="cliInativo"><option value="">Não</option><option value="Sim">Sim</option></select></div>
-    </div>
-    <div class="form-group">
-      <label>Observações internas</label>
-      <textarea id="cliObservacao" style="min-height:120px;"></textarea>
-    </div>
-    <div style="display:flex; gap:8px; justify-content:flex-end;">
-      <button type="button" class="btn btn-ghost" onclick="fecharClienteModal()">Cancelar</button>
-      <button type="button" class="btn btn-purple" id="btnSalvarCliente" onclick="salvarCliente()">
-        <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
-        Salvar
-      </button>
+<!-- Botão flutuante de clonagem -->
+<button class="clone-floating" id="cloneFloating" onclick="abrirClonarVitrine()">
+  <svg class="ico ico-sm" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+  Clonar
+  <span class="num" id="cloneNum">0</span>
+</button>
+
+<!-- ====== MODAL: Ver dados do cliente ====== -->
+<div class="modal-backdrop" id="verClienteBackdrop" onclick="if(event.target===this) fecharVerCliente()">
+  <div class="modal" style="max-width:780px;">
+    <button class="modal-close" onclick="fecharVerCliente()"><svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <h2><svg class="ico" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Dados do cliente</h2>
+    <div id="verClienteConteudo">
+      <div class="loading-inline"><div class="spinner-lg" style="width:34px;height:34px;"></div></div>
     </div>
   </div>
 </div>
 
-<div class="modal-backdrop" id="chaveModalBackdrop" onclick="if(event.target===this) fecharChaveModal()">
-  <div class="modal" style="max-width:520px;">
-    <button class="modal-close" onclick="fecharChaveModal()"><svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-    <h2><svg class="ico" viewBox="0 0 24 24"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg> Onde pegar a chave</h2>
-    <p class="text-muted" style="margin-bottom:16px; font-size:.82rem;" id="chaveModalSub">—</p>
-    <div id="chaveModalTexto" style="background:var(--warn-soft); border:1px solid #e2d3a8; border-radius:var(--radius); padding:16px; font-size:.9rem; line-height:1.6; white-space:pre-wrap; color:#5a4a25;"></div>
-  </div>
-</div>
-
-<div class="modal-backdrop" id="visitaBackdrop" onclick="if(event.target===this) fecharVisitaModal()">
-  <div class="modal" style="max-width:480px;">
-    <button class="modal-close" onclick="fecharVisitaModal()"><svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-    <h2><svg class="ico" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Registrar visita realizada</h2>
-    <input type="hidden" id="visitaImovelId">
-    <div class="form-group"><label>Data da visita <span class="req">*</span></label><input type="date" id="visitaData"></div>
-    <div class="form-group"><label>O que o cliente achou?</label><textarea id="visitaAvaliacao"></textarea></div>
-    <div style="display:flex; gap:8px;">
-      <button class="btn btn-primary" style="flex:1" onclick="salvarVisita(event)">Salvar</button>
-      <button class="btn btn-ghost" id="btnLimparVisita" onclick="limparVisita()">Limpar</button>
-    </div>
-  </div>
-</div>
-
-<div class="modal-backdrop" id="agendarBackdrop" onclick="if(event.target===this) fecharAgendarModal()">
-  <div class="modal" style="max-width:560px;">
-    <button class="modal-close" onclick="fecharAgendarModal()"><svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-    <h2><svg class="ico" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> Agendar visita</h2>
-    <input type="hidden" id="agendarImovelId">
-    <div class="form-group"><label>Data e hora <span class="req">*</span></label><input type="datetime-local" id="agendarDataHora"><div style="font-size:.68rem; color:var(--muted); margin-top:4px;">Somente hoje e datas futuras</div></div>
-    <div class="form-row-3">
-      <div class="form-group"><label>Rua <span class="req">*</span></label><input type="text" id="agendarRua"></div>
-      <div class="form-group"><label>Número <span class="req">*</span></label><input type="text" id="agendarNumero"></div>
-      <div class="form-group"><label>Bairro</label><input type="text" id="agendarBairro"></div>
-    </div>
-    <div style="display:flex; gap:8px;">
-      <button class="btn btn-primary" style="flex:1" onclick="salvarAgendamento(event)">Agendar</button>
-      <button class="btn btn-ghost" id="btnCancelarAgendamento" onclick="cancelarAgendamento()">Cancelar agendamento</button>
-    </div>
-  </div>
-</div>
-
-<div class="modal-backdrop" id="senhaGeradaBackdrop" onclick="if(event.target===this) fecharSenhaGerada()">
-  <div class="modal" style="max-width:460px; text-align:center;">
-    <button class="modal-close" onclick="fecharSenhaGerada()"><svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-    <div style="width:64px; height:64px; margin:0 auto 14px; border-radius:50%; background:var(--success-soft); color:var(--success); display:flex; align-items:center; justify-content:center;">
-      <svg class="ico" style="width:32px;height:32px;" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-    </div>
-    <h2 style="justify-content:center;" id="senhaGeradaTitulo">Acesso criado</h2>
-    <p class="text-muted" style="margin-bottom:18px; font-size:.82rem;" id="senhaGeradaSub">Use o botão abaixo para gerar o texto e enviar ao cliente.</p>
-    <div style="background:var(--bg); border:1px dashed var(--border-strong); border-radius:var(--radius); padding:16px; margin-bottom:16px; text-align:center;">
-      <div style="font-size:.68rem; color:var(--muted); font-weight:700; text-transform:uppercase; letter-spacing:.5px; margin-bottom:6px;">Apelido</div>
-      <div id="senhaGeradaApelido" style="font-size:.92rem; font-weight:700; margin-bottom:16px; color:var(--text);"></div>
-      <div style="font-size:.68rem; color:var(--muted); font-weight:700; text-transform:uppercase; letter-spacing:.5px; margin-bottom:6px;">Senha</div>
-      <div id="senhaGeradaValor" style="font-family:var(--mono); font-size:1.7rem; font-weight:700; letter-spacing:6px; color:var(--purple);"></div>
-    </div>
-    <button class="btn btn-purple btn-full" onclick="gerarTextoWhatsAppSenhaGerada()">
-      <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
-      Texto para WhatsApp
-    </button>
-    <button class="btn btn-ghost btn-full mt-2" onclick="fecharSenhaGerada()">Fechar</button>
-  </div>
-</div>
-
-<div class="modal-backdrop" id="novoAcessoBackdrop" onclick="if(event.target===this) fecharNovoAcesso()">
-  <div class="modal" style="max-width:480px;">
-    <button class="modal-close" onclick="fecharNovoAcesso()"><svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-    <h2><svg class="ico" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Criar novo acesso</h2>
-    <div class="form-group">
-      <label>Apelido do dispositivo <span class="req">*</span></label>
-      <input type="text" id="novoAcessoApelido" maxlength="40">
-      <div class="text-muted mt-2" style="font-size:.72rem;">Ex: "Celular", "PC trabalho"</div>
-    </div>
-    <div style="display:flex; gap:8px;">
-      <button class="btn btn-purple" style="flex:1" onclick="criarAcesso(event)">Gerar senha</button>
-      <button class="btn btn-ghost" onclick="fecharNovoAcesso()">Cancelar</button>
-    </div>
-  </div>
-</div>
-
+<!-- ====== MODAL: Atividade ====== -->
 <div class="modal-backdrop" id="atividadeBackdrop" onclick="if(event.target===this) fecharAtividade()">
   <div class="modal" style="max-width:720px;">
     <button class="modal-close" onclick="fecharAtividade()"><svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
@@ -1127,6 +978,7 @@
   </div>
 </div>
 
+<!-- ====== MODAL: Clonar ====== -->
 <div class="modal-backdrop" id="clonarVitrineBackdrop" onclick="if(event.target===this) fecharClonarVitrine()">
   <div class="modal" style="max-width:640px;">
     <button class="modal-close" onclick="fecharClonarVitrine()"><svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
@@ -1152,25 +1004,91 @@
   </div>
 </div>
 
-<div class="modal-backdrop" id="excluirOuDesativarBackdrop">
-  <div class="modal" style="max-width:460px;">
-    <button class="modal-close" onclick="fecharExcluirOuDesativar()"><svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-    <h2><svg class="ico" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> O que deseja fazer?</h2>
-    <p class="text-muted" style="margin-bottom:16px; font-size:.82rem;" id="excluirOuDesativarSub">Escolha entre desativar (recomendado, você pode reativar depois) ou excluir permanentemente.</p>
-    <div style="display:flex; flex-direction:column; gap:10px;">
-      <button class="btn btn-warn" style="justify-content:flex-start; padding:14px 18px;" onclick="confirmarDesativar()">
-        <svg class="ico ico-lg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
-        <span style="font-weight:700; margin-left:8px;">Mover para Reserva (Ocultar do cliente)</span>
-      </button>
-      <button class="btn btn-danger" style="justify-content:flex-start; padding:14px 18px;" onclick="confirmarExcluir()">
-        <svg class="ico ico-lg" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
-        <span style="font-weight:700; margin-left:8px;">Excluir permanentemente</span>
-      </button>
-      <button class="btn btn-ghost" onclick="fecharExcluirOuDesativar()">Cancelar</button>
+<!-- ====== MODAL: Chave ====== -->
+<div class="modal-backdrop" id="chaveModalBackdrop" onclick="if(event.target===this) fecharChaveModal()">
+  <div class="modal" style="max-width:520px;">
+    <button class="modal-close" onclick="fecharChaveModal()"><svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <h2><svg class="ico" viewBox="0 0 24 24"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg> Onde pegar a chave</h2>
+    <p class="text-muted" style="margin-bottom:16px; font-size:.82rem;" id="chaveModalSub">—</p>
+    <div id="chaveModalTexto" style="background:var(--warn-soft); border:1px solid #e2d3a8; border-radius:var(--radius); padding:16px; font-size:.9rem; line-height:1.6; white-space:pre-wrap; color:#5a4a25;"></div>
+  </div>
+</div>
+
+<!-- ====== MODAL: Visita ====== -->
+<div class="modal-backdrop" id="visitaBackdrop" onclick="if(event.target===this) fecharVisitaModal()">
+  <div class="modal" style="max-width:480px;">
+    <button class="modal-close" onclick="fecharVisitaModal()"><svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <h2><svg class="ico" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Registrar visita realizada</h2>
+    <input type="hidden" id="visitaImovelId">
+    <div class="form-group"><label>Data da visita <span class="req">*</span></label><input type="date" id="visitaData"></div>
+    <div class="form-group"><label>O que o cliente achou?</label><textarea id="visitaAvaliacao"></textarea></div>
+    <div style="display:flex; gap:8px;">
+      <button class="btn btn-primary" style="flex:1" onclick="salvarVisita(event)">Salvar</button>
+      <button class="btn btn-ghost" id="btnLimparVisita" onclick="limparVisita()">Limpar</button>
     </div>
   </div>
 </div>
 
+<!-- ====== MODAL: Agendar ====== -->
+<div class="modal-backdrop" id="agendarBackdrop" onclick="if(event.target===this) fecharAgendarModal()">
+  <div class="modal" style="max-width:560px;">
+    <button class="modal-close" onclick="fecharAgendarModal()"><svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <h2><svg class="ico" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> Agendar visita</h2>
+    <input type="hidden" id="agendarImovelId">
+    <div class="form-group"><label>Data e hora <span class="req">*</span></label><input type="datetime-local" id="agendarDataHora"><div style="font-size:.68rem; color:var(--muted); margin-top:4px;">Somente hoje e datas futuras</div></div>
+    <div class="form-row-3" style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:12px;">
+      <div class="form-group"><label>Rua <span class="req">*</span></label><input type="text" id="agendarRua"></div>
+      <div class="form-group"><label>Número <span class="req">*</span></label><input type="text" id="agendarNumero"></div>
+      <div class="form-group"><label>Bairro</label><input type="text" id="agendarBairro"></div>
+    </div>
+    <div style="display:flex; gap:8px;">
+      <button class="btn btn-primary" style="flex:1" onclick="salvarAgendamento(event)">Agendar</button>
+      <button class="btn btn-ghost" id="btnCancelarAgendamento" onclick="cancelarAgendamento()">Cancelar agendamento</button>
+    </div>
+  </div>
+</div>
+
+<!-- ====== MODAL: Senha gerada ====== -->
+<div class="modal-backdrop" id="senhaGeradaBackdrop" onclick="if(event.target===this) fecharSenhaGerada()">
+  <div class="modal" style="max-width:460px; text-align:center;">
+    <button class="modal-close" onclick="fecharSenhaGerada()"><svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <div style="width:64px; height:64px; margin:0 auto 14px; border-radius:50%; background:var(--success-soft); color:var(--success); display:flex; align-items:center; justify-content:center;">
+      <svg class="ico" style="width:32px;height:32px;" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+    </div>
+    <h2 style="justify-content:center;" id="senhaGeradaTitulo">Acesso criado</h2>
+    <p class="text-muted" style="margin-bottom:18px; font-size:.82rem;" id="senhaGeradaSub">Use o botão abaixo para gerar o texto.</p>
+    <div style="background:var(--bg); border:1px dashed var(--border-strong); border-radius:var(--radius); padding:16px; margin-bottom:16px; text-align:center;">
+      <div style="font-size:.68rem; color:var(--muted); font-weight:700; text-transform:uppercase; letter-spacing:.5px; margin-bottom:6px;">Apelido</div>
+      <div id="senhaGeradaApelido" style="font-size:.92rem; font-weight:700; margin-bottom:16px; color:var(--text);"></div>
+      <div style="font-size:.68rem; color:var(--muted); font-weight:700; text-transform:uppercase; letter-spacing:.5px; margin-bottom:6px;">Senha</div>
+      <div id="senhaGeradaValor" style="font-family:var(--mono); font-size:1.7rem; font-weight:700; letter-spacing:6px; color:var(--purple);"></div>
+    </div>
+    <button class="btn btn-purple btn-full" onclick="gerarTextoWhatsAppSenhaGerada()">
+      <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+      Texto para WhatsApp
+    </button>
+    <button class="btn btn-ghost btn-full mt-2" onclick="fecharSenhaGerada()">Fechar</button>
+  </div>
+</div>
+
+<!-- ====== MODAL: Novo acesso ====== -->
+<div class="modal-backdrop" id="novoAcessoBackdrop" onclick="if(event.target===this) fecharNovoAcesso()">
+  <div class="modal" style="max-width:480px;">
+    <button class="modal-close" onclick="fecharNovoAcesso()"><svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <h2><svg class="ico" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Criar novo acesso</h2>
+    <div class="form-group">
+      <label>Apelido do dispositivo <span class="req">*</span></label>
+      <input type="text" id="novoAcessoApelido" maxlength="40">
+      <div class="text-muted mt-2" style="font-size:.72rem;">Ex: "Celular", "PC trabalho"</div>
+    </div>
+    <div style="display:flex; gap:8px;">
+      <button class="btn btn-purple" style="flex:1" onclick="criarAcesso(event)">Gerar senha</button>
+      <button class="btn btn-ghost" onclick="fecharNovoAcesso()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ====== Confirm ====== -->
 <div class="confirm-backdrop" id="confirmBackdrop">
   <div class="confirm-box">
     <div class="icon-wrap" id="confirmIconWrap">
@@ -1223,7 +1141,6 @@ const state = {
   corretores: [],
   acessos: [],
   filtro: 'todos',
-  filtroCorretor: new Set(),
   salvando: 0,
   _atividadeFiltro: 'todos',
   _atividadeEventos: null,
@@ -1232,7 +1149,6 @@ const state = {
   _codigoLinkAtual: '',
   _corretorEscolhido: '',
   _tipoEscolhido: '',
-  _excluirDesativarId: null,
   _salvarTimeout: null
 };
 
@@ -1341,7 +1257,6 @@ function isVendido(im){
          v === 'vendido' || v === 'v';
 }
 
-function chaveCorretorExata_(nome){ return String(nome || '').trim(); }
 function chaveCorretorGrupo_(nome){
   const s = String(nome || '').trim();
   if(!s) return '';
@@ -1375,10 +1290,6 @@ function extrairTipoImovel(descricao){
   return '';
 }
 
-/**
- * Remove o *Tipo* da primeira linha da descrição.
- * Também remove linhas legadas de Vaga/Elevador (para não duplicar).
- */
 function descricaoSemTipo(descricao){
   if(!descricao) return '';
   let linhas = String(descricao).split(/\r?\n/);
@@ -1435,29 +1346,6 @@ function extrairAptoExibicao(im){
   if(im.apto) return String(im.apto).trim();
   const info = extrairAptoBlocoChave(im.chaveTexto || '');
   return info.apto || '';
-}
-
-function extrairSpecsDescricao(descricao){
-  if(!descricao) return { specs: '', badge: '' };
-  const texto = String(descricao);
-  const linhas = texto.split('\n').map(l => l.trim()).filter(Boolean);
-  if(linhas.length === 0) return { specs: '', badge: '' };
-
-  let linha1 = linhas[0] || '';
-  let badge = '';
-  const mBadge = linha1.match(/\*([^*]+)\*/);
-  if(mBadge && mBadge[1]){
-    badge = mBadge[1].trim();
-    linha1 = linha1.replace(mBadge[0], '').replace(/\s{2,}/g, ' ').trim();
-  }
-
-  const temM2 = /\d+\s*m[²2]/i.test(linha1);
-  const temKeyword = /\b(quarto|quartos|vaga|vagas|suíte|suite|sala|salas|banheiro|banheiros|dormitório|dormitorio|dormitórios|dormitorios|privativa|privativo|área|area|terreno)\b/i.test(linha1);
-  const temNumero = /\d/.test(linha1);
-
-  const specsValido = (temM2 || (temNumero && temKeyword)) ? linha1 : '';
-
-  return { specs: specsValido, badge: badge };
 }
 
 function hojeISO(){
@@ -1661,6 +1549,7 @@ async function recarregarVitrine(){
     .sort((a,b) => new Date(b.dataCadastro||0) - new Date(a.dataCadastro||0));
   atualizarContadoresImoveis();
   renderizarImoveis();
+  atualizarCloneFloating();
   toast('Vitrine atualizada', 'success');
 }
 
@@ -1672,21 +1561,24 @@ function atualizarBarraCliente(){
   const temp = c?.temperatura || 'frio';
   const tempManual = c?.temperaturaManual;
   $('cbNome').textContent = nomeFull;
-  $('cbMeta').innerHTML = `
-    <span style="display:inline-flex; align-items:center; gap:4px;">
-      <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-      ${fmtTel(TELEFONE_CLIENTE)}
-    </span>
-    ${corr ? `<span>${esc(corr)}</span>` : ''}
-    <span>${emojiTemperatura(temp)} ${temp}${tempManual ? ' ●' : ''}</span>
-    ${c?.tqc === 'Sim' ? '<span style="background:var(--primary-soft); color:var(--primary); padding:2px 8px; border-radius:4px; font-size:.62rem; font-weight:700;">TQC</span>' : ''}
-    ${c?.car === 'Sim' ? '<span style="background:var(--success-soft); color:var(--success); padding:2px 8px; border-radius:4px; font-size:.62rem; font-weight:700;">INVESTIDOR</span>' : ''}
-    ${c?.inativo === 'Sim' ? '<span style="background:var(--danger-soft); color:var(--danger); padding:2px 8px; border-radius:4px; font-size:.62rem; font-weight:700;">Inativo</span>' : ''}
-  `;
+  $('cbTel').textContent = fmtTel(TELEFONE_CLIENTE);
+  const corrEl = $('cbCorretor');
+  if(corr){ corrEl.textContent = corr; corrEl.classList.remove('hidden'); }
+  else { corrEl.classList.add('hidden'); }
+
+  const tempEl = $('cbTemp');
+  tempEl.textContent = emojiTemperatura(temp) + ' ' + temp + (tempManual ? ' ●' : '');
+  tempEl.className = 'cli-temp ' + (temp || 'frio');
+
+  const tags = [];
+  if(c?.tqc === 'Sim') tags.push('<span style="background:var(--primary-soft); color:var(--primary); padding:1px 6px; border-radius:4px; font-size:.6rem; font-weight:700;">TQC</span>');
+  if(c?.car === 'Sim') tags.push('<span style="background:var(--success-soft); color:var(--success); padding:1px 6px; border-radius:4px; font-size:.6rem; font-weight:700;">INVEST.</span>');
+  if(c?.inativo === 'Sim') tags.push('<span style="background:var(--danger-soft); color:var(--danger); padding:1px 6px; border-radius:4px; font-size:.6rem; font-weight:700;">Inativo</span>');
+  $('cbTags').innerHTML = tags.join('');
 }
 
 /* =====================================================
-   IMÓVEIS
+   IMÓVEIS - CONTADORES
 ===================================================== */
 function atualizarContadoresImoveis(){
   const counts = { todos: 0, gostei: 0, 'quero-visitar': 0, 'nao-gostei': 0, pendente: 0, reservas: 0 };
@@ -1710,6 +1602,9 @@ function setFiltro(f, el){
   renderizarImoveis();
 }
 
+/* =====================================================
+   IMÓVEIS - RENDERIZAÇÃO
+===================================================== */
 function renderizarImoveis(){
   const grid = $('gridImoveis');
   let lista = [...state.imoveis];
@@ -1720,7 +1615,6 @@ function renderizarImoveis(){
     if(state.filtro === 'recentes'){
       lista.sort((a,b) => new Date(b.dataCadastro||0) - new Date(a.dataCadastro||0));
     } else if(state.filtro === 'todos'){
-      // CORREÇÃO: Adicionado "nao-gostei" na última posição da ordenação
       const ordem = { 'pendente': 0, 'quero-visitar': 1, 'gostei': 2, 'nao-gostei': 3 };
       lista.sort((a,b) => {
         const oa = ordem[(a.status || 'pendente')] ?? 99;
@@ -1732,13 +1626,6 @@ function renderizarImoveis(){
       lista = lista.filter(i => (i.status || 'pendente') === state.filtro);
     }
   }
-  if(state.filtroCorretor.size > 0){
-    lista = lista.filter(i => {
-      const exato = chaveCorretorExata_(i.corretor);
-      const grupo = chaveCorretorGrupo_(i.corretor);
-      return state.filtroCorretor.has(exato) || state.filtroCorretor.has(grupo);
-    });
-  }
   const busca = ($('buscaInput').value || '').toLowerCase().trim();
   if(busca){
     lista = lista.filter(i =>
@@ -1747,7 +1634,6 @@ function renderizarImoveis(){
       (i.observacao || '').toLowerCase().includes(busca)
     );
   }
-
   const vendidos = lista.filter(im => isVendido(im));
   const naoVendidos = lista.filter(im => !isVendido(im));
   lista = [...naoVendidos, ...vendidos];
@@ -1761,6 +1647,16 @@ function renderizarImoveis(){
   }
   $('emptyState').classList.add('hidden');
   grid.innerHTML = lista.map(cardImovelHTML).join('');
+  atualizarCloneFloating();
+}
+
+function formatarMoeda(val){
+  if(!val) return '';
+  const s = String(val).trim();
+  if(!s) return '';
+  // Se já tiver R$ mantém
+  if(/^R\$/i.test(s)) return s;
+  return 'R$ ' + s;
 }
 
 function cardImovelHTML(im){
@@ -1770,45 +1666,26 @@ function cardImovelHTML(im){
 
   const statusLabel = reservado ? 'Em Reserva' : (vendido ? 'Vendido' : ({
     'gostei':'Gostei','nao-gostei':'Não gostei',
-    'quero-visitar':'Quero visitar','pendente':'Aguardando'
-  }[statusAtual] || 'Aguardando'));
+    'quero-visitar':'Quero visitar','pendente':''
+  }[statusAtual] || ''));
 
-  const statusClass = reservado ? 'card-status-reserva' : (vendido ? 'card-status-vendido' : ({
+  const statusClass = reservado ? 'status-reserva' : (vendido ? 'status-gostei' : ({
     'gostei':'status-gostei','nao-gostei':'status-nao-gostei',
     'quero-visitar':'status-quero-visitar','pendente':'status-pendente'
   }[statusAtual] || 'status-pendente'));
 
   const img = im.imagem || 'https://via.placeholder.com/400x300/e2e8f0/64748b?text=Sem+imagem';
   const id = esc(im.id);
-  const dataFmt = fmtData(im.dataCadastro);
-  const obsTexto = (im.observacao || '').trim();
-  const obsLonga = obsTexto.length > 100;
-  const obsId = 'obs-' + id;
   const descTexto = (im.descricao || '').trim();
+  const descSemTipo = descricaoSemTipo(descTexto).trim();
+  const descFinal = descSemTipo || '(sem descrição)';
 
-  const specsInfo = extrairSpecsDescricao(im.descricao);
-  const specsHtml = specsInfo.specs ? `<div class="card-overlay-specs">${esc(specsInfo.specs)}</div>` : '';
-  
-  // CORREÇÃO: Ocultar a tag "Apartamento Padrão" (apenas ela)
-  let badgeTagHtml = '';
-  if (specsInfo.badge) {
-    const normBadge = specsInfo.badge.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
-    if (!normBadge.includes('apartamento padrao')) {
-      badgeTagHtml = `<div class="card-tag-topo">${esc(specsInfo.badge)}</div>`;
-    }
-  }
-
-  const aptoExibicao = extrairAptoExibicao(im);
-  const aptoHtml = aptoExibicao
-    ? `<span class="badge-apto" title="Apartamento"><span class="ap-ico">🚪</span>Apto ${esc(aptoExibicao)}</span>`
-    : '';
-
-  const temAgendamentoAtivo = !!im.dataVisitaAgendada && !reservado && !vendido;
+  const temAgendamento = !!im.dataVisitaAgendada && !reservado && !vendido;
   const cardExtraClass =
     reservado ? ' card-reserva'
     : vendido ? ' card-vendido'
     : statusAtual === 'nao-gostei' ? ' card-nao-gostei'
-    : temAgendamentoAtivo ? ' card-agendado'
+    : temAgendamento ? ' card-agendado'
     : '';
 
   const btnGostei = (statusAtual === 'gostei' && !reservado) ? 'ativo' : '';
@@ -1817,165 +1694,184 @@ function cardImovelHTML(im){
 
   const imgClickAttr = im.link ? `onclick="window.open('${esc(im.link)}', '_blank', 'noopener');"` : '';
 
+  // Monta dados estruturados
+  const apto = extrairAptoExibicao(im);
+  const blocoInfo = extrairAptoBlocoChave(im.chaveTexto || '');
+  const bloco = blocoInfo.bloco || '';
+  const chaveComplemento = blocoInfo.resto || '';
+  const chaveCompleta = [apto, bloco ? 'Bloco ' + bloco : '', chaveComplemento].filter(Boolean).join('\n');
+
+  const precoFmt = formatarMoeda(im.preco);
+  const condFmt = formatarMoeda(im.condominio);
+  const iptuFmt = formatarMoeda(im.iptu);
+
+  const vaga = String(im.vaga || '').trim();
+  const elevador = String(im.elevador || '').trim();
+  const corretor = String(im.corretor || '').trim();
+  const codigo = String(im.codigo || '').trim();
+
+  const isClonado = state._clonarSelecionados.has(im.id);
+  const podeClonar = !vendido && !reservado;
+
+  // Agendamento HTML
   let agHtml = '';
-  const temAgendamento = !!im.dataVisitaAgendada && !reservado && !vendido;
-  const campos = camposEndereco_(im);
-  const chaveReal = campos.chave;
-  const temChave = !!chaveReal;
   if(!reservado && !vendido){
     if(temAgendamento){
-      const btnChave = temChave
-        ? `<button class="btn btn-ghost btn-xs" data-chave="${esc(chaveReal)}" data-end="${esc(im.titulo || '')}" onclick="abrirChaveModal(this.dataset.chave, this.dataset.end)">Chave</button>`
-        : '';
       agHtml = `
         <div class="agendamento-box">
           <div class="titulo">Visita agendada</div>
           <div class="agendamento-info"><strong>Marcada:</strong> ${fmtDataHora(im.dataVisitaAgendada)}</div>
-          <div class="agendamento-actions">
-            <button class="btn btn-success btn-sm" style="flex:1" onclick="registrarVisitaDoAgendamento('${id}')">Registrar visita</button>
-          </div>
-          <div class="agendamento-actions" style="margin-top:6px;">
+          <div style="display:flex; gap:4px; flex-wrap:wrap;">
+            <button class="btn btn-success btn-xs" style="flex:1;" onclick="registrarVisitaDoAgendamento('${id}')">Registrar visita</button>
             <button class="btn btn-ghost btn-xs" onclick="abrirAgendarModal('${id}')">Alterar</button>
             <button class="btn btn-ghost btn-xs" onclick="cancelarAgendamentoDireto('${id}')">Cancelar</button>
-            ${btnChave}
-          </div>
-        </div>`;
-    } else {
-      agHtml = `
-        <div class="agendamento-box">
-          <div class="titulo">Agendar visita</div>
-          <div class="agendamento-actions">
-            <button class="btn btn-purple btn-xs" onclick="abrirAgendarModal('${id}')">Agendar</button>
+            ${chaveCompleta ? `<button class="btn btn-ghost btn-xs" data-chave="${esc(chaveCompleta)}" data-end="${esc(im.titulo || '')}" onclick="abrirChaveModal(this.dataset.chave, this.dataset.end)">Chave</button>` : ''}
           </div>
         </div>`;
     }
   }
 
+  // Visita realizada
   let visHtml = '';
   if(im.visitaFeita === 'Sim' && im.dataVisita && !reservado){
     const aval = (im.avaliacaoVisita || '').trim();
     visHtml = `
       <div class="visita-box">
         <div class="titulo">Visita realizada em ${fmtData(im.dataVisita)}</div>
-        ${aval ? `<div class="visita-info">${esc(aval)}</div>` : ''}
-        <div class="agendamento-actions"><button class="btn btn-ghost btn-xs" onclick="abrirVisitaModal('${id}')">Editar</button></div>
+        ${aval ? `<div style="margin-bottom:4px;">${esc(aval)}</div>` : ''}
+        <button class="btn btn-ghost btn-xs" onclick="abrirVisitaModal('${id}')">Editar</button>
       </div>`;
   }
 
-  const acoesHtml = !reservado
-    ? `
-      <div class="card-actions" onclick="event.stopPropagation();">
-        <button class="btn-action act-gostei ${btnGostei}" onclick="marcarStatus('${id}','gostei')" title="Gostei">
-          <span class="icone">❤️</span>
-          <span>Gostei</span>
-        </button>
-        <button class="btn-action act-visitar ${btnVisitar}" onclick="marcarStatus('${id}','quero-visitar')" title="Quero visitar">
-          <span class="icone">📅</span>
-          <span>Visitar</span>
-        </button>
-        <button class="btn-action act-nao ${btnNao}" onclick="marcarStatus('${id}','nao-gostei')" title="Não gostei">
-          <span class="icone">❌</span>
-          <span>Não</span>
-        </button>
-      </div>
-    `
-    : `
-      <div class="card-actions" onclick="event.stopPropagation();">
-        <button class="btn-action act-reativar" onclick="toggleReserva('${id}')" title="Enviar para o cliente">
-          <span class="icone">↻</span>
-          <span>Enviar para o cliente</span>
-        </button>
-      </div>
-    `;
+  // Botões de status do cliente
+  const acoesHtml = reservado ? `
+    <div class="card-admin-actions" onclick="event.stopPropagation();">
+      <button class="adm-btn btn-reativar" onclick="toggleReserva('${id}')">
+        <span>↻</span> Enviar para o cliente
+      </button>
+    </div>
+  ` : `
+    <div class="card-status-actions" onclick="event.stopPropagation();">
+      <button class="btn-action act-gostei ${btnGostei}" onclick="marcarStatus('${id}','gostei')" title="Gostei">
+        <span>❤️</span> Gostei
+      </button>
+      <button class="btn-action act-visitar ${btnVisitar}" onclick="marcarStatus('${id}','quero-visitar')" title="Quero visitar">
+        <span>📅</span> Visitar
+      </button>
+      <button class="btn-action act-nao ${btnNao}" onclick="marcarStatus('${id}','nao-gostei')" title="Não gostei">
+        <span>❌</span> Não
+      </button>
+    </div>
+  `;
 
-  /* BOTÕES EXTRAS: Reserva e Vendido */
-  let acoesExtrasHtml = '';
-  if(!reservado){
-    acoesExtrasHtml += `
-      <div class="card-actions" style="grid-template-columns:1fr; padding-top:0;" onclick="event.stopPropagation();">
-        <button class="btn-action act-vendido ${vendido ? 'desmarcar' : ''}" onclick="toggleVendido('${id}')" title="${vendido ? 'Desmarcar vendido' : 'Marcar como vendido'}">
-          <span class="icone">${vendido ? '↻' : '🏷️'}</span>
-          <span>${vendido ? 'Desmarcar vendido' : 'Marcar como vendido'}</span>
-        </button>
-        <button class="btn-action act-reserva" style="margin-top:4px;" onclick="toggleReserva('${id}')" title="Mover para Reserva">
-          <span class="icone">📦</span>
-          <span>Mover para Reserva</span>
-        </button>
-      </div>
-    `;
-  }
+  // Botões de administração (compactos, uma linha)
+  const adminBtnsHtml = !reservado ? `
+    <div class="card-admin-actions" onclick="event.stopPropagation();">
+      <button class="adm-btn btn-editar" onclick="editarImovel('${id}')">
+        <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        Editar
+      </button>
+      <button class="adm-btn btn-vendido ${vendido ? 'desmarcar' : ''}" onclick="toggleVendido('${id}')">
+        <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.83z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+        ${vendido ? 'Reativar' : 'Vendido'}
+      </button>
+      <button class="adm-btn btn-reserva" onclick="toggleReserva('${id}')">
+        <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+        Reserva
+      </button>
+      <button class="adm-btn btn-clonar ${isClonado ? 'ativo' : ''}" ${podeClonar ? '' : 'disabled'} onclick="toggleClonarCard('${id}')">
+        <svg class="ico ico-sm" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        ${isClonado ? '✓ Clonar' : 'Clonar'}
+      </button>
+    </div>
+  ` : '';
 
   const tarjaVendidoHtml = vendido ? '<div class="card-tarja-vendido">VENDIDO</div>' : '';
-  
-  // CORREÇÃO: Removida a tarja do meio da foto (tarjaReservaHtml)
-  const tarjaReservaHtml = '';
+  const statusStripHtml = statusLabel ? `<div class="card-status-strip ${statusClass}"><span>${statusLabel}</span></div>` : '';
 
   return `
     <div class="card${cardExtraClass}" data-id="${id}">
-      ${statusLabel ? `<div class="card-status-strip ${statusClass}"><span>${statusLabel}</span></div>` : ''}
-
-      <div class="card-img-wrap">
-        <img class="card-img" src="${esc(img)}" ${imgClickAttr} onerror="this.src='https://via.placeholder.com/400x300/e2e8f0/64748b?text=Sem+imagem'">
-        ${badgeTagHtml}
-        ${specsHtml}
-        ${tarjaVendidoHtml}
-        ${tarjaReservaHtml}
-      </div>
-
-      <div class="card-body">
-        <div class="card-top-meta">
-          ${dataFmt ? `<span class="card-date">${dataFmt}</span>` : ''}
-          ${im.codigo ? `<span class="card-code" onclick="event.stopPropagation(); copiarCodigo('${esc(im.codigo)}', this)">#${esc(im.codigo)}</span>` : ''}
+      ${statusStripHtml}
+      <div class="card-main">
+        <div class="card-img-wrap">
+          <img class="card-img" src="${esc(img)}" ${imgClickAttr} onerror="this.src='https://via.placeholder.com/400x300/e2e8f0/64748b?text=Sem+imagem'">
+          ${tarjaVendidoHtml}
         </div>
-        <div class="card-title">${esc(im.titulo) || 'Sem endereço'}</div>
-
-        ${(im.preco || aptoHtml) ? `
-          <div class="card-price-row">
-            ${im.preco ? `<div class="card-price">${esc(im.preco)}</div>` : '<div></div>'}
-            ${aptoHtml}
+        <div class="card-body">
+          <div class="card-header-row">
+            <div class="card-title-block">
+              <div class="card-title">${esc(im.titulo) || 'Sem endereço'}</div>
+              ${codigo ? `<span class="card-code-chip" onclick="event.stopPropagation(); copiarCodigo('${esc(codigo)}', this)">#${esc(codigo)}</span>` : ''}
+            </div>
           </div>
-        ` : ''}
 
-        ${descTexto ? `<div class="card-desc" onclick="event.stopPropagation(); this.classList.toggle('expandido')">${esc(descTexto)}</div>` : ''}
-      </div>
+          <div class="card-data-grid">
+            ${precoFmt ? `<div class="card-data-item"><span class="dlabel">Preço</span><span class="dvalue preco">${esc(precoFmt)}</span></div>` : ''}
+            ${condFmt ? `<div class="card-data-item"><span class="dlabel">Cond.</span><span class="dvalue">${esc(condFmt)}</span></div>` : ''}
+            ${iptuFmt ? `<div class="card-data-item"><span class="dlabel">IPTU</span><span class="dvalue">${esc(iptuFmt)}</span></div>` : ''}
+            ${apto ? `<div class="card-data-item"><span class="dlabel">Apto</span><span class="dvalue mono">${esc(apto)}</span></div>` : ''}
+            ${bloco ? `<div class="card-data-item"><span class="dlabel">Bloco</span><span class="dvalue mono">${esc(bloco)}</span></div>` : ''}
+            ${vaga ? `<div class="card-data-item"><span class="dlabel">Vaga</span><span class="dvalue">${esc(vaga)}</span></div>` : ''}
+            ${elevador ? `<div class="card-data-item"><span class="dlabel">Elevador</span><span class="dvalue">${esc(elevador)}</span></div>` : ''}
+            ${corretor ? `<div class="card-data-item"><span class="dlabel">Corretor</span><span class="dvalue">${esc(corretor)}</span></div>` : ''}
+          </div>
 
-      ${im.codigo ? `
-        <div style="padding: 0 12px 8px;">
-          <button class="btn btn-ghost btn-sm" style="width:100%;" onclick="event.stopPropagation(); abrirBuscar('${esc(im.codigo)}')">
-            <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-            Buscar entrada #${esc(im.codigo)}
-          </button>
+          ${chaveCompleta ? `
+            <div class="card-chave-block" id="chave-${id}">
+              <div class="chave-lbl">🔑 Chave</div>
+              <div class="chave-txt">${esc(chaveCompleta)}</div>
+              ${chaveCompleta.split('\n').length > 3 ? `<button class="card-chave-toggle" onclick="event.stopPropagation(); document.getElementById('chave-${id}').classList.toggle('expandido')">Ver tudo</button>` : ''}
+            </div>
+          ` : ''}
+
+          <div class="card-desc" onclick="event.stopPropagation(); this.classList.toggle('expandido')">${esc(descFinal)}</div>
         </div>
-      ` : ''}
+      </div>
 
       ${acoesHtml}
-      ${acoesExtrasHtml}
-
+      ${adminBtnsHtml}
       ${agHtml}
       ${visHtml}
-
-      <div class="obs-wrap" id="${obsId}" onclick="event.stopPropagation();">
-        <div class="obs-label">Observação <button class="obs-edit-btn" onclick="event.stopPropagation(); abrirEdicaoObsImovel('${obsId}')">Editar</button></div>
-        ${obsTexto ? `
-          <div class="obs-text ${obsLonga ? '' : 'expandido'}" id="${obsId}-text">${esc(obsTexto)}</div>
-          ${obsLonga ? `<button class="obs-toggle" onclick="event.stopPropagation(); toggleObsImovel('${obsId}')">Ver mais</button>` : ''}
-        ` : `<div class="obs-empty" onclick="event.stopPropagation(); abrirEdicaoObsImovel('${obsId}')">Clique para adicionar</div>`}
-        <textarea class="obs-textarea" id="${obsId}-input">${esc(obsTexto)}</textarea>
-        <div class="obs-edit-actions">
-          <button class="btn btn-purple btn-sm" style="flex:1" onclick="event.stopPropagation(); salvarEdicaoObsImovel('${id}', '${obsId}')">Salvar</button>
-          <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation(); cancelarEdicaoObsImovel('${obsId}')">Cancelar</button>
-        </div>
-      </div>
-
-      <div class="card-footer">
-        <div class="card-footer-actions">
-          <button class="btn btn-ghost btn-sm" onclick="abrirHistoricoImovel('${id}')">Histórico</button>
-          <button class="btn btn-ghost btn-sm" onclick="editarImovel('${id}')">Editar</button>
-          <button class="btn btn-danger btn-sm" onclick="abrirExcluirOuDesativar('${id}')">Excluir</button>
-        </div>
-      </div>
     </div>
   `;
+}
+
+/* =====================================================
+   CLONE POR CARD
+===================================================== */
+function toggleClonarCard(id){
+  const im = state.imoveis.find(i => i.id === id);
+  if(!im) return;
+  if(isVendido(im) || isReserva(im)){
+    toast('Imóvel vendido ou reservado não pode ser clonado', 'error');
+    return;
+  }
+  if(state._clonarSelecionados.has(id)){
+    state._clonarSelecionados.delete(id);
+  } else {
+    state._clonarSelecionados.add(id);
+  }
+  // Atualiza só o botão do card
+  const card = document.querySelector(`.card[data-id="${id}"]`);
+  if(card){
+    const btn = card.querySelector('.btn-clonar');
+    if(btn){
+      const ativo = state._clonarSelecionados.has(id);
+      btn.classList.toggle('ativo', ativo);
+      btn.innerHTML = `<svg class="ico ico-sm" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> ${ativo ? '✓ Clonar' : 'Clonar'}`;
+    }
+  }
+  atualizarCloneFloating();
+}
+
+function atualizarCloneFloating(){
+  const btn = $('cloneFloating');
+  const num = $('cloneNum');
+  if(!btn || !num) return;
+  const n = state._clonarSelecionados.size;
+  num.textContent = n;
+  if(n > 0) btn.classList.add('show');
+  else btn.classList.remove('show');
 }
 
 /* =====================================================
@@ -1986,8 +1882,8 @@ async function toggleReserva(id){
   if(!im) return;
   const reservado = isReserva(im);
   const cfg = reservado
-    ? { titulo:'Enviar para o cliente?', texto:'O imóvel sairá da reserva e voltará a aparecer na vitrine.', btnSim:'Enviar para o cliente', tipo:'success' }
-    : { titulo:'Mover para Reserva?', texto:'O imóvel será ocultado do cliente, mas continuará salvo no seu banco de dados.', btnSim:'Mover para Reserva', tipo:'warn' };
+    ? { titulo:'Enviar para o cliente?', texto:'O imóvel sairá da reserva e voltará a aparecer na vitrine.', btnSim:'Enviar', tipo:'success' }
+    : { titulo:'Mover para Reserva?', texto:'O imóvel será ocultado do cliente, mas continuará salvo.', btnSim:'Mover', tipo:'warn' };
   const ok = await confirmarAcao(cfg);
   if(!ok) return;
 
@@ -2059,7 +1955,7 @@ async function marcarStatus(id, acao){
   const configs = {
     'gostei': { titulo:'Marcar "Gostei"?', texto:'O imóvel será marcado como GOSTEI.', tipo:'success' },
     'quero-visitar': { titulo:'Marcar "Quero Visitar"?', texto:'O imóvel aparecerá em "Querem Visitar".', tipo:'warn' },
-    'nao-gostei': { titulo:'Marcar "Não Gostei"?', texto:'O imóvel será marcado como NÃO GOSTEI.', tipo:'danger' }
+    'nao-gostei': { titulo:'Marcar "Não Gostei"?', texto:'O imóvel será marcado como NÃO GOSTEI e ficará desativado no fim da lista.', tipo:'danger' }
   };
   const cfg = vaiDesmarcar
     ? { titulo:'Desmarcar?', texto:'Voltará para "Aguardando".', tipo:'primary' }
@@ -2083,89 +1979,12 @@ async function marcarStatus(id, acao){
   toast(novaAcao !== 'pendente' ? 'Marcado: ' + novaAcao : 'Desmarcado', 'success');
 }
 
-function abrirExcluirOuDesativar(id){
-  state._excluirDesativarId = id;
-  $('excluirOuDesativarBackdrop').classList.add('show');
-}
-function fecharExcluirOuDesativar(){
-  $('excluirOuDesativarBackdrop').classList.remove('show');
-  state._excluirDesativarId = null;
-}
-async function confirmarDesativar(){
-  const id = state._excluirDesativarId;
-  fecharExcluirOuDesativar();
-  if(!id) return;
-  const im = state.imoveis.find(i => i.id === id);
-  if(!im) return;
-  marcarSalvando(true);
-  const res = await api('desativarImovel', { senha: SENHA_ADMIN, id });
-  marcarSalvando(false);
-  if(!res.ok){ toast(res.error || 'Erro', 'error'); return; }
-  im.desativado = 'Sim';
-  atualizarContadoresImoveis();
-  renderizarImoveis();
-  toast('Imóvel movido para Reserva', 'success');
-}
-async function confirmarExcluir(){
-  const id = state._excluirDesativarId;
-  fecharExcluirOuDesativar();
-  if(!id) return;
-  const ok = await confirmarAcao({
-    titulo: 'Excluir permanentemente?', texto: 'Essa ação NÃO pode ser desfeita. O imóvel será removido da vitrine do cliente.',
-    btnSim: 'Excluir', tipo: 'danger'
-  });
-  if(!ok) return;
-  marcarSalvando(true);
-  const res = await api('excluirImovel', { senha: SENHA_ADMIN, id });
-  marcarSalvando(false);
-  if(!res.ok){ toast(res.error || 'Erro', 'error'); return; }
-  toast('Imóvel excluído', 'success');
-  state.imoveis = state.imoveis.filter(i => i.id !== id);
-  atualizarContadoresImoveis();
-  renderizarImoveis();
-}
-
 function copiarCodigo(codigo, el){
   if(!codigo) return;
   copiarTexto(String(codigo));
   const orig = el.innerHTML;
   el.classList.add('copiado'); el.innerHTML = 'Copiado!';
   setTimeout(() => { el.classList.remove('copiado'); el.innerHTML = orig; }, 1400);
-}
-
-/* =====================================================
-   OBSERVAÇÕES INLINE
-===================================================== */
-function toggleObsImovel(obsId){
-  const text = $(obsId + '-text');
-  if(!text) return;
-  text.classList.toggle('expandido');
-}
-function abrirEdicaoObsImovel(obsId){
-  const wrap = $(obsId);
-  const input = $(obsId + '-input');
-  const text = $(obsId + '-text');
-  if(!wrap || !input) return;
-  input.value = text ? text.textContent.trim() : '';
-  wrap.classList.add('editing');
-  input.focus();
-}
-function cancelarEdicaoObsImovel(obsId){
-  const wrap = $(obsId);
-  if(wrap) wrap.classList.remove('editing');
-}
-async function salvarEdicaoObsImovel(id, obsId){
-  const input = $(obsId + '-input');
-  const novaObs = input.value.trim();
-  const im = state.imoveis.find(i => i.id === id);
-  if(im) im.observacao = novaObs;
-  const wrap = $(obsId);
-  if(wrap) wrap.classList.remove('editing');
-  renderizarImoveis();
-  toast('Observação salva', 'success');
-  marcarSalvando(true);
-  await api('salvarObservacao', { id, observacao: novaObs });
-  marcarSalvando(false);
 }
 
 /* =====================================================
@@ -2196,7 +2015,6 @@ function limparFormAdmin(){
   $('adIPTU').value = '';
   $('adDescricao').value = '';
   $('adImagem').value = '';
-  $('adReserva').value = '';
   if($('adVaga')) $('adVaga').value = '';
   if($('adElevador')) $('adElevador').value = '';
   if($('adVaga')) $('adVaga').classList.remove('invalido');
@@ -2223,13 +2041,11 @@ function atualizarBtnsCorretor(valor){
     btn.classList.toggle('ativo', btn.dataset.corretor === valor);
   });
 }
-
 function escolherCorretor(nome, el){
   state._corretorEscolhido = nome;
   atualizarBtnsCorretor(nome);
   validarBotaoSalvar();
 }
-
 function escolherTipoImovel(tipo, el){
   state._tipoEscolhido = tipo;
   atualizarBtnsTipo(tipo);
@@ -2237,13 +2053,11 @@ function escolherTipoImovel(tipo, el){
   atualizarRequisitoApto();
   validarBotaoSalvar();
 }
-
 function atualizarBtnsTipo(valor){
   document.querySelectorAll('#tipoChipsWrap .chip-tipo').forEach(btn => {
     btn.classList.toggle('ativo', btn.dataset.tipo === valor);
   });
 }
-
 function atualizarDescTipoPreview(){
   const tipo = state._tipoEscolhido;
   const elTexto = $('descTipoTexto');
@@ -2261,20 +2075,16 @@ function atualizarDescTipoPreview(){
     elTexto.style.fontWeight = '';
   }
 }
-
 function atualizarRequisitoApto(){
   const req = $('reqApto');
   const aptoInput = $('adApto');
   if(!req || !aptoInput) return;
   if(state._tipoEscolhido === 'Casa'){
     req.style.display = 'none';
-    aptoInput.placeholder = 'Apartamento';
   } else {
     req.style.display = '';
-    aptoInput.placeholder = 'Apartamento';
   }
 }
-
 function atualizarChavePreview(){
   const apto = $('adApto') ? $('adApto').value.trim() : '';
   const bloco = $('adBloco') ? $('adBloco').value.trim() : '';
@@ -2294,18 +2104,10 @@ function atualizarChavePreview(){
     elBloco.textContent = bloco || '—';
     if(linhaBloco) linhaBloco.classList.toggle('vazia', !bloco);
   }
-
   validarBotaoSalvar();
 }
-
-function onAptoInput(el){
-  sanitizarApto(el);
-  atualizarChavePreview();
-}
-function onBlocoInput(el){
-  sanitizarBloco(el);
-  atualizarChavePreview();
-}
+function onAptoInput(el){ sanitizarApto(el); atualizarChavePreview(); }
+function onBlocoInput(el){ sanitizarBloco(el); atualizarChavePreview(); }
 
 function validarBotaoSalvar(){
   const rua = $('adRua').value.trim();
@@ -2320,10 +2122,8 @@ function validarBotaoSalvar(){
   const ehCasa = tipoEscolhido === 'Casa';
   const aptoOk = ehCasa || !!apto;
   const chaveOk = !!complemento || aptoOk;
-
   const podeSalvar = rua && numero && bairro && vaga && elevador &&
                      tipoEscolhido && corretor && aptoOk && chaveOk;
-
   if($('btnSalvarImovel')) $('btnSalvarImovel').disabled = !podeSalvar;
   if($('btnSalvarReserva')) $('btnSalvarReserva').disabled = !podeSalvar;
 }
@@ -2341,27 +2141,19 @@ function atualizarPreview(url){
     if(semImg) semImg.style.display = '';
   }
 }
-
 function atualizarBotaoBuscarEntrada(codigo){
   state._codigoLinkAtual = codigo || '';
   const btn = $('btnBuscarEntrada');
   const badge = $('codigoBadge');
   if(!btn || !badge) return;
-  if(codigo){
-    btn.disabled = false;
-    badge.textContent = '#' + codigo;
-  } else {
-    btn.disabled = true;
-    badge.textContent = 'sem código';
-  }
+  if(codigo){ btn.disabled = false; badge.textContent = '#' + codigo; }
+  else { btn.disabled = true; badge.textContent = 'sem código'; }
 }
-
 function abrirBuscarEntradaForm(){
   const codigo = state._codigoLinkAtual;
   if(!codigo){ toast('Cole um link com código primeiro', 'error'); return; }
   window.open(`${BUSCAR_BASE}/${codigo}`, '_blank', 'noopener');
 }
-
 async function onLinkBlur(){
   const url = $('adLink').value.trim();
   if(!url) return;
@@ -2371,7 +2163,6 @@ async function onLinkBlur(){
     await tentarPreencherPorCodigo(codigo);
   }
 }
-
 function onLinkImovelChanged(){
   clearTimeout(state._linkDebounce);
   const url = $('adLink').value.trim();
@@ -2449,7 +2240,7 @@ async function buscarImagemDoLink(url, mostrarToast){
     const img = $('previewImg');
     img.classList.add('hidden');
     if(semImg){
-      semImg.innerHTML = '<div class="loading-img"><div class="spin" style="width:18px;height:18px;border:2px solid rgba(109,40,217,.25);border-top-color:var(--purple);border-radius:50%;animation:girar .7s linear infinite;"></div>Buscando imagem...</div>';
+      semImg.innerHTML = '<div style="display:flex; flex-direction:column; align-items:center; gap:6px;"><div class="spin" style="width:18px;height:18px;border:2px solid rgba(109,40,217,.25);border-top-color:var(--purple);border-radius:50%;animation:girar .7s linear infinite;"></div>Buscando...</div>';
       semImg.style.display = '';
     }
   }
@@ -2467,10 +2258,6 @@ async function buscarImagemDoLink(url, mostrarToast){
   }
 }
 
-/**
- * Monta descrição final: tipo + primeira linha da descrição juntos na MESMA linha.
- * Resto da descrição continua nas linhas seguintes.
- */
 function montarDescricaoComTipo(descricaoSemTipoTexto, tipo){
   const tipoLimpo = String(tipo || '').trim();
   const base = String(descricaoSemTipoTexto || '').trim();
@@ -2503,28 +2290,20 @@ async function salvarImovel(isReserva){
   const editandoId = $('editingId').value || '';
   const editando = !!editandoId;
 
-  if(!state._corretorEscolhido){
-    toast('Escolha o corretor (Hugo ou Carol) antes de salvar', 'error');
-    return;
-  }
-  if(!tipo){
-    toast('Escolha o tipo de imóvel', 'error');
-    return;
-  }
-  if(!tel || tel.length < 10){ toast('Telefone do cliente inválido', 'error'); return; }
+  if(!state._corretorEscolhido){ toast('Escolha o corretor', 'error'); return; }
+  if(!tipo){ toast('Escolha o tipo de imóvel', 'error'); return; }
+  if(!tel || tel.length < 10){ toast('Telefone inválido', 'error'); return; }
   if(!rua){ toast('Informe a rua', 'error'); return; }
   if(!numero){ toast('Informe o número', 'error'); return; }
-  if(tipo !== 'Casa' && !apto){ toast('Informe o número do apartamento', 'error'); return; }
+  if(tipo !== 'Casa' && !apto){ toast('Informe o apartamento', 'error'); return; }
   if(!bairro){ toast('Informe o bairro', 'error'); return; }
   if(!vaga){
     if($('adVaga')) $('adVaga').classList.add('invalido');
-    toast('Informe o tipo de vaga', 'error');
-    return;
+    toast('Informe a vaga', 'error'); return;
   }
   if(!elevador){
     if($('adElevador')) $('adElevador').classList.add('invalido');
-    toast('Informe se o imóvel tem elevador', 'error');
-    return;
+    toast('Informe o elevador', 'error'); return;
   }
   if($('adVaga')) $('adVaga').classList.remove('invalido');
   if($('adElevador')) $('adElevador').classList.remove('invalido');
@@ -2549,11 +2328,9 @@ async function salvarImovel(isReserva){
       visitaFeitaAtual = imOriginal.visitaFeita || 'Não';
       dataVisitaAgendadaAtual = imOriginal.dataVisitaAgendada || '';
       vendidoAtual = imOriginal.vendido || '';
-      if(isReserva !== undefined) {
-         desativadoAtual = isReserva ? 'Sim' : '';
-      } else {
-         desativadoAtual = imOriginal.desativado || '';
-      }
+      // Se é edição e o usuário clicou "Salvar como Reserva", respeita.
+      // Se clicou "Salvar no cliente", desativa a reserva.
+      desativadoAtual = isReserva ? 'Sim' : '';
     }
   }
 
@@ -2577,6 +2354,8 @@ async function salvarImovel(isReserva){
       }
     }
   }
+
+  const codigoOriginal = extrairCodigoDoLink(linkFinal || link || '');
 
   const dados = {
     id: idOriginal,
@@ -2613,58 +2392,70 @@ async function salvarImovel(isReserva){
   }
 
   marcarSalvando(true);
-
   const timeoutPromise = new Promise((resolve) => {
     state._salvarTimeout = setTimeout(() => {
       resolve({ ok: false, error: 'TIMEOUT_15S' });
     }, TIMEOUT_SALVAR);
   });
-
   const savePromise = api('salvarImovel', { senha: SENHA_ADMIN, ...dados });
-
   let res;
   try {
     res = await Promise.race([savePromise, timeoutPromise]);
   } finally {
-    if(state._salvarTimeout){
-      clearTimeout(state._salvarTimeout);
-      state._salvarTimeout = null;
-    }
+    if(state._salvarTimeout){ clearTimeout(state._salvarTimeout); state._salvarTimeout = null; }
     marcarSalvando(false);
   }
 
   if(res && res.error === 'TIMEOUT_15S'){
     btn.disabled = false;
     btn.innerHTML = htmlOriginal;
-    toast('⏱️ Demorou demais (15s). Seus dados estão preservados. Tente salvar novamente.', 'error');
+    toast('⏱️ Demorou demais (15s). Dados preservados.', 'error');
     return;
   }
-
   if(!res.ok){
     btn.disabled = false;
     btn.innerHTML = htmlOriginal;
-    toast(res.error || 'Erro ao salvar — tente novamente', 'error');
+    toast(res.error || 'Erro ao salvar', 'error');
     return;
   }
 
-  if(editando){
-    const imOriginal = state.imoveis.find(i => String(i.id) === String(editandoId));
-    if(imOriginal){
-      imOriginal.status = statusAtual;
-      imOriginal.observacao = observacaoAtual;
-      imOriginal.dataVisita = dataVisitaAtual;
-      imOriginal.avaliacaoVisita = avaliacaoVisitaAtual;
-      imOriginal.visitaFeita = visitaFeitaAtual;
-      imOriginal.dataVisitaAgendada = dataVisitaAgendadaAtual;
-      imOriginal.desativado = desativadoAtual;
-      imOriginal.vendido = vendidoAtual;
-      imOriginal.vaga = vaga;
-      imOriginal.elevador = elevador;
+  // ⚠️ CORREÇÃO RESERVA: se salvou como reserva mas o backend não marcou desativado,
+  // chamamos desativarImovel para garantir
+  if(isReserva && res.id){
+    marcarSalvando(true);
+    await api('desativarImovel', { senha: SENHA_ADMIN, id: res.id });
+    marcarSalvando(false);
+  }
+
+  // ⚠️ CORREÇÃO EDIÇÃO POR CÓDIGO: se editando e há código, propaga para todos
+  if(editando && codigoOriginal){
+    const camposPropagar = {};
+    if(dados.preco      !== undefined){ camposPropagar.preco      = dados.preco;      }
+    if(dados.condominio !== undefined){ camposPropagar.condominio = dados.condominio; }
+    if(dados.iptu       !== undefined){ camposPropagar.iptu       = dados.iptu;       }
+    if(dados.descricao  !== undefined){ camposPropagar.descricao  = dados.descricao;  }
+    if(dados.imagem     !== undefined){ camposPropagar.imagem     = dados.imagem;     }
+    if(dados.chaveTexto !== undefined){ camposPropagar.chaveTexto = dados.chaveTexto; }
+    if(dados.link       !== undefined){ camposPropagar.link       = dados.link;       }
+    if(dados.vaga       !== undefined){ camposPropagar.vaga       = dados.vaga;       }
+    if(dados.elevador   !== undefined){ camposPropagar.elevador   = dados.elevador;   }
+
+    if(Object.keys(camposPropagar).length > 0){
+      marcarSalvando(true);
+      const propRes = await api('atualizarImovelPorCodigo', {
+        senha: SENHA_ADMIN,
+        codigo: codigoOriginal,
+        ...camposPropagar
+      });
+      marcarSalvando(false);
+      if(propRes.ok && propRes.total > 1){
+        toast(`✨ Edição propagada para ${propRes.total} imóveis com o código #${codigoOriginal}`, 'success');
+      }
     }
   }
 
   fecharPainelImovel();
-  toast(editando ? 'Imóvel atualizado' : 'Imóvel salvo', 'success');
+  toast(editando ? 'Imóvel atualizado' : (isReserva ? 'Imóvel salvo como reserva' : 'Imóvel salvo'), 'success');
   await recarregarVitrine();
   if(res.id){
     setTimeout(() => {
@@ -2745,11 +2536,6 @@ function editarImovel(id){
   document.body.style.overflow = 'hidden';
 }
 
-function abrirBuscar(codigo){
-  const url = codigo ? `${BUSCAR_BASE}/${codigo}` : BUSCAR_BASE;
-  window.open(url, '_blank');
-}
-
 /* =====================================================
    VISITA / AGENDAMENTO
 ===================================================== */
@@ -2762,9 +2548,7 @@ function abrirVisitaModal(id){
   $('btnLimparVisita').style.display = im.visitaFeita === 'Sim' ? 'inline-flex' : 'none';
   $('visitaBackdrop').classList.add('show');
 }
-function registrarVisitaDoAgendamento(id){
-  abrirVisitaModal(id);
-}
+function registrarVisitaDoAgendamento(id){ abrirVisitaModal(id); }
 function fecharVisitaModal(){ $('visitaBackdrop').classList.remove('show'); }
 
 async function salvarVisita(ev){
@@ -2797,10 +2581,7 @@ async function salvarVisita(ev){
 async function limparVisita(){
   const id = $('visitaImovelId').value;
   if(!id) return;
-  const ok = await confirmarAcao({
-    titulo: 'Desfazer visita?', texto: 'A visita será removida.',
-    btnSim: 'Desfazer', tipo: 'warn'
-  });
+  const ok = await confirmarAcao({ titulo: 'Desfazer visita?', texto: 'A visita será removida.', btnSim: 'Desfazer', tipo: 'warn' });
   if(!ok) return;
   marcarSalvando(true);
   const res = await api('limparVisita', { id });
@@ -2848,7 +2629,7 @@ async function salvarAgendamento(ev){
   if(dataZero.getTime() === hojeZero.getTime()){
     const tolerancia = 5 * 60 * 1000;
     if(dataEscolhida.getTime() < (agora.getTime() - tolerancia)){
-      toast('Horário já passou. Escolha um horário futuro.', 'error');
+      toast('Horário já passou.', 'error');
       return;
     }
   }
@@ -2856,10 +2637,7 @@ async function salvarAgendamento(ev){
   const btn = ev?.target; if(btn) btn.disabled = true;
   marcarSalvando(true);
   const iso = dataEscolhida.toISOString();
-  const res = await api('agendarVisita', {
-    senha: SENHA_ADMIN, id, dataAgendada: iso,
-    rua, numero, bairro
-  });
+  const res = await api('agendarVisita', { senha: SENHA_ADMIN, id, dataAgendada: iso, rua, numero, bairro });
   marcarSalvando(false);
   if(btn) btn.disabled = false;
   if(!res.ok){ toast(res.error || 'Erro', 'error'); return; }
@@ -2914,21 +2692,68 @@ function abrirChaveModal(texto, contexto){
 function fecharChaveModal(){ $('chaveModalBackdrop').classList.remove('show'); }
 
 /* =====================================================
-   HISTÓRICO IMÓVEL
+   VER CLIENTE (somente leitura)
 ===================================================== */
-async function abrirHistoricoImovel(id){
-  const im = state.imoveis.find(i => i.id === id);
-  if(!im) return;
-  toast('Carregando histórico...');
+async function abrirVerCliente(){
+  const c = state.clienteAtual;
+  const backdrop = $('verClienteBackdrop');
+  const cont = $('verClienteConteudo');
+  if(!c){
+    cont.innerHTML = '<p class="text-muted">Cliente não carregado.</p>';
+    backdrop.classList.add('show');
+    return;
+  }
+  cont.innerHTML = '<div class="loading-inline"><div class="spinner-lg" style="width:34px;height:34px;"></div></div>';
+  backdrop.classList.add('show');
+
+  // Busca preferências
   marcarSalvando(true);
-  const res = await api('listarHistoricoImovel', { senha: SENHA_ADMIN, imovelId: id });
+  const resPref = await api('buscarPreferenciasCliente', { senha: SENHA_ADMIN, telefone: TELEFONE_CLIENTE });
   marcarSalvando(false);
-  if(!res.ok){ toast('Erro ao carregar', 'error'); return; }
-  const lista = res.data || [];
-  if(lista.length === 0){ toast('Nenhuma ação registrada'); return; }
-  const txt = lista.map(h => `• ${fmtDataHora(h.dataHora)} — ${h.acao}${h.detalhe ? ' (' + h.detalhe + ')' : ''}`).join('\n');
-  alert('Histórico do imóvel:\n\n' + txt);
+
+  const temp = c.temperatura || 'frio';
+  const pref = (resPref.ok && resPref.data) ? resPref.data : null;
+
+  let prefHtml = '<div class="info-block-title">Preferências de imóvel</div>';
+  if(pref){
+    prefHtml += `<div class="info-grid">
+      <div class="info-item"><div class="lbl">Bairros</div><div class="val">${esc((pref.bairros||[]).join(', ')) || '—'}</div></div>
+      <div class="info-item"><div class="lbl">Preço mín.</div><div class="val">${esc(pref.precoMin) || '—'}</div></div>
+      <div class="info-item"><div class="lbl">Preço máx.</div><div class="val">${esc(pref.precoMax) || '—'}</div></div>
+      <div class="info-item"><div class="lbl">Cond. mín.</div><div class="val">${esc(pref.condMin) || '—'}</div></div>
+      <div class="info-item"><div class="lbl">Cond. máx.</div><div class="val">${esc(pref.condMax) || '—'}</div></div>
+      <div class="info-item"><div class="lbl">Quartos</div><div class="val">${esc(pref.quartos) || '—'}</div></div>
+      <div class="info-item"><div class="lbl">Suítes</div><div class="val">${esc(pref.suites) || '—'}</div></div>
+      <div class="info-item"><div class="lbl">Vagas</div><div class="val">${esc(pref.vagas) || '—'}</div></div>
+      <div class="info-item"><div class="lbl">Acessibilidade</div><div class="val">${esc(pref.acessibilidade) || '—'}</div></div>
+      <div class="info-item"><div class="lbl">Elevador</div><div class="val">${esc(pref.elevador) || '—'}</div></div>
+      <div class="info-item"><div class="lbl">Tipo</div><div class="val">${esc(pref.tipo) || '—'}</div></div>
+      <div class="info-item" style="grid-column: 1 / -1;"><div class="lbl">Outros</div><div class="val">${esc(pref.outros) || '—'}</div></div>
+    </div>`;
+  } else {
+    prefHtml += '<p class="text-muted" style="font-size:.82rem;">Nenhuma preferência cadastrada.</p>';
+  }
+
+  cont.innerHTML = `
+    <div class="info-block-title">Dados básicos</div>
+    <div class="info-grid">
+      <div class="info-item"><div class="lbl">Nome</div><div class="val">${esc(c.nome) || '—'}</div></div>
+      <div class="info-item"><div class="lbl">Telefone</div><div class="val">${esc(fmtTel(c.telefone))}</div></div>
+      <div class="info-item"><div class="lbl">Corretor</div><div class="val">${esc(c.corretor) || '—'}</div></div>
+      <div class="info-item"><div class="lbl">Temperatura</div><div class="val">${emojiTemperatura(temp)} ${esc(temp)}${c.temperaturaManual ? ' (manual)' : ''}</div></div>
+      <div class="info-item"><div class="lbl">TQC</div><div class="val">${esc(c.tqc) || 'Não'}</div></div>
+      <div class="info-item"><div class="lbl">Investidor</div><div class="val">${esc(c.car) || 'Não'}</div></div>
+      <div class="info-item"><div class="lbl">Inativo</div><div class="val">${esc(c.inativo) || 'Não'}</div></div>
+      <div class="info-item"><div class="lbl">Cadastro</div><div class="val">${fmtData(c.dataCadastro) || '—'}</div></div>
+    </div>
+    ${prefHtml}
+    <div class="info-block-title">Observações</div>
+    <div class="info-item" style="grid-column: 1 / -1;">
+      <div class="val" style="white-space:pre-wrap;">${esc(c.observacao) || '(vazio)'}</div>
+    </div>
+  `;
 }
+function fecharVerCliente(){ $('verClienteBackdrop').classList.remove('show'); }
 
 /* =====================================================
    ACESSOS
@@ -2970,7 +2795,7 @@ function renderizarAcessos(){
       ? '<span style="font-size:.6rem;font-weight:700;padding:2px 6px;border-radius:4px;background:var(--purple-soft);color:var(--purple);text-transform:uppercase;letter-spacing:.3px;">Admin</span>'
       : '';
     return `
-      <div class="acesso-card">
+      <div style="background:var(--bg); border:1px solid var(--border); border-radius:var(--radius); padding:14px; margin-bottom:10px;">
         <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:10px; margin-bottom:10px; flex-wrap:wrap;">
           <div style="font-size:.88rem; font-weight:700; color:var(--text); display:flex; align-items:center; gap:6px;">
             <svg class="ico ico-sm" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
@@ -2978,7 +2803,7 @@ function renderizarAcessos(){
           </div>
           <span style="font-size:.64rem; font-weight:700; padding:3px 8px; border-radius:4px; text-transform:uppercase; letter-spacing:.3px; ${statusTag}">${esc(a.status)}</span>
         </div>
-        <div class="acesso-senha-wrap">
+        <div style="display:flex; align-items:center; gap:8px; background:#fff; border:1px solid var(--border); border-radius:var(--radius-sm); padding:10px 12px; margin-bottom:10px; font-family:var(--mono);">
           <span style="font-size:.68rem; color:var(--muted); font-weight:700; text-transform:uppercase;">Senha</span>
           <span style="font-size:1.05rem; font-weight:700; letter-spacing:2px; color:var(--purple); flex:1; user-select:all;">${esc(a.senha)}</span>
           <button onclick="copiarTexto('${esc(a.senha)}')" title="Copiar" style="background:transparent; border:none; cursor:pointer; padding:4px; color:var(--text-soft);">
@@ -3034,7 +2859,7 @@ async function criarAcessoAdminAqui(){
   if(!c){ toast('Cliente não carregado', 'error'); return; }
   const ok = await confirmarAcao({
     titulo: 'Criar acesso admin?',
-    texto: 'Será gerado um acesso de administrador para este cliente. Se já existir, será mantido.',
+    texto: 'Será gerado um acesso de administrador para este cliente.',
     btnSim: 'Criar acesso admin', tipo: 'warn'
   });
   if(!ok) return;
@@ -3051,7 +2876,7 @@ async function criarAcessoAdminAqui(){
     observacao: c.observacao || ''
   });
   marcarSalvando(false);
-  if(!res.ok){ toast(res.error || 'Erro ao criar acesso admin', 'error'); return; }
+  if(!res.ok){ toast(res.error || 'Erro', 'error'); return; }
   if(res.senhaAdmin){
     $('senhaGeradaTitulo').textContent = 'Acesso admin criado';
     $('senhaGeradaSub').textContent = 'Envie a senha abaixo para o admin do cliente.';
@@ -3059,7 +2884,7 @@ async function criarAcessoAdminAqui(){
     $('senhaGeradaValor').textContent = res.senhaAdmin;
     $('senhaGeradaBackdrop').classList.add('show');
   } else {
-    toast('Cliente atualizado. Recarregue os acessos pra conferir.', 'success');
+    toast('Cliente atualizado. Recarregue os acessos.', 'success');
   }
   carregarAcessos();
 }
@@ -3068,7 +2893,7 @@ function fecharSenhaGerada(){ $('senhaGeradaBackdrop').classList.remove('show');
 
 async function trocarSenhaAcesso(acessoId){
   const ok = await confirmarAcao({
-    titulo: 'Gerar nova senha?', texto: 'A senha atual deixará de funcionar imediatamente.',
+    titulo: 'Gerar nova senha?', texto: 'A senha atual deixará de funcionar.',
     btnSim: 'Gerar nova senha', tipo: 'warn'
   });
   if(!ok) return;
@@ -3087,7 +2912,7 @@ async function trocarSenhaAcesso(acessoId){
 
 async function bloquearAcesso(acessoId){
   const ok = await confirmarAcao({
-    titulo: 'Bloquear/desbloquear acesso?', texto: 'O status do acesso será alterado.',
+    titulo: 'Bloquear/desbloquear acesso?', texto: 'O status será alterado.',
     btnSim: 'Confirmar', tipo: 'warn'
   });
   if(!ok) return;
@@ -3126,7 +2951,6 @@ ${url}
 Qualquer dúvida, estou à disposição!`;
   copiarTexto(texto);
 }
-
 function gerarTextoWhatsAppSenhaGerada(){
   const senha = $('senhaGeradaValor').textContent;
   if(!senha) return;
@@ -3148,7 +2972,7 @@ async function abrirAtividade(){
   ]);
   marcarSalvando(false);
   if(!resLog.ok && !resHist.ok){
-    $('ativTimeline').innerHTML = '<div class="empty-state"><p>Erro ao carregar atividade</p></div>';
+    $('ativTimeline').innerHTML = '<div style="text-align:center; padding:40px;"><p>Erro ao carregar</p></div>';
     return;
   }
   const eventos = [];
@@ -3188,25 +3012,18 @@ async function abrirAtividade(){
     else if(diasUlt <= 30){ nivelClass = 'yellow'; nivelTxt = 'Morno'; }
   }
   $('ativResumo').innerHTML = `
-    <div class="acesso-card" style="margin:0;">
-      <div style="font-size:.64rem; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.4px;">Engajamento</div>
-      <div style="font-size:1.05rem; font-weight:700; color:var(--${nivelClass === 'green' ? 'success' : nivelClass === 'yellow' ? 'warn' : 'danger'});">${nivelTxt}</div>
-      <div style="font-size:.68rem; color:var(--text-soft);">${diasUlt !== null ? 'Última ação: ' + (diasUlt === 0 ? 'hoje' : diasUlt + ' dia(s) atrás') : 'Sem registro'}</div>
+    <div style="background:var(--bg); border:1px solid var(--border); border-radius:var(--radius-sm); padding:10px 12px;">
+      <div style="font-size:.62rem; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.4px;">Engajamento</div>
+      <div style="font-size:1rem; font-weight:700; color:var(--${nivelClass === 'green' ? 'success' : nivelClass === 'yellow' ? 'warn' : 'danger'});">${nivelTxt}</div>
+      <div style="font-size:.66rem; color:var(--text-soft);">${diasUlt !== null ? 'Última: ' + (diasUlt === 0 ? 'hoje' : diasUlt + 'd atrás') : 'Sem registro'}</div>
     </div>
-    <div class="acesso-card" style="margin:0;">
-      <div style="font-size:.64rem; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.4px;">Acessos</div>
-      <div style="font-size:1.05rem; font-weight:700; color:var(--text);">${totalAcessos}</div>
-      <div style="font-size:.68rem; color:var(--text-soft);">logins registrados</div>
+    <div style="background:var(--bg); border:1px solid var(--border); border-radius:var(--radius-sm); padding:10px 12px;">
+      <div style="font-size:.62rem; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.4px;">Acessos</div>
+      <div style="font-size:1rem; font-weight:700; color:var(--text);">${totalAcessos}</div>
     </div>
-    <div class="acesso-card" style="margin:0;">
-      <div style="font-size:.64rem; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.4px;">Ações</div>
-      <div style="font-size:1.05rem; font-weight:700; color:var(--text);">${totalAcoes}</div>
-      <div style="font-size:.68rem; color:var(--text-soft);">marcações, visitas, edições</div>
-    </div>
-    <div class="acesso-card" style="margin:0;">
-      <div style="font-size:.64rem; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.4px;">Última</div>
-      <div style="font-size:.82rem; font-weight:700; color:var(--text);">${ultimoEvento ? fmtDataHoraCurta(ultimoEvento.dataHora) : '—'}</div>
-      <div style="font-size:.68rem; color:var(--text-soft);">${ultimoEvento ? esc(ultimoEvento.titulo) : ''}</div>
+    <div style="background:var(--bg); border:1px solid var(--border); border-radius:var(--radius-sm); padding:10px 12px;">
+      <div style="font-size:.62rem; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.4px;">Ações</div>
+      <div style="font-size:1rem; font-weight:700; color:var(--text);">${totalAcoes}</div>
     </div>
   `;
   renderizarTimeline();
@@ -3229,7 +3046,7 @@ function renderizarTimeline(){
   else if(state._atividadeFiltro === 'cliente') eventos = eventos.filter(e => e.tipo === 'acao' && !e.isAdmin);
   else if(state._atividadeFiltro === 'admin') eventos = eventos.filter(e => e.tipo === 'acao' && e.isAdmin);
   if(eventos.length === 0){
-    container.innerHTML = '<div class="empty-state"><p>Nenhum registro nesse filtro</p></div>';
+    container.innerHTML = '<div style="text-align:center; padding:40px; color:var(--muted);">Nenhum registro nesse filtro</div>';
     return;
   }
   container.innerHTML = eventos.map(e => {
@@ -3237,12 +3054,12 @@ function renderizarTimeline(){
     const bg = e.tipo === 'acesso' ? (e.isAdmin ? 'var(--purple-soft)' : 'var(--success-soft)') : (e.isAdmin ? 'var(--primary-soft)' : 'var(--info-soft)');
     const cor = e.tipo === 'acesso' ? (e.isAdmin ? 'var(--purple)' : 'var(--success)') : (e.isAdmin ? 'var(--primary)' : 'var(--info)');
     return `
-      <div style="display:flex; gap:12px; padding:12px 6px; border-bottom:1px solid var(--border);">
-        <div style="width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:.9rem; background:${bg}; color:${cor};">${icon}</div>
+      <div style="display:flex; gap:12px; padding:10px 4px; border-bottom:1px solid var(--border);">
+        <div style="width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:.85rem; background:${bg}; color:${cor};">${icon}</div>
         <div style="flex:1; min-width:0;">
-          <div style="font-weight:600; font-size:.82rem; color:var(--text);">${esc(e.titulo)}</div>
-          ${e.detalhe ? `<div style="font-size:.74rem; color:var(--text-soft); margin-top:2px;">${esc(e.detalhe)}</div>` : ''}
-          <div style="font-size:.68rem; color:var(--muted); margin-top:4px; font-family:var(--mono);">${fmtDataHora(e.dataHora)}${e.apelido ? ' · ' + esc(e.apelido) : ''}</div>
+          <div style="font-weight:600; font-size:.8rem; color:var(--text);">${esc(e.titulo)}</div>
+          ${e.detalhe ? `<div style="font-size:.72rem; color:var(--text-soft); margin-top:2px;">${esc(e.detalhe)}</div>` : ''}
+          <div style="font-size:.66rem; color:var(--muted); margin-top:3px; font-family:var(--mono);">${fmtDataHora(e.dataHora)}${e.apelido ? ' · ' + esc(e.apelido) : ''}</div>
         </div>
       </div>
     `;
@@ -3251,77 +3068,26 @@ function renderizarTimeline(){
 function fecharAtividade(){ $('atividadeBackdrop').classList.remove('show'); }
 
 /* =====================================================
-   CLIENTE — EDITAR
-===================================================== */
-function abrirEditarClienteAtual(){
-  const c = state.clienteAtual;
-  if(!c){ toast('Cliente não carregado', 'error'); return; }
-  $('cliTelefone').value = fmtTel(c.telefone);
-  $('cliNome').value = c.nome || '';
-  preencherSelectCorretores(c.corretor);
-  $('cliTQC').value = c.tqc || '';
-  $('cliCAR').value = c.car || '';
-  $('cliInativo').value = c.inativo || '';
-  $('cliObservacao').value = c.observacao || '';
-  $('clienteModalBackdrop').classList.add('show');
-}
-
-function preencherSelectCorretores(valorAtual){
-  const sel = $('cliCorretor');
-  sel.innerHTML = '<option value="">— Selecione —</option>' +
-    state.corretores.map(c => `<option value="${esc(c.nome)}">${esc(c.nome)}</option>`).join('');
-  if(valorAtual) sel.value = valorAtual;
-}
-
-function fecharClienteModal(){ $('clienteModalBackdrop').classList.remove('show'); }
-
-async function salvarCliente(){
-  const tel = normalizaTel(TELEFONE_CLIENTE);
-  const nome = $('cliNome').value.trim();
-  const corretor = $('cliCorretor').value;
-  const tqc = $('cliTQC').value;
-  const car = $('cliCAR').value;
-  const inativo = $('cliInativo').value;
-  const observacao = $('cliObservacao').value.trim();
-  if(!nome){ toast('Informe o nome', 'error'); return; }
-  if(!corretor){ toast('Selecione o corretor', 'error'); return; }
-  const btn = $('btnSalvarCliente');
-  btn.disabled = true;
-  btn.innerHTML = '<span class="loader"></span> Salvando...';
-  marcarSalvando(true);
-  const res = await api('salvarCliente', {
-    senha: SENHA_ADMIN, telefone: tel, nome, corretor,
-    tqc, car, inativo,
-    linkVitrine: state.clienteAtual?.linkVitrine || '',
-    observacao
-  });
-  marcarSalvando(false);
-  btn.disabled = false;
-  btn.innerHTML = '<svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Salvar';
-  if(!res.ok){ toast(res.error || 'Erro', 'error'); return; }
-  fecharClienteModal();
-  toast('Cliente salvo', 'success');
-  if(state.clienteAtual){
-    state.clienteAtual.nome = nome;
-    state.clienteAtual.corretor = corretor;
-    state.clienteAtual.tqc = tqc;
-    state.clienteAtual.car = car;
-    state.clienteAtual.inativo = inativo;
-    state.clienteAtual.observacao = observacao;
-  }
-  atualizarBarraCliente();
-}
-
-/* =====================================================
    CLONAR
 ===================================================== */
 async function abrirClonarVitrine(){
-  const imoveisDisponiveis = state.imoveis.filter(im => !isReserva(im));
-  if(imoveisDisponiveis.length === 0){
-    toast('Nenhum imóvel disponível para clonar', 'error');
+  if(state._clonarSelecionados.size === 0){
+    toast('Selecione ao menos um imóvel no card (botão Clonar)', 'error');
     return;
   }
-  state._clonarSelecionados = new Set(imoveisDisponiveis.map(i => i.id));
+  // Remove vendidos/reservados da seleção
+  const invalidos = [];
+  state._clonarSelecionados.forEach(id => {
+    const im = state.imoveis.find(i => i.id === id);
+    if(!im || isVendido(im) || isReserva(im)) invalidos.push(id);
+  });
+  invalidos.forEach(id => state._clonarSelecionados.delete(id));
+
+  if(state._clonarSelecionados.size === 0){
+    toast('Nenhum imóvel válido selecionado', 'error');
+    return;
+  }
+
   marcarSalvando(true);
   const resCli = await api('listarClientes', { senha: SENHA_ADMIN });
   marcarSalvando(false);
@@ -3333,38 +3099,37 @@ async function abrirClonarVitrine(){
   sel.innerHTML = '<option value="">— Selecione o cliente de destino —</option>' +
     destino.map(c => `<option value="${esc(normalizaTel(c.telefone))}">${esc(c.nome || 'Sem nome')} · ${esc(fmtTel(c.telefone))}</option>`).join('');
   $('clonarVitrineSub').textContent =
-    `Origem: ${nomeCompletoCliente_(state.clienteAtual?.nome || '', TELEFONE_CLIENTE)} · ${imoveisDisponiveis.length} imóveis disponíveis`;
-  renderizarListaClonagem(imoveisDisponiveis);
+    `Origem: ${nomeCompletoCliente_(state.clienteAtual?.nome || '', TELEFONE_CLIENTE)} · ${state._clonarSelecionados.size} imóveis selecionados`;
+  renderizarListaClonagem();
   $('clonarVitrineBackdrop').classList.add('show');
 }
 
 function fecharClonarVitrine(){
   $('clonarVitrineBackdrop').classList.remove('show');
-  state._clonarSelecionados = new Set();
 }
 
-function renderizarListaClonagem(imoveis){
+function renderizarListaClonagem(){
   const lista = $('clonarListaImoveis');
-  if(!imoveis) imoveis = state.imoveis.filter(im => !isReserva(im));
+  const imoveis = state.imoveis.filter(im => !isReserva(im));
   if(imoveis.length === 0){
-    lista.innerHTML = '<div class="empty-state" style="padding:20px;"><p>Nenhum imóvel</p></div>';
+    lista.innerHTML = '<div style="text-align:center; padding:20px; color:var(--muted);">Nenhum imóvel</div>';
     return;
   }
   lista.innerHTML = imoveis.map(im => {
     const marcado = state._clonarSelecionados.has(im.id);
-    const campos = camposEndereco_(im);
+    const vendido = isVendido(im);
+    const desabilitado = vendido;
     return `
-      <label class="clonar-item">
-        <input type="checkbox" ${marcado?'checked':''} onchange="toggleClonarImovel('${esc(im.id)}', this.checked)" style="width:18px; height:18px; cursor:pointer; accent-color:var(--purple);">
-        <img src="${esc(im.imagem || '')}" style="width:48px; height:48px; object-fit:cover; border-radius:6px; background:var(--bg-alt);" onerror="this.style.visibility='hidden'">
+      <label class="clonar-item ${desabilitado ? 'disabled' : ''}">
+        <input type="checkbox" ${marcado?'checked':''} ${desabilitado?'disabled':''} onchange="toggleClonarImovel('${esc(im.id)}', this.checked)" style="width:18px; height:18px; cursor:pointer; accent-color:var(--purple);">
+        <img src="${esc(im.imagem || '')}" style="width:44px; height:44px; object-fit:cover; border-radius:6px; background:var(--bg-alt);" onerror="this.style.visibility='hidden'">
         <div style="flex:1; min-width:0;">
-          <div style="font-size:.82rem; font-weight:700; color:var(--text); margin-bottom:2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
-            ${esc(im.titulo || 'Sem endereço')}
+          <div style="font-size:.8rem; font-weight:700; color:var(--text); margin-bottom:2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+            ${esc(im.titulo || 'Sem endereço')} ${vendido ? '<span style="color:#dc2626; font-size:.66rem;">(VENDIDO)</span>' : ''}
           </div>
-          <div style="font-size:.7rem; color:var(--muted); display:flex; gap:8px; flex-wrap:wrap;">
+          <div style="font-size:.68rem; color:var(--muted); display:flex; gap:8px; flex-wrap:wrap;">
             ${im.codigo ? `<span>#${esc(im.codigo)}</span>` : ''}
             ${im.preco ? `<span>${esc(im.preco)}</span>` : ''}
-            ${campos.bairro ? `<span>${esc(campos.bairro)}</span>` : ''}
           </div>
         </div>
       </label>
@@ -3377,17 +3142,19 @@ function toggleClonarImovel(id, marcado){
   if(marcado) state._clonarSelecionados.add(id);
   else state._clonarSelecionados.delete(id);
   atualizarContadorClonagem();
+  atualizarCloneFloating();
 }
 
 function clonarMarcarTodos(marcar){
-  const imoveis = state.imoveis.filter(im => !isReserva(im));
+  const imoveis = state.imoveis.filter(im => !isReserva(im) && !isVendido(im));
   if(marcar) imoveis.forEach(i => state._clonarSelecionados.add(i.id));
   else state._clonarSelecionados.clear();
-  renderizarListaClonagem(imoveis);
+  renderizarListaClonagem();
+  atualizarCloneFloating();
 }
 
 function atualizarContadorClonagem(){
-  const total = state.imoveis.filter(im => !isReserva(im)).length;
+  const total = state.imoveis.filter(im => !isReserva(im) && !isVendido(im)).length;
   $('clonarContador').textContent = `${state._clonarSelecionados.size} de ${total} selecionados`;
 }
 
@@ -3395,10 +3162,10 @@ async function confirmarClonagem(){
   const destinoTel = $('clonarClienteDestino').value;
   if(!destinoTel){ toast('Selecione o cliente de destino', 'error'); return; }
   if(state._clonarSelecionados.size === 0){ toast('Selecione pelo menos 1 imóvel', 'error'); return; }
-  const imoveis = state.imoveis.filter(im => state._clonarSelecionados.has(im.id));
+  const imoveis = state.imoveis.filter(im => state._clonarSelecionados.has(im.id) && !isVendido(im) && !isReserva(im));
   const ok = await confirmarAcao({
     titulo: 'Confirmar clonagem?',
-    texto: `${imoveis.length} imóvel(is) serão copiados para a vitrine do cliente de destino.`,
+    texto: `${imoveis.length} imóvel(is) serão copiados para o cliente de destino.`,
     btnSim: 'Clonar', tipo: 'primary'
   });
   if(!ok) return;
@@ -3417,7 +3184,10 @@ async function confirmarClonagem(){
   btn.innerHTML = '<svg class="ico ico-sm" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Clonar imóveis selecionados';
   if(!res.ok){ toast(res.error || 'Erro ao clonar', 'error'); return; }
   toast(`${res.copiados || imoveis.length} imóvel(is) clonado(s)!`, 'success');
+  state._clonarSelecionados.clear();
   fecharClonarVitrine();
+  renderizarImoveis();
+  atualizarCloneFloating();
 }
 
 /* =====================================================
@@ -3426,7 +3196,7 @@ async function confirmarClonagem(){
 function copiarTexto(texto){
   if(navigator.clipboard && window.isSecureContext){
     navigator.clipboard.writeText(texto)
-      .then(() => toast('Texto copiado! Cole no WhatsApp', 'success'))
+      .then(() => toast('Texto copiado!', 'success'))
       .catch(() => fallbackCopy(texto));
   } else fallbackCopy(texto);
 }
@@ -3449,11 +3219,6 @@ window.addEventListener('beforeunload', function(e){
   }
 });
 
-/* =====================================================
-   VALIDAÇÃO DOS SELECTS VAGA / ELEVADOR
-   Limpa a marcação de "inválido" assim que o usuário escolhe
-   e revalida o botão de salvar.
-===================================================== */
 document.addEventListener('DOMContentLoaded', function(){
   const vagaSel = $('adVaga');
   const elevSel = $('adElevador');
