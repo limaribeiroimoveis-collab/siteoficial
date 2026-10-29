@@ -311,13 +311,44 @@
     font-size: 1rem; font-weight: 800; color: var(--success-bright); letter-spacing: -0.5px;
   }
 
-  .card-data-grid{
-    display: grid; grid-template-columns: 1fr 1fr; gap: 2px 8px; font-size: .66rem; line-height: 1.35;
+  /* GRID DE INFORMAÇÕES DIVIDIDO EM 2 COLUNAS */
+  .card-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px;
+    margin-top: 2px;
   }
-  .card-data-item{ display: flex; align-items: baseline; gap: 3px; min-width: 0; }
-  .card-data-item .dlabel{ font-size: .52rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .3px; flex-shrink: 0; }
-  .card-data-item .dvalue{ color: var(--text); font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .card-data-item .dvalue.mono{ font-family: var(--mono); font-size: .64rem; }
+  .card-info-col {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .card-info-row {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+    font-size: 0.64rem;
+    line-height: 1.3;
+  }
+  .card-info-row .dlabel {
+    font-size: 0.52rem;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    flex-shrink: 0;
+  }
+  .card-info-row .dvalue {
+    color: var(--text);
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .card-info-row .dvalue.mono {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+  }
 
   /* Blocos (Descrição e Chave) */
   .card-block{
@@ -972,6 +1003,16 @@
   </div>
 </div>
 
+<!-- ===== MODAL CLIENTES ===== -->
+<div class="modal-backdrop" id="clientesModalBackdrop" onclick="if(event.target===this) fecharClientesImovel()">
+  <div class="modal">
+    <button class="modal-close" onclick="fecharClientesImovel()"><svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <h2>👥 Clientes com este imóvel</h2>
+    <p class="sub" id="clientesModalSub">—</p>
+    <div id="clientesModalLista" style="max-height:60vh; overflow-y:auto;"></div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -1229,7 +1270,6 @@ function temInformacaoFaltando(im) {
   if (!String(im.numero || '').trim()) faltas.push('Número');
   if (!String(im.bairro || '').trim()) faltas.push('Bairro');
   if (!String(im.preco || '').trim()) faltas.push('Preço');
-  if (!String(im.condominio || '').trim()) faltas.push('Condomínio');
   if (!String(im.imagem || '').trim()) faltas.push('Imagem');
   if (!String(im.descricao || '').trim()) faltas.push('Descrição');
   
@@ -1242,7 +1282,8 @@ function temInformacaoFaltando(im) {
   const e = String(im.elevador || '').trim();
   if (!e || e === '—') faltas.push('Elevador');
   
-  const t = extrairTipoImovel(im.descricao);
+  // Se for Apartamento Padrão, não exige tipo
+  const t = extrairTipoImovel(im.descricao) || 'Apartamento Padrão'; 
   if (!t) faltas.push('Tipo');
   
   const s = String(im.suites || '').trim();
@@ -1610,14 +1651,18 @@ function cardHTML(im){
             <span class="card-preco-val">${esc(precoFmt)}</span>
           </div>
 
-          <div class="card-data-grid">
-            <div class="card-data-item"><span class="dlabel">Cond.</span><span class="dvalue">${esc(condFmt)}</span></div>
-            <div class="card-data-item"><span class="dlabel">IPTU</span><span class="dvalue">${esc(iptuFmt)}</span></div>
-            <div class="card-data-item"><span class="dlabel">Apto</span><span class="dvalue mono">${esc(apto)}</span></div>
-            <div class="card-data-item"><span class="dlabel">Bloco</span><span class="dvalue mono">${esc(bloco)}</span></div>
-            <div class="card-data-item"><span class="dlabel">Vaga</span><span class="dvalue">${esc(vaga)}</span></div>
-            <div class="card-data-item"><span class="dlabel">Elev.</span><span class="dvalue">${esc(elevador)}</span></div>
-            <div class="card-data-item"><span class="dlabel">Suítes</span><span class="dvalue">${esc(suites)}</span></div>
+          <div class="card-info-grid">
+            <div class="card-info-col">
+              <div class="card-info-row"><span class="dlabel">Cond.</span><span class="dvalue">${esc(condFmt)}</span></div>
+              <div class="card-info-row"><span class="dlabel">IPTU</span><span class="dvalue">${esc(iptuFmt)}</span></div>
+              <div class="card-info-row"><span class="dlabel">Vaga</span><span class="dvalue">${esc(vaga)}</span></div>
+            </div>
+            <div class="card-info-col">
+              <div class="card-info-row"><span class="dlabel">Apto</span><span class="dvalue mono">${esc(apto)}</span></div>
+              <div class="card-info-row"><span class="dlabel">Bloco</span><span class="dvalue mono">${esc(bloco)}</span></div>
+              <div class="card-info-row"><span class="dlabel">Elev.</span><span class="dvalue">${esc(elevador)}</span></div>
+              <div class="card-info-row"><span class="dlabel">Suítes</span><span class="dvalue">${esc(suites)}</span></div>
+            </div>
           </div>
         </div>
       </div>
