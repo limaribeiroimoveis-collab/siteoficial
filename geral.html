@@ -1277,9 +1277,11 @@ function temInformacaoFaltando(im) {
   // 8. Chave
   if (!String(im.chaveTexto || '').trim()) faltas.push('Chave');
   
-  // 9. Suítes (zero é válido)
-  const suites = String(im.suites || '').trim();
-  if (suites === '' || suites === '—') faltas.push('Suítes');
+  // 9. Suítes — zero é válido, vazio ativa exclamação
+const suites = String(im.suites !== undefined && im.suites !== null ? im.suites : '').trim();
+if (suites === '' || suites === '—') {
+  faltas.push('Suítes');
+}
   
   // 10. Vaga
   const vaga = String(im.vaga || '').trim();
