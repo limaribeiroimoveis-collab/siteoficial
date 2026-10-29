@@ -3,238 +3,444 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<title>Escolha seus Bairros - BH e Vila da Serra</title>
+<title>Encontre seu imóvel - BH e Vila da Serra</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <style>
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-  html, body { margin: 0; padding: 0; height: 100%; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+  html, body {
+    margin: 0; padding: 0; height: 100%;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #f9fafb;
+    color: #111827;
+  }
   #app { display: flex; flex-direction: column; height: 100vh; height: 100dvh; }
-  #map { flex: 1; width: 100%; position: relative; }
 
-  /* Botão "i" flutuante */
+  /* ============ PÁGINA 1 - MAPA ============ */
+  #pagina-mapa { display: flex; flex-direction: column; flex: 1; height: 100%; }
+  #pagina-mapa.oculta, #pagina-form.oculta { display: none; }
+
+  #map-wrap { flex: 1; position: relative; }
+  #map { width: 100%; height: 100%; }
+
   #btn-info {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    z-index: 1000;
-    width: 42px;
-    height: 42px;
-    border-radius: 50%;
-    background: #1e3a8a;
-    color: #fff;
-    border: none;
-    font-size: 20px;
-    font-weight: bold;
-    font-style: italic;
-    font-family: Georgia, serif;
-    cursor: pointer;
+    position: absolute; top: 12px; right: 12px; z-index: 1000;
+    width: 42px; height: 42px; border-radius: 50%;
+    background: #1e3a8a; color: #fff; border: none;
+    font-size: 20px; font-weight: bold; font-style: italic;
+    font-family: Georgia, serif; cursor: pointer;
     box-shadow: 0 3px 10px rgba(0,0,0,.3);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: flex; align-items: center; justify-content: center;
   }
   #btn-info:active { background: #1e40af; }
 
-  /* Modal de instruções */
-  #modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,.55);
-    z-index: 2000;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-  }
-  #modal-overlay.ativo { display: flex; }
-  #modal {
-    background: #fff;
-    border-radius: 16px;
-    max-width: 420px;
-    width: 100%;
-    padding: 24px 20px 20px;
-    box-shadow: 0 20px 50px rgba(0,0,0,.4);
-    animation: aparecer .2s ease-out;
-  }
-  @keyframes aparecer {
-    from { transform: scale(.92); opacity: 0; }
-    to { transform: scale(1); opacity: 1; }
-  }
-  #modal h2 {
-    margin: 0 0 14px;
-    font-size: 20px;
-    color: #1e3a8a;
-    text-align: center;
-  }
-  #modal .passo {
-    display: flex;
-    gap: 12px;
-    margin-bottom: 14px;
-    align-items: flex-start;
-  }
-  #modal .num {
-    background: #1e3a8a;
-    color: #fff;
-    width: 28px;
-    height: 28px;
-    min-width: 28px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    font-size: 14px;
-  }
-  #modal .passo p {
-    margin: 0;
-    font-size: 15px;
-    line-height: 1.4;
-    color: #374151;
-  }
-  #modal .passo p strong { color: #111827; }
-  #btn-entendi {
-    width: 100%;
-    background: #16a34a;
-    color: #fff;
-    border: none;
-    padding: 14px;
-    font-size: 16px;
-    font-weight: 700;
-    border-radius: 10px;
-    cursor: pointer;
-    margin-top: 6px;
-  }
-  #btn-entendi:active { background: #15803d; }
-
-  /* Rodapé */
-  #footer {
-    background: #fff;
-    border-top: 2px solid #e5e7eb;
-    padding: 10px 12px;
-    max-height: 38vh;
-    overflow-y: auto;
-    z-index: 1000;
-  }
-  #footer h3 {
-    margin: 0 0 6px;
-    font-size: 13px;
-    color: #374151;
-    text-transform: uppercase;
-    letter-spacing: .5px;
-  }
-  #lista-nomes {
-    font-size: 14px;
-    color: #111827;
-    min-height: 22px;
-    margin-bottom: 8px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-  }
-  .tag {
-    background: #dcfce7;
-    color: #166534;
-    border: 1px solid #86efac;
-    padding: 5px 8px 5px 10px;
-    border-radius: 999px;
-    font-size: 13px;
-    font-weight: 600;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .tag .x {
-    cursor: pointer;
-    font-weight: bold;
-    color: #fff;
-    background: #16a34a;
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    line-height: 1;
-  }
-  .tag .x:active { background: #15803d; }
-  .vazio { color: #9ca3af; font-style: italic; font-size: 13px; }
-
-  #btn-confirmar {
-    width: 100%;
-    background: #16a34a;
-    color: #fff;
-    border: none;
-    padding: 14px;
-    font-size: 16px;
-    font-weight: 700;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: background .15s;
-  }
-  #btn-confirmar:active { background: #15803d; }
-  #btn-confirmar:disabled { background: #d1d5db; color: #6b7280; cursor: not-allowed; }
-
-  /* Aviso temporário no mapa (toast) */
   #toast {
-    position: absolute;
-    bottom: 16px;
-    left: 50%;
+    position: absolute; bottom: 16px; left: 50%;
     transform: translateX(-50%);
-    background: rgba(17,24,39,.92);
-    color: #fff;
-    padding: 10px 16px;
-    border-radius: 10px;
-    font-size: 13px;
-    font-weight: 600;
-    z-index: 1500;
-    opacity: 0;
-    transition: opacity .25s;
-    pointer-events: none;
-    white-space: nowrap;
-    max-width: 90%;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    background: rgba(17,24,39,.92); color: #fff;
+    padding: 10px 16px; border-radius: 10px;
+    font-size: 13px; font-weight: 600; z-index: 1500;
+    opacity: 0; transition: opacity .25s; pointer-events: none;
+    white-space: nowrap; max-width: 90%;
+    overflow: hidden; text-overflow: ellipsis;
   }
   #toast.visivel { opacity: 1; }
+
+  /* Rodapé do mapa */
+  #footer-mapa {
+    background: #fff; border-top: 2px solid #e5e7eb;
+    padding: 12px; max-height: 38vh; overflow-y: auto; z-index: 1000;
+  }
+  #footer-mapa h3 {
+    margin: 0 0 8px; font-size: 12px; color: #6b7280;
+    text-transform: uppercase; letter-spacing: .5px; font-weight: 700;
+  }
+  #lista-nomes {
+    font-size: 14px; min-height: 22px; margin-bottom: 10px;
+    display: flex; flex-wrap: wrap; gap: 6px;
+  }
+  .tag {
+    background: #ecfdf5; color: #065f46;
+    border: 1px solid #6ee7b7;
+    padding: 5px 6px 5px 10px; border-radius: 999px;
+    font-size: 13px; font-weight: 600;
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .tag .x {
+    cursor: pointer; font-weight: bold; color: #fff;
+    background: #10b981; width: 18px; height: 18px;
+    border-radius: 50%; display: flex; align-items: center;
+    justify-content: center; font-size: 12px; line-height: 1;
+  }
+  .tag .x:active { background: #059669; }
+  .vazio { color: #9ca3af; font-style: italic; font-size: 13px; }
+
+  .btn-primario {
+    width: 100%; background: #10b981; color: #fff; border: none;
+    padding: 14px; font-size: 16px; font-weight: 700;
+    border-radius: 12px; cursor: pointer; transition: background .15s;
+  }
+  .btn-primario:active { background: #059669; }
+  .btn-primario:disabled { background: #d1d5db; color: #9ca3af; cursor: not-allowed; }
+
+  /* ============ MODAL GENÉRICO ============ */
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,.55);
+    z-index: 2000; display: none; align-items: center;
+    justify-content: center; padding: 20px;
+  }
+  .modal-overlay.ativo { display: flex; }
+  .modal {
+    background: #fff; border-radius: 16px; max-width: 420px;
+    width: 100%; padding: 24px 20px 20px;
+    box-shadow: 0 20px 50px rgba(0,0,0,.4);
+    animation: aparecer .2s ease-out;
+    max-height: 88vh; overflow-y: auto;
+  }
+  @keyframes aparecer {
+    from { transform: scale(.94); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+  .modal h2 {
+    margin: 0 0 14px; font-size: 19px;
+    color: #111827; text-align: center;
+  }
+  .modal .passo {
+    display: flex; gap: 12px; margin-bottom: 14px;
+    align-items: flex-start;
+  }
+  .modal .num {
+    background: #1e3a8a; color: #fff; width: 28px; height: 28px;
+    min-width: 28px; border-radius: 50%; display: flex;
+    align-items: center; justify-content: center;
+    font-weight: bold; font-size: 14px;
+  }
+  .modal .passo p {
+    margin: 0; font-size: 15px; line-height: 1.4; color: #374151;
+  }
+  .modal .passo p strong { color: #111827; }
+  .modal .btn-fechar {
+    width: 100%; background: #10b981; color: #fff; border: none;
+    padding: 14px; font-size: 16px; font-weight: 700;
+    border-radius: 12px; cursor: pointer; margin-top: 6px;
+  }
+  .modal .btn-fechar:active { background: #059669; }
+
+  /* Modal de aviso (menos de 3 bairros) */
+  .modal-aviso-titulo {
+    font-size: 18px; text-align: center;
+    margin: 0 0 10px; color: #111827;
+  }
+  .modal-aviso-texto {
+    font-size: 15px; color: #4b5563; text-align: center;
+    line-height: 1.5; margin: 0 0 20px;
+  }
+  .modal-aviso-texto strong { color: #10b981; }
+  .modal-aviso-botoes {
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .btn-secundario {
+    width: 100%; background: #f3f4f6; color: #374151;
+    border: none; padding: 14px; font-size: 15px;
+    font-weight: 600; border-radius: 12px; cursor: pointer;
+  }
+  .btn-secundario:active { background: #e5e7eb; }
+
+  /* ============ PÁGINA 2 - FORMULÁRIO ============ */
+  #pagina-form {
+    display: flex; flex-direction: column; flex: 1; height: 100%;
+    background: #f9fafb;
+  }
+  #form-header {
+    background: #fff; padding: 14px 16px;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex; align-items: center; gap: 12px;
+    position: sticky; top: 0; z-index: 50;
+  }
+  #btn-voltar {
+    background: none; border: none; font-size: 22px;
+    color: #374151; cursor: pointer; padding: 4px 8px;
+    line-height: 1; border-radius: 8px;
+  }
+  #btn-voltar:active { background: #f3f4f6; }
+  #form-titulo { flex: 1; font-size: 16px; font-weight: 700; color: #111827; }
+  #form-progresso { font-size: 12px; color: #6b7280; font-weight: 600; }
+
+  #form-body {
+    flex: 1; overflow-y: auto; padding: 16px;
+    padding-bottom: 100px;
+  }
+  .secao {
+    background: #fff; border-radius: 14px; padding: 16px;
+    margin-bottom: 14px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.04);
+  }
+  .secao h3 {
+    margin: 0 0 4px; font-size: 15px; font-weight: 700;
+    color: #111827;
+  }
+  .secao .dica {
+    font-size: 12px; color: #6b7280; margin: 0 0 12px;
+    line-height: 1.4;
+  }
+  .secao .obrig { color: #ef4444; }
+
+  /* Chips (escolha múltipla e única) */
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    padding: 10px 14px; border-radius: 10px;
+    background: #f3f4f6; color: #374151;
+    border: 1.5px solid transparent;
+    font-size: 14px; font-weight: 600;
+    cursor: pointer; user-select: none;
+    transition: all .12s;
+    display: inline-flex; align-items: center; gap: 6px;
+    line-height: 1.2;
+  }
+  .chip:active { transform: scale(.97); }
+  .chip.marcado {
+    background: #ecfdf5; color: #065f46;
+    border-color: #10b981;
+  }
+  .chip.marcado::before {
+    content: "✓"; font-weight: bold; font-size: 13px;
+  }
+
+  /* Inputs de texto */
+  .campo-texto {
+    width: 100%; padding: 12px 14px;
+    border: 1.5px solid #e5e7eb; border-radius: 10px;
+    font-size: 16px; font-family: inherit;
+    background: #fff; color: #111827;
+    outline: none; transition: border-color .15s;
+  }
+  .campo-texto:focus { border-color: #10b981; }
+  .campo-texto.erro { border-color: #ef4444; }
+
+  .sufixo-wrap {
+    position: relative;
+  }
+  .sufixo {
+    position: absolute; right: 14px; top: 50%;
+    transform: translateY(-50%); color: #6b7280;
+    font-size: 14px; font-weight: 600;
+    pointer-events: none;
+  }
+  .extenso {
+    font-size: 12px; color: #059669;
+    font-weight: 600; margin-top: 6px;
+    min-height: 16px;
+    line-height: 1.3;
+  }
+
+  /* Botão fixo no rodapé */
+  #form-footer {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: #fff; padding: 12px 16px 16px;
+    border-top: 1px solid #e5e7eb;
+    z-index: 100;
+  }
+  #form-footer .aviso-obrig {
+    font-size: 11px; color: #9ca3af;
+    text-align: center; margin-bottom: 8px;
+  }
+
+  /* Etiqueta visual de erro */
+  .erro-msg {
+    color: #ef4444; font-size: 12px;
+    margin-top: 6px; font-weight: 600;
+    display: none;
+  }
+  .erro-msg.visivel { display: block; }
 </style>
 </head>
 <body>
 
 <div id="app">
-  <div id="map">
-    <button id="btn-info" aria-label="Instruções">i</button>
-    <div id="toast"></div>
+  <!-- ============ PÁGINA 1 - MAPA ============ -->
+  <div id="pagina-mapa">
+    <div id="map-wrap">
+      <div id="map"></div>
+      <button id="btn-info" aria-label="Instruções">i</button>
+      <div id="toast"></div>
+    </div>
+
+    <div id="footer-mapa">
+      <h3>Bairros escolhidos</h3>
+      <div id="lista-nomes"><span class="vazio">Nenhum bairro selecionado ainda.</span></div>
+      <button id="btn-continuar" class="btn-primario" disabled>Continuar</button>
+    </div>
   </div>
 
-  <div id="footer">
-    <h3>Bairros escolhidos</h3>
-    <div id="lista-nomes"><span class="vazio">Nenhum bairro selecionado ainda.</span></div>
-    <button id="btn-confirmar" disabled>Confirmar e Enviar</button>
+  <!-- ============ PÁGINA 2 - FORMULÁRIO ============ -->
+  <div id="pagina-form" class="oculta">
+    <div id="form-header">
+      <button id="btn-voltar" aria-label="Voltar">←</button>
+      <div id="form-titulo">Sobre seu imóvel</div>
+      <div id="form-progresso">2 de 2</div>
+    </div>
+
+    <div id="form-body">
+
+      <!-- 1. Tipo de imóvel -->
+      <div class="secao">
+        <h3>Quais tipos de imóvel você procura? <span class="obrig">*</span></h3>
+        <p class="dica">Pode escolher quantos quiser.</p>
+        <div class="chips" data-grupo="tipos" data-multiplo="true">
+          <div class="chip" data-valor="Apartamento padrão">Apartamento padrão</div>
+          <div class="chip" data-valor="Área privativa">Área privativa</div>
+          <div class="chip" data-valor="Cobertura">Cobertura</div>
+          <div class="chip" data-valor="Casa">Casa</div>
+        </div>
+        <div class="erro-msg" data-erro="tipos">Escolha pelo menos um tipo.</div>
+      </div>
+
+      <!-- 2. Quartos -->
+      <div class="secao">
+        <h3>No mínimo quantos quartos? <span class="obrig">*</span></h3>
+        <div class="chips" data-grupo="quartos" data-multiplo="false">
+          <div class="chip marcado" data-valor="Tanto faz">Tanto faz</div>
+          <div class="chip" data-valor="1+">1+</div>
+          <div class="chip" data-valor="2+">2+</div>
+          <div class="chip" data-valor="3+">3+</div>
+          <div class="chip" data-valor="4+">4+</div>
+        </div>
+      </div>
+
+      <!-- 3. Suíte -->
+      <div class="secao">
+        <h3>Obrigatório ter suíte? <span class="obrig">*</span></h3>
+        <div class="chips" data-grupo="suite" data-multiplo="false">
+          <div class="chip marcado" data-valor="Tanto faz">Tanto faz</div>
+          <div class="chip" data-valor="Sim">Sim</div>
+        </div>
+      </div>
+
+      <!-- 4. Vagas -->
+      <div class="secao">
+        <h3>Vagas de garagem? <span class="obrig">*</span></h3>
+        <div class="chips" data-grupo="vagas" data-multiplo="false">
+          <div class="chip marcado" data-valor="Tanto faz">Tanto faz</div>
+          <div class="chip" data-valor="1+">1+</div>
+          <div class="chip" data-valor="2+">2+</div>
+          <div class="chip" data-valor="3+">3+</div>
+        </div>
+      </div>
+
+      <!-- 5. Metragem -->
+      <div class="secao">
+        <h3>Qual tamanho mínimo (m²)? <span class="obrig">*</span></h3>
+        <div class="sufixo-wrap">
+          <input type="tel" inputmode="numeric" id="input-metragem" class="campo-texto" placeholder="Ex: 80">
+          <span class="sufixo">m²</span>
+        </div>
+        <div class="erro-msg" data-erro="metragem">Digite o tamanho mínimo.</div>
+      </div>
+
+      <!-- 6. Elevador -->
+      <div class="secao">
+        <h3>Precisa ter elevador? <span class="obrig">*</span></h3>
+        <div class="chips" data-grupo="elevador" data-multiplo="false">
+          <div class="chip marcado" data-valor="Tanto faz">Tanto faz</div>
+          <div class="chip" data-valor="Sim">Sim</div>
+          <div class="chip" data-valor="Não">Não</div>
+        </div>
+      </div>
+
+      <!-- 7. Escadas -->
+      <div class="secao">
+        <h3>Sobre escadas <span class="obrig">*</span></h3>
+        <div class="chips" data-grupo="escadas" data-multiplo="false">
+          <div class="chip marcado" data-valor="Tanto faz">Tanto faz</div>
+          <div class="chip" data-valor="Pode ter escada">Pode ter escada</div>
+          <div class="chip" data-valor="Não pode ter escada">Não pode ter escada</div>
+        </div>
+      </div>
+
+      <!-- 8. Condomínio -->
+      <div class="secao">
+        <h3>Valor médio aceito de condomínio <span class="obrig">*</span></h3>
+        <p class="dica">Quanto menor o valor, mais limitada é a busca.</p>
+        <div class="chips" data-grupo="condominio" data-multiplo="false">
+          <div class="chip marcado" data-valor="Tanto faz">Tanto faz</div>
+          <div class="chip" data-valor="Até R$ 500">Até R$ 500</div>
+          <div class="chip" data-valor="Até R$ 800">Até R$ 800</div>
+          <div class="chip" data-valor="Até R$ 1.200">Até R$ 1.200</div>
+          <div class="chip" data-valor="Até R$ 2.000">Até R$ 2.000</div>
+          <div class="chip" data-valor="Sem preferência">Sem preferência</div>
+        </div>
+      </div>
+
+      <!-- 9. Valor máximo -->
+      <div class="secao">
+        <h3>Valor máximo para investir <span class="obrig">*</span></h3>
+        <p class="dica">Campo para o valor total do imóvel.</p>
+        <input type="tel" inputmode="numeric" id="input-valor" class="campo-texto" placeholder="R$ 0">
+        <div class="extenso" id="valor-extenso"></div>
+        <div class="erro-msg" data-erro="valor">Digite o valor máximo.</div>
+      </div>
+
+      <!-- 10. Forma de pagamento -->
+      <div class="secao">
+        <h3>Forma de pagamento <span class="obrig">*</span></h3>
+        <div class="chips" data-grupo="pagamento" data-multiplo="false">
+          <div class="chip marcado" data-valor="Tanto faz">Tanto faz</div>
+          <div class="chip" data-valor="À vista">À vista</div>
+          <div class="chip" data-valor="Financiado">Financiado</div>
+          <div class="chip" data-valor="Parte à vista e parte financiado">Parte à vista e parte financiado</div>
+        </div>
+      </div>
+
+      <!-- 11. Observações -->
+      <div class="secao">
+        <h3>Observações (opcional)</h3>
+        <p class="dica">Conte detalhes sobre o que busca no seu imóvel.</p>
+        <textarea id="input-obs" class="campo-texto" rows="4" placeholder="Ex: Gostaria com lazer, cozinha americana, varanda..."></textarea>
+      </div>
+
+    </div>
+
+    <div id="form-footer">
+      <div class="aviso-obrig">* Campos obrigatórios</div>
+      <button id="btn-enviar" class="btn-primario">Enviar preferências</button>
+    </div>
   </div>
 </div>
 
-<!-- MODAL -->
-<div id="modal-overlay">
-  <div id="modal">
+<!-- ============ MODAL DE INSTRUÇÕES ============ -->
+<div id="modal-overlay" class="modal-overlay">
+  <div class="modal">
     <h2>Como escolher seus bairros</h2>
     <div class="passo">
       <div class="num">1</div>
-      <p>Use <strong>dois dedos</strong> (ou role o mouse) para dar <strong>zoom</strong> no mapa e encontrar a região que te interessa.</p>
+      <p>Use <strong>dois dedos</strong> (ou role o mouse) para dar <strong>zoom</strong> no mapa e encontrar a região.</p>
     </div>
     <div class="passo">
       <div class="num">2</div>
-      <p>Dê <strong>dois toques rápidos</strong> em cima do bairro desejado. Ele será adicionado à lista abaixo.</p>
+      <p>Dê <strong>dois toques rápidos</strong> em cima do bairro desejado. Ele será adicionado à lista.</p>
     </div>
     <div class="passo">
       <div class="num">3</div>
-      <p>Errou? Toque no <strong>×</strong> ao lado do nome para remover. Pode escolher quantos bairros quiser.</p>
+      <p>Errou? Toque no <strong>×</strong> ao lado do nome para remover. Escolha quantos quiser.</p>
     </div>
     <div class="passo">
       <div class="num">4</div>
-      <p>Quando terminar, toque em <strong>Confirmar e Enviar</strong>.</p>
+      <p>Quando terminar, toque em <strong>Continuar</strong> para preencher as preferências do imóvel.</p>
     </div>
-    <button id="btn-entendi">Entendi, vamos lá!</button>
+    <button id="btn-entendi" class="btn-fechar">Entendi, vamos lá!</button>
+  </div>
+</div>
+
+<!-- ============ MODAL DE AVISO (< 3 bairros) ============ -->
+<div id="modal-aviso" class="modal-overlay">
+  <div class="modal">
+    <h2 class="modal-aviso-titulo" id="aviso-titulo">Você escolheu 1 bairro</h2>
+    <p class="modal-aviso-texto">
+      Quanto mais bairros escolher, mais chances de encontrar <strong>ótimas oportunidades</strong> para você.
+    </p>
+    <div class="modal-aviso-botoes">
+      <button id="btn-aviso-continuar" class="btn-fechar">Continuar com esses bairros</button>
+      <button id="btn-aviso-mais" class="btn-secundario">Escolher mais bairros</button>
+    </div>
   </div>
 </div>
 
@@ -243,47 +449,34 @@
   // ============================================================
   // CONFIG
   // ============================================================
-  const LIMITES_BH = {
-    // Caixa aproximada: BH + Vila da Serra (Nova Lima)
-    minLat: -20.05, maxLat: -19.75,
-    minLng: -44.10, maxLng: -43.80
-  };
-  
-  // Bairros que NÃO atendemos (ex: Contagem) - bloqueia
-  // (Como não temos polígonos, usamos validação por texto do Nominatim)
+  const LIMITES_BH = { minLat: -20.05, maxLat: -19.75, minLng: -44.10, maxLng: -43.80 };
   const BAIRROS_BLOQUEADOS = [
-    // Contagem (exemplos)
     'contagem', 'eldorado', 'cidade industrial', 'ressaca', 'água branca',
-    'santa luzia', 'ibitir', 'cabo verde', 'cinquenta', 'kennedy',
-    // Adicione mais se necessário
+    'santa luzia', 'ibitir', 'cabo verde', 'cinquenta', 'kennedy'
   ];
 
   // ============================================================
-  // ESTADO
+  // ESTADO GLOBAL
   // ============================================================
-  const selecionados = new Map(); // nome -> {lat, lng, marker}
+  const selecionados = new Map();
+  let preferencias = {}; // resposta final
+
   const listaEl = document.getElementById('lista-nomes');
-  const btnConfirmar = document.getElementById('btn-confirmar');
+  const btnContinuar = document.getElementById('btn-continuar');
   const toastEl = document.getElementById('toast');
+  const paginaMapa = document.getElementById('pagina-mapa');
+  const paginaForm = document.getElementById('pagina-form');
 
   // ============================================================
   // MAPA
   // ============================================================
   const map = L.map('map', {
-    zoomControl: false,
-    attributionControl: false,
-    doubleClickZoom: false  // IMPORTANTE: desativa o zoom por duplo clique
+    zoomControl: false, attributionControl: false, doubleClickZoom: false
   }).setView([-19.9400, -43.9450], 12);
 
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19
-  }).addTo(map);
-
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
   L.control.zoom({ position: 'bottomright' }).addTo(map);
 
-  // ============================================================
-  // TOAST (aviso rápido)
-  // ============================================================
   let toastTimer;
   function toast(msg, duracao = 2200) {
     toastEl.textContent = msg;
@@ -292,65 +485,47 @@
     toastTimer = setTimeout(() => toastEl.classList.remove('visivel'), duracao);
   }
 
-  // ============================================================
-  // ÍCONE do marcador após seleção
-  // ============================================================
   function criarIconeSelecionado() {
     return L.divIcon({
       className: 'pino-selecionado',
       html: `<svg width="30" height="40" viewBox="0 0 30 40" xmlns="http://www.w3.org/2000/svg">
-        <path d="M15 0C6.72 0 0 6.72 0 15c0 11 15 25 15 25s15-14 15-25C30 6.72 23.28 0 15 0z" fill="#16a34a" stroke="#14532d" stroke-width="1.5"/>
+        <path d="M15 0C6.72 0 0 6.72 0 15c0 11 15 25 15 25s15-14 15-25C30 6.72 23.28 0 15 0z" fill="#10b981" stroke="#065f46" stroke-width="1.5"/>
         <circle cx="15" cy="15" r="5.5" fill="#fff"/>
       </svg>`,
-      iconSize: [30, 40],
-      iconAnchor: [15, 40]
+      iconSize: [30, 40], iconAnchor: [15, 40]
     });
   }
   const iconeVerde = criarIconeSelecionado();
 
   // ============================================================
-  // GEOCODING REVERSO (Nominatim)
+  // GEOCODING REVERSO
   // ============================================================
   let ultimaRequisicao = 0;
   async function obterBairro(lat, lng) {
-    // Respeita rate limit de 1 req/seg
     const agora = Date.now();
     const espera = Math.max(0, 1100 - (agora - ultimaRequisicao));
     if (espera > 0) await new Promise(r => setTimeout(r, espera));
     ultimaRequisicao = Date.now();
 
     const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}&zoom=16&addressdetails=1&accept-language=pt-BR`;
-    
     try {
-      const resp = await fetch(url, {
-        headers: { 'Accept': 'application/json' }
-      });
-      if (!resp.ok) throw new Error('Falha na resposta');
-      const data = await resp.json();
-      return data;
+      const resp = await fetch(url, { headers: { 'Accept': 'application/json' } });
+      if (!resp.ok) throw new Error('Falha');
+      return await resp.json();
     } catch (err) {
-      console.error('Erro Nominatim:', err);
+      console.error(err);
       return null;
     }
   }
 
   // ============================================================
-  // DUPLO CLIQUE / DUPLO TOQUE
+  // DUPLO TOQUE
   // ============================================================
-  // Leaflet já tem evento 'dblclick' que funciona em mobile como duplo toque.
-  // Mas por segurança, também tratamos com nosso próprio detector de toques.
-  
   let ultimoToque = { tempo: 0, lat: 0, lng: 0 };
-  
   map.on('click', async (e) => {
     const agora = Date.now();
     const dt = agora - ultimoToque.tempo;
-    const dist = map.distance(
-      [e.latlng.lat, e.latlng.lng],
-      [ultimoToque.lat, ultimoToque.lng]
-    );
-    
-    // Considera duplo toque se < 400ms e < 30m de distância
+    const dist = map.distance([e.latlng.lat, e.latlng.lng], [ultimoToque.lat, ultimoToque.lng]);
     if (dt < 400 && dist < 30) {
       ultimoToque.tempo = 0;
       await processarToque(e.latlng);
@@ -358,78 +533,40 @@
       ultimoToque = { tempo: agora, lat: e.latlng.lat, lng: e.latlng.lng };
     }
   });
+  map.on('dblclick', async (e) => { await processarToque(e.latlng); });
 
-  // Fallback: também escuta o dblclick nativo do Leaflet
-  map.on('dblclick', async (e) => {
-    await processarToque(e.latlng);
-  });
-
-  // ============================================================
-  // PROCESSA O TOQUE (identifica o bairro)
-  // ============================================================
   async function processarToque(latlng) {
     const { lat, lng } = latlng;
-
-    // Valida se está dentro da área atendida
     if (lat < LIMITES_BH.minLat || lat > LIMITES_BH.maxLat ||
         lng < LIMITES_BH.minLng || lng > LIMITES_BH.maxLng) {
       toast('Fora da área atendida (BH + Vila da Serra)');
       return;
     }
-
     toast('Identificando bairro...', 5000);
-
     const data = await obterBairro(lat, lng);
-    
-    if (!data || !data.address) {
-      toast('Não consegui identificar o bairro aqui');
-      return;
-    }
+    if (!data || !data.address) { toast('Não consegui identificar o bairro aqui'); return; }
 
     const end = data.address;
-    // Tenta pegar o bairro (suburb ou neighbourhood)
     const bairro = end.suburb || end.neighbourhood || end.city_district || end.town || end.village;
     const cidade = end.city || end.town || end.municipality || '';
+    if (!bairro) { toast('Não consegui identificar o bairro aqui'); return; }
 
-    if (!bairro) {
-      toast('Não consegui identificar o bairro aqui');
-      return;
-    }
-
-    // Verifica se é de Contagem ou outra cidade fora
     const cidadeLower = cidade.toLowerCase();
-    if (cidadeLower.includes('contagem') || 
-        cidadeLower.includes('santa luzia') ||
-        cidadeLower.includes('ribeirão das neves') ||
-        cidadeLower.includes('betim')) {
+    if (cidadeLower.includes('contagem') || cidadeLower.includes('santa luzia') ||
+        cidadeLower.includes('ribeirão das neves') || cidadeLower.includes('betim')) {
       toast(`Fora da área: ${bairro} (${cidade})`);
       return;
     }
-
-    // Verifica bairros bloqueados
     const bairroLower = bairro.toLowerCase();
     if (BAIRROS_BLOQUEADOS.some(b => bairroLower.includes(b))) {
       toast(`Bairro não atendido: ${bairro}`);
       return;
     }
 
-    // Nome final: "Bairro (Cidade)" se for Nova Lima, senão só "Bairro"
-    const nomeFinal = cidadeLower.includes('nova lima')
-      ? `${bairro} (Nova Lima)`
-      : bairro;
+    const nomeFinal = cidadeLower.includes('nova lima') ? `${bairro} (Nova Lima)` : bairro;
+    if (selecionados.has(nomeFinal)) { toast(`"${nomeFinal}" já está na lista`); return; }
 
-    // Já selecionado?
-    if (selecionados.has(nomeFinal)) {
-      toast(`"${nomeFinal}" já está na lista`);
-      return;
-    }
-
-    // Adiciona marcador verde
-    const marker = L.marker([lat, lng], {
-      icon: iconeVerde,
-      interactive: false
-    }).addTo(map);
-
+    const marker = L.marker([lat, lng], { icon: iconeVerde, interactive: false }).addTo(map);
     selecionados.set(nomeFinal, { lat, lng, marker });
     atualizarRodape();
     toast(`✓ ${nomeFinal} adicionado`);
@@ -441,31 +578,23 @@
   function atualizarRodape() {
     if (selecionados.size === 0) {
       listaEl.innerHTML = '<span class="vazio">Nenhum bairro selecionado ainda.</span>';
-      btnConfirmar.disabled = true;
+      btnContinuar.disabled = true;
       return;
     }
-
     listaEl.innerHTML = '';
     selecionados.forEach((dados, nome) => {
       const tag = document.createElement('span');
       tag.className = 'tag';
-      
       const texto = document.createElement('span');
       texto.textContent = nome;
-      
       const x = document.createElement('span');
-      x.className = 'x';
-      x.textContent = '×';
+      x.className = 'x'; x.textContent = '×';
       x.setAttribute('role', 'button');
-      x.setAttribute('aria-label', 'Remover ' + nome);
       x.addEventListener('click', () => removerBairro(nome));
-      
-      tag.appendChild(texto);
-      tag.appendChild(x);
+      tag.appendChild(texto); tag.appendChild(x);
       listaEl.appendChild(tag);
     });
-
-    btnConfirmar.disabled = false;
+    btnContinuar.disabled = false;
   }
 
   function removerBairro(nome) {
@@ -478,35 +607,232 @@
   }
 
   // ============================================================
-  // MODAL
+  // MODAL INSTRUÇÕES
   // ============================================================
-  const overlay = document.getElementById('modal-overlay');
+  const overlayInstr = document.getElementById('modal-overlay');
   const btnEntendi = document.getElementById('btn-entendi');
   const btnInfo = document.getElementById('btn-info');
 
-  function abrirModal() { overlay.classList.add('ativo'); }
-  function fecharModal() { overlay.classList.remove('ativo'); }
+  function abrirInstr() { overlayInstr.classList.add('ativo'); }
+  function fecharInstr() { overlayInstr.classList.remove('ativo'); }
+  btnEntendi.addEventListener('click', fecharInstr);
+  btnInfo.addEventListener('click', abrirInstr);
+  overlayInstr.addEventListener('click', (e) => { if (e.target === overlayInstr) fecharInstr(); });
+  window.addEventListener('load', () => setTimeout(abrirInstr, 300));
 
-  btnEntendi.addEventListener('click', fecharModal);
-  btnInfo.addEventListener('click', abrirModal);
-  overlay.addEventListener('click', (e) => {
-    if (e.target === overlay) fecharModal();
+  // ============================================================
+  // MODAL AVISO (< 3 bairros)
+  // ============================================================
+  const overlayAviso = document.getElementById('modal-aviso');
+  const avisoTitulo = document.getElementById('aviso-titulo');
+  const btnAvisoContinuar = document.getElementById('btn-aviso-continuar');
+  const btnAvisoMais = document.getElementById('btn-aviso-mais');
+
+  function abrirAviso(qtd) {
+    avisoTitulo.textContent = `Você escolheu ${qtd} ${qtd === 1 ? 'bairro' : 'bairros'}`;
+    overlayAviso.classList.add('ativo');
+  }
+  function fecharAviso() { overlayAviso.classList.remove('ativo'); }
+
+  btnAvisoContinuar.addEventListener('click', () => {
+    fecharAviso();
+    irParaFormulario();
+  });
+  btnAvisoMais.addEventListener('click', fecharAviso);
+  overlayAviso.addEventListener('click', (e) => { if (e.target === overlayAviso) fecharAviso(); });
+
+  // ============================================================
+  // NAVEGAÇÃO ENTRE PÁGINAS
+  // ============================================================
+  btnContinuar.addEventListener('click', () => {
+    const qtd = selecionados.size;
+    if (qtd === 0) return;
+    if (qtd < 3) {
+      abrirAviso(qtd);
+    } else {
+      irParaFormulario();
+    }
   });
 
-  // Abre ao carregar (primeira vez)
-  window.addEventListener('load', () => {
-    setTimeout(abrirModal, 300);
+  function irParaFormulario() {
+    paginaMapa.classList.add('oculta');
+    paginaForm.classList.remove('oculta');
+    document.getElementById('form-body').scrollTop = 0;
+  }
+
+  document.getElementById('btn-voltar').addEventListener('click', () => {
+    paginaForm.classList.add('oculta');
+    paginaMapa.classList.remove('oculta');
   });
 
   // ============================================================
-  // CONFIRMAR
+  // CHIPS (seleção única/múltipla)
   // ============================================================
-  btnConfirmar.addEventListener('click', () => {
-    const lista = Array.from(selecionados.keys());
-    if (lista.length === 0) return;
-    const resumo = `Bairros escolhidos:\n\n• ${lista.join('\n• ')}\n\n(Total: ${lista.length})`;
-    alert(resumo + '\n\n👉 Próximo passo: integrar com WhatsApp/planilha.');
+  document.querySelectorAll('.chips').forEach(grupo => {
+    const multiplo = grupo.dataset.multiplo === 'true';
+    grupo.querySelectorAll('.chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        if (multiplo) {
+          chip.classList.toggle('marcado');
+        } else {
+          grupo.querySelectorAll('.chip').forEach(c => c.classList.remove('marcado'));
+          chip.classList.add('marcado');
+        }
+        // Esconde erro do grupo
+        const grupoNome = grupo.dataset.grupo;
+        const erro = document.querySelector(`[data-erro="${grupoNome}"]`);
+        if (erro) erro.classList.remove('visivel');
+      });
+    });
   });
+
+  // ============================================================
+  // INPUT METRAGEM (só números)
+  // ============================================================
+  const inputMetragem = document.getElementById('input-metragem');
+  inputMetragem.addEventListener('input', () => {
+    inputMetragem.value = inputMetragem.value.replace(/\D/g, '');
+    document.querySelector('[data-erro="metragem"]').classList.remove('visivel');
+  });
+
+  // ============================================================
+  // INPUT VALOR (formatação automática + extenso)
+  // ============================================================
+  const inputValor = document.getElementById('input-valor');
+  const valorExtenso = document.getElementById('valor-extenso');
+
+  function formatarReais(numero) {
+    if (!numero) return '';
+    return numero.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', minimumFractionDigits: 0, maximumFractionDigits: 0 });
+  }
+
+  function numeroPorExtenso(numero) {
+    if (!numero || numero === 0) return '';
+    const unidades = ['', 'um', 'dois', 'três', 'quatro', 'cinco', 'seis', 'sete', 'oito', 'nove'];
+    const especiais = ['dez', 'onze', 'doze', 'treze', 'quatorze', 'quinze', 'dezesseis', 'dezessete', 'dezoito', 'dezenove'];
+    const dezenas = ['', '', 'vinte', 'trinta', 'quarenta', 'cinquenta', 'sessenta', 'setenta', 'oitenta', 'noventa'];
+    const centenas = ['', 'cento', 'duzentos', 'trezentos', 'quatrocentos', 'quinhentos', 'seiscentos', 'setecentos', 'oitocentos', 'novecentos'];
+
+    function grupo3(n) {
+      let s = '';
+      const c = Math.floor(n / 100);
+      const d = Math.floor((n % 100) / 10);
+      const u = n % 10;
+      if (n === 100) return 'cem';
+      if (c > 0) s += centenas[c];
+      if (d > 0) {
+        if (s) s += ' e ';
+        if (d === 1 && u > 0) { s += especiais[u]; return s; }
+        s += dezenas[d];
+        if (u > 0) s += ' e ' + unidades[u];
+      } else if (u > 0) {
+        if (s) s += ' e ';
+        s += unidades[u];
+      }
+      return s;
+    }
+
+    const milhoes = Math.floor(numero / 1000000);
+    const milhares = Math.floor((numero % 1000000) / 1000);
+    const resto = numero % 1000;
+
+    const partes = [];
+    if (milhoes > 0) partes.push(grupo3(milhoes) + (milhoes === 1 ? ' milhão' : ' milhões'));
+    if (milhares > 0) partes.push(grupo3(milhares) + (milhares === 1 ? ' mil' : ' mil'));
+    if (resto > 0) partes.push(grupo3(resto));
+
+    if (partes.length === 0) return '';
+    let texto = partes.join(' e ');
+    return texto + (numero === 1 ? ' real' : ' reais');
+  }
+
+  inputValor.addEventListener('input', (e) => {
+    let v = e.target.value.replace(/\D/g, '');
+    if (!v) {
+      inputValor.value = '';
+      valorExtenso.textContent = '';
+      return;
+    }
+    const numero = parseInt(v, 10);
+    inputValor.value = formatarReais(numero);
+    valorExtenso.textContent = numeroPorExtenso(numero);
+    document.querySelector('[data-erro="valor"]').classList.remove('visivel');
+  });
+
+  // ============================================================
+  // VALIDAÇÃO E ENVIO
+  // ============================================================
+  function obterSelecaoGrupo(nome) {
+    const grupo = document.querySelector(`[data-grupo="${nome}"]`);
+    if (!grupo) return null;
+    const marcados = Array.from(grupo.querySelectorAll('.chip.marcado')).map(c => c.dataset.valor);
+    if (grupo.dataset.multiplo === 'true') return marcados;
+    return marcados[0] || null;
+  }
+
+  function validarFormulario() {
+    const erros = [];
+
+    const tipos = obterSelecaoGrupo('tipos');
+    if (!tipos || tipos.length === 0) {
+      erros.push('tipos');
+      document.querySelector('[data-erro="tipos"]').classList.add('visivel');
+    }
+
+    const metragem = inputMetragem.value.trim();
+    if (!metragem || parseInt(metragem) === 0) {
+      erros.push('metragem');
+      document.querySelector('[data-erro="metragem"]').classList.add('visivel');
+      inputMetragem.classList.add('erro');
+    } else {
+      inputMetragem.classList.remove('erro');
+    }
+
+    const valor = inputValor.value.trim();
+    if (!valor || valor === 'R$ 0') {
+      erros.push('valor');
+      document.querySelector('[data-erro="valor"]').classList.add('visivel');
+      inputValor.classList.add('erro');
+    } else {
+      inputValor.classList.remove('erro');
+    }
+
+    return erros;
+  }
+
+  document.getElementById('btn-enviar').addEventListener('click', () => {
+    const erros = validarFormulario();
+    if (erros.length > 0) {
+      // Rola até o primeiro erro
+      const primeiro = document.querySelector(`[data-erro="${erros[0]}"]`);
+      if (primeiro) primeiro.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+
+    // Monta objeto final
+    preferencias = {
+      bairros: Array.from(selecionados.keys()),
+      tipos: obterSelecaoGrupo('tipos'),
+      quartos: obterSelecaoGrupo('quartos'),
+      suite: obterSelecaoGrupo('suite'),
+      vagas: obterSelecaoGrupo('vagas'),
+      metragemMinima: parseInt(inputMetragem.value, 10),
+      elevador: obterSelecaoGrupo('elevador'),
+      escadas: obterSelecaoGrupo('escadas'),
+      condominio: obterSelecaoGrupo('condominio'),
+      valorMaximo: inputValor.value,
+      formaPagamento: obterSelecaoGrupo('pagamento'),
+      observacoes: document.getElementById('input-obs').value.trim()
+    };
+
+    // Ainda sem envio real — mostra resumo
+    const resumo = JSON.stringify(preferencias, null, 2);
+    alert('Preferências coletadas:\n\n' + resumo + '\n\n👉 Próximo passo: integrar com WhatsApp/planilha.');
+    console.log('Preferências completas:', preferencias);
+  });
+
+  // Inicializa
+  atualizarRodape();
 </script>
 </body>
 </html>
