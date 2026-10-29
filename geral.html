@@ -30,9 +30,7 @@
     --font: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
     
-    --card-img-size: 118px;
-    /* CARD MAIS ALTO PARA NÃO CORTAR INFORMAÇÕES */
-    --card-fixed-height: 430px;
+    --card-fixed-height: 440px;
     --block-fixed-height: 62px;
   }
   html, body { height: 100%; overflow-x: hidden; }
@@ -274,23 +272,27 @@
 
   .card-main{ display: flex; gap: 0; min-height: 0; flex: 1; overflow: hidden; }
   
+  /* Wrapper da imagem - AGORA 100% ALTURA E TARJA FLUTUANTE */
   .card-img-col {
-    width: var(--card-img-size); flex-shrink: 0; display: flex; flex-direction: column;
-    background: var(--bg-alt);
+    width: 120px; flex-shrink: 0; display: flex; flex-direction: column;
+    background: var(--bg-alt); position: relative; border-right: 1px solid var(--border);
   }
   .card-img-wrap{
-    width: 100%; height: var(--card-img-size); overflow: hidden; position: relative; flex-shrink: 0;
+    width: 100%; height: 100%; overflow: hidden; position: relative;
   }
   .card-img{ width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .3s ease; cursor: pointer; }
   .card:hover .card-img{ transform: scale(1.04); }
 
+  /* FAIXA DE TIPO - FLUTUANTE NA FOTO */
   .card-tipo-faixa {
-    width: 100%; height: 24px; background: var(--purple); color: #fff;
+    position: absolute; bottom: 0; left: 0; width: 100%; 
+    background: rgba(109, 40, 217, 0.85); color: #fff; backdrop-filter: blur(2px);
     display: flex; align-items: center; justify-content: center;
-    font-size: 0.58rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;
-    text-align: center; line-height: 1; padding: 0 4px; overflow: hidden;
+    font-size: 0.6rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;
+    text-align: center; line-height: 1; padding: 6px 4px; z-index: 2;
+    border-top: 1px solid rgba(255,255,255,0.2);
   }
-  .card-tipo-faixa.hidden { visibility: hidden; }
+  .card-tipo-faixa.hidden { display: none; }
 
   .card-body{ padding: 6px 12px 8px; flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; overflow: hidden; }
   .card-title{
@@ -419,9 +421,8 @@
   }
   .grid[data-cols="lista"] .card-match-row{ position: absolute; top: 10px; right: 10px; width: 180px; padding: 0; order: 0; z-index: 10; }
   .grid[data-cols="lista"] .card-main{ flex-direction: row; align-items: flex-start; gap: 14px; }
-  .grid[data-cols="lista"] .card-img-col{ width: 150px; }
-  .grid[data-cols="lista"] .card-img-wrap{ width: 150px; height: 150px; border-radius: var(--radius-sm); }
-  .grid[data-cols="lista"] .card-tipo-faixa { border-radius: 0 0 var(--radius-sm) var(--radius-sm); }
+  .grid[data-cols="lista"] .card-img-col{ width: 150px; height: 150px; border-radius: var(--radius-sm); overflow: hidden; border-right: none; }
+  .grid[data-cols="lista"] .card-img-wrap{ width: 100%; height: 100%; }
   .grid[data-cols="lista"] .card-body{ padding: 0; }
   .grid[data-cols="lista"] .card-block{ height: auto; min-height: 44px; max-height: 66px; margin: 4px 0; }
   .grid[data-cols="lista"] .card-block.expandido{ position: relative; top: 0; left: 0; right: 0; }
@@ -723,7 +724,7 @@
       <button class="btn-close-match" onclick="fecharModalMatch()"><svg class="ico" viewBox="0 0 24 24" style="stroke:#fff;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
     </div>
     <div class="modal-match-body" id="matchModalLista">
-      <div class="loading-wrap" style="min-height:auto; padding:30px 0;"><div style="width:34px;height:34px;border:3px solid var(--purple-soft);border-top-color:var(--purple);border-radius:50%;animation:girar .8s linear infinite;margin:0 auto;"></div></div>
+      <div style="text-align:center;padding:30px 0;"><div style="width:34px;height:34px;border:3px solid var(--purple-soft);border-top-color:var(--purple);border-radius:50%;animation:girar .8s linear infinite;margin:0 auto;"></div></div>
     </div>
   </div>
 </div>
@@ -1276,7 +1277,6 @@ async function carregarTudo(){
   state.clientes = (resCli.ok && resCli.data) ? resCli.data : [];
   state.corretores = (resCor.ok && resCor.data) ? resCor.data : [];
   atualizarContadores(); popularFiltros(); renderizar(); preencherDatalistClientes(); carregarContagensClientes();
-  // Inicializa sistema de match em background
   iniciarMatchesBackground();
 }
 
@@ -1307,9 +1307,7 @@ function atualizarBadgesClientes(){
 }
 
 /* =========================================================
-   LÓGICA DE INFORMAÇÃO FALTANDO - REESCRITA
-   Verifica: preço, condomínio, iptu, rua, número, apto,
-   bairro, suíte, vaga, elevador, tipo, descrição, chave
+   LÓGICA DE INFORMAÇÃO FALTANDO - REESCRITA E CORRIGIDA
    ========================================================= */
 function temInformacaoFaltando(im) {
   if (isVendido(im)) return [];
@@ -1348,7 +1346,7 @@ function temInformacaoFaltando(im) {
     faltas.push('Bairro');
   }
   
-  // 7. Apartamento (na chave)
+  // 7. Apartamento
   const infoChave = extrairAptoBlocoChave(im.chaveTexto || '');
   if (!infoChave.apto) {
     faltas.push('Apartamento');
@@ -1359,9 +1357,9 @@ function temInformacaoFaltando(im) {
     faltas.push('Chave');
   }
   
-  // 9. Suítes
+  // 9. Suítes - AGORA ACEITA "0" COMO RESPOSTA VÁLIDA
   const suites = String(im.suites || '').trim();
-  if (!suites || suites === '—' || suites === '') {
+  if (suites === '' || suites === '—') {
     faltas.push('Suítes');
   }
   
@@ -1377,7 +1375,7 @@ function temInformacaoFaltando(im) {
     faltas.push('Elevador');
   }
   
-  // 12. Tipo (extraído da descrição)
+  // 12. Tipo
   const tipo = extrairTipoImovel(im.descricao || '');
   if (!tipo) {
     faltas.push('Tipo');
@@ -1652,7 +1650,6 @@ function renderizar(){
   
   atualizarBadgesClientes();
   aplicarCacheMatchesNoDOM();
-  // Agenda carregamento de matches faltantes
   setTimeout(() => carregarMatchesFaltantesBackground(), 200);
 }
 
@@ -1675,7 +1672,6 @@ function cardHTML(im){
   const descTemMais = descSemTipo.split(/\r?\n/).length > 2 || descSemTipo.length > 120;
   const chaveTemMais = chaveCompleta.split(/\r?\n/).length > 2 || chaveCompleta.length > 60;
 
-  // ALERTA AMARELO - SÓ APARECE SE FALTAR INFORMAÇÃO
   const faltas = temInformacaoFaltando(im);
   const alertaFaltaHtml = faltas.length > 0 ? `
     <div class="alerta-falta-info" title="Faltando: ${esc(faltas.join(', '))}">
@@ -1709,7 +1705,6 @@ function cardHTML(im){
       <button class="card-code-btn btn-clientes" onclick="abrirClientesImovel('${esc(codigo)}', '${esc(im.titulo || '')}')" title="Clientes"><svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> Clientes ${badgeClientesHtml}</button>
     </div>` : '';
 
-  // BOTÃO MATCH - FULL WIDTH, ESTADO INICIAL COM BASE NO CACHE
   const cacheEntry = state._matchesCache[codigo];
   const temCache = cacheEntry !== undefined;
   const matchCount = temCache ? cacheEntry.length : null;
@@ -1749,8 +1744,8 @@ function cardHTML(im){
           <div class="card-img-wrap">
             <img class="card-img" src="${esc(img)}" ${imgClickAttr} onerror="this.src='https://via.placeholder.com/300x300/e2e8f0/64748b?text=Sem+imagem'">
             ${tarjaVendidoHtml}
+            ${faixaTipoHtml}
           </div>
-          ${faixaTipoHtml}
         </div>
         <div class="card-body">
           <div class="card-title" title="${esc(im.titulo || 'Sem endereço')}">${esc(im.titulo) || 'Sem endereço'}</div>
@@ -1795,18 +1790,11 @@ function abrirBuscar(codigo){ if(!codigo) return; window.open(`${BUSCAR_BASE}/${
 
 /* =========================================================
    SISTEMA DE MATCH ROBUSTO COM CACHE
-   - Cache local em localStorage
-   - Hash para detectar mudanças na base
-   - Atualização só quando há novos imóveis/clientes
-   - Carregamento em lotes em background
    ========================================================= */
-
 function calcularHashBase() {
-  // Hash baseado na quantidade de imóveis + clientes + código do último imóvel
   const numIm = state.imoveis.length;
   const numCli = state.clientes.length;
   const codigosIm = state.imoveis.map(i => i.codigo).sort().join(',');
-  // Hash simples: soma dos caracteres
   let hash = numIm + '-' + numCli + '-';
   for (let i = 0; i < codigosIm.length; i++) {
     hash += codigosIm.charCodeAt(i);
@@ -1824,14 +1812,10 @@ function carregarCacheMatches() {
       if (cache) {
         const parsed = JSON.parse(cache);
         state._matchesCache = parsed;
-        console.log('[Match] Cache carregado do localStorage:', Object.keys(parsed).length, 'imóveis');
         return true;
       }
     }
-    console.log('[Match] Hash mudou ou sem cache — vai recarregar tudo');
-  } catch(e) {
-    console.warn('[Match] Erro ao carregar cache:', e);
-  }
+  } catch(e) {}
   return false;
 }
 
@@ -1839,10 +1823,7 @@ function salvarCacheMatches() {
   try {
     localStorage.setItem(STORAGE_KEY_MATCH_CACHE, JSON.stringify(state._matchesCache));
     localStorage.setItem(STORAGE_KEY_MATCH_HASH, calcularHashBase());
-    console.log('[Match] Cache salvo:', Object.keys(state._matchesCache).length, 'imóveis');
-  } catch(e) {
-    console.warn('[Match] Erro ao salvar cache:', e);
-  }
+  } catch(e) {}
 }
 
 function aplicarCacheMatchesNoDOM() {
@@ -1865,20 +1846,15 @@ async function iniciarMatchesBackground() {
   if (state._matchEmAndamento) return;
   state._matchEmAndamento = true;
   
-  // Tenta carregar cache primeiro
   const cacheOk = carregarCacheMatches();
   
   if (cacheOk) {
-    // Cache válido — aplica no DOM e depois verifica se precisa atualizar
     aplicarCacheMatchesNoDOM();
     state._matchEmAndamento = false;
-    console.log('[Match] Usando cache existente');
     return;
   }
   
-  // Sem cache válido — busca tudo em lotes
   const codigosUnicos = [...new Set(state.imoveis.filter(i => !isVendido(i)).map(i => String(i.codigo || '').trim()).filter(Boolean))];
-  console.log('[Match] Iniciando carregamento em background:', codigosUnicos.length, 'imóveis');
   
   const LOTE = 8;
   for (let i = 0; i < codigosUnicos.length; i += LOTE) {
@@ -1893,19 +1869,15 @@ async function iniciarMatchesBackground() {
         state._matchesCache[cod] = [];
       }
     }));
-    // Aplica no DOM a cada lote
     aplicarCacheMatchesNoDOM();
-    // Pequena pausa entre lotes
     await new Promise(r => setTimeout(r, 100));
   }
   
   salvarCacheMatches();
   state._matchEmAndamento = false;
-  console.log('[Match] Carregamento em background concluído');
 }
 
 async function carregarMatchesFaltantesBackground() {
-  // Carrega só os que ainda não estão no cache
   const cards = Array.from(document.querySelectorAll('.card[data-codigo]:not(.card-vendido)'));
   const faltantes = cards
     .map(c => c.getAttribute('data-codigo'))
@@ -1937,7 +1909,6 @@ async function abrirModalMatch(codigo, titulo){
   if(!codigo){ toast('Código não informado', 'error'); return; }
   $('matchModalNome').textContent = '#' + codigo + (titulo ? ' — ' + titulo : '');
   
-  // Se já tem cache, mostra imediatamente
   const cacheEntry = state._matchesCache[codigo];
   if (cacheEntry !== undefined) {
     renderizarListaMatches(codigo, cacheEntry);
@@ -1945,7 +1916,6 @@ async function abrirModalMatch(codigo, titulo){
     return;
   }
   
-  // Se não tem cache, busca
   $('matchModalLista').innerHTML = '<div style="text-align:center;padding:30px 0;"><div style="width:34px;height:34px;border:3px solid var(--purple-soft);border-top-color:var(--purple);border-radius:50%;animation:girar .8s linear infinite;margin:0 auto;"></div></div>';
   $('matchModalBackdrop').classList.add('show');
   
@@ -1986,17 +1956,15 @@ function renderizarListaMatches(codigo, lista) {
 async function matchEnviar(telefone, codigo, btn){
   if(!await confirmarAcao({ titulo: 'Enviar para vitrine?', texto: 'Uma cópia será adicionada.', btnSim: 'Enviar' })) return;
   const im = state.imoveis.find(x => String(x.codigo || '') === codigo); if(!im){ toast('Imóvel não encontrado', 'error'); return; }
-  const res = await api('salvarImovel', { senha: SENHA_ADMIN, telefone, rua: im.rua, numero: im.numero, bairro: im.bairro, preco: im.preco, descricao: im.descricao, chaveTexto: im.chaveTexto, vaga: im.vaga, elevador: im.elevador, suites: im.suites });
+  const res = await api('salvarImovel', { senha: SENHA_ADMIN, telefone, rua: im.rua, numero: im.numero, bairro: im.bairro, preco: im.preco, descricao: im.descricao, chaveTexto: im.chaveTexto, vaga: im.vaga, elevador: im.elevador, suites: String(im.suites || '') });
   if(!res.ok){ toast(res.error, 'error'); return; }
   await api('descartarMatch', { senha: SENHA_ADMIN, telefone, codigo, origem: 'enviado' });
   toast('Enviado!', 'success'); 
   if(btn) btn.closest('.cliente-match-card').remove(); 
   carregarContagensClientes(); 
-  // Remove do cache
   if (state._matchesCache[codigo]) {
     state._matchesCache[codigo] = state._matchesCache[codigo].filter(m => normalizaTel(m.telefone) !== normalizaTel(telefone));
     salvarCacheMatches();
-    // Atualiza o número no card
     const card = document.querySelector(`.card[data-codigo="${codigo}"]`);
     if (card) {
       const numEl = card.querySelector('.btn-match-card .num');
@@ -2010,7 +1978,6 @@ async function matchDescartar(telefone, codigo, btn){
   await api('descartarMatch', { senha: SENHA_ADMIN, telefone, codigo, origem: 'descartado' }); 
   toast('Match descartado', 'success');
   if(btn) btn.closest('.cliente-match-card').remove();
-  // Remove do cache
   if (state._matchesCache[codigo]) {
     state._matchesCache[codigo] = state._matchesCache[codigo].filter(m => normalizaTel(m.telefone) !== normalizaTel(telefone));
     salvarCacheMatches();
@@ -2136,24 +2103,42 @@ async function salvarImovel(){
   
   const corretorSelecionado = state.corretores[0]?.nome || '';
 
+  // CORREÇÃO CRÍTICA: Forçar o envio da suíte como string para não perder o "0"
   const dados = {
     senha: SENHA_ADMIN, id: editandoId, telefone: tel,
     rua: $('adRua').value.trim(), numero: $('adNumero').value.trim(), bairro: $('adBairro').value.trim(),
     preco: $('adPreco').value.trim(), condominio: $('adCondominio').value.trim(), iptu: $('adIPTU').value.trim(),
     descricao: descricaoFinal, link: $('adLink').value.trim(), imagem: $('adImagem').value.trim(), chaveTexto: chaveFinal,
     status: 'pendente', corretor: corretorSelecionado, vendido: '', desativado: '',
-    vaga: $('adVaga').value.trim(), elevador: $('adElevador').value.trim(), suites: $('adSuites').value
+    vaga: String($('adVaga').value).trim(), elevador: String($('adElevador').value).trim(), suites: String($('adSuites').value)
   };
   
   $('btnSalvarImovel').disabled = true; $('btnSalvarImovel').innerHTML = 'Salvando...';
+  
   const res = await api('salvarImovel', dados);
+  
   if(res.ok && editandoId){ 
-    await api('atualizarImovelPorCodigo', { senha: SENHA_ADMIN, codigo: extrairCodigoDoLink(dados.link), preco: dados.preco, condominio: dados.condominio, iptu: dados.iptu, descricao: dados.descricao, imagem: dados.imagem, chaveTexto: dados.chaveTexto, link: dados.link, vaga: dados.vaga, elevador: dados.elevador }); 
+    // SEGUNDA REQUISIÇÃO CORRETIVA: Garante que a suíte e outros campos sejam atualizados em massa
+    await api('atualizarImovelPorCodigo', { 
+      senha: SENHA_ADMIN, 
+      codigo: extrairCodigoDoLink(dados.link), 
+      preco: dados.preco, 
+      condominio: dados.condominio, 
+      iptu: dados.iptu, 
+      descricao: dados.descricao, 
+      imagem: dados.imagem, 
+      chaveTexto: dados.chaveTexto, 
+      link: dados.link, 
+      vaga: dados.vaga, 
+      elevador: dados.elevador,
+      suites: String(dados.suites) // Forçando envio da suíte como string
+    }); 
   }
+  
   $('btnSalvarImovel').disabled = false; $('btnSalvarImovel').innerHTML = editandoId ? 'Atualizar' : 'Salvar no catálogo';
   if(!res.ok){ toast(res.error || 'Erro ao salvar', 'error'); return; }
   toast(editandoId ? 'Atualizado!' : 'Adicionado!', 'success'); 
-  // Invalida cache de matches ao salvar
+  
   localStorage.removeItem(STORAGE_KEY_MATCH_HASH);
   fecharPainelImovel(); await recarregar();
 }
