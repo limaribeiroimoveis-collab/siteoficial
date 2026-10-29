@@ -6,7 +6,6 @@
 <meta name="google" content="notranslate">
 <meta name="robots" content="noindex, nofollow">
 <title>Catálogo Geral — Lima Ribeiro Imóveis</title>
-<!-- FAVICON AZUL ESCURO -->
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%231e3a5f'/><text x='50' y='68' font-family='-apple-system,sans-serif' font-size='42' font-weight='800' fill='white' text-anchor='middle'>GER</text></svg>">
 <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32;800&display=swap" rel="stylesheet">
 <style>
@@ -1266,28 +1265,30 @@ function temInformacaoFaltando(im) {
   if (isVendido(im)) return false;
   const faltas = [];
   
+  // CHECKLIST ESTRITO
+  if (!String(im.preco || '').trim() || im.preco === '0,00') faltas.push('Preço');
+  if (!String(im.condominio || '').trim()) faltas.push('Condomínio');
+  if (!String(im.iptu || '').trim()) faltas.push('IPTU');
   if (!String(im.rua || '').trim()) faltas.push('Rua');
   if (!String(im.numero || '').trim()) faltas.push('Número');
   if (!String(im.bairro || '').trim()) faltas.push('Bairro');
-  if (!String(im.preco || '').trim()) faltas.push('Preço');
-  if (!String(im.imagem || '').trim()) faltas.push('Imagem');
-  if (!String(im.descricao || '').trim()) faltas.push('Descrição');
   
   const info = extrairAptoBlocoChave(im.chaveTexto || '');
-  if (!info.apto && !info.bloco && !String(im.chaveTexto||'').trim()) faltas.push('Chave');
+  if (!info.apto) faltas.push('Apartamento');
+  if (!String(im.chaveTexto || '').trim()) faltas.push('Chave');
+  
+  if (!String(im.suites || '').trim() || im.suites === '—') faltas.push('Suítes');
   
   const v = String(im.vaga || '').trim();
-  if (!v || v === '—') faltas.push('Vaga');
+  if (!v || v === '—' || !['Livre','Presa','Não sei'].includes(v)) faltas.push('Vaga');
   
   const e = String(im.elevador || '').trim();
-  if (!e || e === '—') faltas.push('Elevador');
+  if (!e || e === '—' || !['Sim','Não'].includes(e)) faltas.push('Elevador');
   
-  // Se for Apartamento Padrão, não exige tipo
   const t = extrairTipoImovel(im.descricao) || 'Apartamento Padrão'; 
   if (!t) faltas.push('Tipo');
   
-  const s = String(im.suites || '').trim();
-  if (!s || s === '—') faltas.push('Suítes');
+  if (!String(im.descricao || '').trim()) faltas.push('Descrição');
   
   return faltas;
 }
