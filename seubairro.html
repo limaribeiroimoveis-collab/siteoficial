@@ -3,21 +3,22 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta name="google" content="notranslate">
+<meta name="robots" content="noindex, nofollow">
 <title>Escolha qual será seu bairro</title>
 
-<!-- OPEN GRAPH -->
+<!-- ===== OPEN GRAPH (preview no WhatsApp) ===== -->
 <meta property="og:type" content="website">
 <meta property="og:title" content="Escolha qual será seu bairro">
 <meta property="og:description" content="Selecione os bairros de seu interesse e encontre seu imóvel ideal.">
-<!-- 🔴 COLE AQUI a URL pública da sua imagem -->
 <meta property="og:image" content="https://cdn.awsli.com.br/1608/1608652/arquivos/escolha-seu-bairro.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:type" content="image/png">
+<meta property="og:image:type" content="image/jpeg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Escolha qual será seu bairro">
 <meta name="twitter:description" content="Selecione os bairros de seu interesse e encontre seu imóvel ideal.">
-<meta name="twitter:image" content="https://i.imgur.com/COLE_SUA_IMAGEM_AQUI.png">
+<meta name="twitter:image" content="https://cdn.awsli.com.br/1608/1608652/arquivos/escolha-seu-bairro.jpg">
 
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <style>
@@ -25,10 +26,37 @@
   html, body {
     margin: 0; padding: 0; height: 100%;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    background: #f9fafb;
-    color: #111827;
+    background: #f9fafb; color: #111827;
   }
   #app { display: flex; flex-direction: column; height: 100vh; height: 100dvh; }
+
+  /* ============ TELA DE ERRO / JÁ ENVIADO ============ */
+  .tela-bloco {
+    display: flex; flex-direction: column; align-items: center;
+    justify-content: center; padding: 30px 24px; text-align: center;
+    height: 100vh; height: 100dvh;
+  }
+  .tela-bloco .ico-grande {
+    width: 72px; height: 72px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 20px;
+  }
+  .tela-bloco .ico-grande.erro { background: #fee2e2; color: #dc2626; }
+  .tela-bloco .ico-grande.ok { background: #d1fae5; color: #059669; }
+  .tela-bloco h1 {
+    font-size: 22px; font-weight: 800; margin: 0 0 12px;
+    color: #111827;
+  }
+  .tela-bloco p {
+    font-size: 15px; line-height: 1.5; color: #4b5563;
+    margin: 0 0 24px; max-width: 380px;
+  }
+  .tela-bloco .btn-tela {
+    background: #064e3b; color: #fff; border: none;
+    padding: 14px 28px; font-size: 16px; font-weight: 700;
+    border-radius: 12px; cursor: pointer; text-decoration: none;
+    display: inline-block;
+  }
 
   /* ============ PÁGINA 1 - MAPA ============ */
   #pagina-mapa { display: flex; flex-direction: column; flex: 1; height: 100%; }
@@ -37,16 +65,33 @@
   #map-wrap { flex: 1; position: relative; }
   #map { width: 100%; height: 100%; }
 
+  /* Botão Informações (topo direito) */
   #btn-info {
     position: absolute; top: 12px; right: 12px; z-index: 1000;
-    width: 42px; height: 42px; border-radius: 50%;
+    height: 38px; padding: 0 14px; border-radius: 999px;
     background: #064e3b; color: #fff; border: none;
-    font-size: 20px; font-weight: bold; font-style: italic;
-    font-family: Georgia, serif; cursor: pointer;
+    font-size: 13px; font-weight: 700; cursor: pointer;
     box-shadow: 0 3px 10px rgba(0,0,0,.3);
-    display: flex; align-items: center; justify-content: center;
+    display: inline-flex; align-items: center; gap: 6px;
   }
   #btn-info:active { background: #065f46; }
+  #btn-info svg { width: 15px; height: 15px; stroke: #fff; fill: none; stroke-width: 2; }
+
+  /* Botão Centralizar (embaixo do + / -) */
+  #btn-centralizar {
+    position: absolute; right: 12px; bottom: 90px; z-index: 1000;
+    height: 34px; padding: 0 12px; border-radius: 8px;
+    background: #fff; color: #064e3b; border: 2px solid #064e3b;
+    font-size: 12px; font-weight: 800; cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,.2);
+    display: inline-flex; align-items: center; gap: 5px;
+    letter-spacing: .2px;
+  }
+  #btn-centralizar:active { background: #ecfdf5; }
+  #btn-centralizar svg { width: 14px; height: 14px; stroke: #064e3b; fill: none; stroke-width: 2.2; }
+
+  /* Ajusta o zoom do Leaflet pra não sobrepor o botão centralizar */
+  .leaflet-bottom.leaflet-right { bottom: 12px; }
 
   #toast {
     position: absolute; bottom: 16px; left: 50%;
@@ -114,23 +159,15 @@
     from { transform: scale(.94); opacity: 0; }
     to { transform: scale(1); opacity: 1; }
   }
-  .modal h2 {
-    margin: 0 0 14px; font-size: 19px;
-    color: #111827; text-align: center;
-  }
-  .modal .passo {
-    display: flex; gap: 12px; margin-bottom: 14px;
-    align-items: flex-start;
-  }
+  .modal h2 { margin: 0 0 14px; font-size: 19px; color: #111827; text-align: center; }
+  .modal .passo { display: flex; gap: 12px; margin-bottom: 14px; align-items: flex-start; }
   .modal .num {
     background: #064e3b; color: #fff; width: 28px; height: 28px;
     min-width: 28px; border-radius: 50%; display: flex;
     align-items: center; justify-content: center;
     font-weight: bold; font-size: 14px;
   }
-  .modal .passo p {
-    margin: 0; font-size: 15px; line-height: 1.4; color: #374151;
-  }
+  .modal .passo p { margin: 0; font-size: 15px; line-height: 1.4; color: #374151; }
   .modal .passo p strong { color: #111827; }
   .modal .btn-fechar {
     width: 100%; background: #10b981; color: #fff; border: none;
@@ -139,18 +176,10 @@
   }
   .modal .btn-fechar:active { background: #059669; }
 
-  .modal-aviso-titulo {
-    font-size: 18px; text-align: center;
-    margin: 0 0 10px; color: #111827;
-  }
-  .modal-aviso-texto {
-    font-size: 15px; color: #4b5563; text-align: center;
-    line-height: 1.5; margin: 0 0 20px;
-  }
+  .modal-aviso-titulo { font-size: 18px; text-align: center; margin: 0 0 10px; color: #111827; }
+  .modal-aviso-texto { font-size: 15px; color: #4b5563; text-align: center; line-height: 1.5; margin: 0 0 20px; }
   .modal-aviso-texto strong { color: #10b981; }
-  .modal-aviso-botoes {
-    display: flex; flex-direction: column; gap: 10px;
-  }
+  .modal-aviso-botoes { display: flex; flex-direction: column; gap: 10px; }
   .btn-secundario {
     width: 100%; background: #f3f4f6; color: #374151;
     border: none; padding: 14px; font-size: 15px;
@@ -159,174 +188,111 @@
   .btn-secundario:active { background: #e5e7eb; }
 
   /* ============ PÁGINA 2 - FORMULÁRIO ============ */
-  #pagina-form {
-    display: flex; flex-direction: column; flex: 1; height: 100%;
-    background: #f9fafb;
-  }
+  #pagina-form { display: flex; flex-direction: column; flex: 1; height: 100%; background: #f9fafb; }
   #form-header {
     background: #fff; padding: 14px 16px;
     border-bottom: 1px solid #e5e7eb;
     display: flex; align-items: center; gap: 12px;
     position: sticky; top: 0; z-index: 50;
   }
-  #btn-voltar {
-    background: none; border: none; font-size: 22px;
-    color: #374151; cursor: pointer; padding: 4px 8px;
-    line-height: 1; border-radius: 8px;
-  }
+  #btn-voltar { background: none; border: none; font-size: 22px; color: #374151; cursor: pointer; padding: 4px 8px; line-height: 1; border-radius: 8px; }
   #btn-voltar:active { background: #f3f4f6; }
   #form-titulo { flex: 1; font-size: 16px; font-weight: 700; color: #111827; }
   #form-progresso { font-size: 12px; color: #6b7280; font-weight: 600; }
-
-  #form-body {
-    flex: 1; overflow-y: auto; padding: 16px;
-    padding-bottom: 100px;
-  }
-  .secao {
-    background: #fff; border-radius: 14px; padding: 16px;
-    margin-bottom: 14px;
-    box-shadow: 0 1px 3px rgba(0,0,0,.04);
-  }
-  .secao h3 {
-    margin: 0 0 4px; font-size: 15px; font-weight: 700;
-    color: #111827;
-  }
-  .secao .dica {
-    font-size: 12px; color: #6b7280; margin: 0 0 12px;
-    line-height: 1.4;
-  }
+  #form-body { flex: 1; overflow-y: auto; padding: 16px; padding-bottom: 100px; }
+  .secao { background: #fff; border-radius: 14px; padding: 16px; margin-bottom: 14px; box-shadow: 0 1px 3px rgba(0,0,0,.04); }
+  .secao h3 { margin: 0 0 4px; font-size: 15px; font-weight: 700; color: #111827; }
+  .secao .dica { font-size: 12px; color: #6b7280; margin: 0 0 12px; line-height: 1.4; }
   .secao .obrig { color: #ef4444; }
 
-  /* ============ CHIPS — CORRIGIDO ============
-     O check agora usa ::after com posição absoluta
-     (não desloca o texto quando marcado) */
-  .chips {
-    display: flex; flex-wrap: wrap; gap: 8px;
-    align-items: stretch;
-  }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; align-items: stretch; }
   .chip {
-    position: relative;
-    padding: 10px 14px; border-radius: 10px;
-    background: #f3f4f6; color: #374151;
-    border: 1.5px solid transparent;
-    font-size: 14px; font-weight: 600;
-    cursor: pointer; user-select: none;
+    position: relative; padding: 10px 14px; border-radius: 10px;
+    background: #f3f4f6; color: #374151; border: 1.5px solid transparent;
+    font-size: 14px; font-weight: 600; cursor: pointer; user-select: none;
     transition: background .12s, color .12s, border-color .12s;
     display: inline-flex; align-items: center; justify-content: center;
     line-height: 1.2; text-align: center;
   }
   .chip:active { background: #e5e7eb; }
-  .chip.marcado {
-    background: #ecfdf5; color: #065f46;
-    border-color: #10b981;
-    /* check via ::after fica no canto, não desloca texto */
-    padding-right: 28px;
-  }
+  .chip.marcado { background: #ecfdf5; color: #065f46; border-color: #10b981; padding-right: 28px; }
   .chip.marcado::after {
-    content: "✓";
-    position: absolute;
-    right: 8px; top: 50%;
-    transform: translateY(-50%);
-    font-weight: bold; font-size: 13px;
-    color: #10b981;
+    content: "✓"; position: absolute; right: 8px; top: 50%;
+    transform: translateY(-50%); font-weight: bold; font-size: 13px; color: #10b981;
   }
-
-  /* GRUPO QUARTOS — todos em uma linha */
   .chips[data-grupo="quartos"] { flex-wrap: nowrap; gap: 6px; }
-  .chips[data-grupo="quartos"] .chip {
-    flex: 1; padding: 10px 6px; font-size: 13px;
-  }
-  .chips[data-grupo="quartos"] .chip.marcado {
-    padding-right: 6px; padding-left: 18px;
-  }
-  .chips[data-grupo="quartos"] .chip.marcado::after {
-    right: auto; left: 4px;
-  }
-
-  /* GRUPO CONDOMÍNIO — máx 2 linhas, chips proporcionais */
-  .chips[data-grupo="condominio"] .chip {
-    flex: 1 1 calc(50% - 4px);
-    min-width: 0;
-  }
-
-  /* GRUPO PAGAMENTO — máx 2 linhas, chips proporcionais */
-  .chips[data-grupo="pagamento"] .chip {
-    flex: 1 1 calc(50% - 4px);
-    min-width: 0;
-    padding: 12px 10px;
-    font-size: 13px;
-  }
-
-  /* GRUPO TIPOS — não muda layout ao marcar */
-  .chips[data-grupo="tipos"] .chip {
-    flex: 1 1 calc(50% - 4px);
-    min-width: 0;
-  }
-
-  /* GRUPO VAGAS — compacto */
-  .chips[data-grupo="vagas"] .chip {
-    flex: 1;
-    padding: 10px 8px; font-size: 13px;
-  }
-  .chips[data-grupo="vagas"] .chip.marcado {
-    padding-right: 8px; padding-left: 20px;
-  }
-  .chips[data-grupo="vagas"] .chip.marcado::after {
-    right: auto; left: 6px;
-  }
+  .chips[data-grupo="quartos"] .chip { flex: 1; padding: 10px 6px; font-size: 13px; }
+  .chips[data-grupo="quartos"] .chip.marcado { padding-right: 6px; padding-left: 18px; }
+  .chips[data-grupo="quartos"] .chip.marcado::after { right: auto; left: 4px; }
+  .chips[data-grupo="condominio"] .chip { flex: 1 1 calc(50% - 4px); min-width: 0; }
+  .chips[data-grupo="pagamento"] .chip { flex: 1 1 calc(50% - 4px); min-width: 0; padding: 12px 10px; font-size: 13px; }
+  .chips[data-grupo="tipos"] .chip { flex: 1 1 calc(50% - 4px); min-width: 0; }
+  .chips[data-grupo="vagas"] .chip { flex: 1; padding: 10px 8px; font-size: 13px; }
+  .chips[data-grupo="vagas"] .chip.marcado { padding-right: 8px; padding-left: 20px; }
+  .chips[data-grupo="vagas"] .chip.marcado::after { right: auto; left: 6px; }
 
   .campo-texto {
-    width: 100%; padding: 12px 14px;
-    border: 1.5px solid #e5e7eb; border-radius: 10px;
-    font-size: 16px; font-family: inherit;
-    background: #fff; color: #111827;
-    outline: none; transition: border-color .15s;
+    width: 100%; padding: 12px 14px; border: 1.5px solid #e5e7eb;
+    border-radius: 10px; font-size: 16px; font-family: inherit;
+    background: #fff; color: #111827; outline: none; transition: border-color .15s;
   }
   .campo-texto:focus { border-color: #10b981; }
   .campo-texto.erro { border-color: #ef4444; }
-
   .sufixo-wrap { position: relative; }
   .sufixo {
-    position: absolute; right: 14px; top: 50%;
-    transform: translateY(-50%); color: #6b7280;
-    font-size: 14px; font-weight: 600;
-    pointer-events: none;
+    position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+    color: #6b7280; font-size: 14px; font-weight: 600; pointer-events: none;
   }
-  .extenso {
-    font-size: 12px; color: #059669;
-    font-weight: 600; margin-top: 6px;
-    min-height: 16px; line-height: 1.3;
-  }
+  .extenso { font-size: 12px; color: #059669; font-weight: 600; margin-top: 6px; min-height: 16px; line-height: 1.3; }
 
   #form-footer {
     position: fixed; bottom: 0; left: 0; right: 0;
     background: #fff; padding: 12px 16px 16px;
-    border-top: 1px solid #e5e7eb;
-    z-index: 100;
+    border-top: 1px solid #e5e7eb; z-index: 100;
   }
-  #form-footer .aviso-obrig {
-    font-size: 11px; color: #9ca3af;
-    text-align: center; margin-bottom: 8px;
-  }
+  #form-footer .aviso-obrig { font-size: 11px; color: #9ca3af; text-align: center; margin-bottom: 8px; }
 
-  .erro-msg {
-    color: #ef4444; font-size: 12px;
-    margin-top: 6px; font-weight: 600;
-    display: none;
-  }
+  .erro-msg { color: #ef4444; font-size: 12px; margin-top: 6px; font-weight: 600; display: none; }
   .erro-msg.visivel { display: block; }
 </style>
 </head>
 <body>
 
 <div id="app">
-  <!-- PÁGINA 1 - MAPA -->
-  <div id="pagina-mapa">
+
+  <!-- ===== TELA: link inválido ===== -->
+  <div id="tela-erro" class="tela-bloco" style="display:none;">
+    <div class="ico-grande erro">
+      <svg viewBox="0 0 24 24" style="width:36px;height:36px;stroke:currentColor;fill:none;stroke-width:2.5;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    </div>
+    <h1>Link inválido</h1>
+    <p>Este link não contém um número de WhatsApp válido. Peça um novo link ao seu corretor.</p>
+  </div>
+
+  <!-- ===== TELA: já enviado ===== -->
+  <div id="tela-enviado" class="tela-bloco" style="display:none;">
+    <div class="ico-grande ok">
+      <svg viewBox="0 0 24 24" style="width:36px;height:36px;stroke:currentColor;fill:none;stroke-width:2.5;"><polyline points="20 6 9 17 4 12"/></svg>
+    </div>
+    <h1>Informações já enviadas</h1>
+    <p>Recebemos suas preferências! Qualquer alteração, basta pedir ao seu corretor que ele ajusta para você.</p>
+  </div>
+
+  <!-- ===== PÁGINA 1 - MAPA ===== -->
+  <div id="pagina-mapa" style="display:none;">
     <div id="map-wrap">
       <div id="map"></div>
-      <button id="btn-info" aria-label="Instruções">i</button>
+      <button id="btn-info" aria-label="Informações">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+        Informações
+      </button>
+      <button id="btn-centralizar" aria-label="Centralizar mapa">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
+        Centralizar
+      </button>
       <div id="toast"></div>
     </div>
+
     <div id="footer-mapa">
       <h3>Bairros escolhidos</h3>
       <div id="lista-nomes"><span class="vazio">Nenhum bairro selecionado ainda.</span></div>
@@ -334,8 +300,8 @@
     </div>
   </div>
 
-  <!-- PÁGINA 2 - FORMULÁRIO -->
-  <div id="pagina-form" class="oculta">
+  <!-- ===== PÁGINA 2 - FORMULÁRIO ===== -->
+  <div id="pagina-form" class="oculta" style="display:none;">
     <div id="form-header">
       <button id="btn-voltar" aria-label="Voltar">←</button>
       <div id="form-titulo">Sobre seu imóvel</div>
@@ -344,7 +310,6 @@
 
     <div id="form-body">
 
-      <!-- 1. Tipo -->
       <div class="secao">
         <h3>Quais tipos de imóvel você procura? <span class="obrig">*</span></h3>
         <p class="dica">Pode escolher quantos quiser.</p>
@@ -357,7 +322,6 @@
         <div class="erro-msg" data-erro="tipos">Escolha pelo menos um tipo.</div>
       </div>
 
-      <!-- 2. Quartos -->
       <div class="secao">
         <h3>No mínimo quantos quartos? <span class="obrig">*</span></h3>
         <div class="chips" data-grupo="quartos" data-multiplo="false">
@@ -369,7 +333,6 @@
         </div>
       </div>
 
-      <!-- 3. Suíte -->
       <div class="secao">
         <h3>Obrigatório ter suíte? <span class="obrig">*</span></h3>
         <div class="chips" data-grupo="suite" data-multiplo="false">
@@ -378,7 +341,6 @@
         </div>
       </div>
 
-      <!-- 4. Vagas -->
       <div class="secao">
         <h3>Vagas de garagem? <span class="obrig">*</span></h3>
         <div class="chips" data-grupo="vagas" data-multiplo="false">
@@ -389,7 +351,6 @@
         </div>
       </div>
 
-      <!-- 5. Metragem -->
       <div class="secao">
         <h3>Qual tamanho mínimo (m²)? <span class="obrig">*</span></h3>
         <div class="sufixo-wrap">
@@ -399,7 +360,6 @@
         <div class="erro-msg" data-erro="metragem">Digite o tamanho mínimo.</div>
       </div>
 
-      <!-- 6. Elevador -->
       <div class="secao">
         <h3>Precisa ter elevador? <span class="obrig">*</span></h3>
         <div class="chips" data-grupo="elevador" data-multiplo="false">
@@ -409,7 +369,6 @@
         </div>
       </div>
 
-      <!-- 7. Escadas -->
       <div class="secao">
         <h3>Sobre escadas <span class="obrig">*</span></h3>
         <div class="chips" data-grupo="escadas" data-multiplo="false">
@@ -419,7 +378,6 @@
         </div>
       </div>
 
-      <!-- 8. Condomínio -->
       <div class="secao">
         <h3>Valor médio aceito de condomínio <span class="obrig">*</span></h3>
         <p class="dica">Quanto menor o valor, mais limitada é a busca.</p>
@@ -431,7 +389,6 @@
         </div>
       </div>
 
-      <!-- 9. Valor máximo -->
       <div class="secao">
         <h3>Valor máximo para investir <span class="obrig">*</span></h3>
         <p class="dica">Campo para o valor total do imóvel.</p>
@@ -440,7 +397,6 @@
         <div class="erro-msg" data-erro="valor">Digite o valor máximo.</div>
       </div>
 
-      <!-- 10. Forma de pagamento -->
       <div class="secao">
         <h3>Forma de pagamento <span class="obrig">*</span></h3>
         <div class="chips" data-grupo="pagamento" data-multiplo="false">
@@ -452,7 +408,6 @@
         <div class="erro-msg" data-erro="pagamento">Escolha uma forma de pagamento.</div>
       </div>
 
-      <!-- 11. Observações -->
       <div class="secao">
         <h3>Observações (opcional)</h3>
         <p class="dica">Conte detalhes sobre o que busca no seu imóvel.</p>
@@ -472,22 +427,10 @@
 <div id="modal-overlay" class="modal-overlay">
   <div class="modal">
     <h2>Como escolher seus bairros</h2>
-    <div class="passo">
-      <div class="num">1</div>
-      <p>Use <strong>dois dedos</strong> (ou role o mouse) para dar <strong>zoom</strong> no mapa e encontrar a região.</p>
-    </div>
-    <div class="passo">
-      <div class="num">2</div>
-      <p>Dê <strong>dois toques rápidos</strong> em cima do bairro desejado. Ele será adicionado à lista.</p>
-    </div>
-    <div class="passo">
-      <div class="num">3</div>
-      <p>Errou? Toque no <strong>×</strong> ao lado do nome para remover. Escolha quantos quiser.</p>
-    </div>
-    <div class="passo">
-      <div class="num">4</div>
-      <p>Quando terminar, toque em <strong>Continuar</strong>.</p>
-    </div>
+    <div class="passo"><div class="num">1</div><p>Use <strong>dois dedos</strong> (ou role o mouse) para dar <strong>zoom</strong> no mapa e encontrar a região.</p></div>
+    <div class="passo"><div class="num">2</div><p>Dê <strong>dois toques rápidos</strong> em cima do bairro desejado. Ele será adicionado à lista.</p></div>
+    <div class="passo"><div class="num">3</div><p>Errou? Toque no <strong>×</strong> ao lado do nome para remover. Escolha quantos quiser.</p></div>
+    <div class="passo"><div class="num">4</div><p>Quando terminar, toque em <strong>Continuar</strong>.</p></div>
     <button id="btn-entendi" class="btn-fechar">Entendi, vamos lá!</button>
   </div>
 </div>
@@ -496,9 +439,7 @@
 <div id="modal-aviso" class="modal-overlay">
   <div class="modal">
     <h2 class="modal-aviso-titulo" id="aviso-titulo">Você escolheu 1 bairro</h2>
-    <p class="modal-aviso-texto">
-      Quanto mais bairros escolher, mais chances de encontrar <strong>ótimas oportunidades</strong> para você.
-    </p>
+    <p class="modal-aviso-texto">Quanto mais bairros escolher, mais chances de encontrar <strong>ótimas oportunidades</strong> para você.</p>
     <div class="modal-aviso-botoes">
       <button id="btn-aviso-continuar" class="btn-fechar">Continuar com esses bairros</button>
       <button id="btn-aviso-mais" class="btn-secundario">Escolher mais bairros</button>
@@ -508,37 +449,74 @@
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
+  // ============================================================
+  // CONFIG — SUBSTITUA A SENHA ABAIXO PELA SUA SENHA ADMIN
+  // ============================================================
+  const API_URL = 'https://script.google.com/macros/s/AKfycbzuCjg_5ZJDMWWKmjYp1ThW34iWS0YouviWFdiMGx8W3yApv0F1fdUcjeZdjm0s6Mg/exec';
+  const SENHA_ADMIN = 'Cal@562938'; // ⚠️ troque aqui pela sua senha admin real
   const LIMITES_BH = { minLat: -20.05, maxLat: -19.75, minLng: -44.10, maxLng: -43.80 };
-  const BAIRROS_BLOQUEADOS = [
-    'contagem', 'eldorado', 'cidade industrial', 'ressaca', 'água branca',
-    'santa luzia', 'ibitir', 'cabo verde', 'cinquenta', 'kennedy'
-  ];
+  const BAIRROS_BLOQUEADOS = ['contagem', 'eldorado', 'cidade industrial', 'ressaca', 'água branca', 'santa luzia', 'ibitir', 'cabo verde', 'cinquenta', 'kennedy'];
 
+  // ============================================================
+  // ESTADO
+  // ============================================================
   const selecionados = new Map();
-  let preferencias = {};
+  const CHAVE_LOCALSTORAGE = 'seubairro_enviado_'; // + telefone
 
+  // ============================================================
+  // 1. LÊ O TELEFONE DA URL
+  // ============================================================
+  const params = new URLSearchParams(window.location.search);
+  const TEL_URL = (params.get('tel') || '').replace(/\D/g, '');
+
+  function validarAcesso(){
+    if(!TEL_URL || TEL_URL.length < 10){
+      document.getElementById('tela-erro').style.display = 'flex';
+      return false;
+    }
+    if(localStorage.getItem(CHAVE_LOCALSTORAGE + TEL_URL)){
+      document.getElementById('tela-enviado').style.display = 'flex';
+      return false;
+    }
+    document.getElementById('pagina-mapa').style.display = 'flex';
+    return true;
+  }
+  if(!validarAcesso()) { /* para aqui */ }
+
+  // Elementos
   const listaEl = document.getElementById('lista-nomes');
   const btnContinuar = document.getElementById('btn-continuar');
   const toastEl = document.getElementById('toast');
   const paginaMapa = document.getElementById('pagina-mapa');
   const paginaForm = document.getElementById('pagina-form');
 
-  // MAPA
-  const map = L.map('map', {
-    zoomControl: false, attributionControl: false, doubleClickZoom: false
-  }).setView([-19.9400, -43.9450], 12);
+  // ============================================================
+  // 2. MAPA + CENTRALIZAR
+  // ============================================================
+  const POSICAO_INICIAL = { lat: -19.9400, lng: -43.9450, zoom: 12 };
+  const map = L.map('map', { zoomControl: false, attributionControl: false, doubleClickZoom: false })
+    .setView([POSICAO_INICIAL.lat, POSICAO_INICIAL.lng], POSICAO_INICIAL.zoom);
+
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
   L.control.zoom({ position: 'bottomright' }).addTo(map);
 
+  // Botão Centralizar
+  document.getElementById('btn-centralizar').addEventListener('click', () => {
+    map.setView([POSICAO_INICIAL.lat, POSICAO_INICIAL.lng], POSICAO_INICIAL.zoom, { animate: true });
+    toast('Mapa centralizado');
+  });
+
+  // Toast
   let toastTimer;
-  function toast(msg, duracao = 2200) {
+  function toast(msg, duracao = 2200){
     toastEl.textContent = msg;
     toastEl.classList.add('visivel');
     clearTimeout(toastTimer);
     toastTimer = setTimeout(() => toastEl.classList.remove('visivel'), duracao);
   }
 
-  function criarIconeSelecionado() {
+  // Ícone verde
+  function criarIconeVerde(){
     return L.divIcon({
       className: 'pino-selecionado',
       html: `<svg width="30" height="40" viewBox="0 0 30 40" xmlns="http://www.w3.org/2000/svg">
@@ -548,28 +526,34 @@
       iconSize: [30, 40], iconAnchor: [15, 40]
     });
   }
-  const iconeVerde = criarIconeSelecionado();
+  const iconeVerde = criarIconeVerde();
 
+  // ============================================================
+  // 3. GEOCODING REVERSO
+  // ============================================================
   let ultimaRequisicao = 0;
-  async function obterBairro(lat, lng) {
+  async function obterBairro(lat, lng){
     const agora = Date.now();
     const espera = Math.max(0, 1100 - (agora - ultimaRequisicao));
-    if (espera > 0) await new Promise(r => setTimeout(r, espera));
+    if(espera > 0) await new Promise(r => setTimeout(r, espera));
     ultimaRequisicao = Date.now();
     const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}&zoom=16&addressdetails=1&accept-language=pt-BR`;
     try {
       const resp = await fetch(url, { headers: { 'Accept': 'application/json' } });
-      if (!resp.ok) throw new Error('Falha');
+      if(!resp.ok) throw new Error('Falha');
       return await resp.json();
-    } catch (err) { console.error(err); return null; }
+    } catch(err){ console.error(err); return null; }
   }
 
+  // ============================================================
+  // 4. DUPLO TOQUE
+  // ============================================================
   let ultimoToque = { tempo: 0, lat: 0, lng: 0 };
   map.on('click', async (e) => {
     const agora = Date.now();
     const dt = agora - ultimoToque.tempo;
     const dist = map.distance([e.latlng.lat, e.latlng.lng], [ultimoToque.lat, ultimoToque.lng]);
-    if (dt < 400 && dist < 30) {
+    if(dt < 400 && dist < 30){
       ultimoToque.tempo = 0;
       await processarToque(e.latlng);
     } else {
@@ -578,40 +562,46 @@
   });
   map.on('dblclick', async (e) => { await processarToque(e.latlng); });
 
-  async function processarToque(latlng) {
+  async function processarToque(latlng){
     const { lat, lng } = latlng;
-    if (lat < LIMITES_BH.minLat || lat > LIMITES_BH.maxLat ||
-        lng < LIMITES_BH.minLng || lng > LIMITES_BH.maxLng) {
-      toast('Fora da área atendida (BH + Vila da Serra)'); return;
+    if(lat < LIMITES_BH.minLat || lat > LIMITES_BH.maxLat || lng < LIMITES_BH.minLng || lng > LIMITES_BH.maxLng){
+      toast('Fora da área atendida (BH + Vila da Serra)');
+      return;
     }
     toast('Identificando bairro...', 5000);
     const data = await obterBairro(lat, lng);
-    if (!data || !data.address) { toast('Não consegui identificar o bairro aqui'); return; }
+    if(!data || !data.address){ toast('Não consegui identificar o bairro aqui'); return; }
     const end = data.address;
     const bairro = end.suburb || end.neighbourhood || end.city_district || end.town || end.village;
     const cidade = end.city || end.town || end.municipality || '';
-    if (!bairro) { toast('Não consegui identificar o bairro aqui'); return; }
+    if(!bairro){ toast('Não consegui identificar o bairro aqui'); return; }
     const cidadeLower = cidade.toLowerCase();
-    if (cidadeLower.includes('contagem') || cidadeLower.includes('santa luzia') ||
-        cidadeLower.includes('ribeirão das neves') || cidadeLower.includes('betim')) {
-      toast(`Fora da área: ${bairro} (${cidade})`); return;
+    if(cidadeLower.includes('contagem') || cidadeLower.includes('santa luzia') ||
+       cidadeLower.includes('ribeirão das neves') || cidadeLower.includes('betim')){
+      toast(`Fora da área: ${bairro} (${cidade})`);
+      return;
     }
     const bairroLower = bairro.toLowerCase();
-    if (BAIRROS_BLOQUEADOS.some(b => bairroLower.includes(b))) {
-      toast(`Bairro não atendido: ${bairro}`); return;
+    if(BAIRROS_BLOQUEADOS.some(b => bairroLower.includes(b))){
+      toast(`Bairro não atendido: ${bairro}`);
+      return;
     }
     const nomeFinal = cidadeLower.includes('nova lima') ? `${bairro} (Nova Lima)` : bairro;
-    if (selecionados.has(nomeFinal)) { toast(`"${nomeFinal}" já está na lista`); return; }
+    if(selecionados.has(nomeFinal)){ toast(`"${nomeFinal}" já está na lista`); return; }
     const marker = L.marker([lat, lng], { icon: iconeVerde, interactive: false }).addTo(map);
     selecionados.set(nomeFinal, { lat, lng, marker });
     atualizarRodape();
     toast(`✓ ${nomeFinal} adicionado`);
   }
 
-  function atualizarRodape() {
-    if (selecionados.size === 0) {
+  // ============================================================
+  // 5. RODAPÉ
+  // ============================================================
+  function atualizarRodape(){
+    if(selecionados.size === 0){
       listaEl.innerHTML = '<span class="vazio">Nenhum bairro selecionado ainda.</span>';
-      btnContinuar.disabled = true; return;
+      btnContinuar.disabled = true;
+      return;
     }
     listaEl.innerHTML = '';
     selecionados.forEach((dados, nome) => {
@@ -628,108 +618,121 @@
     });
     btnContinuar.disabled = false;
   }
-
-  function removerBairro(nome) {
+  function removerBairro(nome){
     const dados = selecionados.get(nome);
-    if (!dados) return;
+    if(!dados) return;
     map.removeLayer(dados.marker);
     selecionados.delete(nome);
     atualizarRodape();
     toast(`"${nome}" removido`);
   }
 
-  // MODAIS
+  // ============================================================
+  // 6. MODAIS
+  // ============================================================
   const overlayInstr = document.getElementById('modal-overlay');
   const btnEntendi = document.getElementById('btn-entendi');
   const btnInfo = document.getElementById('btn-info');
-  function abrirInstr() { overlayInstr.classList.add('ativo'); }
-  function fecharInstr() { overlayInstr.classList.remove('ativo'); }
+  function abrirInstr(){ overlayInstr.classList.add('ativo'); }
+  function fecharInstr(){ overlayInstr.classList.remove('ativo'); }
   btnEntendi.addEventListener('click', fecharInstr);
   btnInfo.addEventListener('click', abrirInstr);
-  overlayInstr.addEventListener('click', (e) => { if (e.target === overlayInstr) fecharInstr(); });
+  overlayInstr.addEventListener('click', (e) => { if(e.target === overlayInstr) fecharInstr(); });
   window.addEventListener('load', () => setTimeout(abrirInstr, 300));
 
   const overlayAviso = document.getElementById('modal-aviso');
   const avisoTitulo = document.getElementById('aviso-titulo');
   const btnAvisoContinuar = document.getElementById('btn-aviso-continuar');
   const btnAvisoMais = document.getElementById('btn-aviso-mais');
-  function abrirAviso(qtd) {
+  function abrirAviso(qtd){
     avisoTitulo.textContent = `Você escolheu ${qtd} ${qtd === 1 ? 'bairro' : 'bairros'}`;
     overlayAviso.classList.add('ativo');
   }
-  function fecharAviso() { overlayAviso.classList.remove('ativo'); }
+  function fecharAviso(){ overlayAviso.classList.remove('ativo'); }
   btnAvisoContinuar.addEventListener('click', () => { fecharAviso(); irParaFormulario(); });
   btnAvisoMais.addEventListener('click', fecharAviso);
-  overlayAviso.addEventListener('click', (e) => { if (e.target === overlayAviso) fecharAviso(); });
+  overlayAviso.addEventListener('click', (e) => { if(e.target === overlayAviso) fecharAviso(); });
 
-  // NAVEGAÇÃO
+  // ============================================================
+  // 7. NAVEGAÇÃO
+  // ============================================================
   btnContinuar.addEventListener('click', () => {
     const qtd = selecionados.size;
-    if (qtd === 0) return;
-    if (qtd < 3) abrirAviso(qtd);
+    if(qtd === 0) return;
+    if(qtd < 3) abrirAviso(qtd);
     else irParaFormulario();
   });
-  function irParaFormulario() {
+  function irParaFormulario(){
     paginaMapa.classList.add('oculta');
+    paginaMapa.style.display = 'none';
     paginaForm.classList.remove('oculta');
+    paginaForm.style.display = 'flex';
     document.getElementById('form-body').scrollTop = 0;
+    formEmAndamento = true;
   }
   document.getElementById('btn-voltar').addEventListener('click', () => {
     paginaForm.classList.add('oculta');
+    paginaForm.style.display = 'none';
     paginaMapa.classList.remove('oculta');
+    paginaMapa.style.display = 'flex';
   });
 
-  // CHIPS
+  // ============================================================
+  // 8. CHIPS
+  // ============================================================
   document.querySelectorAll('.chips').forEach(grupo => {
     const multiplo = grupo.dataset.multiplo === 'true';
     grupo.querySelectorAll('.chip').forEach(chip => {
       chip.addEventListener('click', () => {
-        if (multiplo) chip.classList.toggle('marcado');
+        if(multiplo) chip.classList.toggle('marcado');
         else {
           grupo.querySelectorAll('.chip').forEach(c => c.classList.remove('marcado'));
           chip.classList.add('marcado');
         }
-        const grupoNome = grupo.dataset.grupo;
-        const erro = document.querySelector(`[data-erro="${grupoNome}"]`);
-        if (erro) erro.classList.remove('visivel');
+        const erro = document.querySelector(`[data-erro="${grupo.dataset.grupo}"]`);
+        if(erro) erro.classList.remove('visivel');
       });
     });
   });
 
-  // METRAGEM
+  // ============================================================
+  // 9. METRAGEM
+  // ============================================================
   const inputMetragem = document.getElementById('input-metragem');
   inputMetragem.addEventListener('input', () => {
     inputMetragem.value = inputMetragem.value.replace(/\D/g, '');
     document.querySelector('[data-erro="metragem"]').classList.remove('visivel');
   });
 
-  // VALOR + EXTENSO
+  // ============================================================
+  // 10. VALOR + EXTENSO
+  // ============================================================
   const inputValor = document.getElementById('input-valor');
   const valorExtenso = document.getElementById('valor-extenso');
-  function formatarReais(numero) {
-    if (!numero) return '';
+  function formatarReais(numero){
+    if(!numero) return '';
     return numero.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', minimumFractionDigits: 0, maximumFractionDigits: 0 });
   }
-  function numeroPorExtenso(numero) {
-    if (!numero || numero === 0) return '';
+  function numeroPorExtenso(numero){
+    if(!numero || numero === 0) return '';
     const unidades = ['', 'um', 'dois', 'três', 'quatro', 'cinco', 'seis', 'sete', 'oito', 'nove'];
     const especiais = ['dez', 'onze', 'doze', 'treze', 'quatorze', 'quinze', 'dezesseis', 'dezessete', 'dezoito', 'dezenove'];
     const dezenas = ['', '', 'vinte', 'trinta', 'quarenta', 'cinquenta', 'sessenta', 'setenta', 'oitenta', 'noventa'];
     const centenas = ['', 'cento', 'duzentos', 'trezentos', 'quatrocentos', 'quinhentos', 'seiscentos', 'setecentos', 'oitocentos', 'novecentos'];
-    function grupo3(n) {
+    function grupo3(n){
       let s = '';
       const c = Math.floor(n / 100);
       const d = Math.floor((n % 100) / 10);
       const u = n % 10;
-      if (n === 100) return 'cem';
-      if (c > 0) s += centenas[c];
-      if (d > 0) {
-        if (s) s += ' e ';
-        if (d === 1 && u > 0) { s += especiais[u]; return s; }
+      if(n === 100) return 'cem';
+      if(c > 0) s += centenas[c];
+      if(d > 0){
+        if(s) s += ' e ';
+        if(d === 1 && u > 0){ s += especiais[u]; return s; }
         s += dezenas[d];
-        if (u > 0) s += ' e ' + unidades[u];
-      } else if (u > 0) {
-        if (s) s += ' e ';
+        if(u > 0) s += ' e ' + unidades[u];
+      } else if(u > 0){
+        if(s) s += ' e ';
         s += unidades[u];
       }
       return s;
@@ -738,84 +741,228 @@
     const milhares = Math.floor((numero % 1000000) / 1000);
     const resto = numero % 1000;
     const partes = [];
-    if (milhoes > 0) partes.push(grupo3(milhoes) + (milhoes === 1 ? ' milhão' : ' milhões'));
-    if (milhares > 0) partes.push(grupo3(milhares) + (milhares === 1 ? ' mil' : ' mil'));
-    if (resto > 0) partes.push(grupo3(resto));
-    if (partes.length === 0) return '';
-    let texto = partes.join(' e ');
-    return texto + (numero === 1 ? ' real' : ' reais');
+    if(milhoes > 0) partes.push(grupo3(milhoes) + (milhoes === 1 ? ' milhão' : ' milhões'));
+    if(milhares > 0) partes.push(grupo3(milhares) + (milhares === 1 ? ' mil' : ' mil'));
+    if(resto > 0) partes.push(grupo3(resto));
+    if(partes.length === 0) return '';
+    return partes.join(' e ') + (numero === 1 ? ' real' : ' reais');
   }
   inputValor.addEventListener('input', (e) => {
     let v = e.target.value.replace(/\D/g, '');
-    if (!v) { inputValor.value = ''; valorExtenso.textContent = ''; return; }
+    if(!v){ inputValor.value = ''; valorExtenso.textContent = ''; return; }
     const numero = parseInt(v, 10);
     inputValor.value = formatarReais(numero);
     valorExtenso.textContent = numeroPorExtenso(numero);
     document.querySelector('[data-erro="valor"]').classList.remove('visivel');
   });
 
-  // VALIDAÇÃO
-  function obterSelecaoGrupo(nome) {
+  // ============================================================
+  // 11. VALIDAÇÃO
+  // ============================================================
+  function obterSelecaoGrupo(nome){
     const grupo = document.querySelector(`[data-grupo="${nome}"]`);
-    if (!grupo) return null;
+    if(!grupo) return null;
     const marcados = Array.from(grupo.querySelectorAll('.chip.marcado')).map(c => c.dataset.valor);
-    if (grupo.dataset.multiplo === 'true') return marcados;
+    if(grupo.dataset.multiplo === 'true') return marcados;
     return marcados[0] || null;
   }
-  function validarFormulario() {
+  function validarFormulario(){
     const erros = [];
     const tipos = obterSelecaoGrupo('tipos');
-    if (!tipos || tipos.length === 0) {
+    if(!tipos || tipos.length === 0){
       erros.push('tipos');
       document.querySelector('[data-erro="tipos"]').classList.add('visivel');
     }
     const metragem = inputMetragem.value.trim();
-    if (!metragem || parseInt(metragem) === 0) {
+    if(!metragem || parseInt(metragem) === 0){
       erros.push('metragem');
       document.querySelector('[data-erro="metragem"]').classList.add('visivel');
       inputMetragem.classList.add('erro');
     } else { inputMetragem.classList.remove('erro'); }
     const valor = inputValor.value.trim();
-    if (!valor || valor === 'R$ 0') {
+    if(!valor || valor === 'R$ 0'){
       erros.push('valor');
       document.querySelector('[data-erro="valor"]').classList.add('visivel');
       inputValor.classList.add('erro');
     } else { inputValor.classList.remove('erro'); }
     const pagamento = obterSelecaoGrupo('pagamento');
-    if (!pagamento) {
+    if(!pagamento){
       erros.push('pagamento');
       document.querySelector('[data-erro="pagamento"]').classList.add('visivel');
     }
     return erros;
   }
 
-  document.getElementById('btn-enviar').addEventListener('click', () => {
+  // ============================================================
+  // 12. MONTA O PAYLOAD COMPATÍVEL COM O APPSCRIPT
+  // ============================================================
+  function montarPayload(){
+    // Bairros
+    const bairrosArr = Array.from(selecionados.keys());
+
+    // Grupos
+    const quartos = obterSelecaoGrupo('quartos');
+    const suite   = obterSelecaoGrupo('suite');
+    const vagas   = obterSelecaoGrupo('vagas');
+    const elevador = obterSelecaoGrupo('elevador');
+    const escadas = obterSelecaoGrupo('escadas');
+    const condominio = obterSelecaoGrupo('condominio');
+    const pagamento = obterSelecaoGrupo('pagamento');
+    const tipos = obterSelecaoGrupo('tipos') || [];
+    const metragem = inputMetragem.value.trim();
+    const precoMax = inputValor.value.replace(/\D/g, '');
+    const obs = document.getElementById('input-obs').value.trim();
+
+    // Condomínio (número)
+    let condMax = '';
+    if(condominio && condominio.startsWith('Até R$')){
+      condMax = condominio.replace(/\D/g, '');
+    }
+
+    // Quartos (número ou 'tanto faz')
+    let quartosNum = '';
+    if(quartos && quartos !== 'Tanto faz') quartosNum = quartos.replace(/\D/g, '');
+
+    // Suítes
+    let suitesNum = '';
+    if(suite === 'Sim') suitesNum = '1';
+
+    // Vagas
+    let vagasNum = '';
+    if(vagas && vagas !== 'Tanto faz') vagasNum = vagas.replace(/\D/g, '');
+
+    // Acessibilidade
+    let acessibilidade = 'tanto faz';
+    if(escadas === 'Não pode ter escada') acessibilidade = 'sim';
+    else if(escadas === 'Pode ter escada') acessibilidade = 'nao';
+
+    // Elevador
+    let elevadorVal = 'tanto faz';
+    if(elevador === 'Sim') elevadorVal = 'sim';
+    else if(elevador === 'Não') elevadorVal = 'nao';
+
+    // Tipo principal + extras
+    let tipoParaAPI = 'tanto faz';
+    let tiposExtras = '';
+    if(tipos.length === 1){
+      tipoParaAPI = tipos[0].toLowerCase();
+    } else if(tipos.length > 1){
+      tipoParaAPI = tipos[0].toLowerCase();
+      tiposExtras = tipos.slice(1).join(', ');
+    }
+
+    // Monta `outros` com prefixos que o HTML A sabe ler
+    function timestampAgora(){
+      const d = new Date();
+      const dia = String(d.getDate()).padStart(2, '0');
+      const mes = String(d.getMonth() + 1).padStart(2, '0');
+      const ano = String(d.getFullYear()).slice(-2);
+      const h = String(d.getHours()).padStart(2, '0');
+      const m = String(d.getMinutes()).padStart(2, '0');
+      return `${dia}/${mes}/${ano} ${h}:${m}hs`;
+    }
+    const linhas = [timestampAgora()];
+
+    if(metragem) linhas.push(`📐 Área: ${metragem}m²`);
+
+    // Aquisição
+    if(pagamento === 'À vista'){
+      linhas.push('💰 Aquisição: Recursos próprios (à vista)');
+    } else if(pagamento === 'Financiado'){
+      linhas.push('💰 Aquisição: Financiado');
+    } else if(pagamento === 'Parte à vista e parte financiado'){
+      linhas.push('💰 Aquisição: Parte à vista + Financiado');
+    } else if(pagamento === 'Tenho que vender meu imóvel primeiro'){
+      linhas.push('💰 Aquisição: Precisa vender imóvel primeiro');
+    }
+
+    // Sem escada
+    if(escadas === 'Não pode ter escada'){
+      linhas.push('🚫 Sem escada: Sim (obrigatório)');
+    }
+
+    // Observações
+    if(obs) linhas.push(`📝 ${obs}`);
+
+    // Tipos extras
+    if(tiposExtras){
+      linhas.push(`🏠 Também busca: ${tiposExtras} (também ${tipoParaAPI})`);
+    }
+
+    return {
+      senha: SENHA_ADMIN,
+      telefone: TEL_URL,
+      bairros: bairrosArr,
+      precoMin: '',
+      precoMax: precoMax,
+      condMin: '',
+      condMax: condMax,
+      quartos: quartosNum,
+      suites: suitesNum,
+      vagas: vagasNum,
+      acessibilidade: acessibilidade,
+      elevador: elevadorVal,
+      tipo: tipoParaAPI,
+      outros: linhas.join('\n')
+    };
+  }
+
+  // ============================================================
+  // 13. ENVIO
+  // ============================================================
+  let formEmAndamento = false;
+
+  document.getElementById('btn-enviar').addEventListener('click', async () => {
     const erros = validarFormulario();
-    if (erros.length > 0) {
+    if(erros.length > 0){
       const primeiro = document.querySelector(`[data-erro="${erros[0]}"]`);
-      if (primeiro) primeiro.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      if(primeiro) primeiro.scrollIntoView({ behavior: 'smooth', block: 'center' });
       return;
     }
-    preferencias = {
-      bairros: Array.from(selecionados.keys()),
-      tipos: obterSelecaoGrupo('tipos'),
-      quartos: obterSelecaoGrupo('quartos'),
-      suite: obterSelecaoGrupo('suite'),
-      vagas: obterSelecaoGrupo('vagas'),
-      metragemMinima: parseInt(inputMetragem.value, 10),
-      elevador: obterSelecaoGrupo('elevador'),
-      escadas: obterSelecaoGrupo('escadas'),
-      condominio: obterSelecaoGrupo('condominio'),
-      valorMaximo: inputValor.value,
-      formaPagamento: obterSelecaoGrupo('pagamento'),
-      observacoes: document.getElementById('input-obs').value.trim()
-    };
-    const resumo = JSON.stringify(preferencias, null, 2);
-    alert('Preferências coletadas:\n\n' + resumo + '\n\n👉 Próximo passo: integrar com WhatsApp/planilha.');
-    console.log('Preferências completas:', preferencias);
+
+    const btn = document.getElementById('btn-enviar');
+    btn.disabled = true;
+    btn.textContent = 'Enviando...';
+
+    const payload = montarPayload();
+    const qs = new URLSearchParams({ action: 'salvarPreferenciasCliente' }).toString();
+    const url = API_URL + '?' + qs;
+
+    try {
+      const resp = await fetch(url, {
+        method: 'POST',
+        mode: 'cors',
+        redirect: 'follow',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload)
+      });
+      const data = await resp.json();
+      if(!data || data.ok === false){
+        throw new Error((data && data.error) || 'Erro ao salvar');
+      }
+      // Sucesso
+      localStorage.setItem(CHAVE_LOCALSTORAGE + TEL_URL, '1');
+      formEmAndamento = false;
+      document.getElementById('pagina-form').style.display = 'none';
+      document.getElementById('tela-enviado').style.display = 'flex';
+    } catch(err){
+      console.error(err);
+      btn.disabled = false;
+      btn.textContent = 'Enviar preferências';
+      alert('Não foi possível enviar. Verifique sua conexão e tente novamente.');
+    }
   });
 
-  atualizarRodape();
+  // ============================================================
+  // 14. beforeunload — evita perder dados sem querer
+  // ============================================================
+  window.addEventListener('beforeunload', (e) => {
+    if(formEmAndamento || selecionados.size > 0){
+      e.preventDefault();
+      e.returnValue = 'Você tem informações não enviadas. Se atualizar agora, vai perder tudo. Deseja sair mesmo assim?';
+      return e.returnValue;
+    }
+  });
 </script>
 </body>
 </html>
