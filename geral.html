@@ -31,7 +31,7 @@
     --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
     
     --card-img-size: 110px;
-    --card-fixed-height: 350px;
+    --card-fixed-height: 370px; /* Aumentado levemente para caber a faixa de tipo */
     --block-fixed-height: 65px;
   }
   html, body { height: 100%; overflow-x: hidden; }
@@ -254,12 +254,26 @@
   .btn-match-card .ico{ stroke: #fff; }
 
   .card-main{ display: flex; gap: 0; min-height: 0; flex: 1; overflow: hidden; }
+  
+  /* Wrapper da imagem + faixa de tipo */
+  .card-img-col {
+    width: var(--card-img-size); flex-shrink: 0; display: flex; flex-direction: column;
+    background: var(--bg-alt);
+  }
   .card-img-wrap{
-    width: var(--card-img-size); height: var(--card-img-size); flex-shrink: 0; overflow: hidden;
-    background: var(--bg-alt); position: relative; border-radius: 0;
+    width: 100%; height: var(--card-img-size); overflow: hidden; position: relative; flex-shrink: 0;
   }
   .card-img{ width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .3s ease; cursor: pointer; }
   .card:hover .card-img{ transform: scale(1.04); }
+
+  /* FAIXA DE TIPO (ROXO ESCURO) */
+  .card-tipo-faixa {
+    width: 100%; height: 24px; background: var(--purple); color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.58rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;
+    text-align: center; line-height: 1; padding: 0 4px; overflow: hidden;
+  }
+  .card-tipo-faixa.hidden { visibility: hidden; } /* Ocupa espaço mas não mostra nada */
 
   .card-body{ padding: 6px 10px; flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; overflow: hidden; }
   .card-title{
@@ -349,7 +363,9 @@
   }
   .grid[data-cols="lista"] .card-match-row{ position: absolute; top: 8px; right: 8px; width: 160px; padding: 0; order: 0; z-index: 10; }
   .grid[data-cols="lista"] .card-main{ flex-direction: row; align-items: flex-start; gap: 12px; }
+  .grid[data-cols="lista"] .card-img-col{ width: 140px; }
   .grid[data-cols="lista"] .card-img-wrap{ width: 140px; height: 140px; border-radius: var(--radius-sm); }
+  .grid[data-cols="lista"] .card-tipo-faixa { border-radius: 0 0 var(--radius-sm) var(--radius-sm); }
   .grid[data-cols="lista"] .card-body{ padding: 0; }
   .grid[data-cols="lista"] .card-block{ height: auto; min-height: 40px; max-height: 60px; margin: 4px 0; }
   .grid[data-cols="lista"] .card-block.expandido{ position: relative; top: 0; left: 0; right: 0; }
@@ -794,7 +810,7 @@
     <div class="form-row-link-price">
       <div><label>Link do anúncio</label><input type="url" id="adLink" onblur="onLinkBlur()" oninput="onLinkImovelChanged()" placeholder="https://..."></div>
       <div><label>Preço</label><input type="text" id="adPreco" inputmode="numeric" oninput="mascaraPreco(this); validarBotaoSalvar()"></div>
-      <div><label>Condomínio</label><input type="text" id="adCondominio" inputmode="numeric" oninput="mascaraPreco(this)"></div>
+      <div><label>Condomínio</label><input type="text" id="adCondominio" inputmode="numeric" oninput="mascaraPreco(this); validarBotaoSalvar()"></div>
       <div><label>IPTU</label><input type="text" id="adIPTU" inputmode="numeric" oninput="mascaraPreco(this)"></div>
       <div>
         <button type="button" class="btn-buscar-entrada-inline" id="btnBuscarEntrada" onclick="abrirBuscarEntradaForm()" disabled title="Buscar entrada no QuintoAndar">
@@ -807,8 +823,8 @@
     <div class="form-row-address">
       <div><label>Rua <span class="req">*</span></label><input type="text" id="adRua" oninput="validarBotaoSalvar()"></div>
       <div><label>Número <span class="req">*</span></label><input type="text" id="adNumero" oninput="validarBotaoSalvar()"></div>
-      <div><label>Bloco</label><input type="text" id="adBloco" maxlength="10" oninput="onBlocoInput(this)"></div>
-      <div><label>Apartamento <span class="req" id="reqApto">*</span></label><input type="text" id="adApto" maxlength="10" oninput="onAptoInput(this)"></div>
+      <div><label>Bloco</label><input type="text" id="adBloco" maxlength="10" oninput="onBlocoInput(this); validarBotaoSalvar()"></div>
+      <div><label>Apartamento <span class="req" id="reqApto">*</span></label><input type="text" id="adApto" maxlength="10" oninput="onAptoInput(this); validarBotaoSalvar()"></div>
     </div>
 
     <div class="form-row-bairro-tipo">
@@ -844,7 +860,7 @@
       </div>
       <div>
         <label>Tipo <span class="req">*</span></label>
-        <select id="adTipo" onchange="onTipoChange(this)">
+        <select id="adTipo" onchange="onTipoChange(this); validarBotaoSalvar()">
           <option value="">—</option>
           <option value="Apartamento Padrão">Apartamento Padrão</option>
           <option value="Cobertura">Cobertura</option>
@@ -1197,13 +1213,30 @@ function atualizarBadgesClientes(){
 function temInformacaoFaltando(im) {
   if (isVendido(im)) return false;
   const faltas = [];
+  
   if (!String(im.rua || '').trim()) faltas.push('Rua');
   if (!String(im.numero || '').trim()) faltas.push('Número');
   if (!String(im.bairro || '').trim()) faltas.push('Bairro');
   if (!String(im.preco || '').trim()) faltas.push('Preço');
+  if (!String(im.condominio || '').trim()) faltas.push('Condomínio');
   if (!String(im.imagem || '').trim()) faltas.push('Imagem');
+  if (!String(im.descricao || '').trim()) faltas.push('Descrição');
+  
   const info = extrairAptoBlocoChave(im.chaveTexto || '');
   if (!info.apto && !info.bloco && !String(im.chaveTexto||'').trim()) faltas.push('Chave');
+  
+  const v = String(im.vaga || '').trim();
+  if (!v) faltas.push('Vaga');
+  
+  const e = String(im.elevador || '').trim();
+  if (!e) faltas.push('Elevador');
+  
+  const t = extrairTipoImovel(im.descricao);
+  if (!t) faltas.push('Tipo');
+  
+  const s = String(im.suites || '').trim();
+  if (!s) faltas.push('Suítes');
+  
   return faltas;
 }
 
@@ -1534,11 +1567,25 @@ function cardHTML(im){
       <button class="adm-btn btn-clonar" onclick="abrirClonar('${id}')"><svg class="ico ico-sm" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Clonar</button>
     </div>`;
 
+  const tipo = extrairTipoImovel(im.descricao || '');
+  const mostrarFaixa = tipo && tipo !== 'Apartamento Padrão';
+  const faixaTipoHtml = `
+    <div class="card-tipo-faixa ${mostrarFaixa ? '' : 'hidden'}" title="Tipo de imóvel">
+      ${mostrarFaixa ? esc(tipo) : '&nbsp;'}
+    </div>
+  `;
+
   return `
     <div class="card${vendido ? ' card-vendido' : ''}" data-id="${id}" data-codigo="${esc(codigo)}">
       ${statusStripHtml}${alertaFaltaHtml}${matchBtnHtml}
       <div class="card-main">
-        <div class="card-img-wrap"><img class="card-img" src="${esc(img)}" ${imgClickAttr} onerror="this.src='https://via.placeholder.com/300x300/e2e8f0/64748b?text=Sem+imagem'">${tarjaVendidoHtml}</div>
+        <div class="card-img-col">
+          <div class="card-img-wrap">
+            <img class="card-img" src="${esc(img)}" ${imgClickAttr} onerror="this.src='https://via.placeholder.com/300x300/e2e8f0/64748b?text=Sem+imagem'">
+            ${tarjaVendidoHtml}
+          </div>
+          ${faixaTipoHtml}
+        </div>
         <div class="card-body">
           <div class="card-title" title="${esc(im.titulo || 'Sem endereço')}">${esc(im.titulo) || 'Sem endereço'}</div>
           ${codeActionsHtml}
