@@ -353,7 +353,6 @@
   .card-admin-actions .adm-btn.btn-vendido.desmarcar{ color: #15803d; border-color: #86efac; }
   .card-admin-actions .adm-btn.btn-clonar{ color: var(--purple); border-color: #ddd6fe; }
 
-  /* Modo Lista */
   .grid[data-cols="lista"] .card{ height: auto; min-height: 160px; max-height: none; flex-direction: row; padding: 10px; }
   .grid[data-cols="lista"] .card-match-row{ position: absolute; top: 10px; right: 10px; width: 180px; padding: 0; order: 0; z-index: 10; }
   .grid[data-cols="lista"] .card-main{ flex-direction: row; align-items: flex-start; gap: 14px; }
@@ -364,7 +363,6 @@
   .grid[data-cols="lista"] .card-block.expandido{ position: relative; top: 0; left: 0; right: 0; }
   .grid[data-cols="lista"] .card-admin-actions{ position: absolute; bottom: 10px; right: 10px; width: 320px; padding: 0; }
 
-  /* ===== MODAIS ===== */
   .modal-backdrop{ position: fixed; inset: 0; background: rgba(15,23,42,.6); z-index: 1000; display: none; align-items: center; justify-content: center; padding: 16px; backdrop-filter: blur(4px); overflow-y: auto; }
   .modal-backdrop.show{ display: flex; }
   .modal{ background: #fff; border-radius: var(--radius-lg); max-width: 750px; width: 100%; max-height: 92vh; overflow: auto; padding: 24px; position: relative; box-shadow: var(--shadow-lg); animation: fadeUp 0.25s ease; }
@@ -827,10 +825,19 @@
   <div class="admin-panel-inner">
     <input type="hidden" id="editingId">
 
-    <div style="margin-bottom: 10px;">
+    <!-- CAMPO DE CLIENTE - SÓ APARECE EM NOVO IMÓVEL -->
+    <div id="clienteFieldWrap" style="margin-bottom: 10px;">
       <label>Cliente dono <span style="font-weight:500; color:var(--muted); font-size:.7rem;">(opcional — pode deixar em branco)</span></label>
       <input type="text" id="adCliente" list="listaClientesDatalist" placeholder="Nome ou telefone..." autocomplete="off" oninput="validarBotaoSalvar()">
       <datalist id="listaClientesDatalist"></datalist>
+    </div>
+
+    <!-- AVISO AO EDITAR -->
+    <div id="editAviso" class="hidden" style="margin-bottom: 10px; padding: 10px 12px; background: #fef9ec; border: 1px solid #fde68a; border-radius: 6px; font-size: .8rem; color: #78350f; display: flex; align-items: center; gap: 8px;">
+      <svg style="width: 18px; height: 18px; flex-shrink: 0;" viewBox="0 0 24 24" fill="none" stroke="#b45309" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+      </svg>
+      <span>Editando em massa: todos os clientes que têm este imóvel serão atualizados. O vínculo é preservado.</span>
     </div>
 
     <div class="form-row-link-price">
@@ -1010,7 +1017,8 @@ const state = {
   },
   _lazyMatchIndex: 0,
   _matchEmAndamento: false,
-  _matchHashAtual: ''
+  _matchHashAtual: '',
+  _editandoCodigoAtual: ''
 };
 
 const $ = id => document.getElementById(id);
@@ -1223,6 +1231,11 @@ function atualizarBadgesClientes(){
   });
 }
 
+/* =========================================================
+   LÓGICA DE INFORMAÇÃO FALTANDO
+   BLOCO NÃO É OBRIGATÓRIO
+   APARTAMENTO NÃO É OBRIGATÓRIO SE FOR CASA
+   ========================================================= */
 function temInformacaoFaltando(im) {
   if (isVendido(im)) return [];
   const faltas = [];
@@ -1243,10 +1256,10 @@ function temInformacaoFaltando(im) {
   const tipo = extrairTipoImovel(im.descricao || '');
   const infoChave = extrairAptoBlocoChave(im.chaveTexto || '');
   
-  // Apartamento não é obrigatório se for Casa
+  // Apartamento NÃO é obrigatório se for Casa
   if (tipo !== 'Casa' && !infoChave.apto) faltas.push('Apartamento');
   
-  // Bloco NÃO É OBRIGATÓRIO (removido)
+  // Bloco NÃO é obrigatório
   
   if (!String(im.chaveTexto || '').trim()) faltas.push('Chave');
   
@@ -1893,7 +1906,11 @@ function abrirClonar(id){ toast('A clonagem em lote está na vitrine principal.'
 
 function abrirPainelNovoImovel(){
   limparForm(); $('adCliente').value = ''; $('adminPanelTitle').textContent = 'Adicionar imóvel';
-  $('btnSalvarImovel').innerHTML = 'Salvar no catálogo'; $('adminPanel').classList.add('show'); setTimeout(() => $('adLink').focus(), 300);
+  $('btnSalvarImovel').innerHTML = 'Salvar no catálogo';
+  $('clienteFieldWrap').classList.remove('hidden');
+  $('editAviso').classList.add('hidden');
+  state._editandoCodigoAtual = '';
+  $('adminPanel').classList.add('show'); setTimeout(() => $('adLink').focus(), 300);
 }
 
 function limparForm(){
@@ -1907,7 +1924,13 @@ function fecharPainelImovel(){ $('adminPanel').classList.remove('show'); }
 
 function editarImovel(id){
   const im = state.imoveis.find(x => String(x.id) === String(id)); if(!im) return;
-  limparForm(); $('editingId').value = im.id; $('adCliente').value = im.clienteNome ? `${im.clienteNome} - ${fmtTel(im.telefone)}` : '';
+  limparForm(); $('editingId').value = im.id;
+  state._editandoCodigoAtual = String(im.codigo || '').trim();
+  
+  // ESCONDE O CAMPO DE CLIENTE AO EDITAR (evita desvincular)
+  $('clienteFieldWrap').classList.add('hidden');
+  $('editAviso').classList.remove('hidden');
+  
   $('adLink').value = im.link || ''; $('adRua').value = im.rua || ''; $('adNumero').value = im.numero || ''; $('adBairro').value = im.bairro || ''; $('adPreco').value = im.preco || ''; $('adCondominio').value = im.condominio || ''; $('adIPTU').value = im.iptu || '';
   const info = extrairAptoBlocoChave(im.chaveTexto || ''); $('adApto').value = info.apto || ''; $('adBloco').value = info.bloco || ''; $('adChaveComplemento').value = info.resto || '';
   if($('adVaga')) $('adVaga').value = String(im.vaga || '').trim(); if($('adElevador')) $('adElevador').value = String(im.elevador || '').trim(); if($('adSuites')) $('adSuites').value = String(im.suites || '0');
@@ -1978,10 +2001,15 @@ async function salvarImovel(){
   if(!tipo){ toast('Escolha o tipo', 'error'); return; }
   const descricaoLimpa = descricaoSemTipo($('adDescricao').value), descricaoFinal = `*${tipo}* ` + descricaoLimpa;
   const chaveFinal = montarChaveTexto($('adApto').value, $('adBloco').value, $('adChaveComplemento').value);
-  const clienteStr = $('adCliente').value; let tel = '';
-  if(clienteStr){
-    const dlOption = Array.from(document.querySelectorAll('#listaClientesDatalist option')).find(o => o.value === clienteStr);
-    if(dlOption) tel = dlOption.dataset.tel; else tel = normalizaTel(clienteStr);
+  
+  // ⚠️ SÓ PEGA O TELEFONE SE NÃO ESTIVER EDITANDO (evita desvincular)
+  let tel = '';
+  if (!editandoId) {
+    const clienteStr = $('adCliente').value;
+    if(clienteStr){
+      const dlOption = Array.from(document.querySelectorAll('#listaClientesDatalist option')).find(o => o.value === clienteStr);
+      if(dlOption) tel = dlOption.dataset.tel; else tel = normalizaTel(clienteStr);
+    }
   }
   
   const corretorSelecionado = state.corretores[0]?.nome || '';
@@ -1995,14 +2023,25 @@ async function salvarImovel(){
     vaga: String($('adVaga').value).trim(), elevador: String($('adElevador').value).trim(), suites: String($('adSuites').value)
   };
   
+  // Se estiver editando, remove telefone do payload para o AppScript preservar o original
+  if (editandoId) {
+    delete dados.telefone;
+    // Também remove campos de "novo" que não devem ser reenviados
+    delete dados.status;
+    delete dados.vendido;
+    delete dados.desativado;
+  }
+  
   $('btnSalvarImovel').disabled = true; $('btnSalvarImovel').innerHTML = 'Salvando...';
   
   const res = await api('salvarImovel', dados);
   
   if(res.ok && editandoId){ 
+    // Segunda chamada para atualizar TODAS as linhas com esse código
+    // sem tocar no telefone (vínculo preservado)
     await api('atualizarImovelPorCodigo', { 
       senha: SENHA_ADMIN, 
-      codigo: extrairCodigoDoLink(dados.link), 
+      codigo: state._editandoCodigoAtual || extrairCodigoDoLink(dados.link), 
       preco: dados.preco, 
       condominio: dados.condominio, 
       iptu: dados.iptu, 
@@ -2025,30 +2064,31 @@ async function salvarImovel(){
 }
 
 // =========================================================
-// FUNÇÃO DE TESTE - DIGITE testarSuite("ID_DO_IMOVEL", "2") NO CONSOLE
+// TESTE DE SUÍTE NO CONSOLE
+// Uso: testarSuite("CODIGO_DO_IMOVEL", "2")
 // =========================================================
-window.testarSuite = async function(idImovel, suitesValue) {
-  console.log(`%c[TESTE] Enviando suites="${suitesValue}" para imóvel ID=${idImovel}`, 'color: #7c3aed; font-weight: bold;');
+window.testarSuite = async function(codigo, suitesValue) {
+  if (!codigo) { console.error('❌ Informe o código do imóvel (não o ID)'); return; }
+  console.log(`%c[TESTE SUÍTE] Código=${codigo}, Suíte=${suitesValue}`, 'color: #7c3aed; font-weight: bold; font-size: 14px;');
   
-  const payload = { 
+  const im = state.imoveis.find(x => String(x.codigo || '').trim() === String(codigo));
+  if (!im) { console.error('❌ Imóvel não encontrado no catálogo carregado'); return; }
+  
+  console.log('[TESTE] Imóvel encontrado:', im.titulo);
+  console.log('[TESTE] Suíte atual:', im.suites);
+  
+  const res = await api('atualizarImovelPorCodigo', { 
     senha: SENHA_ADMIN, 
-    id: idImovel, 
+    codigo: codigo, 
     suites: String(suitesValue)
-  };
+  });
   
-  console.log('[TESTE] Payload enviado:', payload);
+  console.log('[TESTE] Resposta do AppScript:', res);
   
-  try {
-    const res = await api('salvarImovel', payload);
-    console.log('%c[TESTE] Resposta do servidor:', 'color: #16a34a; font-weight: bold;', res);
-    
-    if (res.ok) {
-      console.log('%c✅ Salvou com sucesso! Agora verifique a planilha.', 'color: #16a34a; font-size: 14px;');
-    } else {
-      console.error('❌ Erro ao salvar:', res.error);
-    }
-  } catch(e) {
-    console.error('❌ Erro na requisição:', e);
+  if (res.ok) {
+    console.log('%c✅ Sucesso! Recarregue a planilha para verificar.', 'color: #16a34a; font-size: 14px;');
+  } else {
+    console.error('❌ Erro:', res.error);
   }
 };
 
