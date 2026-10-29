@@ -7,7 +7,7 @@
 <meta name="robots" content="noindex, nofollow">
 <title>Catálogo Geral — Lima Ribeiro Imóveis</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23f97316'/><text x='50' y='68' font-family='-apple-system,sans-serif' font-size='42' font-weight='800' fill='white' text-anchor='middle'>GER</text></svg>">
-<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32;800&display=swap" rel="stylesheet">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   :root{
@@ -26,16 +26,14 @@
     --shadow-sm: 0 1px 3px rgba(15,23,42,.10), 0 1px 2px rgba(15,23,42,.06);
     --shadow-md: 0 4px 12px rgba(15,23,42,.10), 0 1px 3px rgba(15,23,42,.06);
     --shadow-lg: 0 12px 32px rgba(15,23,42,.14), 0 2px 6px rgba(15,23,42,.08);
-    --shadow-xl: 0 24px 64px rgba(15,23,42,.35), 0 8px 24px rgba(15,23,42,.20);
     --font: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
     
-    /* Tamanhos fixos para simetria dos cards */
     --card-img-size: 110px;
     --card-fixed-height: 350px;
     --block-fixed-height: 65px;
   }
-  html, body { height: 100%; }
+  html, body { height: 100%; overflow-x: hidden; }
   body{
     font-family: var(--font);
     background: var(--bg); color: var(--text); min-height: 100vh;
@@ -72,6 +70,7 @@
   .brand-title{ font-size: .8rem; font-weight: 700; letter-spacing: .2px; color: #fff; }
   .brand-sub{ font-size: .55rem; opacity: .7; letter-spacing: 1.5px; text-transform: uppercase; margin-top: 2px; }
   .header-right{ display: flex; align-items: center; gap: 6px; flex-shrink: 0; flex-wrap: wrap; }
+  
   .btn-header{
     background: transparent; color: #ddd6fe; border: 1px solid rgba(255,255,255,.15);
     padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: .72rem; font-weight: 600;
@@ -84,6 +83,13 @@
   @keyframes girar{ to{ transform: rotate(360deg); } }
   .btn-header.add{ color: #fde68a; border-color: rgba(251,191,36,.5); background: rgba(251,191,36,.15); }
   .btn-header.add:hover{ background: rgba(251,191,36,.3); color: #fff; border-color: rgba(251,191,36,.8); }
+  
+  .btn-header.filtro-avancado { color: #fff; background: rgba(255,255,255,.1); border-color: rgba(255,255,255,.2); }
+  .btn-header.filtro-avancado:hover { background: rgba(255,255,255,.2); border-color: rgba(255,255,255,.4); }
+  .btn-header.filtro-avancado.tem-filtro { background: #fff; color: #4c1d95; }
+  .btn-header .badge-filtro { background: var(--orange); color: #fff; padding: 1px 5px; border-radius: 10px; font-size: .6rem; display: none; margin-left: 2px; }
+  .btn-header.tem-filtro .badge-filtro { display: inline-block; }
+  
   @media(max-width:900px){ .brand-text{ display: none; } }
   @media(max-width:640px){
     header.app-header{ padding: 6px 8px; }
@@ -100,20 +106,9 @@
     max-width: 1800px; margin: 0 auto; padding: 8px 16px;
     display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
   }
-  .topbar .search-wrap{ flex: 1; min-width: 200px; max-width: 320px; display: flex; gap: 6px; }
-  .topbar .search-wrap input{ padding: 8px 12px; font-size: .84rem; }
+  .topbar .search-wrap{ flex: 1; min-width: 200px; max-width: 320px; }
+  .topbar .search-wrap input{ padding: 8px 12px; font-size: .84rem; width: 100%; border: 1px solid var(--border-strong); border-radius: var(--radius-sm); }
   
-  .btn-avancado{
-    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
-    padding: 8px 12px; border-radius: var(--radius-sm); border: 1px solid var(--border);
-    background: var(--primary-soft); color: var(--primary); cursor: pointer;
-    font-size: .8rem; font-weight: 700; font-family: inherit; transition: all .15s; white-space: nowrap;
-  }
-  .btn-avancado:hover { background: #dde6ee; border-color: var(--primary); }
-  .btn-avancado.tem-filtro { background: var(--primary); color: #fff; border-color: var(--primary); }
-  .btn-avancado .badge-filtro { background: rgba(255,255,255,.3); padding: 1px 6px; border-radius: 10px; font-size: .65rem; display: none; }
-  .btn-avancado.tem-filtro .badge-filtro { display: inline-block; }
-
   .filters-inline{ display: flex; gap: 4px; flex-wrap: wrap; flex-shrink: 0; align-items: center; }
   .filter-btn{
     padding: 6px 10px; border-radius: var(--radius-sm); border: 1px solid var(--border);
@@ -369,21 +364,6 @@
   .filtro-grupo select:focus, .filtro-grupo input:focus { outline: none; border-color: var(--purple); box-shadow: 0 0 0 3px rgba(109,40,217,0.1); }
   .filtros-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
 
-  /* Modal Multi-Select Bairros */
-  .multi-select-wrap { position: relative; width: 100%; }
-  .multi-select-trigger { width: 100%; padding: 10px 12px; border: 1.5px solid var(--border-strong); border-radius: 8px; font-size: 0.86rem; font-family: inherit; background: #fff; color: var(--text); cursor: pointer; display: flex; align-items: center; justify-content: space-between; min-height: 42px; gap: 6px; }
-  .multi-select-trigger .txt-trigger { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--text-soft); }
-  .multi-select-trigger .txt-trigger.tem-valor { color: var(--text); font-weight: 600; }
-  .multi-select-dropdown { display: none; position: absolute; top: calc(100% + 4px); left: 0; right: 0; background: #fff; border: 1.5px solid var(--border-strong); border-radius: 12px; box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15); z-index: 100; max-height: 280px; overflow-y: auto; padding: 6px; }
-  .multi-select-dropdown.aberto { display: block; }
-  .ms-item { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 8px; cursor: pointer; font-size: 0.86rem; font-weight: 500; color: var(--text); }
-  .ms-item:hover { background: var(--purple-soft); }
-  .ms-item input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--purple); cursor: pointer; margin: 0; }
-  .ms-item .qtd-b { margin-left: auto; background: var(--bg-alt); color: var(--text-soft); padding: 2px 8px; border-radius: 999px; font-size: 0.66rem; font-weight: 700; }
-  .ms-acoes-rapidas { display: flex; gap: 6px; padding: 6px 4px 8px; border-bottom: 1px solid var(--border); margin-bottom: 4px; }
-  .ms-acoes-rapidas button { flex: 1; padding: 6px 8px; border: 1px solid var(--border-strong); background: #fff; border-radius: 6px; font-family: inherit; font-size: 0.7rem; font-weight: 700; color: var(--text-soft); cursor: pointer; }
-  .ms-acoes-rapidas button:hover { background: var(--bg-alt); }
-
   /* Slider de Preço */
   .range-preco-wrap { padding: 4px 0 12px; }
   .range-valores { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
@@ -529,6 +509,12 @@
       </div>
     </div>
     <div class="header-right">
+      <!-- Botão de Filtro Avançado (Esquerda do Adicionar) -->
+      <button class="btn-header filtro-avancado" id="btnFiltroAvancadoTop" onclick="abrirModalFiltro()" title="Filtro Avançado">
+        <svg class="ico" viewBox="0 0 24 24"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+        <span class="lbl-txt">Filtros</span>
+        <span class="badge-filtro" id="badgeFiltrosAtivos">0</span>
+      </button>
       <button class="btn-header add" onclick="abrirPainelNovoImovel()" title="Adicionar imóvel">
         <svg class="ico" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         <span class="lbl-txt">Adicionar</span>
@@ -541,9 +527,9 @@
   </div>
 </header>
 
-<div id="loadingView" class="loading-wrap" style="display:flex; justify-content:center; align-items:center; min-height:60vh; color:var(--orange);">
-  <div class="spinner-lg" style="width: 46px; height: 46px; border: 3px solid rgba(249,115,22,.2); border-top-color: var(--orange); border-radius: 50%; animation: girar .8s linear infinite;"></div>
-  <p style="margin-left: 12px; color: var(--text-soft);">Carregando catálogo geral...</p>
+<div id="loadingView" style="display:flex; justify-content:center; align-items:center; min-height:60vh; flex-direction:column; gap:16px; color:var(--orange);">
+  <div style="width: 46px; height: 46px; border: 3px solid rgba(249,115,22,.2); border-top-color: var(--orange); border-radius: 50%; animation: girar .8s linear infinite;"></div>
+  <p style="color: var(--text-soft); font-size: .9rem;">Carregando catálogo geral...</p>
 </div>
 
 <div id="erroView" class="hidden" style="max-width: 480px; margin: 80px auto; text-align: center; padding: 40px 24px; background: #fff; border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); border: 1px solid var(--border);">
@@ -556,11 +542,6 @@
     <div class="topbar-inner">
       <div class="search-wrap">
         <input type="search" id="buscaInput" placeholder="Buscar endereço, código..." oninput="renderizar()">
-        <button class="btn-avancado" id="btnFiltroAvancado" onclick="abrirModalFiltro()">
-          <svg class="ico ico-sm" viewBox="0 0 24 24"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
-          <span>Filtros</span>
-          <span class="badge-filtro" id="badgeFiltrosAtivos">0</span>
-        </button>
       </div>
       
       <div class="filters-inline" id="filters">
@@ -747,7 +728,7 @@
     <!-- Cliente dono (Input Híbrido com Datalist) -->
     <div style="margin-bottom: 10px;">
       <label>Cliente dono <span style="font-weight:500; color:var(--muted); font-size:.7rem;">(opcional — digite para buscar)</span></label>
-      <input type="text" id="adCliente" list="listaClientesDatalist" placeholder="Nome ou telefone..." autocomplete="off" style="width:100%; padding:9px 11px; border:1px solid var(--border-strong); border-radius:var(--radius-sm); font-size:.86rem;">
+      <input type="text" id="adCliente" list="listaClientesDatalist" placeholder="Nome ou telefone..." autocomplete="off">
       <datalist id="listaClientesDatalist">
         <!-- Preenchido via JS -->
       </datalist>
@@ -911,48 +892,29 @@
 <div class="toast" id="toast"></div>
 
 <script>
-/* =====================================================
-   CONFIG
-===================================================== */
 const API_URL = 'https://script.google.com/macros/s/AKfycbzuCjg_5ZJDMWWKmjYp1ThW34iWS0YouviWFdiMGx8W3yApv0F1fdUcjeZdjm0s6Mg/exec';
 const BUSCAR_BASE = 'https://corretor.quintoandar.com.br/informacoes-de-entrada';
 const TIMEOUT_API = 90000;
-
 const urlParams = new URLSearchParams(window.location.search);
 const SENHA_ADMIN = urlParams.get('senha') || '';
-
 const STORAGE_KEY_COLS = 'catalogo_geral_cols';
 
 const state = {
-  imoveis: [],
-  clientes: [],
-  corretores: [],
-  filtroStatus: 'todos',
-  filtroCliente: '',
-  salvando: 0,
-  _linkDebounce: null,
-  _codigoLinkAtual: '',
-  _tipoEscolhido: '',
-  _clientesPorImovel: {}, 
-  _matchesCache: {},
+  imoveis: [], clientes: [], corretores: [],
+  filtroStatus: 'todos', filtroCliente: '',
+  _linkDebounce: null, _codigoLinkAtual: '', _tipoEscolhido: '',
+  _clientesPorImovel: {}, _matchesCache: {},
   _filtrosAvancados: {
     tipos: [], precoMin: null, precoMax: null, quartos: '', suites: '',
-    vagasQtd: '', vagaTipo: '', elevador: '', andares: [], metragem: '', condominioMax: '',
-    ordenacao: 'recentes'
+    vagasQtd: '', vagaTipo: '', elevador: '', andares: [], metragem: '', condominioMax: '', ordenacao: 'recentes'
   }
 };
 
 const $ = id => document.getElementById(id);
 
-/* =====================================================
-   HELPERS
-===================================================== */
 function toast(msg, type=''){
-  const t = $('toast');
-  t.textContent = msg;
-  t.className = 'toast show ' + type;
-  clearTimeout(t._timer);
-  t._timer = setTimeout(() => t.classList.remove('show'), 3200);
+  const t = $('toast'); t.textContent = msg; t.className = 'toast show ' + type;
+  clearTimeout(t._timer); t._timer = setTimeout(() => t.classList.remove('show'), 3200);
 }
 function normalizaTel(t){ return String(t || '').replace(/\D/g, ''); }
 function esc(s){
@@ -1009,9 +971,7 @@ function extrairTipoImovel(descricao){
 function descricaoSemTipo(descricao){
   if(!descricao) return '';
   let linhas = String(descricao).split(/\r?\n/);
-  if(linhas.length > 0){
-    linhas[0] = linhas[0].replace(/\*+[^*\n]+\*+/g, '').trim();
-  }
+  if(linhas.length > 0){ linhas[0] = linhas[0].replace(/\*+[^*\n]+\*+/g, '').trim(); }
   return linhas.filter(l => !/^\s*(Vaga|Elevador):\s*/i.test(l)).join('\n').replace(/^\s+/, '');
 }
 function extrairAptoBlocoChave(chaveTexto){
@@ -1019,21 +979,17 @@ function extrairAptoBlocoChave(chaveTexto){
   const linhas = String(chaveTexto).split(/\r?\n/).map(l => String(l || '').trim()).filter(Boolean);
   if(linhas.length === 0) return { apto: '', bloco: '', resto: '' };
   let apto = '', bloco = '', idx = 0;
-  const l1 = linhas[0];
-  const mApto = l1.match(/^(?:apto|ap|apartamento|unidade|sala|loja|conjunto|cj|casa)?\s*[°º.:#]?\s*(\d{1,8}[A-Za-z]?)\s*$/i);
+  const mApto = linhas[0].match(/^(?:apto|ap|apartamento|unidade|sala|loja|conjunto|cj|casa)?\s*[°º.:#]?\s*(\d{1,8}[A-Za-z]?)\s*$/i);
   if(mApto && mApto[1]){ apto = mApto[1].toUpperCase(); idx = 1; }
   if(idx < linhas.length){
-    const l2 = linhas[idx];
-    const mBloco = l2.match(/^(?:bl(?:oco)?|torre|ed(?:if[ií]cio)?|pr[ée]dio)\.?\s*[:#-]?\s*([A-Za-z0-9]{1,10})\s*$/i);
+    const mBloco = linhas[idx].match(/^(?:bl(?:oco)?|torre|ed(?:if[ií]cio)?|pr[ée]dio)\.?\s*[:#-]?\s*([A-Za-z0-9]{1,10})\s*$/i);
     if(mBloco && mBloco[1]){ bloco = mBloco[1].toUpperCase(); idx++; }
   }
   return { apto, bloco, resto: linhas.slice(idx).join('\n') };
 }
 function montarChaveTexto(apto, bloco, complemento){
   const linhas = [];
-  const a = String(apto || '').trim();
-  const b = String(bloco || '').trim();
-  const c = String(complemento || '').trim();
+  const a = String(apto || '').trim(), b = String(bloco || '').trim(), c = String(complemento || '').trim();
   if(a) linhas.push(a);
   if(b) linhas.push('Bloco ' + b.replace(/^bl(?:oco)?\.?\s*/i, '').replace(/^torre\s*/i, '').trim());
   if(c) linhas.push(c);
@@ -1044,65 +1000,42 @@ function mascaraPreco(input){
   if(!v){ input.value = ''; return; }
   v = v.replace(/^0+/, '') || '0';
   if(v.length > 15) v = v.slice(0, 15);
-  const reais = v.slice(0, -2) || '0';
-  const centavos = v.slice(-2).padStart(2, '0');
+  const reais = v.slice(0, -2) || '0', centavos = v.slice(-2).padStart(2, '0');
   input.value = reais.replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ',' + centavos;
 }
 function sanitizarApto(input){
   let v = String(input.value || '').replace(/[^0-9A-Za-z]/g, '').toUpperCase();
-  if(v.length > 10) v = v.slice(0, 10);
-  input.value = v;
+  if(v.length > 10) v = v.slice(0, 10); input.value = v;
 }
 function sanitizarBloco(input){
   let v = String(input.value || '').replace(/[^0-9A-Za-z]/g, '').toUpperCase();
-  if(v.length > 10) v = v.slice(0, 10);
-  input.value = v;
+  if(v.length > 10) v = v.slice(0, 10); input.value = v;
 }
 
-function marcarSalvando(inicio){
-  if(inicio) state.salvando++;
-  else state.salvando = Math.max(0, state.salvando - 1);
-}
-
-/* =====================================================
-   COLUNAS / LAYOUT
-===================================================== */
-function detectarDefaultCols(){
-  return window.matchMedia('(max-width: 820px)').matches ? '2' : '4';
-}
+/* Layout */
+function detectarDefaultCols(){ return window.matchMedia('(max-width: 820px)').matches ? '2' : '4'; }
 function carregarColunas(){
   const salvo = localStorage.getItem(STORAGE_KEY_COLS);
   const isMobile = window.matchMedia('(max-width: 820px)').matches;
   const validos = isMobile ? ['1','2'] : ['2','3','4','5','lista'];
   return (salvo && validos.includes(salvo)) ? salvo : detectarDefaultCols();
 }
-function setColunas(cols){
-  localStorage.setItem(STORAGE_KEY_COLS, cols);
-  aplicarColunas(cols);
-}
+function setColunas(cols){ localStorage.setItem(STORAGE_KEY_COLS, cols); aplicarColunas(cols); }
 function aplicarColunas(cols){
-  const grid = $('grid');
-  if(!grid) return;
+  const grid = $('grid'); if(!grid) return;
   const isMobile = window.matchMedia('(max-width: 820px)').matches;
   let colsFinal = isMobile && !['1','2'].includes(cols) ? '2' : cols;
   grid.setAttribute('data-cols', colsFinal);
   document.querySelectorAll('.cols-btn').forEach(b => b.classList.toggle('active', b.getAttribute('data-cols') === cols));
 }
 
-/* =====================================================
-   API
-===================================================== */
+/* API */
 async function apiOnce(action, params, timeoutMs){
   const qs = new URLSearchParams({ action, ...params, _t: Date.now() }).toString();
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  const controller = new AbortController(); const timer = setTimeout(() => controller.abort(), timeoutMs);
   try {
-    const resp = await fetch(API_URL + '?' + qs, {
-      method: 'GET', mode: 'cors', headers: { 'Accept': 'application/json' }, redirect: 'follow', signal: controller.signal
-    });
-    clearTimeout(timer);
-    if (!resp.ok) throw new Error('HTTP ' + resp.status);
-    return await resp.json();
+    const resp = await fetch(API_URL + '?' + qs, { method: 'GET', mode: 'cors', headers: { 'Accept': 'application/json' }, redirect: 'follow', signal: controller.signal });
+    clearTimeout(timer); if (!resp.ok) throw new Error('HTTP ' + resp.status); return await resp.json();
   } catch (err) { clearTimeout(timer); throw err; }
 }
 async function api(action, params = {}, timeoutMs = TIMEOUT_API, retries = 1) {
@@ -1120,113 +1053,78 @@ function confirmarAcao(opts){
     $('confirmTitulo').textContent = opts.titulo || 'Confirmar ação';
     $('confirmTexto').textContent  = opts.texto  || 'Tem certeza?';
     const wrapIcon = $('confirmIconWrap');
-    wrapIcon.className = ''; // reset
     wrapIcon.style.background = opts.tipo === 'danger' ? 'var(--danger-soft)' : opts.tipo === 'success' ? 'var(--success-soft)' : 'var(--warn-soft)';
     wrapIcon.style.color = opts.tipo === 'danger' ? 'var(--danger)' : opts.tipo === 'success' ? 'var(--success)' : 'var(--warn)';
-
-    const btnSim = $('confirmBtnSim');
-    const btnNao = $('confirmBtnNao');
-    btnSim.textContent = opts.btnSim || 'Confirmar';
-    btnNao.textContent = opts.btnNao || 'Cancelar';
-    
-    const novoSim = btnSim.cloneNode(true);
-    const novoNao = btnNao.cloneNode(true);
-    btnSim.parentNode.replaceChild(novoSim, btnSim);
-    btnNao.parentNode.replaceChild(novoNao, btnNao);
-    
+    const btnSim = $('confirmBtnSim'), btnNao = $('confirmBtnNao');
+    btnSim.textContent = opts.btnSim || 'Confirmar'; btnNao.textContent = opts.btnNao || 'Cancelar';
+    const novoSim = btnSim.cloneNode(true), novoNao = btnNao.cloneNode(true);
+    btnSim.parentNode.replaceChild(novoSim, btnSim); btnNao.parentNode.replaceChild(novoNao, btnNao);
     function fechar(){ backdrop.classList.remove('show'); }
     novoSim.addEventListener('click', () => { fechar(); resolve(true); });
     novoNao.addEventListener('click', () => { fechar(); resolve(false); });
     backdrop.addEventListener('click', (e) => { if(e.target === backdrop){ fechar(); resolve(false); } });
-    backdrop.classList.add('show');
-    setTimeout(() => novoSim.focus(), 80);
+    backdrop.classList.add('show'); setTimeout(() => novoSim.focus(), 80);
   });
 }
 
-/* =====================================================
-   INIT & CARREGAMENTO
-===================================================== */
+/* INIT */
 (async function init(){
   aplicarColunas(carregarColunas());
   if(!SENHA_ADMIN){
-    $('loadingView').classList.add('hidden');
-    $('erroView').classList.remove('hidden');
-    $('erroTitulo').textContent = 'Senha não informada';
-    $('erroTexto').textContent = 'Abra esta página pelo botão GERAL na vitrine admin.';
+    $('loadingView').classList.add('hidden'); $('erroView').classList.remove('hidden');
+    $('erroTitulo').textContent = 'Senha não informada'; $('erroTexto').textContent = 'Abra esta página pelo botão GERAL na vitrine admin.';
     return;
   }
   const resValid = await api('adminListar', { senha: SENHA_ADMIN });
   if(!resValid.ok){
-    $('loadingView').classList.add('hidden');
-    $('erroView').classList.remove('hidden');
-    $('erroTitulo').textContent = 'Senha inválida';
-    return;
+    $('loadingView').classList.add('hidden'); $('erroView').classList.remove('hidden');
+    $('erroTitulo').textContent = 'Senha inválida'; return;
   }
   await carregarTudo();
-  $('loadingView').classList.add('hidden');
-  $('conteudoView').classList.remove('hidden');
+  $('loadingView').classList.add('hidden'); $('conteudoView').classList.remove('hidden');
 })();
 
 async function carregarTudo(){
   const [resIm, resCli, resCor] = await Promise.all([
-    api('listarImoveisGeral', { senha: SENHA_ADMIN }),
-    api('listarClientes', { senha: SENHA_ADMIN }),
-    api('listarCorretores', { senha: SENHA_ADMIN })
+    api('listarImoveisGeral', { senha: SENHA_ADMIN }), api('listarClientes', { senha: SENHA_ADMIN }), api('listarCorretores', { senha: SENHA_ADMIN })
   ]);
   state.imoveis = (resIm.ok && resIm.data) ? resIm.data : [];
   state.clientes = (resCli.ok && resCli.data) ? resCli.data : [];
   state.corretores = (resCor.ok && resCor.data) ? resCor.data : [];
-  
-  atualizarContadores();
-  renderizar();
-  preencherDatalistClientes();
-  carregarContagensClientes();
+  atualizarContadores(); renderizar(); preencherDatalistClientes(); carregarContagensClientes();
 }
 
 async function recarregar(){
-  const btn = $('btnAtualizarHeader');
-  if(btn) btn.classList.add('girando');
-  await carregarTudo();
-  if(btn) btn.classList.remove('girando');
+  const btn = $('btnAtualizarHeader'); if(btn) btn.classList.add('girando');
+  await carregarTudo(); if(btn) btn.classList.remove('girando');
   toast('Catálogo atualizado', 'success');
 }
 
 async function carregarContagensClientes(){
   try {
     const res = await api('contarClientesPorImovel', { senha: SENHA_ADMIN });
-    if(res.ok && res.data){
-      state._clientesPorImovel = res.data;
-      atualizarBadgesClientes();
-    }
+    if(res.ok && res.data){ state._clientesPorImovel = res.data; atualizarBadgesClientes(); }
   } catch(e){}
 }
 
 function atualizarBadgesClientes(){
   document.querySelectorAll('.card[data-codigo]').forEach(card => {
-    const cod = card.getAttribute('data-codigo');
-    if(!cod) return;
+    const cod = card.getAttribute('data-codigo'); if(!cod) return;
     const count = state._clientesPorImovel[cod] || 0;
     const btn = card.querySelector('.btn-clientes');
     if(btn){
       let badge = btn.querySelector('.count-badge');
-      if(count > 0){
-        if(!badge){ badge = document.createElement('span'); badge.className = 'count-badge'; btn.appendChild(badge); }
-        badge.textContent = count > 99 ? '99+' : count;
-      } else {
-        if(badge) badge.remove();
-      }
+      if(count > 0){ if(!badge){ badge = document.createElement('span'); badge.className = 'count-badge'; btn.appendChild(badge); } badge.textContent = count > 99 ? '99+' : count; }
+      else { if(badge) badge.remove(); }
     }
   });
 }
 
-/* =====================================================
-   FILTROS
-===================================================== */
+/* FILTROS E RENDER */
 function atualizarContadores(){
   let todos = 0, pendente = 0, vendido = 0, semCodigo = 0;
   state.imoveis.forEach(im => {
-    todos++;
-    if(isVendido(im)) vendido++; else pendente++;
+    todos++; if(isVendido(im)) vendido++; else pendente++;
     if(!String(im.codigo || '').trim()) semCodigo++;
   });
   const map = { 'todos': todos, 'pendente': pendente, 'vendido': vendido, 'sem-codigo': semCodigo };
@@ -1234,47 +1132,27 @@ function atualizarContadores(){
 }
 
 function setFiltro(f, el){
-  state.filtroStatus = f;
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  el.classList.add('active');
-  renderizar();
+  state.filtroStatus = f; document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active')); el.classList.add('active'); renderizar();
 }
 
 function onFiltroClienteChange(){
-  const sel = $('filtroCliente');
-  state.filtroCliente = sel.value;
-  const btnLimpar = $('btnLimparCliente');
-  if(sel.value){ sel.classList.add('has-value'); btnLimpar.classList.add('show'); } 
-  else { sel.classList.remove('has-value'); btnLimpar.classList.remove('show'); }
+  const sel = $('filtroCliente'); state.filtroCliente = sel.value; const btnLimpar = $('btnLimparCliente');
+  if(sel.value){ sel.classList.add('has-value'); btnLimpar.classList.add('show'); } else { sel.classList.remove('has-value'); btnLimpar.classList.remove('show'); }
   renderizar();
 }
 
 function limparFiltroCliente(){
-  const sel = $('filtroCliente');
-  sel.value = ''; state.filtroCliente = '';
-  sel.classList.remove('has-value');
-  $('btnLimparCliente').classList.remove('show');
-  renderizar();
+  const sel = $('filtroCliente'); sel.value = ''; state.filtroCliente = ''; sel.classList.remove('has-value'); $('btnLimparCliente').classList.remove('show'); renderizar();
 }
 
 function preencherDatalistClientes(){
   const dl = $('listaClientesDatalist');
-  if(!dl) return;
-  dl.innerHTML = state.clientes
-    .sort((a,b) => (a.nome||'').localeCompare(b.nome||'', 'pt-BR'))
-    .map(c => `<option value="${esc(c.nome)} - ${esc(fmtTel(c.telefone))}" data-tel="${esc(normalizaTel(c.telefone))}"></option>`).join('');
-    
-  // Filtro de clientes na barra superior (com contagem de matches)
-  const selFiltro = $('filtroCliente');
-  const atual = state.filtroCliente;
-  selFiltro.innerHTML = '<option value="">Todos os clientes</option>' +
-    state.clientes
-      .sort((a,b) => (a.nome||'').localeCompare(b.nome||'', 'pt-BR'))
-      .map(c => `<option value="${esc(normalizaTel(c.telefone))}">${esc(c.nome || 'Sem nome')} · ${esc(fmtTel(c.telefone))}</option>`).join('');
+  if(dl) dl.innerHTML = state.clientes.sort((a,b) => (a.nome||'').localeCompare(b.nome||'', 'pt-BR')).map(c => `<option value="${esc(c.nome)} - ${esc(fmtTel(c.telefone))}" data-tel="${esc(normalizaTel(c.telefone))}"></option>`).join('');
+  const selFiltro = $('filtroCliente'), atual = state.filtroCliente;
+  selFiltro.innerHTML = '<option value="">Todos os clientes</option>' + state.clientes.sort((a,b) => (a.nome||'').localeCompare(b.nome||'', 'pt-BR')).map(c => `<option value="${esc(normalizaTel(c.telefone))}">${esc(c.nome || 'Sem nome')} · ${esc(fmtTel(c.telefone))}</option>`).join('');
   if(atual) selFiltro.value = atual;
 }
 
-// Filtro Avançado - Slider
 const PRECO_MAX_SLIDER = 2000000, PRECO_STEP = 10000;
 function initSliderPreco() {
   const minR = $('precoMinRange'), maxR = $('precoMaxRange'), minI = $('precoMinInput'), maxI = $('precoMaxInput'), range = $('sliderRange');
@@ -1296,25 +1174,17 @@ function setarSliderPreco(min, max) {
   const minR = $('precoMinRange'), maxR = $('precoMaxRange'), minI = $('precoMinInput'), maxI = $('precoMaxInput'), range = $('sliderRange');
   minR.value = Math.min(Math.max(min || 0, 0), PRECO_MAX_SLIDER); maxR.value = Math.min(Math.max(max || PRECO_MAX_SLIDER, 0), PRECO_MAX_SLIDER);
   minI.value = min > 0 ? min : ''; maxI.value = max && max < PRECO_MAX_SLIDER ? max : '';
-  range.style.left = ((minR.value / PRECO_MAX_SLIDER) * 100) + '%'; 
-  range.style.width = (((maxR.value - minR.value) / PRECO_MAX_SLIDER) * 100) + '%';
+  range.style.left = ((minR.value / PRECO_MAX_SLIDER) * 100) + '%'; range.style.width = (((maxR.value - minR.value) / PRECO_MAX_SLIDER) * 100) + '%';
 }
 
 function abrirModalFiltro(){
   const f = state._filtrosAvancados;
-  $('filtroQuartos').value = f.quartos;
-  $('filtroSuites').value = f.suites;
-  $('filtroVagasQtd').value = f.vagasQtd;
-  $('filtroVagaTipo').value = f.vagaTipo;
-  $('filtroMetragem').value = f.metragem;
-  $('filtroCondominioMax').value = f.condominioMax;
-  $('filtroOrdenacao').value = f.ordenacao;
+  $('filtroQuartos').value = f.quartos; $('filtroSuites').value = f.suites; $('filtroVagasQtd').value = f.vagasQtd; $('filtroVagaTipo').value = f.vagaTipo;
+  $('filtroMetragem').value = f.metragem; $('filtroCondominioMax').value = f.condominioMax; $('filtroOrdenacao').value = f.ordenacao;
   setarSliderPreco(f.precoMin || 0, f.precoMax || PRECO_MAX_SLIDER);
-  
   document.querySelectorAll('#chipsTipoImovel .chip').forEach(b => b.classList.toggle('active', (f.tipos || []).includes(b.dataset.tipo)));
   document.querySelectorAll('#chipsAndar .chip').forEach(b => b.classList.toggle('active', (f.andares || []).includes(b.dataset.andar)));
   document.querySelectorAll('#chipsElevador .chip').forEach(b => b.classList.toggle('active', b.dataset.elevador === (f.elevador || '')));
-
   $('modalFiltro').classList.add('show');
 }
 
@@ -1326,56 +1196,30 @@ function aplicarFiltrosAvancados(){
   const elevadorAtivo = document.querySelector('#chipsElevador .chip.active');
   const minV = parseFloat($('precoMinRange').value) || 0;
   const maxV = parseFloat($('precoMaxRange').value) || 0;
-
   state._filtrosAvancados = {
-    tipos: tiposAtivos,
-    andares: andaresAtivos,
-    elevador: elevadorAtivo ? elevadorAtivo.dataset.elevador : '',
-    precoMin: minV > 0 ? minV : null,
-    precoMax: maxV > 0 && maxV < PRECO_MAX_SLIDER ? maxV : null,
-    quartos: $('filtroQuartos').value,
-    suites: $('filtroSuites').value,
-    vagasQtd: $('filtroVagasQtd').value,
-    vagaTipo: $('filtroVagaTipo').value,
-    metragem: $('filtroMetragem').value,
-    condominioMax: $('filtroCondominioMax').value,
-    ordenacao: $('filtroOrdenacao').value
+    tipos: tiposAtivos, andares: andaresAtivos, elevador: elevadorAtivo ? elevadorAtivo.dataset.elevador : '',
+    precoMin: minV > 0 ? minV : null, precoMax: maxV > 0 && maxV < PRECO_MAX_SLIDER ? maxV : null,
+    quartos: $('filtroQuartos').value, suites: $('filtroSuites').value, vagasQtd: $('filtroVagasQtd').value, vagaTipo: $('filtroVagaTipo').value,
+    metragem: $('filtroMetragem').value, condominioMax: $('filtroCondominioMax').value, ordenacao: $('filtroOrdenacao').value
   };
-  
-  fecharModalFiltro();
-  renderizar();
+  fecharModalFiltro(); renderizar();
 }
 
 function limparFiltros(){
-  state._filtrosAvancados = {
-    tipos: [], precoMin: null, precoMax: null, quartos: '', suites: '',
-    vagasQtd: '', vagaTipo: '', elevador: '', andares: [], metragem: '', condominioMax: '',
-    ordenacao: 'recentes'
-  };
-  $('filtroBusca').value = '';
-  abrirModalFiltro(); // Recarrega os campos limpos
-  aplicarFiltrosAvancados();
+  state._filtrosAvancados = { tipos: [], precoMin: null, precoMax: null, quartos: '', suites: '', vagasQtd: '', vagaTipo: '', elevador: '', andares: [], metragem: '', condominioMax: '', ordenacao: 'recentes' };
+  $('buscaInput').value = ''; abrirModalFiltro(); aplicarFiltrosAvancados();
 }
 
-/* =====================================================
-   RENDERIZAÇÃO
-===================================================== */
 function renderizar(){
-  const grid = $('grid');
-  let lista = [...state.imoveis];
-
+  const grid = $('grid'); let lista = [...state.imoveis];
   if(state.filtroStatus === 'pendente') lista = lista.filter(im => !isVendido(im));
   else if(state.filtroStatus === 'vendido') lista = lista.filter(im => isVendido(im));
   else if(state.filtroStatus === 'sem-codigo') lista = lista.filter(im => !String(im.codigo || '').trim());
 
   const busca = ($('buscaInput').value || '').toLowerCase().trim();
-  if(busca){
-    lista = lista.filter(i => (i.titulo || '').toLowerCase().includes(busca) || (i.codigo || '').toLowerCase().includes(busca) || (i.bairro || '').toLowerCase().includes(busca));
-  }
+  if(busca) lista = lista.filter(i => (i.titulo || '').toLowerCase().includes(busca) || (i.codigo || '').toLowerCase().includes(busca) || (i.bairro || '').toLowerCase().includes(busca));
 
-  const f = state._filtrosAvancados;
-  let filtrosAtivos = 0;
-
+  const f = state._filtrosAvancados; let filtrosAtivos = 0;
   if(f.tipos.length > 0){
     filtrosAtivos++;
     lista = lista.filter(im => {
@@ -1396,9 +1240,7 @@ function renderizar(){
     lista = lista.filter(im => { 
       const m = String(im.descricao||'').match(/(\d+)\s*(vagas?|vgs?)/i); 
       const q = m ? parseInt(m[1]) : 0;
-      if(f.vagasQtd === '0') return q === 0;
-      if(f.vagasQtd === '3') return q >= 3;
-      return q === parseInt(f.vagasQtd);
+      if(f.vagasQtd === '0') return q === 0; if(f.vagasQtd === '3') return q >= 3; return q === parseInt(f.vagasQtd);
     }); 
   }
   if(f.vagaTipo){ filtrosAtivos++; lista = lista.filter(im => im.vaga === f.vagaTipo); }
@@ -1406,72 +1248,48 @@ function renderizar(){
   if(f.andares.length){
     filtrosAtivos++;
     lista = lista.filter(im => {
-      const apto = extrairAptoBlocoChave(im.chaveTexto || '').apto;
-      const num = parseInt(apto) || 0;
-      const andar = num > 0 ? Math.floor(num / 100) || 1 : 0;
-      if(andar === 0) return false;
+      const apto = extrairAptoBlocoChave(im.chaveTexto || '').apto; const num = parseInt(apto) || 0;
+      const andar = num > 0 ? Math.floor(num / 100) || 1 : 0; if(andar === 0) return false;
       return f.andares.some(a => a === '10' ? andar >= 10 : andar === parseInt(a));
     });
   }
   if(f.metragem){ filtrosAtivos++; lista = lista.filter(im => { const m = String(im.descricao||'').match(/(\d+)\s*m[²2]/i); return m && parseInt(m[1]) >= parseInt(f.metragem); }); }
   if(f.condominioMax){ filtrosAtivos++; lista = lista.filter(im => { const c = parseNumeroBR(im.condominio); return c === 0 || c <= parseFloat(f.condominioMax); }); }
 
-  const btnFiltro = $('btnFiltroAvancado');
-  const badge = $('badgeFiltrosAtivos');
-  if(filtrosAtivos > 0){ btnFiltro.classList.add('tem-filtro'); badge.textContent = filtrosAtivos; } 
-  else { btnFiltro.classList.remove('tem-filtro'); }
+  const btnFiltro = $('btnFiltroAvancadoTop'), badge = $('badgeFiltrosAtivos');
+  if(filtrosAtivos > 0){ btnFiltro.classList.add('tem-filtro'); badge.textContent = filtrosAtivos; } else { btnFiltro.classList.remove('tem-filtro'); }
 
   if(state.filtroCliente){
-    lista = lista.filter(im => {
-      const cod = String(im.codigo || '').trim();
-      if(!cod) return false;
-      if(state._matchesCache[cod]) return state._matchesCache[cod].some(m => normalizaTel(m.telefone) === state.filtroCliente);
-      return false;
-    });
+    lista = lista.filter(im => { const cod = String(im.codigo || '').trim(); if(!cod) return false; if(state._matchesCache[cod]) return state._matchesCache[cod].some(m => normalizaTel(m.telefone) === state.filtroCliente); return false; });
   }
 
-  // Ordenação
   lista.sort((a,b) => {
     if(f.ordenacao === 'menor-preco') return parseNumeroBR(a.preco) - parseNumeroBR(b.preco);
     if(f.ordenacao === 'maior-preco') return parseNumeroBR(b.preco) - parseNumeroBR(a.preco);
-    if(f.ordenacao === 'menor-andar') { /* ... */ }
     const va = isVendido(a) ? 1 : 0, vb = isVendido(b) ? 1 : 0;
     if(va !== vb) return va - vb;
     return new Date(b.dataCadastro || 0) - new Date(a.dataCadastro || 0);
   });
 
-  if(lista.length === 0){
-    grid.innerHTML = '';
-    $('emptyState').classList.remove('hidden');
-    return;
-  }
-  $('emptyState').classList.add('hidden');
-  grid.innerHTML = lista.map(cardHTML).join('');
-
-  atualizarBadgesClientes();
-  setTimeout(() => carregarTodosBadgesMatch(), 300);
+  if(lista.length === 0){ grid.innerHTML = ''; $('emptyState').classList.remove('hidden'); return; }
+  $('emptyState').classList.add('hidden'); grid.innerHTML = lista.map(cardHTML).join('');
+  atualizarBadgesClientes(); setTimeout(() => carregarTodosBadgesMatch(), 300);
 }
 
 function cardHTML(im){
   const vendido = isVendido(im);
   const img = im.imagem || 'https://via.placeholder.com/300x300/e2e8f0/64748b?text=Sem+imagem';
-  const id = esc(im.id);
-  const codigo = String(im.codigo || '').trim();
+  const id = esc(im.id), codigo = String(im.codigo || '').trim();
   const descSemTipo = descricaoSemTipo(im.descricao || '').trim();
   const imgClickAttr = im.link ? `onclick="window.open('${esc(im.link)}', '_blank', 'noopener');"` : '';
 
   const aptoInfo = extrairAptoBlocoChave(im.chaveTexto || '');
-  const apto = aptoInfo.apto || '—';
-  const bloco = aptoInfo.bloco || '—';
-  const chaveComplemento = aptoInfo.resto || '';
-  const chaveCompleta = chaveComplemento;
+  const apto = aptoInfo.apto || '—', bloco = aptoInfo.bloco || '—';
+  const chaveComplemento = aptoInfo.resto || '', chaveCompleta = chaveComplemento;
 
-  const precoFmt = formatarMoeda(im.preco) || 'R$ 0,00';
-  const condFmt = formatarMoeda(im.condominio) || 'R$ 0,00';
-  const iptuFmt = formatarMoeda(im.iptu) || 'R$ 0,00';
+  const precoFmt = formatarMoeda(im.preco) || 'R$ 0,00', condFmt = formatarMoeda(im.condominio) || 'R$ 0,00', iptuFmt = formatarMoeda(im.iptu) || 'R$ 0,00';
   const suites = im.suites ? im.suites + (im.suites === '5+' ? '' : '') : '—';
-  const vaga = String(im.vaga || '').trim() || '—';
-  const elevador = String(im.elevador || '').trim() || '—';
+  const vaga = String(im.vaga || '').trim() || '—', elevador = String(im.elevador || '').trim() || '—';
 
   const statusStripHtml = vendido ? `<div class="card-status-strip status-vendido">Vendido</div>` : '';
   const descTemMais = descSemTipo.split(/\r?\n/).length > 2 || descSemTipo.length > 120;
@@ -1479,19 +1297,13 @@ function cardHTML(im){
 
   let descBlockHtml = descSemTipo ? `
     <div class="card-block block-desc" id="desc-${id}">
-      <div class="block-header">
-        <span class="block-label">📝 Descrição</span>
-        ${descTemMais ? `<button class="block-toggle" onclick="event.stopPropagation(); const el=document.getElementById('desc-${id}'); el.classList.toggle('expandido'); this.textContent = el.classList.contains('expandido') ? 'Ver menos' : 'Ver tudo';">Ver tudo</button>` : ''}
-      </div>
+      <div class="block-header"><span class="block-label">📝 Descrição</span>${descTemMais ? `<button class="block-toggle" onclick="event.stopPropagation(); const el=document.getElementById('desc-${id}'); el.classList.toggle('expandido'); this.textContent = el.classList.contains('expandido') ? 'Ver menos' : 'Ver tudo';">Ver tudo</button>` : ''}</div>
       <div class="block-text">${esc(descSemTipo)}</div>
     </div>` : '';
 
   let chaveBlockHtml = chaveCompleta ? `
     <div class="card-block block-chave" id="chave-${id}">
-      <div class="block-header">
-        <span class="block-label">🔑 Chave</span>
-        ${chaveTemMais ? `<button class="block-toggle" onclick="event.stopPropagation(); const el=document.getElementById('chave-${id}'); el.classList.toggle('expandido'); this.textContent = el.classList.contains('expandido') ? 'Ver menos' : 'Ver tudo';">Ver tudo</button>` : ''}
-      </div>
+      <div class="block-header"><span class="block-label">🔑 Chave</span>${chaveTemMais ? `<button class="block-toggle" onclick="event.stopPropagation(); const el=document.getElementById('chave-${id}'); el.classList.toggle('expandido'); this.textContent = el.classList.contains('expandido') ? 'Ver menos' : 'Ver tudo';">Ver tudo</button>` : ''}</div>
       <div class="block-text">${esc(chaveCompleta)}</div>
     </div>` : '';
 
@@ -1501,49 +1313,29 @@ function cardHTML(im){
   const codeActionsHtml = codigo ? `
     <div class="card-code-row" onclick="event.stopPropagation();">
       <span class="card-code-chip" onclick="copiarCodigo('${esc(codigo)}', this)">#${esc(codigo)}</span>
-      <button class="card-code-btn" onclick="abrirBuscar('${esc(codigo)}')" title="Buscar entrada">
-        <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> Entrada
-      </button>
-      <button class="card-code-btn btn-clientes" onclick="abrirClientesImovel('${esc(codigo)}', '${esc(im.titulo || '')}')" title="Clientes que têm esse imóvel">
-        <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> Clientes ${badgeClientesHtml}
-      </button>
-    </div>
-  ` : '';
+      <button class="card-code-btn" onclick="abrirBuscar('${esc(codigo)}')" title="Buscar entrada"><svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> Entrada</button>
+      <button class="card-code-btn btn-clientes" onclick="abrirClientesImovel('${esc(codigo)}', '${esc(im.titulo || '')}')" title="Clientes"><svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> Clientes ${badgeClientesHtml}</button>
+    </div>` : '';
 
   const matchBtnHtml = codigo ? `
     <div class="card-match-row" onclick="event.stopPropagation();">
-      <button class="btn-match-card" id="match-btn-${id}" onclick="abrirModalMatch('${esc(codigo)}', '${esc(im.titulo || '')}')">
-        <svg class="ico ico-sm" viewBox="0 0 24 24"><circle cx="8" cy="12" r="5"/><circle cx="16" cy="12" r="5"/></svg>
-        Match <span class="num" id="match-num-${id}">…</span>
-      </button>
-    </div>
-  ` : '';
+      <button class="btn-match-card" id="match-btn-${id}" onclick="abrirModalMatch('${esc(codigo)}', '${esc(im.titulo || '')}')"><svg class="ico ico-sm" viewBox="0 0 24 24"><circle cx="8" cy="12" r="5"/><circle cx="16" cy="12" r="5"/></svg> Match <span class="num" id="match-num-${id}">…</span></button>
+    </div>` : '';
 
   const tarjaVendidoHtml = vendido ? '<div class="card-tarja-vendido">VENDIDO</div>' : '';
 
   const adminBtnsHtml = `
     <div class="card-admin-actions" onclick="event.stopPropagation();">
-      <button class="adm-btn btn-editar" onclick="editarImovel('${id}')">
-        <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> Editar
-      </button>
-      <button class="adm-btn btn-vendido ${vendido ? 'desmarcar' : ''}" onclick="toggleVendido('${esc(codigo)}', ${vendido})">
-        <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.83z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg> ${vendido ? 'Reativar' : 'Vendido'}
-      </button>
-      <button class="adm-btn btn-clonar" onclick="abrirClonar('${id}')">
-        <svg class="ico ico-sm" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Clonar
-      </button>
-    </div>
-  `;
+      <button class="adm-btn btn-editar" onclick="editarImovel('${id}')"><svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> Editar</button>
+      <button class="adm-btn btn-vendido ${vendido ? 'desmarcar' : ''}" onclick="toggleVendido('${esc(codigo)}', ${vendido})"><svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.83z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg> ${vendido ? 'Reativar' : 'Vendido'}</button>
+      <button class="adm-btn btn-clonar" onclick="abrirClonar('${id}')"><svg class="ico ico-sm" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Clonar</button>
+    </div>`;
 
   return `
     <div class="card${vendido ? ' card-vendido' : ''}" data-id="${id}" data-codigo="${esc(codigo)}">
-      ${statusStripHtml}
-      ${matchBtnHtml}
+      ${statusStripHtml}${matchBtnHtml}
       <div class="card-main">
-        <div class="card-img-wrap">
-          <img class="card-img" src="${esc(img)}" ${imgClickAttr} onerror="this.src='https://via.placeholder.com/300x300/e2e8f0/64748b?text=Sem+imagem'">
-          ${tarjaVendidoHtml}
-        </div>
+        <div class="card-img-wrap"><img class="card-img" src="${esc(img)}" ${imgClickAttr} onerror="this.src='https://via.placeholder.com/300x300/e2e8f0/64748b?text=Sem+imagem'">${tarjaVendidoHtml}</div>
         <div class="card-body">
           <div class="card-title" title="${esc(im.titulo || 'Sem endereço')}">${esc(im.titulo) || 'Sem endereço'}</div>
           ${codeActionsHtml}
@@ -1559,246 +1351,131 @@ function cardHTML(im){
           </div>
         </div>
       </div>
-      ${descBlockHtml}
-      ${chaveBlockHtml}
-      ${adminBtnsHtml}
-    </div>
-  `;
+      ${descBlockHtml}${chaveBlockHtml}${adminBtnsHtml}
+    </div>`;
 }
 
-/* =====================================================
-   AÇÕES BÁSICAS
-===================================================== */
+/* AÇÕES */
 function copiarCodigo(codigo, el){
-  if(!codigo) return;
-  copiarTexto(String(codigo));
-  const orig = el.innerHTML;
-  el.classList.add('copiado'); el.innerHTML = 'Copiado!';
-  setTimeout(() => { el.classList.remove('copiado'); el.innerHTML = orig; }, 1400);
+  if(!codigo) return; copiarTexto(String(codigo)); const orig = el.innerHTML;
+  el.classList.add('copiado'); el.innerHTML = 'Copiado!'; setTimeout(() => { el.classList.remove('copiado'); el.innerHTML = orig; }, 1400);
 }
 function copiarTexto(texto){
-  if(navigator.clipboard && window.isSecureContext){
-    navigator.clipboard.writeText(texto).then(() => toast('Copiado!', 'success')).catch(() => fallbackCopy(texto));
-  } else fallbackCopy(texto);
+  if(navigator.clipboard && window.isSecureContext){ navigator.clipboard.writeText(texto).then(() => toast('Copiado!', 'success')).catch(() => fallbackCopy(texto)); } else fallbackCopy(texto);
 }
 function fallbackCopy(texto){
   const ta = document.createElement('textarea'); ta.value = texto; ta.style.position = 'fixed'; ta.style.opacity = '0';
-  document.body.appendChild(ta); ta.select();
-  try { document.execCommand('copy'); toast('Copiado!', 'success'); } catch(e){}
-  document.body.removeChild(ta);
+  document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); toast('Copiado!', 'success'); } catch(e){} document.body.removeChild(ta);
 }
-function abrirBuscar(codigo){
-  if(!codigo) return;
-  window.open(`${BUSCAR_BASE}/${codigo}`, '_blank', 'noopener');
-}
+function abrirBuscar(codigo){ if(!codigo) return; window.open(`${BUSCAR_BASE}/${codigo}`, '_blank', 'noopener'); }
 
-/* =====================================================
-   MATCH
-===================================================== */
+/* MATCH */
 async function abrirModalMatch(codigo, titulo){
   if(!codigo){ toast('Código não informado', 'error'); return; }
   $('matchModalNome').textContent = '#' + codigo + (titulo ? ' — ' + titulo : '');
   $('matchModalLista').innerHTML = '<div class="loading-wrap" style="min-height:auto; padding:30px 0;"><div class="spinner-lg" style="width:34px;height:34px;"></div></div>';
   $('matchModalBackdrop').classList.add('show');
-  
   const res = await api('listarMatchesDoImovel', { senha: SENHA_ADMIN, codigo });
-  if(!res.ok){
-    $('matchModalLista').innerHTML = '<div class="empty-state"><p>Erro ao carregar matches.</p></div>';
-    return;
-  }
-  const lista = res.data || [];
-  state._matchesCache[codigo] = lista;
-  
-  if(lista.length === 0){
-    $('matchModalLista').innerHTML = `<div class="empty-state"><p>Nenhum cliente compatível.</p></div>`;
-    atualizarNumMatch(codigo, 0);
-    return;
-  }
+  if(!res.ok){ $('matchModalLista').innerHTML = '<div class="empty-state"><p>Erro ao carregar matches.</p></div>'; return; }
+  const lista = res.data || []; state._matchesCache[codigo] = lista;
+  if(lista.length === 0){ $('matchModalLista').innerHTML = `<div class="empty-state"><p>Nenhum cliente compatível.</p></div>`; atualizarNumMatch(codigo, 0); return; }
   atualizarNumMatch(codigo, lista.length);
   $('matchModalLista').innerHTML = lista.map(m => `
     <div class="cliente-match-row" data-tel="${esc(m.telefone)}">
       <div class="avatar">${(m.nome || '?').slice(0,1).toUpperCase()}</div>
-      <div class="info">
-        <div class="nome">${esc(m.nome || 'Sem nome')}</div>
-        <div class="meta">${esc(fmtTel(m.telefone))}</div>
-      </div>
-      <div class="actions">
-        <button class="btn btn-lilac" onclick="matchEnviar('${esc(m.telefone)}', '${esc(codigo)}', this)">Enviar</button>
-        <button class="btn btn-ghost" onclick="matchDescartar('${esc(m.telefone)}', '${esc(codigo)}', this)">X</button>
-      </div>
+      <div class="info"><div class="nome">${esc(m.nome || 'Sem nome')}</div><div class="meta">${esc(fmtTel(m.telefone))}</div></div>
+      <div class="actions"><button class="btn btn-lilac" onclick="matchEnviar('${esc(m.telefone)}', '${esc(codigo)}', this)">Enviar</button><button class="btn btn-ghost" onclick="matchDescartar('${esc(m.telefone)}', '${esc(codigo)}', this)">X</button></div>
     </div>
   `).join('');
 }
-
 async function matchEnviar(telefone, codigo, btn){
   if(!await confirmarAcao({ titulo: 'Enviar para vitrine?', texto: 'Uma cópia será adicionada.', btnSim: 'Enviar' })) return;
-  const im = state.imoveis.find(x => String(x.codigo || '') === codigo);
-  if(!im){ toast('Imóvel não encontrado', 'error'); return; }
-  
+  const im = state.imoveis.find(x => String(x.codigo || '') === codigo); if(!im){ toast('Imóvel não encontrado', 'error'); return; }
   const res = await api('salvarImovel', { senha: SENHA_ADMIN, telefone, rua: im.rua, numero: im.numero, bairro: im.bairro, preco: im.preco, descricao: im.descricao, chaveTexto: im.chaveTexto, vaga: im.vaga, elevador: im.elevador, suites: im.suites });
   if(!res.ok){ toast(res.error, 'error'); return; }
-  
   await api('descartarMatch', { senha: SENHA_ADMIN, telefone, codigo, origem: 'enviado' });
-  toast('Enviado!', 'success');
-  if(btn) btn.closest('.cliente-match-row').remove();
-  carregarContagensClientes();
-  delete state._matchesCache[codigo];
+  toast('Enviado!', 'success'); if(btn) btn.closest('.cliente-match-row').remove(); carregarContagensClientes(); delete state._matchesCache[codigo];
 }
-
 async function matchDescartar(telefone, codigo, btn){
   if(!await confirmarAcao({ titulo: 'Descartar match?', texto: 'Ocultará este cliente.', btnSim: 'Descartar', tipo: 'danger' })) return;
-  await api('descartarMatch', { senha: SENHA_ADMIN, telefone, codigo, origem: 'descartado' });
-  toast('Match descartado', 'success');
-  if(btn) btn.closest('.cliente-match-row').remove();
-  delete state._matchesCache[codigo];
+  await api('descartarMatch', { senha: SENHA_ADMIN, telefone, codigo, origem: 'descartado' }); toast('Match descartado', 'success');
+  if(btn) btn.closest('.cliente-match-row').remove(); delete state._matchesCache[codigo];
 }
-
 function atualizarNumMatch(codigo, total){
-  const card = document.querySelector(`.card[data-codigo="${esc(codigo)}"]`);
-  if(!card) return;
-  const num = card.querySelector('.btn-match-card .num');
-  if(num){
-    num.textContent = total > 99 ? '99+' : total;
-    num.classList.toggle('zero', total === 0);
-  }
+  const card = document.querySelector(`.card[data-codigo="${esc(codigo)}"]`); if(!card) return;
+  const num = card.querySelector('.btn-match-card .num'); if(num){ num.textContent = total > 99 ? '99+' : total; num.classList.toggle('zero', total === 0); }
 }
 function fecharModalMatch(){ $('matchModalBackdrop').classList.remove('show'); }
 
 async function carregarTodosBadgesMatch(){
-  const cards = document.querySelectorAll('.card[data-codigo]');
-  const codigos = [];
+  const cards = document.querySelectorAll('.card[data-codigo]'); const codigos = [];
   cards.forEach(c => { const cod = c.dataset.codigo; if(cod && !state._matchesCache[cod]) codigos.push(cod); });
   for(let i = 0; i < codigos.length; i += 5){
     const lote = codigos.slice(i, i + 5);
     await Promise.all(lote.map(async cod => {
-      try {
-        const res = await api('listarMatchesDoImovel', { senha: SENHA_ADMIN, codigo: cod }, TIMEOUT_API, 0);
-        const lista = (res.ok && res.data) ? res.data : [];
-        state._matchesCache[cod] = lista;
-        atualizarNumMatch(cod, lista.length);
-      } catch(e){}
+      try { const res = await api('listarMatchesDoImovel', { senha: SENHA_ADMIN, codigo: cod }, TIMEOUT_API, 0); const lista = (res.ok && res.data) ? res.data : []; state._matchesCache[cod] = lista; atualizarNumMatch(cod, lista.length); } catch(e){}
     }));
   }
 }
 
-/* =====================================================
-   CLIENTES DO IMÓVEL
-===================================================== */
 async function abrirClientesImovel(codigo, titulo){
   if(!codigo){ toast('Código vazio', 'error'); return; }
   $('clientesModalSub').textContent = '#' + codigo + (titulo ? ' — ' + titulo : '');
   $('clientesModalLista').innerHTML = '<div class="loading-wrap" style="min-height:auto; padding:30px 0;"><div class="spinner-lg" style="width:34px;height:34px;"></div></div>';
   $('clientesModalBackdrop').classList.add('show');
-  
   const res = await api('listarClientesPorImovel', { senha: SENHA_ADMIN, codigo });
   if(!res.ok){ $('clientesModalLista').innerHTML = '<p class="text-muted" style="text-align:center; padding:20px;">Erro ao carregar.</p>'; return; }
-  
   const lista = res.data || [];
-  if(lista.length === 0){
-    $('clientesModalLista').innerHTML = '<p class="text-muted" style="text-align:center; padding:20px;">Nenhum cliente tem este imóvel.</p>';
-    return;
-  }
+  if(lista.length === 0){ $('clientesModalLista').innerHTML = '<p class="text-muted" style="text-align:center; padding:20px;">Nenhum cliente tem este imóvel.</p>'; return; }
   $('clientesModalLista').innerHTML = lista.map(cli => `
-    <div class="cliente-match-row">
-      <div class="avatar">${(cli.nome || '?').slice(0,1).toUpperCase()}</div>
-      <div class="info">
-        <div class="nome">${esc(cli.nome || 'Sem nome')}</div>
-        <div class="meta">${esc(fmtTel(cli.telefone))}</div>
-      </div>
-    </div>
+    <div class="cliente-match-row"><div class="avatar">${(cli.nome || '?').slice(0,1).toUpperCase()}</div><div class="info"><div class="nome">${esc(cli.nome || 'Sem nome')}</div><div class="meta">${esc(fmtTel(cli.telefone))}</div></div></div>
   `).join('');
 }
 function fecharClientesImovel(){ $('clientesModalBackdrop').classList.remove('show'); }
 
-/* =====================================================
-   VENDIDO / CLONAR / SALVAR
-===================================================== */
 async function toggleVendido(codigo, vendidoAtual){
   if(!codigo){ toast('Imóvel sem código', 'error'); return; }
   if(!await confirmarAcao({ titulo: vendidoAtual ? 'Desmarcar?' : 'Marcar vendido?', texto: 'O status será alterado para todos os clientes.', btnSim: 'Confirmar', tipo: vendidoAtual ? 'success' : 'danger' })) return;
-  
   const res = await api('atualizarImovelPorCodigo', { senha: SENHA_ADMIN, codigo, vendido: !vendidoAtual }, TIMEOUT_API, 0);
-  if(!res.ok){ toast(res.error || 'Erro', 'error'); return; }
-  toast('Atualizado!', 'success');
-  await recarregar();
+  if(!res.ok){ toast(res.error || 'Erro', 'error'); return; } toast('Atualizado!', 'success'); await recarregar();
 }
-
-function abrirClonar(id){
-  const im = state.imoveis.find(x => String(x.id) === String(id));
-  if(!im) return;
-  toast('A clonagem em lote está na vitrine principal.', 'error');
-}
+function abrirClonar(id){ toast('A clonagem em lote está na vitrine principal.', 'error'); }
 
 function abrirPainelNovoImovel(){
-  limparForm();
-  $('adCliente').value = '';
-  $('adminPanelTitle').textContent = 'Adicionar imóvel';
-  $('btnSalvarImovel').innerHTML = 'Salvar no catálogo';
-  $('adminPanel').classList.add('show');
-  setTimeout(() => $('adLink').focus(), 300);
+  limparForm(); $('adCliente').value = ''; $('adminPanelTitle').textContent = 'Adicionar imóvel';
+  $('btnSalvarImovel').innerHTML = 'Salvar no catálogo'; $('adminPanel').classList.add('show'); setTimeout(() => $('adLink').focus(), 300);
 }
 
 function limparForm(){
-  $('editingId').value = '';
-  $('adLink').value = ''; $('adRua').value = ''; $('adNumero').value = ''; $('adApto').value = '';
-  $('adBairro').value = ''; $('adBloco').value = ''; $('adChaveComplemento').value = '';
+  $('editingId').value = ''; $('adLink').value = ''; $('adRua').value = ''; $('adNumero').value = ''; $('adApto').value = ''; $('adBairro').value = ''; $('adBloco').value = ''; $('adChaveComplemento').value = '';
   $('adPreco').value = ''; $('adCondominio').value = ''; $('adIPTU').value = ''; $('adDescricao').value = ''; $('adImagem').value = '';
-  if($('adVaga')) $('adVaga').value = ''; if($('adElevador')) $('adElevador').value = '';
-  if($('adTipo')) $('adTipo').value = ''; if($('adSuites')) $('adSuites').value = '';
-  state._tipoEscolhido = '';
-  atualizarPreview('');
-  atualizarBotaoBuscarEntrada('');
-  atualizarDescTipoPreview();
-  atualizarChavePreview();
-  validarBotaoSalvar();
+  if($('adVaga')) $('adVaga').value = ''; if($('adElevador')) $('adElevador').value = ''; if($('adTipo')) $('adTipo').value = ''; if($('adSuites')) $('adSuites').value = '';
+  state._tipoEscolhido = ''; atualizarPreview(''); atualizarBotaoBuscarEntrada(''); atualizarDescTipoPreview(); atualizarChavePreview(); validarBotaoSalvar();
 }
 
 function fecharPainelImovel(){ $('adminPanel').classList.remove('show'); }
 
 function editarImovel(id){
-  const im = state.imoveis.find(x => String(x.id) === String(id));
-  if(!im) return;
-  limparForm();
-  $('editingId').value = im.id;
-  $('adCliente').value = im.clienteNome ? `${im.clienteNome} - ${fmtTel(im.telefone)}` : '';
-  $('adLink').value = im.link || ''; $('adRua').value = im.rua || ''; $('adNumero').value = im.numero || '';
-  $('adBairro').value = im.bairro || ''; $('adPreco').value = im.preco || ''; $('adCondominio').value = im.condominio || '';
-  $('adIPTU').value = im.iptu || '';
-  const info = extrairAptoBlocoChave(im.chaveTexto || '');
-  $('adApto').value = info.apto || ''; $('adBloco').value = info.bloco || ''; $('adChaveComplemento').value = info.resto || '';
-  if($('adVaga')) $('adVaga').value = String(im.vaga || '').trim();
-  if($('adElevador')) $('adElevador').value = String(im.elevador || '').trim();
-  if($('adSuites')) $('adSuites').value = String(im.suites || '0');
-  const tipo = extrairTipoImovel(im.descricao || '');
-  if(tipo){ state._tipoEscolhido = tipo; if($('adTipo')) $('adTipo').value = tipo; }
-  atualizarDescTipoPreview();
-  $('adDescricao').value = descricaoSemTipo(im.descricao || '');
-  $('adImagem').value = im.imagem || '';
-  if(im.imagem) atualizarPreview(im.imagem);
-  if(im.codigo) atualizarBotaoBuscarEntrada(im.codigo);
-  atualizarChavePreview(); validarBotaoSalvar();
-  $('btnSalvarImovel').innerHTML = 'Atualizar';
-  $('adminPanelTitle').textContent = 'Editar imóvel';
-  $('adminPanel').classList.add('show');
+  const im = state.imoveis.find(x => String(x.id) === String(id)); if(!im) return;
+  limparForm(); $('editingId').value = im.id; $('adCliente').value = im.clienteNome ? `${im.clienteNome} - ${fmtTel(im.telefone)}` : '';
+  $('adLink').value = im.link || ''; $('adRua').value = im.rua || ''; $('adNumero').value = im.numero || ''; $('adBairro').value = im.bairro || ''; $('adPreco').value = im.preco || ''; $('adCondominio').value = im.condominio || ''; $('adIPTU').value = im.iptu || '';
+  const info = extrairAptoBlocoChave(im.chaveTexto || ''); $('adApto').value = info.apto || ''; $('adBloco').value = info.bloco || ''; $('adChaveComplemento').value = info.resto || '';
+  if($('adVaga')) $('adVaga').value = String(im.vaga || '').trim(); if($('adElevador')) $('adElevador').value = String(im.elevador || '').trim(); if($('adSuites')) $('adSuites').value = String(im.suites || '0');
+  const tipo = extrairTipoImovel(im.descricao || ''); if(tipo){ state._tipoEscolhido = tipo; if($('adTipo')) $('adTipo').value = tipo; }
+  atualizarDescTipoPreview(); $('adDescricao').value = descricaoSemTipo(im.descricao || ''); $('adImagem').value = im.imagem || '';
+  if(im.imagem) atualizarPreview(im.imagem); if(im.codigo) atualizarBotaoBuscarEntrada(im.codigo);
+  atualizarChavePreview(); validarBotaoSalvar(); $('btnSalvarImovel').innerHTML = 'Atualizar'; $('adminPanelTitle').textContent = 'Editar imóvel'; $('adminPanel').classList.add('show');
 }
 
 function atualizarPreview(url){
   const img = $('previewImg'), semImg = $('semImgTxt');
-  if(url && /^https?:\/\//.test(url)){ img.src = url; img.classList.remove('hidden'); if(semImg) semImg.style.display = 'none'; }
-  else { img.src = ''; img.classList.add('hidden'); if(semImg) semImg.style.display = ''; }
+  if(url && /^https?:\/\//.test(url)){ img.src = url; img.classList.remove('hidden'); if(semImg) semImg.style.display = 'none'; } else { img.src = ''; img.classList.add('hidden'); if(semImg) semImg.style.display = ''; }
 }
-function atualizarBotaoBuscarEntrada(codigo){
-  state._codigoLinkAtual = codigo || '';
-  const btn = $('btnBuscarEntrada'); if(btn) btn.disabled = !codigo;
-}
-function abrirBuscarEntradaForm(){
-  if(!state._codigoLinkAtual) return;
-  window.open(`${BUSCAR_BASE}/${state._codigoLinkAtual}`, '_blank', 'noopener');
-}
+function atualizarBotaoBuscarEntrada(codigo){ state._codigoLinkAtual = codigo || ''; const btn = $('btnBuscarEntrada'); if(btn) btn.disabled = !codigo; }
+function abrirBuscarEntradaForm(){ if(!state._codigoLinkAtual) return; window.open(`${BUSCAR_BASE}/${state._codigoLinkAtual}`, '_blank', 'noopener'); }
 function onLinkBlur(){ const url = $('adLink').value.trim(); if(url) atualizarBotaoBuscarEntrada(extrairCodigoDoLink(url)); }
 function onLinkImovelChanged(){
-  clearTimeout(state._linkDebounce);
-  const url = $('adLink').value.trim();
+  clearTimeout(state._linkDebounce); const url = $('adLink').value.trim();
   if(!url){ atualizarBotaoBuscarEntrada(''); return; }
   atualizarBotaoBuscarEntrada(extrairCodigoDoLink(url));
   if(!/^https?:\/\//.test(url)) return;
@@ -1810,29 +1487,21 @@ function onLinkImovelChanged(){
 }
 async function verificarCodigoExistente(codigo){
   if(!codigo || $('editingId').value || $('adRua').value.trim()) return;
-  const res = await api('listarTodosImoveis', { senha: SENHA_ADMIN });
-  if(!res.ok || !res.data) return;
-  const achado = res.data.find(im => String(im.codigo || '').trim() === String(codigo));
-  if(!achado) return;
-  $('adRua').value = achado.rua || ''; $('adNumero').value = achado.numero || ''; $('adBairro').value = achado.bairro || '';
-  $('adPreco').value = achado.preco || ''; $('adCondominio').value = achado.condominio || ''; $('adIPTU').value = achado.iptu || '';
-  $('adDescricao').value = descricaoSemTipo(achado.descricao || '');
-  const info = extrairAptoBlocoChave(achado.chaveTexto || '');
-  $('adApto').value = info.apto || ''; $('adBloco').value = info.bloco || ''; $('adChaveComplemento').value = info.resto || '';
-  if(achado.imagem){ $('adImagem').value = achado.imagem; atualizarPreview(achado.imagem); }
-  validarBotaoSalvar();
+  const res = await api('listarTodosImoveis', { senha: SENHA_ADMIN }); if(!res.ok || !res.data) return;
+  const achado = res.data.find(im => String(im.codigo || '').trim() === String(codigo)); if(!achado) return;
+  $('adRua').value = achado.rua || ''; $('adNumero').value = achado.numero || ''; $('adBairro').value = achado.bairro || ''; $('adPreco').value = achado.preco || ''; $('adCondominio').value = achado.condominio || ''; $('adIPTU').value = achado.iptu || ''; $('adDescricao').value = descricaoSemTipo(achado.descricao || '');
+  const info = extrairAptoBlocoChave(achado.chaveTexto || ''); $('adApto').value = info.apto || ''; $('adBloco').value = info.bloco || ''; $('adChaveComplemento').value = info.resto || '';
+  if(achado.imagem){ $('adImagem').value = achado.imagem; atualizarPreview(achado.imagem); } validarBotaoSalvar();
 }
 function onTipoChange(select){ state._tipoEscolhido = select.value; atualizarDescTipoPreview(); validarBotaoSalvar(); }
 function atualizarDescTipoPreview(){
   const elTexto = $('descTipoTexto');
-  if(state._tipoEscolhido){ elTexto.textContent = '*' + state._tipoEscolhido + '*'; elTexto.classList.remove('empty-txt'); }
-  else { elTexto.textContent = 'Selecione o tipo acima'; elTexto.classList.add('empty-txt'); }
+  if(state._tipoEscolhido){ elTexto.textContent = '*' + state._tipoEscolhido + '*'; elTexto.classList.remove('empty-txt'); } else { elTexto.textContent = 'Selecione o tipo acima'; elTexto.classList.add('empty-txt'); }
 }
 function atualizarChavePreview(){
   const apto = $('adApto').value.trim(), bloco = $('adBloco').value.trim();
   $('chaveValorApto').textContent = apto || '—'; $('chaveLinhaApto').classList.toggle('vazia', !apto);
-  $('chaveValorBloco').textContent = bloco || '—'; $('chaveLinhaBloco').classList.toggle('vazia', !bloco);
-  validarBotaoSalvar();
+  $('chaveValorBloco').textContent = bloco || '—'; $('chaveLinhaBloco').classList.toggle('vazia', !bloco); validarBotaoSalvar();
 }
 function onAptoInput(el){ sanitizarApto(el); atualizarChavePreview(); }
 function onBlocoInput(el){ sanitizarBloco(el); atualizarChavePreview(); }
@@ -1842,22 +1511,15 @@ function validarBotaoSalvar(){
 }
 
 async function salvarImovel(){
-  const editandoId = $('editingId').value;
-  const tipo = state._tipoEscolhido;
+  const editandoId = $('editingId').value, tipo = state._tipoEscolhido;
   if(!tipo){ toast('Escolha o tipo', 'error'); return; }
-  
-  const descricaoLimpa = descricaoSemTipo($('adDescricao').value);
-  const descricaoFinal = `*${tipo}* ` + descricaoLimpa;
+  const descricaoLimpa = descricaoSemTipo($('adDescricao').value), descricaoFinal = `*${tipo}* ` + descricaoLimpa;
   const chaveFinal = montarChaveTexto($('adApto').value, $('adBloco').value, $('adChaveComplemento').value);
-  
-  const clienteStr = $('adCliente').value;
-  let tel = '';
+  const clienteStr = $('adCliente').value; let tel = '';
   if(clienteStr){
     const dlOption = Array.from(document.querySelectorAll('#listaClientesDatalist option')).find(o => o.value === clienteStr);
-    if(dlOption) tel = dlOption.dataset.tel;
-    else tel = normalizaTel(clienteStr);
+    if(dlOption) tel = dlOption.dataset.tel; else tel = normalizaTel(clienteStr);
   }
-
   const dados = {
     senha: SENHA_ADMIN, id: editandoId, telefone: tel,
     rua: $('adRua').value.trim(), numero: $('adNumero').value.trim(), bairro: $('adBairro').value.trim(),
@@ -1866,32 +1528,19 @@ async function salvarImovel(){
     status: 'pendente', corretor: state.corretores[0]?.nome || '', vendido: '', desativado: '',
     vaga: $('adVaga').value.trim(), elevador: $('adElevador').value.trim(), suites: $('adSuites').value
   };
-
-  $('btnSalvarImovel').disabled = true;
-  $('btnSalvarImovel').innerHTML = 'Salvando...';
-  
+  $('btnSalvarImovel').disabled = true; $('btnSalvarImovel').innerHTML = 'Salvando...';
   const res = await api('salvarImovel', dados);
-  if(res.ok && editandoId){
-    await api('atualizarImovelPorCodigo', { senha: SENHA_ADMIN, codigo: extrairCodigoDoLink(dados.link), preco: dados.preco, condominio: dados.condominio, iptu: dados.iptu, descricao: dados.descricao, imagem: dados.imagem, chaveTexto: dados.chaveTexto, link: dados.link, vaga: dados.vaga, elevador: dados.elevador });
-  }
-
-  $('btnSalvarImovel').disabled = false;
-  $('btnSalvarImovel').innerHTML = editandoId ? 'Atualizar' : 'Salvar no catálogo';
-
+  if(res.ok && editandoId){ await api('atualizarImovelPorCodigo', { senha: SENHA_ADMIN, codigo: extrairCodigoDoLink(dados.link), preco: dados.preco, condominio: dados.condominio, iptu: dados.iptu, descricao: dados.descricao, imagem: dados.imagem, chaveTexto: dados.chaveTexto, link: dados.link, vaga: dados.vaga, elevador: dados.elevador }); }
+  $('btnSalvarImovel').disabled = false; $('btnSalvarImovel').innerHTML = editandoId ? 'Atualizar' : 'Salvar no catálogo';
   if(!res.ok){ toast(res.error || 'Erro ao salvar', 'error'); return; }
-  toast(editandoId ? 'Atualizado!' : 'Adicionado!', 'success');
-  fecharPainelImovel();
-  await recarregar();
+  toast(editandoId ? 'Atualizado!' : 'Adicionado!', 'success'); fecharPainelImovel(); await recarregar();
 }
 
-// Listeners
 window.addEventListener('resize', () => aplicarColunas(carregarColunas()));
 document.addEventListener('DOMContentLoaded', () => {
   initSliderPreco();
   document.querySelectorAll('#chipsTipoImovel .chip, #chipsAndar .chip').forEach(b => b.addEventListener('click', () => b.classList.toggle('active')));
-  document.querySelectorAll('#chipsElevador .chip').forEach(b => b.addEventListener('click', () => {
-    document.querySelectorAll('#chipsElevador .chip').forEach(x => x.classList.remove('active')); b.classList.add('active');
-  }));
+  document.querySelectorAll('#chipsElevador .chip').forEach(b => b.addEventListener('click', () => { document.querySelectorAll('#chipsElevador .chip').forEach(x => x.classList.remove('active')); b.classList.add('active'); }));
   setTimeout(() => { if(document.querySelectorAll('.card[data-codigo]').length > 0) carregarTodosBadgesMatch(); }, 1000);
 });
 </script>
