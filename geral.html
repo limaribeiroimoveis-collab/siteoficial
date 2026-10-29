@@ -31,7 +31,7 @@
     --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
     
     --card-img-size: 110px;
-    --card-fixed-height: 370px; /* Aumentado levemente para caber a faixa de tipo */
+    --card-fixed-height: 365px;
     --block-fixed-height: 65px;
   }
   html, body { height: 100%; overflow-x: hidden; }
@@ -268,14 +268,14 @@
 
   /* FAIXA DE TIPO (ROXO ESCURO) */
   .card-tipo-faixa {
-    width: 100%; height: 24px; background: var(--purple); color: #fff;
+    width: 100%; height: 22px; background: var(--purple); color: #fff;
     display: flex; align-items: center; justify-content: center;
-    font-size: 0.58rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;
+    font-size: 0.55rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;
     text-align: center; line-height: 1; padding: 0 4px; overflow: hidden;
   }
-  .card-tipo-faixa.hidden { visibility: hidden; } /* Ocupa espaço mas não mostra nada */
+  .card-tipo-faixa.hidden { visibility: hidden; }
 
-  .card-body{ padding: 6px 10px; flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; overflow: hidden; }
+  .card-body{ padding: 4px 10px 6px; flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; overflow: hidden; }
   .card-title{
     font-size: .8rem; font-weight: 700; line-height: 1.25; color: var(--text);
     letter-spacing: -.005em; word-break: break-word;
@@ -303,13 +303,20 @@
     font-size: .5rem; font-weight: 800; min-width: 14px; text-align: center; line-height: 1.4;
   }
 
+  /* PREÇO SEM O LABEL */
+  .card-preco-row {
+    display: flex; align-items: center; margin: 2px 0;
+  }
+  .card-preco-val {
+    font-size: 1rem; font-weight: 800; color: var(--success-bright); letter-spacing: -0.5px;
+  }
+
   .card-data-grid{
     display: grid; grid-template-columns: 1fr 1fr; gap: 2px 8px; font-size: .66rem; line-height: 1.35;
   }
   .card-data-item{ display: flex; align-items: baseline; gap: 3px; min-width: 0; }
   .card-data-item .dlabel{ font-size: .52rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .3px; flex-shrink: 0; }
   .card-data-item .dvalue{ color: var(--text); font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .card-data-item .dvalue.preco{ color: var(--success-bright); font-weight: 800; font-size: .78rem; }
   .card-data-item .dvalue.mono{ font-family: var(--mono); font-size: .64rem; }
 
   /* Blocos (Descrição e Chave) */
@@ -380,6 +387,35 @@
   .modal-close:hover{ background: var(--bg-alt); color: var(--text); }
   .modal h2{ font-size: 1.15rem; font-weight: 800; margin-bottom: 6px; display: flex; align-items: center; gap: 9px; color: var(--text); }
   .modal .sub{ color: var(--text-soft); font-size: 0.85rem; margin-bottom: 20px; line-height: 1.5; }
+
+  /* ===== MODAL MATCH (NOVO DESIGN) ===== */
+  .modal-match { max-width: 600px; padding: 0; overflow: hidden; display: flex; flex-direction: column; }
+  .modal-match-header { background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); padding: 20px 24px; color: #fff; position: relative; }
+  .modal-match-header h2 { color: #fff; margin-bottom: 4px; font-size: 1.25rem; }
+  .modal-match-header p { color: rgba(255,255,255,0.8); font-size: 0.85rem; margin: 0; }
+  .modal-match-header .btn-close-match { position: absolute; top: 16px; right: 16px; background: rgba(255,255,255,0.2); border: none; color: #fff; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.15s; }
+  .modal-match-header .btn-close-match:hover { background: rgba(255,255,255,0.4); transform: rotate(90deg); }
+  .modal-match-body { padding: 20px 24px; overflow-y: auto; max-height: 65vh; background: #f8fafc; }
+  
+  .cliente-match-card {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    background: #fff; border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 12px 16px; margin-bottom: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    transition: 0.15s;
+  }
+  .cliente-match-card:hover { border-color: var(--lilac); box-shadow: 0 4px 12px rgba(167,139,250,0.15); }
+  .cliente-match-left { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0; }
+  .cliente-match-left .avatar { width: 42px; height: 42px; border-radius: 50%; background: var(--lilac-soft); color: var(--lilac-dark); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; font-weight: 800; flex-shrink: 0; }
+  .cliente-match-info { min-width: 0; }
+  .cliente-match-info .nome { font-weight: 700; font-size: 0.9rem; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .cliente-match-info .meta { font-size: 0.75rem; color: var(--text-soft); }
+  .cliente-match-actions { display: flex; gap: 6px; flex-shrink: 0; }
+  .btn-match-action { width: 36px; height: 36px; border-radius: 50%; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.15s; }
+  .btn-match-action.btn-send { background: var(--lilac-soft); color: var(--lilac-dark); }
+  .btn-match-action.btn-send:hover { background: var(--lilac); color: #fff; }
+  .btn-match-action.btn-discard { background: var(--bg-alt); color: var(--text-soft); }
+  .btn-match-action.btn-discard:hover { background: #fee2e2; color: var(--danger-bright); }
+  .modal-match-footer { padding: 16px 24px; background: #fff; border-top: 1px solid var(--border); text-align: right; }
 
   /* ===== MODAL FILTRO AVANÇADO ===== */
   .secao-titulo { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; color: var(--purple); margin-bottom: 8px; padding-top: 12px; border-top: 1px dashed var(--border); display: flex; align-items: center; gap: 6px; }
@@ -618,6 +654,20 @@
     <div class="empty-state hidden" id="emptyState">
       <h3>Nenhum imóvel encontrado</h3>
       <p>Ajuste os filtros ou a busca.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL MATCH ===== -->
+<div class="modal-backdrop" id="matchModalBackdrop" onclick="if(event.target===this) fecharModalMatch()">
+  <div class="modal modal-match">
+    <div class="modal-match-header">
+      <h2><svg class="ico" viewBox="0 0 24 24" style="stroke:#fff; width:24px; height:24px;"><circle cx="8" cy="12" r="5"></circle><circle cx="16" cy="12" r="5"></circle></svg> Clientes com Match</h2>
+      <p>Imóvel: <span id="matchModalNome" style="font-weight:700;"></span></p>
+      <button class="btn-close-match" onclick="fecharModalMatch()"><svg class="ico" viewBox="0 0 24 24" style="stroke:#fff;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="modal-match-body" id="matchModalLista">
+      <div class="loading-wrap" style="min-height:auto; padding:30px 0;"><div class="spinner-lg" style="width:34px;height:34px;"></div></div>
     </div>
   </div>
 </div>
@@ -922,46 +972,6 @@
   </div>
 </div>
 
-<!-- ===== MODAL MATCH ===== -->
-<div class="modal-backdrop" id="matchModalBackdrop" onclick="if(event.target===this) fecharModalMatch()">
-  <div class="modal">
-    <button class="modal-close" onclick="fecharModalMatch()"><svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-    <h2 style="display:flex; align-items:center; gap:9px;">
-      <svg class="ico" viewBox="0 0 24 24" style="stroke:#7c3aed;"><circle cx="8" cy="12" r="5"></circle><circle cx="16" cy="12" r="5"></circle></svg>
-      Match — <span id="matchModalNome" style="color:var(--text-soft);font-weight:600;"></span>
-    </h2>
-    <p class="sub">Clientes que combinam com este imóvel. Envie para a vitrine de quem desejar.</p>
-    <div id="matchModalLista" style="max-height:60vh; overflow-y:auto; padding-right:4px;">
-      <div class="loading-wrap" style="min-height:auto; padding:30px 0;"><div class="spinner-lg" style="width:34px;height:34px;"></div></div>
-    </div>
-  </div>
-</div>
-
-<!-- ===== MODAL CLIENTES ===== -->
-<div class="modal-backdrop" id="clientesModalBackdrop" onclick="if(event.target===this) fecharClientesImovel()">
-  <div class="modal">
-    <button class="modal-close" onclick="fecharClientesImovel()"><svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-    <h2>👥 Clientes com este imóvel</h2>
-    <p class="sub" id="clientesModalSub">—</p>
-    <div id="clientesModalLista" style="max-height:60vh; overflow-y:auto;"></div>
-  </div>
-</div>
-
-<!-- ===== CONFIRM ===== -->
-<div class="modal-backdrop" id="confirmBackdrop">
-  <div class="modal" style="max-width:400px; text-align:center;">
-    <div id="confirmIconWrap" style="width:52px; height:52px; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 14px; background:var(--warn-soft); color:var(--warn);">
-      <svg class="ico ico-lg" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-    </div>
-    <h3 id="confirmTitulo" style="font-size:1rem; font-weight:700; margin-bottom:8px;">Confirmar ação</h3>
-    <p id="confirmTexto" style="font-size:.84rem; color:var(--text-soft); margin-bottom:20px;">Tem certeza?</p>
-    <div style="display:flex; gap:8px;">
-      <button class="btn btn-ghost" id="confirmBtnNao" style="flex:1">Cancelar</button>
-      <button class="btn btn-purple" id="confirmBtnSim" style="flex:1">Confirmar</button>
-    </div>
-  </div>
-</div>
-
 <div class="toast" id="toast"></div>
 
 <script>
@@ -994,7 +1004,8 @@ const state = {
   _filtrosAvancados: {
     bairros: [], regioes: [], tipos: [], precoMin: null, precoMax: null, quartos: '', suites: '',
     vagasQtd: '', vagaTipo: '', elevador: '', andares: [], metragem: '', condominioMax: '', ordenacao: 'recentes'
-  }
+  },
+  _lazyMatchIndex: 0
 };
 
 const $ = id => document.getElementById(id);
@@ -1226,16 +1237,16 @@ function temInformacaoFaltando(im) {
   if (!info.apto && !info.bloco && !String(im.chaveTexto||'').trim()) faltas.push('Chave');
   
   const v = String(im.vaga || '').trim();
-  if (!v) faltas.push('Vaga');
+  if (!v || v === '—') faltas.push('Vaga');
   
   const e = String(im.elevador || '').trim();
-  if (!e) faltas.push('Elevador');
+  if (!e || e === '—') faltas.push('Elevador');
   
   const t = extrairTipoImovel(im.descricao);
   if (!t) faltas.push('Tipo');
   
   const s = String(im.suites || '').trim();
-  if (!s) faltas.push('Suítes');
+  if (!s || s === '—') faltas.push('Suítes');
   
   return faltas;
 }
@@ -1498,7 +1509,12 @@ function renderizar(){
 
   if(lista.length === 0){ grid.innerHTML = ''; $('emptyState').classList.remove('hidden'); return; }
   $('emptyState').classList.add('hidden'); grid.innerHTML = lista.map(cardHTML).join('');
-  atualizarBadgesClientes(); setTimeout(() => carregarTodosBadgesMatch(), 300);
+  
+  atualizarBadgesClientes();
+  
+  // Reset do Lazy Load e carrega os 20 primeiros
+  state._lazyMatchIndex = 0;
+  setTimeout(() => carregarMatchesLazy(), 300);
 }
 
 function cardHTML(im){
@@ -1589,8 +1605,12 @@ function cardHTML(im){
         <div class="card-body">
           <div class="card-title" title="${esc(im.titulo || 'Sem endereço')}">${esc(im.titulo) || 'Sem endereço'}</div>
           ${codeActionsHtml}
+          
+          <div class="card-preco-row">
+            <span class="card-preco-val">${esc(precoFmt)}</span>
+          </div>
+
           <div class="card-data-grid">
-            <div class="card-data-item"><span class="dlabel">Preço</span><span class="dvalue preco">${esc(precoFmt)}</span></div>
             <div class="card-data-item"><span class="dlabel">Cond.</span><span class="dvalue">${esc(condFmt)}</span></div>
             <div class="card-data-item"><span class="dlabel">IPTU</span><span class="dvalue">${esc(iptuFmt)}</span></div>
             <div class="card-data-item"><span class="dlabel">Apto</span><span class="dvalue mono">${esc(apto)}</span></div>
@@ -1630,11 +1650,24 @@ async function abrirModalMatch(codigo, titulo){
   const lista = res.data || []; state._matchesCache[codigo] = lista;
   if(lista.length === 0){ $('matchModalLista').innerHTML = `<div class="empty-state"><p>Nenhum cliente compatível.</p></div>`; atualizarNumMatch(codigo, 0); return; }
   atualizarNumMatch(codigo, lista.length);
+  
   $('matchModalLista').innerHTML = lista.map(m => `
-    <div class="cliente-match-row" data-tel="${esc(m.telefone)}">
-      <div class="avatar">${(m.nome || '?').slice(0,1).toUpperCase()}</div>
-      <div class="info"><div class="nome">${esc(m.nome || 'Sem nome')}</div><div class="meta">${esc(fmtTel(m.telefone))}</div></div>
-      <div class="actions"><button class="btn btn-lilac" onclick="matchEnviar('${esc(m.telefone)}', '${esc(codigo)}', this)">Enviar</button><button class="btn btn-ghost" onclick="matchDescartar('${esc(m.telefone)}', '${esc(codigo)}', this)">X</button></div>
+    <div class="cliente-match-card" data-tel="${esc(m.telefone)}">
+      <div class="cliente-match-left">
+        <div class="avatar">${(m.nome || '?').slice(0,1).toUpperCase()}</div>
+        <div class="cliente-match-info">
+          <div class="nome">${esc(m.nome || 'Sem nome')}</div>
+          <div class="meta">${esc(fmtTel(m.telefone))}</div>
+        </div>
+      </div>
+      <div class="cliente-match-actions">
+        <button class="btn-match-action btn-send" onclick="matchEnviar('${esc(m.telefone)}', '${esc(codigo)}', this)" title="Enviar para vitrine">
+          <svg class="ico" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        </button>
+        <button class="btn-match-action btn-discard" onclick="matchDescartar('${esc(m.telefone)}', '${esc(codigo)}', this)" title="Descartar Match">
+          <svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
     </div>
   `).join('');
 }
@@ -1644,12 +1677,12 @@ async function matchEnviar(telefone, codigo, btn){
   const res = await api('salvarImovel', { senha: SENHA_ADMIN, telefone, rua: im.rua, numero: im.numero, bairro: im.bairro, preco: im.preco, descricao: im.descricao, chaveTexto: im.chaveTexto, vaga: im.vaga, elevador: im.elevador, suites: im.suites });
   if(!res.ok){ toast(res.error, 'error'); return; }
   await api('descartarMatch', { senha: SENHA_ADMIN, telefone, codigo, origem: 'enviado' });
-  toast('Enviado!', 'success'); if(btn) btn.closest('.cliente-match-row').remove(); carregarContagensClientes(); delete state._matchesCache[codigo];
+  toast('Enviado!', 'success'); if(btn) btn.closest('.cliente-match-card').remove(); carregarContagensClientes(); delete state._matchesCache[codigo];
 }
 async function matchDescartar(telefone, codigo, btn){
   if(!await confirmarAcao({ titulo: 'Descartar match?', texto: 'Ocultará este cliente.', btnSim: 'Descartar', tipo: 'danger' })) return;
   await api('descartarMatch', { senha: SENHA_ADMIN, telefone, codigo, origem: 'descartado' }); toast('Match descartado', 'success');
-  if(btn) btn.closest('.cliente-match-row').remove(); delete state._matchesCache[codigo];
+  if(btn) btn.closest('.cliente-match-card').remove(); delete state._matchesCache[codigo];
 }
 function atualizarNumMatch(codigo, total){
   const card = document.querySelector(`.card[data-codigo="${esc(codigo)}"]`); if(!card) return;
@@ -1657,23 +1690,38 @@ function atualizarNumMatch(codigo, total){
 }
 function fecharModalMatch(){ $('matchModalBackdrop').classList.remove('show'); }
 
-/* PERFORMANCE: CARREGAR MATCHES APENAS PARA ATIVOS, E EM LOTES MAIORES */
-async function carregarTodosBadgesMatch(){
-  const cards = document.querySelectorAll('.card[data-codigo]:not(.card-vendido)'); // Ignora vendidos
-  const codigos = [];
-  cards.forEach(c => { const cod = c.dataset.codigo; if(cod && !state._matchesCache[cod]) codigos.push(cod); });
-  for(let i = 0; i < codigos.length; i += 10){ // Lotes maiores (10 em vez de 5)
-    const lote = codigos.slice(i, i + 10);
-    await Promise.all(lote.map(async cod => {
-      try { 
-        const res = await api('listarMatchesDoImovel', { senha: SENHA_ADMIN, codigo: cod }, TIMEOUT_API, 0); 
-        const lista = (res.ok && res.data) ? res.data : []; 
-        state._matchesCache[cod] = lista; 
-        atualizarNumMatch(cod, lista.length); 
-      } catch(e){}
-    }));
-  }
+/* LAZY LOAD MATCH (20 EM 20) */
+function carregarMatchesLazy(){
+  const cards = Array.from(document.querySelectorAll('.card[data-codigo]:not(.card-vendido)'));
+  if (state._lazyMatchIndex >= cards.length) return;
+
+  const lote = cards.slice(state._lazyMatchIndex, state._lazyMatchIndex + 20);
+  state._lazyMatchIndex += 20;
+
+  lote.forEach(async card => {
+    const cod = card.dataset.codigo;
+    if (!cod || state._matchesCache[cod] !== undefined) return;
+    
+    try {
+      const res = await api('listarMatchesDoImovel', { senha: SENHA_ADMIN, codigo: cod }, TIMEOUT_API, 0);
+      const lista = (res.ok && res.data) ? res.data : [];
+      state._matchesCache[cod] = lista;
+      atualizarNumMatch(cod, lista.length);
+    } catch(e){}
+  });
 }
+
+// Escuta o scroll para carregar mais matches
+let _scrollTimeout;
+window.addEventListener('scroll', () => {
+  if (_scrollTimeout) clearTimeout(_scrollTimeout);
+  _scrollTimeout = setTimeout(() => {
+    // Se estiver perto do fim da página, carrega mais 20
+    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 500) {
+      carregarMatchesLazy();
+    }
+  }, 200);
+});
 
 async function abrirClientesImovel(codigo, titulo){
   if(!codigo){ toast('Código vazio', 'error'); return; }
@@ -1805,7 +1853,6 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('#chipsTipoImovel .chip, #chipsAndar .chip').forEach(b => b.addEventListener('click', () => b.classList.toggle('active')));
   document.querySelectorAll('#chipsElevador .chip').forEach(b => b.addEventListener('click', () => { document.querySelectorAll('#chipsElevador .chip').forEach(x => x.classList.remove('active')); b.classList.add('active'); }));
   document.querySelectorAll('#chipsRegiao .chip-regiao').forEach(btn => btn.addEventListener('click', () => toggleRegiao(btn.dataset.regiao)));
-  setTimeout(() => { if(document.querySelectorAll('.card[data-codigo]:not(.card-vendido)').length > 0) carregarTodosBadgesMatch(); }, 1000);
 });
 </script>
 </body>
