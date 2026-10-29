@@ -431,7 +431,7 @@
 
   .form-row-link-price{ display: grid; grid-template-columns: 2fr 1fr 1fr 1fr auto; gap: 10px; margin-bottom: 6px; align-items: end; }
   .form-row-address{ display: grid; grid-template-columns: 2fr 1fr .9fr 1fr; gap: 10px; margin-bottom: 6px; }
-  .form-row-bairro-tipo{ display: grid; grid-template-columns: 1.4fr 1fr 1fr 1.2fr; gap: 10px; margin-bottom: 6px; }
+  .form-row-bairro-tipo{ display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr 1.2fr; gap: 10px; margin-bottom: 6px; }
   .form-row-img-desc{ display: grid; grid-template-columns: 180px 1fr; gap: 12px; margin-bottom: 8px; align-items: start; }
   .form-row-chave-acoes{ display: grid; grid-template-columns: 7fr 3fr; gap: 12px; margin-bottom: 6px; align-items: stretch; }
   .acoes-col{ display: flex; flex-direction: column; gap: 6px; justify-content: flex-start; }
@@ -687,8 +687,20 @@
       <div><label>Apartamento <span class="req" id="reqApto">*</span></label><input type="text" id="adApto" maxlength="10" oninput="onAptoInput(this)"></div>
     </div>
 
-    <div class="form-row-bairro-tipo">
+        <div class="form-row-bairro-tipo">
       <div><label>Bairro <span class="req">*</span></label><input type="text" id="adBairro"></div>
+      <div>
+        <label>Suítes <span class="req">*</span></label>
+        <select id="adSuites" class="select-padrao">
+          <option value="">—</option>
+          <option value="0">0</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5+">5+</option>
+        </select>
+      </div>
       <div>
         <label>Vaga <span class="req">*</span></label>
         <select id="adVaga" class="select-padrao">
@@ -1709,6 +1721,7 @@ function limparForm(){
   if($('adVaga')) $('adVaga').value = '';
   if($('adElevador')) $('adElevador').value = '';
   if($('adTipo')) $('adTipo').value = '';
+  if($('adSuites')) $('adSuites').value = '';   // ← ADICIONE
   state._tipoEscolhido = '';
   atualizarPreview('');
   atualizarBotaoBuscarEntrada('');
@@ -1739,6 +1752,16 @@ function editarImovel(id){
   $('adChaveComplemento').value = info.resto || '';
   if($('adVaga')) $('adVaga').value = String(im.vaga || '').trim();
   if($('adElevador')) $('adElevador').value = String(im.elevador || '').trim();
+   // Suítes: tenta da descrição
+  if($('adSuites')){
+    const mSuite = String(im.descricao || '').match(/(\d+)\s*su[íi]tes?/i);
+    if(mSuite){
+      const n = parseInt(mSuite[1], 10);
+      $('adSuites').value = n >= 5 ? '5+' : String(n);
+    } else {
+      $('adSuites').value = '0';
+    }
+  }
   const tipo = extrairTipoImovel(im.descricao || '');
   if(tipo){
     state._tipoEscolhido = tipo;
@@ -1793,6 +1816,84 @@ function onLinkImovelChanged(){
   if(!url){ atualizarBotaoBuscarEntrada(''); return; }
   const codigo = extrairCodigoDoLink(url);
   atualizarBotaoBuscarEntrada(codigo);
+  if(!codigo || !/^https?:\/\//.test(url)) return;
+  state._linkDebounce = setTimeout(async () => {
+    // 1. Busca miniatura do link
+    await buscarImagemDoLink(url);
+    // 2. Verifica se o código já existe no sistema
+    await verificarCodigoExistente(codigo);
+  }, 900);
+}
+
+ async function buscarImagemDoLink(url){
+  const semImg = $('semImgTxt');
+  const img = $('previewImg');
+  img.classList.add('hidden');
+  if(semImg){
+    semImg.innerHTML = '<div style="display:flex; flex-direction:column; align-items:center; gap:6px;"><div style="width:18px;height:18px;border:2px solid rgba(249,115,22,.25);border-top-color:var(--orange);border-radius:50%;animation:girar .7s linear infinite;"></div>Buscando...</div>';
+    semImg.style.display = '';
+  }
+  try {
+    const res = await api('buscarImagem', { url });
+    if(res.ok && res.imagem){
+      $('adImagem').value = res.imagem;
+      atualizarPreview(res.imagem);
+    } else {
+      if(semImg) semImg.innerHTML = 'Cole um link<br>para buscar';
+    }
+  } catch(e){
+    if(semImg) semImg.innerHTML = 'Cole um link<br>para buscar';
+  }
+}
+
+async function verificarCodigoExistente(codigo){
+  if(!codigo) return;
+  // Se está editando, não busca (é o próprio)
+  if($('editingId').value) return;
+  // Se já preencheu rua manualmente, respeita o que o usuário digitou
+  if($('adRua').value.trim()) return;
+  try {
+    const res = await api('listarTodosImoveis', { senha: SENHA_ADMIN });
+    if(!res.ok || !res.data) return;
+    const achado = res.data.find(im => String(im.codigo || '').trim() === String(codigo));
+    if(!achado) return;
+    // Preenche campos automaticamente
+    $('adRua').value = achado.rua || '';
+    $('adNumero').value = achado.numero || '';
+    $('adBairro').value = achado.bairro || '';
+    $('adPreco').value = achado.preco || '';
+    $('adCondominio').value = achado.condominio || '';
+    $('adIPTU').value = achado.iptu || '';
+    $('adDescricao').value = descricaoSemTipo(achado.descricao || '');
+    $('adImagem').value = achado.imagem || '';
+    if(achado.imagem) atualizarPreview(achado.imagem);
+    // Apto/Bloco/Chave
+    const info = extrairAptoBlocoChave(achado.chaveTexto || '');
+    $('adApto').value = info.apto || '';
+    $('adBloco').value = info.bloco || '';
+    $('adChaveComplemento').value = info.resto || '';
+    // Vaga/Elevador
+    if($('adVaga') && achado.vaga) $('adVaga').value = String(achado.vaga).trim();
+    if($('adElevador') && achado.elevador) $('adElevador').value = String(achado.elevador).trim();
+    // Tipo (da descrição)
+    const tipo = extrairTipoImovel(achado.descricao || '');
+    if(tipo){
+      state._tipoEscolhido = tipo;
+      if($('adTipo')) $('adTipo').value = tipo;
+      atualizarDescTipoPreview();
+    }
+    // Suítes da descrição (se tiver "N suítes")
+    const mSuite = String(achado.descricao || '').match(/(\d+)\s*su[íi]tes?/i);
+    if(mSuite && $('adSuites')){
+      const n = parseInt(mSuite[1], 10);
+      $('adSuites').value = n >= 5 ? '5+' : String(n);
+    }
+    atualizarChavePreview();
+    validarBotaoSalvar();
+    toast('✨ Dados do imóvel preenchidos automaticamente!', 'success');
+  } catch(e){
+    console.warn('[verificarCodigoExistente] erro:', e);
+  }
 }
 function onTipoChange(select){
   state._tipoEscolhido = select.value;
@@ -1835,12 +1936,13 @@ function validarBotaoSalvar(){
   const rua = $('adRua').value.trim();
   const numero = $('adNumero').value.trim();
   const bairro = $('adBairro').value.trim();
+  const suites = $('adSuites') ? $('adSuites').value.trim() : '';
   const vaga = $('adVaga') ? $('adVaga').value.trim() : '';
   const elevador = $('adElevador') ? $('adElevador').value.trim() : '';
   const tipo = $('adTipo') ? $('adTipo').value.trim() : '';
   const btn = $('btnSalvarImovel');
   if(!btn) return;
-  const ok = rua && numero && bairro && vaga && elevador && tipo;
+  const ok = rua && numero && bairro && suites && vaga && elevador && tipo;
   btn.disabled = !ok;
 }
 
@@ -1859,13 +1961,15 @@ async function salvarImovel(){
   const complemento = $('adChaveComplemento').value.trim();
   const link = $('adLink').value.trim();
   const tipo = state._tipoEscolhido;
+   const suites = $('adSuites') ? $('adSuites').value.trim() : '';
   const vaga = $('adVaga').value.trim();
   const elevador = $('adElevador').value.trim();
 
-  if(!tipo){ toast('Escolha o tipo', 'error'); return; }
+    if(!tipo){ toast('Escolha o tipo', 'error'); return; }
   if(!rua){ toast('Informe a rua', 'error'); return; }
   if(!numero){ toast('Informe o número', 'error'); return; }
   if(!bairro){ toast('Informe o bairro', 'error'); return; }
+  if(!suites){ toast('Informe o número de suítes', 'error'); return; }   // ← ADICIONE
   if(!vaga){ toast('Informe a vaga', 'error'); return; }
   if(!elevador){ toast('Informe o elevador', 'error'); return; }
 
@@ -1892,6 +1996,7 @@ async function salvarImovel(){
     vendido: '',
     desativado: '',
     vaga, elevador
+suites   // ← ADICIONE
   };
 
   const btn = $('btnSalvarImovel');
