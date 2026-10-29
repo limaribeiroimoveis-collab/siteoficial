@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Escolha seus Bairros - BH e Vila da Serra</title>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; padding: 0; height: 100%; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+  
+  #app { display: flex; flex-direction: column; height: 100vh; height: 100dvh; }
+  
+  /* Faixa de instrução */
+  #instrucao {
+    background: #1e3a8a;
+    color: #fff;
+    padding: 10px 14px;
+    font-size: 14px;
+    line-height: 1.35;
+    text-align: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,.2);
+    z-index: 1000;
+  }
+  #instrucao strong { color: #fde047; }
+
+  /* Mapa */
+  #map { flex: 1; width: 100%; }
+
+  /* Rodapé */
+  #footer {
+    background: #fff;
+    border-top: 2px solid #e5e7eb;
+    padding: 10px 12px;
+    max-height: 38vh;
+    overflow-y: auto;
+    z-index: 1000;
+  }
+  #footer h3 {
+    margin: 0 0 6px;
+    font-size: 13px;
+    color: #374151;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+  }
+  #lista-nomes {
+    font-size: 14px;
+    color: #111827;
+    min-height: 22px;
+    margin-bottom: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .tag {
+    background: #dcfce7;
+    color: #166534;
+    border: 1px solid #86efac;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .tag .x {
+    cursor: pointer;
+    font-weight: bold;
+    color: #166534;
+    font-size: 15px;
+    line-height: 1;
+  }
+  .vazio { color: #9ca3af; font-style: italic; font-size: 13px; }
+
+  #btn-confirmar {
+    width: 100%;
+    background: #16a34a;
+    color: #fff;
+    border: none;
+    padding: 14px;
+    font-size: 16px;
+    font-weight: 700;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background .15s;
+  }
+  #btn-confirmar:active { background: #15803d; }
+  #btn-confirmar:disabled { background: #d1d5db; color: #6b7280; cursor: not-allowed; }
+
+  /* Ajuste dos pinos */
+  .pino-icon { 
+    background: transparent; 
+    border: none; 
+  }
+</style>
+</head>
+<body>
+
+<div id="app">
+  <!-- Instrução rápida -->
+  <div id="instrucao">
+    👆 <strong>Toque nos pinos</strong> para marcar os bairros onde quer que eu procure seu imóvel ideal em <strong>BH + Vila da Serra</strong>.<br>
+    Depois toque em <strong>Confirmar e Enviar</strong>.
+  </div>
+
+  <!-- Mapa -->
+  <div id="map"></div>
+
+  <!-- Rodapé -->
+  <div id="footer">
+    <h3>Bairros escolhidos</h3>
+    <div id="lista-nomes"><span class="vazio">Nenhum bairro selecionado ainda.</span></div>
+    <button id="btn-confirmar" disabled>Confirmar e Enviar</button>
+  </div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+  // ============================================================
+  // LISTA DE BAIRROS (edite aqui para incluir/remover)
+  // Foco: TODA Belo Horizonte + Vila da Serra (Nova Lima)
+  // ============================================================
+  const bairros = [
+    // ---- BELO HORIZONTE (regiões principais) ----
+    // Centro-Sul (foco do corretor, próxima à Vila da Serra/Belvedere)
+    { nome: "Belvedere", lat: -19.9733, lng: -43.9454, regiao: "Centro-Sul" },
+    { nome: "Lourdes", lat: -19.9289, lng: -43.9386, regiao: "Centro-Sul" },
+    { nome: "Savassi", lat: -19.9360, lng: -43.9345, regiao: "Centro-Sul" },
+    { nome: "Funcionários", lat: -19.9320, lng: -43.9310, regiao: "Centro-Sul" },
+    { nome: "Mangabeiras", lat: -19.9510, lng: -43.9330, regiao: "Centro-Sul" },
+    { nome: "Serra do Curral", lat: -19.9660, lng: -43.9330, regiao: "Centro-Sul" },
+    { nome: "Sion", lat: -19.9580, lng: -43.9330, regiao: "Centro-Sul" },
+    { nome: "Cruzeiro", lat: -19.9420, lng: -43.9300, regiao: "Centro-Sul" },
+    { nome: "Anchieta", lat: -19.9430, lng: -43.9370, regiao: "Centro-Sul" },
+    { nome: "Carmo", lat: -19.9420, lng: -43.9410, regiao: "Centro-Sul" },
+    { nome: "Santa Efigênia", lat: -19.9280, lng: -43.9230, regiao: "Centro-Sul" },
+    { nome: "São Lucas", lat: -19.9280, lng: -43.9150, regiao: "Centro-Sul" },
+    { nome: "Cidade Jardim", lat: -19.9550, lng: -43.9300, regiao: "Centro-Sul" },
+
+    // Oeste
+    { nome: "Buritis", lat: -19.9660, lng: -43.9700, regiao: "Oeste" },
+    { nome: "Estoril", lat: -19.9640, lng: -43.9750, regiao: "Oeste" },
+    { nome: "Gutierrez", lat: -19.9450, lng: -43.9600, regiao: "Oeste" },
+    { nome: "Barro Preto", lat: -19.9280, lng: -43.9500, regiao: "Oeste" },
+    { nome: "Prado", lat: -19.9250, lng: -43.9650, regiao: "Oeste" },
+    { nome: "Nova Granada", lat: -19.9490, lng: -43.9800, regiao: "Oeste" },
+    { nome: "Ouro Preto", lat: -19.9420, lng: -43.9900, regiao: "Oeste" },
+    { nome: "Betânia", lat: -19.9600, lng: -43.9900, regiao: "Oeste" },
+    { nome: "Salgado Filho", lat: -19.9350, lng: -43.9700, regiao: "Oeste" },
+    { nome: "Gameleira", lat: -19.9330, lng: -43.9750, regiao: "Oeste" },
+
+    // Centro
+    { nome: "Centro", lat: -19.9191, lng: -43.9386, regiao: "Centro" },
+    { nome: "Floresta", lat: -19.9120, lng: -43.9280, regiao: "Centro" },
+    { nome: "Lagoinha", lat: -19.9120, lng: -43.9450, regiao: "Centro" },
+    { nome: "Carlos Prates", lat: -19.9100, lng: -43.9550, regiao: "Centro" },
+    { nome: "Bonfim", lat: -19.9050, lng: -43.9350, regiao: "Centro" },
+
+    // Leste
+    { nome: "Santa Tereza", lat: -19.9200, lng: -43.9150, regiao: "Leste" },
+    { nome: "Horto", lat: -19.9150, lng: -43.9050, regiao: "Leste" },
+    { nome: "Sagrada Família", lat: -19.9050, lng: -43.9100, regiao: "Leste" },
+    { nome: "Colégio Batista", lat: -19.9150, lng: -43.9250, regiao: "Leste" },
+    { nome: "Cidade Nova", lat: -19.9100, lng: -43.9200, regiao: "Leste" },
+    { nome: "Vera Cruz", lat: -19.9050, lng: -43.9200, regiao: "Leste" },
+    { nome: "Esplanada", lat: -19.9100, lng: -43.9300, regiao: "Leste" },
+    { nome: "Caetano Furquim", lat: -19.8950, lng: -43.9200, regiao: "Leste" },
+
+    // Nordeste
+    { nome: "Cidade Nova (NE)", lat: -19.8950, lng: -43.9050, regiao: "Nordeste" },
+    { nome: "Renascença", lat: -19.8900, lng: -43.9100, regiao: "Nordeste" },
+    { nome: "Silveira", lat: -19.8800, lng: -43.9150, regiao: "Nordeste" },
+    { nome: "São Paulo", lat: -19.8850, lng: -43.9300, regiao: "Nordeste" },
+    { nome: "União", lat: -19.8750, lng: -43.9200, regiao: "Nordeste" },
+
+    // Noroeste
+    { nome: "Pampulha", lat: -19.8500, lng: -43.9800, regiao: "Pampulha" },
+    { nome: "São Luiz", lat: -19.8600, lng: -43.9700, regiao: "Pampulha" },
+    { nome: "Itapoã", lat: -19.8650, lng: -43.9500, regiao: "Pampulha" },
+    { nome: "Santa Amélia", lat: -19.8500, lng: -43.9600, regiao: "Pampulha" },
+    { nome: "Bandeirantes", lat: -19.8700, lng: -43.9650, regiao: "Pampulha" },
+    { nome: "Indaiá", lat: -19.8500, lng: -43.9650, regiao: "Pampulha" },
+    { nome: "Dona Clara", lat: -19.8700, lng: -43.9750, regiao: "Pampulha" },
+    { nome: "Jaraguá", lat: -19.8800, lng: -43.9800, regiao: "Pampulha" },
+    { nome: "Céu Azul", lat: -19.8600, lng: -43.9850, regiao: "Pampulha" },
+
+    // Norte
+    { nome: "São Bernardo", lat: -19.8600, lng: -43.9300, regiao: "Norte" },
+    { nome: "Planalto", lat: -19.8500, lng: -43.9300, regiao: "Norte" },
+    { nome: "Venda Nova", lat: -19.8200, lng: -43.9600, regiao: "Norte" },
+    { nome: "Cachoeirinha", lat: -19.8600, lng: -43.9300, regiao: "Norte" },
+    { nome: "Floramar", lat: -19.8400, lng: -43.9400, regiao: "Norte" },
+
+    // Barreiro (Sul/Sudoeste)
+    { nome: "Barreiro", lat: -19.9800, lng: -43.9900, regiao: "Barreiro" },
+    { nome: "Tirol", lat: -19.9700, lng: -43.9800, regiao: "Barreiro" },
+    { nome: "Bonsucesso", lat: -19.9800, lng: -43.9700, regiao: "Barreiro" },
+    { nome: "Miramar", lat: -19.9900, lng: -43.9800, regiao: "Barreiro" },
+
+    // Venda Nova
+    { nome: "Venda Nova", lat: -19.8200, lng: -43.9600, regiao: "Venda Nova" },
+    { nome: "Mantiqueira", lat: -19.8100, lng: -43.9500, regiao: "Venda Nova" },
+    { nome: "Rio Branco", lat: -19.8300, lng: -43.9500, regiao: "Venda Nova" },
+
+    // ---- VILA DA SERRA (Nova Lima) ----
+    { nome: "Vila da Serra", lat: -19.9850, lng: -43.9500, regiao: "Nova Lima" },
+    { nome: "Vila da Serra - Alphaville", lat: -19.9900, lng: -43.9450, regiao: "Nova Lima" },
+    { nome: "Vila da Serra - Belvedere", lat: -19.9820, lng: -43.9520, regiao: "Nova Lima" },
+    { nome: "Vila da Serra - Vale dos Cristais", lat: -19.9920, lng: -43.9480, regiao: "Nova Lima" },
+    { nome: "Vila da Serra - Bosque", lat: -19.9870, lng: -43.9450, regiao: "Nova Lima" },
+  ];
+
+  // ============================================================
+  // MAPA
+  // ============================================================
+  const map = L.map('map', {
+    zoomControl: false,
+    attributionControl: false
+  }).setView([-19.9400, -43.9450], 11); // Foco em BH + Vila da Serra
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19
+  }).addTo(map);
+
+  // Zoom no canto inferior direito (melhor para celular)
+  L.control.zoom({ position: 'bottomright' }).addTo(map);
+
+  // ============================================================
+  // ÍCONES
+  // ============================================================
+  function criarIcone(cor) {
+    const corHex = cor === 'verde' ? '#16a34a' : '#ef4444';
+    const corBorda = cor === 'verde' ? '#14532d' : '#991b1b';
+    return L.divIcon({
+      className: 'pino-icon',
+      html: `<svg width="28" height="38" viewBox="0 0 28 38" xmlns="http://www.w3.org/2000/svg">
+        <path d="M14 0C6.27 0 0 6.27 0 14c0 10.5 14 24 14 24s14-13.5 14-24C28 6.27 21.73 0 14 0z" fill="${corHex}" stroke="${corBorda}" stroke-width="1.5"/>
+        <circle cx="14" cy="14" r="5" fill="#fff"/>
+      </svg>`,
+      iconSize: [28, 38],
+      iconAnchor: [14, 38],
+      popupAnchor: [0, -34]
+    });
+  }
+
+  const iconeVermelho = criarIcone('vermelho');
+  const iconeVerde = criarIcone('verde');
+
+  // ============================================================
+  // ESTADO
+  // ============================================================
+  const selecionados = new Set(); // nomes dos bairros
+  const marcadores = {}; // nome -> marcador
+
+  const listaEl = document.getElementById('lista-nomes');
+  const btnConfirmar = document.getElementById('btn-confirmar');
+
+  // ============================================================
+  // RENDERIZAÇÃO DO RODAPÉ
+  // ============================================================
+  function atualizarRodape() {
+    if (selecionados.size === 0) {
+      listaEl.innerHTML = '<span class="vazio">Nenhum bairro selecionado ainda.</span>';
+      btnConfirmar.disabled = true;
+      return;
+    }
+
+    listaEl.innerHTML = '';
+    selecionados.forEach(nome => {
+      const tag = document.createElement('span');
+      tag.className = 'tag';
+      tag.innerHTML = `${nome} <span class="x" data-nome="${nome}">×</span>`;
+      listaEl.appendChild(tag);
+    });
+
+    btnConfirmar.disabled = false;
+
+    // Delegação de clique para remover
+    listaEl.querySelectorAll('.x').forEach(x => {
+      x.addEventListener('click', (e) => {
+        const nome = e.target.dataset.nome;
+        removerBairro(nome);
+      });
+    });
+  }
+
+  // ============================================================
+  // AÇÕES
+  // ============================================================
+  function adicionarBairro(nome) {
+    if (selecionados.has(nome)) return;
+    selecionados.add(nome);
+    marcadores[nome].setIcon(iconeVerde);
+    atualizarRodape();
+  }
+
+  function removerBairro(nome) {
+    if (!selecionados.has(nome)) return;
+    selecionados.delete(nome);
+    marcadores[nome].setIcon(iconeVermelho);
+    atualizarRodape();
+  }
+
+  function toggleBairro(nome) {
+    if (selecionados.has(nome)) removerBairro(nome);
+    else adicionarBairro(nome);
+  }
+
+  // ============================================================
+  // CRIA OS MARCADORES
+  // ============================================================
+  bairros.forEach(b => {
+    const marker = L.marker([b.lat, b.lng], {
+      icon: iconeVermelho,
+      title: b.nome
+    }).addTo(map);
+
+    // Tooltip com nome (aparece no hover, útil no desktop)
+    marker.bindTooltip(b.nome, { direction: 'top', offset: [0, -34] });
+
+    marker.on('click', () => toggleBairro(b.nome));
+
+    marcadores[b.nome] = marker;
+  });
+
+  // ============================================================
+  // BOTÃO CONFIRMAR (ainda sem envio real)
+  // ============================================================
+  btnConfirmar.addEventListener('click', () => {
+    const lista = Array.from(selecionados);
+    if (lista.length === 0) return;
+
+    // Resumo por enquanto — depois trocamos por envio real
+    const resumo = `Bairros escolhidos:\n\n• ${lista.join('\n• ')}\n\n(Total: ${lista.length})`;
+    alert(resumo + '\n\n👉 Próximo passo: integrar com WhatsApp/planilha.');
+  });
+
+  // ============================================================
+  // AJUSTE INICIAL
+  // ============================================================
+  atualizarRodape();
+</script>
+</body>
+</html>
