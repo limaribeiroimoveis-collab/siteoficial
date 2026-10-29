@@ -6,15 +6,16 @@
 <meta name="google" content="notranslate">
 <meta name="robots" content="noindex, nofollow">
 <title>Catálogo Geral — Lima Ribeiro Imóveis</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23f97316'/><text x='50' y='68' font-family='-apple-system,sans-serif' font-size='42' font-weight='800' fill='white' text-anchor='middle'>GER</text></svg>">
+<!-- FAVICON AZUL ESCURO -->
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%231e3a5f'/><text x='50' y='68' font-family='-apple-system,sans-serif' font-size='42' font-weight='800' fill='white' text-anchor='middle'>GER</text></svg>">
 <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32;800&display=swap" rel="stylesheet">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   :root{
     --primary:#1e3a5f; --primary-hover:#0f2942; --primary-soft:#eef2f7;
     --success:#2f6b4f; --success-soft:#e6efe9; --success-bright:#16a34a;
-    --danger:#8b3a3a; --danger-soft:#f4e6e6;
-    --warn:#8b6f3a; --warn-soft:#f5efe0;
+    --danger:#8b3a3a; --danger-soft:#f4e6e6; --danger-bright:#ef4444;
+    --warn:#8b6f3a; --warn-soft:#f5efe0; --warn-bright:#f59e0b;
     --purple:#6d28d9; --purple-soft:#ede9fe;
     --lilac:#a78bfa; --lilac-hover:#8b5cf6; --lilac-dark:#7c3aed;
     --orange:#f97316; --orange-hover:#ea580c; --orange-dark:#c2410c;
@@ -218,6 +219,21 @@
     color: #fff; font-size: .8rem; font-weight: 900; letter-spacing: 4px;
     padding: 5px 14px; border: 2px solid #fff; border-radius: 6px;
     box-shadow: 0 4px 20px rgba(220,38,38,.5); text-shadow: 0 2px 5px rgba(0,0,0,.3); pointer-events: none; white-space: nowrap;
+  }
+
+  /* ALERTA DE INFORMAÇÃO FALTANDO (Triângulo) */
+  .alerta-falta-info {
+    position: absolute; top: -4px; right: -4px; z-index: 20;
+    width: 34px; height: 34px; border-radius: 50%;
+    background: #fff; display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,.25); border: 2px solid #fff;
+    cursor: help; animation: pulse-alert 2s infinite;
+  }
+  .alerta-falta-info svg { width: 26px; height: 26px; stroke: var(--danger-bright); fill: #fee2e2; stroke-width: 2.5; }
+  @keyframes pulse-alert {
+    0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+    70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
   }
 
   /* Botão Match no TOPO */
@@ -1367,6 +1383,22 @@ function limparFiltros(){
   atualizarTextoMultiBairros(); atualizarChipsRegiao(); abrirModalFiltro(); aplicarFiltrosAvancados();
 }
 
+/* REGRA DE INFORMAÇÃO FALTANDO */
+function temInformacaoFaltando(im) {
+  if (isVendido(im)) return false;
+  const faltas = [];
+  if (!String(im.rua || '').trim()) faltas.push('Rua');
+  if (!String(im.numero || '').trim()) faltas.push('Número');
+  if (!String(im.bairro || '').trim()) faltas.push('Bairro');
+  if (!String(im.preco || '').trim()) faltas.push('Preço');
+  if (!String(im.imagem || '').trim()) faltas.push('Imagem');
+  
+  const info = extrairAptoBlocoChave(im.chaveTexto || '');
+  if (!info.apto && !info.bloco && !String(im.chaveTexto||'').trim()) faltas.push('Chave');
+  
+  return faltas;
+}
+
 function renderizar(){
   const grid = $('grid'); let lista = [...state.imoveis];
   if(state.filtroStatus === 'pendente') lista = lista.filter(im => !isVendido(im));
@@ -1454,6 +1486,17 @@ function cardHTML(im){
   const descTemMais = descSemTipo.split(/\r?\n/).length > 2 || descSemTipo.length > 120;
   const chaveTemMais = chaveCompleta.split(/\r?\n/).length > 2 || chaveCompleta.length > 60;
 
+  const faltas = temInformacaoFaltando(im);
+  const alertaFaltaHtml = faltas.length > 0 ? `
+    <div class="alerta-falta-info" title="Faltando: ${faltas.join(', ')}">
+      <svg viewBox="0 0 24 24" fill="none">
+        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+        <line x1="12" y1="9" x2="12" y2="13"/>
+        <line x1="12" y1="17" x2="12.01" y2="17"/>
+      </svg>
+    </div>
+  ` : '';
+
   let descBlockHtml = descSemTipo ? `
     <div class="card-block block-desc" id="desc-${id}">
       <div class="block-header"><span class="block-label">📝 Descrição</span>${descTemMais ? `<button class="block-toggle" onclick="event.stopPropagation(); const el=document.getElementById('desc-${id}'); el.classList.toggle('expandido'); this.textContent = el.classList.contains('expandido') ? 'Ver menos' : 'Ver tudo';">Ver tudo</button>` : ''}</div>
@@ -1478,7 +1521,7 @@ function cardHTML(im){
 
   const matchBtnHtml = codigo ? `
     <div class="card-match-row" onclick="event.stopPropagation();">
-      <button class="btn-match-card" id="match-btn-${id}" onclick="abrirModalMatch('${esc(codigo)}', '${esc(im.titulo || '')}')"><svg class="ico ico-sm" viewBox="0 0 24 24"><circle cx="8" cy="12" r="5"/><circle cx="16" cy="12" r="5"/></svg> Match <span class="num" id="match-num-${id}">…</span></button>
+      <button class="btn-match-card" id="match-btn-${id}" onclick="abrirModalMatch('${esc(codigo)}', '${esc(im.titulo || '')}')"><svg class="ico ico-sm" viewBox="0 0 24 24"><circle cx="8" cy="12" r="5"/><circle cx="16" cy="12" r="5"/></svg> Match <span class="num" id="match-num-${id}">${vendido ? '0' : '…'}</span></button>
     </div>` : '';
 
   const tarjaVendidoHtml = vendido ? '<div class="card-tarja-vendido">VENDIDO</div>' : '';
@@ -1492,7 +1535,7 @@ function cardHTML(im){
 
   return `
     <div class="card${vendido ? ' card-vendido' : ''}" data-id="${id}" data-codigo="${esc(codigo)}">
-      ${statusStripHtml}${matchBtnHtml}
+      ${statusStripHtml}${alertaFaltaHtml}${matchBtnHtml}
       <div class="card-main">
         <div class="card-img-wrap"><img class="card-img" src="${esc(img)}" ${imgClickAttr} onerror="this.src='https://via.placeholder.com/300x300/e2e8f0/64748b?text=Sem+imagem'">${tarjaVendidoHtml}</div>
         <div class="card-body">
@@ -1566,13 +1609,20 @@ function atualizarNumMatch(codigo, total){
 }
 function fecharModalMatch(){ $('matchModalBackdrop').classList.remove('show'); }
 
+/* PERFORMANCE: CARREGAR MATCHES APENAS PARA ATIVOS, E EM LOTES MAIORES */
 async function carregarTodosBadgesMatch(){
-  const cards = document.querySelectorAll('.card[data-codigo]'); const codigos = [];
+  const cards = document.querySelectorAll('.card[data-codigo]:not(.card-vendido)'); // Ignora vendidos
+  const codigos = [];
   cards.forEach(c => { const cod = c.dataset.codigo; if(cod && !state._matchesCache[cod]) codigos.push(cod); });
-  for(let i = 0; i < codigos.length; i += 5){
-    const lote = codigos.slice(i, i + 5);
+  for(let i = 0; i < codigos.length; i += 10){ // Lotes maiores (10 em vez de 5)
+    const lote = codigos.slice(i, i + 10);
     await Promise.all(lote.map(async cod => {
-      try { const res = await api('listarMatchesDoImovel', { senha: SENHA_ADMIN, codigo: cod }, TIMEOUT_API, 0); const lista = (res.ok && res.data) ? res.data : []; state._matchesCache[cod] = lista; atualizarNumMatch(cod, lista.length); } catch(e){}
+      try { 
+        const res = await api('listarMatchesDoImovel', { senha: SENHA_ADMIN, codigo: cod }, TIMEOUT_API, 0); 
+        const lista = (res.ok && res.data) ? res.data : []; 
+        state._matchesCache[cod] = lista; 
+        atualizarNumMatch(cod, lista.length); 
+      } catch(e){}
     }));
   }
 }
@@ -1701,7 +1751,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('#chipsTipoImovel .chip, #chipsAndar .chip').forEach(b => b.addEventListener('click', () => b.classList.toggle('active')));
   document.querySelectorAll('#chipsElevador .chip').forEach(b => b.addEventListener('click', () => { document.querySelectorAll('#chipsElevador .chip').forEach(x => x.classList.remove('active')); b.classList.add('active'); }));
   document.querySelectorAll('#chipsRegiao .chip-regiao').forEach(btn => btn.addEventListener('click', () => toggleRegiao(btn.dataset.regiao)));
-  setTimeout(() => { if(document.querySelectorAll('.card[data-codigo]').length > 0) carregarTodosBadgesMatch(); }, 1000);
+  setTimeout(() => { if(document.querySelectorAll('.card[data-codigo]:not(.card-vendido)').length > 0) carregarTodosBadgesMatch(); }, 1000);
 });
 </script>
 </body>
