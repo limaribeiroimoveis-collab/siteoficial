@@ -54,10 +54,10 @@
 
   /* ============ PÁGINA 1 - MAPA ============ */
   #pagina-mapa { display: flex; flex-direction: column; flex: 1; height: 100%; }
-  #pagina-mapa.oculta, #pagina-form.oculta, #pagina-digitar.oculta { display: none; }
+  #pagina-mapa.oculta, #pagina-form.oculta { display: none; }
 
   #map-wrap { flex: 1; position: relative; }
-  #map { width: 100%; height: 100%; transition: opacity .2s; }
+  #map { width: 100%; height: 100%; }
 
   /* Botão Informações (topo direito) */
   #btn-info {
@@ -144,9 +144,13 @@
   .btn-primario:disabled { background: #d1d5db; color: #9ca3af; cursor: not-allowed; }
 
   /* ============ TELA DIGITAR BAIRROS ============ */
-  #pagina-digitar { display: flex; flex-direction: column; flex: 1; height: 100%; padding: 24px 20px; }
-  #pagina-digitar h2 { font-size: 22px; font-weight: 800; margin: 40px 0 10px; text-align: center; color: #064e3b; }
-  #pagina-digitar p { font-size: 14px; color: #6b7280; text-align: center; margin: 0 0 24px; line-height: 1.5; }
+  #tela-digitacao {
+    position: absolute; inset: 0; background: #f9fafb; z-index: 900;
+    display: none; flex-direction: column; padding: 24px 20px;
+  }
+  #tela-digitacao.ativo { display: flex; }
+  #tela-digitacao h2 { font-size: 22px; font-weight: 800; margin: 50px 0 10px; text-align: center; color: #064e3b; }
+  #tela-digitacao p { font-size: 14px; color: #6b7280; text-align: center; margin: 0 0 24px; line-height: 1.5; }
   #txt-digitar { width: 100%; border: 2px solid #d1d5db; border-radius: 12px; padding: 16px; font-size: 16px; font-family: inherit; resize: none; flex: 1; min-height: 150px; outline: none; transition: border .2s; }
   #txt-digitar:focus { border-color: #10b981; }
 
@@ -260,28 +264,32 @@
   <!-- ===== PÁGINA 1 - MAPA / DIGITAR ===== -->
   <div id="pagina-mapa" style="display:none;">
     
-    <!-- Mapa -->
     <div id="map-wrap">
       <div id="map"></div>
+      
       <button id="btn-info" aria-label="Informações">
         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
         Ajuda
       </button>
+      
+      <!-- Botão Digitar / Mapa -->
       <button id="btn-toggle-digitar" aria-label="Alternar modo de escolha">
         <svg id="ico-btn-digitar" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
         <span id="lbl-btn-digitar">Digitar Bairros</span>
       </button>
+
       <button id="btn-centralizar" aria-label="Centralizar mapa" title="Centralizar Mapa">
         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
       </button>
+      
       <div id="toast"></div>
-    </div>
 
-    <!-- Tela de Digitar -->
-    <div id="pagina-digitar" class="oculta">
-      <h2>Digite os bairros</h2>
-      <p>Separe cada bairro por vírgula.<br>Ex: Savassi, Lourdes, Belvedere</p>
-      <textarea id="txt-digitar" placeholder="Digite aqui..."></textarea>
+      <!-- Tela de Digitação sobreposta -->
+      <div id="tela-digitacao">
+        <h2>Digite os bairros</h2>
+        <p>Separe cada bairro por vírgula.<br>Ex: Savassi, Lourdes, Belvedere</p>
+        <textarea id="txt-digitar" placeholder="Digite aqui..."></textarea>
+      </div>
     </div>
 
     <div id="footer-mapa">
@@ -300,7 +308,6 @@
     </div>
 
     <div id="form-body">
-
       <div class="secao">
         <h3>Quais tipos de imóvel você procura? <span class="obrig">*</span></h3>
         <p class="dica">Pode escolher quantos quiser.</p>
@@ -404,7 +411,6 @@
         <p class="dica">Conte detalhes sobre o que busca no seu imóvel.</p>
         <textarea id="input-obs" class="campo-texto" rows="4" placeholder="Ex: Gostaria com lazer, cozinha americana, varanda..."></textarea>
       </div>
-
     </div>
 
     <div id="form-footer">
@@ -448,12 +454,11 @@
   const LIMITES_BH = { minLat: -20.05, maxLat: -19.75, minLng: -44.10, maxLng: -43.80 };
   const BAIRROS_BLOQUEADOS = ['contagem', 'eldorado', 'cidade industrial', 'ressaca', 'água branca', 'santa luzia', 'ibitir', 'cabo verde', 'cinquenta', 'kennedy'];
 
-  // ============================================================
-  // ESTADO
-  // ============================================================
   const selecionados = new Map();
   const CHAVE_LOCALSTORAGE = 'seubairro_enviado_'; 
-  let modoDigitacao = false; // NOVO: controla mapa ou digitacao
+  
+  // Estado do modo de escolha
+  let modoDigitacao = false; 
 
   const params = new URLSearchParams(window.location.search);
   const TEL_URL = (params.get('tel') || '').replace(/\D/g, '');
@@ -479,7 +484,7 @@
   const paginaForm = document.getElementById('pagina-form');
 
   // ============================================================
-  // 2. MAPA + CENTRALIZAR
+  // 2. MAPA
   // ============================================================
   const POSICAO_INICIAL = { lat: -19.9400, lng: -43.9450, zoom: 12 };
   const map = L.map('map', { zoomControl: false, attributionControl: false, doubleClickZoom: false })
@@ -531,11 +536,11 @@
   }
 
   // ============================================================
-  // 4. DUPLO TOQUE
+  // 4. TOQUES NO MAPA
   // ============================================================
   let ultimoToque = { tempo: 0, lat: 0, lng: 0 };
   map.on('click', async (e) => {
-    if(modoDigitacao) return; // Se estiver digitando, ignora cliques no mapa
+    if(modoDigitacao) return; 
     const agora = Date.now();
     const dt = agora - ultimoToque.tempo;
     const dist = map.distance([e.latlng.lat, e.latlng.lng], [ultimoToque.lat, ultimoToque.lng]);
@@ -564,6 +569,7 @@
     const bairro = end.suburb || end.neighbourhood || end.city_district || end.town || end.village;
     const cidade = end.city || end.town || end.municipality || '';
     if(!bairro){ toast('Não consegui identificar o bairro aqui'); return; }
+    
     const cidadeLower = cidade.toLowerCase();
     if(cidadeLower.includes('contagem') || cidadeLower.includes('santa luzia') ||
        cidadeLower.includes('ribeirão das neves') || cidadeLower.includes('betim')){
@@ -575,8 +581,10 @@
       toast(`Bairro não atendido: ${bairro}`);
       return;
     }
+    
     const nomeFinal = cidadeLower.includes('nova lima') ? `${bairro} (Nova Lima)` : bairro;
     if(selecionados.has(nomeFinal)){ toast(`"${nomeFinal}" já está na lista`); return; }
+    
     const marker = L.marker([lat, lng], { icon: iconeVerde, interactive: false }).addTo(map);
     selecionados.set(nomeFinal, { lat, lng, marker, tipo: 'mapa' });
     atualizarRodape();
@@ -584,7 +592,68 @@
   }
 
   // ============================================================
-  // 5. RODAPÉ
+  // 5. DIGITAR BAIRROS / VOLTAR PARA O MAPA
+  // ============================================================
+  const btnToggle = document.getElementById('btn-toggle-digitar');
+  const lblToggle = document.getElementById('lbl-btn-digitar');
+  const icoToggle = document.getElementById('ico-btn-digitar');
+  const telaDigitacao = document.getElementById('tela-digitacao');
+  const txtDigitar = document.getElementById('txt-digitar');
+
+  btnToggle.addEventListener('click', () => {
+    modoDigitacao = !modoDigitacao;
+    
+    if(modoDigitacao){
+      // Vai para modo digitar
+      telaDigitacao.classList.add('ativo');
+      lblToggle.textContent = 'Escolher pelo Mapa';
+      icoToggle.innerHTML = '<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>';
+      
+      const doMapa = Array.from(selecionados.entries()).filter(e => e[1].tipo === 'mapa').map(e => e[0]);
+      if(doMapa.length > 0 && !txtDigitar.value.trim()) {
+        txtDigitar.value = doMapa.join(', ');
+      }
+      atualizarBairrosDigitados();
+      txtDigitar.focus();
+    } else {
+      // Volta pro mapa
+      telaDigitacao.classList.remove('ativo');
+      lblToggle.textContent = 'Digitar Bairros';
+      icoToggle.innerHTML = '<path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>';
+      
+      atualizarBairrosDigitados();
+      map.invalidateSize();
+    }
+  });
+
+  // O botão libera enquanto digita
+  txtDigitar.addEventListener('input', atualizarBairrosDigitados);
+
+  function atualizarBairrosDigitados() {
+    const texto = txtDigitar.value;
+    // Separa por vírgulas, tira espaços vazios
+    const listaDigitada = texto.split(',').map(s => s.trim()).filter(s => s.length > 0);
+    
+    // Remove os da digitação que não estão mais no texto
+    Array.from(selecionados.keys()).forEach(nome => {
+      const dados = selecionados.get(nome);
+      if(dados && dados.tipo === 'texto' && !listaDigitada.includes(nome)) {
+        selecionados.delete(nome);
+      }
+    });
+
+    // Adiciona os novos digitados
+    listaDigitada.forEach(nome => {
+      if(!selecionados.has(nome)) {
+        selecionados.set(nome, { tipo: 'texto' });
+      }
+    });
+    
+    atualizarRodape();
+  }
+
+  // ============================================================
+  // 6. RODAPÉ
   // ============================================================
   function atualizarRodape(){
     if(selecionados.size === 0){
@@ -607,6 +676,7 @@
     });
     btnContinuar.disabled = false;
   }
+
   function removerBairro(nome){
     const dados = selecionados.get(nome);
     if(!dados) return;
@@ -614,74 +684,20 @@
       map.removeLayer(dados.marker);
     }
     selecionados.delete(nome);
+    
+    // Se removeu um bairro clicando no X do rodapé, atualiza o texto de digitação também
+    if(dados.tipo === 'texto') {
+      const doMapa = Array.from(selecionados.entries()).filter(e => e[1].tipo === 'mapa').map(e => e[0]);
+      const doTexto = Array.from(selecionados.entries()).filter(e => e[1].tipo === 'texto').map(e => e[0]);
+      txtDigitar.value = doTexto.join(', ');
+    }
+    
     atualizarRodape();
     toast(`"${nome}" removido`);
   }
 
   // ============================================================
-  // 5.1 ALTERNAR DIGITAÇÃO / MAPA
-  // ============================================================
-  const btnToggle = document.getElementById('btn-toggle-digitar');
-  const lblToggle = document.getElementById('lbl-btn-digitar');
-  const icoToggle = document.getElementById('ico-btn-digitar');
-  const telaDigitar = document.getElementById('pagina-digitar');
-  const txtDigitar = document.getElementById('txt-digitar');
-  const mapWrap = document.getElementById('map-wrap');
-
-  btnToggle.addEventListener('click', () => {
-    modoDigitacao = !modoDigitacao;
-    if(modoDigitacao){
-      // Vai para o modo digitar
-      mapWrap.style.display = 'none';
-      telaDigitar.classList.remove('oculta');
-      telaDigitar.style.display = 'flex';
-      lblToggle.textContent = 'Escolher pelo Mapa';
-      icoToggle.innerHTML = '<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>'; // Ícone de pino/mapa
-      
-      // Puxa o que tem no mapa para o texto
-      const doMapa = Array.from(selecionados.entries()).filter(e => e[1].tipo === 'mapa').map(e => e[0]);
-      if(doMapa.length > 0 && !txtDigitar.value.trim()) {
-        txtDigitar.value = doMapa.join(', ');
-      }
-      txtDigitar.focus();
-    } else {
-      // Volta para o mapa
-      mapWrap.style.display = 'block';
-      telaDigitar.classList.add('oculta');
-      telaDigitar.style.display = 'none';
-      lblToggle.textContent = 'Digitar Bairros';
-      icoToggle.innerHTML = '<path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>'; // Ícone de caneta
-      
-      // Atualiza os bairros baseados no que foi digitado
-      atualizarBairrosDigitados();
-      map.invalidateSize();
-    }
-  });
-
-  function atualizarBairrosDigitados() {
-    const texto = txtDigitar.value;
-    const listaDigitada = texto.split(',').map(s => s.trim()).filter(s => s.length > 0);
-    
-    // Remove os bairros que eram de digitação e não estão mais no texto
-    Array.from(selecionados.keys()).forEach(nome => {
-      const dados = selecionados.get(nome);
-      if(dados && dados.tipo === 'texto' && !listaDigitada.includes(nome)) {
-        selecionados.delete(nome);
-      }
-    });
-
-    // Adiciona os novos
-    listaDigitada.forEach(nome => {
-      if(!selecionados.has(nome)) {
-        selecionados.set(nome, { tipo: 'texto' });
-      }
-    });
-    
-    atualizarRodape();
-  }
-
-  // ============================================================
-  // 6. MODAIS
+  // 7. MODAIS
   // ============================================================
   const overlayInstr = document.getElementById('modal-overlay');
   const btnEntendi = document.getElementById('btn-entendi');
@@ -707,22 +723,18 @@
   overlayAviso.addEventListener('click', (e) => { if(e.target === overlayAviso) fecharAviso(); });
 
   // ============================================================
-  // 7. NAVEGAÇÃO
+  // 8. NAVEGAÇÃO
   // ============================================================
   btnContinuar.addEventListener('click', () => {
     const qtd = selecionados.size;
     if(qtd === 0) return;
-    if(modoDigitacao) atualizarBairrosDigitados(); // Salva os digitados antes de avançar
-    
-    // Se não tem bairros válidos, para
-    if(selecionados.size === 0) {
-      toast('Digite pelo menos um bairro');
-      return;
-    }
+    if(modoDigitacao) atualizarBairrosDigitados(); 
+    if(selecionados.size === 0) { toast('Digite pelo menos um bairro'); return; }
 
     if(qtd < 3) abrirAviso(qtd);
     else irParaFormulario();
   });
+
   function irParaFormulario(){
     paginaMapa.classList.add('oculta');
     paginaMapa.style.display = 'none';
@@ -739,7 +751,7 @@
   });
 
   // ============================================================
-  // 8. CHIPS
+  // 9. CHIPS, METRAGEM E VALOR
   // ============================================================
   document.querySelectorAll('.chips').forEach(grupo => {
     const multiplo = grupo.dataset.multiplo === 'true';
@@ -756,18 +768,12 @@
     });
   });
 
-  // ============================================================
-  // 9. METRAGEM
-  // ============================================================
   const inputMetragem = document.getElementById('input-metragem');
   inputMetragem.addEventListener('input', () => {
     inputMetragem.value = inputMetragem.value.replace(/\D/g, '');
     document.querySelector('[data-erro="metragem"]').classList.remove('visivel');
   });
 
-  // ============================================================
-  // 10. VALOR + EXTENSO
-  // ============================================================
   const inputValor = document.getElementById('input-valor');
   const valorExtenso = document.getElementById('valor-extenso');
   function formatarReais(numero){
@@ -818,7 +824,7 @@
   });
 
   // ============================================================
-  // 11. VALIDAÇÃO
+  // 10. VALIDAÇÃO
   // ============================================================
   function obterSelecaoGrupo(nome){
     const grupo = document.querySelector(`[data-grupo="${nome}"]`);
@@ -855,7 +861,7 @@
   }
 
   // ============================================================
-  // 12. MONTA O PAYLOAD
+  // 11. PAYLOAD
   // ============================================================
   function montarPayload(){
     const bairrosArr = Array.from(selecionados.keys());
@@ -936,7 +942,9 @@
       linhas.push(`🏠 Também busca: ${tiposExtras} (também ${tipoParaAPI})`);
     }
 
+    // COLOCANDO A ACTION DENTRO DO PAYLOAD (Foi o que funcionou no console)
     return {
+      action: 'salvarPreferenciasCliente',
       senha: SENHA_ADMIN,
       telefone: TEL_URL,
       bairros: bairrosArr,
@@ -955,7 +963,7 @@
   }
 
   // ============================================================
-  // 13. ENVIO (Aqui resolvi o problema do Google)
+  // 12. ENVIO FINAL (Ajustado conforme o teste do console)
   // ============================================================
   let formEmAndamento = false;
 
@@ -972,27 +980,14 @@
     btn.textContent = 'Enviando...';
 
     const payload = montarPayload();
-    const url = API_URL + '?action=salvarPreferenciasCliente';
 
     try {
-      // CORREÇÃO DEFINITIVA:
-      // O Google Apps Script não lê JSON no body, ele lê dados de formulário.
-      // Vamos enviar os dados no formato urlencoded para ele entender.
-      const formData = new URLSearchParams();
-      for (const key in payload) {
-        if (Array.isArray(payload[key])) {
-          payload[key].forEach(val => formData.append(key, val));
-        } else {
-          formData.append(key, payload[key] || '');
-        }
-      }
-
-      const resp = await fetch(url, {
+      const resp = await fetch(API_URL, {
         method: 'POST',
         mode: 'cors',
         redirect: 'follow',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
-        body: formData.toString()
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload)
       });
       
       const texto = await resp.text();
@@ -1021,7 +1016,7 @@
   });
 
   // ============================================================
-  // 14. beforeunload
+  // 13. beforeunload
   // ============================================================
   window.addEventListener('beforeunload', (e) => {
     if(formEmAndamento || selecionados.size > 0){
