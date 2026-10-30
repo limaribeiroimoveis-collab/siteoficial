@@ -43,14 +43,8 @@
   }
   .tela-bloco .ico-grande.erro { background: #fee2e2; color: #dc2626; }
   .tela-bloco .ico-grande.ok { background: #d1fae5; color: #059669; }
-  .tela-bloco h1 {
-    font-size: 22px; font-weight: 800; margin: 0 0 12px;
-    color: #111827;
-  }
-  .tela-bloco p {
-    font-size: 15px; line-height: 1.5; color: #4b5563;
-    margin: 0 0 24px; max-width: 380px;
-  }
+  .tela-bloco h1 { font-size: 22px; font-weight: 800; margin: 0 0 12px; color: #111827; }
+  .tela-bloco p { font-size: 15px; line-height: 1.5; color: #4b5563; margin: 0 0 24px; max-width: 380px; }
   .tela-bloco .btn-tela {
     background: #064e3b; color: #fff; border: none;
     padding: 14px 28px; font-size: 16px; font-weight: 700;
@@ -60,10 +54,10 @@
 
   /* ============ PÁGINA 1 - MAPA ============ */
   #pagina-mapa { display: flex; flex-direction: column; flex: 1; height: 100%; }
-  #pagina-mapa.oculta, #pagina-form.oculta { display: none; }
+  #pagina-mapa.oculta, #pagina-form.oculta, #pagina-digitar.oculta { display: none; }
 
   #map-wrap { flex: 1; position: relative; }
-  #map { width: 100%; height: 100%; }
+  #map { width: 100%; height: 100%; transition: opacity .2s; }
 
   /* Botão Informações (topo direito) */
   #btn-info {
@@ -77,21 +71,29 @@
   #btn-info:active { background: #065f46; }
   #btn-info svg { width: 15px; height: 15px; stroke: #fff; fill: none; stroke-width: 2; }
 
-  /* Botão Centralizar (embaixo do + / -) */
-  #btn-centralizar {
-    position: absolute; right: 12px; bottom: 90px; z-index: 1000;
-    height: 34px; padding: 0 12px; border-radius: 8px;
-    background: #fff; color: #064e3b; border: 2px solid #064e3b;
-    font-size: 12px; font-weight: 800; cursor: pointer;
-    box-shadow: 0 2px 8px rgba(0,0,0,.2);
-    display: inline-flex; align-items: center; gap: 5px;
-    letter-spacing: .2px;
+  /* Botão Digitar Bairros (topo esquerdo) */
+  #btn-toggle-digitar {
+    position: absolute; top: 12px; left: 12px; z-index: 1000;
+    height: 38px; padding: 0 14px; border-radius: 999px;
+    background: #fff; color: #374151; border: 1px solid #d1d5db;
+    font-size: 12px; font-weight: 700; cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,.15);
+    display: inline-flex; align-items: center; gap: 6px;
   }
-  #btn-centralizar:active { background: #ecfdf5; }
-  #btn-centralizar svg { width: 14px; height: 14px; stroke: #064e3b; fill: none; stroke-width: 2.2; }
+  #btn-toggle-digitar:active { background: #f3f4f6; }
+  #btn-toggle-digitar svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; }
 
-  /* Ajusta o zoom do Leaflet pra não sobrepor o botão centralizar */
-  .leaflet-bottom.leaflet-right { bottom: 12px; }
+  /* Botão Centralizar (Embaixo do + e -) */
+  #btn-centralizar {
+    position: absolute; right: 12px; bottom: 76px; z-index: 1000;
+    height: 34px; width: 34px; border-radius: 6px;
+    background: #fff; color: #374151; border: 2px solid rgba(0,0,0,0.2);
+    background-clip: padding-box;
+    cursor: pointer; box-shadow: 0 1px 5px rgba(0,0,0,0.4);
+    display: flex; align-items: center; justify-content: center;
+  }
+  #btn-centralizar:active { background: #f4f4f4; }
+  #btn-centralizar svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2.5; }
 
   #toast {
     position: absolute; bottom: 16px; left: 50%;
@@ -141,6 +143,13 @@
   .btn-primario:active { background: #059669; }
   .btn-primario:disabled { background: #d1d5db; color: #9ca3af; cursor: not-allowed; }
 
+  /* ============ TELA DIGITAR BAIRROS ============ */
+  #pagina-digitar { display: flex; flex-direction: column; flex: 1; height: 100%; padding: 24px 20px; }
+  #pagina-digitar h2 { font-size: 22px; font-weight: 800; margin: 40px 0 10px; text-align: center; color: #064e3b; }
+  #pagina-digitar p { font-size: 14px; color: #6b7280; text-align: center; margin: 0 0 24px; line-height: 1.5; }
+  #txt-digitar { width: 100%; border: 2px solid #d1d5db; border-radius: 12px; padding: 16px; font-size: 16px; font-family: inherit; resize: none; flex: 1; min-height: 150px; outline: none; transition: border .2s; }
+  #txt-digitar:focus { border-color: #10b981; }
+
   /* ============ MODAIS ============ */
   .modal-overlay {
     position: fixed; inset: 0; background: rgba(0,0,0,.55);
@@ -155,10 +164,7 @@
     animation: aparecer .2s ease-out;
     max-height: 88vh; overflow-y: auto;
   }
-  @keyframes aparecer {
-    from { transform: scale(.94); opacity: 0; }
-    to { transform: scale(1); opacity: 1; }
-  }
+  @keyframes aparecer { from { transform: scale(.94); opacity: 0; } to { transform: scale(1); opacity: 1; } }
   .modal h2 { margin: 0 0 14px; font-size: 19px; color: #111827; text-align: center; }
   .modal .passo { display: flex; gap: 12px; margin-bottom: 14px; align-items: flex-start; }
   .modal .num {
@@ -169,32 +175,19 @@
   }
   .modal .passo p { margin: 0; font-size: 15px; line-height: 1.4; color: #374151; }
   .modal .passo p strong { color: #111827; }
-  .modal .btn-fechar {
-    width: 100%; background: #10b981; color: #fff; border: none;
-    padding: 14px; font-size: 16px; font-weight: 700;
-    border-radius: 12px; cursor: pointer; margin-top: 6px;
-  }
+  .modal .btn-fechar { width: 100%; background: #10b981; color: #fff; border: none; padding: 14px; font-size: 16px; font-weight: 700; border-radius: 12px; cursor: pointer; margin-top: 6px; }
   .modal .btn-fechar:active { background: #059669; }
 
   .modal-aviso-titulo { font-size: 18px; text-align: center; margin: 0 0 10px; color: #111827; }
   .modal-aviso-texto { font-size: 15px; color: #4b5563; text-align: center; line-height: 1.5; margin: 0 0 20px; }
   .modal-aviso-texto strong { color: #10b981; }
   .modal-aviso-botoes { display: flex; flex-direction: column; gap: 10px; }
-  .btn-secundario {
-    width: 100%; background: #f3f4f6; color: #374151;
-    border: none; padding: 14px; font-size: 15px;
-    font-weight: 600; border-radius: 12px; cursor: pointer;
-  }
+  .btn-secundario { width: 100%; background: #f3f4f6; color: #374151; border: none; padding: 14px; font-size: 15px; font-weight: 600; border-radius: 12px; cursor: pointer; }
   .btn-secundario:active { background: #e5e7eb; }
 
   /* ============ PÁGINA 2 - FORMULÁRIO ============ */
   #pagina-form { display: flex; flex-direction: column; flex: 1; height: 100%; background: #f9fafb; }
-  #form-header {
-    background: #fff; padding: 14px 16px;
-    border-bottom: 1px solid #e5e7eb;
-    display: flex; align-items: center; gap: 12px;
-    position: sticky; top: 0; z-index: 50;
-  }
+  #form-header { background: #fff; padding: 14px 16px; border-bottom: 1px solid #e5e7eb; display: flex; align-items: center; gap: 12px; position: sticky; top: 0; z-index: 50; }
   #btn-voltar { background: none; border: none; font-size: 22px; color: #374151; cursor: pointer; padding: 4px 8px; line-height: 1; border-radius: 8px; }
   #btn-voltar:active { background: #f3f4f6; }
   #form-titulo { flex: 1; font-size: 16px; font-weight: 700; color: #111827; }
@@ -216,10 +209,7 @@
   }
   .chip:active { background: #e5e7eb; }
   .chip.marcado { background: #ecfdf5; color: #065f46; border-color: #10b981; padding-right: 28px; }
-  .chip.marcado::after {
-    content: "✓"; position: absolute; right: 8px; top: 50%;
-    transform: translateY(-50%); font-weight: bold; font-size: 13px; color: #10b981;
-  }
+  .chip.marcado::after { content: "✓"; position: absolute; right: 8px; top: 50%; transform: translateY(-50%); font-weight: bold; font-size: 13px; color: #10b981; }
   .chips[data-grupo="quartos"] { flex-wrap: nowrap; gap: 6px; }
   .chips[data-grupo="quartos"] .chip { flex: 1; padding: 10px 6px; font-size: 13px; }
   .chips[data-grupo="quartos"] .chip.marcado { padding-right: 6px; padding-left: 18px; }
@@ -231,25 +221,14 @@
   .chips[data-grupo="vagas"] .chip.marcado { padding-right: 8px; padding-left: 20px; }
   .chips[data-grupo="vagas"] .chip.marcado::after { right: auto; left: 6px; }
 
-  .campo-texto {
-    width: 100%; padding: 12px 14px; border: 1.5px solid #e5e7eb;
-    border-radius: 10px; font-size: 16px; font-family: inherit;
-    background: #fff; color: #111827; outline: none; transition: border-color .15s;
-  }
+  .campo-texto { width: 100%; padding: 12px 14px; border: 1.5px solid #e5e7eb; border-radius: 10px; font-size: 16px; font-family: inherit; background: #fff; color: #111827; outline: none; transition: border-color .15s; }
   .campo-texto:focus { border-color: #10b981; }
   .campo-texto.erro { border-color: #ef4444; }
   .sufixo-wrap { position: relative; }
-  .sufixo {
-    position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
-    color: #6b7280; font-size: 14px; font-weight: 600; pointer-events: none;
-  }
+  .sufixo { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); color: #6b7280; font-size: 14px; font-weight: 600; pointer-events: none; }
   .extenso { font-size: 12px; color: #059669; font-weight: 600; margin-top: 6px; min-height: 16px; line-height: 1.3; }
 
-  #form-footer {
-    position: fixed; bottom: 0; left: 0; right: 0;
-    background: #fff; padding: 12px 16px 16px;
-    border-top: 1px solid #e5e7eb; z-index: 100;
-  }
+  #form-footer { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; padding: 12px 16px 16px; border-top: 1px solid #e5e7eb; z-index: 100; }
   #form-footer .aviso-obrig { font-size: 11px; color: #9ca3af; text-align: center; margin-bottom: 8px; }
 
   .erro-msg { color: #ef4444; font-size: 12px; margin-top: 6px; font-weight: 600; display: none; }
@@ -278,19 +257,31 @@
     <p>Recebemos suas preferências! Qualquer alteração, basta pedir ao seu corretor que ele ajusta para você.</p>
   </div>
 
-  <!-- ===== PÁGINA 1 - MAPA ===== -->
+  <!-- ===== PÁGINA 1 - MAPA / DIGITAR ===== -->
   <div id="pagina-mapa" style="display:none;">
+    
+    <!-- Mapa -->
     <div id="map-wrap">
       <div id="map"></div>
       <button id="btn-info" aria-label="Informações">
         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-        Informações
+        Ajuda
       </button>
-      <button id="btn-centralizar" aria-label="Centralizar mapa">
+      <button id="btn-toggle-digitar" aria-label="Alternar modo de escolha">
+        <svg id="ico-btn-digitar" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+        <span id="lbl-btn-digitar">Digitar Bairros</span>
+      </button>
+      <button id="btn-centralizar" aria-label="Centralizar mapa" title="Centralizar Mapa">
         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
-        Centralizar
       </button>
       <div id="toast"></div>
+    </div>
+
+    <!-- Tela de Digitar -->
+    <div id="pagina-digitar" class="oculta">
+      <h2>Digite os bairros</h2>
+      <p>Separe cada bairro por vírgula.<br>Ex: Savassi, Lourdes, Belvedere</p>
+      <textarea id="txt-digitar" placeholder="Digite aqui..."></textarea>
     </div>
 
     <div id="footer-mapa">
@@ -450,10 +441,10 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
   // ============================================================
-  // CONFIG — SUBSTITUA A SENHA ABAIXO PELA SUA SENHA ADMIN
+  // CONFIG
   // ============================================================
   const API_URL = 'https://script.google.com/macros/s/AKfycbzuCjg_5ZJDMWWKmjYp1ThW34iWS0YouviWFdiMGx8W3yApv0F1fdUcjeZdjm0s6Mg/exec';
-  const SENHA_ADMIN = 'Cal@562938'; // ⚠️ troque aqui pela sua senha admin real
+  const SENHA_ADMIN = 'Cal@562938'; 
   const LIMITES_BH = { minLat: -20.05, maxLat: -19.75, minLng: -44.10, maxLng: -43.80 };
   const BAIRROS_BLOQUEADOS = ['contagem', 'eldorado', 'cidade industrial', 'ressaca', 'água branca', 'santa luzia', 'ibitir', 'cabo verde', 'cinquenta', 'kennedy'];
 
@@ -461,11 +452,9 @@
   // ESTADO
   // ============================================================
   const selecionados = new Map();
-  const CHAVE_LOCALSTORAGE = 'seubairro_enviado_'; // + telefone
+  const CHAVE_LOCALSTORAGE = 'seubairro_enviado_'; 
+  let modoDigitacao = false; // NOVO: controla mapa ou digitacao
 
-  // ============================================================
-  // 1. LÊ O TELEFONE DA URL
-  // ============================================================
   const params = new URLSearchParams(window.location.search);
   const TEL_URL = (params.get('tel') || '').replace(/\D/g, '');
 
@@ -483,7 +472,6 @@
   }
   if(!validarAcesso()) { /* para aqui */ }
 
-  // Elementos
   const listaEl = document.getElementById('lista-nomes');
   const btnContinuar = document.getElementById('btn-continuar');
   const toastEl = document.getElementById('toast');
@@ -500,13 +488,11 @@
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
   L.control.zoom({ position: 'bottomright' }).addTo(map);
 
-  // Botão Centralizar
   document.getElementById('btn-centralizar').addEventListener('click', () => {
     map.setView([POSICAO_INICIAL.lat, POSICAO_INICIAL.lng], POSICAO_INICIAL.zoom, { animate: true });
     toast('Mapa centralizado');
   });
 
-  // Toast
   let toastTimer;
   function toast(msg, duracao = 2200){
     toastEl.textContent = msg;
@@ -515,7 +501,6 @@
     toastTimer = setTimeout(() => toastEl.classList.remove('visivel'), duracao);
   }
 
-  // Ícone verde
   function criarIconeVerde(){
     return L.divIcon({
       className: 'pino-selecionado',
@@ -550,6 +535,7 @@
   // ============================================================
   let ultimoToque = { tempo: 0, lat: 0, lng: 0 };
   map.on('click', async (e) => {
+    if(modoDigitacao) return; // Se estiver digitando, ignora cliques no mapa
     const agora = Date.now();
     const dt = agora - ultimoToque.tempo;
     const dist = map.distance([e.latlng.lat, e.latlng.lng], [ultimoToque.lat, ultimoToque.lng]);
@@ -560,7 +546,10 @@
       ultimoToque = { tempo: agora, lat: e.latlng.lat, lng: e.latlng.lng };
     }
   });
-  map.on('dblclick', async (e) => { await processarToque(e.latlng); });
+  map.on('dblclick', async (e) => { 
+    if(modoDigitacao) return;
+    await processarToque(e.latlng); 
+  });
 
   async function processarToque(latlng){
     const { lat, lng } = latlng;
@@ -589,7 +578,7 @@
     const nomeFinal = cidadeLower.includes('nova lima') ? `${bairro} (Nova Lima)` : bairro;
     if(selecionados.has(nomeFinal)){ toast(`"${nomeFinal}" já está na lista`); return; }
     const marker = L.marker([lat, lng], { icon: iconeVerde, interactive: false }).addTo(map);
-    selecionados.set(nomeFinal, { lat, lng, marker });
+    selecionados.set(nomeFinal, { lat, lng, marker, tipo: 'mapa' });
     atualizarRodape();
     toast(`✓ ${nomeFinal} adicionado`);
   }
@@ -621,10 +610,74 @@
   function removerBairro(nome){
     const dados = selecionados.get(nome);
     if(!dados) return;
-    map.removeLayer(dados.marker);
+    if(dados.tipo === 'mapa' && dados.marker) {
+      map.removeLayer(dados.marker);
+    }
     selecionados.delete(nome);
     atualizarRodape();
     toast(`"${nome}" removido`);
+  }
+
+  // ============================================================
+  // 5.1 ALTERNAR DIGITAÇÃO / MAPA
+  // ============================================================
+  const btnToggle = document.getElementById('btn-toggle-digitar');
+  const lblToggle = document.getElementById('lbl-btn-digitar');
+  const icoToggle = document.getElementById('ico-btn-digitar');
+  const telaDigitar = document.getElementById('pagina-digitar');
+  const txtDigitar = document.getElementById('txt-digitar');
+  const mapWrap = document.getElementById('map-wrap');
+
+  btnToggle.addEventListener('click', () => {
+    modoDigitacao = !modoDigitacao;
+    if(modoDigitacao){
+      // Vai para o modo digitar
+      mapWrap.style.display = 'none';
+      telaDigitar.classList.remove('oculta');
+      telaDigitar.style.display = 'flex';
+      lblToggle.textContent = 'Escolher pelo Mapa';
+      icoToggle.innerHTML = '<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>'; // Ícone de pino/mapa
+      
+      // Puxa o que tem no mapa para o texto
+      const doMapa = Array.from(selecionados.entries()).filter(e => e[1].tipo === 'mapa').map(e => e[0]);
+      if(doMapa.length > 0 && !txtDigitar.value.trim()) {
+        txtDigitar.value = doMapa.join(', ');
+      }
+      txtDigitar.focus();
+    } else {
+      // Volta para o mapa
+      mapWrap.style.display = 'block';
+      telaDigitar.classList.add('oculta');
+      telaDigitar.style.display = 'none';
+      lblToggle.textContent = 'Digitar Bairros';
+      icoToggle.innerHTML = '<path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>'; // Ícone de caneta
+      
+      // Atualiza os bairros baseados no que foi digitado
+      atualizarBairrosDigitados();
+      map.invalidateSize();
+    }
+  });
+
+  function atualizarBairrosDigitados() {
+    const texto = txtDigitar.value;
+    const listaDigitada = texto.split(',').map(s => s.trim()).filter(s => s.length > 0);
+    
+    // Remove os bairros que eram de digitação e não estão mais no texto
+    Array.from(selecionados.keys()).forEach(nome => {
+      const dados = selecionados.get(nome);
+      if(dados && dados.tipo === 'texto' && !listaDigitada.includes(nome)) {
+        selecionados.delete(nome);
+      }
+    });
+
+    // Adiciona os novos
+    listaDigitada.forEach(nome => {
+      if(!selecionados.has(nome)) {
+        selecionados.set(nome, { tipo: 'texto' });
+      }
+    });
+    
+    atualizarRodape();
   }
 
   // ============================================================
@@ -659,6 +712,14 @@
   btnContinuar.addEventListener('click', () => {
     const qtd = selecionados.size;
     if(qtd === 0) return;
+    if(modoDigitacao) atualizarBairrosDigitados(); // Salva os digitados antes de avançar
+    
+    // Se não tem bairros válidos, para
+    if(selecionados.size === 0) {
+      toast('Digite pelo menos um bairro');
+      return;
+    }
+
     if(qtd < 3) abrirAviso(qtd);
     else irParaFormulario();
   });
@@ -794,13 +855,11 @@
   }
 
   // ============================================================
-  // 12. MONTA O PAYLOAD COMPATÍVEL COM O APPSCRIPT
+  // 12. MONTA O PAYLOAD
   // ============================================================
   function montarPayload(){
-    // Bairros
     const bairrosArr = Array.from(selecionados.keys());
 
-    // Grupos
     const quartos = obterSelecaoGrupo('quartos');
     const suite   = obterSelecaoGrupo('suite');
     const vagas   = obterSelecaoGrupo('vagas');
@@ -813,35 +872,28 @@
     const precoMax = inputValor.value.replace(/\D/g, '');
     const obs = document.getElementById('input-obs').value.trim();
 
-    // Condomínio (número)
     let condMax = '';
     if(condominio && condominio.startsWith('Até R$')){
       condMax = condominio.replace(/\D/g, '');
     }
 
-    // Quartos (número ou 'tanto faz')
     let quartosNum = '';
     if(quartos && quartos !== 'Tanto faz') quartosNum = quartos.replace(/\D/g, '');
 
-    // Suítes
     let suitesNum = '';
     if(suite === 'Sim') suitesNum = '1';
 
-    // Vagas
     let vagasNum = '';
     if(vagas && vagas !== 'Tanto faz') vagasNum = vagas.replace(/\D/g, '');
 
-    // Acessibilidade
     let acessibilidade = 'tanto faz';
     if(escadas === 'Não pode ter escada') acessibilidade = 'sim';
     else if(escadas === 'Pode ter escada') acessibilidade = 'nao';
 
-    // Elevador
     let elevadorVal = 'tanto faz';
     if(elevador === 'Sim') elevadorVal = 'sim';
     else if(elevador === 'Não') elevadorVal = 'nao';
 
-    // Tipo principal + extras
     let tipoParaAPI = 'tanto faz';
     let tiposExtras = '';
     if(tipos.length === 1){
@@ -851,7 +903,6 @@
       tiposExtras = tipos.slice(1).join(', ');
     }
 
-    // Monta `outros` com prefixos que o HTML A sabe ler
     function timestampAgora(){
       const d = new Date();
       const dia = String(d.getDate()).padStart(2, '0');
@@ -865,7 +916,6 @@
 
     if(metragem) linhas.push(`📐 Área: ${metragem}m²`);
 
-    // Aquisição
     if(pagamento === 'À vista'){
       linhas.push('💰 Aquisição: Recursos próprios (à vista)');
     } else if(pagamento === 'Financiado'){
@@ -876,15 +926,12 @@
       linhas.push('💰 Aquisição: Precisa vender imóvel primeiro');
     }
 
-    // Sem escada
     if(escadas === 'Não pode ter escada'){
       linhas.push('🚫 Sem escada: Sim (obrigatório)');
     }
 
-    // Observações
     if(obs) linhas.push(`📝 ${obs}`);
 
-    // Tipos extras
     if(tiposExtras){
       linhas.push(`🏠 Também busca: ${tiposExtras} (também ${tipoParaAPI})`);
     }
@@ -907,8 +954,8 @@
     };
   }
 
-   // ============================================================
-  // 13. ENVIO
+  // ============================================================
+  // 13. ENVIO (Aqui resolvi o problema do Google)
   // ============================================================
   let formEmAndamento = false;
 
@@ -925,21 +972,29 @@
     btn.textContent = 'Enviando...';
 
     const payload = montarPayload();
-    
-    // Força a URL a ficar exatamente no formato que o AppScript espera
     const url = API_URL + '?action=salvarPreferenciasCliente';
 
     try {
+      // CORREÇÃO DEFINITIVA:
+      // O Google Apps Script não lê JSON no body, ele lê dados de formulário.
+      // Vamos enviar os dados no formato urlencoded para ele entender.
+      const formData = new URLSearchParams();
+      for (const key in payload) {
+        if (Array.isArray(payload[key])) {
+          payload[key].forEach(val => formData.append(key, val));
+        } else {
+          formData.append(key, payload[key] || '');
+        }
+      }
+
       const resp = await fetch(url, {
         method: 'POST',
         mode: 'cors',
         redirect: 'follow',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify(payload)
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+        body: formData.toString()
       });
       
-      // Lê a resposta como texto antes de tentar virar JSON
-      // (se o Google retornar um erro em HTML, não vai quebrar o app)
       const texto = await resp.text();
       let data = {};
       try {
@@ -948,12 +1003,10 @@
         console.warn('Resposta não era JSON:', texto);
       }
 
-      // Verifica se o AppScript retornou algum erro
       if (!data || data.ok === false || data.status === 'error') {
         throw new Error((data && (data.error || data.message)) || 'Erro desconhecido no servidor');
       }
 
-      // Sucesso
       localStorage.setItem(CHAVE_LOCALSTORAGE + TEL_URL, '1');
       formEmAndamento = false;
       document.getElementById('pagina-form').style.display = 'none';
@@ -963,14 +1016,12 @@
       console.error('Erro no envio:', err);
       btn.disabled = false;
       btn.textContent = 'Enviar preferências';
-      
-      // Mostra o erro REAL no alerta para sabermos o que está acontecendo
       alert('Não foi possível enviar. Detalhe técnico: ' + err.message);
     }
   });
 
   // ============================================================
-  // 14. beforeunload — evita perder dados sem querer
+  // 14. beforeunload
   // ============================================================
   window.addEventListener('beforeunload', (e) => {
     if(formEmAndamento || selecionados.size > 0){
