@@ -271,7 +271,7 @@
 
   .form-row-link-price{ display: grid; grid-template-columns: 2fr 1fr 1fr 1fr auto; gap: 10px; margin-bottom: 6px; align-items: end; }
   .form-row-address{ display: grid; grid-template-columns: 2fr 1fr .9fr 1fr; gap: 10px; margin-bottom: 6px; }
-  .form-row-bairro-tipo{ display: grid; grid-template-columns: 1.4fr 1fr 1fr 1.2fr; gap: 10px; margin-bottom: 6px; }
+  .form-row-bairro-tipo{ display: grid; grid-template-columns: 1.2fr 0.7fr 1fr 1fr 1.2fr; gap: 10px; margin-bottom: 6px; }
   .form-row-img-desc{ display: grid; grid-template-columns: 180px 1fr; gap: 12px; margin-bottom: 8px; align-items: start; }
   .form-row-chave-acoes{ display: grid; grid-template-columns: 7fr 3fr; gap: 12px; margin-bottom: 6px; align-items: stretch; }
   .acoes-col{ display: flex; flex-direction: column; gap: 6px; justify-content: flex-start; }
@@ -838,196 +838,202 @@
         <div class="cli-tags" id="cbTags"></div>
       </div>
 
-      <div class="filters-inline" id="filters">
-        <button class="filter-btn" data-filter="recentes" onclick="setFiltro('recentes', this)">Recentes</button>
-        <button class="filter-btn active" data-filter="todos" onclick="setFiltro('todos', this)">Todos <span class="filter-count" id="cnt-todos">0</span></button>
-        <button class="filter-btn" data-filter="pendente" onclick="setFiltro('pendente', this)">Aguardando <span class="filter-count" id="cnt-pendente">0</span></button>
-        <button class="filter-btn" data-filter="quero-visitar" onclick="setFiltro('quero-visitar', this)">Quero visitar <span class="filter-count" id="cnt-quero-visitar">0</span></button>
-        <button class="filter-btn" data-filter="gostei" onclick="setFiltro('gostei', this)">Gostei <span class="filter-count" id="cnt-gostei">0</span></button>
-        <button class="filter-btn" data-filter="nao-gostei" onclick="setFiltro('nao-gostei', this)">Não gostei <span class="filter-count" id="cnt-nao-gostei">0</span></button>
-        <button class="filter-btn btn-reservas" data-filter="reservas" onclick="setFiltro('reservas', this)">Reservas <span class="filter-count" id="cnt-reservas">0</span></button>
-      </div>
-      <button class="btn-match" id="btnMatchTopbar" onclick="abrirModalMatch()" title="Imóveis que combinam com este cliente">
-        <svg class="ico ico-sm" viewBox="0 0 24 24" style="stroke:#fff;">
-          <circle cx="8" cy="12" r="5"></circle>
-          <circle cx="16" cy="12" r="5"></circle>
-        </svg>
-        Match <span class="num zero" id="matchBadgeNum">0</span>
+     <div class="filters-inline" id="filters">
+  <button class="filter-btn" data-filter="recentes" onclick="setFiltro('recentes', this)">Recentes</button>
+  <button class="filter-btn active" data-filter="todos" onclick="setFiltro('todos', this)">Todos <span class="filter-count" id="cnt-todos">0</span></button>
+  <button class="filter-btn" data-filter="pendente" onclick="setFiltro('pendente', this)">Pendente <span class="filter-count" id="cnt-pendente">0</span></button>
+  <button class="filter-btn" data-filter="quero-visitar" onclick="setFiltro('quero-visitar', this)">Quero visitar <span class="filter-count" id="cnt-quero-visitar">0</span></button>
+  <button class="filter-btn" data-filter="gostei" onclick="setFiltro('gostei', this)">Gostei <span class="filter-count" id="cnt-gostei">0</span></button>
+  <button class="filter-btn" data-filter="nao-gostei" onclick="setFiltro('nao-gostei', this)">Não gostei <span class="filter-count" id="cnt-nao-gostei">0</span></button>
+  <button class="filter-btn btn-reservas" data-filter="reservas" onclick="setFiltro('reservas', this)">Reservas <span class="filter-count" id="cnt-reservas">0</span></button>
+</div>
+<button class="btn-match" id="btnMatchTopbar" onclick="abrirModalMatch()" title="Imóveis que combinam com este cliente">
+  <svg class="ico ico-sm" viewBox="0 0 24 24" style="stroke:#fff;">
+    <circle cx="8" cy="12" r="5"></circle>
+    <circle cx="16" cy="12" r="5"></circle>
+  </svg>
+  Match <span class="num zero" id="matchBadgeNum">0</span>
+</button>
+<div class="search-wrap">
+  <input type="search" id="buscaInput" placeholder="Buscar..." oninput="renderizarImoveis()">
+</div>
+
+<button class="btn btn-purple btn-add" onclick="abrirPainelNovoImovel()">
+  <svg class="ico ico-sm" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+  Adicionar
+</button>
+</div>
+</div>
+
+<div class="container">
+  <!-- PAINEL CADASTRO -->
+  <div class="admin-panel" id="adminPanel">
+    <div class="admin-panel-header">
+      <h3 id="adminPanelTitle">Adicionar imóvel</h3>
+      <button class="close-x" onclick="fecharPainelImovel()" title="Fechar">
+        <svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </button>
-      <div class="search-wrap">
-        <input type="search" id="buscaInput" placeholder="Buscar..." oninput="renderizarImoveis()">
+    </div>
+    <div class="admin-panel-inner">
+      <input type="hidden" id="editingId">
+
+      <div class="form-row-link-price">
+        <div><label>Link do anúncio</label><input type="url" id="adLink" onblur="onLinkBlur()" oninput="onLinkImovelChanged()" placeholder="https://..."></div>
+        <div><label>Preço</label><input type="text" id="adPreco" inputmode="numeric" oninput="mascaraPreco(this)"></div>
+        <div><label>Condomínio</label><input type="text" id="adCondominio" inputmode="numeric" oninput="mascaraPreco(this)"></div>
+        <div><label>IPTU</label><input type="text" id="adIPTU" inputmode="numeric" oninput="mascaraPreco(this)"></div>
+        <div>
+          <button type="button" class="btn-buscar-entrada-inline" id="btnBuscarEntrada" onclick="abrirBuscarEntradaForm()" disabled title="Buscar entrada no QuintoAndar">
+            <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            Buscar Entrada
+          </button>
+        </div>
       </div>
 
-      <button class="btn btn-purple btn-add" onclick="abrirPainelNovoImovel()">
-        <svg class="ico ico-sm" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        Adicionar
-      </button>
+      <div class="form-row-address">
+        <div><label>Rua <span class="req">*</span></label><input type="text" id="adRua" placeholder="Rua"></div>
+        <div><label>Número <span class="req">*</span></label><input type="text" id="adNumero" placeholder="Número"></div>
+        <div><label>Bloco</label><input type="text" id="adBloco" placeholder="Bloco" maxlength="10" oninput="onBlocoInput(this)"></div>
+        <div><label>Apartamento <span class="req" id="reqApto">*</span></label><input type="text" id="adApto" placeholder="Apartamento" maxlength="10" oninput="onAptoInput(this)"></div>
+      </div>
+
+      <div class="form-row-bairro-tipo">
+        <div><label>Bairro <span class="req">*</span></label><input type="text" id="adBairro" placeholder="Bairro"></div>
+        <div>
+          <label>Suítes <span class="req">*</span></label>
+          <select id="adSuites" class="select-padrao">
+            <option value="">— Selecione —</option>
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5+">5+</option>
+          </select>
+        </div>
+        <div>
+          <label>Vaga <span class="req">*</span></label>
+          <select id="adVaga" class="select-padrao">
+            <option value="">— Selecione —</option>
+            <option value="Presa">Presa</option>
+            <option value="Livre">Livre</option>
+            <option value="Não sei">Não sei</option>
+          </select>
+        </div>
+        <div>
+          <label>Elevador <span class="req">*</span></label>
+          <select id="adElevador" class="select-padrao">
+            <option value="">— Selecione —</option>
+            <option value="Sim">Sim</option>
+            <option value="Não">Não</option>
+          </select>
+        </div>
+        <div>
+          <label>Tipo de imóvel <span class="req">*</span></label>
+          <select id="adTipo" class="select-padrao" onchange="onTipoChange(this)">
+            <option value="">— Selecione —</option>
+            <option value="Apartamento Padrão">Apartamento Padrão</option>
+            <option value="Cobertura">Cobertura</option>
+            <option value="Área Privativa">Área Privativa</option>
+            <option value="Casa">Casa</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row-img-desc">
+        <div>
+          <label>Miniatura</label>
+          <div class="img-preview-box" id="imgPreviewBox">
+            <div class="sem-img" id="semImgTxt">Cole um link<br>para buscar</div>
+            <img id="previewImg" class="hidden" alt="Preview">
+          </div>
+        </div>
+        <div>
+          <label>Descrição</label>
+          <div class="desc-field-wrap">
+            <div class="desc-tipo-preview" id="descTipoPreview">
+              <span class="lock-ico">🔒</span>
+              <span id="descTipoTexto" class="empty-txt">Selecione o tipo acima (fixo na 1ª linha)</span>
+            </div>
+            <textarea id="adDescricao" placeholder="Descreva o imóvel..."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row-chave-acoes">
+        <div>
+          <label>Chave (onde pegar) <span class="req">*</span></label>
+          <div class="chave-composer">
+            <div class="chave-locked" id="chaveLocked">
+              <div class="linha" id="chaveLinhaApto">
+                <span class="lock-ico">🔒</span>
+                <span class="label-mini">Apartamento</span>
+                <span class="valor-mini" id="chaveValorApto">—</span>
+              </div>
+              <div class="linha" id="chaveLinhaBloco">
+                <span class="lock-ico">🔒</span>
+                <span class="label-mini">Bloco</span>
+                <span class="valor-mini" id="chaveValorBloco">—</span>
+              </div>
+            </div>
+            <textarea id="adChaveComplemento" placeholder="Onde pegar a chave..."></textarea>
+          </div>
+        </div>
+        <div>
+          <label>Ações</label>
+          <div class="acoes-col">
+            <div class="corr-row">
+              <button type="button" class="btn-corretor-escolha" data-corretor="Hugo" onclick="escolherCorretor('Hugo', this)">Hugo</button>
+              <button type="button" class="btn-corretor-escolha" data-corretor="Carolina" onclick="escolherCorretor('Carolina', this)">Carol</button>
+            </div>
+            <button class="btn btn-warn btn-salvar btn-salvar-reserva" id="btnSalvarReserva" onclick="salvarImovel(true)" disabled>
+              Salvar como Reserva
+            </button>
+            <button class="btn btn-purple btn-salvar btn-salvar-imovel" id="btnSalvarImovel" onclick="salvarImovel(false)" disabled>
+              Salvar no cliente
+            </button>
+            <button class="btn btn-ghost btn-cancelar" onclick="fecharPainelImovel()">Cancelar</button>
+          </div>
+        </div>
+      </div>
+
+      <input type="hidden" id="adImagem">
     </div>
   </div>
 
-  <div class="container">
-    <!-- PAINEL CADASTRO -->
-    <div class="admin-panel" id="adminPanel">
-      <div class="admin-panel-header">
-        <h3 id="adminPanelTitle">Adicionar imóvel</h3>
-        <button class="close-x" onclick="fecharPainelImovel()" title="Fechar">
+  <!-- PAINEL ACESSOS -->
+  <div class="admin-panel hidden" id="acessosSection" style="position:relative; top:auto; left:auto; transform:none; max-width:none; max-height:none; display:block;">
+    <div class="admin-panel-header">
+      <h3 style="display:flex; align-items:center; gap:9px;">
+        <svg class="ico" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        Acessos do cliente
+      </h3>
+      <div style="display:flex; gap:6px;">
+        <button class="btn btn-primary btn-xs" onclick="abrirNovoAcesso()">
+          <svg class="ico ico-sm" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Criar acesso
+        </button>
+        <button class="btn btn-purple btn-xs" onclick="criarAcessoAdminAqui()">
+          <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Criar acesso admin
+        </button>
+        <button class="close-x" onclick="toggleAcessosSection()">
           <svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </button>
       </div>
-      <div class="admin-panel-inner">
-        <input type="hidden" id="editingId">
-
-        <div class="form-row-link-price">
-          <div><label>Link do anúncio</label><input type="url" id="adLink" onblur="onLinkBlur()" oninput="onLinkImovelChanged()" placeholder="https://..."></div>
-          <div><label>Preço</label><input type="text" id="adPreco" inputmode="numeric" oninput="mascaraPreco(this)"></div>
-          <div><label>Condomínio</label><input type="text" id="adCondominio" inputmode="numeric" oninput="mascaraPreco(this)"></div>
-          <div><label>IPTU</label><input type="text" id="adIPTU" inputmode="numeric" oninput="mascaraPreco(this)"></div>
-          <div>
-            <button type="button" class="btn-buscar-entrada-inline" id="btnBuscarEntrada" onclick="abrirBuscarEntradaForm()" disabled title="Buscar entrada no QuintoAndar">
-              <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-              Buscar Entrada
-            </button>
-          </div>
-        </div>
-
-        <div class="form-row-address">
-          <div><label>Rua <span class="req">*</span></label><input type="text" id="adRua" placeholder="Rua"></div>
-          <div><label>Número <span class="req">*</span></label><input type="text" id="adNumero" placeholder="Número"></div>
-          <div><label>Bloco</label><input type="text" id="adBloco" placeholder="Bloco" maxlength="10" oninput="onBlocoInput(this)"></div>
-          <div><label>Apartamento <span class="req" id="reqApto">*</span></label><input type="text" id="adApto" placeholder="Apartamento" maxlength="10" oninput="onAptoInput(this)"></div>
-        </div>
-
-        <div class="form-row-bairro-tipo">
-          <div><label>Bairro <span class="req">*</span></label><input type="text" id="adBairro" placeholder="Bairro"></div>
-          <div>
-            <label>Vaga <span class="req">*</span></label>
-            <select id="adVaga" class="select-padrao">
-              <option value="">— Selecione —</option>
-              <option value="Presa">Presa</option>
-              <option value="Livre">Livre</option>
-              <option value="Não sei">Não sei</option>
-            </select>
-          </div>
-          <div>
-            <label>Elevador <span class="req">*</span></label>
-            <select id="adElevador" class="select-padrao">
-              <option value="">— Selecione —</option>
-              <option value="Sim">Sim</option>
-              <option value="Não">Não</option>
-            </select>
-          </div>
-          <div>
-            <label>Tipo de imóvel <span class="req">*</span></label>
-            <select id="adTipo" class="select-padrao" onchange="onTipoChange(this)">
-              <option value="">— Selecione —</option>
-              <option value="Apartamento Padrão">Apartamento Padrão</option>
-              <option value="Cobertura">Cobertura</option>
-              <option value="Área Privativa">Área Privativa</option>
-              <option value="Casa">Casa</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="form-row-img-desc">
-          <div>
-            <label>Miniatura</label>
-            <div class="img-preview-box" id="imgPreviewBox">
-              <div class="sem-img" id="semImgTxt">Cole um link<br>para buscar</div>
-              <img id="previewImg" class="hidden" alt="Preview">
-            </div>
-          </div>
-          <div>
-            <label>Descrição</label>
-            <div class="desc-field-wrap">
-              <div class="desc-tipo-preview" id="descTipoPreview">
-                <span class="lock-ico">🔒</span>
-                <span id="descTipoTexto" class="empty-txt">Selecione o tipo acima (fixo na 1ª linha)</span>
-              </div>
-              <textarea id="adDescricao" placeholder="Descreva o imóvel..."></textarea>
-            </div>
-          </div>
-        </div>
-
-        <div class="form-row-chave-acoes">
-          <div>
-            <label>Chave (onde pegar) <span class="req">*</span></label>
-            <div class="chave-composer">
-              <div class="chave-locked" id="chaveLocked">
-                <div class="linha" id="chaveLinhaApto">
-                  <span class="lock-ico">🔒</span>
-                  <span class="label-mini">Apartamento</span>
-                  <span class="valor-mini" id="chaveValorApto">—</span>
-                </div>
-                <div class="linha" id="chaveLinhaBloco">
-                  <span class="lock-ico">🔒</span>
-                  <span class="label-mini">Bloco</span>
-                  <span class="valor-mini" id="chaveValorBloco">—</span>
-                </div>
-              </div>
-              <textarea id="adChaveComplemento" placeholder="Onde pegar a chave..."></textarea>
-            </div>
-          </div>
-          <div>
-            <label>Ações</label>
-            <div class="acoes-col">
-              <div class="corr-row">
-                <button type="button" class="btn-corretor-escolha" data-corretor="Hugo" onclick="escolherCorretor('Hugo', this)">Hugo</button>
-                <button type="button" class="btn-corretor-escolha" data-corretor="Carolina" onclick="escolherCorretor('Carolina', this)">Carol</button>
-              </div>
-              <button class="btn btn-warn btn-salvar btn-salvar-reserva" id="btnSalvarReserva" onclick="salvarImovel(true)" disabled>
-                Salvar como Reserva
-              </button>
-              <button class="btn btn-purple btn-salvar btn-salvar-imovel" id="btnSalvarImovel" onclick="salvarImovel(false)" disabled>
-                Salvar no cliente
-              </button>
-              <button class="btn btn-ghost btn-cancelar" onclick="fecharPainelImovel()">Cancelar</button>
-            </div>
-          </div>
-        </div>
-
-        <input type="hidden" id="adImagem">
-      </div>
     </div>
-
-    <!-- PAINEL ACESSOS -->
-    <div class="admin-panel hidden" id="acessosSection" style="position:relative; top:auto; left:auto; transform:none; max-width:none; max-height:none; display:block;">
-      <div class="admin-panel-header">
-        <h3 style="display:flex; align-items:center; gap:9px;">
-          <svg class="ico" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-          Acessos do cliente
-        </h3>
-        <div style="display:flex; gap:6px;">
-          <button class="btn btn-primary btn-xs" onclick="abrirNovoAcesso()">
-            <svg class="ico ico-sm" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            Criar acesso
-          </button>
-          <button class="btn btn-purple btn-xs" onclick="criarAcessoAdminAqui()">
-            <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-            Criar acesso admin
-          </button>
-          <button class="close-x" onclick="toggleAcessosSection()">
-            <svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-          </button>
-        </div>
-      </div>
-      <div class="admin-panel-inner">
-        <div id="acessosList"></div>
-      </div>
-    </div>
-
-    <div class="grid" id="gridImoveis"></div>
-    <div class="empty-state hidden" id="emptyState">
-      <h3 id="emptyTitulo">Nenhum imóvel aqui</h3>
-      <p id="emptyMsg">Nada para mostrar neste filtro.</p>
+    <div class="admin-panel-inner">
+      <div id="acessosList"></div>
     </div>
   </div>
-</div>
 
-<button class="clone-floating" id="cloneFloating" onclick="abrirClonarVitrine()">
-  <svg class="ico ico-sm" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-  Clonar
-  <span class="num" id="cloneNum">0</span>
-</button>
+  <div class="grid" id="gridImoveis"></div>
+  <div class="empty-state hidden" id="emptyState">
+    <h3 id="emptyTitulo">Nenhum imóvel aqui</h3>
+    <p id="emptyMsg">Nada para mostrar neste filtro.</p>
+  </div>
+</div>
+</div>
 
 <!-- MODAL VER CLIENTE -->
 <div class="modal-backdrop" id="verClienteBackdrop" onclick="if(event.target===this) fecharVerCliente()">
@@ -1073,7 +1079,6 @@
   </div>
 </div>
 
- 
 <!-- MODAL ATIVIDADE -->
 <div class="modal-backdrop" id="atividadeBackdrop" onclick="if(event.target===this) fecharAtividade()">
   <div class="modal" style="max-width:720px;">
@@ -2248,12 +2253,14 @@ function limparFormAdmin(){
   $('adIPTU').value = '';
   $('adDescricao').value = '';
   $('adImagem').value = '';
-  if($('adVaga')) $('adVaga').value = '';
-  if($('adElevador')) $('adElevador').value = '';
-  if($('adTipo')) $('adTipo').value = '';
-  if($('adVaga')) $('adVaga').classList.remove('invalido');
-  if($('adElevador')) $('adElevador').classList.remove('invalido');
-  if($('adTipo')) $('adTipo').classList.remove('invalido');
+ if($('adSuites')) $('adSuites').classList.remove('invalido');
+if($('adVaga')) $('adVaga').classList.remove('invalido');
+if($('adElevador')) $('adElevador').classList.remove('invalido');
+if($('adTipo')) $('adTipo').classList.remove('invalido');
+  if($('adSuites')) $('adSuites').value = '';
+if($('adVaga')) $('adVaga').value = '';
+if($('adElevador')) $('adElevador').value = '';
+if($('adTipo')) $('adTipo').value = '';
   state._corretorEscolhido = '';
   state._tipoEscolhido = '';
   atualizarPreview('');
@@ -2341,12 +2348,35 @@ function validarBotaoSalvar(){
   const complemento = $('adChaveComplemento').value.trim();
   const vaga = $('adVaga') ? $('adVaga').value.trim() : '';
   const elevador = $('adElevador') ? $('adElevador').value.trim() : '';
+  const preco = $('adPreco') ? $('adPreco').value.trim() : '';
+  const iptu = $('adIPTU') ? $('adIPTU').value.trim() : '';
+  const suites = $('adSuites') ? $('adSuites').value.trim() : '';
+  const condominio = $('adCondominio') ? $('adCondominio').value.trim() : '';
+  const descricao = $('adDescricao') ? $('adDescricao').value.trim() : '';
+  const imagem = $('adImagem') ? $('adImagem').value.trim() : '';
   const tipoEscolhido = state._tipoEscolhido;
   const corretor = state._corretorEscolhido;
   const ehCasa = tipoEscolhido === 'Casa';
   const aptoOk = ehCasa || !!apto;
   const chaveOk = !!complemento || aptoOk;
-  const podeSalvar = rua && numero && bairro && vaga && elevador && tipoEscolhido && corretor && aptoOk && chaveOk;
+  const condominioOk = ehCasa || !!condominio;
+  const descricaoOk = !!descricao;
+  
+  const podeSalvar = rua 
+    && numero 
+    && bairro 
+    && vaga 
+    && elevador 
+    && preco
+    && iptu
+    && suites
+    && condominioOk
+    && descricaoOk
+    && tipoEscolhido 
+    && corretor 
+    && aptoOk 
+    && chaveOk;
+    
   if($('btnSalvarImovel')) $('btnSalvarImovel').disabled = !podeSalvar;
   if($('btnSalvarReserva')) $('btnSalvarReserva').disabled = !podeSalvar;
 }
@@ -2498,6 +2528,7 @@ async function salvarImovel(isReserva){
   let imagem = $('adImagem').value.trim();
   const vaga = $('adVaga') ? $('adVaga').value.trim() : '';
   const elevador = $('adElevador') ? $('adElevador').value.trim() : '';
+  const suites = $('adSuites') ? $('adSuites').value.trim() : '';
   const editandoId = $('editingId').value || '';
   const editando = !!editandoId;
 
@@ -2508,6 +2539,12 @@ async function salvarImovel(isReserva){
   if(!numero){ toast('Informe o número', 'error'); return; }
   if(tipo !== 'Casa' && !apto){ toast('Informe o apartamento', 'error'); return; }
   if(!bairro){ toast('Informe o bairro', 'error'); return; }
+  if(!$('adPreco').value.trim()){ toast('Informe o preço', 'error'); return; }
+  if(tipo !== 'Casa' && !$('adCondominio').value.trim()){ toast('Informe o condomínio', 'error'); return; }
+  if(!$('adIPTU').value.trim()){ toast('Informe o IPTU', 'error'); return; }
+  if(!suites){ toast('Selecione a quantidade de suítes', 'error'); return; }
+  if(!$('adDescricao').value.trim()){ toast('Informe a descrição', 'error'); return; }
+  if(!complemento){ toast('Informe onde pegar a chave', 'error'); return; }
   if(!vaga){
     if($('adVaga')) $('adVaga').classList.add('invalido');
     toast('Informe a vaga', 'error'); return;
@@ -2569,7 +2606,7 @@ async function salvarImovel(isReserva){
     chaveTexto: chaveFinal, status: statusAtual, observacao: observacaoAtual,
     corretor: state._corretorEscolhido, vendido: vendidoAtual,
     desativado: isReserva ? 'Sim' : '',
-    vaga, elevador
+    vaga, elevador, suites
   };
 
   const btn = isReserva ? $('btnSalvarReserva') : $('btnSalvarImovel');
@@ -2625,6 +2662,7 @@ async function salvarImovel(isReserva){
     if(dados.link       !== undefined) camposPropagar.link       = dados.link;
     if(dados.vaga       !== undefined) camposPropagar.vaga       = dados.vaga;
     if(dados.elevador   !== undefined) camposPropagar.elevador   = dados.elevador;
+    if(dados.suites     !== undefined) camposPropagar.suites     = dados.suites;
 
     if(Object.keys(camposPropagar).length > 0){
       marcarSalvando(true);
@@ -2676,6 +2714,10 @@ function editarImovel(id){
     $('adVaga').value = String(im.vaga || '').trim();
     $('adVaga').classList.remove('invalido');
   }
+ if($('adSuites')){
+  $('adSuites').value = String(im.suites || '').trim();
+  $('adSuites').classList.remove('invalido');
+}
   if($('adElevador')){
     $('adElevador').value = String(im.elevador || '').trim();
     $('adElevador').classList.remove('invalido');
