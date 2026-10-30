@@ -907,7 +907,7 @@
     };
   }
 
-  // ============================================================
+   // ============================================================
   // 13. ENVIO
   // ============================================================
   let formEmAndamento = false;
@@ -925,8 +925,9 @@
     btn.textContent = 'Enviando...';
 
     const payload = montarPayload();
-    const qs = new URLSearchParams({ action: 'salvarPreferenciasCliente' }).toString();
-    const url = API_URL + '?' + qs;
+    
+    // Força a URL a ficar exatamente no formato que o AppScript espera
+    const url = API_URL + '?action=salvarPreferenciasCliente';
 
     try {
       const resp = await fetch(url, {
@@ -936,20 +937,35 @@
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify(payload)
       });
-      const data = await resp.json();
-      if(!data || data.ok === false){
-        throw new Error((data && data.error) || 'Erro ao salvar');
+      
+      // Lê a resposta como texto antes de tentar virar JSON
+      // (se o Google retornar um erro em HTML, não vai quebrar o app)
+      const texto = await resp.text();
+      let data = {};
+      try {
+        data = JSON.parse(texto);
+      } catch(e) {
+        console.warn('Resposta não era JSON:', texto);
       }
+
+      // Verifica se o AppScript retornou algum erro
+      if (!data || data.ok === false || data.status === 'error') {
+        throw new Error((data && (data.error || data.message)) || 'Erro desconhecido no servidor');
+      }
+
       // Sucesso
       localStorage.setItem(CHAVE_LOCALSTORAGE + TEL_URL, '1');
       formEmAndamento = false;
       document.getElementById('pagina-form').style.display = 'none';
       document.getElementById('tela-enviado').style.display = 'flex';
+      
     } catch(err){
-      console.error(err);
+      console.error('Erro no envio:', err);
       btn.disabled = false;
       btn.textContent = 'Enviar preferências';
-      alert('Não foi possível enviar. Verifique sua conexão e tente novamente.');
+      
+      // Mostra o erro REAL no alerta para sabermos o que está acontecendo
+      alert('Não foi possível enviar. Detalhe técnico: ' + err.message);
     }
   });
 
