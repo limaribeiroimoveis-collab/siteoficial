@@ -3142,7 +3142,33 @@
     </div>
   </div>
 </div>
+<!-- ===== NOVO: Modal Escolha (Editar Preferências ou Copiar Link) ===== -->
+<div class="modal-backdrop" id="escolhaPrefsBackdrop">
+  <div class="modal" style="max-width:420px;">
+    <button class="modal-close" onclick="fecharEscolhaPrefs()">
+      <svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <h2 style="margin-bottom:6px;">
+      <svg class="ico" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+      Preferências de <span id="escolhaPrefsNome" style="color:var(--text-soft); font-weight:600;"></span>
+    </h2>
+    <p class="text-muted" style="margin-bottom:18px; font-size:.8rem;">Escolha o que deseja fazer:</p>
 
+    <div style="display:flex; flex-direction:column; gap:10px;">
+      <button class="btn btn-primary btn-full" style="justify-content:flex-start; padding:14px 18px;" onclick="escolherEditarPrefs()">
+        <svg class="ico" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        <span style="font-weight:700;">Editar preferências</span>
+        <span style="font-size:.7rem; color:rgba(255,255,255,.8); margin-left:auto;">Ver / alterar</span>
+      </button>
+
+      <button class="btn btn-success btn-full" style="justify-content:flex-start; padding:14px 18px;" onclick="escolherCopiarLink()">
+        <svg class="ico" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        <span style="font-weight:700;">Copiar Link para WhatsApp</span>
+        <span style="font-size:.7rem; color:rgba(255,255,255,.8); margin-left:auto;">Enviar ao cliente</span>
+      </button>
+    </div>
+  </div>
+</div>
 <!-- ===== NOVO: Modal Preferências do Cliente (padronizado com formulário do cliente) ===== -->
 <div class="modal-backdrop" id="prefsModalBackdrop">
   <div class="modal" style="max-width:640px;">
@@ -4939,8 +4965,8 @@ function clienteRowHTML(c){
         </div>
       </div>
 
-      <div class="tags">
-        <button class="btn btn-ghost btn-xs" title="Preferências do cliente (👁️)" onclick="abrirPrefsDoCard('${tel}')" style="display:none;" data-prefs-mobile="1">
+            <div class="tags">
+        <button class="btn btn-ghost btn-xs" title="Preferências do cliente (👁️)" onclick="abrirEscolhaPrefs('${tel}')" style="display:none;" data-prefs-mobile="1">
           <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
         </button>
         <button class="btn btn-ghost btn-xs" title="Observações internas" onclick="abrirObsClienteDireto('${tel}')">
@@ -4952,7 +4978,7 @@ function clienteRowHTML(c){
         <button class="btn btn-ghost btn-xs" title="Copiar link da vitrine do cliente" onclick="enviarLinkClienteDoCard('${tel}')">
           <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
         </button>
-        <button class="btn btn-ghost btn-xs" title="Ver o que o cliente busca (preferências)" onclick="abrirPrefsDoCard('${tel}')">
+        <button class="btn btn-ghost btn-xs" title="Ver o que o cliente busca (preferências)" onclick="abrirEscolhaPrefs('${tel}')">
           <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
         </button>
         <button class="btn btn-purple btn-xs" title="Abrir vitrine admin (editar imóveis do cliente)" onclick="abrirVitrineAdminDoCard('${tel}')">
@@ -5140,6 +5166,54 @@ async function carregarPrefsCliente(telefone, mostrarToast){
     return state._prefsCachePorTel[tel];
   }
   return null;
+}
+/* ===== NOVO: Modal escolha (Editar Preferências / Copiar Link) ===== */
+let _escolhaPrefsTelAtual = null;
+
+function abrirEscolhaPrefs(telefone){
+  const tel = normalizaTel(telefone);
+  if(!tel){ toast('Telefone inválido', 'error'); return; }
+  _escolhaPrefsTelAtual = tel;
+
+  const cli = state.clientes.find(c => normalizaTel(c.telefone) === tel);
+  const nome = cli ? (cli.nome || '') : '';
+  $('escolhaPrefsNome').textContent = nomeCompletoCliente_(nome, tel);
+
+  $('escolhaPrefsBackdrop').classList.add('show');
+}
+
+function fecharEscolhaPrefs(){
+  $('escolhaPrefsBackdrop').classList.remove('show');
+  _escolhaPrefsTelAtual = null;
+}
+
+async function escolherEditarPrefs(){
+  const tel = _escolhaPrefsTelAtual;
+  if(!tel){ fecharEscolhaPrefs(); return; }
+  // Fecha o modal de escolha ANTES de abrir o de preferências
+  $('escolhaPrefsBackdrop').classList.remove('show');
+  _escolhaPrefsTelAtual = null;
+  // Chama a função que JÁ EXISTE e abre o modal de preferências completo
+  await abrirPrefsDoCard(tel);
+}
+
+function escolherCopiarLink(){
+  const tel = _escolhaPrefsTelAtual;
+  if(!tel){ fecharEscolhaPrefs(); return; }
+  const cli = state.clientes.find(c => normalizaTel(c.telefone) === tel);
+  const nome = cli ? (cli.nome || '') : '';
+
+  // Monta o link do seubairro.html com o telefone
+  const url = 'https://limaribeiroimoveis.com.br/seubairro.html?tel=' + encodeURIComponent(tel);
+
+  // Copia para a área de transferência
+  copiarTexto(url);
+
+  // Fecha o modal após copiar
+  fecharEscolhaPrefs();
+
+  // Mostra um toast dizendo que está pronto
+  toast('Link copiado! Cole no WhatsApp do cliente', 'success');
 }
 
 /* ===== NOVA versão: abre modal de preferências preenchendo o modal novo ===== */
