@@ -1266,17 +1266,17 @@ function temInformacaoFaltando(im) {
   
   // 1. Preço
   const preco = String(im.preco || '').trim();
-  if (!preco || parseNumeroBR(preco) === 0) faltas.push('Preço');
+  if (!preco) faltas.push('Preço');
   
   // 2. Condomínio — só para não-casa
   if (!isCasa) {
     const cond = String(im.condominio || '').trim();
-    if (!cond || parseNumeroBR(cond) === 0) faltas.push('Condomínio');
+    if (!cond) faltas.push('Condomínio');
   }
   
   // 3. IPTU
   const iptu = String(im.iptu || '').trim();
-  if (!iptu || parseNumeroBR(iptu) === 0) faltas.push('IPTU');
+  if (!iptu) faltas.push('IPTU');
   
   // 4-6. Rua, Número, Bairro
   if (!String(im.rua || '').trim()) faltas.push('Rua');
@@ -1290,20 +1290,20 @@ function temInformacaoFaltando(im) {
   // 8. Chave (texto completo)
   if (!String(im.chaveTexto || '').trim()) faltas.push('Chave');
   
-  // 9. Suítes — só é falta se vier realmente nulo/undefined (0 é válido)
+  // 9. Suítes — qualquer valor preenchido (incluindo "0") é válido
   const suitesVal = im.suites;
   if (suitesVal === undefined || suitesVal === null || String(suitesVal).trim() === '') {
     faltas.push('Suítes');
   }
   
-  // 10. Vaga — só é falta se não vier nenhum dos valores válidos
-  const vagaNorm = normalizaTexto(String(im.vaga || ''));
+  // 10. Vaga — precisa ser exatamente um dos três valores
+  const vagaNorm = normalizaTexto(String(im.vaga || '').trim());
   if (vagaNorm !== 'livre' && vagaNorm !== 'presa' && vagaNorm !== 'nao sei') {
     faltas.push('Vaga');
   }
   
-  // 11. Elevador — só é falta se não vier "sim" nem "nao"
-  const elevNorm = normalizaTexto(String(im.elevador || ''));
+  // 11. Elevador — precisa ser Sim ou Não
+  const elevNorm = normalizaTexto(String(im.elevador || '').trim());
   if (elevNorm !== 'sim' && elevNorm !== 'nao') {
     faltas.push('Elevador');
   }
