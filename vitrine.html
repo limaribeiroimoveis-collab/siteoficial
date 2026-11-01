@@ -833,27 +833,36 @@ function toggleColunas(){
 }
 
 function renderizarImoveis(){
-  const grid = $('gridImoveis'); let lista = [...state.imoveis];
+  const grid = $('gridImoveis'); 
+  let lista = [...state.imoveis];
   
-  if (state.filtroNav !== 'vendidos') {
-    lista = lista.filter(i => !imovelReservado_(i) && !imovelVendido_(i));
-  }
-
+  // Filtro por aba
   if(state.filtroNav === 'gostei') lista = lista.filter(i => i.status === 'gostei');
   else if(state.filtroNav === 'visitar') lista = lista.filter(i => i.status === 'quero-visitar');
   else if(state.filtroNav === 'nao-gostei') lista = lista.filter(i => i.status === 'nao-gostei');
   else if(state.filtroNav === 'vendidos') lista = lista.filter(i => imovelVendido_(i));
-  else {
-    lista.sort((a,b) => {
-      const oa = (a.status === 'nao-gostei') ? 2 : 0, ob = (b.status === 'nao-gostei') ? 2 : 0; if(oa !== ob) return oa - ob;
-      return new Date(b.dataCadastro||0) - new Date(a.dataCadastro||0);
-    });
+  
+  // Esconde apenas os "reservados" nas abas normais (mas deixa os vendidos aparecerem)
+  if (state.filtroNav !== 'vendidos') {
+    lista = lista.filter(i => !imovelReservado_(i));
   }
 
+  // ✅ NOVO: Joga os vendidos para o fim da fila
+  lista.sort((a, b) => {
+    const aVend = imovelVendido_(a) ? 1 : 0;
+    const bVend = imovelVendido_(b) ? 1 : 0;
+    if (aVend !== bVend) return aVend - bVend;
+
+    // Se ambos são vendidos ou ambos normais, ordena pela data de cadastro
+    return new Date(b.dataCadastro || 0) - new Date(a.dataCadastro || 0);
+  });
+
+  // Filtro por bairro e busca
   if(state.bairrosSelecionados.size > 0) lista = lista.filter(i => state.bairrosSelecionados.has(normalizarBairro(i.bairro)));
   const busca = $('buscaInput')?.value.toLowerCase().trim();
   if(busca) lista = lista.filter(i => (i.titulo||'').toLowerCase().includes(busca) || (enderecoSemNumero_(i)).toLowerCase().includes(busca));
 
+  // Contador
   $('contadorImoveis').textContent = `${lista.length} ${lista.length === 1 ? 'imóvel' : 'imóveis'}`;
 
   if(!lista.length){
@@ -863,6 +872,7 @@ function renderizarImoveis(){
     $('btnVerTodos').classList.toggle('hidden', state.filtroNav === null && state.bairrosSelecionados.size === 0);
     return;
   }
+  
   $('emptyState').classList.add('hidden');
   grid.innerHTML = lista.map((im, i) => cardHTML(im, i)).join('');
 }
@@ -881,6 +891,37 @@ function cardHTML(im, idx){
     const bNormalizado = badgeTexto.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
     if (bNormalizado.includes("apartamento padrao") || bNormalizado.includes("apto padrao")) {
       ocultarBadge = true;
+    }
+  }
+
+  // ✅ NOVO: Prepara as specs extras para ficarem ABAIXO da descrição
+  let specsExtras = [];
+  
+  // Suítes (sempre mostra, mesmo se 0)
+  const suitesNum = Number(im.suites);
+  if (!isNaN(suitesNum)) {
+    specsExtras.push(`🛏️ ${suitesNum} ${suitesNum === 1 ? 'suíte' : 'suítes'}`);
+  }
+
+  // Elevador
+  const elev = String(im.elevador).toLowerCase();
+  if (elev === 'sim') {
+    specsExtras.push(`🛗 Prédio com elevador`);
+  } else if (elev === 'nao' || elev === 'não') {
+    specsExtras.push(`🚶 Prédio sem elevador`);
+  }
+
+  // Vaga (Livre, Presa ou Indefinido)
+  const vagaStr = String(im.vaga || '').trim().toLowerCase();
+  if (vagaStr) {
+    if (vagaStr === 'nao sei' || vagaStr === 'não sei') {
+      specsExtras.push(`🚗 Vaga (indefinido)`);
+    } else if (vagaStr === 'livre') {
+      specsExtras.push(`🚗 Vaga livre`);
+    } else if (vagaStr === 'presa') {
+      specsExtras.push(`🚗 Vaga presa`);
+    } else {
+      specsExtras.push(`🚗 Vaga ${im.vaga}`); // Caso venha algo diferente
     }
   }
 
@@ -909,7 +950,6 @@ function cardHTML(im, idx){
           ${salvando ? '<span class="spinner-btn" style="border-color:#ef4444;border-top-color:transparent;"></span>' : svgHeart}
           <span>Gostei</span>
         </button>
-        <!-- NOVO: Intercepta o clique para checar se já tem visita solicitada -->
         <button class="action-btn act-visitar ${isVisitar?'ativo':''}" onclick="interceptarCliqueVisita('${im.id}')">
           ${svgCalendar}
           <span>Visitar</span>
@@ -971,6 +1011,13 @@ function cardHTML(im, idx){
           <div class="card-desc" id="desc-${im.id}">
             <div class="card-desc-texto">${esc(String(im.descricao).replace(/\n/g, ' '))}</div>
             <button class="card-desc-toggle" onclick="event.stopPropagation(); document.getElementById('desc-${im.id}').classList.toggle('expandido'); this.textContent = document.getElementById('desc-${im.id}').classList.contains('expandido') ? 'Ver menos' : 'Ver mais';">Ver mais</button>
+          </div>
+        ` : ''}
+
+        <!-- ✅ NOVO: Informações extras (Suítes, Elevador, Vaga) abaixo da descrição -->
+        ${specsExtras.length > 0 ? `
+          <div class="card-specs-extra" style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; font-size: 0.72rem; color: var(--text-soft); font-weight: 600;">
+            ${specsExtras.map(s => `<span style="background: var(--bg); padding: 2px 8px; border-radius: 4px; display: inline-flex; align-items: center; gap: 4px;">${s}</span>`).join('')}
           </div>
         ` : ''}
       </div>
