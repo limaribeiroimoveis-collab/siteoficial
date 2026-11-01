@@ -842,20 +842,27 @@ function renderizarImoveis(){
   else if(state.filtroNav === 'nao-gostei') lista = lista.filter(i => i.status === 'nao-gostei');
   else if(state.filtroNav === 'vendidos') lista = lista.filter(i => imovelVendido_(i));
   
-  // 2. Filtros de Bairro e Busca (aplicados ANTES da ordenação)
+  // 2. Filtros de Bairro e Busca
   if(state.bairrosSelecionados.size > 0) lista = lista.filter(i => state.bairrosSelecionados.has(normalizarBairro(i.bairro)));
   const busca = $('buscaInput')?.value.toLowerCase().trim();
   if(busca) lista = lista.filter(i => (i.titulo||'').toLowerCase().includes(busca) || (enderecoSemNumero_(i)).toLowerCase().includes(busca));
 
-  // 3. ORDENAÇÃO ABSOLUTA
-  // Prioridade 0 = Ativo
-  // Prioridade 1 = Desativado (ou Reservado)
-  // Prioridade 2 = Vendido
+  // 3. ORDENAÇÃO INTELIGENTE
   lista.sort((a, b) => {
     const getPeso = (im) => {
-      if (imovelVendido_(im)) return 2;
-      if (imovelReservado_(im)) return 1;
-      return 0;
+      // Prioridade 3: Vendido (vai para o fim de TUDO, sem exceção)
+      if (imovelVendido_(im)) return 3;
+      
+      // Prioridade 0: Tem interação (Gostei, Visitar, Não gostei) -> É ATIVO!
+      if (im.status === 'gostei' || im.status === 'quero-visitar' || im.status === 'nao-gostei') {
+        return 0;
+      }
+      
+      // Prioridade 1: Sem interação, mas está na vitrine e não está desativado
+      if (!imovelReservado_(im)) return 1;
+      
+      // Prioridade 2: Desativado/Reservado (sem interação)
+      return 2;
     };
 
     const pesoA = getPeso(a);
@@ -864,7 +871,7 @@ function renderizarImoveis(){
     // Se os pesos forem diferentes, joga os maiores (desativados/vendidos) para o fim
     if (pesoA !== pesoB) return pesoA - pesoB;
 
-    // Se forem do mesmo tipo, ordena pelo mais recente
+    // Se forem do mesmo peso, ordena pelo mais recente
     return new Date(b.dataCadastro || 0) - new Date(a.dataCadastro || 0);
   });
 
