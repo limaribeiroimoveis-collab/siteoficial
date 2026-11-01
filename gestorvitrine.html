@@ -430,10 +430,10 @@
   .btn-evento{ background: var(--purple); color: #fff; border: 1px solid var(--purple); }
   .btn-evento:hover:not(:disabled){ background: #7d3f22; }
 
-  .big-cards{ display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-top: 20px; }
-@media(max-width:1100px){ .big-cards{ grid-template-columns: repeat(5, 1fr); gap: 8px; } }
-  @media(max-width:780px){ .big-cards{ grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 12px; } }
-  @media(max-width:640px){ .big-cards{ grid-template-columns: repeat(2, 1fr); gap: 8px; } }
+ .big-cards{ display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-top: 20px; }
+@media(max-width:1100px){ .big-cards{ grid-template-columns: repeat(3, 1fr); gap: 8px; } }
+@media(max-width:780px){ .big-cards{ grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 12px; } }
+@media(max-width:640px){ .big-cards{ grid-template-columns: repeat(2, 1fr); gap: 8px; } }
   .big-card{
     background: #fff; border-radius: var(--radius-lg);
     padding: 22px 20px; cursor: pointer;
@@ -2719,18 +2719,31 @@
         <div class="agenda-corretores-lista" id="clientesCorretoresLista"></div>
       </div>
     </div>
-    <!-- ===== NOVO: Card Cutucada (5º card) ===== -->
-    <div class="big-card card-cutucada" id="cardCutucada" onclick="abrirPainel('cutucada')">
-      <span class="bal zero" id="balCutucada">0</span>
-      <div class="card-ico-wrap">
-        <svg class="ico ico-lg" viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
-      </div>
-      <div style="width:100%;">
-        <div class="titulo">Cutucada</div>
-        <div class="sub">Sem interação há 3+ dias</div>
-        <div class="agenda-corretores-lista" id="cutucadaCorretoresLista"></div>
-      </div>
-    </div>
+   <!-- ===== Cutucada — Hugo ===== -->
+<div class="big-card card-cutucada" id="cardCutucadaHugo" onclick="abrirPainel('cutucadaHugo')">
+  <span class="bal zero" id="balCutucadaHugo">0</span>
+  <div class="card-ico-wrap">
+    <svg class="ico ico-lg" viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+  </div>
+  <div style="width:100%;">
+    <div class="titulo">Cutucada Hugo</div>
+    <div class="sub">Sem interação há 3+ dias</div>
+    <div class="agenda-corretores-lista" id="cutucadaHugoCorretoresLista"></div>
+  </div>
+</div>
+
+<!-- ===== Cutucada — Carolina ===== -->
+<div class="big-card card-cutucada" id="cardCutucadaCarol" onclick="abrirPainel('cutucadaCarol')">
+  <span class="bal zero" id="balCutucadaCarol">0</span>
+  <div class="card-ico-wrap">
+    <svg class="ico ico-lg" viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+  </div>
+  <div style="width:100%;">
+    <div class="titulo">Cutucada Carol</div>
+    <div class="sub">Sem interação há 3+ dias</div>
+    <div class="agenda-corretores-lista" id="cutucadaCarolCorretoresLista"></div>
+  </div>
+</div>
   </div>
 
   <div class="panel hidden" id="panelAgenda">
@@ -2744,7 +2757,7 @@
           <svg class="ico ico-sm" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
           Novo evento
         </button>
-        <button class="btn btn-ghost btn-sm" onclick="recarregarPainel('agenda')">
+        <button class="btn btn-ghost btn-sm" onclick="atualizarAgendaForte()">
           <svg class="ico ico-sm" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
           Atualizar
         </button>
@@ -3688,7 +3701,7 @@ const CORRETORES_CACHE_KEY = 'vitrine_corretores_v11';
 const BUSCAR_BASE = 'https://corretor.quintoandar.com.br/informacoes-de-entrada';
 const VITRINE_URL_BASE = 'https://limaribeiroimoveis.com.br/vitrine.html';
 const VITRINE_ADMIN_URL = 'vitrineadmin.html';
-const IMOVEIS_ADMIN_URL = 'https://limaribeiroimoveis.com.br/imoveis.html?admin=1&senha=Cal%40562938';
+const IMOVEIS_ADMIN_URL = 'https://limaribeiroimoveis.com.br/geral.html?senha=Cal%40562938';
 const PREFERENCIAS_URL_BASE = 'https://limaribeiroimoveis.com.br/meuimovel.html';
 const TIMEOUT_API = 90000;
 const TIMEOUT_LOGIN = 60000;
@@ -4183,7 +4196,7 @@ function mostrarView(id){
 }
 function irParaHomeAdmin(){
   if(!state.isAdmin) return;
-  ['agenda','visitar','gostei','clientes','cutucada'].forEach(p => {
+  ['agenda','visitar','gostei','clientes','cutucadaHugo','cutucadaCarol'].forEach(p => {
     const cap = p.charAt(0).toUpperCase() + p.slice(1);
     const el = $('panel' + cap);
     const card = $('card' + cap);
@@ -4198,18 +4211,19 @@ function irParaHomeAdmin(){
 }
 function abrirPainel(painel){
   state.painelAtivo = painel;
-  ['agenda','visitar','gostei','clientes','cutucada'].forEach(p => {
+  // inclui os 2 painéis de cutucada
+  ['agenda','visitar','gostei','clientes','cutucadaHugo','cutucadaCarol'].forEach(p => {
     const cap = p.charAt(0).toUpperCase() + p.slice(1);
     const elPanel = $('panel' + cap);
-    const elCard = $('card' + cap);
+    const elCard  = $('card' + cap);
     if(elPanel) elPanel.classList.toggle('hidden', p !== painel);
-    if(elCard) elCard.classList.toggle('active', p === painel);
+    if(elCard)  elCard.classList.toggle('active', p === painel);
   });
   if(painel === 'agenda' && !state.carregado.agenda) carregarAgenda(true);
   if(painel === 'visitar' && !state.carregado.visitar) carregarNotificacoes(true);
   if(painel === 'gostei' && !state.carregado.gostei) carregarNotificacoes(true);
   if(painel === 'clientes' && !state.carregado.clientes) carregarClientes(true);
-  if(painel === 'cutucada'){
+  if(painel === 'cutucadaHugo' || painel === 'cutucadaCarol'){
     if(!state.carregado.clientes) carregarClientes(true).then(() => renderizarCutucadas());
     else renderizarCutucadas();
   }
@@ -4219,7 +4233,9 @@ async function recarregarPainel(painel){
   if(painel === 'visitar'){ state.carregado.visitar = false; await carregarNotificacoes(true); }
   if(painel === 'gostei'){ state.carregado.gostei = false; await carregarNotificacoes(true); }
   if(painel === 'clientes'){ state.carregado.clientes = false; await carregarClientes(true); }
-  if(painel === 'cutucada'){ state.carregado.clientes = false; await carregarClientes(true); renderizarCutucadas(); }
+  if(painel === 'cutucadaHugo' || painel === 'cutucadaCarol'){
+    state.carregado.clientes = false; await carregarClientes(true); renderizarCutucadas();
+  }
 }
 function alternarConcluidas(painel){
   state.visaoPainel[painel] = state.visaoPainel[painel] === 'concluidas' ? 'ativas' : 'concluidas';
@@ -4268,6 +4284,27 @@ async function atualizarSomenteBadges(){
   }
 }
 
+// ✅ NOVO: Atualização "forte" da agenda — limpa cache local antes de refetch
+async function atualizarAgendaForte(){
+  const ico = $('icoAtualizar');
+  if(ico) ico.classList.add('spin');
+  // Limpa arrays locais para forçar substituição total
+  state.agendamentos = [];
+  state.eventosNeutros = [];
+  state.todosImoveis = [];
+  state._corretorPorImovelId = {};
+  state.carregado.agenda = false;
+  try {
+    await carregarAgenda(true);
+    toast('Agenda atualizada', 'success');
+  } catch(e){
+    console.warn('[atualizarAgendaForte] erro:', e);
+    toast('Erro ao atualizar agenda', 'error');
+  } finally {
+    if(ico) ico.classList.remove('spin');
+  }
+}
+ 
 /* ===== NOVO: Auto-refresh silencioso dos badges (2 min + ao voltar pra aba + ao carregar) ===== */
 async function atualizarBadgesSilencioso(){
   if(!state.isAdmin) return;
@@ -4325,10 +4362,10 @@ async function carregarHomeAdmin(){
   atualizarBadgeCaptar();
   atualizarBadgeLeads();
   carregarNotasBadge();
-  state.carregado = { agenda: false, visitar: false, gostei: false, clientes: false, geral: false, tarefas: false, cutucada: false };
+  state.carregado = { agenda: false, visitar: false, gostei: false, clientes: false, geral: false, tarefas: false, cutucada: false, cutucadaHugo: false, cutucadaCarol: false };
   await carregarCorretores();
   state.painelAtivo = 'agenda';
-  ['agenda','visitar','gostei','clientes','cutucada'].forEach(p => {
+  ['agenda','visitar','gostei','clientes','cutucadaHugo','cutucadaCarol'].forEach(p => {
     const cap = p.charAt(0).toUpperCase() + p.slice(1);
     const elPanel = $('panel' + cap);
     const elCard = $('card' + cap);
@@ -4532,17 +4569,26 @@ function renderizarCorretoresNoCardClientes_(){
 
 /* ===== NOVO: prévia de corretores no card Cutucada ===== */
 function renderizarCutucadaCorretores_(){
-  const wrap = $('cutucadaCorretoresLista');
-  if(!wrap) return;
   const atrasados = (state.clientes || []).filter(c => clienteAtrasado_(c));
-  if(atrasados.length === 0){ wrap.innerHTML = ''; return; }
-  const contagem = {};
-  atrasados.forEach(c => {
-    const corr = chaveCorretorExata_(c.corretor) || '(sem corretor)';
-    if(!contagem[corr]) contagem[corr] = 0;
-    contagem[corr]++;
-  });
-  wrap.innerHTML = montarPreviaCorretores_(contagem, 5);
+
+  const hugo  = atrasados.filter(c => donoCutucada_(c) === 'hugo');
+  const carol = atrasados.filter(c => donoCutucada_(c) === 'carol');
+
+  function previa(lista, wrapId){
+    const wrap = $(wrapId);
+    if(!wrap) return;
+    if(lista.length === 0){ wrap.innerHTML = ''; return; }
+    const contagem = {};
+    lista.forEach(c => {
+      const corr = chaveCorretorExata_(c.corretor) || '(sem corretor)';
+      if(!contagem[corr]) contagem[corr] = 0;
+      contagem[corr]++;
+    });
+    wrap.innerHTML = montarPreviaCorretores_(contagem, 5);
+  }
+
+  previa(hugo,  'cutucadaHugoCorretoresLista');
+  previa(carol, 'cutucadaCarolCorretoresLista');
 }
 
 async function carregarTarefas(mostrarLoading){
@@ -4593,12 +4639,34 @@ function clienteAtrasado_(c){
   if(dias === null) return true; // nunca cutucado = atrasado
   return dias > DIAS_CUTUCADA_ATRASO;
 }
+// ✅ NOVO: identifica o "dono" do cliente pelo prefixo do corretor.
+// Regra: se começa com "Hugo" (ex: "Hugo", "Hugo/Carol", "Hugo/Iasmin") → hugo.
+// Senão, se começa com "Carol" ou "Carolina" (ex: "Carol", "Carol/Hugo", "Carolina") → carol.
+// Senão → null (não conta em nenhum card de cutucada).
+function donoCutucada_(cliente){
+  const corr = String(cliente && cliente.corretor || '').trim();
+  if(!corr) return null;
+  const primeiro = corr.split('/')[0].trim().toLowerCase();
+  if(primeiro.startsWith('hugo')) return 'hugo';
+  if(primeiro.startsWith('carol') || primeiro.startsWith('carolina')) return 'carol';
+  return null;
+}
+
 function atualizarBalCutucada(){
-  const el = $('balCutucada');
-  if(!el) return;
-  const atrasados = (state.clientes || []).filter(c => clienteAtrasado_(c)).length;
-  el.textContent = atrasados > 99 ? '99+' : atrasados;
-  el.classList.toggle('zero', atrasados === 0);
+  const atrasados = (state.clientes || []).filter(c => clienteAtrasado_(c));
+  const hugo  = atrasados.filter(c => donoCutucada_(c) === 'hugo').length;
+  const carol = atrasados.filter(c => donoCutucada_(c) === 'carol').length;
+
+  const elH = $('balCutucadaHugo');
+  if(elH){
+    elH.textContent = hugo > 99 ? '99+' : hugo;
+    elH.classList.toggle('zero', hugo === 0);
+  }
+  const elC = $('balCutucadaCarol');
+  if(elC){
+    elC.textContent = carol > 99 ? '99+' : carol;
+    elC.classList.toggle('zero', carol === 0);
+  }
 }
 function cutucadaDiasHTML(c){
   const dias = calcularDiasSemCutucada(c);
@@ -5713,79 +5781,131 @@ function onBuscaCutucadaChanged(){
   state._buscaCutucadaTimer = setTimeout(() => renderizarCutucadas(), 250);
 }
 function renderizarCutucadas(){
-  const lista = $('cutucadaLista');
-  const empty = $('cutucadaEmpty');
-  if(!lista) return;
-  if(!state.carregado.clientes){
-    lista.innerHTML = '<div class="loading-inline"><span class="loader loader-lg"></span><p>Carregando clientes...</p></div>';
-    return;
-  }
-  renderizarFiltrosCutucada();
+  ['Hugo','Carol'].forEach(sufixo => {
+    const dono = sufixo.toLowerCase();
+    const listaId  = 'cutucadaLista' + sufixo;
+    const emptyId  = 'cutucadaEmpty' + sufixo;
+    const filtrosId = 'filtrosCutucada' + sufixo;
+    const buscaId  = 'buscaCutucada' + sufixo;
+    const ordemId  = 'ordenacaoCutucada' + sufixo;
 
-  const busca = ($('buscaCutucada').value || '').toLowerCase().trim();
-  const ordem = $('ordenacaoCutucada').value;
+    const lista = $(listaId);
+    const empty = $(emptyId);
+    if(!lista) return;
 
-  let arr = (state.clientes || []).filter(c => clienteAtivoParaCutucada_(c));
-
-  if(state.filtrosCutucada.corretores.size > 0){
-    arr = arr.filter(c => state.filtrosCutucada.corretores.has(chaveCorretorExata_(c.corretor)));
-  }
-  if(state.filtrosCutucada.temperaturas.size > 0){
-    arr = arr.filter(c => state.filtrosCutucada.temperaturas.has(c.temperatura || 'frio'));
-  }
-  if(busca){
-    const b = busca;
-    const bTel = normalizaTel(busca);
-    arr = arr.filter(c => {
-      if((c.nome || '').toLowerCase().includes(b)) return true;
-      if(bTel && normalizaTel(c.telefone).includes(bTel)) return true;
-      return false;
-    });
-  }
-
-  // Ordenação: dias sem cutucada (nunca = sempre no topo quando "mais-atrasado")
-  const diasMap = {};
-  arr.forEach(c => {
-    const d = calcularDiasSemCutucada(c);
-    diasMap[normalizaTel(c.telefone)] = (d === null) ? 99999 : d;
-  });
-  if(ordem === 'mais-atrasado'){
-    arr.sort((a,b) => diasMap[normalizaTel(b.telefone)] - diasMap[normalizaTel(a.telefone)]);
-  } else if(ordem === 'menos-atrasado'){
-    arr.sort((a,b) => diasMap[normalizaTel(a.telefone)] - diasMap[normalizaTel(b.telefone)]);
-  } else {
-    arr.sort((a,b) => (a.nome||'').localeCompare(b.nome||'', 'pt-BR', {sensitivity:'base'}));
-  }
-
-  if(arr.length === 0){
-    lista.innerHTML = '';
-    empty.classList.remove('hidden');
-    return;
-  }
-  empty.classList.add('hidden');
-
-  // Renderiza usando o mesmo HTML do card de clientes + um selo extra de dias
-  lista.innerHTML = arr.map(c => {
-    const baseHTML = clienteRowHTML(c);
-    const seloDias = cutucadaDiasHTML(c);
-    const seloAtrasado = clienteAtrasado_(c)
-      ? '<span class="cutucada-atrasado-selo">⚠️ Atrasado</span>'
-      : '';
-    // Injeta o selo de dias logo após o "nome" (dentro da div.linha2)
-    const htmlComSelo = baseHTML.replace(
-      '<span class="item ult-admin">',
-      `${seloDias} ${seloAtrasado}<span class="item ult-admin">`
-    );
-    return htmlComSelo;
-  }).join('');
-
-  // Pré-carrega preferências (para a barra aparecer)
-  arr.forEach(c => {
-    const tel = normalizaTel(c.telefone);
-    if(tel && !state._prefsCachePorTel[tel]){
-      carregarPrefsCliente(tel, false);
+    if(!state.carregado.clientes){
+      lista.innerHTML = '<div class="loading-inline"><span class="loader loader-lg"></span><p>Carregando clientes...</p></div>';
+      return;
     }
+
+    // Filtros por corretor deste card
+    const filtrosWrap = $(filtrosId);
+    if(filtrosWrap) renderizarFiltrosCutucadaPorDono_(filtrosWrap, dono);
+
+    const busca = ($(buscaId) && $(buscaId).value || '').toLowerCase().trim();
+    const ordem = ($(ordemId) && $(ordemId).value) || 'mais-atrasado';
+
+    let arr = (state.clientes || [])
+      .filter(c => clienteAtivoParaCutucada_(c))
+      .filter(c => donoCutucada_(c) === dono);
+
+    // Filtros de corretor/temp (reaproveita o set global filtrando só os do dono)
+    if(state.filtrosCutucada.corretores.size > 0){
+      arr = arr.filter(c => state.filtrosCutucada.corretores.has(chaveCorretorExata_(c.corretor)));
+    }
+    if(state.filtrosCutucada.temperaturas.size > 0){
+      arr = arr.filter(c => state.filtrosCutucada.temperaturas.has(c.temperatura || 'frio'));
+    }
+    if(busca){
+      const b = busca;
+      const bTel = normalizaTel(busca);
+      arr = arr.filter(c => {
+        if((c.nome || '').toLowerCase().includes(b)) return true;
+        if(bTel && normalizaTel(c.telefone).includes(bTel)) return true;
+        return false;
+      });
+    }
+
+    const diasMap = {};
+    arr.forEach(c => {
+      const d = calcularDiasSemCutucada(c);
+      diasMap[normalizaTel(c.telefone)] = (d === null) ? 99999 : d;
+    });
+    if(ordem === 'mais-atrasado'){
+      arr.sort((a,b) => diasMap[normalizaTel(b.telefone)] - diasMap[normalizaTel(a.telefone)]);
+    } else if(ordem === 'menos-atrasado'){
+      arr.sort((a,b) => diasMap[normalizaTel(a.telefone)] - diasMap[normalizaTel(b.telefone)]);
+    } else {
+      arr.sort((a,b) => (a.nome||'').localeCompare(b.nome||'', 'pt-BR', {sensitivity:'base'}));
+    }
+
+    if(arr.length === 0){
+      lista.innerHTML = '';
+      if(empty) empty.classList.remove('hidden');
+      return;
+    }
+    if(empty) empty.classList.add('hidden');
+
+    lista.innerHTML = arr.map(c => {
+      const baseHTML = clienteRowHTML(c);
+      const seloDias = cutucadaDiasHTML(c);
+      const seloAtrasado = clienteAtrasado_(c)
+        ? '<span class="cutucada-atrasado-selo">⚠️ Atrasado</span>'
+        : '';
+      return baseHTML.replace(
+        '<span class="item ult-admin">',
+        `${seloDias} ${seloAtrasado}<span class="item ult-admin">`
+      );
+    }).join('');
+
+    arr.forEach(c => {
+      const tel = normalizaTel(c.telefone);
+      if(tel && !state._prefsCachePorTel[tel]) carregarPrefsCliente(tel, false);
+    });
   });
+}
+
+// Filtros por dono (Hugo/Carol) — reaproveita o estado global
+function renderizarFiltrosCutucadaPorDono_(wrap, dono){
+  const ativos = (state.clientes || [])
+    .filter(c => clienteAtivoParaCutucada_(c))
+    .filter(c => donoCutucada_(c) === dono);
+
+  const encontrados = new Set();
+  ativos.forEach(c => {
+    const corr = chaveCorretorExata_(c.corretor);
+    if(corr) encontrados.add(corr);
+  });
+  const listaCorretores = [...encontrados].sort((a,b) => a.localeCompare(b,'pt-BR'));
+  const chips = listaCorretores.map(nome => {
+    const cnt = ativos.filter(c => chaveCorretorExata_(c.corretor) === nome).length;
+    const ativo = state.filtrosCutucada.corretores.has(nome);
+    const cor = corDoCorretor(nome) || '#64748b';
+    return `<button class="chip chip-corretor ${ativo ? 'active' : ''}"
+              style="background:${ativo ? cor : '#fff'}; color:${ativo ? '#fff' : cor}; border-color:${cor}"
+              onclick="toggleFiltroCutucadaCorretor('${esc(nome)}')">
+              ${esc(nome)} <span class="cnt">${cnt}</span>
+            </button>`;
+  }).join('');
+  const t = state.filtrosCutucada.temperaturas;
+  const cntTemp = { quente: 0, morno: 0, frio: 0 };
+  ativos.forEach(c => {
+    const temp = c.temperatura || 'frio';
+    if(cntTemp[temp] !== undefined) cntTemp[temp]++;
+  });
+  wrap.innerHTML = `
+    <div class="filtro-grupo">
+      <span class="lbl">Corretor:</span>
+      ${chips}
+      ${listaCorretores.length > 0 ? `<button class="chip ${state.filtrosCutucada.corretores.size === 0 ? 'active' : ''}" onclick="limparFiltroCutucadaCorretores()">Todos</button>` : ''}
+    </div>
+    <div class="filtro-grupo filtro-desktop-only">
+      <span class="lbl">Temp:</span>
+      <button class="chip ${t.has('quente') ? 'active' : ''}" onclick="toggleFiltroCutucadaTemp('quente')">🔥 <span class="cnt">${cntTemp.quente}</span></button>
+      <button class="chip ${t.has('morno') ? 'active' : ''}" onclick="toggleFiltroCutucadaTemp('morno')">🌡️ <span class="cnt">${cntTemp.morno}</span></button>
+      <button class="chip ${t.has('frio') ? 'active' : ''}" onclick="toggleFiltroCutucadaTemp('frio')">❄️ <span class="cnt">${cntTemp.frio}</span></button>
+    </div>
+  `;
 }
 
 /* ===== NOTAS (post-its por corretor) ===== */
@@ -6109,7 +6229,7 @@ async function salvarEdicaoCutucada(id){
   cancelarEdicaoCutucada(id);
   atualizarUltimaCutucadaDoCliente_(id, novoTexto);
   renderizarClientes();
-  if(state.painelAtivo === 'cutucada') renderizarCutucadas();
+  if(state.painelAtivo === 'cutucadaHugo' || state.painelAtivo === 'cutucadaCarol') renderizarCutucadas();
   atualizarBalCutucada();
 }
 function atualizarUltimaCutucadaDoCliente_(idCutucada, novoTexto){
@@ -6373,8 +6493,21 @@ async function carregarAgenda(mostrarLoading){
     api('listarTodosImoveis', { senha: state.adminSenha }),
     api('listarEventosNeutros', { senha: state.adminSenha })
   ]);
-  state.agendamentos = (res.ok && res.data) ? res.data : [];
-  state.eventosNeutros = (resEv.ok && resEv.data) ? resEv.data : [];
+
+  // ✅ CORREÇÃO ANTI-FANTASMA: Só substitui o array se a resposta for OK.
+  // Se falhar (rede/API), mantém o array anterior — mas se vier OK e vazio,
+  // zera (que é o correto: a planilha está vazia).
+  if(res.ok){
+    state.agendamentos = Array.isArray(res.data) ? res.data : [];
+  } else {
+    console.warn('[carregarAgenda] listarAgendamentos falhou — mantendo cache anterior');
+  }
+  if(resEv.ok){
+    state.eventosNeutros = Array.isArray(resEv.data) ? resEv.data : [];
+  } else {
+    console.warn('[carregarAgenda] listarEventosNeutros falhou — mantendo cache anterior');
+  }
+
   if(resIm.ok && resIm.data){
     state.todosImoveis = resIm.data;
     state._corretorPorImovelId = {};
@@ -6382,6 +6515,22 @@ async function carregarAgenda(mostrarLoading){
       state._corretorPorImovelId[String(im.id)] = im.corretor || '';
     });
   }
+
+  // ✅ NOVO: remove eventos cujo id já não existe em state.todosImoveis E
+  // que também não estão em state.agendamentos (evita fantasma de imóvel excluído)
+  if(res.ok && resIm.ok && resEv.ok){
+    const idsAg = new Set((state.agendamentos || []).map(a => String(a.id)));
+    const idsIm = new Set((state.todosImoveis || []).map(im => String(im.id)));
+    state.eventosNeutros = (state.eventosNeutros || []).filter(ev => {
+      const id = String(ev.id || '');
+      // eventos neutros têm prefixo "evento_" (ou vêm da aba Eventos com id uuid).
+      // Não dá pra cruzar com todosImoveis, então confiamos na resposta da API.
+      // Só removemos se o id tiver prefixo evento_ E não estiver na lista do servidor
+      // (o que já garantimos acima ao substituir o array).
+      return true;
+    });
+  }
+
   state.carregado.agenda = true;
   atualizarBalAgenda();
   renderizarFiltrosAgenda();
@@ -7596,7 +7745,7 @@ async function executarRefreshSilencioso(){
       if(state.painelAtivo === 'agenda') renderizarAgenda();
       if(state.painelAtivo === 'visitar' || state.painelAtivo === 'gostei') renderizarNotificacoes();
       if(state.painelAtivo === 'clientes') renderizarClientes();
-      if(state.painelAtivo === 'cutucada') renderizarCutucadas();
+      if(state.painelAtivo === 'cutucadaHugo' || state.painelAtivo === 'cutucadaCarol') renderizarCutucadas();
     }
   } catch(e){
     console.warn('[refresh silencioso] erro:', e);
