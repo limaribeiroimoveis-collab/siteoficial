@@ -1950,7 +1950,7 @@ async function toggleVendido(codigo, vendidoAtual){
 window._clonarImovelId = null;
 window._clonarImovelTitulo = '';
 
-function abrirClonar(id){
+async function abrirClonar(id){
   const im = state.imoveis.find(x => String(x.id) === String(id));
   if(!im){ toast('Imóvel não encontrado', 'error'); return; }
   
@@ -1959,44 +1959,48 @@ function abrirClonar(id){
   
   const codigoOriginal = String(im.codigo || '').trim();
   
-  // ✅ CORREÇÃO: Varre TODO o state.imoveis buscando o código exato.
-  // Isso pega o Hugo, a Carol e qualquer outro, independente da carteira.
-  const clientesQueJaTem = new Set();
-  if (codigoOriginal) {
-    state.imoveis.forEach(item => {
-      // Compara os códigos exatamente como estão no banco
-      if (String(item.codigo || '').trim() === codigoOriginal) {
-        clientesQueJaTem.add(normalizaTel(item.telefone));
-      }
-    });
-  }
-  
   $('clonarModalSub').textContent = `#${codigoOriginal || im.id} — ${im.titulo || 'Sem endereço'}`;
   
   const sel = $('clonarSelectCliente');
+  const btn = $('btnConfirmarClonar');
+  
+  // Mostra um estado de carregamento no select
+  sel.innerHTML = '<option value="">Carregando clientes que já possuem...</option>';
+  sel.disabled = true;
+  btn.disabled = true;
+  btn.textContent = 'Clonar para este cliente';
+  
+  $('clonarModalBackdrop').classList.add('show');
+  
+  // ✅ NOVO: Busca a lista REAL de clientes que têm esse imóvel direto da API
+  let clientesQueJaTem = new Set();
+  if (codigoOriginal) {
+    try {
+      const res = await api('listarClientesPorImovel', { senha: SENHA_ADMIN, codigo: codigoOriginal });
+      if (res.ok && res.data) {
+        res.data.forEach(c => clientesQueJaTem.add(normalizaTel(c.telefone)));
+      }
+    } catch(e) {
+      console.warn('Erro ao buscar clientes por imóvel:', e);
+    }
+  }
+  
+  // Popula o select com todos os clientes, desabilitando quem já tem o imóvel
   const clientesOrdenados = [...state.clientes].sort((a, b) => (a.nome || '').localeCompare(b.nome || '', 'pt-BR'));
   
   sel.innerHTML = '<option value="">— Escolha um cliente —</option>' + 
     clientesOrdenados.map(c => {
       const tel = normalizaTel(c.telefone);
       const jaTem = clientesQueJaTem.has(tel);
-      
-      // Monta o texto, se já tiver, adiciona o aviso
       const label = `${esc(c.nome || 'Sem nome')} · ${esc(fmtTel(c.telefone))}${jaTem ? ' — ❌ Já possui' : ''}`;
-      
-      // Desabilita a opção se o cliente já tiver o imóvel
       return `<option value="${esc(tel)}" ${jaTem ? 'disabled style="color: #94a3b8;"' : ''}>${label}</option>`;
     }).join('');
   
-  const btn = $('btnConfirmarClonar');
-  btn.disabled = true;
-  btn.textContent = 'Clonar para este cliente';
+  sel.disabled = false;
   
   sel.onchange = () => {
     btn.disabled = !sel.value;
   };
-  
-  $('clonarModalBackdrop').classList.add('show');
 }
 
 function fecharClonarModal(){
