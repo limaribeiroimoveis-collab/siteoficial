@@ -4417,6 +4417,32 @@ async function carregarHomeAdmin(){
     if(elPanel) elPanel.classList.toggle('hidden', p !== 'agenda');
     if(elCard) elCard.classList.toggle('active', p === 'agenda');
   });
+
+ async function carregarHomeAdmin(){
+  mostrarView('homeView');
+  $('btnSair').classList.remove('hidden');
+  atualizarBadgeCaptar();
+  atualizarBadgeLeads();
+  carregarNotasBadge();
+  state.carregado = { agenda: false, visitar: false, gostei: false, clientes: false, geral: false, tarefas: false, cutucada: false };
+  await carregarCorretores();
+
+  // ✅ FAXINA PESADA no login: garante memória limpa desde o início
+  await faxinaEventosFantasma();
+
+  state.painelAtivo = 'agenda';
+  ['agenda','visitar','gostei','clientes','cutucada'].forEach(p => {
+    const cap = p.charAt(0).toUpperCase() + p.slice(1);
+    const elPanel = $('panel' + cap);
+    const elCard = $('card' + cap);
+    if(elPanel) elPanel.classList.toggle('hidden', p !== 'agenda');
+    if(elCard) elCard.classList.toggle('active', p === 'agenda');
+  });
+  await carregarAgenda(true);
+  carregarResto_();
+  iniciarRefreshSilencioso();
+  iniciarAutoRefreshBadges();
+}
   await carregarAgenda(true);
   carregarResto_();
   iniciarRefreshSilencioso();
@@ -6499,27 +6525,22 @@ async function carregarAgenda(mostrarLoading){
     $('agendaLista').innerHTML = '<div class="loading-inline"><span class="loader loader-lg"></span><p>Carregando agenda...</p></div>';
   }
 
+  // ✅ FAXINA PREVENTIVA: alinha a memória com o servidor antes de renderizar
+  await faxinaEventosFantasma();
+
+  // Depois da faxina, garante que o resto do fluxo (imóveis etc.) siga normalmente
   const [res, resIm, resEv] = await Promise.all([
     api('listarAgendamentos', { senha: state.adminSenha }),
     api('listarTodosImoveis', { senha: state.adminSenha }),
     api('listarEventosNeutros', { senha: state.adminSenha })
   ]);
 
-  // ✅ Só sobrescreve se a resposta foi OK — evita apagar a tela em caso de erro de rede
   if(res.ok && Array.isArray(res.data)){
     state.agendamentos = res.data;
-  } else if(!res.ok){
-    console.warn('[carregarAgenda] listarAgendamentos falhou:', res.error);
   }
-
-  // ✅ Eventos: se o servidor respondeu OK, a lista DELE é a verdade.
-  // Qualquer evento que não vier do servidor é removido da memória (fantasma some).
   if(resEv.ok && Array.isArray(resEv.data)){
     state.eventosNeutros = resEv.data;
-  } else if(!resEv.ok){
-    console.warn('[carregarAgenda] listarEventosNeutros falhou:', resEv.error);
   }
-
   if(resIm.ok && resIm.data){
     state.todosImoveis = resIm.data;
     state._corretorPorImovelId = {};
@@ -6533,6 +6554,56 @@ async function carregarAgenda(mostrarLoading){
   renderizarFiltrosAgenda();
   renderizarAgenda();
   renderizarCorretoresNoCardAgenda_();
+}
+
+ /* =========================================================
+   FAXINA AUTOMÁTICA DE EVENTOS FANTASMAS
+   Roda sempre que a agenda é carregada. Remove da memória
+   qualquer evento/agendamento que NÃO exista mais no servidor.
+   ========================================================= */
+async function faxinaEventosFantasma(){
+  if(!state.isAdmin || !state.adminSenha) return;
+  try {
+    // 1) Busca o estado REAL do servidor
+    const [rEv, rAg] = await Promise.all([
+      api('listarEventosNeutros', { senha: state.adminSenha }),
+      api('listarAgendamentos',   { senha: state.adminSenha })
+    ]);
+
+    // Se alguma consulta falhou, NÃO mexe em nada (evita apagar por erro de rede)
+    if(!rEv.ok || !rAg.ok){
+      console.warn('[faxina] consulta falhou, mantendo estado atual', { rEv, rAg });
+      return;
+    }
+
+    const idsEvServidor = new Set((rEv.data || []).map(e => String(e.id)));
+    const idsAgServidor = new Set((rAg.data || []).map(a => String(a.id)));
+
+    // 2) Calcula o que é fantasma (está na memória mas não está no servidor)
+    const fantasmasEv = state.eventosNeutros.filter(e => !idsEvServidor.has(String(e.id)));
+    const fantasmasAg = state.agendamentos.filter(a => !idsAgServidor.has(String(a.id)));
+
+    // 3) Reconstrói a memória SÓ com o que o servidor tem
+    //    (isso é o coração da faxina — sobrescreve em vez de filtrar, para garantir)
+    state.eventosNeutros = rEv.data || [];
+    state.agendamentos    = rAg.data || [];
+
+    // 4) Se encontrou fantasmas, avisa no console e re-renderiza
+    if(fantasmasEv.length > 0 || fantasmasAg.length > 0){
+      console.log('%c[faxina] fantasmas removidos:', 'color:#16a34a;font-weight:bold',
+        { eventos: fantasmasEv.map(e => e.id), agendamentos: fantasmasAg.map(a => a.id) });
+
+      // Re-renderiza a tela se a agenda estiver visível
+      try {
+        atualizarBalAgenda();
+        renderizarFiltrosAgenda();
+        renderizarAgenda();
+        renderizarCorretoresNoCardAgenda_();
+      } catch(e){ /* silencioso */ }
+    }
+  } catch(err){
+    console.warn('[faxina] erro:', err);
+  }
 }
 function atualizarBalAgenda(){
   const el = $('balAgenda');
