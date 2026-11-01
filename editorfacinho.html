@@ -376,6 +376,13 @@ const esc = s => String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').repl
 
 function normalizaTexto(s){ return String(s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim(); }
 function normalizaTel(t){ return String(t || '').replace(/\D/g, ''); }
+function formatarMoeda(v){
+  if(!v) return '';
+  const s = String(v).trim();
+  if(!s) return '';
+  if(/^R\$/i.test(s)) return s;
+  return 'R$ ' + s;
+}
 function extrairTipoImovel(desc){
   if(!desc) return '';
   const l = String(desc).split(/\r?\n/).map(x => x.trim()).filter(Boolean)[0] || '';
@@ -470,15 +477,10 @@ async function carregarTudo(){
     return;
   }
   setStatus('Carregando...');
-  console.log('[editor] Buscando imóveis com senha:', SENHA_ADMIN);
 
   let res = await api('listarTodosImoveis', { senha: SENHA_ADMIN });
-  console.log('[editor] resposta listarTodosImoveis:', res);
-
   if(!res.ok || !res.data || res.data.length === 0){
-    console.log('[editor] Tentando listarImoveisGeral como fallback...');
     res = await api('listarImoveisGeral', { senha: SENHA_ADMIN });
-    console.log('[editor] resposta listarImoveisGeral:', res);
   }
 
   if(!res.ok){
@@ -493,17 +495,30 @@ async function carregarTudo(){
   else if(Array.isArray(res.imoveis)) lista = res.imoveis;
   else if(Array.isArray(res.data?.imoveis)) lista = res.data.imoveis;
 
-  console.log('[editor] Total de imóveis carregados:', lista.length);
-
   if(lista.length === 0){
-    $('contador').textContent = 'A API respondeu mas não retornou nenhum imóvel. Verifique a senha ou se há imóveis na planilha.';
+    $('contador').textContent = 'A API respondeu mas não retornou nenhum imóvel.';
     setStatus('Vazio');
     return;
   }
 
-  state.imoveis = lista;
+  // ✅ AGRUPAR POR CÓDIGO — remove duplicatas
+  const mapaCodigo = {};
+  lista.forEach(im => {
+    const cod = String(im.codigo || '').trim();
+    const chave = cod || ('id:' + im.id);
+    if(!mapaCodigo[chave]){
+      mapaCodigo[chave] = im;
+    } else {
+      // Se o atual estiver vendido e já tem um não vendido, mantém o não vendido
+      const atualVendido = String(mapaCodigo[chave].vendido || '').toLowerCase() === 'sim';
+      const novoVendido = String(im.vendido || '').toLowerCase() === 'sim';
+      if(atualVendido && !novoVendido) mapaCodigo[chave] = im;
+    }
+  });
+
+  state.imoveis = Object.values(mapaCodigo);
   state.carregado = true;
-  setStatus('Conectado · ' + lista.length + ' imóveis');
+  setStatus('Conectado · ' + state.imoveis.length + ' imóveis únicos');
   renderizarLista();
 }
 
@@ -546,12 +561,37 @@ function renderizarLista(){
   $('lista').innerHTML = lista.slice(0, 200).map(im => {
     const vendido = String(im.vendido || '').toLowerCase() === 'sim';
     const cod = String(im.codigo || '').trim();
-    const tit = esc(im.titulo || 'Sem endereço');
+    
+    // ✅ TÍTULO COM APTO
+    const infoChave = extrairAptoBlocoChave(im.chaveTexto || '');
+    const apto = infoChave.apto || '';
+    const rua = String(im.rua || '').trim();
+    const numero = String(im.numero || '').trim();
+    
+    let titulo = String(im.titulo || 'Sem endereço');
+    if(rua && numero){
+      titulo = `${rua}, ${numero}`;
+      if(apto) titulo += ` / ${apto}`;
+    } else if(apto && titulo){
+      titulo += ` / ${apto}`;
+    }
+
+    // ✅ META COM CÓDIGO + PREÇO + CONDOMÍNIO
+    const preco = formatarMoeda(im.preco);
+    const cond = formatarMoeda(im.condominio);
+    const metaPartes = [];
+    if(cod) metaPartes.push(`#${cod}`);
+    if(preco) metaPartes.push(preco);
+    if(cond) metaPartes.push(`Cond. ${cond}`);
+    if(vendido) metaPartes.push('VENDIDO');
+    
+    const meta = metaPartes.length ? metaPartes.join(' · ') : '—';
+
     return `
       <div class="item ${vendido ? 'item-vendido' : ''}" onclick="abrirEditor('${esc(im.id)}')">
         <div class="item-info">
-          <div class="item-titulo">${tit}</div>
-          <div class="item-meta">${cod ? '#' + esc(cod) : 'sem código'}${vendido ? ' · VENDIDO' : ''}</div>
+          <div class="item-titulo">${esc(titulo)}</div>
+          <div class="item-meta" style="font-size: 0.68rem;">${esc(meta)}</div>
         </div>
         <button class="item-btn">Editar</button>
       </div>
