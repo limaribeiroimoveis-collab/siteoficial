@@ -5,7 +5,23 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="google" content="notranslate">
 <title>LR Imóveis - Quinto Andar</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏢</text></svg>">
+
+  <!-- Open Graph (WhatsApp, Facebook, LinkedIn) -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="LR Imóveis - Vitrine">
+<meta property="og:description" content="Veja imóveis selecionados para você pela Lima Ribeiro Imóveis.">
+<meta property="og:image" content="https://cdn.awsli.com.br/1608/1608652/arquivos/vitrinelr.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:url" content="https://limaribeiroimoveis.com.br/vitrine.html">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="LR Imóveis - Vitrine">
+<meta name="twitter:description" content="Veja imóveis selecionados para você pela Lima Ribeiro Imóveis.">
+<meta name="twitter:image" content="https://cdn.awsli.com.br/1608/1608652/arquivos/vitrinelr.jpg">
+  
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏢</text></svg>">
 
 <script>
   window.__WARMUP_URL__ = 'https://script.google.com/macros/s/AKfycbzuCjg_5ZJDMWWKmjYp1ThW34iWS0YouviWFdiMGx8W3yApv0F1fdUcjeZdjm0s6Mg/exec';
@@ -122,6 +138,13 @@
   .card.card-nao-gostei{ opacity: .4; filter: grayscale(100%); }
   .card.card-nao-gostei:hover{ opacity: .6; filter: grayscale(80%); }
   .card.card-vendido{ opacity: .6; filter: grayscale(80%); pointer-events: none; }
+  
+  /* CARD VISITAR (Fundo Marrom Mais Destacado) */
+  .card.card-quero-visitar { background-color: #e2ccb2; border-color: #c9a57b; box-shadow: 0 4px 12px rgba(160,120,80,0.15); }
+  .card.card-quero-visitar .card-actions { border-top-color: #c9a57b; }
+  .card.card-quero-visitar .card-header { background-color: transparent; }
+  .card.card-quero-visitar .card-bairro { color: #4a3a25; }
+  .card.card-quero-visitar .card-rua { color: #6b5a45; }
 
   /* Topo do Card */
   .card-header{ display: flex; flex-direction: column; padding: 12px 12px 8px; gap: 2px; }
@@ -142,6 +165,10 @@
   .badge-vendido{ position: absolute; top: 15%; left: 50%; transform: translate(-50%, -50%) rotate(-10deg); background: rgba(220,38,38,.95); color: #fff; font-size: .9rem; font-weight: 900; letter-spacing: 1.5px; padding: 8px 20px; border-radius: 6px; border: 2px solid #fff; z-index: 6; text-transform: uppercase; }
   .badge-desativado{ position: absolute; top: 10px; left: 10px; background: #000; color: #fff; font-size: .6rem; font-weight: 800; padding: 4px 10px; border-radius: 4px; z-index: 6; text-transform: uppercase; letter-spacing: .5px; }
   .badge-novo{ position: absolute; top: 10px; left: 10px; background: var(--success); color: #fff; font-size: .6rem; font-weight: 800; padding: 4px 10px; border-radius: 999px; z-index: 5; }
+  
+  /* BADGE VISITAR */
+  .badge-visitar-solicitado { position: absolute; top: 10px; right: 10px; background: var(--success); color: #fff; font-size: .6rem; font-weight: 800; padding: 4px 10px; border-radius: 999px; z-index: 6; text-transform: uppercase; box-shadow: 0 2px 6px rgba(22,163,74,.3); }
+
   .card-heart-top{ position: absolute; top: 10px; right: 10px; width: 32px; height: 32px; background: rgba(255,255,255,.9); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; z-index: 7; animation: heartIn .3s cubic-bezier(.34,1.56,.64,1) both; }
   @keyframes heartIn{ from{ opacity: 0; transform: scale(.3); } to{ opacity: 1; transform: scale(1); } }
   .card-tag-topo{ position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,.6); backdrop-filter: blur(4px); color: #fff; font-size: .6rem; font-weight: 700; text-transform: uppercase; padding: 4px 8px; border-radius: 4px; z-index: 5; }
@@ -414,6 +441,19 @@
   </div>
 </div>
 
+<!-- NOVO MODAL: CANCELAR VISITA -->
+<div class="modal-backdrop" id="modalCancelarVisita" onclick="if(event.target===this) fecharModalCancelarVisita()">
+  <div class="modal">
+    <button class="modal-close" onclick="fecharModalCancelarVisita()">×</button>
+    <h2>⚠️ Cancelar visita?</h2>
+    <p class="sub">Você já solicitou uma visita para este imóvel. Tem certeza de que deseja cancelar essa solicitação?</p>
+    <div style="display:flex; flex-direction:column; gap:10px;">
+      <button class="btn btn-ghost btn-full" onclick="fecharModalCancelarVisita()">Não, manter visita</button>
+      <button class="btn btn-primary btn-full" id="btnConfirmarCancelamento" style="background:var(--danger);" onclick="confirmarCancelamentoVisita()">Sim, cancelar visita</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -529,6 +569,14 @@ function imovelEhNovo(im){
 
 function imovelVendido_(im){ const v = String(im?.vendido || '').trim().toLowerCase(); return ['sim','s','true','1','vendido'].includes(v); }
 
+// Verifica se o imóvel está reservado (desativado/oculto na vitrine)
+function imovelReservado_(im) {
+  if (!im) return false;
+  const v = String(im.vendido || '').trim().toLowerCase();
+  const desat = String(im.desativado || '').trim().toLowerCase();
+  return ['sim','s','true','1','reserva','reservado'].includes(v) || ['sim','s','true','1'].includes(desat);
+}
+
 function lerCache(){ try { const raw = localStorage.getItem(CACHE_KEY); if(!raw) return null; const obj = JSON.parse(raw); if(!obj?.ts || !obj?.data) return null; return { data: obj.data, fresh: (Date.now() - obj.ts) < CACHE_TTL }; } catch(e){ return null; } }
 function gravarCache(imoveis){ try { localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), data: imoveis })); } catch(e){} }
 
@@ -619,6 +667,42 @@ async function loginComRetryForte(tel, senha){
   return ultimoRes;
 }
 
+// Função que busca a lista do admin em segundo plano e sincroniza os dados de reserva
+async function sincronizarReservasAdmin() {
+  if (!state.telefone) return;
+  try {
+    const resAdmin = await api('adminListar', { senha: 'Cal@562938' }, TIMEOUT_API, 1);
+    if (!resAdmin.ok || !resAdmin.data) return;
+
+    const imoveisAdminDoCliente = resAdmin.data.filter(i => normalizaTel(i.telefone) === state.telefone);
+
+    const reservadosIds = new Set();
+    imoveisAdminDoCliente.forEach(im => {
+      if (String(im.desativado).toLowerCase() === 'sim') {
+        reservadosIds.add(String(im.id));
+      }
+    });
+
+    if (reservadosIds.size === 0) return;
+
+    let removeu = false;
+    state.imoveis = state.imoveis.filter(im => {
+      if (reservadosIds.has(String(im.id))) {
+        removeu = true;
+        return false;
+      }
+      return true;
+    });
+
+    if (removeu) {
+      gravarCache(state.imoveis);
+      atualizarTela();
+    }
+  } catch (e) {
+    console.warn('Aviso: não foi possível sincronizar reservas em segundo plano.', e);
+  }
+}
+
 async function reprocessarComLink(tel, senha){
   state.telefone = tel; state.deviceToken = null; state.clienteInfo = null; state.imoveis = [];
   mostrarView('vitrineView'); $('saudacaoUser').textContent = 'Olá, ' + fmtTel(tel); mostrarSkeleton();
@@ -628,7 +712,7 @@ async function reprocessarComLink(tel, senha){
     localStorage.setItem(TEL_KEY, tel); localStorage.setItem(TOKEN_KEY, state.deviceToken);
     if(res.nome) localStorage.setItem(NOME_KEY, res.nome); gravarLinkOriginal(tel, senha);
     $('saudacaoUser').textContent = 'Olá, ' + (res.nome ? res.nome.split(' ')[0] : fmtTel(tel));
-    if(res.imoveis?.length){ state.imoveis = res.imoveis.sort((a,b) => new Date(b.dataCadastro||0) - new Date(a.dataCadastro||0)); gravarCache(state.imoveis); atualizarTela(); limparUrl(); limparOriginalUrl(); return; }
+    if(res.imoveis?.length){ state.imoveis = res.imoveis.sort((a,b) => new Date(b.dataCadastro||0) - new Date(a.dataCadastro||0)); gravarCache(state.imoveis); atualizarTela(); limparUrl(); limparOriginalUrl(); sincronizarReservasAdmin(); return; }
     await carregarImoveis(); limparUrl(); limparOriginalUrl(); return;
   }
   if(erroEhDispositivoVinculado(res.error)){ mostrarBloqueioDispositivo(); return; }
@@ -660,7 +744,7 @@ async function irParaVitrine(){
   mostrarView('vitrineView');
   $('saudacaoUser').textContent = 'Olá, ' + (state.clienteInfo?.nome ? state.clienteInfo.nome.split(' ')[0] : fmtTel(state.telefone));
   const cache = lerCache();
-  if(cache?.data?.length){ state.imoveis = cache.data; atualizarTela(); if(cache.fresh) return; } else { mostrarSkeleton(); }
+  if(cache?.data?.length){ state.imoveis = cache.data; atualizarTela(); if(cache.fresh) { sincronizarReservasAdmin(); return; } } else { mostrarSkeleton(); }
   await carregarImoveis();
 }
 
@@ -674,13 +758,14 @@ async function carregarImoveis(){
   if(!res.data?.length && state.imoveis.length) return;
   state.imoveis = (res.data || []).sort((a,b) => new Date(b.dataCadastro||0) - new Date(a.dataCadastro||0));
   gravarCache(state.imoveis); atualizarTela();
+  sincronizarReservasAdmin();
 }
 
 function atualizarTela(){ renderizarVisitas(); renderizarNovidades(); renderizarFiltroDropdown(); renderizarImoveis(); }
 
 function renderizarVisitas(){
   const sec = $('sectionVisitas'), wrap = $('visitasWrap'), cnt = $('visitasCount');
-  const vis = state.imoveis.filter(im => !imovelVendido_(im) && im.dataVisitaAgendada && new Date(im.dataVisitaAgendada) >= new Date(Date.now() - 2*60*60*1000));
+  const vis = state.imoveis.filter(im => !imovelVendido_(im) && !imovelReservado_(im) && im.dataVisitaAgendada && new Date(im.dataVisitaAgendada) >= new Date(Date.now() - 2*60*60*1000));
   if(!vis.length){ sec.classList.add('hidden'); return; }
   sec.classList.remove('hidden'); cnt.textContent = vis.length;
   vis.sort((a,b) => new Date(a.dataVisitaAgendada) - new Date(b.dataVisitaAgendada));
@@ -692,7 +777,7 @@ function renderizarVisitas(){
 
 function renderizarNovidades(){
   const sec = $('sectionNovidades'), wrap = $('novidadesWrap'), cnt = $('novidadesCount');
-  const novos = state.imoveis.filter(im => !imovelVendido_(im) && imovelEhNovo(im) && im.status !== 'nao-gostei');
+  const novos = state.imoveis.filter(im => !imovelVendido_(im) && !imovelReservado_(im) && imovelEhNovo(im) && im.status !== 'nao-gostei');
   if(!novos.length){ sec.classList.add('hidden'); return; }
   sec.classList.remove('hidden'); cnt.textContent = novos.length;
   wrap.innerHTML = novos.map(im => `
@@ -706,7 +791,7 @@ function renderizarFiltroDropdown(){
   const dropdown = $('filtroLista'), badge = $('badgeFiltro'), btnLimpar = $('btnLimparFiltro');
   const mapa = new Map();
   state.imoveis.forEach(im => {
-    if(imovelVendido_(im) || im.status === 'nao-gostei') return;
+    if(imovelVendido_(im) || imovelReservado_(im) || im.status === 'nao-gostei') return;
     const nome = String(im.bairro || '').trim(); if(!nome) return;
     const chave = normalizarBairro(nome);
     if(!mapa.has(chave)) mapa.set(chave, { nome, count: 0 });
@@ -749,14 +834,17 @@ function toggleColunas(){
 
 function renderizarImoveis(){
   const grid = $('gridImoveis'); let lista = [...state.imoveis];
+  
+  if (state.filtroNav !== 'vendidos') {
+    lista = lista.filter(i => !imovelReservado_(i) && !imovelVendido_(i));
+  }
 
-  if(state.filtroNav === 'gostei') lista = lista.filter(i => !imovelVendido_(i) && i.status === 'gostei');
-  else if(state.filtroNav === 'visitar') lista = lista.filter(i => !imovelVendido_(i) && i.status === 'quero-visitar');
-  else if(state.filtroNav === 'nao-gostei') lista = lista.filter(i => !imovelVendido_(i) && i.status === 'nao-gostei');
+  if(state.filtroNav === 'gostei') lista = lista.filter(i => i.status === 'gostei');
+  else if(state.filtroNav === 'visitar') lista = lista.filter(i => i.status === 'quero-visitar');
+  else if(state.filtroNav === 'nao-gostei') lista = lista.filter(i => i.status === 'nao-gostei');
   else if(state.filtroNav === 'vendidos') lista = lista.filter(i => imovelVendido_(i));
   else {
     lista.sort((a,b) => {
-      const va = imovelVendido_(a) ? 3 : 0, vb = imovelVendido_(b) ? 3 : 0; if(va !== vb) return va - vb;
       const oa = (a.status === 'nao-gostei') ? 2 : 0, ob = (b.status === 'nao-gostei') ? 2 : 0; if(oa !== ob) return oa - ob;
       return new Date(b.dataCadastro||0) - new Date(a.dataCadastro||0);
     });
@@ -787,7 +875,19 @@ function cardHTML(im, idx){
   const specsInfo = extrairSpecsDescricao(im.descricao);
   const precoFmt = formatarPreco(im.preco);
   
-  let extraClass = ''; if(descartado) extraClass += ' card-nao-gostei'; if(vendido) extraClass += ' card-vendido';
+  let badgeTexto = specsInfo.badge;
+  let ocultarBadge = false;
+  if (badgeTexto) {
+    const bNormalizado = badgeTexto.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+    if (bNormalizado.includes("apartamento padrao") || bNormalizado.includes("apto padrao")) {
+      ocultarBadge = true;
+    }
+  }
+
+  let extraClass = ''; 
+  if(descartado) extraClass += ' card-nao-gostei'; 
+  if(vendido) extraClass += ' card-vendido';
+  if(im.status === 'quero-visitar') extraClass += ' card-quero-visitar';
 
   const svgHeart = `<svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`;
   const svgCalendar = `<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>`;
@@ -809,7 +909,8 @@ function cardHTML(im, idx){
           ${salvando ? '<span class="spinner-btn" style="border-color:#ef4444;border-top-color:transparent;"></span>' : svgHeart}
           <span>Gostei</span>
         </button>
-        <button class="action-btn act-visitar ${isVisitar?'ativo':''}" onclick="abrirModalVisita('${im.id}')">
+        <!-- NOVO: Intercepta o clique para checar se já tem visita solicitada -->
+        <button class="action-btn act-visitar ${isVisitar?'ativo':''}" onclick="interceptarCliqueVisita('${im.id}')">
           ${svgCalendar}
           <span>Visitar</span>
         </button>
@@ -841,8 +942,10 @@ function cardHTML(im, idx){
         ${descartado ? `<div class="badge-desativado">DESATIVADO</div>` : ''}
         ${imovelEhNovo(im) && !vendido && !descartado ? `<div class="badge-novo">NOVO</div>` : ''}
         
-        ${specsInfo.badge ? `<div class="card-tag-topo" style="left: ${imovelEhNovo(im)||descartado ? '80px' : '10px'}">${esc(specsInfo.badge)}</div>` : ''}
+        ${specsInfo.badge && !ocultarBadge ? `<div class="card-tag-topo" style="left: ${imovelEhNovo(im)||descartado ? '80px' : '10px'}">${esc(specsInfo.badge)}</div>` : ''}
         ${isGostei && !vendido ? `<div class="card-heart-top">❤️</div>` : ''}
+        
+        ${isVisitar && !vendido ? `<div class="badge-visitar-solicitado">Visita Solicitada</div>` : ''}
 
         ${!vendido && !descartado ? `
           <div class="carousel-fake" onclick="event.stopPropagation();">
@@ -908,7 +1011,7 @@ function abrirWhatsDuvida(id){
 
 async function marcarGostei(id){
   if(state.salvandoIds[id]) return;
-  const im = state.imoveis.find(i => i.id === id); if(!im || imovelVendido_(im)) return;
+  const im = state.imoveis.find(i => i.id === id); if(!im || imovelVendido_(im) || imovelReservado_(im)) return;
   
   const eraGostei = im.status === 'gostei';
   const novaAcao = eraGostei ? 'pendente' : 'gostei';
@@ -932,7 +1035,7 @@ async function marcarGostei(id){
 
 async function marcar(id, acao){
   if(state.salvandoIds[id]) return;
-  const im = state.imoveis.find(i => i.id === id); if(!im || imovelVendido_(im)) return;
+  const im = state.imoveis.find(i => i.id === id); if(!im || imovelVendido_(im) || imovelReservado_(im)) return;
   
   if(acao === 'nao-gostei'){
     const eraNao = im.status === 'nao-gostei';
@@ -958,8 +1061,71 @@ function abrirModalGostei(id){ state.modalImovelId = id; $('modalGostei').classL
 function fecharModalGostei(){ $('modalGostei').classList.remove('show'); state.modalImovelId = null; }
 function modalGosteiIrParaVisita(){ const id = state.modalImovelId; fecharModalGostei(); if(id) abrirModalVisita(id); }
 
+// NOVO: Intercepta o clique no botão "Visitar" do card
+function interceptarCliqueVisita(id) {
+  const im = state.imoveis.find(i => i.id === id);
+  if (!im) return;
+  // Se o status atual for 'quero-visitar', abre o modal de cancelamento
+  if (im.status === 'quero-visitar') {
+    state.modalImovelId = id;
+    $('modalCancelarVisita').classList.add('show');
+  } else {
+    // Se não, segue o fluxo normal de agendamento
+    abrirModalVisita(id);
+  }
+}
+
+// NOVO: Fecha o modal de cancelamento
+function fecharModalCancelarVisita() {
+  $('modalCancelarVisita').classList.remove('show');
+  state.modalImovelId = null;
+}
+
+// NOVO: Cancela a visita (volta status para pendente)
+async function confirmarCancelamentoVisita() {
+  const id = state.modalImovelId;
+  if (!id) return;
+  const im = state.imoveis.find(i => i.id === id);
+  if (!im) return;
+
+  const btn = $('btnConfirmarCancelamento');
+  btn.disabled = true;
+  btn.innerHTML = 'Cancelando...';
+
+  const prevStatus = im.status;
+  im.status = 'pendente'; // Volta para o status inicial
+
+  try {
+    // Atualiza o AppScript que a visita foi cancelada
+    const res = await api('atualizarStatus', {
+      id,
+      telefone: state.telefone,
+      acao: 'pendente',
+      deviceToken: state.deviceToken
+    }, TIMEOUT_API, 1);
+
+    if (!res.ok) {
+      // Se der erro na API, desfaz a alteração local
+      im.status = prevStatus;
+      toast(res.error || 'Erro ao cancelar. Tente novamente.', 'error');
+    } else {
+      // Deu certo! Atualiza a tela
+      toast('Visita cancelada com sucesso.', 'success');
+      atualizarTela();
+      gravarCache(state.imoveis);
+    }
+  } catch (e) {
+    im.status = prevStatus;
+    toast('Falha de conexão ao cancelar.', 'error');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Sim, cancelar visita';
+    fecharModalCancelarVisita();
+  }
+}
+
 function abrirModalVisita(id){
-  const im = state.imoveis.find(i => i.id === id); if(!im || imovelVendido_(im)) return;
+  const im = state.imoveis.find(i => i.id === id); if(!im || imovelVendido_(im) || imovelReservado_(im)) return;
   state.modalImovelId = id; state.visitaDia = ''; state.visitaTurno = '';
   const wrap = $('diasWrap'); const hoje = new Date(); let html = '';
   for(let i = 1; i <= 8; i++){
@@ -1014,7 +1180,6 @@ function fecharBusca(){
 }
 
 function navIr(destino){
-  // Se clicar em qualquer nav, fecha a barra de busca
   fecharBusca();
 
   ['navInicio','navBuscar','navFavoritos','navVisitar','navNaoGostei','navVendidos'].forEach(id => $(id).classList.remove('active'));
@@ -1055,7 +1220,7 @@ function limparFiltro(){ state.filtroNav = null; state.bairrosSelecionados.clear
       localStorage.setItem(TEL_KEY, telUrl); localStorage.setItem(TOKEN_KEY, state.deviceToken);
       if(res.nome) localStorage.setItem(NOME_KEY, res.nome);
       $('saudacaoUser').textContent = 'Olá, ' + (res.nome ? res.nome.split(' ')[0] : fmtTel(telUrl)); salvarUltimoAcesso(); limparUrl(); limparOriginalUrl();
-      if(res.imoveis?.length){ state.imoveis = res.imoveis.sort((a,b)=>new Date(b.dataCadastro||0)-new Date(a.dataCadastro||0)); gravarCache(state.imoveis); atualizarTela(); return; }
+      if(res.imoveis?.length){ state.imoveis = res.imoveis.sort((a,b)=>new Date(b.dataCadastro||0)-new Date(a.dataCadastro||0)); gravarCache(state.imoveis); atualizarTela(); sincronizarReservasAdmin(); return; }
       await carregarImoveis(); return;
     }
     if(erroEhDispositivoVinculado(res.error)){ mostrarBloqueioDispositivo(); return; }
@@ -1066,6 +1231,7 @@ function limparFiltro(){ state.filtroNav = null; state.bairrosSelecionados.clear
   if(cache?.data?.length && telSalvo){
     state.telefone = telSalvo; state.deviceToken = tokenSalvo; state.clienteInfo = { nome: nomeSalvo }; state.imoveis = cache.data;
     mostrarView('vitrineView'); $('saudacaoUser').textContent = 'Olá, ' + (nomeSalvo ? nomeSalvo.split(' ')[0] : fmtTel(telSalvo)); atualizarTela();
+    sincronizarReservasAdmin();
   } else { mostrarView('loginView'); setTimeout(()=>$('inputTelefone').focus(),200); }
 })();
 </script>
