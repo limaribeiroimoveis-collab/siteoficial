@@ -1266,21 +1266,21 @@ function temInformacaoFaltando(im) {
   
   // 1. Preço
   const preco = String(im.preco || '').trim();
-  if (!preco || preco === '0,00' || preco === 'R$ 0,00' || parseNumeroBR(preco) === 0) {
+  if (!preco || parseNumeroBR(preco) === 0) {
     faltas.push('Preço');
   }
   
   // 2. Condomínio — SÓ PARA NÃO-CASA
   if (!isCasa) {
     const cond = String(im.condominio || '').trim();
-    if (!cond || cond === '0,00' || cond === 'R$ 0,00') {
+    if (!cond || parseNumeroBR(cond) === 0) {
       faltas.push('Condomínio');
     }
   }
   
   // 3. IPTU
   const iptu = String(im.iptu || '').trim();
-  if (!iptu || iptu === '0,00' || iptu === 'R$ 0,00') {
+  if (!iptu || parseNumeroBR(iptu) === 0) {
     faltas.push('IPTU');
   }
   
@@ -1291,35 +1291,78 @@ function temInformacaoFaltando(im) {
   
   // 7. Apartamento — SÓ PARA NÃO-CASA
   const infoChave = extrairAptoBlocoChave(im.chaveTexto || '');
-  if (!isCasa) {
-    if (!infoChave.apto) faltas.push('Apartamento');
+  if (!isCasa && !infoChave.apto) {
+    faltas.push('Apartamento');
   }
-  // Bloco: NUNCA ativa
   
-  // 8. Chave
+  // 8. Chave (texto completo)
   if (!String(im.chaveTexto || '').trim()) faltas.push('Chave');
   
-  // 9. Suítes — zero é válido, vazio ativa exclamação
-const suites = String(im.suites !== undefined && im.suites !== null ? im.suites : '').trim();
-if (suites === '' || suites === '—') {
-  faltas.push('Suítes');
-}
+  // 9. Suítes — zero é válido, mas vazio é falta
+  const suites = im.suites;
+  if (suites === undefined || suites === null || String(suites).trim() === '') {
+    faltas.push('Suítes');
+  }
   
   // 10. Vaga
   const vaga = String(im.vaga || '').trim();
-  if (!vaga || vaga === '—' || !['Livre','Presa','Não sei'].includes(vaga)) faltas.push('Vaga');
+  if (!['Livre', 'Presa', 'Não sei'].includes(vaga)) faltas.push('Vaga');
   
   // 11. Elevador
   const elevador = String(im.elevador || '').trim();
-  if (!elevador || elevador === '—' || !['Sim','Não'].includes(elevador)) faltas.push('Elevador');
+  if (!['Sim', 'Não'].includes(elevador)) faltas.push('Elevador');
   
   // 12. Tipo
   if (!tipo) faltas.push('Tipo');
   
-  // 13. Descrição
-  if (!String(im.descricao || '').trim()) faltas.push('Descrição');
+  // 13. Descrição (texto limpo, sem o tipo)
+  const descSemTipo = descricaoSemTipo(im.descricao || '').trim();
+  if (!descSemTipo) faltas.push('Descrição');
   
   return faltas;
+}
+
+ function abrirModalPendencias(faltas) {
+  // Se a lista de faltas vier como string, transforma em array
+  const listaFaltas = Array.isArray(faltas) ? faltas : [];
+  if (listaFaltas.length === 0) {
+    toast('Nenhuma pendência encontrada.', 'success');
+    return;
+  }
+
+  // Cria o HTML dinâmico da lista
+  const htmlLista = listaFaltas.map(f => `<li style="padding: 6px 0; border-bottom: 1px dashed var(--border); display: flex; align-items: center; gap: 8px; color: var(--text-soft); font-size: 0.88rem;">
+    <span style="color: var(--danger-bright); font-size: 1.1rem; line-height: 1;">●</span>
+    <span>${esc(f)}</span>
+  </li>`).join('');
+
+  // Monta o modal
+  const modalHtml = `
+    <div class="modal-backdrop show" id="pendenciasBackdrop" onclick="if(event.target===this) fecharModalPendencias()">
+      <div class="modal" style="max-width: 400px;">
+        <button class="modal-close" onclick="fecharModalPendencias()"><svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+        <h2 style="justify-content: center; color: var(--danger-bright);">
+          <svg class="ico" viewBox="0 0 24 24" style="stroke: var(--danger-bright); width: 24px; height: 24px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          Pendências
+        </h2>
+        <p class="sub" style="text-align: center;">Para o imóvel ficar 100%, corrija os itens abaixo:</p>
+        <ul style="list-style: none; padding: 0; margin: 16px 0; max-height: 250px; overflow-y: auto;">
+          ${htmlLista}
+        </ul>
+        <button class="btn btn-purple" style="width: 100%; margin-top: 10px;" onclick="fecharModalPendencias()">Entendi</button>
+      </div>
+    </div>
+  `;
+
+  // Remove modal antigo se existir e insere o novo no body
+  const antigo = $('pendenciasBackdrop');
+  if (antigo) antigo.remove();
+  document.body.insertAdjacentHTML('beforeend', modalHtml);
+}
+
+function fecharModalPendencias() {
+  const modal = $('pendenciasBackdrop');
+  if (modal) modal.remove();
 }
 
 function atualizarContadores(){
@@ -1606,8 +1649,8 @@ function cardHTML(im){
   const chaveTemMais = chaveCompleta.split(/\r?\n/).length > 2 || chaveCompleta.length > 60;
 
   const faltas = temInformacaoFaltando(im);
-  const alertaFaltaHtml = faltas.length > 0 ? `
-    <div class="alerta-falta-info" title="Faltando: ${esc(faltas.join(', '))}">
+   const alertaFaltaHtml = faltas.length > 0 ? `
+    <div class="alerta-falta-info" onclick="event.stopPropagation(); abrirModalPendencias(${esc(JSON.stringify(faltas).replace(/"/g, '&quot;'))})" title="Faltando: ${esc(faltas.join(', '))}" style="cursor: pointer;">
       <svg viewBox="0 0 24 24" fill="none">
         <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
         <line x1="12" y1="9" x2="12" y2="13"/>
