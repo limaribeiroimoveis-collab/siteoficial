@@ -90,6 +90,29 @@
     font-size: 0.75rem;
     color: var(--muted);
     margin-top: 2px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-wrap: wrap;
+  }
+  .item-codigo {
+    font-weight: 700;
+    color: var(--primary);
+    cursor: pointer;
+    padding: 1px 4px;
+    border-radius: 3px;
+    transition: background 0.15s;
+    font-family: ui-monospace, SFMono-Regular, monospace;
+  }
+  .item-codigo:hover { background: #e0e7ff; }
+  .item-codigo.copiado { background: #dcfce7; color: #15803d; }
+
+  .item-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+    flex-shrink: 0;
   }
   .item-btn {
     background: var(--primary);
@@ -102,10 +125,33 @@
     cursor: pointer;
     white-space: nowrap;
     flex-shrink: 0;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
   }
   .item-btn:hover { background: #0f2942; }
-  .item-vendido .item-btn { background: var(--muted); }
-  .item-vendido { opacity: 0.65; }
+  
+  .pendencia-dot {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 14px;
+    height: 14px;
+    background: #f59e0b;
+    color: #fff;
+    border-radius: 50%;
+    font-size: 0.6rem;
+    font-weight: 900;
+    margin-right: 4px;
+    vertical-align: middle;
+  }
+
+  .item-tipo {
+    font-size: 0.68rem;
+    color: var(--muted);
+    font-weight: 600;
+    letter-spacing: 0.2px;
+  }
 
   .empty {
     text-align: center;
@@ -246,46 +292,6 @@
   .toast.show { opacity: 1; transform: translate(-50%, 0); }
   .toast.success { background: var(--success); }
   .toast.error { background: var(--danger); }
-  .item-actions {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 4px;
-    flex-shrink: 0;
-  }
-  .item-tipo {
-    font-size: 0.68rem;
-    color: var(--muted);
-    font-weight: 600;
-    letter-spacing: 0.2px;
-  }
-  .item-btn {
-    position: relative;
-  }
-  .pendencia-dot {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 14px;
-    height: 14px;
-    background: #f59e0b;
-    color: #fff;
-    border-radius: 50%;
-    font-size: 0.6rem;
-    font-weight: 900;
-    margin-right: 4px;
-    vertical-align: middle;
-  }
-  .item-codigo {
-    font-weight: 700;
-    color: var(--primary);
-    cursor: pointer;
-    padding: 1px 4px;
-    border-radius: 3px;
-    transition: background 0.15s;
-  }
-  .item-codigo:hover { background: #e0e7ff; }
-  .item-codigo.copiado { background: #dcfce7; color: #15803d; }
 </style>
 </head>
 <body>
@@ -403,7 +409,6 @@
 </div>
 
 <div class="toast" id="toast"></div>
-
 <script>
 const API_URL = 'https://script.google.com/macros/s/AKfycbzuCjg_5ZJDMWWKmjYp1ThW34iWS0YouviWFdiMGx8W3yApv0F1fdUcjeZdjm0s6Mg/exec';
 const SENHA_ADMIN = new URLSearchParams(window.location.search).get('senha') || '';
@@ -425,7 +430,6 @@ function formatarPreco(v){
   return 'R$ ' + s;
 }
 
-// ✅ Condomínio sem centavos, sem R$
 function formatarCondominio(v){
   if(!v) return '';
   let s = String(v).replace(/R\$\s*/gi, '').replace(/\s/g, '');
@@ -452,12 +456,14 @@ function extrairTipoImovel(desc){
   }
   return '';
 }
+
 function descricaoSemTipo(desc){
   if(!desc) return '';
   const linhas = String(desc).split(/\r?\n/);
   if(linhas.length) linhas[0] = linhas[0].replace(/\*+[^*\n]+\*+/g, '').trim();
   return linhas.join('\n').replace(/^\s+/, '');
 }
+
 function extrairAptoBlocoChave(chave){
   if(!chave) return { apto: '', bloco: '', resto: '' };
   const linhas = String(chave).split(/\r?\n/).map(x => x.trim()).filter(Boolean);
@@ -471,6 +477,7 @@ function extrairAptoBlocoChave(chave){
   }
   return { apto, bloco, resto: linhas.slice(idx).join('\n') };
 }
+
 function montarChaveTexto(apto, bloco, complemento){
   const l = [];
   if(apto) l.push(String(apto).trim());
@@ -478,6 +485,7 @@ function montarChaveTexto(apto, bloco, complemento){
   if(complemento) l.push(String(complemento).trim());
   return l.join('\n');
 }
+
 function montarDescricaoComTipo(descSemTipo, tipo){
   const base = String(descSemTipo || '').trim();
   const linhas = base ? base.split(/\r?\n/) : [];
@@ -488,10 +496,11 @@ function montarDescricaoComTipo(descSemTipo, tipo){
   return [out, ...resto].filter(Boolean).join('\n');
 }
 
-const VAGAS_VALIDAS = [
-  'livre 100%','parcial (linha)','presa (depende 3º)',
-  'livre + parcial (linha)','livre + presa','estacionamento','nao sei'
+const VAGAS_VALIDAS_EXACT = [
+  'Livre 100%', 'Parcial (Linha)', 'Presa (depende 3º)',
+  'Livre + Parcial (linha)', 'Livre + Presa', 'Estacionamento', 'Não Sei'
 ];
+
 function temInformacaoFaltando(im){
   if(isVendido(im)) return [];
   const faltas = [];
@@ -513,8 +522,8 @@ function temInformacaoFaltando(im){
   const suitesStr = String(suitesVal !== undefined && suitesVal !== null ? suitesVal : '').trim();
   if(suitesStr === '' || suitesStr === 'undefined' || suitesStr === 'null') faltas.push('Suítes');
   
-  const vagaNorm = normalizaTexto(String(im.vaga || '').trim());
-  if(!VAGAS_VALIDAS.includes(vagaNorm)) faltas.push('Vaga');
+  const vagaStr = String(im.vaga || '').trim();
+  if(!VAGAS_VALIDAS_EXACT.includes(vagaStr)) faltas.push('Vaga');
   
   const elevNorm = normalizaTexto(String(im.elevador || '').trim());
   if(elevNorm !== 'sim' && elevNorm !== 'nao') faltas.push('Elevador');
@@ -594,7 +603,6 @@ async function carregarTudo(){
     return;
   }
 
-  // ✅ AGRUPAR POR CÓDIGO + OCULTAR VENDIDOS
   const mapaCodigo = {};
   lista.forEach(im => {
     if(isVendido(im)) return;
@@ -603,7 +611,6 @@ async function carregarTudo(){
     if(!mapaCodigo[chave]) mapaCodigo[chave] = im;
   });
 
-  // ✅ ORDENAR POR MAIS RECENTE
   state.imoveis = Object.values(mapaCodigo).sort((a, b) => {
     return new Date(b.dataCadastro || 0) - new Date(a.dataCadastro || 0);
   });
@@ -649,7 +656,6 @@ function renderizarLista(){
 
   $('lista').innerHTML = lista.slice(0, 200).map(im => {
     const cod = String(im.codigo || '').trim();
-    
     const infoChave = extrairAptoBlocoChave(im.chaveTexto || '');
     const apto = infoChave.apto || '';
     const rua = String(im.rua || '').trim();
@@ -663,7 +669,6 @@ function renderizarLista(){
       titulo += ` / ${apto}`;
     }
 
-    // ✅ META COM FORMATAÇÕES
     const preco = formatarPreco(im.preco);
     const cond = formatarCondominio(im.condominio);
     
@@ -764,16 +769,13 @@ async function salvarEdicao(){
   const im = state.imoveis.find(x => String(x.id) === String(id));
   if(!im){ toast('Imóvel não encontrado', 'error'); return; }
 
-  const tipo = $('eTipo').value;
-  if(!tipo){ toast('Selecione o tipo de imóvel', 'error'); return; }
-
+  const tipo = $('eTipo').value || '';
   const apto = $('eApto').value.trim();
   const bloco = $('eBloco').value.trim();
   const chaveComplemento = $('eChave').value.trim();
   const chaveFinal = montarChaveTexto(tipo === 'Casa' ? '' : apto, bloco, chaveComplemento);
-
   const descricaoLimpa = descricaoSemTipo($('eDescricao').value);
-  const descricaoFinal = montarDescricaoComTipo(descricaoLimpa, tipo);
+  const descricaoFinal = tipo ? montarDescricaoComTipo(descricaoLimpa, tipo) : descricaoLimpa;
 
   const dados = {
     senha: SENHA_ADMIN,
