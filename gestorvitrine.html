@@ -4272,11 +4272,36 @@ function abrirPainel(painel){
   }
 }
 async function recarregarPainel(painel){
-  if(painel === 'agenda'){ state.carregado.agenda = false; await carregarAgenda(true); }
-  if(painel === 'visitar'){ state.carregado.visitar = false; await carregarNotificacoes(true); }
-  if(painel === 'gostei'){ state.carregado.gostei = false; await carregarNotificacoes(true); }
-  if(painel === 'clientes'){ state.carregado.clientes = false; await carregarClientes(true); }
-  if(painel === 'cutucada'){ state.carregado.clientes = false; await carregarClientes(true); renderizarCutucadas(); }
+  if(painel === 'agenda'){
+    // ✅ Limpa memória ANTES de recarregar — remove qualquer fantasma
+    state.agendamentos = [];
+    state.eventosNeutros = [];
+    state.carregado.agenda = false;
+    // Limpa a tela imediatamente para não mostrar dado velho
+    const lista = $('agendaLista');
+    if(lista){
+      lista.innerHTML = '<div class="loading-inline"><span class="loader loader-lg"></span><p>Carregando agenda...</p></div>';
+    }
+    atualizarBalAgenda();
+    await carregarAgenda(true);
+  }
+  if(painel === 'visitar'){
+    state.carregado.visitar = false;
+    await carregarNotificacoes(true);
+  }
+  if(painel === 'gostei'){
+    state.carregado.gostei = false;
+    await carregarNotificacoes(true);
+  }
+  if(painel === 'clientes'){
+    state.carregado.clientes = false;
+    await carregarClientes(true);
+  }
+  if(painel === 'cutucada'){
+    state.carregado.clientes = false;
+    await carregarClientes(true);
+    renderizarCutucadas();
+  }
 }
 function alternarConcluidas(painel){
   state.visaoPainel[painel] = state.visaoPainel[painel] === 'concluidas' ? 'ativas' : 'concluidas';
@@ -6473,13 +6498,28 @@ async function carregarAgenda(mostrarLoading){
   if(mostrarLoading){
     $('agendaLista').innerHTML = '<div class="loading-inline"><span class="loader loader-lg"></span><p>Carregando agenda...</p></div>';
   }
+
   const [res, resIm, resEv] = await Promise.all([
     api('listarAgendamentos', { senha: state.adminSenha }),
     api('listarTodosImoveis', { senha: state.adminSenha }),
     api('listarEventosNeutros', { senha: state.adminSenha })
   ]);
-  state.agendamentos = (res.ok && res.data) ? res.data : [];
-  state.eventosNeutros = (resEv.ok && resEv.data) ? resEv.data : [];
+
+  // ✅ Só sobrescreve se a resposta foi OK — evita apagar a tela em caso de erro de rede
+  if(res.ok && Array.isArray(res.data)){
+    state.agendamentos = res.data;
+  } else if(!res.ok){
+    console.warn('[carregarAgenda] listarAgendamentos falhou:', res.error);
+  }
+
+  // ✅ Eventos: se o servidor respondeu OK, a lista DELE é a verdade.
+  // Qualquer evento que não vier do servidor é removido da memória (fantasma some).
+  if(resEv.ok && Array.isArray(resEv.data)){
+    state.eventosNeutros = resEv.data;
+  } else if(!resEv.ok){
+    console.warn('[carregarAgenda] listarEventosNeutros falhou:', resEv.error);
+  }
+
   if(resIm.ok && resIm.data){
     state.todosImoveis = resIm.data;
     state._corretorPorImovelId = {};
@@ -6487,6 +6527,7 @@ async function carregarAgenda(mostrarLoading){
       state._corretorPorImovelId[String(im.id)] = im.corretor || '';
     });
   }
+
   state.carregado.agenda = true;
   atualizarBalAgenda();
   renderizarFiltrosAgenda();
@@ -7062,7 +7103,21 @@ function abrirNovoEvento(){
 }
 function abrirEditarEvento(id){
   const a = state.eventosNeutros.find(x => String(x.id) === String(id));
-  if(!a){ toast('Evento não encontrado', 'error'); return; }
+
+  // ✅ Se não achou na memória, é "fantasma" — remove da tela e recarrega
+  if(!a){
+    toast('Evento não encontrado — removendo da tela...', 'error');
+    state.eventosNeutros = state.eventosNeutros.filter(e => String(e.id) !== String(id));
+    state.agendamentos = state.agendamentos.filter(ag => String(ag.id) !== String(id));
+    atualizarBalAgenda();
+    renderizarFiltrosAgenda();
+    renderizarAgenda();
+    renderizarCorretoresNoCardAgenda_();
+    state.carregado.agenda = false;
+    carregarAgenda(false).catch(() => {});
+    return;
+  }
+
   $('eventoModalTitulo').textContent = 'Editar evento';
   $('eventoId').value = id;
   $('eventoTitulo').value = a.titulo || '';
