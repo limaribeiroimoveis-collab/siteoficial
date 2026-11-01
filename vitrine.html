@@ -1200,18 +1200,40 @@ async function enviarSolicitacaoVisita(){
   if(!state.visitaDia){ toast('Escolha um dia.', 'error'); return; }
   if(!state.visitaTurno){ toast('Escolha um turno.', 'error'); return; }
   const im = state.imoveis.find(i => i.id === id); if(!im) return;
+  
   const btn = $('btnEnviarVisita'); btn.disabled = true; btn.innerHTML = 'Enviando...';
 
   let diasLegivel = state.visitaDia;
-  try { const d = new Date(state.visitaDia + 'T12:00:00'); diasLegivel = `${DIAS_SEMANA[d.getDay()]} ${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}`; } catch(e){}
+  try { 
+    const d = new Date(state.visitaDia + 'T12:00:00'); 
+    diasLegivel = `${DIAS_SEMANA[d.getDay()]} ${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}`; 
+  } catch(e){}
 
-  const res = await api('solicitarVisitaPlanilha', { id, telefone: state.telefone, deviceToken: state.deviceToken, dias: diasLegivel, turno: state.visitaTurno, observacao: $('obsVisita').value.trim() }, TIMEOUT_API, 1);
-  btn.disabled = false; btn.innerHTML = '📩 Enviar solicitação';
+  const obsTexto = $('obsVisita').value.trim();
+  const textoParaObservacao = `📅 Visita solicitada: ${diasLegivel} (${state.visitaTurno})\n${obsTexto ? '📝 Obs: ' + obsTexto : ''}`;
 
+  // 1. Envia para a planilha de visitas (fluxo normal)
+  const res = await api('solicitarVisitaPlanilha', { id, telefone: state.telefone, deviceToken: state.deviceToken, dias: diasLegivel, turno: state.visitaTurno, observacao: obsTexto }, TIMEOUT_API, 1);
+  
   if(!res.ok){
+    btn.disabled = false; btn.innerHTML = '📩 Enviar solicitação';
     if(erroEhDispositivoVinculado(res.error)) return mostrarBloqueioDispositivo();
     toast(res.error || 'Erro', 'error'); return;
   }
+
+  // 2. Salva a observação no campo de observações do imóvel (para o admin ver no gestor)
+  try {
+    await api('salvarObservacao', { 
+      id: id, 
+      observacao: textoParaObservacao, 
+      telefone: state.telefone, 
+      deviceToken: state.deviceToken 
+    }, TIMEOUT_API, 0);
+  } catch(e) {
+    console.warn('Não foi possível salvar observação no imóvel:', e);
+  }
+
+  btn.disabled = false; btn.innerHTML = '📩 Enviar solicitação';
   im.status = 'quero-visitar'; atualizarTela(); gravarCache(state.imoveis);
   fecharModalVisita(); toast('Solicitação enviada!', 'success');
 }
