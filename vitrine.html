@@ -836,37 +836,45 @@ function renderizarImoveis(){
   const grid = $('gridImoveis'); 
   let lista = [...state.imoveis];
   
-  // Filtro por aba
+  // 1. Filtros de Navegação
   if(state.filtroNav === 'gostei') lista = lista.filter(i => i.status === 'gostei');
   else if(state.filtroNav === 'visitar') lista = lista.filter(i => i.status === 'quero-visitar');
   else if(state.filtroNav === 'nao-gostei') lista = lista.filter(i => i.status === 'nao-gostei');
   else if(state.filtroNav === 'vendidos') lista = lista.filter(i => imovelVendido_(i));
   
-  // Esconde apenas os "reservados" nas abas normais (mas deixa os vendidos aparecerem)
-  if (state.filtroNav !== 'vendidos') {
-    lista = lista.filter(i => !imovelReservado_(i));
-  }
-
-  // ✅ NOVO: Joga os vendidos para o fim da fila
-  lista.sort((a, b) => {
-    const aVend = imovelVendido_(a) ? 1 : 0;
-    const bVend = imovelVendido_(b) ? 1 : 0;
-    if (aVend !== bVend) return aVend - bVend;
-
-    // Se ambos são vendidos ou ambos normais, ordena pela data de cadastro
-    return new Date(b.dataCadastro || 0) - new Date(a.dataCadastro || 0);
-  });
-
-  // Filtro por bairro e busca
+  // 2. Filtros de Bairro e Busca (aplicados ANTES da ordenação)
   if(state.bairrosSelecionados.size > 0) lista = lista.filter(i => state.bairrosSelecionados.has(normalizarBairro(i.bairro)));
   const busca = $('buscaInput')?.value.toLowerCase().trim();
   if(busca) lista = lista.filter(i => (i.titulo||'').toLowerCase().includes(busca) || (enderecoSemNumero_(i)).toLowerCase().includes(busca));
 
-  // Contador
+  // 3. ORDENAÇÃO ABSOLUTA
+  // Prioridade 0 = Ativo
+  // Prioridade 1 = Desativado (ou Reservado)
+  // Prioridade 2 = Vendido
+  lista.sort((a, b) => {
+    const getPeso = (im) => {
+      if (imovelVendido_(im)) return 2;
+      if (imovelReservado_(im)) return 1;
+      return 0;
+    };
+
+    const pesoA = getPeso(a);
+    const pesoB = getPeso(b);
+
+    // Se os pesos forem diferentes, joga os maiores (desativados/vendidos) para o fim
+    if (pesoA !== pesoB) return pesoA - pesoB;
+
+    // Se forem do mesmo tipo, ordena pelo mais recente
+    return new Date(b.dataCadastro || 0) - new Date(a.dataCadastro || 0);
+  });
+
+  // 4. Atualiza o contador
   $('contadorImoveis').textContent = `${lista.length} ${lista.length === 1 ? 'imóvel' : 'imóveis'}`;
 
+  // 5. Renderiza ou mostra tela vazia
   if(!lista.length){
-    grid.innerHTML = ''; $('emptyState').classList.remove('hidden');
+    grid.innerHTML = ''; 
+    $('emptyState').classList.remove('hidden');
     $('emptyTitulo').textContent = 'Nenhum imóvel';
     $('emptyMsg').textContent = 'Nada para mostrar neste filtro.';
     $('btnVerTodos').classList.toggle('hidden', state.filtroNav === null && state.bairrosSelecionados.size === 0);
