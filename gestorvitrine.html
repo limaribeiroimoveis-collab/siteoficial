@@ -7116,10 +7116,38 @@ async function excluirEvento(id){
   marcarSalvando(true);
   const res = await api('excluirEventoNeutro', { senha: state.adminSenha, id });
   marcarSalvando(false);
-  if(!res.ok){ toast(res.error || 'Erro', 'error'); return; }
+
+  // ✅ NOVO: Se backend falhou, remove localmente de qualquer forma
+  if(!res.ok){
+    const msg = String(res.error || '').toLowerCase();
+    const naoEncontrado = msg.includes('não encontrado') 
+                       || msg.includes('nao encontrado')
+                       || msg.includes('not found')
+                       || msg.includes('não existe')
+                       || msg.includes('nao existe');
+    if(naoEncontrado){
+      // Remove da memória local — o evento fantasma some da tela
+      state.eventosNeutros = state.eventosNeutros.filter(e => String(e.id) !== String(id));
+      toast('Evento removido da tela (já não existia no servidor)', 'success');
+      atualizarBalAgenda();
+      renderizarFiltrosAgenda();
+      renderizarAgenda();
+      renderizarCorretoresNoCardAgenda_();
+      return;
+    }
+    toast(res.error || 'Erro', 'error');
+    return;
+  }
+
   toast('Evento excluído', 'success');
+  state.eventosNeutros = state.eventosNeutros.filter(e => String(e.id) !== String(id));
+  atualizarBalAgenda();
+  renderizarFiltrosAgenda();
+  renderizarAgenda();
+  renderizarCorretoresNoCardAgenda_();
   state.carregado.agenda = false;
-  await carregarAgenda(false);
+  // Recarrega do servidor em background para garantir
+  carregarAgenda(false).catch(() => {});
 }
 
 /* WHATSAPP / FINALIZAR */
