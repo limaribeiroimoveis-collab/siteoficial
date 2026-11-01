@@ -896,14 +896,19 @@
             </select>
           </div>
           <div>
-            <label>Vaga <span class="req">*</span></label>
-            <select id="adVaga" class="select-padrao" onchange="validarBotaoSalvar()">
-              <option value="">— Selecione —</option>
-              <option value="Presa">Presa</option>
-              <option value="Livre">Livre</option>
-              <option value="Não sei">Não sei</option>
-            </select>
-          </div>
+           <div>
+  <label>Vaga <span class="req">*</span></label>
+  <select id="adVaga" class="select-padrao" onchange="validarBotaoSalvar()">
+    <option value="">— Selecione —</option>
+    <option value="Livre 100%">Livre 100%</option>
+    <option value="Parcial (Linha)">Parcial (Linha)</option>
+    <option value="Presa (depende 3º)">Presa (depende 3º)</option>
+    <option value="Livre + Parcial (linha)">Livre + Parcial (linha)</option>
+    <option value="Livre + Presa">Livre + Presa</option>
+    <option value="Estacionamento">Estacionamento</option>
+    <option value="Não Sei">Não Sei</option>
+  </select>
+</div>
           <div>
             <label>Elevador <span class="req">*</span></label>
             <select id="adElevador" class="select-padrao" onchange="validarBotaoSalvar()">
@@ -1730,6 +1735,7 @@ function renderizarImoveis(){
   const grid = $('gridImoveis');
   if(!grid) return;
   let lista = [...state.imoveis];
+  
   if(state.filtro === 'reservas'){
     lista = lista.filter(im => isReserva(im));
   } else {
@@ -1737,7 +1743,8 @@ function renderizarImoveis(){
     if(state.filtro === 'recentes'){
       lista.sort((a,b) => new Date(b.dataCadastro||0) - new Date(a.dataCadastro||0));
     } else if(state.filtro === 'todos'){
-      const ordem = { 'pendente': 0, 'quero-visitar': 1, 'gostei': 2, 'nao-gostei': 3 };
+      // ✅ NOVA ORDENAÇÃO: Quero Visitar primeiro, depois Pendentes, depois os outros
+      const ordem = { 'quero-visitar': 0, 'pendente': 1, 'gostei': 2, 'nao-gostei': 3 };
       lista.sort((a,b) => {
         const oa = ordem[(a.status || 'pendente')] ?? 99;
         const ob = ordem[(b.status || 'pendente')] ?? 99;
@@ -1748,6 +1755,7 @@ function renderizarImoveis(){
       lista = lista.filter(i => (i.status || 'pendente') === state.filtro);
     }
   }
+  
   const busca = ($('buscaInput').value || '').toLowerCase().trim();
   if(busca){
     lista = lista.filter(i =>
@@ -1756,6 +1764,8 @@ function renderizarImoveis(){
       (i.observacao || '').toLowerCase().includes(busca)
     );
   }
+  
+  // Joga vendidos pro fim
   const vendidos = lista.filter(im => isVendido(im));
   const naoVendidos = lista.filter(im => !isVendido(im));
   lista = [...naoVendidos, ...vendidos];
@@ -1862,6 +1872,19 @@ function cardImovelHTML(im){
         <div class="titulo">✅ Visita realizada em ${fmtData(im.dataVisita)}</div>
         ${aval ? `<div class="visita-info">${esc(aval)}</div>` : ''}
         <button class="btn btn-ghost btn-xs" onclick="abrirVisitaModal('${id}')">Editar</button>
+      </div>`;
+  }
+
+  // ✅ NOVO: Bloco de Observação só aparece se o status for 'quero-visitar'
+  let obsClienteHtml = '';
+  if(statusAtual === 'quero-visitar' && !reservado && !vendido){
+    const obsTexto = String(im.observacao || '').trim() || '(cliente não especificou dia/horário)';
+    obsClienteHtml = `
+      <div class="card-block block-obs" style="background:#fdf6ec; border-color:#e7c8a1;">
+        <div class="block-header">
+          <span class="block-label" style="color:#b45309;">📅 Preferência de Visita</span>
+        </div>
+        <div class="block-text" style="color:#7c2d12;">${esc(obsTexto)}</div>
       </div>`;
   }
 
@@ -1990,6 +2013,7 @@ function cardImovelHTML(im){
 
       ${descBlockHtml}
       ${chaveBlockHtml}
+      ${obsClienteHtml}
       ${statusActionsHtml}
       ${adminBtnsHtml}
       ${agendarHistoricoHtml}
