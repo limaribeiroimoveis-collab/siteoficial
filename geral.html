@@ -979,7 +979,29 @@
 </div>
 
 <div class="toast" id="toast"></div>
+<!-- Modal Clonar Imóvel -->
+<div class="modal-backdrop" id="clonarModalBackdrop" onclick="if(event.target===this) fecharClonarModal()">
+  <div class="modal" style="max-width: 500px;">
+    <button class="modal-close" onclick="fecharClonarModal()"><svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <h2 style="display:flex; align-items:center; gap:8px;">
+      <svg class="ico" style="stroke: var(--purple);" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      Clonar Imóvel
+    </h2>
+    <p class="sub" id="clonarModalSub">—</p>
+    
+    <div class="filtro-grupo">
+      <label>Selecione o cliente que receberá a cópia</label>
+      <select id="clonarSelectCliente" style="width: 100%; padding: 10px; border-radius: 8px; border: 1.5px solid var(--border-strong);">
+        <option value="">— Escolha um cliente —</option>
+      </select>
+    </div>
 
+    <div class="modal-acoes" style="margin-top: 20px;">
+      <button class="btn-modal limpar" onclick="fecharClonarModal()">Cancelar</button>
+      <button class="btn-modal aplicar" id="btnConfirmarClonar" onclick="executarClonagem()" disabled>Clonar para este cliente</button>
+    </div>
+  </div>
+</div>
 <script>
 const API_URL = 'https://script.google.com/macros/s/AKfycbzuCjg_5ZJDMWWKmjYp1ThW34iWS0YouviWFdiMGx8W3yApv0F1fdUcjeZdjm0s6Mg/exec';
 const BUSCAR_BASE = 'https://corretor.quintoandar.com.br/informacoes-de-entrada';
@@ -1924,7 +1946,82 @@ async function toggleVendido(codigo, vendidoAtual){
   const res = await api('atualizarImovelPorCodigo', { senha: SENHA_ADMIN, codigo, vendido: !vendidoAtual }, TIMEOUT_API, 0);
   if(!res.ok){ toast(res.error || 'Erro', 'error'); return; } toast('Atualizado!', 'success'); await recarregar();
 }
-function abrirClonar(id){ toast('A clonagem em lote está na vitrine principal.', 'error'); }
+// Variáveis de estado para a clonagem
+window._clonarImovelId = null;
+window._clonarImovelTitulo = '';
+
+function abrirClonar(id){
+  const im = state.imoveis.find(x => String(x.id) === String(id));
+  if(!im){ toast('Imóvel não encontrado', 'error'); return; }
+  
+  window._clonarImovelId = id;
+  window._clonarImovelTitulo = im.titulo || 'Sem título';
+  
+  // Atualiza o subtítulo do modal
+  $('clonarModalSub').textContent = `#${im.codigo || ''} — ${im.titulo || 'Sem endereço'}`;
+  
+  // Popula o select com todos os clientes ordenados por nome
+  const sel = $('clonarSelectCliente');
+  const clientesOrdenados = [...state.clientes].sort((a, b) => (a.nome || '').localeCompare(b.nome || '', 'pt-BR'));
+  
+  sel.innerHTML = '<option value="">— Escolha um cliente —</option>' + 
+    clientesOrdenados.map(c => `<option value="${esc(normalizaTel(c.telefone))}">${esc(c.nome || 'Sem nome')} · ${esc(fmtTel(c.telefone))}</option>`).join('');
+  
+  // Reseta o botão
+  const btn = $('btnConfirmarClonar');
+  btn.disabled = true;
+  btn.textContent = 'Clonar para este cliente';
+  
+  // Adiciona o listener para habilitar o botão quando um cliente for escolhido
+  sel.onchange = () => {
+    btn.disabled = !sel.value;
+  };
+  
+  $('clonarModalBackdrop').classList.add('show');
+}
+
+function fecharClonarModal(){
+  $('clonarModalBackdrop').classList.remove('show');
+  window._clonarImovelId = null;
+  window._clonarImovelTitulo = '';
+}
+
+async function executarClonagem(){
+  const idOrigem = window._clonarImovelId;
+  const telDestino = $('clonarSelectCliente').value;
+  if(!idOrigem || !telDestino){ toast('Selecione um cliente', 'error'); return; }
+
+  const im = state.imoveis.find(x => String(x.id) === String(idOrigem));
+  if(!im){ toast('Imóvel original não encontrado', 'error'); return; }
+
+  const btn = $('btnConfirmarClonar');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner" style="width:14px;height:14px;border-width:2px;display:inline-block;vertical-align:middle;margin-right:6px;"></span> Clonando...';
+
+  // O AppScript espera o código do imóvel ou o ID. Vamos usar o código.
+  // Se não tiver código, usa o ID.
+  const codigoOriginal = String(im.codigo || '').trim() || String(im.id);
+
+  const res = await api('clonarImoveisVitrine', {
+    senha: SENHA_ADMIN,
+    telefoneOrigem: normalizaTel(im.telefone),
+    telefoneDestino: telDestino,
+    imovelIds: codigoOriginal
+  });
+
+  if(!res.ok){
+    toast(res.error || 'Erro ao clonar', 'error');
+    btn.disabled = false;
+    btn.textContent = 'Clonar para este cliente';
+    return;
+  }
+
+  toast(`Imóvel clonado com sucesso para ${fmtTel(telDestino)}!`, 'success');
+  fecharClonarModal();
+  
+  // Recarrega os dados para o novo imóvel aparecer
+  await recarregar();
+}
 
 function abrirPainelNovoImovel(){
   limparForm(); $('adCliente').value = ''; $('adminPanelTitle').textContent = 'Adicionar imóvel';
