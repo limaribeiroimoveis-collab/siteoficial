@@ -266,13 +266,6 @@
   .turno-btn.active{ background: var(--primary); border-color: var(--primary); color: #fff; }
   
   .aviso-importante{ background: #fffbeb; border-left: 4px solid #f59e0b; border-radius: 6px; padding: 12px; font-size: .75rem; color: #78350f; line-height: 1.5; margin: 10px 0 20px; }
-  /* ✅ NOVO: Vendidos - não bloqueia cliques na imagem, só sinaliza */
-  .card.card-vendido { opacity: .65; filter: grayscale(80%); pointer-events: auto; }
-  .card.card-vendido:hover { opacity: .8; }
-  .card.card-vendido .card-actions, 
-  .card.card-vendido .btn-wa-outline { pointer-events: auto; }
-  .card.card-vendido .card-img-wrap { pointer-events: auto; }
-
 </style>
 </head>
 <body>
@@ -840,37 +833,27 @@ function toggleColunas(){
 }
 
 function renderizarImoveis(){
-  const grid = $('gridImoveis'); 
-  let lista = [...state.imoveis];
+  const grid = $('gridImoveis'); let lista = [...state.imoveis];
   
-  // ✅ NOVO: Filtros das abas
+  if (state.filtroNav !== 'vendidos') {
+    lista = lista.filter(i => !imovelReservado_(i) && !imovelVendido_(i));
+  }
+
   if(state.filtroNav === 'gostei') lista = lista.filter(i => i.status === 'gostei');
   else if(state.filtroNav === 'visitar') lista = lista.filter(i => i.status === 'quero-visitar');
   else if(state.filtroNav === 'nao-gostei') lista = lista.filter(i => i.status === 'nao-gostei');
   else if(state.filtroNav === 'vendidos') lista = lista.filter(i => imovelVendido_(i));
-  
-  // ✅ NOVO: Se NÃO estiver na aba 'vendidos', permite que os vendidos apareçam,
-  // mas filtra os reservados.
-  if (state.filtroNav !== 'vendidos') {
-    lista = lista.filter(i => !imovelReservado_(i));
+  else {
+    lista.sort((a,b) => {
+      const oa = (a.status === 'nao-gostei') ? 2 : 0, ob = (b.status === 'nao-gostei') ? 2 : 0; if(oa !== ob) return oa - ob;
+      return new Date(b.dataCadastro||0) - new Date(a.dataCadastro||0);
+    });
   }
 
-  // ✅ NOVO: A grande jogada — joga vendidos pro fim em TODAS as abas
-  lista.sort((a, b) => {
-    const aVend = imovelVendido_(a) ? 1 : 0;
-    const bVend = imovelVendido_(b) ? 1 : 0;
-    if (aVend !== bVend) return aVend - bVend; // Vendidos vão pro final
-
-    // Se ambos são vendidos ou ambos são ativos, ordena pela data de cadastro
-    return new Date(b.dataCadastro || 0) - new Date(a.dataCadastro || 0);
-  });
-
-  // Filtro de busca e bairros
   if(state.bairrosSelecionados.size > 0) lista = lista.filter(i => state.bairrosSelecionados.has(normalizarBairro(i.bairro)));
   const busca = $('buscaInput')?.value.toLowerCase().trim();
   if(busca) lista = lista.filter(i => (i.titulo||'').toLowerCase().includes(busca) || (enderecoSemNumero_(i)).toLowerCase().includes(busca));
 
-  // Contador
   $('contadorImoveis').textContent = `${lista.length} ${lista.length === 1 ? 'imóvel' : 'imóveis'}`;
 
   if(!lista.length){
@@ -880,7 +863,6 @@ function renderizarImoveis(){
     $('btnVerTodos').classList.toggle('hidden', state.filtroNav === null && state.bairrosSelecionados.size === 0);
     return;
   }
-  
   $('emptyState').classList.add('hidden');
   grid.innerHTML = lista.map((im, i) => cardHTML(im, i)).join('');
 }
@@ -900,25 +882,6 @@ function cardHTML(im, idx){
     if (bNormalizado.includes("apartamento padrao") || bNormalizado.includes("apto padrao")) {
       ocultarBadge = true;
     }
-  }
-
-  // ✅ NOVO: Monta as specs extras (Suítes, Elevador, Vaga)
-  let specsExtras = [];
-  if (im.suites && Number(im.suites) > 0) {
-    specsExtras.push(`🛏️ ${im.suites} ${Number(im.suites) === 1 ? 'suíte' : 'suítes'}`);
-  }
-  if (String(im.elevador).toLowerCase() === 'sim') {
-    specsExtras.push(`🛗 Elevador`);
-  }
-  const vagaStr = String(im.vaga || '').trim();
-  if (vagaStr && vagaStr.toLowerCase() !== 'não sei' && vagaStr.toLowerCase() !== 'nao sei') {
-    specsExtras.push(`🚗 Vaga ${vagaStr}`);
-  }
-
-  // Junta o que já vinha da descrição com as novas specs
-  let overlayTexto = specsInfo.specs;
-  if (specsExtras.length > 0) {
-    overlayTexto = overlayTexto ? `${overlayTexto} · ${specsExtras.join(' · ')}` : specsExtras.join(' · ');
   }
 
   let extraClass = ''; 
@@ -946,6 +909,7 @@ function cardHTML(im, idx){
           ${salvando ? '<span class="spinner-btn" style="border-color:#ef4444;border-top-color:transparent;"></span>' : svgHeart}
           <span>Gostei</span>
         </button>
+        <!-- NOVO: Intercepta o clique para checar se já tem visita solicitada -->
         <button class="action-btn act-visitar ${isVisitar?'ativo':''}" onclick="interceptarCliqueVisita('${im.id}')">
           ${svgCalendar}
           <span>Visitar</span>
@@ -991,7 +955,7 @@ function cardHTML(im, idx){
           </div>
         ` : ''}
 
-        ${overlayTexto ? `<div class="card-overlay-specs">${esc(overlayTexto)}</div>` : ''}
+        ${specsInfo.specs ? `<div class="card-overlay-specs">${esc(specsInfo.specs)}</div>` : ''}
       </div>
 
       <div class="card-body">
