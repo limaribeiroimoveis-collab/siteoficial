@@ -114,7 +114,6 @@
     font-size: 0.9rem;
   }
 
-  /* Painel de edição (tela cheia) */
   .editor {
     position: fixed;
     inset: 0;
@@ -272,14 +271,13 @@
 </header>
 
 <div class="busca">
-  <input type="search" id="inputBusca" placeholder="Buscar por endereço ou código (#895632145)" autofocus>
+  <input type="search" id="inputBusca" placeholder="Buscar por endereço, bairro ou código" autofocus autocomplete="off">
 </div>
 
 <div class="contador" id="contador">Carregando...</div>
 <div class="lista" id="lista"></div>
 <div class="empty" id="empty" style="display:none;">Nenhum imóvel encontrado.</div>
 
-<!-- Painel de edição (tela cheia) -->
 <div class="editor" id="editor">
   <div class="editor-head">
     <h2 id="editorTitulo">Editar imóvel</h2>
@@ -499,25 +497,36 @@ async function carregarTudo(){
   renderizarLista();
 }
 
+// =========================================================
+// BUSCA INSTANTÂNEA — filtra em tempo real enquanto digita
+// =========================================================
 function renderizarLista(){
-  const busca = normalizaTexto($('inputBusca').value);
-  const buscaNum = normalizaTel($('inputBusca').value);
+  const termo = $('inputBusca').value;
+  const busca = normalizaTexto(termo);
+  const buscaNum = normalizaTel(termo);
   let lista = state.imoveis.slice();
 
   if(busca || buscaNum){
     lista = lista.filter(im => {
-      if((im.titulo || '').toLowerCase().includes(busca)) return true;
-      if((im.rua || '').toLowerCase().includes(busca)) return true;
-      if((im.bairro || '').toLowerCase().includes(busca)) return true;
-      if((im.numero || '').toLowerCase().includes(busca)) return true;
-      if((im.codigo || '').toLowerCase().includes(busca)) return true;
+      const t = normalizaTexto(im.titulo || '');
+      const r = normalizaTexto(im.rua || '');
+      const b = normalizaTexto(im.bairro || '');
+      const n = normalizaTexto(im.numero || '');
+      const c = normalizaTexto(im.codigo || '');
+      if(t.includes(busca)) return true;
+      if(r.includes(busca)) return true;
+      if(b.includes(busca)) return true;
+      if(n.includes(busca)) return true;
+      if(c.includes(busca)) return true;
       if(buscaNum && String(im.codigo || '').includes(buscaNum)) return true;
       return false;
     });
   }
 
   const total = lista.length;
-  $('contador').textContent = total === 0 ? 'Nenhum imóvel' : total + ' imóvel' + (total === 1 ? '' : 's');
+  $('contador').textContent = total === 0
+    ? (busca ? 'Nenhum imóvel com "' + termo + '"' : 'Nenhum imóvel')
+    : total + ' imóvel' + (total === 1 ? '' : 's') + (busca ? ' encontrado' + (total === 1 ? '' : 's') : '');
 
   if(total === 0){
     $('lista').innerHTML = '';
@@ -615,7 +624,6 @@ async function salvarEdicao(){
 
   if(!res.ok){ toast(res.error || 'Erro ao salvar', 'error'); return; }
 
-  // Propaga edição em massa (todos os imóveis com o mesmo código)
   const codigo = String(im.codigo || '').trim();
   if(codigo){
     marcarSalvando(true);
@@ -629,7 +637,6 @@ async function salvarEdicao(){
     marcarSalvando(false);
   }
 
-  // Atualiza o cache local e re-renderiza
   const idx = state.imoveis.findIndex(x => String(x.id) === String(id));
   if(idx >= 0){
     state.imoveis[idx] = { ...state.imoveis[idx], ...dados, id };
@@ -639,9 +646,15 @@ async function salvarEdicao(){
   renderizarLista();
 }
 
-// Init
+// =========================================================
+// INIT — busca instantânea
+// =========================================================
 document.addEventListener('DOMContentLoaded', () => {
-  $('inputBusca').addEventListener('input', renderizarLista);
+  const input = $('inputBusca');
+  // 'input' dispara a cada tecla (busca instantânea)
+  input.addEventListener('input', renderizarLista);
+  // 'keyup' extra para garantir em navegadores antigos
+  input.addEventListener('keyup', renderizarLista);
   carregarTudo();
 });
 </script>
