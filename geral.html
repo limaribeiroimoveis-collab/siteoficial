@@ -1957,22 +1957,39 @@ function abrirClonar(id){
   window._clonarImovelId = id;
   window._clonarImovelTitulo = im.titulo || 'Sem título';
   
-  // Atualiza o subtítulo do modal
-  $('clonarModalSub').textContent = `#${im.codigo || ''} — ${im.titulo || 'Sem endereço'}`;
+  const codigoOriginal = String(im.codigo || '').trim();
   
-  // Popula o select com todos os clientes ordenados por nome
+  // ✅ TRAVA: Descobre quais clientes JÁ POSSUEM este imóvel (pelo código)
+  const clientesQueJaTem = new Set();
+  if (codigoOriginal) {
+    state.imoveis.forEach(item => {
+      if (String(item.codigo || '').trim() === codigoOriginal) {
+        clientesQueJaTem.add(normalizaTel(item.telefone));
+      }
+    });
+  }
+  
+  // Atualiza o subtítulo
+  $('clonarModalSub').textContent = `#${codigoOriginal || im.id} — ${im.titulo || 'Sem endereço'}`;
+  
+  // Popula o select com todos os clientes, desabilitando quem já tem o imóvel
   const sel = $('clonarSelectCliente');
   const clientesOrdenados = [...state.clientes].sort((a, b) => (a.nome || '').localeCompare(b.nome || '', 'pt-BR'));
   
   sel.innerHTML = '<option value="">— Escolha um cliente —</option>' + 
-    clientesOrdenados.map(c => `<option value="${esc(normalizaTel(c.telefone))}">${esc(c.nome || 'Sem nome')} · ${esc(fmtTel(c.telefone))}</option>`).join('');
+    clientesOrdenados.map(c => {
+      const tel = normalizaTel(c.telefone);
+      const jaTem = clientesQueJaTem.has(tel);
+      const label = `${esc(c.nome || 'Sem nome')} · ${esc(fmtTel(c.telefone))}${jaTem ? ' — ❌ Já possui' : ''}`;
+      return `<option value="${esc(tel)}" ${jaTem ? 'disabled' : ''}>${label}</option>`;
+    }).join('');
   
   // Reseta o botão
   const btn = $('btnConfirmarClonar');
   btn.disabled = true;
   btn.textContent = 'Clonar para este cliente';
   
-  // Adiciona o listener para habilitar o botão quando um cliente for escolhido
+  // Habilita o botão só quando escolher um cliente válido
   sel.onchange = () => {
     btn.disabled = !sel.value;
   };
