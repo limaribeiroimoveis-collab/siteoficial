@@ -70,6 +70,42 @@
   #tela-digitacao p { font-size: 14px; color: #6b7280; text-align: center; margin: 0 0 24px; line-height: 1.5; }
   #txt-digitar { width: 100%; border: 2px solid #d1d5db; border-radius: 12px; padding: 16px; font-size: 16px; font-family: inherit; resize: none; flex: 1; min-height: 150px; outline: none; transition: border .2s; }
   #txt-digitar:focus { border-color: #10b981; }
+
+  /* ============ MODAIS ============ */
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,.55);
+    z-index: 2000; 
+    display: none; /* Começa oculto */
+    align-items: center; justify-content: center; padding: 20px;
+  }
+  .modal-overlay.ativo { 
+    display: flex !important; /* Força a exibição */
+  }
+  
+  .modal {
+    background: #fff; border-radius: 16px; 
+    max-width: 420px; width: 100%; 
+    padding: 24px 20px 20px;
+    box-shadow: 0 20px 50px rgba(0,0,0,.4);
+    animation: aparecer .2s ease-out;
+    max-height: 88vh; overflow-y: auto;
+  }
+  
+  @keyframes aparecer { 
+    from { transform: scale(.94); opacity: 0; } 
+    to { transform: scale(1); opacity: 1; } 
+  }
+  
+  .modal h2 { margin: 0 0 14px; font-size: 19px; color: #111827; text-align: center; }
+  .modal .btn-fechar { width: 100%; background: #10b981; color: #fff; border: none; padding: 14px; font-size: 16px; font-weight: 700; border-radius: 12px; cursor: pointer; margin-top: 6px; }
+  .modal .btn-fechar:active { background: #059669; }
+
+  .passo-ilustrado { display: flex; gap: 14px; margin-bottom: 16px; align-items: center; }
+  .passo-ilustrado .icone { width: 48px; height: 48px; border-radius: 12px; background: #ecfdf5; color: #064e3b; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .passo-ilustrado .icone svg { width: 24px; height: 24px; stroke: currentColor; fill: none; stroke-width: 2; }
+  .passo-ilustrado .texto { flex: 1; }
+  .passo-ilustrado .texto strong { display: block; font-size: 15px; color: #111827; margin-bottom: 2px; }
+  .passo-ilustrado .texto span { font-size: 13px; color: #6b7280; line-height: 1.4; display: block; }
 </style>
 </head>
 <body>
@@ -550,11 +586,37 @@
   // ============================================================
   // MODAIS
   // ============================================================
-  const overlayInstr = document.getElementById('modal-overlay');
+    const overlayInstr = document.getElementById('modal-overlay');
   const btnEntendi = document.getElementById('btn-entendi');
   const btnInfo = document.getElementById('btn-info');
-  function abrirInstr(){ overlayInstr.classList.add('ativo'); }
-  function fecharInstr(){ overlayInstr.classList.remove('ativo'); }
+
+  function abrirInstr(){ 
+    if(!overlayInstr) return;
+    overlayInstr.classList.add('ativo'); 
+    // Força o display flex caso o CSS não esteja aplicado
+    overlayInstr.style.display = 'flex';
+  }
+  
+  function fecharInstr(){ 
+    if(!overlayInstr) return;
+    overlayInstr.classList.remove('ativo'); 
+    overlayInstr.style.display = 'none';
+  }
+
+  // Garante que os event listeners estão corretos
+  if(btnEntendi) btnEntendi.addEventListener('click', fecharInstr);
+  if(btnInfo) btnInfo.addEventListener('click', abrirInstr);
+  
+  if(overlayInstr){
+    overlayInstr.addEventListener('click', (e) => { 
+      if(e.target === overlayInstr) fecharInstr(); 
+    });
+  }
+
+  // Abre o modal após carregar (com um pequeno delay)
+  window.addEventListener('load', () => {
+    setTimeout(abrirInstr, 400);
+  });
   btnEntendi.addEventListener('click', fecharInstr);
   btnInfo.addEventListener('click', abrirInstr);
   overlayInstr.addEventListener('click', (e) => { if(e.target === overlayInstr) fecharInstr(); });
