@@ -877,12 +877,17 @@
         </select>
       </div>
       <div>
+            <div>
         <label>Vaga <span class="req">*</span></label>
         <select id="adVaga" onchange="validarBotaoSalvar()">
           <option value="">—</option>
-          <option value="Presa">Presa</option>
-          <option value="Livre">Livre</option>
-          <option value="Não sei">Não sei</option>
+          <option value="Livre 100%">Livre 100%</option>
+          <option value="Parcial (Linha)">Parcial (Linha)</option>
+          <option value="Presa (depende 3º)">Presa (depende 3º)</option>
+          <option value="Livre + Parcial (linha)">Livre + Parcial (linha)</option>
+          <option value="Livre + Presa">Livre + Presa</option>
+          <option value="Estacionamento">Estacionamento</option>
+          <option value="Não Sei">Não Sei</option>
         </select>
       </div>
       <div>
@@ -1111,9 +1116,7 @@ function descricaoSemTipo(descricao){
   return linhas.filter(l => !/^\s*(Vaga|Elevador):\s*/i.test(l)).join('\n').replace(/^\s+/, '');
 }
 
- function toggleVagaTipo(btn) {
-  btn.classList.toggle('active');
-}
+
 
 function abrirModalFiltro(){
   const f = state._filtrosAvancados;
@@ -1124,7 +1127,7 @@ function abrirModalFiltro(){
   document.querySelectorAll('#chipsAndar .chip').forEach(b => b.classList.toggle('active', (f.andares || []).includes(b.dataset.andar)));
   document.querySelectorAll('#chipsElevador .chip').forEach(b => b.classList.toggle('active', b.dataset.elevador === (f.elevador || '')));
   
-  // ✅ NOVO: Marca os tipos de vaga selecionados
+  // ✅ CORREÇÃO AQUI: Garante que o modal abra corretamente
   document.querySelectorAll('#chipsVagaTipo .chip').forEach(b => b.classList.toggle('active', (f.vagaTipos || []).includes(b.dataset.vaga)));
   
   $('modalFiltro').classList.add('show');
@@ -1537,17 +1540,6 @@ function setarSliderPreco(min, max) {
   range.style.left = ((minR.value / PRECO_MAX_SLIDER) * 100) + '%'; range.style.width = (((maxR.value - minR.value) / PRECO_MAX_SLIDER) * 100) + '%';
 }
 
-function abrirModalFiltro(){
-  const f = state._filtrosAvancados;
-  $('filtroQuartos').value = f.quartos; $('filtroSuites').value = f.suites; $('filtroVagasQtd').value = f.vagasQtd; $('filtroVagaTipo').value = f.vagaTipo;
-  $('filtroMetragem').value = f.metragem; $('filtroCondominioMax').value = f.condominioMax; $('filtroOrdenacao').value = f.ordenacao;
-  setarSliderPreco(f.precoMin || 0, f.precoMax || PRECO_MAX_SLIDER);
-  document.querySelectorAll('#chipsTipoImovel .chip').forEach(b => b.classList.toggle('active', (f.tipos || []).includes(b.dataset.tipo)));
-  document.querySelectorAll('#chipsAndar .chip').forEach(b => b.classList.toggle('active', (f.andares || []).includes(b.dataset.andar)));
-  document.querySelectorAll('#chipsElevador .chip').forEach(b => b.classList.toggle('active', b.dataset.elevador === (f.elevador || '')));
-  $('modalFiltro').classList.add('show');
-}
-
 function fecharModalFiltro(){ $('modalFiltro').classList.remove('show'); }
 
 function aplicarFiltrosAvancados(){
@@ -1580,6 +1572,10 @@ function limparFiltros(){
   atualizarTextoMultiBairros(); atualizarChipsRegiao(); abrirModalFiltro(); aplicarFiltrosAvancados();
 }
 
+  function toggleVagaTipo(btn) {
+  btn.classList.toggle('active');
+}  
+ 
 function renderizar(){
   const grid = $('grid'); let lista = [...state.imoveis];
   if(state.filtroStatus === 'pendente') lista = lista.filter(im => !isVendido(im));
