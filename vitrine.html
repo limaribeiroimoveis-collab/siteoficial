@@ -894,35 +894,32 @@ function cardHTML(im, idx){
     }
   }
 
-  // ✅ NOVO: Prepara as specs extras para ficarem ABAIXO da descrição
-  let specsExtras = [];
-  
-  // Suítes (sempre mostra, mesmo se 0)
+  // ✅ NOVO: Linha 1 (Suítes e Vaga)
+  let linha1Specs = [];
   const suitesNum = Number(im.suites);
   if (!isNaN(suitesNum)) {
-    specsExtras.push(`🛏️ ${suitesNum} ${suitesNum === 1 ? 'suíte' : 'suítes'}`);
+    linha1Specs.push(`${suitesNum} ${suitesNum === 1 ? 'suíte' : 'suítes'}`);
   }
-
-  // Elevador
-  const elev = String(im.elevador).toLowerCase();
-  if (elev === 'sim') {
-    specsExtras.push(`🛗 Prédio com elevador`);
-  } else if (elev === 'nao' || elev === 'não') {
-    specsExtras.push(`🚶 Prédio sem elevador`);
-  }
-
-  // Vaga (Livre, Presa ou Indefinido)
   const vagaStr = String(im.vaga || '').trim().toLowerCase();
   if (vagaStr) {
     if (vagaStr === 'nao sei' || vagaStr === 'não sei') {
-      specsExtras.push(`🚗 Vaga (indefinido)`);
+      linha1Specs.push(`Vaga (indefinido)`);
     } else if (vagaStr === 'livre') {
-      specsExtras.push(`🚗 Vaga livre`);
+      linha1Specs.push(`Vaga livre`);
     } else if (vagaStr === 'presa') {
-      specsExtras.push(`🚗 Vaga presa`);
+      linha1Specs.push(`Vaga presa`);
     } else {
-      specsExtras.push(`🚗 Vaga ${im.vaga}`); // Caso venha algo diferente
+      linha1Specs.push(`Vaga ${im.vaga}`);
     }
+  }
+
+  // ✅ NOVO: Elevador para a linha de condomínio
+  let txtElevador = '';
+  const elev = String(im.elevador).toLowerCase();
+  if (elev === 'sim') {
+    txtElevador = 'Com elevador';
+  } else if (elev === 'nao' || elev === 'não') {
+    txtElevador = 'Sem elevador';
   }
 
   let extraClass = ''; 
@@ -1001,23 +998,26 @@ function cardHTML(im, idx){
       <div class="card-body">
         <div class="card-preco">${precoFmt || 'Consulte'}</div>
         
-        <div class="card-preco-sec">
-          ${im.condominio ? `<span>Cond. ${esc(im.condominio)}</span>` : ''}
-          ${im.condominio && im.iptu ? `<span class="sep">|</span>` : ''}
-          ${im.iptu ? `<span>IPTU ${esc(im.iptu)}</span>` : ''}
+        <div class="card-preco-sec" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+          <div style="display: flex; gap: 8px; align-items: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+            ${im.condominio ? `<span>Cond. ${esc(im.condominio)}</span>` : ''}
+            ${im.condominio && im.iptu ? `<span class="sep">|</span>` : ''}
+            ${im.iptu ? `<span>IPTU ${esc(im.iptu)}</span>` : ''}
+          </div>
+          ${txtElevador ? `<span style="font-weight: 600; color: var(--text-soft); white-space: nowrap;">${txtElevador}</span>` : ''}
         </div>
+
+        <!-- ✅ NOVO: Linha de Suítes e Vaga -->
+        ${linha1Specs.length > 0 ? `
+          <div style="font-size: .75rem; font-weight: 600; color: var(--text-soft); margin-top: 4px; margin-bottom: 2px;">
+            ${linha1Specs.join(' · ')}
+          </div>
+        ` : ''}
         
         ${im.descricao ? `
           <div class="card-desc" id="desc-${im.id}">
             <div class="card-desc-texto">${esc(String(im.descricao).replace(/\n/g, ' '))}</div>
             <button class="card-desc-toggle" onclick="event.stopPropagation(); document.getElementById('desc-${im.id}').classList.toggle('expandido'); this.textContent = document.getElementById('desc-${im.id}').classList.contains('expandido') ? 'Ver menos' : 'Ver mais';">Ver mais</button>
-          </div>
-        ` : ''}
-
-        <!-- ✅ NOVO: Informações extras (Suítes, Elevador, Vaga) abaixo da descrição -->
-        ${specsExtras.length > 0 ? `
-          <div class="card-specs-extra" style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; font-size: 0.72rem; color: var(--text-soft); font-weight: 600;">
-            ${specsExtras.map(s => `<span style="background: var(--bg); padding: 2px 8px; border-radius: 4px; display: inline-flex; align-items: center; gap: 4px;">${s}</span>`).join('')}
           </div>
         ` : ''}
       </div>
