@@ -1316,21 +1316,29 @@ function temInformacaoFaltando(im) {
   // 8. Chave (texto completo)
   if (!String(im.chaveTexto || '').trim()) faltas.push('Chave');
   
-    // 9. Suítes — só falta se for realmente vazio ou indefinido
+  // 9. Suítes — 0 é válido, mas vazio/undefined ativa
   const suitesVal = im.suites;
   const suitesStr = String(suitesVal !== undefined && suitesVal !== null ? suitesVal : '').trim();
-  // Se for string vazia, OU se for "undefined", OU se for "null" (como string), aí sim falta
   if (suitesStr === '' || suitesStr === 'undefined' || suitesStr === 'null') {
     faltas.push('Suítes');
   }
   
-  // 10. Vaga — precisa ser exatamente um dos três valores
+  // 10. Vaga — ✅ SÓ aceita as 7 opções novas
   const vagaNorm = normalizaTexto(String(im.vaga || '').trim());
-  if (vagaNorm !== 'livre' && vagaNorm !== 'presa' && vagaNorm !== 'nao sei') {
+  const vagasValidas = [
+    'livre 100%',
+    'parcial (linha)',
+    'presa (depende 3º)',
+    'livre + parcial (linha)',
+    'livre + presa',
+    'estacionamento',
+    'nao sei'
+  ];
+  if (!vagasValidas.includes(vagaNorm)) {
     faltas.push('Vaga');
   }
   
-  // 11. Elevador — precisa ser Sim ou Não
+  // 11. Elevador — Sim ou Não
   const elevNorm = normalizaTexto(String(im.elevador || '').trim());
   if (elevNorm !== 'sim' && elevNorm !== 'nao') {
     faltas.push('Elevador');
@@ -1339,7 +1347,7 @@ function temInformacaoFaltando(im) {
   // 12. Tipo
   if (!tipo) faltas.push('Tipo');
   
-  // 13. Descrição (texto limpo, sem o tipo)
+  // 13. Descrição
   const descSemTipo = descricaoSemTipo(im.descricao || '').trim();
   if (!descSemTipo) faltas.push('Descrição');
   
