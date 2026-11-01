@@ -246,6 +246,37 @@
   .toast.show { opacity: 1; transform: translate(-50%, 0); }
   .toast.success { background: var(--success); }
   .toast.error { background: var(--danger); }
+  .item-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+    flex-shrink: 0;
+  }
+  .item-tipo {
+    font-size: 0.68rem;
+    color: var(--muted);
+    font-weight: 600;
+    letter-spacing: 0.2px;
+  }
+  .item-btn {
+    position: relative;
+  }
+  .pendencia-dot {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 14px;
+    height: 14px;
+    background: #f59e0b;
+    color: #fff;
+    border-radius: 50%;
+    font-size: 0.6rem;
+    font-weight: 900;
+    margin-right: 4px;
+    vertical-align: middle;
+  }
+
 </style>
 </head>
 <body>
@@ -383,6 +414,11 @@ function formatarMoeda(v){
   if(/^R\$/i.test(s)) return s;
   return 'R$ ' + s;
 }
+function isVendido(im){
+  if(!im) return false;
+  const v = String(im.vendido || '').trim().toLowerCase();
+  return ['sim','s','true','1','vendido'].includes(v);
+}
 function extrairTipoImovel(desc){
   if(!desc) return '';
   const l = String(desc).split(/\r?\n/).map(x => x.trim()).filter(Boolean)[0] || '';
@@ -390,7 +426,7 @@ function extrairTipoImovel(desc){
   for(const m of matches){
     const t = m.replace(/\*/g, '').trim().toLowerCase();
     if(t.includes('cobertura')) return 'Cobertura';
-    if(t.includes('area privativa')) return 'Área Privativa';
+    if(t.includes('area privativa') || t.includes('privativa')) return 'Área Privativa';
     if(t.includes('casa')) return 'Casa';
     if(t.includes('padrao') || t.includes('apartamento')) return 'Apartamento Padrão';
   }
@@ -430,6 +466,44 @@ function montarDescricaoComTipo(descSemTipo, tipo){
   let out = `*${tipo}*`;
   if(primeira) out += ' ' + primeira;
   return [out, ...resto].filter(Boolean).join('\n');
+}
+
+// ===== PENDÊNCIAS =====
+const VAGAS_VALIDAS = [
+  'livre 100%','parcial (linha)','presa (depende 3º)',
+  'livre + parcial (linha)','livre + presa','estacionamento','nao sei'
+];
+function temInformacaoFaltando(im){
+  if(isVendido(im)) return [];
+  const faltas = [];
+  const tipo = extrairTipoImovel(im.descricao || '');
+  const isCasa = tipo === 'Casa';
+  
+  if(!String(im.preco || '').trim()) faltas.push('Preço');
+  if(!isCasa && !String(im.condominio || '').trim()) faltas.push('Condomínio');
+  if(!String(im.iptu || '').trim()) faltas.push('IPTU');
+  if(!String(im.rua || '').trim()) faltas.push('Rua');
+  if(!String(im.numero || '').trim()) faltas.push('Número');
+  if(!String(im.bairro || '').trim()) faltas.push('Bairro');
+  
+  const infoChave = extrairAptoBlocoChave(im.chaveTexto || '');
+  if(!isCasa && !infoChave.apto) faltas.push('Apartamento');
+  if(!String(im.chaveTexto || '').trim()) faltas.push('Chave');
+  
+  const suitesVal = im.suites;
+  const suitesStr = String(suitesVal !== undefined && suitesVal !== null ? suitesVal : '').trim();
+  if(suitesStr === '' || suitesStr === 'undefined' || suitesStr === 'null') faltas.push('Suítes');
+  
+  const vagaNorm = normalizaTexto(String(im.vaga || '').trim());
+  if(!VAGAS_VALIDAS.includes(vagaNorm)) faltas.push('Vaga');
+  
+  const elevNorm = normalizaTexto(String(im.elevador || '').trim());
+  if(elevNorm !== 'sim' && elevNorm !== 'nao') faltas.push('Elevador');
+  
+  if(!tipo) faltas.push('Tipo');
+  if(!descricaoSemTipo(im.descricao || '').trim()) faltas.push('Descrição');
+  
+  return faltas;
 }
 
 function toast(msg, tipo=''){
@@ -501,24 +575,18 @@ async function carregarTudo(){
     return;
   }
 
-  // ✅ AGRUPAR POR CÓDIGO — remove duplicatas
+  // ✅ AGRUPAR POR CÓDIGO + OCULTAR VENDIDOS
   const mapaCodigo = {};
   lista.forEach(im => {
+    if(isVendido(im)) return; // pula vendidos
     const cod = String(im.codigo || '').trim();
     const chave = cod || ('id:' + im.id);
-    if(!mapaCodigo[chave]){
-      mapaCodigo[chave] = im;
-    } else {
-      // Se o atual estiver vendido e já tem um não vendido, mantém o não vendido
-      const atualVendido = String(mapaCodigo[chave].vendido || '').toLowerCase() === 'sim';
-      const novoVendido = String(im.vendido || '').toLowerCase() === 'sim';
-      if(atualVendido && !novoVendido) mapaCodigo[chave] = im;
-    }
+    if(!mapaCodigo[chave]) mapaCodigo[chave] = im;
   });
 
   state.imoveis = Object.values(mapaCodigo);
   state.carregado = true;
-  setStatus('Conectado · ' + state.imoveis.length + ' imóveis únicos');
+  setStatus('Conectado · ' + state.imoveis.length + ' imóveis');
   renderizarLista();
 }
 
@@ -559,7 +627,6 @@ function renderizarLista(){
   $('empty').style.display = 'none';
 
   $('lista').innerHTML = lista.slice(0, 200).map(im => {
-    const vendido = String(im.vendido || '').toLowerCase() === 'sim';
     const cod = String(im.codigo || '').trim();
     
     // ✅ TÍTULO COM APTO
@@ -576,24 +643,41 @@ function renderizarLista(){
       titulo += ` / ${apto}`;
     }
 
-    // ✅ META COM CÓDIGO + PREÇO + CONDOMÍNIO
+    // ✅ META
     const preco = formatarMoeda(im.preco);
     const cond = formatarMoeda(im.condominio);
     const metaPartes = [];
     if(cod) metaPartes.push(`#${cod}`);
     if(preco) metaPartes.push(preco);
     if(cond) metaPartes.push(`Cond. ${cond}`);
-    if(vendido) metaPartes.push('VENDIDO');
-    
     const meta = metaPartes.length ? metaPartes.join(' · ') : '—';
 
+    // ✅ TIPO DO IMÓVEL
+    const tipoRaw = extrairTipoImovel(im.descricao || '');
+    let tipoLabel = tipoRaw || '—';
+    if(tipoRaw === 'Apartamento Padrão') tipoLabel = 'Padrão';
+    if(tipoRaw === 'Área Privativa') tipoLabel = 'Privativa';
+
+    // ✅ PENDÊNCIAS
+    const faltas = temInformacaoFaltando(im);
+    const temPendencia = faltas.length > 0;
+    const badgePendencia = temPendencia 
+      ? `<span class="pendencia-dot" title="Pendente: ${esc(faltas.join(', '))}">!</span>` 
+      : '';
+
     return `
-      <div class="item ${vendido ? 'item-vendido' : ''}" onclick="abrirEditor('${esc(im.id)}')">
+      <div class="item" onclick="abrirEditor('${esc(im.id)}')">
         <div class="item-info">
           <div class="item-titulo">${esc(titulo)}</div>
-          <div class="item-meta" style="font-size: 0.68rem;">${esc(meta)}</div>
+          <div class="item-meta">${esc(meta)}</div>
         </div>
-        <button class="item-btn">Editar</button>
+        <div class="item-actions">
+          <button class="item-btn" onclick="event.stopPropagation(); abrirEditor('${esc(im.id)}')">
+            ${badgePendencia}
+            Editar
+          </button>
+          <span class="item-tipo">${esc(tipoLabel)}</span>
+        </div>
       </div>
     `;
   }).join('');
