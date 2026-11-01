@@ -1290,9 +1290,11 @@ function temInformacaoFaltando(im) {
   // 8. Chave (texto completo)
   if (!String(im.chaveTexto || '').trim()) faltas.push('Chave');
   
-  // 9. Suítes — qualquer valor preenchido (incluindo "0") é válido
+    // 9. Suítes — só falta se for realmente vazio ou indefinido
   const suitesVal = im.suites;
-  if (suitesVal === undefined || suitesVal === null || String(suitesVal).trim() === '') {
+  const suitesStr = String(suitesVal !== undefined && suitesVal !== null ? suitesVal : '').trim();
+  // Se for string vazia, OU se for "undefined", OU se for "null" (como string), aí sim falta
+  if (suitesStr === '' || suitesStr === 'undefined' || suitesStr === 'null') {
     faltas.push('Suítes');
   }
   
@@ -1634,7 +1636,7 @@ function cardHTML(im){
   const chaveComplemento = aptoInfo.resto || '', chaveCompleta = chaveComplemento;
 
   const precoFmt = formatarMoeda(im.preco) || 'R$ 0,00', condFmt = formatarMoeda(im.condominio) || 'R$ 0,00', iptuFmt = formatarMoeda(im.iptu) || 'R$ 0,00';
-  const suites = im.suites ? im.suites : '—';
+    const suites = (im.suites !== undefined && im.suites !== null && String(im.suites).trim() !== '') ? im.suites : '—';
   const vaga = String(im.vaga || '').trim() || '—', elevador = String(im.elevador || '').trim() || '—';
 
   const statusStripHtml = vendido ? `<div class="card-status-strip status-vendido">Vendido</div>` : '';
