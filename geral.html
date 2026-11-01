@@ -713,7 +713,7 @@
       <button type="button" class="chip" data-andar="10">10º+</button>
     </div>
 
-    <div class="secao-titulo">🅿️ Vaga</div>
+        <div class="secao-titulo">🅿️ Vaga</div>
     <div class="filtros-grid-2">
       <div class="filtro-grupo">
         <label>Quantidade de vagas</label>
@@ -725,19 +725,19 @@
           <option value="3">3+ vagas</option>
         </select>
       </div>
-      <div class="filtro-grupo">
-  <label>Tipo de vaga</label>
-  <select id="filtroVagaTipo">
-    <option value="">Qualquer</option>
-    <option value="Livre 100%">Livre 100%</option>
-    <option value="Parcial (Linha)">Parcial (Linha)</option>
-    <option value="Presa (depende 3º)">Presa (depende 3º)</option>
-    <option value="Livre + Parcial (linha)">Livre + Parcial (linha)</option>
-    <option value="Livre + Presa">Livre + Presa</option>
-    <option value="Estacionamento">Estacionamento</option>
-    <option value="Não Sei">Não Sei</option>
-  </select>
-</div>
+    </div>
+
+    <div class="filtro-grupo full" style="grid-column: 1 / -1;">
+      <label>Tipo de vaga (pode marcar mais de um)</label>
+      <div class="chips-wrap" id="chipsVagaTipo">
+        <button type="button" class="chip" data-vaga="Livre 100%">Livre 100%</button>
+        <button type="button" class="chip" data-vaga="Parcial (Linha)">Parcial (Linha)</button>
+        <button type="button" class="chip" data-vaga="Presa (depende 3º)">Presa (depende 3º)</button>
+        <button type="button" class="chip" data-vaga="Livre + Parcial (linha)">Livre + Parcial (linha)</button>
+        <button type="button" class="chip" data-vaga="Livre + Presa">Livre + Presa</button>
+        <button type="button" class="chip" data-vaga="Estacionamento">Estacionamento</button>
+        <button type="button" class="chip" data-vaga="Não Sei">Não Sei</button>
+      </div>
     </div>
 
     <div class="secao-titulo">🛗 Elevador</div>
@@ -1035,9 +1035,9 @@ const state = {
   filtroStatus: 'todos', filtroCliente: '',
   _linkDebounce: null, _codigoLinkAtual: '', _tipoEscolhido: '',
   _clientesPorImovel: {}, _matchesCache: {},
-  _filtrosAvancados: {
+    _filtrosAvancados: {
     bairros: [], regioes: [], tipos: [], precoMin: null, precoMax: null, quartos: '', suites: '',
-    vagasQtd: '', vagaTipo: '', elevador: '', andares: [], metragem: '', condominioMax: '', ordenacao: 'recentes'
+    vagasQtd: '', vagaTipos: [], elevador: '', andares: [], metragem: '', condominioMax: '', ordenacao: 'recentes'
   },
   _lazyMatchIndex: 0,
   _matchEmAndamento: false,
@@ -1110,6 +1110,26 @@ function descricaoSemTipo(descricao){
   if(linhas.length > 0){ linhas[0] = linhas[0].replace(/\*+[^*\n]+\*+/g, '').trim(); }
   return linhas.filter(l => !/^\s*(Vaga|Elevador):\s*/i.test(l)).join('\n').replace(/^\s+/, '');
 }
+
+ function toggleVagaTipo(btn) {
+  btn.classList.toggle('active');
+}
+
+function abrirModalFiltro(){
+  const f = state._filtrosAvancados;
+  $('filtroQuartos').value = f.quartos; $('filtroSuites').value = f.suites; $('filtroVagasQtd').value = f.vagasQtd;
+  $('filtroMetragem').value = f.metragem; $('filtroCondominioMax').value = f.condominioMax; $('filtroOrdenacao').value = f.ordenacao;
+  setarSliderPreco(f.precoMin || 0, f.precoMax || PRECO_MAX_SLIDER);
+  document.querySelectorAll('#chipsTipoImovel .chip').forEach(b => b.classList.toggle('active', (f.tipos || []).includes(b.dataset.tipo)));
+  document.querySelectorAll('#chipsAndar .chip').forEach(b => b.classList.toggle('active', (f.andares || []).includes(b.dataset.andar)));
+  document.querySelectorAll('#chipsElevador .chip').forEach(b => b.classList.toggle('active', b.dataset.elevador === (f.elevador || '')));
+  
+  // ✅ NOVO: Marca os tipos de vaga selecionados
+  document.querySelectorAll('#chipsVagaTipo .chip').forEach(b => b.classList.toggle('active', (f.vagaTipos || []).includes(b.dataset.vaga)));
+  
+  $('modalFiltro').classList.add('show');
+}
+ 
 function extrairAptoBlocoChave(chaveTexto){
   if(!chaveTexto) return { apto: '', bloco: '', resto: '' };
   const linhas = String(chaveTexto).split(/\r?\n/).map(l => String(l || '').trim()).filter(Boolean);
@@ -1533,26 +1553,29 @@ function fecharModalFiltro(){ $('modalFiltro').classList.remove('show'); }
 function aplicarFiltrosAvancados(){
   const tiposAtivos = Array.from(document.querySelectorAll('#chipsTipoImovel .chip.active')).map(b => b.dataset.tipo);
   const andaresAtivos = Array.from(document.querySelectorAll('#chipsAndar .chip.active')).map(b => b.dataset.andar);
+  const vagaTiposAtivos = Array.from(document.querySelectorAll('#chipsVagaTipo .chip.active')).map(b => b.dataset.vaga);
   const elevadorAtivo = document.querySelector('#chipsElevador .chip.active');
   const minV = parseFloat($('precoMinRange').value) || 0;
   const maxV = parseFloat($('precoMaxRange').value) || 0;
+  
   state._filtrosAvancados.tipos = tiposAtivos;
   state._filtrosAvancados.andares = andaresAtivos;
+  state._filtrosAvancados.vagaTipos = vagaTiposAtivos;
   state._filtrosAvancados.elevador = elevadorAtivo ? elevadorAtivo.dataset.elevador : '';
   state._filtrosAvancados.precoMin = minV > 0 ? minV : null;
   state._filtrosAvancados.precoMax = maxV > 0 && maxV < PRECO_MAX_SLIDER ? maxV : null;
   state._filtrosAvancados.quartos = $('filtroQuartos').value;
   state._filtrosAvancados.suites = $('filtroSuites').value;
   state._filtrosAvancados.vagasQtd = $('filtroVagasQtd').value;
-  state._filtrosAvancados.vagaTipo = $('filtroVagaTipo').value;
   state._filtrosAvancados.metragem = $('filtroMetragem').value;
   state._filtrosAvancados.condominioMax = $('filtroCondominioMax').value;
   state._filtrosAvancados.ordenacao = $('filtroOrdenacao').value;
+  
   fecharModalFiltro(); renderizar();
 }
 
 function limparFiltros(){
-  state._filtrosAvancados = { bairros: [], regioes: [], tipos: [], precoMin: null, precoMax: null, quartos: '', suites: '', vagasQtd: '', vagaTipo: '', elevador: '', andares: [], metragem: '', condominioMax: '', ordenacao: 'recentes' };
+  state._filtrosAvancados = { bairros: [], regioes: [], tipos: [], precoMin: null, precoMax: null, quartos: '', suites: '', vagasQtd: '', vagaTipos: [], elevador: '', andares: [], metragem: '', condominioMax: '', ordenacao: 'recentes' };
   $('buscaInput').value = ''; document.querySelectorAll('#listaBairrosCheckboxes input').forEach(c => c.checked = false);
   atualizarTextoMultiBairros(); atualizarChipsRegiao(); abrirModalFiltro(); aplicarFiltrosAvancados();
 }
@@ -1592,7 +1615,13 @@ function renderizar(){
       if(f.vagasQtd === '0') return q === 0; if(f.vagasQtd === '3') return q >= 3; return q === parseInt(f.vagasQtd);
     }); 
   }
-  if(f.vagaTipo){ filtrosAtivos++; lista = lista.filter(im => im.vaga === f.vagaTipo); }
+   if (f.vagaTipos && f.vagaTipos.length > 0) {
+    filtrosAtivos++;
+    lista = lista.filter(im => {
+      const vagaImovel = String(im.vaga || '').trim();
+      return f.vagaTipos.includes(vagaImovel);
+    });
+  }
   if(f.elevador){ filtrosAtivos++; lista = lista.filter(im => im.elevador === f.elevador); }
   if(f.andares.length){
     filtrosAtivos++;
@@ -2275,6 +2304,8 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('#chipsTipoImovel .chip, #chipsAndar .chip').forEach(b => b.addEventListener('click', () => b.classList.toggle('active')));
   document.querySelectorAll('#chipsElevador .chip').forEach(b => b.addEventListener('click', () => { document.querySelectorAll('#chipsElevador .chip').forEach(x => x.classList.remove('active')); b.classList.add('active'); }));
   document.querySelectorAll('#chipsRegiao .chip-regiao').forEach(btn => btn.addEventListener('click', () => toggleRegiao(btn.dataset.regiao)));
+ // ✅ NOVO: Listener dos chips de tipo de vaga
+  document.querySelectorAll('#chipsVagaTipo .chip').forEach(b => b.addEventListener('click', () => b.classList.toggle('active')));
 });
 </script>
 </body>
