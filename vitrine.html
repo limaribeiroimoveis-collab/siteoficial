@@ -847,28 +847,26 @@ function renderizarImoveis(){
   const busca = $('buscaInput')?.value.toLowerCase().trim();
   if(busca) lista = lista.filter(i => (i.titulo||'').toLowerCase().includes(busca) || (enderecoSemNumero_(i)).toLowerCase().includes(busca));
 
-  // 3. ORDENAÇÃO INTELIGENTE
+  // 3. ORDENAÇÃO CORRIGIDA
   lista.sort((a, b) => {
     const getPeso = (im) => {
-      // Prioridade 3: Vendido (vai para o fim de TUDO, sem exceção)
+      // 1º Lugar: VENDIDO (vai para o fim absoluto de tudo)
       if (imovelVendido_(im)) return 3;
       
-      // Prioridade 0: Tem interação (Gostei, Visitar, Não gostei) -> É ATIVO!
-      if (im.status === 'gostei' || im.status === 'quero-visitar' || im.status === 'nao-gostei') {
-        return 0;
-      }
+      // 2º Lugar: DESATIVADO (mas sem ser vendido)
+      if (imovelReservado_(im)) return 2;
       
-      // Prioridade 1: Sem interação, mas está na vitrine e não está desativado
-      if (!imovelReservado_(im)) return 1;
+      // 3º Lugar: QUER VISITAR (topo da fila dos ativos)
+      if (im.status === 'quero-visitar') return 0;
       
-      // Prioridade 2: Desativado/Reservado (sem interação)
-      return 2;
+      // 4º Lugar: TODOS OS OUTROS ATIVOS (Pendentes, Gostei, Não Gostei, etc)
+      return 1; 
     };
 
     const pesoA = getPeso(a);
     const pesoB = getPeso(b);
 
-    // Se os pesos forem diferentes, joga os maiores (desativados/vendidos) para o fim
+    // Se os pesos forem diferentes, ordena do menor (topo) para o maior (fim)
     if (pesoA !== pesoB) return pesoA - pesoB;
 
     // Se forem do mesmo peso, ordena pelo mais recente
@@ -909,32 +907,25 @@ function cardHTML(im, idx){
     }
   }
 
-  // ✅ NOVO: Linha 1 (Suítes e Vaga)
-  let linha1Specs = [];
+  // ✅ NOVO: Monta a linha de specs (Apenas o que for positivo para o cliente)
+  let specsLinha = [];
+  
+  // Suítes (só mostra se > 0)
   const suitesNum = Number(im.suites);
-  if (!isNaN(suitesNum)) {
-    linha1Specs.push(`${suitesNum} ${suitesNum === 1 ? 'suíte' : 'suítes'}`);
-  }
-  const vagaStr = String(im.vaga || '').trim().toLowerCase();
-  if (vagaStr) {
-    if (vagaStr === 'nao sei' || vagaStr === 'não sei') {
-      linha1Specs.push(`Vaga (indefinido)`);
-    } else if (vagaStr === 'livre') {
-      linha1Specs.push(`Vaga livre`);
-    } else if (vagaStr === 'presa') {
-      linha1Specs.push(`Vaga presa`);
-    } else {
-      linha1Specs.push(`Vaga ${im.vaga}`);
-    }
+  if (suitesNum > 0) {
+    specsLinha.push(`${suitesNum} ${suitesNum === 1 ? 'suíte' : 'suítes'}`);
   }
 
-  // ✅ NOVO: Elevador para a linha de condomínio
-  let txtElevador = '';
+  // Vaga (só mostra se for livre)
+  const vagaStr = String(im.vaga || '').trim().toLowerCase();
+  if (vagaStr === 'livre') {
+    specsLinha.push(`Vaga livre`);
+  }
+
+  // Elevador (só mostra se tiver)
   const elev = String(im.elevador).toLowerCase();
   if (elev === 'sim') {
-    txtElevador = 'Com elevador';
-  } else if (elev === 'nao' || elev === 'não') {
-    txtElevador = 'Sem elevador';
+    specsLinha.push(`Com elevador`);
   }
 
   let extraClass = ''; 
@@ -1013,19 +1004,16 @@ function cardHTML(im, idx){
       <div class="card-body">
         <div class="card-preco">${precoFmt || 'Consulte'}</div>
         
-        <div class="card-preco-sec" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-          <div style="display: flex; gap: 8px; align-items: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-            ${im.condominio ? `<span>Cond. ${esc(im.condominio)}</span>` : ''}
-            ${im.condominio && im.iptu ? `<span class="sep">|</span>` : ''}
-            ${im.iptu ? `<span>IPTU ${esc(im.iptu)}</span>` : ''}
-          </div>
-          ${txtElevador ? `<span style="font-weight: 600; color: var(--text-soft); white-space: nowrap;">${txtElevador}</span>` : ''}
+        <div class="card-preco-sec">
+          ${im.condominio ? `<span>Cond. ${esc(im.condominio)}</span>` : ''}
+          ${im.condominio && im.iptu ? `<span class="sep">|</span>` : ''}
+          ${im.iptu ? `<span>IPTU ${esc(im.iptu)}</span>` : ''}
         </div>
 
-        <!-- ✅ NOVO: Linha de Suítes e Vaga -->
-        ${linha1Specs.length > 0 ? `
+        <!-- ✅ NOVO: Linha de specs unificada -->
+        ${specsLinha.length > 0 ? `
           <div style="font-size: .75rem; font-weight: 600; color: var(--text-soft); margin-top: 4px; margin-bottom: 2px;">
-            ${linha1Specs.join(' · ')}
+            ${specsLinha.join(' · ')}
           </div>
         ` : ''}
         
