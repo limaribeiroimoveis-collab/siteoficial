@@ -2513,38 +2513,7 @@
     width: 14px;
     height: 14px;
   }
-/* Badges de vaga/elevador no relatório */
-.relatorio-badge-vaga,
-.relatorio-badge-elev {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 3px 10px;
-  border-radius: 999px;
-  font-size: .78rem;
-  font-weight: 700;
-  letter-spacing: .2px;
-}
-.relatorio-badge-vaga.livre {
-  background: #dcfce7;
-  color: #166534;
-}
-.relatorio-badge-vaga.presa {
-  background: #fef3c7;
-  color: #92400e;
-}
-.relatorio-badge-vaga.nao-sei {
-  background: #f1f5f9;
-  color: #475569;
-}
-.relatorio-badge-elev.sim {
-  background: #dbeafe;
-  color: #1e40af;
-}
-.relatorio-badge-elev.nao {
-  background: #f1f5f9;
-  color: #475569;
-}
+
   /* =====================================================
      ===== ADIÇÕES RODADA 2026-10 — FIM =====
      ===================================================== */
@@ -3142,33 +3111,7 @@
     </div>
   </div>
 </div>
-<!-- ===== NOVO: Modal Escolha (Editar Preferências ou Copiar Link) ===== -->
-<div class="modal-backdrop" id="escolhaPrefsBackdrop">
-  <div class="modal" style="max-width:420px;">
-    <button class="modal-close" onclick="fecharEscolhaPrefs()">
-      <svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-    </button>
-    <h2 style="margin-bottom:6px;">
-      <svg class="ico" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-      Preferências de <span id="escolhaPrefsNome" style="color:var(--text-soft); font-weight:600;"></span>
-    </h2>
-    <p class="text-muted" style="margin-bottom:18px; font-size:.8rem;">Escolha o que deseja fazer:</p>
 
-    <div style="display:flex; flex-direction:column; gap:10px;">
-      <button class="btn btn-primary btn-full" style="justify-content:flex-start; padding:14px 18px;" onclick="escolherEditarPrefs()">
-        <svg class="ico" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-        <span style="font-weight:700;">Editar preferências</span>
-        <span style="font-size:.7rem; color:rgba(255,255,255,.8); margin-left:auto;">Ver / alterar</span>
-      </button>
-
-      <button class="btn btn-success btn-full" style="justify-content:flex-start; padding:14px 18px;" onclick="escolherCopiarLink()">
-        <svg class="ico" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-        <span style="font-weight:700;">Copiar Link para WhatsApp</span>
-        <span style="font-size:.7rem; color:rgba(255,255,255,.8); margin-left:auto;">Enviar ao cliente</span>
-      </button>
-    </div>
-  </div>
-</div>
 <!-- ===== NOVO: Modal Preferências do Cliente (padronizado com formulário do cliente) ===== -->
 <div class="modal-backdrop" id="prefsModalBackdrop">
   <div class="modal" style="max-width:640px;">
@@ -4272,36 +4215,11 @@ function abrirPainel(painel){
   }
 }
 async function recarregarPainel(painel){
-  if(painel === 'agenda'){
-    // ✅ Limpa memória ANTES de recarregar — remove qualquer fantasma
-    state.agendamentos = [];
-    state.eventosNeutros = [];
-    state.carregado.agenda = false;
-    // Limpa a tela imediatamente para não mostrar dado velho
-    const lista = $('agendaLista');
-    if(lista){
-      lista.innerHTML = '<div class="loading-inline"><span class="loader loader-lg"></span><p>Carregando agenda...</p></div>';
-    }
-    atualizarBalAgenda();
-    await carregarAgenda(true);
-  }
-  if(painel === 'visitar'){
-    state.carregado.visitar = false;
-    await carregarNotificacoes(true);
-  }
-  if(painel === 'gostei'){
-    state.carregado.gostei = false;
-    await carregarNotificacoes(true);
-  }
-  if(painel === 'clientes'){
-    state.carregado.clientes = false;
-    await carregarClientes(true);
-  }
-  if(painel === 'cutucada'){
-    state.carregado.clientes = false;
-    await carregarClientes(true);
-    renderizarCutucadas();
-  }
+  if(painel === 'agenda'){ state.carregado.agenda = false; await carregarAgenda(true); }
+  if(painel === 'visitar'){ state.carregado.visitar = false; await carregarNotificacoes(true); }
+  if(painel === 'gostei'){ state.carregado.gostei = false; await carregarNotificacoes(true); }
+  if(painel === 'clientes'){ state.carregado.clientes = false; await carregarClientes(true); }
+  if(painel === 'cutucada'){ state.carregado.clientes = false; await carregarClientes(true); renderizarCutucadas(); }
 }
 function alternarConcluidas(painel){
   state.visaoPainel[painel] = state.visaoPainel[painel] === 'concluidas' ? 'ativas' : 'concluidas';
@@ -4417,32 +4335,6 @@ async function carregarHomeAdmin(){
     if(elPanel) elPanel.classList.toggle('hidden', p !== 'agenda');
     if(elCard) elCard.classList.toggle('active', p === 'agenda');
   });
-
- async function carregarHomeAdmin(){
-  mostrarView('homeView');
-  $('btnSair').classList.remove('hidden');
-  atualizarBadgeCaptar();
-  atualizarBadgeLeads();
-  carregarNotasBadge();
-  state.carregado = { agenda: false, visitar: false, gostei: false, clientes: false, geral: false, tarefas: false, cutucada: false };
-  await carregarCorretores();
-
-  // ✅ FAXINA PESADA no login: garante memória limpa desde o início
-  await faxinaEventosFantasma();
-
-  state.painelAtivo = 'agenda';
-  ['agenda','visitar','gostei','clientes','cutucada'].forEach(p => {
-    const cap = p.charAt(0).toUpperCase() + p.slice(1);
-    const elPanel = $('panel' + cap);
-    const elCard = $('card' + cap);
-    if(elPanel) elPanel.classList.toggle('hidden', p !== 'agenda');
-    if(elCard) elCard.classList.toggle('active', p === 'agenda');
-  });
-  await carregarAgenda(true);
-  carregarResto_();
-  iniciarRefreshSilencioso();
-  iniciarAutoRefreshBadges();
-}
   await carregarAgenda(true);
   carregarResto_();
   iniciarRefreshSilencioso();
@@ -5016,8 +4908,8 @@ function clienteRowHTML(c){
         </div>
       </div>
 
-            <div class="tags">
-        <button class="btn btn-ghost btn-xs" title="Preferências do cliente (👁️)" onclick="abrirEscolhaPrefs('${tel}')" style="display:none;" data-prefs-mobile="1">
+      <div class="tags">
+        <button class="btn btn-ghost btn-xs" title="Preferências do cliente (👁️)" onclick="abrirPrefsDoCard('${tel}')" style="display:none;" data-prefs-mobile="1">
           <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
         </button>
         <button class="btn btn-ghost btn-xs" title="Observações internas" onclick="abrirObsClienteDireto('${tel}')">
@@ -5029,7 +4921,7 @@ function clienteRowHTML(c){
         <button class="btn btn-ghost btn-xs" title="Copiar link da vitrine do cliente" onclick="enviarLinkClienteDoCard('${tel}')">
           <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
         </button>
-        <button class="btn btn-ghost btn-xs" title="Ver o que o cliente busca (preferências)" onclick="abrirEscolhaPrefs('${tel}')">
+        <button class="btn btn-ghost btn-xs" title="Ver o que o cliente busca (preferências)" onclick="abrirPrefsDoCard('${tel}')">
           <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
         </button>
         <button class="btn btn-purple btn-xs" title="Abrir vitrine admin (editar imóveis do cliente)" onclick="abrirVitrineAdminDoCard('${tel}')">
@@ -5217,54 +5109,6 @@ async function carregarPrefsCliente(telefone, mostrarToast){
     return state._prefsCachePorTel[tel];
   }
   return null;
-}
-/* ===== NOVO: Modal escolha (Editar Preferências / Copiar Link) ===== */
-let _escolhaPrefsTelAtual = null;
-
-function abrirEscolhaPrefs(telefone){
-  const tel = normalizaTel(telefone);
-  if(!tel){ toast('Telefone inválido', 'error'); return; }
-  _escolhaPrefsTelAtual = tel;
-
-  const cli = state.clientes.find(c => normalizaTel(c.telefone) === tel);
-  const nome = cli ? (cli.nome || '') : '';
-  $('escolhaPrefsNome').textContent = nomeCompletoCliente_(nome, tel);
-
-  $('escolhaPrefsBackdrop').classList.add('show');
-}
-
-function fecharEscolhaPrefs(){
-  $('escolhaPrefsBackdrop').classList.remove('show');
-  _escolhaPrefsTelAtual = null;
-}
-
-async function escolherEditarPrefs(){
-  const tel = _escolhaPrefsTelAtual;
-  if(!tel){ fecharEscolhaPrefs(); return; }
-  // Fecha o modal de escolha ANTES de abrir o de preferências
-  $('escolhaPrefsBackdrop').classList.remove('show');
-  _escolhaPrefsTelAtual = null;
-  // Chama a função que JÁ EXISTE e abre o modal de preferências completo
-  await abrirPrefsDoCard(tel);
-}
-
-function escolherCopiarLink(){
-  const tel = _escolhaPrefsTelAtual;
-  if(!tel){ fecharEscolhaPrefs(); return; }
-  const cli = state.clientes.find(c => normalizaTel(c.telefone) === tel);
-  const nome = cli ? (cli.nome || '') : '';
-
-  // Monta o link do seubairro.html com o telefone
-  const url = 'https://limaribeiroimoveis.com.br/seubairro.html?tel=' + encodeURIComponent(tel);
-
-  // Copia para a área de transferência
-  copiarTexto(url);
-
-  // Fecha o modal após copiar
-  fecharEscolhaPrefs();
-
-  // Mostra um toast dizendo que está pronto
-  toast('Link copiado! Cole no WhatsApp do cliente', 'success');
 }
 
 /* ===== NOVA versão: abre modal de preferências preenchendo o modal novo ===== */
@@ -6524,23 +6368,13 @@ async function carregarAgenda(mostrarLoading){
   if(mostrarLoading){
     $('agendaLista').innerHTML = '<div class="loading-inline"><span class="loader loader-lg"></span><p>Carregando agenda...</p></div>';
   }
-
-  // ✅ FAXINA PREVENTIVA: alinha a memória com o servidor antes de renderizar
-  await faxinaEventosFantasma();
-
-  // Depois da faxina, garante que o resto do fluxo (imóveis etc.) siga normalmente
   const [res, resIm, resEv] = await Promise.all([
     api('listarAgendamentos', { senha: state.adminSenha }),
     api('listarTodosImoveis', { senha: state.adminSenha }),
     api('listarEventosNeutros', { senha: state.adminSenha })
   ]);
-
-  if(res.ok && Array.isArray(res.data)){
-    state.agendamentos = res.data;
-  }
-  if(resEv.ok && Array.isArray(resEv.data)){
-    state.eventosNeutros = resEv.data;
-  }
+  state.agendamentos = (res.ok && res.data) ? res.data : [];
+  state.eventosNeutros = (resEv.ok && resEv.data) ? resEv.data : [];
   if(resIm.ok && resIm.data){
     state.todosImoveis = resIm.data;
     state._corretorPorImovelId = {};
@@ -6548,62 +6382,11 @@ async function carregarAgenda(mostrarLoading){
       state._corretorPorImovelId[String(im.id)] = im.corretor || '';
     });
   }
-
   state.carregado.agenda = true;
   atualizarBalAgenda();
   renderizarFiltrosAgenda();
   renderizarAgenda();
   renderizarCorretoresNoCardAgenda_();
-}
-
- /* =========================================================
-   FAXINA AUTOMÁTICA DE EVENTOS FANTASMAS
-   Roda sempre que a agenda é carregada. Remove da memória
-   qualquer evento/agendamento que NÃO exista mais no servidor.
-   ========================================================= */
-async function faxinaEventosFantasma(){
-  if(!state.isAdmin || !state.adminSenha) return;
-  try {
-    // 1) Busca o estado REAL do servidor
-    const [rEv, rAg] = await Promise.all([
-      api('listarEventosNeutros', { senha: state.adminSenha }),
-      api('listarAgendamentos',   { senha: state.adminSenha })
-    ]);
-
-    // Se alguma consulta falhou, NÃO mexe em nada (evita apagar por erro de rede)
-    if(!rEv.ok || !rAg.ok){
-      console.warn('[faxina] consulta falhou, mantendo estado atual', { rEv, rAg });
-      return;
-    }
-
-    const idsEvServidor = new Set((rEv.data || []).map(e => String(e.id)));
-    const idsAgServidor = new Set((rAg.data || []).map(a => String(a.id)));
-
-    // 2) Calcula o que é fantasma (está na memória mas não está no servidor)
-    const fantasmasEv = state.eventosNeutros.filter(e => !idsEvServidor.has(String(e.id)));
-    const fantasmasAg = state.agendamentos.filter(a => !idsAgServidor.has(String(a.id)));
-
-    // 3) Reconstrói a memória SÓ com o que o servidor tem
-    //    (isso é o coração da faxina — sobrescreve em vez de filtrar, para garantir)
-    state.eventosNeutros = rEv.data || [];
-    state.agendamentos    = rAg.data || [];
-
-    // 4) Se encontrou fantasmas, avisa no console e re-renderiza
-    if(fantasmasEv.length > 0 || fantasmasAg.length > 0){
-      console.log('%c[faxina] fantasmas removidos:', 'color:#16a34a;font-weight:bold',
-        { eventos: fantasmasEv.map(e => e.id), agendamentos: fantasmasAg.map(a => a.id) });
-
-      // Re-renderiza a tela se a agenda estiver visível
-      try {
-        atualizarBalAgenda();
-        renderizarFiltrosAgenda();
-        renderizarAgenda();
-        renderizarCorretoresNoCardAgenda_();
-      } catch(e){ /* silencioso */ }
-    }
-  } catch(err){
-    console.warn('[faxina] erro:', err);
-  }
 }
 function atualizarBalAgenda(){
   const el = $('balAgenda');
@@ -6818,22 +6601,11 @@ async function abrirRelatorio(id){
   const cli = state.clientes.find(c => normalizaTel(c.telefone) === normalizaTel(a.telefone));
   const nomeCli = cli ? cli.nome : (a.clienteNome || '(sem cadastro)');
 
-  // Busca o cliente completo (com observações) se não estiver no state
-  let clienteCompleto = cli;
-  if(!clienteCompleto || !clienteCompleto.observacao){
-    try {
-      const resCli = await api('buscarCliente', { senha: state.adminSenha, telefone: normalizaTel(a.telefone) });
-      if(resCli.ok && resCli.data){
-        clienteCompleto = resCli.data;
-      }
-    } catch(e){
-      console.warn('[abrirRelatorio] erro ao buscar cliente:', e);
-    }
-  }
-
   // ✅ CRUZAMENTO: procura o imóvel completo em state.todosImoveis
+  // (o agendamento sozinho não tem preço, condomínio, iptu, descrição, tipo)
   let imovelCompleto = null;
 
+  // Primeiro, garante que todosImoveis está carregado
   if(!state.todosImoveis || state.todosImoveis.length === 0){
     try {
       const resIm = await api('listarTodosImoveis', { senha: state.adminSenha });
@@ -6849,16 +6621,18 @@ async function abrirRelatorio(id){
     }
   }
 
+  // Agora procura o imóvel pelo ID
   if(state.todosImoveis && state.todosImoveis.length > 0){
     imovelCompleto = state.todosImoveis.find(im => String(im.id) === String(a.id));
+    // Fallback: procura por código (mais confiável quando há duplicatas)
     if(!imovelCompleto && a.codigo){
       imovelCompleto = state.todosImoveis.find(im => String(im.codigo) === String(a.codigo));
     }
   }
 
   $('relatorioNome').textContent = nomeCompletoCliente_(nomeCli, a.telefone);
-  state._relatorioAtual = { agendamento: a, cliente: clienteCompleto || null, nomeCli, imovelCompleto };
-  $('relatorioCorpo').innerHTML = montarHTMLRelatorio(a, clienteCompleto, imovelCompleto);
+  state._relatorioAtual = { agendamento: a, cliente: cli || null, nomeCli, imovelCompleto };
+  $('relatorioCorpo').innerHTML = montarHTMLRelatorio(a, cli, imovelCompleto);
   $('relatorioBackdrop').classList.add('show');
 }
 function montarHTMLRelatorio(a, cli, imovelCompleto){
@@ -6882,46 +6656,11 @@ function montarHTMLRelatorio(a, cli, imovelCompleto){
   const iptu        = String(im.iptu       || a.iptu       || '').trim();
   const descricao   = String(im.descricao  || a.descricao  || '').trim();
   const chavePrimeiraLinha = extrairPrimeiraLinhaChave(campos.chave);
-// ✅ VAGA E ELEVADOR (padronizados: Livre/Presa/Não sei | Sim/Não)
-const vagaRaw     = String(im.vaga     || a.vaga     || '').trim();
-const elevadorRaw = String(im.elevador || a.elevador || '').trim();
-
-const vagaNorm     = vagaRaw.toLowerCase();
-const elevadorNorm = elevadorRaw.toLowerCase();
-
-let vagaHTML = '<span style="color:var(--muted); font-style:italic;">—</span>';
-if (vagaNorm === 'livre') {
-  vagaHTML = '<span class="relatorio-badge-vaga livre">🅿️ Livre</span>';
-} else if (vagaNorm === 'presa') {
-  vagaHTML = '<span class="relatorio-badge-vaga presa">🅿️ Presa</span>';
-} else if (vagaNorm === 'não sei' || vagaNorm === 'nao sei' || vagaNorm === 'não-sei' || vagaNorm === 'nao-sei') {
-  vagaHTML = '<span class="relatorio-badge-vaga nao-sei">🅿️ Não sei</span>';
-} else if (vagaRaw) {
-  vagaHTML = `<span class="relatorio-badge-vaga nao-sei">🅿️ ${esc(vagaRaw)}</span>`;
-}
-
-let elevadorHTML = '<span style="color:var(--muted); font-style:italic;">—</span>';
-if (elevadorNorm === 'sim') {
-  elevadorHTML = '<span class="relatorio-badge-elev sim">🛗 Sim</span>';
-} else if (elevadorNorm === 'não' || elevadorNorm === 'nao') {
-  elevadorHTML = '<span class="relatorio-badge-elev nao">🛗 Não</span>';
-} else if (elevadorRaw) {
-  elevadorHTML = `<span class="relatorio-badge-elev nao">🛗 ${esc(elevadorRaw)}</span>`;
-}
   const dataVisita  = a.dataVisitaAgendada;
   const linkAnuncio = String(im.link       || a.link       || '').trim();
   const linkBuscar  = codigo ? `${BUSCAR_BASE}/${codigo}` : '';
   const tel = normalizaTel(telCli);
   const telZap = tel ? (tel.startsWith('55') ? tel : '55' + tel) : '';
-
-  // ✅ OBSERVAÇÕES DO CLIENTE
-  const observacao = cli ? String(cli.observacao || '').trim() : '';
-  const tqc = cli ? String(cli.tqc || '').toLowerCase() === 'sim' : false;
-  const investidor = cli ? String(cli.car || '').toLowerCase() === 'sim' : false;
-  const inativo = cli ? String(cli.inativo || '').toLowerCase() === 'sim' : false;
-  const temperatura = cli ? (cli.temperatura || 'frio') : 'frio';
-  const emojiTemp = emojiTemperatura(temperatura);
-  const corretorCliente = cli ? cli.corretor : corr;
 
   function campoHTML(lbl, val, extraCls){
     const v = String(val || '').trim();
@@ -6930,12 +6669,6 @@ if (elevadorNorm === 'sim') {
       <div class="val ${v ? '' : 'muted'}">${v ? esc(v) : '—'}</div>
     </div>`;
   }
-
-  const tagsCliente = [];
-  if(tqc) tagsCliente.push('<span style="background:#3d2b20; color:#fff; padding:2px 8px; border-radius:4px; font-size:.7rem; font-weight:700;">TQC</span>');
-  if(investidor) tagsCliente.push('<span style="background:#2f6b4f; color:#fff; padding:2px 8px; border-radius:4px; font-size:.7rem; font-weight:700;">INVESTIDOR</span>');
-  if(inativo) tagsCliente.push('<span style="background:#8b3a3a; color:#fff; padding:2px 8px; border-radius:4px; font-size:.7rem; font-weight:700;">INATIVO</span>');
-  tagsCliente.push(`<span style="font-size:.9rem;">${emojiTemp}</span>`);
 
   return `
     <div class="relatorio-secao">
@@ -6956,14 +6689,7 @@ if (elevadorNorm === 'sim') {
         ${campoHTML('Preço', preco, 'sucesso')}
         ${campoHTML('Condomínio', condominio)}
         ${campoHTML('IPTU', iptu)}
-        ${campoHTML('Chave (1ª linha)', chavePrimeiraLinha, 'alerta')}<div class="relatorio-campo destaque">
-  <div class="lbl">🚗 Vaga</div>
-  <div class="val">${vagaHTML}</div>
-</div>
-<div class="relatorio-campo destaque">
-  <div class="lbl">🛗 Elevador</div>
-  <div class="val">${elevadorHTML}</div>
-</div>
+        ${campoHTML('🔑 Chave (1ª linha)', chavePrimeiraLinha, 'alerta')}
       </div>
     </div>
 
@@ -6986,29 +6712,9 @@ if (elevadorNorm === 'sim') {
       <div class="relatorio-grid">
         ${campoHTML('Cliente', nomeCli)}
         ${campoHTML('WhatsApp', fmtTel(telCli))}
-        ${campoHTML('Corretor', corretorCliente || corr)}
+        ${campoHTML('Corretor', corr)}
         ${campoHTML('Data da visita', dataVisita ? fmtDataHora(dataVisita) : '')}
       </div>
-      <div style="height:8px;"></div>
-      <div class="relatorio-grid full">
-        <div class="relatorio-campo">
-          <div class="lbl">Tags do cliente</div>
-          <div class="val" style="display:flex; gap:6px; flex-wrap:wrap; align-items:center;">
-            ${tagsCliente.join(' ')}
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="relatorio-secao">
-      <div class="relatorio-secao-titulo">
-        <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-        Observações do cliente
-      </div>
-      ${observacao
-        ? `<div class="relatorio-descricao-box" style="background:#f8fafc; border-color:#e2e8f0; color:#334155;">${esc(observacao)}</div>`
-        : `<div class="relatorio-descricao-box vazio" style="background:#f8fafc; border-color:#e2e8f0;">Nenhuma observação registrada.</div>`
-      }
     </div>
 
     <div class="relatorio-secao">
@@ -7044,8 +6750,6 @@ function montarTextoRelatorio(a){
   const im = state.todosImoveis.find(x => String(x.id) === String(a.id))
           || (a.codigo ? state.todosImoveis.find(x => String(x.codigo) === String(a.codigo)) : null)
           || {};
-  
-  // ✅ Busca o cliente com observações
   const cli = state.clientes.find(c => normalizaTel(c.telefone) === normalizaTel(a.telefone));
   const nomeCli = cli ? (cli.nome || '') : (a.clienteNome || '(sem cadastro)');
   const corr = resolverCorretor_(a);
@@ -7064,90 +6768,39 @@ function montarTextoRelatorio(a){
   const iptu        = String(im.iptu       || a.iptu       || '').trim();
   const descricao   = String(im.descricao  || a.descricao  || '').trim();
   const chavePrimeiraLinha = extrairPrimeiraLinhaChave(campos.chave);
- const vaga     = String(im.vaga     || a.vaga     || '').trim();
-const elevador = String(im.elevador || a.elevador || '').trim();
   const dataVisita  = a.dataVisitaAgendada;
   const linkAnuncio = String(im.link       || a.link       || '').trim();
   const linkBuscar  = codigo ? `${BUSCAR_BASE}/${codigo}` : '';
   const tel = normalizaTel(a.telefone);
   const telZap = tel ? (tel.startsWith('55') ? tel : '55' + tel) : '';
 
-  // ✅ OBSERVAÇÕES DO CLIENTE
-  const observacao = cli ? String(cli.observacao || '').trim() : '';
-  const tqc = cli ? String(cli.tqc || '').toLowerCase() === 'sim' : false;
-  const investidor = cli ? String(cli.car || '').toLowerCase() === 'sim' : false;
-  const temperatura = cli ? (cli.temperatura || 'frio') : 'frio';
-  const emojiTemp = emojiTemperatura(temperatura);
-
   const endereco = [campos.rua, campos.numero].filter(Boolean).join(', ') + (campos.bairro ? ' - ' + campos.bairro : '');
 
   const linhas = [];
-  
-  // === IMÓVEL ===
   linhas.push(`🏠 IMÓVEL${codigo ? ' #' + codigo : ''}`);
-  linhas.push('─────────────────────────────');
+  linhas.push('');
   if(tipo) linhas.push(`🏘️ Tipo: ${tipo}`);
-  if(endereco) linhas.push(`📍 Endereço: ${endereco}`);
+  if(endereco) linhas.push(`📍 ${endereco}`);
   if(preco) linhas.push(`💰 Venda: ${preco}`);
   if(condominio) linhas.push(`🏢 Condomínio: ${condominio}`);
   if(iptu) linhas.push(`📄 IPTU: ${iptu}`);
   if(chavePrimeiraLinha) linhas.push(`🔑 Chave: ${chavePrimeiraLinha}`);
- if(vaga)     linhas.push(`🚗 Vaga: ${vaga}`);
-if(elevador) linhas.push(`🛗 Elevador: ${elevador}`);
   linhas.push('');
-  
-  // === DESCRIÇÃO ===
   if(descricao){
-    linhas.push('📝 DESCRIÇÃO DO IMÓVEL');
-    linhas.push('─────────────────────────────');
+    linhas.push('📝 Descrição:');
     linhas.push(descricao);
     linhas.push('');
   }
-  
-  // === CLIENTE ===
   linhas.push('👤 CLIENTE');
-  linhas.push('─────────────────────────────');
   if(nomeCli) linhas.push(`Nome: ${nomeCli}`);
   if(tel) linhas.push(`WhatsApp: ${fmtTel(tel)}`);
   if(corr) linhas.push(`Corretor: ${corr}`);
   if(dataVisita) linhas.push(`📅 Visita: ${fmtDataHora(dataVisita)}`);
-  
-  // Tags do cliente
-  const tags = [];
-  if(tqc) tags.push('TQC');
-  if(investidor) tags.push('INVESTIDOR');
-  tags.push(emojiTemp + ' ' + temperatura.charAt(0).toUpperCase() + temperatura.slice(1));
-  if(tags.length) linhas.push(`🏷️ Tags: ${tags.join(' | ')}`);
   linhas.push('');
-  
-  // === OBSERVAÇÕES ===
-  linhas.push('📋 OBSERVAÇÕES DO CLIENTE');
-  linhas.push('─────────────────────────────');
-  if(observacao){
-    linhas.push(observacao);
-  } else {
-    linhas.push('(Nenhuma observação registrada)');
-  }
-  linhas.push('');
-  
-  // === LINKS (separados para não embolar) ===
-  linhas.push('🔗 LINKS ÚTEIS');
-  linhas.push('─────────────────────────────');
-  if(linkAnuncio){
-    linhas.push('📌 Anúncio:');
-    linhas.push(linkAnuncio);
-    linhas.push('');
-  }
-  if(linkBuscar){
-    linhas.push('🔍 Buscar entrada:');
-    linhas.push(linkBuscar);
-    linhas.push('');
-  }
-  if(telZap){
-    linhas.push('💬 WhatsApp do cliente:');
-    linhas.push(`https://wa.me/${telZap}`);
-  }
-  
+  linhas.push('🔗 LINKS');
+  if(linkAnuncio) linhas.push(`Anúncio: ${linkAnuncio}`);
+  if(linkBuscar) linhas.push(`Buscar entrada: ${linkBuscar}`);
+  if(telZap) linhas.push(`WhatsApp: https://wa.me/${telZap}`);
   return linhas.join('\n');
 }
 function copiarRelatorio(){
@@ -7174,21 +6827,7 @@ function abrirNovoEvento(){
 }
 function abrirEditarEvento(id){
   const a = state.eventosNeutros.find(x => String(x.id) === String(id));
-
-  // ✅ Se não achou na memória, é "fantasma" — remove da tela e recarrega
-  if(!a){
-    toast('Evento não encontrado — removendo da tela...', 'error');
-    state.eventosNeutros = state.eventosNeutros.filter(e => String(e.id) !== String(id));
-    state.agendamentos = state.agendamentos.filter(ag => String(ag.id) !== String(id));
-    atualizarBalAgenda();
-    renderizarFiltrosAgenda();
-    renderizarAgenda();
-    renderizarCorretoresNoCardAgenda_();
-    state.carregado.agenda = false;
-    carregarAgenda(false).catch(() => {});
-    return;
-  }
-
+  if(!a){ toast('Evento não encontrado', 'error'); return; }
   $('eventoModalTitulo').textContent = 'Editar evento';
   $('eventoId').value = id;
   $('eventoTitulo').value = a.titulo || '';
@@ -7242,38 +6881,10 @@ async function excluirEvento(id){
   marcarSalvando(true);
   const res = await api('excluirEventoNeutro', { senha: state.adminSenha, id });
   marcarSalvando(false);
-
-  // ✅ NOVO: Se backend falhou, remove localmente de qualquer forma
-  if(!res.ok){
-    const msg = String(res.error || '').toLowerCase();
-    const naoEncontrado = msg.includes('não encontrado') 
-                       || msg.includes('nao encontrado')
-                       || msg.includes('not found')
-                       || msg.includes('não existe')
-                       || msg.includes('nao existe');
-    if(naoEncontrado){
-      // Remove da memória local — o evento fantasma some da tela
-      state.eventosNeutros = state.eventosNeutros.filter(e => String(e.id) !== String(id));
-      toast('Evento removido da tela (já não existia no servidor)', 'success');
-      atualizarBalAgenda();
-      renderizarFiltrosAgenda();
-      renderizarAgenda();
-      renderizarCorretoresNoCardAgenda_();
-      return;
-    }
-    toast(res.error || 'Erro', 'error');
-    return;
-  }
-
+  if(!res.ok){ toast(res.error || 'Erro', 'error'); return; }
   toast('Evento excluído', 'success');
-  state.eventosNeutros = state.eventosNeutros.filter(e => String(e.id) !== String(id));
-  atualizarBalAgenda();
-  renderizarFiltrosAgenda();
-  renderizarAgenda();
-  renderizarCorretoresNoCardAgenda_();
   state.carregado.agenda = false;
-  // Recarrega do servidor em background para garantir
-  carregarAgenda(false).catch(() => {});
+  await carregarAgenda(false);
 }
 
 /* WHATSAPP / FINALIZAR */
