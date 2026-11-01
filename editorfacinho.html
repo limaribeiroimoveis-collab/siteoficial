@@ -276,7 +276,16 @@
     margin-right: 4px;
     vertical-align: middle;
   }
-
+  .item-codigo {
+    font-weight: 700;
+    color: var(--primary);
+    cursor: pointer;
+    padding: 1px 4px;
+    border-radius: 3px;
+    transition: background 0.15s;
+  }
+  .item-codigo:hover { background: #e0e7ff; }
+  .item-codigo.copiado { background: #dcfce7; color: #15803d; }
 </style>
 </head>
 <body>
@@ -407,18 +416,29 @@ const esc = s => String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').repl
 
 function normalizaTexto(s){ return String(s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim(); }
 function normalizaTel(t){ return String(t || '').replace(/\D/g, ''); }
-function formatarMoeda(v){
+
+function formatarPreco(v){
   if(!v) return '';
   const s = String(v).trim();
   if(!s) return '';
   if(/^R\$/i.test(s)) return s;
   return 'R$ ' + s;
 }
+
+// ✅ Condomínio sem centavos, sem R$
+function formatarCondominio(v){
+  if(!v) return '';
+  let s = String(v).replace(/R\$\s*/gi, '').replace(/\s/g, '');
+  if(s.includes(',')) s = s.split(',')[0];
+  return s;
+}
+
 function isVendido(im){
   if(!im) return false;
   const v = String(im.vendido || '').trim().toLowerCase();
   return ['sim','s','true','1','vendido'].includes(v);
 }
+
 function extrairTipoImovel(desc){
   if(!desc) return '';
   const l = String(desc).split(/\r?\n/).map(x => x.trim()).filter(Boolean)[0] || '';
@@ -468,7 +488,6 @@ function montarDescricaoComTipo(descSemTipo, tipo){
   return [out, ...resto].filter(Boolean).join('\n');
 }
 
-// ===== PENDÊNCIAS =====
 const VAGAS_VALIDAS = [
   'livre 100%','parcial (linha)','presa (depende 3º)',
   'livre + parcial (linha)','livre + presa','estacionamento','nao sei'
@@ -578,19 +597,21 @@ async function carregarTudo(){
   // ✅ AGRUPAR POR CÓDIGO + OCULTAR VENDIDOS
   const mapaCodigo = {};
   lista.forEach(im => {
-    if(isVendido(im)) return; // pula vendidos
+    if(isVendido(im)) return;
     const cod = String(im.codigo || '').trim();
     const chave = cod || ('id:' + im.id);
     if(!mapaCodigo[chave]) mapaCodigo[chave] = im;
   });
 
-  state.imoveis = Object.values(mapaCodigo);
+  // ✅ ORDENAR POR MAIS RECENTE
+  state.imoveis = Object.values(mapaCodigo).sort((a, b) => {
+    return new Date(b.dataCadastro || 0) - new Date(a.dataCadastro || 0);
+  });
   state.carregado = true;
   setStatus('Conectado · ' + state.imoveis.length + ' imóveis');
   renderizarLista();
 }
 
-// BUSCA INSTANTÂNEA
 function renderizarLista(){
   const termo = $('inputBusca').value;
   const busca = normalizaTexto(termo);
@@ -629,7 +650,6 @@ function renderizarLista(){
   $('lista').innerHTML = lista.slice(0, 200).map(im => {
     const cod = String(im.codigo || '').trim();
     
-    // ✅ TÍTULO COM APTO
     const infoChave = extrairAptoBlocoChave(im.chaveTexto || '');
     const apto = infoChave.apto || '';
     const rua = String(im.rua || '').trim();
@@ -643,22 +663,20 @@ function renderizarLista(){
       titulo += ` / ${apto}`;
     }
 
-    // ✅ META
-    const preco = formatarMoeda(im.preco);
-    const cond = formatarMoeda(im.condominio);
+    // ✅ META COM FORMATAÇÕES
+    const preco = formatarPreco(im.preco);
+    const cond = formatarCondominio(im.condominio);
+    
     const metaPartes = [];
-    if(cod) metaPartes.push(`#${cod}`);
     if(preco) metaPartes.push(preco);
     if(cond) metaPartes.push(`Cond. ${cond}`);
     const meta = metaPartes.length ? metaPartes.join(' · ') : '—';
 
-    // ✅ TIPO DO IMÓVEL
     const tipoRaw = extrairTipoImovel(im.descricao || '');
     let tipoLabel = tipoRaw || '—';
     if(tipoRaw === 'Apartamento Padrão') tipoLabel = 'Padrão';
     if(tipoRaw === 'Área Privativa') tipoLabel = 'Privativa';
 
-    // ✅ PENDÊNCIAS
     const faltas = temInformacaoFaltando(im);
     const temPendencia = faltas.length > 0;
     const badgePendencia = temPendencia 
@@ -669,7 +687,12 @@ function renderizarLista(){
       <div class="item" onclick="abrirEditor('${esc(im.id)}')">
         <div class="item-info">
           <div class="item-titulo">${esc(titulo)}</div>
-          <div class="item-meta">${esc(meta)}</div>
+          <div class="item-meta">
+            <span class="item-codigo" onclick="event.stopPropagation(); copiarCodigo('${esc(cod)}', this)" title="Clique para copiar">
+              ${cod ? '#' + esc(cod) : 'sem código'}
+            </span>
+            ${meta ? ' · ' + esc(meta) : ''}
+          </div>
         </div>
         <div class="item-actions">
           <button class="item-btn" onclick="event.stopPropagation(); abrirEditor('${esc(im.id)}')">
@@ -681,6 +704,26 @@ function renderizarLista(){
       </div>
     `;
   }).join('');
+}
+
+function copiarCodigo(cod, el){
+  if(!cod) return;
+  if(navigator.clipboard && window.isSecureContext){
+    navigator.clipboard.writeText(cod).then(() => {
+      const orig = el.textContent;
+      el.textContent = 'Copiado!';
+      el.classList.add('copiado');
+      setTimeout(() => { el.textContent = orig; el.classList.remove('copiado'); }, 1200);
+      toast('Código copiado', 'success');
+    }).catch(() => fallbackCopy(cod));
+  } else fallbackCopy(cod);
+}
+function fallbackCopy(txt){
+  const ta = document.createElement('textarea');
+  ta.value = txt; ta.style.position = 'fixed'; ta.style.opacity = '0';
+  document.body.appendChild(ta); ta.select();
+  try { document.execCommand('copy'); toast('Copiado!', 'success'); } catch(e){}
+  document.body.removeChild(ta);
 }
 
 function abrirEditor(id){
