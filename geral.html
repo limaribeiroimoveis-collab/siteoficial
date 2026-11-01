@@ -1959,20 +1959,20 @@ function abrirClonar(id){
   
   const codigoOriginal = String(im.codigo || '').trim();
   
-  // ✅ TRAVA: Descobre quais clientes JÁ POSSUEM este imóvel (pelo código)
+  // ✅ CORREÇÃO: Varre TODO o state.imoveis buscando o código exato.
+  // Isso pega o Hugo, a Carol e qualquer outro, independente da carteira.
   const clientesQueJaTem = new Set();
   if (codigoOriginal) {
     state.imoveis.forEach(item => {
+      // Compara os códigos exatamente como estão no banco
       if (String(item.codigo || '').trim() === codigoOriginal) {
         clientesQueJaTem.add(normalizaTel(item.telefone));
       }
     });
   }
   
-  // Atualiza o subtítulo
   $('clonarModalSub').textContent = `#${codigoOriginal || im.id} — ${im.titulo || 'Sem endereço'}`;
   
-  // Popula o select com todos os clientes, desabilitando quem já tem o imóvel
   const sel = $('clonarSelectCliente');
   const clientesOrdenados = [...state.clientes].sort((a, b) => (a.nome || '').localeCompare(b.nome || '', 'pt-BR'));
   
@@ -1980,16 +1980,18 @@ function abrirClonar(id){
     clientesOrdenados.map(c => {
       const tel = normalizaTel(c.telefone);
       const jaTem = clientesQueJaTem.has(tel);
+      
+      // Monta o texto, se já tiver, adiciona o aviso
       const label = `${esc(c.nome || 'Sem nome')} · ${esc(fmtTel(c.telefone))}${jaTem ? ' — ❌ Já possui' : ''}`;
-      return `<option value="${esc(tel)}" ${jaTem ? 'disabled' : ''}>${label}</option>`;
+      
+      // Desabilita a opção se o cliente já tiver o imóvel
+      return `<option value="${esc(tel)}" ${jaTem ? 'disabled style="color: #94a3b8;"' : ''}>${label}</option>`;
     }).join('');
   
-  // Reseta o botão
   const btn = $('btnConfirmarClonar');
   btn.disabled = true;
   btn.textContent = 'Clonar para este cliente';
   
-  // Habilita o botão só quando escolher um cliente válido
   sel.onchange = () => {
     btn.disabled = !sel.value;
   };
