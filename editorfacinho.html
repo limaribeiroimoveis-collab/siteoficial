@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Editor Rápido — LR Imóveis</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --primary: #1e3a5f;
+    --border: #e2e8f0;
+    --bg: #f8fafc;
+    --text: #0f172a;
+    --muted: #64748b;
+    --danger: #dc2626;
+    --success: #16a34a;
+  }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.5;
+    padding: 12px;
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  header {
+    background: #4c1d95;
+    color: #fff;
+    padding: 12px 14px;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  header h1 { font-size: 1rem; font-weight: 700; }
+  header .status { font-size: 0.72rem; opacity: 0.8; }
+
+  .busca {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+  .busca input {
+    flex: 1;
+    padding: 12px 14px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 1rem;
+    background: #fff;
+  }
+  .busca input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(30,58,95,.1);
+  }
+
+  .contador {
+    font-size: 0.75rem;
+    color: var(--muted);
+    margin-bottom: 8px;
+    padding: 0 4px;
+  }
+
+  .lista { display: flex; flex-direction: column; gap: 6px; }
+  .item {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    transition: all 0.12s;
+  }
+  .item:hover { border-color: var(--primary); }
+  .item-info { flex: 1; min-width: 0; }
+  .item-titulo {
+    font-size: 0.92rem;
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .item-meta {
+    font-size: 0.75rem;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+  .item-btn {
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .item-btn:hover { background: #0f2942; }
+  .item-vendido .item-btn { background: var(--muted); }
+  .item-vendido { opacity: 0.65; }
+
+  .empty {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+
+  /* Painel de edição (tela cheia) */
+  .editor {
+    position: fixed;
+    inset: 0;
+    background: #fff;
+    z-index: 1000;
+    display: none;
+    flex-direction: column;
+    overflow-y: auto;
+  }
+  .editor.show { display: flex; }
+  .editor-head {
+    position: sticky;
+    top: 0;
+    background: #4c1d95;
+    color: #fff;
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    z-index: 10;
+  }
+  .editor-head h2 {
+    font-size: 0.92rem;
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .editor-head button {
+    background: rgba(255,255,255,.15);
+    color: #fff;
+    border: 1px solid rgba(255,255,255,.25);
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .editor-body {
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 720px;
+    margin: 0 auto;
+    width: 100%;
+  }
+  .field { display: flex; flex-direction: column; gap: 4px; }
+  .field label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--muted);
+    letter-spacing: 0.3px;
+  }
+  .field input,
+  .field select,
+  .field textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 0.94rem;
+    font-family: inherit;
+    background: #fff;
+  }
+  .field input:focus,
+  .field select:focus,
+  .field textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(30,58,95,.1);
+  }
+  .field textarea { min-height: 80px; resize: vertical; }
+  .field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .field-row-3 {
+    display: grid;
+    grid-template-columns: 2fr 1fr 2fr;
+    gap: 10px;
+  }
+  @media (max-width: 520px) {
+    .field-row, .field-row-3 { grid-template-columns: 1fr; }
+  }
+  .btns {
+    position: sticky;
+    bottom: 0;
+    background: #fff;
+    padding: 12px 14px;
+    display: flex;
+    gap: 8px;
+    border-top: 1px solid var(--border);
+    margin-top: 6px;
+  }
+  .btns button {
+    flex: 1;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+  }
+  .btn-salvar { background: var(--primary); color: #fff; }
+  .btn-salvar:disabled { opacity: 0.5; cursor: not-allowed; }
+  .btn-cancelar { background: #f1f5f9; color: var(--text); border: 1px solid var(--border); }
+
+  .toast {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translate(-50%, 30px);
+    background: #0f172a;
+    color: #fff;
+    padding: 12px 22px;
+    border-radius: 8px;
+    opacity: 0;
+    transition: all 0.3s;
+    z-index: 2000;
+    font-size: 0.85rem;
+    font-weight: 600;
+    max-width: 90vw;
+    pointer-events: none;
+    text-align: center;
+  }
+  .toast.show { opacity: 1; transform: translate(-50%, 0); }
+  .toast.success { background: var(--success); }
+  .toast.error { background: var(--danger); }
+
+  .loading { text-align: center; padding: 40px 20px; color: var(--muted); }
+  .loading::after {
+    content: '';
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin-left: 8px;
+    border: 2px solid var(--border);
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    vertical-align: middle;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Editor Rápido</h1>
+  <span class="status" id="statusConexao">Conectado</span>
+</header>
+
+<div class="busca">
+  <input type="search" id="inputBusca" placeholder="Buscar por endereço ou código (#895632145)" autofocus>
+</div>
+
+<div class="contador" id="contador">Carregando...</div>
+<div class="lista" id="lista"></div>
+<div class="empty" id="empty" style="display:none;">Nenhum imóvel encontrado.</div>
+
+<!-- Painel de edição (tela cheia) -->
+<div class="editor" id="editor">
+  <div class="editor-head">
+    <h2 id="editorTitulo">Editar imóvel</h2>
+    <button onclick="fecharEditor()">Fechar</button>
+  </div>
+  <div class="editor-body">
+    <input type="hidden" id="editingId">
+
+    <div class="field">
+      <label>Link do anúncio</label>
+      <input type="url" id="eLink">
+    </div>
+
+    <div class="field-row-3">
+      <div class="field"><label>Rua</label><input type="text" id="eRua"></div>
+      <div class="field"><label>Número</label><input type="text" id="eNumero"></div>
+      <div class="field"><label>Bairro</label><input type="text" id="eBairro"></div>
+    </div>
+
+    <div class="field-row">
+      <div class="field"><label>Apto</label><input type="text" id="eApto" maxlength="10"></div>
+      <div class="field"><label>Bloco</label><input type="text" id="eBloco" maxlength="10"></div>
+    </div>
+
+    <div class="field-row">
+      <div class="field"><label>Preço</label><input type="text" id="ePreco" inputmode="numeric"></div>
+      <div class="field"><label>Condomínio</label><input type="text" id="eCondominio" inputmode="numeric"></div>
+    </div>
+
+    <div class="field-row">
+      <div class="field"><label>IPTU</label><input type="text" id="eIPTU" inputmode="numeric"></div>
+      <div class="field"><label>Suítes</label>
+        <select id="eSuites">
+          <option value="">—</option>
+          <option value="0">0</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5+">5+</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Vaga</label>
+      <select id="eVaga">
+        <option value="">—</option>
+        <option value="Livre 100%">Livre 100%</option>
+        <option value="Parcial (Linha)">Parcial (Linha)</option>
+        <option value="Presa (depende 3º)">Presa (depende 3º)</option>
+        <option value="Livre + Parcial (linha)">Livre + Parcial (linha)</option>
+        <option value="Livre + Presa">Livre + Presa</option>
+        <option value="Estacionamento">Estacionamento</option>
+        <option value="Não Sei">Não Sei</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Elevador</label>
+      <select id="eElevador">
+        <option value="">—</option>
+        <option value="Sim">Sim</option>
+        <option value="Não">Não</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Tipo de imóvel</label>
+      <select id="eTipo">
+        <option value="">—</option>
+        <option value="Apartamento Padrão">Apartamento Padrão</option>
+        <option value="Cobertura">Cobertura</option>
+        <option value="Área Privativa">Área Privativa</option>
+        <option value="Casa">Casa</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Descrição</label>
+      <textarea id="eDescricao"></textarea>
+    </div>
+
+    <div class="field">
+      <label>Chave (onde pegar)</label>
+      <textarea id="eChave" placeholder="Ex: Portaria, com síndico João, cofre 123..."></textarea>
+    </div>
+
+    <div class="field">
+      <label>Observação interna</label>
+      <textarea id="eObservacao" placeholder="Observações do cliente"></textarea>
+    </div>
+  </div>
+  <div class="btns">
+    <button class="btn-cancelar" onclick="fecharEditor()">Cancelar</button>
+    <button class="btn-salvar" id="btnSalvar" onclick="salvarEdicao()">Salvar</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const API_URL = 'https://script.google.com/macros/s/AKfycbzuCjg_5ZJDMWWKmjYp1ThW34iWS0YouviWFdiMGx8W3yApv0F1fdUcjeZdjm0s6Mg/exec';
+const SENHA_ADMIN = new URLSearchParams(window.location.search).get('senha') || '';
+const TIMEOUT = 30000;
+
+const state = { imoveis: [], carregado: false, _salvar: 0 };
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+
+function normalizaTexto(s){ return String(s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim(); }
+function normalizaTel(t){ return String(t || '').replace(/\D/g, ''); }
+function extrairCodigoDoLink(url){ if(!url) return ''; const m = String(url).match(/(\d{6,})/); return m ? m[1] : ''; }
+function extrairTipoImovel(desc){
+  if(!desc) return '';
+  const l = String(desc).split(/\r?\n/).map(x => x.trim()).filter(Boolean)[0] || '';
+  const matches = l.match(/\*+([^*\n]+)\*+/g) || [];
+  for(const m of matches){
+    const t = m.replace(/\*/g, '').trim().toLowerCase();
+    if(t.includes('cobertura')) return 'Cobertura';
+    if(t.includes('area privativa')) return 'Área Privativa';
+    if(t.includes('casa')) return 'Casa';
+    if(t.includes('padrao') || t.includes('apartamento')) return 'Apartamento Padrão';
+  }
+  return '';
+}
+function descricaoSemTipo(desc){
+  if(!desc) return '';
+  const linhas = String(desc).split(/\r?\n/);
+  if(linhas.length) linhas[0] = linhas[0].replace(/\*+[^*\n]+\*+/g, '').trim();
+  return linhas.join('\n').replace(/^\s+/, '');
+}
+function extrairAptoBlocoChave(chave){
+  if(!chave) return { apto: '', bloco: '', resto: '' };
+  const linhas = String(chave).split(/\r?\n/).map(x => x.trim()).filter(Boolean);
+  if(!linhas.length) return { apto: '', bloco: '', resto: '' };
+  let apto = '', bloco = '', idx = 0;
+  const mA = linhas[0].match(/^(?:apto|ap|apartamento|unidade|sala|loja|conjunto|cj|casa)?\s*[°º.:#]?\s*(\d{1,8}[A-Za-z]?)\s*$/i);
+  if(mA && mA[1]){ apto = mA[1].toUpperCase(); idx = 1; }
+  if(idx < linhas.length){
+    const mB = linhas[idx].match(/^(?:bl(?:oco)?|torre|ed(?:if[ií]cio)?|pr[ée]dio)\.?\s*[:#-]?\s*([A-Za-z0-9]{1,10})\s*$/i);
+    if(mB && mB[1]){ bloco = mB[1].toUpperCase(); idx++; }
+  }
+  return { apto, bloco, resto: linhas.slice(idx).join('\n') };
+}
+function montarChaveTexto(apto, bloco, complemento){
+  const l = [];
+  if(apto) l.push(String(apto).trim());
+  if(bloco) l.push('Bloco ' + String(bloco).replace(/^bl(?:oco)?\.?\s*/i, '').replace(/^torre\s*/i, '').trim());
+  if(complemento) l.push(String(complemento).trim());
+  return l.join('\n');
+}
+function montarDescricaoComTipo(descSemTipo, tipo){
+  const base = String(descSemTipo || '').trim();
+  const linhas = base ? base.split(/\r?\n/) : [];
+  const primeira = (linhas[0] || '').trim();
+  const resto = linhas.slice(1);
+  let out = `*${tipo}*`;
+  if(primeira) out += ' ' + primeira;
+  return [out, ...resto].filter(Boolean).join('\n');
+}
+
+function toast(msg, tipo=''){
+  const t = $('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + tipo;
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.remove('show'), 3000);
+}
+function setStatus(txt){ $('statusConexao').textContent = txt; }
+
+async function apiOnce(action, params, timeoutMs){
+  const qs = new URLSearchParams({ action, ...params, _t: Date.now() }).toString();
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), timeoutMs);
+  try {
+    const r = await fetch(API_URL + '?' + qs, { method: 'GET', mode: 'cors', signal: ctrl.signal, redirect: 'follow' });
+    clearTimeout(timer);
+    if(!r.ok) throw new Error('HTTP ' + r.status);
+    return await r.json();
+  } catch(e){ clearTimeout(timer); throw e; }
+}
+async function api(action, params = {}, timeoutMs = TIMEOUT, retries = 1){
+  let last;
+  for(let i = 0; i <= retries; i++){
+    try { return await apiOnce(action, params, timeoutMs); }
+    catch(e){ last = e; if(i < retries) await new Promise(r => setTimeout(r, 600)); }
+  }
+  return { ok: false, error: 'Falha: ' + last.message };
+}
+function marcarSalvando(inicio){
+  if(inicio) state._salvar++;
+  else state._salvar = Math.max(0, state._salvar - 1);
+  const btn = $('btnSalvar');
+  if(btn){
+    btn.disabled = state._salvar > 0;
+    btn.textContent = state._salvar > 0 ? 'Salvando...' : 'Salvar';
+  }
+}
+
+async function carregarTudo(){
+  if(!SENHA_ADMIN){
+    $('contador').textContent = 'Senha não informada na URL (?senha=...)';
+    return;
+  }
+  setStatus('Carregando...');
+  const res = await api('listarImoveisGeral', { senha: SENHA_ADMIN });
+  if(!res.ok){
+    $('contador').textContent = 'Erro ao carregar: ' + (res.error || '');
+    setStatus('Erro');
+    return;
+  }
+  state.imoveis = res.data || [];
+  state.carregado = true;
+  setStatus('Conectado');
+  renderizarLista();
+}
+
+function renderizarLista(){
+  const busca = normalizaTexto($('inputBusca').value);
+  const buscaNum = normalizaTel($('inputBusca').value);
+  let lista = state.imoveis.slice();
+
+  if(busca || buscaNum){
+    lista = lista.filter(im => {
+      if((im.titulo || '').toLowerCase().includes(busca)) return true;
+      if((im.rua || '').toLowerCase().includes(busca)) return true;
+      if((im.bairro || '').toLowerCase().includes(busca)) return true;
+      if((im.numero || '').toLowerCase().includes(busca)) return true;
+      if((im.codigo || '').toLowerCase().includes(busca)) return true;
+      if(buscaNum && String(im.codigo || '').includes(buscaNum)) return true;
+      return false;
+    });
+  }
+
+  const total = lista.length;
+  $('contador').textContent = total === 0 ? 'Nenhum imóvel' : total + ' imóvel' + (total === 1 ? '' : 's');
+
+  if(total === 0){
+    $('lista').innerHTML = '';
+    $('empty').style.display = 'block';
+    return;
+  }
+  $('empty').style.display = 'none';
+
+  $('lista').innerHTML = lista.slice(0, 200).map(im => {
+    const vendido = String(im.vendido || '').toLowerCase() === 'sim';
+    const cod = String(im.codigo || '').trim();
+    const tit = esc(im.titulo || 'Sem endereço');
+    return `
+      <div class="item ${vendido ? 'item-vendido' : ''}" onclick="abrirEditor('${esc(im.id)}')">
+        <div class="item-info">
+          <div class="item-titulo">${tit}</div>
+          <div class="item-meta">${cod ? '#' + esc(cod) : 'sem código'}${vendido ? ' · VENDIDO' : ''}</div>
+        </div>
+        <button class="item-btn">Editar</button>
+      </div>
+    `;
+  }).join('');
+}
+
+function abrirEditor(id){
+  const im = state.imoveis.find(x => String(x.id) === String(id));
+  if(!im){ toast('Imóvel não encontrado', 'error'); return; }
+  $('editorTitulo').textContent = (im.titulo || 'Imóvel') + (im.codigo ? ' · #' + im.codigo : '');
+  $('editingId').value = im.id;
+  $('eLink').value = im.link || '';
+  $('eRua').value = im.rua || '';
+  $('eNumero').value = im.numero || '';
+  $('eBairro').value = im.bairro || '';
+  const info = extrairAptoBlocoChave(im.chaveTexto || '');
+  $('eApto').value = info.apto || '';
+  $('eBloco').value = info.bloco || '';
+  $('ePreco').value = im.preco || '';
+  $('eCondominio').value = im.condominio || '';
+  $('eIPTU').value = im.iptu || '';
+  $('eSuites').value = String(im.suites || '').trim();
+  $('eVaga').value = String(im.vaga || '').trim();
+  $('eElevador').value = String(im.elevador || '').trim();
+  const tipo = extrairTipoImovel(im.descricao || '');
+  $('eTipo').value = tipo || '';
+  $('eDescricao').value = descricaoSemTipo(im.descricao || '');
+  $('eChave').value = info.resto || '';
+  $('eObservacao').value = im.observacao || '';
+  $('editor').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+
+function fecharEditor(){
+  $('editor').classList.remove('show');
+  document.body.style.overflow = '';
+}
+
+async function salvarEdicao(){
+  const id = $('editingId').value;
+  if(!id){ toast('Imóvel não identificado', 'error'); return; }
+  const im = state.imoveis.find(x => String(x.id) === String(id));
+  if(!im){ toast('Imóvel não encontrado', 'error'); return; }
+
+  const tipo = $('eTipo').value;
+  if(!tipo){ toast('Selecione o tipo de imóvel', 'error'); return; }
+
+  const apto = $('eApto').value.trim();
+  const bloco = $('eBloco').value.trim();
+  const chaveComplemento = $('eChave').value.trim();
+  const chaveFinal = montarChaveTexto(tipo === 'Casa' ? '' : apto, bloco, chaveComplemento);
+
+  const descricaoLimpa = descricaoSemTipo($('eDescricao').value);
+  const descricaoFinal = montarDescricaoComTipo(descricaoLimpa, tipo);
+
+  const dados = {
+    senha: SENHA_ADMIN,
+    id: id,
+    rua: $('eRua').value.trim(),
+    numero: $('eNumero').value.trim(),
+    bairro: $('eBairro').value.trim(),
+    preco: $('ePreco').value.trim(),
+    condominio: $('eCondominio').value.trim(),
+    iptu: $('eIPTU').value.trim(),
+    link: $('eLink').value.trim(),
+    descricao: descricaoFinal,
+    chaveTexto: chaveFinal,
+    vaga: $('eVaga').value.trim(),
+    elevador: $('eElevador').value.trim(),
+    suites: $('eSuites').value.trim(),
+    observacao: $('eObservacao').value.trim()
+  };
+
+  marcarSalvando(true);
+  const res = await api('salvarImovel', dados);
+  marcarSalvando(false);
+
+  if(!res.ok){ toast(res.error || 'Erro ao salvar', 'error'); return; }
+
+  // Propaga edição em massa (todos os imóveis com o mesmo código)
+  const codigo = String(im.codigo || '').trim();
+  if(codigo){
+    marcarSalvando(true);
+    await api('atualizarImovelPorCodigo', {
+      senha: SENHA_ADMIN, codigo,
+      rua: dados.rua, numero: dados.numero, bairro: dados.bairro,
+      preco: dados.preco, condominio: dados.condominio, iptu: dados.iptu,
+      descricao: dados.descricao, link: dados.link, chaveTexto: dados.chaveTexto,
+      vaga: dados.vaga, elevador: dados.elevador, suites: dados.suites
+    });
+    marcarSalvando(false);
+  }
+
+  // Atualiza o cache local e re-renderiza
+  const idx = state.imoveis.findIndex(x => String(x.id) === String(id));
+  if(idx >= 0){
+    state.imoveis[idx] = { ...state.imoveis[idx], ...dados, id };
+  }
+  toast('Imóvel atualizado', 'success');
+  fecharEditor();
+  renderizarLista();
+}
+
+// Init
+document.addEventListener('DOMContentLoaded', () => {
+  $('inputBusca').addEventListener('input', renderizarLista);
+  carregarTudo();
+});
+</script>
+</body>
+</html>
