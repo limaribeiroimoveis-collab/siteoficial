@@ -2959,41 +2959,72 @@
     </div>
   </div>
 
-  <!-- ===== NOVO: Painel Cutucada ===== -->
-  <div class="panel hidden" id="panelCutucada">
-    <div class="panel-head">
-      <h2>
-        <svg class="ico ico-lg" viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
-        Cutucada — Clientes sem interação
-      </h2>
-      <div style="display:flex; gap:8px; flex-wrap:wrap;">
-        <button class="btn btn-ghost btn-sm" onclick="recarregarPainel('cutucada')">
-          <svg class="ico ico-sm" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
-          Atualizar
-        </button>
-      </div>
+  <!-- ===== Painel Cutucada — Hugo ===== -->
+<div class="panel hidden" id="panelCutucadaHugo">
+  <div class="panel-head">
+    <h2>
+      <svg class="ico ico-lg" viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+      Cutucada Hugo — Clientes sem interação
+    </h2>
+    <div style="display:flex; gap:8px; flex-wrap:wrap;">
+      <button class="btn btn-ghost btn-sm" onclick="recarregarPainel('cutucadaHugo')">
+        <svg class="ico ico-sm" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+        Atualizar
+      </button>
     </div>
-    <div class="panel-body">
-      <div style="background:#fef3c7; border-left:3px solid #f59e0b; padding:10px 14px; border-radius:var(--radius-sm); font-size:.78rem; color:#78350f; margin-bottom:14px; line-height:1.5;">
-        ⚠️ <strong>Clientes ativos</strong> sem cutucada há mais de <strong>3 dias</strong> (ou que <strong>nunca</strong> foram cutucados) aparecem no topo. Clique no cliente para interagir.
-      </div>
+  </div>
+  <div class="panel-body">
+    <div style="background:#fef3c7; border-left:3px solid #f59e0b; padding:10px 14px; border-radius:var(--radius-sm); font-size:.78rem; color:#78350f; margin-bottom:14px; line-height:1.5;">
+      ⚠️ <strong>Clientes da carteira do Hugo</strong> sem cutucada há mais de <strong>3 dias</strong> (ou que <strong>nunca</strong> foram cutucados). Os mais atrasados aparecem no topo.
+    </div>
+    <div class="filtros-wrap" id="filtrosCutucadaHugo"></div>
+    <div class="busca-cliente-wrap">
+      <input type="search" id="buscaCutucadaHugo" placeholder="Buscar nome, telefone..." oninput="onBuscaCutucadaChanged()">
+      <select id="ordenacaoCutucadaHugo" onchange="renderizarCutucadas()">
+        <option value="mais-atrasado">Mais tempo sem cutucada</option>
+        <option value="menos-atrasado">Menos tempo sem cutucada</option>
+        <option value="alfabetica">Nome (A-Z)</option>
+      </select>
+    </div>
+    <div class="clientes-lista" id="cutucadaListaHugo"></div>
+    <div class="empty-state hidden" id="cutucadaEmptyHugo">
+      <h3>Todos os clientes do Hugo em dia 🎉</h3>
+      <p>Nenhum cliente ativo está sem cutucada há mais de 3 dias.</p>
+    </div>
+  </div>
+</div>
 
-      <div class="filtros-wrap" id="filtrosCutucada"></div>
-
-      <div class="busca-cliente-wrap">
-        <input type="search" id="buscaCutucada" placeholder="Buscar nome, telefone..." oninput="onBuscaCutucadaChanged()">
-        <select id="ordenacaoCutucada" onchange="renderizarCutucadas()">
-          <option value="mais-atrasado">Mais tempo sem cutucada</option>
-          <option value="menos-atrasado">Menos tempo sem cutucada</option>
-          <option value="alfabetica">Nome (A-Z)</option>
-        </select>
-      </div>
-
-      <div class="clientes-lista" id="cutucadaLista"></div>
-      <div class="empty-state hidden" id="cutucadaEmpty">
-        <h3>Todos os clientes ativos em dia 🎉</h3>
-        <p>Nenhum cliente ativo está sem cutucada há mais de 3 dias.</p>
-      </div>
+<!-- ===== Painel Cutucada — Carol ===== -->
+<div class="panel hidden" id="panelCutucadaCarol">
+  <div class="panel-head">
+    <h2>
+      <svg class="ico ico-lg" viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+      Cutucada Carol — Clientes sem interação
+    </h2>
+    <div style="display:flex; gap:8px; flex-wrap:wrap;">
+      <button class="btn btn-ghost btn-sm" onclick="recarregarPainel('cutucadaCarol')">
+        <svg class="ico ico-sm" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+        Atualizar
+      </button>
+    </div>
+  </div>
+  <div class="panel-body">
+    <div style="background:#fef3c7; border-left:3px solid #f59e0b; padding:10px 14px; border-radius:var(--radius-sm); font-size:.78rem; color:#78350f; margin-bottom:14px; line-height:1.5;">
+      ⚠️ <strong>Clientes da carteira da Carol</strong> sem cutucada há mais de <strong>3 dias</strong> (ou que <strong>nunca</strong> foram cutucados). Os mais atrasados aparecem no topo.
+    </div>
+    <div class="filtros-wrap" id="filtrosCutucadaCarol"></div>
+    <div class="busca-cliente-wrap">
+      <input type="search" id="buscaCutucadaCarol" placeholder="Buscar nome, telefone..." oninput="onBuscaCutucadaChanged()">
+      <select id="ordenacaoCutucadaCarol" onchange="renderizarCutucadas()">
+        <option value="mais-atrasado">Mais tempo sem cutucada</option>
+        <option value="menos-atrasado">Menos tempo sem cutucada</option>
+        <option value="alfabetica">Nome (A-Z)</option>
+      </select>
+    </div>
+    <div class="clientes-lista" id="cutucadaListaCarol"></div>
+    <div class="empty-state hidden" id="cutucadaEmptyCarol">
+      <h3>Todos os clientes da Carol em dia 🎉</h3>
+      <p>Nenhum cliente ativo está sem cutucada há mais de 3 dias.</p>
     </div>
   </div>
 </div>
@@ -3565,9 +3596,9 @@
       Cutucadas — <span id="cutucadasNome" style="color:var(--text-soft);font-weight:600;"></span>
     </h2>
     <p class="text-muted" style="margin-bottom:14px; font-size:.78rem;" id="cutucadasSub">—</p>
-    <div class="cutucada-lista" id="cutucadaLista">
-      <div class="loading-inline"><span class="loader loader-lg"></span><p>Carregando cutucadas...</p></div>
-    </div>
+    <div class="cutucada-lista" id="cutucadaListaModal">
+  <div class="loading-inline"><span class="loader loader-lg"></span><p>Carregando cutucadas...</p></div>
+</div>
     <div class="cutucada-nova-wrap">
       <label style="margin-bottom:0;">Nova cutucada</label>
       <textarea id="cutucadaNovaTexto" placeholder="Escreva aqui a cutucada para este cliente..." maxlength="500"></textarea>
@@ -5783,11 +5814,11 @@ function onBuscaCutucadaChanged(){
 function renderizarCutucadas(){
   ['Hugo','Carol'].forEach(sufixo => {
     const dono = sufixo.toLowerCase();
-    const listaId  = 'cutucadaLista' + sufixo;
-    const emptyId  = 'cutucadaEmpty' + sufixo;
+    const listaId   = 'cutucadaLista' + sufixo;
+    const emptyId   = 'cutucadaEmpty' + sufixo;
     const filtrosId = 'filtrosCutucada' + sufixo;
-    const buscaId  = 'buscaCutucada' + sufixo;
-    const ordemId  = 'ordenacaoCutucada' + sufixo;
+    const buscaId   = 'buscaCutucada' + sufixo;
+    const ordemId   = 'ordenacaoCutucada' + sufixo;
 
     const lista = $(listaId);
     const empty = $(emptyId);
@@ -5805,17 +5836,20 @@ function renderizarCutucadas(){
     const busca = ($(buscaId) && $(buscaId).value || '').toLowerCase().trim();
     const ordem = ($(ordemId) && $(ordemId).value) || 'mais-atrasado';
 
+    // ✅ Começa pegando TODOS os clientes ativos que pertencem ao dono
     let arr = (state.clientes || [])
       .filter(c => clienteAtivoParaCutucada_(c))
       .filter(c => donoCutucada_(c) === dono);
 
-    // Filtros de corretor/temp (reaproveita o set global filtrando só os do dono)
+    // ✅ Filtro por corretor específico (chips)
     if(state.filtrosCutucada.corretores.size > 0){
       arr = arr.filter(c => state.filtrosCutucada.corretores.has(chaveCorretorExata_(c.corretor)));
     }
+    // ✅ Filtro por temperatura
     if(state.filtrosCutucada.temperaturas.size > 0){
       arr = arr.filter(c => state.filtrosCutucada.temperaturas.has(c.temperatura || 'frio'));
     }
+    // ✅ Filtro por busca
     if(busca){
       const b = busca;
       const bTel = normalizaTel(busca);
@@ -5826,10 +5860,12 @@ function renderizarCutucadas(){
       });
     }
 
+    // ✅ ORDENAÇÃO — o ponto que faltava: mais tempo sem cutucada primeiro
     const diasMap = {};
     arr.forEach(c => {
       const d = calcularDiasSemCutucada(c);
-      diasMap[normalizaTel(c.telefone)] = (d === null) ? 99999 : d;
+      // null = nunca cutucado → deve ser o PRIMEIRO (mais crítico)
+      diasMap[normalizaTel(c.telefone)] = (d === null) ? Number.MAX_SAFE_INTEGER : d;
     });
     if(ordem === 'mais-atrasado'){
       arr.sort((a,b) => diasMap[normalizaTel(b.telefone)] - diasMap[normalizaTel(a.telefone)]);
@@ -5846,6 +5882,7 @@ function renderizarCutucadas(){
     }
     if(empty) empty.classList.add('hidden');
 
+    // ✅ Renderiza cada cliente, adicionando os selos de "dias sem cutucada"
     lista.innerHTML = arr.map(c => {
       const baseHTML = clienteRowHTML(c);
       const seloDias = cutucadaDiasHTML(c);
@@ -5858,6 +5895,7 @@ function renderizarCutucadas(){
       );
     }).join('');
 
+    // Carrega preferências (mesma lógica do painel de clientes)
     arr.forEach(c => {
       const tel = normalizaTel(c.telefone);
       if(tel && !state._prefsCachePorTel[tel]) carregarPrefsCliente(tel, false);
@@ -6154,20 +6192,20 @@ async function abrirCutucadas(telefone){
   $('cutucadasNome').textContent = nomeCompletoCliente_(nome, tel);
   $('cutucadasSub').textContent = fmtTel(tel);
   $('cutucadaNovaTexto').value = '';
-  $('cutucadaLista').innerHTML = '<div class="loading-inline"><span class="loader loader-lg"></span><p>Carregando cutucadas...</p></div>';
+  $('cutucadaListaModal').innerHTML = '<div class="loading-inline"><span class="loader loader-lg"></span><p>Carregando cutucadas...</p></div>';
   $('cutucadasBackdrop').classList.add('show');
   marcarSalvando(true);
   const res = await api('listarCutucadas', { senha: state.adminSenha, telefone: tel });
   marcarSalvando(false);
   if(!res.ok){
-    $('cutucadaLista').innerHTML = '<div class="empty-state"><p>Erro ao carregar cutucadas</p></div>';
-    return;
-  }
+  $('cutucadaListaModal').innerHTML = '<div class="empty-state"><p>Erro ao carregar cutucadas</p></div>';
+  return;
+}
   renderizarListaCutucadas_(res.data || []);
 }
 function renderizarListaCutucadas_(lista){
   window._cutucadasAtuais = lista || [];
-  const cont = $('cutucadaLista');
+  const cont = $('cutucadaListaModal');
   if(!lista || lista.length === 0){
     cont.innerHTML = '<div class="empty-state" style="padding:30px 20px;"><p>Nenhuma cutucada registrada ainda.</p></div>';
     return;
@@ -6246,6 +6284,9 @@ function fecharCutucadas(){
   $('cutucadasBackdrop').classList.remove('show');
   window._cutucadaTelAtual = null;
   window._cutucadasAtuais = [];
+  // Pode adicionar esta linha para limpar o modal ao fechar:
+  const cont = $('cutucadaListaModal');
+  if(cont) cont.innerHTML = ''; 
 }
 async function salvarNovaCutucada(){
   const tel = window._cutucadaTelAtual;
