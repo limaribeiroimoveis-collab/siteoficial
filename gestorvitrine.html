@@ -3418,20 +3418,63 @@
   </div>
 </div>
 
-<!-- Modal Finalizar -->
+<!-- Modal Finalizar — Registro de Visita -->
 <div class="modal-backdrop" id="finalizarBackdrop">
-  <div class="modal" style="max-width:420px;">
+  <div class="modal" style="max-width:560px;">
     <button class="modal-close" onclick="fecharModalFinalizar()"><svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-    <h2><svg class="ico" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Finalizar visita</h2>
-    <p class="text-muted" style="margin-bottom:18px; font-size:.82rem;" id="finalizarModalSub">—</p>
+    <h2><svg class="ico" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Registro de Visita</h2>
+    <p class="text-muted" style="margin-bottom:16px; font-size:.82rem;" id="finalizarModalSub">—</p>
+
+    <div id="finalizarLinkBox" style="background:var(--bg); border:1px solid var(--border); border-radius:var(--radius); padding:16px; margin-bottom:18px;">
+      <div style="font-size:.66rem; font-weight:800; color:var(--muted); text-transform:uppercase; letter-spacing:.5px; margin-bottom:8px; display:flex; align-items:center; gap:6px;">
+        <svg class="ico ico-sm" viewBox="0 0 24 24" style="color:var(--purple);"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+        Link das condições de compra
+      </div>
+      <div id="finalizarLinkTexto" style="font-family:var(--mono); font-size:.74rem; color:var(--text); background:#fff; padding:10px 12px; border-radius:var(--radius-sm); border:1px dashed var(--border-strong); word-break:break-all; line-height:1.5; min-height:38px; display:flex; align-items:center;">
+        Carregando...
+      </div>
+      <div style="display:flex; gap:6px; margin-top:10px; flex-wrap:wrap;">
+        <button class="btn btn-ghost btn-sm" id="btnCopiarLinkCondicao" onclick="copiarLinkCondicaoFinalizar()" style="flex:1; min-width:120px;">
+          <svg class="ico ico-sm" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copiar link
+        </button>
+        <button class="btn btn-success btn-sm" id="btnEnviarLinkWhatsApp" onclick="enviarLinkCondicaoWhatsApp()" style="flex:1; min-width:120px;">
+          <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+          Enviar no WhatsApp
+        </button>
+      </div>
+    </div>
+
+    <div style="background:#fef3c7; border-left:3px solid #f59e0b; padding:10px 14px; border-radius:var(--radius-sm); font-size:.74rem; color:#78350f; margin-bottom:18px; line-height:1.5;">
+      ⚠️ A visita só será finalizada se você clicar em <strong>"Concluir e finalizar"</strong>. Se fechar este modal no X, a visita <strong>continua na agenda</strong>.
+    </div>
+
+    <div style="display:flex; gap:8px;">
+      <button class="btn btn-ghost" style="flex:1;" onclick="fecharModalFinalizar()">
+        Fechar sem finalizar
+      </button>
+      <button class="btn btn-success" style="flex:1;" onclick="finalizarConcluirEtapa1()">
+        <svg class="ico ico-sm" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+        Concluir e finalizar
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Finalizar — Pergunta: visita aconteceu? (etapa 2) -->
+<div class="modal-backdrop" id="finalizarEtapa2Backdrop">
+  <div class="modal" style="max-width:420px;">
+    <button class="modal-close" onclick="fecharFinalizarEtapa2()"><svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <h2><svg class="ico" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> A visita aconteceu?</h2>
+    <p class="text-muted" style="margin-bottom:18px; font-size:.82rem;" id="finalizarEtapa2Sub">—</p>
     <div style="display:flex; flex-direction:column; gap:10px;">
       <button class="btn btn-success" style="justify-content:flex-start; padding:14px 18px;" onclick="finalizarRegistrar()">
         <svg class="ico ico-lg" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-        <span style="font-weight:700;">Registrar visita</span><span style="font-size:.7rem; color:rgba(255,255,255,.8); margin-left:auto;">Visita aconteceu</span>
+        <span style="font-weight:700;">Sim, registrar visita</span><span style="font-size:.7rem; color:rgba(255,255,255,.8); margin-left:auto;">Visita aconteceu</span>
       </button>
       <button class="btn btn-danger" style="justify-content:flex-start; padding:14px 18px;" onclick="finalizarCancelar()">
         <svg class="ico ico-lg" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
-        <span style="font-weight:700;">Cancelar visita</span><span style="font-size:.7rem; color:rgba(255,255,255,.8); margin-left:auto;">Não vai acontecer</span>
+        <span style="font-weight:700;">Não, cancelar visita</span><span style="font-size:.7rem; color:rgba(255,255,255,.8); margin-left:auto;">Não vai acontecer</span>
       </button>
     </div>
   </div>
@@ -7133,19 +7176,147 @@ function zapConfirmarVisita(){
   window.open(`https://wa.me/${telZap}?text=${encodeURIComponent(msg)}`, '_blank');
   fecharModalWhatsAppAgenda();
 }
+/* =====================================================
+   FINALIZAR VISITA — Novo fluxo com link de condições
+   Etapa 1: modal com link → botão "Concluir e finalizar"
+   Etapa 2: pergunta "aconteceu?" → registrar / cancelar
+===================================================== */
 function abrirModalFinalizar(id){
   const a = state.agendamentos.find(x => x.id === id);
   if(!a){ toast('Agendamento não encontrado', 'error'); return; }
   window._finalizarAgendamentoId = id;
+
   const cli = state.clientes.find(c => normalizaTel(c.telefone) === normalizaTel(a.telefone));
   const nomeCliente = (cli && cli.nome) || a.clienteNome || '';
   const nomeCompleto = nomeCompletoCliente_(nomeCliente, a.telefone);
-  $('finalizarModalSub').textContent = nomeCompleto;
+
+  $('finalizarModalSub').textContent = nomeCompleto + ' — ' + fmtTel(a.telefone);
+  $('finalizarLinkTexto').innerHTML = '<span style="color:var(--muted); font-style:italic;">Carregando...</span>';
+  $('btnCopiarLinkCondicao').disabled = true;
+  $('btnEnviarLinkWhatsApp').disabled = true;
+
   $('finalizarBackdrop').classList.add('show');
+
+  // Busca o link das condições
+  gerarLinkCondicaoParaFinalizar(a);
 }
+
+async function gerarLinkCondicaoParaFinalizar(a){
+  const codigo = String(a.codigo || '').trim();
+  if(!codigo){
+    $('finalizarLinkTexto').innerHTML = '<span style="color:var(--danger); font-style:italic;">Este imóvel não tem código cadastrado. Gere o link depois.</span>';
+    return;
+  }
+
+  marcarSalvando(true);
+  const res = await api('gerarLinkCondicao', {
+    senha: state.adminSenha,
+    telefone: normalizaTel(a.telefone),
+    codigo: codigo
+  });
+  marcarSalvando(false);
+
+  if(!res.ok){
+    $('finalizarLinkTexto').innerHTML =
+      '<span style="color:var(--danger); font-style:italic;">' +
+      esc(res.error || 'Erro ao gerar link') +
+      '</span>';
+    return;
+  }
+
+  window._linkCondicaoFinalizar = res.link;
+  window._corretorCondicaoFinalizar = res.corretor || '';
+  $('finalizarLinkTexto').textContent = res.link;
+  $('btnCopiarLinkCondicao').disabled = false;
+  $('btnEnviarLinkWhatsApp').disabled = false;
+}
+
 function fecharModalFinalizar(){
   $('finalizarBackdrop').classList.remove('show');
   window._finalizarAgendamentoId = null;
+  window._linkCondicaoFinalizar = null;
+  window._corretorCondicaoFinalizar = null;
+}
+
+function finalizarConcluirEtapa1(){
+  // Fecha a etapa 1 e abre a etapa 2
+  const id = window._finalizarAgendamentoId;
+  if(!id) return;
+
+  $('finalizarBackdrop').classList.remove('show');
+
+  const a = state.agendamentos.find(x => x.id === id);
+  if(a){
+    const cli = state.clientes.find(c => normalizaTel(c.telefone) === normalizaTel(a.telefone));
+    const nomeCliente = (cli && cli.nome) || a.clienteNome || '';
+    $('finalizarEtapa2Sub').textContent = nomeCompletoCliente_(nomeCliente, a.telefone);
+  }
+  $('finalizarEtapa2Backdrop').classList.add('show');
+}
+
+function fecharFinalizarEtapa2(){
+  $('finalizarEtapa2Backdrop').classList.remove('show');
+  // Só limpa o ID se o usuário realmente fechou sem escolher
+  // (a escolha em si é feita nas funções finalizarRegistrar/finalizarCancelar)
+}
+
+function finalizarRegistrar(){
+  const id = window._finalizarAgendamentoId;
+  $('finalizarEtapa2Backdrop').classList.remove('show');
+  if(!id) return;
+  abrirRegistrarVisitaAgenda(id);
+}
+
+function finalizarCancelar(){
+  const id = window._finalizarAgendamentoId;
+  $('finalizarEtapa2Backdrop').classList.remove('show');
+  if(!id) return;
+  cancelarAgendamentoDireto(id);
+}
+
+/* =====================================================
+   Ações do modal (copiar / enviar WhatsApp)
+===================================================== */
+function copiarLinkCondicaoFinalizar(){
+  const link = window._linkCondicaoFinalizar;
+  if(!link){ toast('Link ainda não disponível', 'error'); return; }
+  copiarTexto(link);
+  const btn = $('btnCopiarLinkCondicao');
+  if(btn){
+    const orig = btn.innerHTML;
+    btn.innerHTML = '✓ Copiado!';
+    setTimeout(() => { btn.innerHTML = orig; }, 1500);
+  }
+}
+
+function enviarLinkCondicaoWhatsApp(){
+  const link = window._linkCondicaoFinalizar;
+  if(!link){ toast('Link ainda não disponível', 'error'); return; }
+  const id = window._finalizarAgendamentoId;
+  if(!id) return;
+
+  const a = state.agendamentos.find(x => x.id === id);
+  if(!a) return;
+
+  const cli = state.clientes.find(c => normalizaTel(c.telefone) === normalizaTel(a.telefone));
+  const nomeCliente = (cli && cli.nome) || a.clienteNome || '';
+  const pNome = String(nomeCliente).trim().split(/\s+/)[0] || '';
+
+  const campos = camposEndereco_(a);
+  const endereco = [campos.rua, campos.numero].filter(Boolean).join(', ') +
+                   (campos.bairro ? ' — ' + campos.bairro : '');
+
+  const texto =
+    'Olá' + (pNome ? ', ' + pNome : '') + '.\n\n' +
+    'Estou registrando sua visita ao imóvel na ' + endereco +
+    ' (código ' + (a.codigo || '') + ').\n\n' +
+    'Abra o link abaixo e me diga como pretende adquirir esse imóvel:\n' +
+    link;
+
+  const tel = normalizaTel(a.telefone);
+  const telZap = tel.startsWith('55') ? tel : '55' + tel;
+
+  window.open('https://wa.me/' + telZap + '?text=' + encodeURIComponent(texto), '_blank');
 }
 function finalizarRegistrar(){
   const id = window._finalizarAgendamentoId;
