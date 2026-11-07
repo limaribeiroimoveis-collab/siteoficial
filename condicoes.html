@@ -2,22 +2,23 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="google" content="notranslate">
 <meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#3d2b20">
 <title>Condições para Aquisição — Lima Ribeiro Imóveis</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%233d2b20'/><text x='50' y='68' font-family='-apple-system,sans-serif' font-size='48' font-weight='800' fill='white' text-anchor='middle'>LR</text></svg>">
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
   :root {
     --primary: #3d2b20;
     --primary-hover: #2a1d15;
     --primary-soft: #f0e9e2;
     --accent: #8b7355;
-    --success: #2f6b4f;
-    --danger: #8b3a3a;
-    --warn: #8b6f3a;
-    --info: #2c5a8c;
+    --success: #16a34a;
+    --success-hover: #15803d;
+    --danger: #dc2626;
+    --warn: #ea580c;
     --bg: #f7f5f2;
     --card: #ffffff;
     --text: #0f172a;
@@ -27,10 +28,9 @@
     --border-strong: #d4c9b8;
     --radius: 10px;
     --radius-sm: 8px;
-    --radius-lg: 14px;
+    --radius-lg: 12px;
     --shadow-sm: 0 1px 3px rgba(61,43,32,.08);
-    --shadow-md: 0 4px 14px rgba(61,43,32,.10);
-    --shadow-lg: 0 12px 40px rgba(61,43,32,.14);
+    --shadow-md: 0 2px 8px rgba(61,43,32,.10);
     --font: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
   }
   html, body { min-height: 100%; }
@@ -39,178 +39,223 @@
     background: var(--bg);
     color: var(--text);
     font-size: 15px;
-    line-height: 1.55;
+    line-height: 1.5;
     -webkit-font-smoothing: antialiased;
-    padding: 24px 16px 60px;
+    padding: max(16px, env(safe-area-inset-top)) 14px max(24px, env(safe-area-inset-bottom));
   }
-  .container { max-width: 620px; margin: 0 auto; }
+  .container { max-width: 560px; margin: 0 auto; }
 
+  /* ==== HEADER COMPACTO ==== */
   .brand {
-    display: flex; align-items: center; gap: 10px;
-    margin-bottom: 24px;
-    justify-content: center;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 14px;
+    padding: 0 4px;
   }
   .brand-icon {
-    width: 44px; height: 44px; background: var(--primary);
-    border-radius: 10px; color: #fff;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1rem; font-weight: 800; letter-spacing: .5px;
+    width: 32px;
+    height: 32px;
+    background: var(--primary);
+    border-radius: 8px;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: .8rem;
+    font-weight: 800;
+    letter-spacing: .5px;
+    flex-shrink: 0;
   }
-  .brand-text { display: flex; flex-direction: column; line-height: 1.1; }
-  .brand-title { font-size: .95rem; font-weight: 700; color: var(--text); }
-  .brand-sub { font-size: .68rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1.4px; margin-top: 3px; }
-
-  .card {
-    background: var(--card);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-md);
-    border: 1px solid var(--border);
-    padding: 28px;
+  .brand-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.1;
   }
-  @media(max-width: 520px) { .card { padding: 20px; } }
-
-  h1 {
-    font-size: 1.3rem;
+  .brand-title {
+    font-size: .82rem;
     font-weight: 700;
     color: var(--text);
     letter-spacing: -.01em;
-    margin-bottom: 20px;
+  }
+  .brand-sub {
+    font-size: .6rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    margin-top: 2px;
   }
 
-  /* ============================================================
-     BLOCO DO IMÓVEL — DESTACADO
-  ============================================================ */
+  /* ==== CARD ==== */
+  .card {
+    background: var(--card);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border);
+    padding: 20px 18px;
+  }
+  @media (max-width: 480px) {
+    .card { padding: 18px 16px; }
+  }
+
+  /* ==== TÍTULO ==== */
+  h1 {
+    font-size: 1.02rem;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -.01em;
+    line-height: 1.3;
+    margin-bottom: 16px;
+  }
+  @media (max-width: 480px) {
+    h1 { font-size: .95rem; margin-bottom: 14px; }
+  }
+
+  /* ==== HERO IMÓVEL (compacto) ==== */
   .imovel-hero {
     background: linear-gradient(135deg, #3d2b20 0%, #5a3f2f 100%);
     border-radius: var(--radius);
-    padding: 20px 22px;
-    margin-bottom: 26px;
+    padding: 14px 16px;
+    margin-bottom: 18px;
     color: #fff;
-    box-shadow: 0 4px 16px rgba(61,43,32,.20);
     position: relative;
     overflow: hidden;
   }
   .imovel-hero::before {
     content: '';
     position: absolute;
-    top: -40px; right: -40px;
-    width: 140px; height: 140px;
+    top: -30px;
+    right: -30px;
+    width: 100px;
+    height: 100px;
     background: rgba(255,255,255,.05);
     border-radius: 50%;
     pointer-events: none;
   }
-  .imovel-hero-top {
+
+  .hero-top {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 12px;
-    margin-bottom: 12px;
+    gap: 8px;
+    margin-bottom: 8px;
     position: relative;
     z-index: 1;
   }
-  .imovel-hero .lbl {
-    font-size: .62rem;
+  .hero-lbl {
+    font-size: .58rem;
     font-weight: 800;
     color: rgba(255,255,255,.65);
     text-transform: uppercase;
     letter-spacing: .8px;
   }
-  .corretor-badge-hero {
+  .hero-corretor {
     display: inline-flex;
     align-items: center;
-    gap: 5px;
-    background: rgba(255,255,255,.15);
-    border: 1px solid rgba(255,255,255,.25);
-    padding: 4px 10px;
+    gap: 4px;
+    background: rgba(255,255,255,.14);
+    border: 1px solid rgba(255,255,255,.22);
+    padding: 3px 9px;
     border-radius: 999px;
-    font-size: .68rem;
+    font-size: .64rem;
     font-weight: 700;
     color: #fff;
     white-space: nowrap;
+    max-width: 55%;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
-  .corretor-badge-hero::before {
-    content: '👤';
-    font-size: .75rem;
-  }
-  .imovel-hero .endereco {
-    font-size: 1.15rem;
-    font-weight: 800;
+
+  .hero-endereco {
+    font-size: .94rem;
+    font-weight: 700;
     color: #fff;
-    line-height: 1.3;
-    margin-bottom: 14px;
+    line-height: 1.35;
+    margin-bottom: 10px;
     position: relative;
     z-index: 1;
-    letter-spacing: -.01em;
+    letter-spacing: -.005em;
+    word-break: break-word;
   }
-  .imovel-hero .valor-imovel {
+
+  .hero-valor-linha {
     display: flex;
     align-items: baseline;
     gap: 8px;
-    padding-top: 12px;
+    padding-top: 10px;
     border-top: 1px solid rgba(255,255,255,.15);
     position: relative;
     z-index: 1;
+    flex-wrap: wrap;
+    row-gap: 2px;
   }
-  .imovel-hero .valor-imovel .lbl-valor {
-    font-size: .72rem;
+  .hero-valor-lbl {
+    font-size: .6rem;
     font-weight: 700;
-    color: rgba(255,255,255,.75);
+    color: rgba(255,255,255,.7);
     text-transform: uppercase;
-    letter-spacing: .4px;
+    letter-spacing: .5px;
   }
-  .imovel-hero .valor-imovel .val {
-    font-size: 1.6rem;
+  .hero-valor {
+    font-size: 1.15rem;
     font-weight: 800;
     color: #fff;
     letter-spacing: -.02em;
     font-variant-numeric: tabular-nums;
+    line-height: 1.15;
   }
-  .imovel-hero .codigo-chip {
-    display: inline-block;
+  .hero-codigo {
+    margin-left: auto;
     background: rgba(255,255,255,.12);
     border: 1px solid rgba(255,255,255,.2);
-    color: rgba(255,255,255,.85);
+    color: rgba(255,255,255,.9);
     font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-    font-size: .72rem;
+    font-size: .64rem;
     font-weight: 700;
-    padding: 3px 9px;
-    border-radius: 5px;
-    margin-top: 8px;
+    padding: 2px 7px;
+    border-radius: 4px;
     letter-spacing: .3px;
+    white-space: nowrap;
   }
 
-  /* Campos */
-  .field { margin-bottom: 18px; }
+  /* ==== CAMPOS ==== */
+  .field {
+    margin-bottom: 14px;
+  }
   .field label {
     display: block;
-    font-size: .76rem;
+    font-size: .72rem;
     font-weight: 700;
     color: var(--text);
-    margin-bottom: 6px;
+    margin-bottom: 5px;
     letter-spacing: -.005em;
   }
   .field label .hint {
-    font-size: .7rem;
+    font-size: .64rem;
     font-weight: 500;
     color: var(--muted);
-    margin-left: 4px;
+    margin-left: 3px;
   }
-  .input-money-wrap { position: relative; }
+  .input-money-wrap {
+    position: relative;
+  }
   .input-money-wrap .prefix {
     position: absolute;
-    left: 14px;
+    left: 12px;
     top: 50%;
     transform: translateY(-50%);
     font-weight: 700;
     color: var(--text-soft);
-    font-size: .95rem;
+    font-size: .85rem;
     pointer-events: none;
   }
-  .input-money-wrap input { padding-left: 46px !important; }
+  .input-money-wrap input {
+    padding-left: 40px !important;
+  }
   input[type="text"], textarea {
     width: 100%;
-    padding: 12px 14px;
-    font-size: 1rem;
+    padding: 11px 12px;
+    font-size: .94rem;
     font-family: inherit;
     border: 1.5px solid var(--border-strong);
     border-radius: var(--radius-sm);
@@ -222,10 +267,11 @@
   }
   textarea {
     resize: vertical;
-    min-height: 80px;
+    min-height: 72px;
     font-weight: 500;
-    font-size: .92rem;
-    line-height: 1.5;
+    font-size: .88rem;
+    line-height: 1.45;
+    font-variant-numeric: normal;
   }
   input[type="text"]:focus, textarea:focus {
     outline: none;
@@ -233,41 +279,47 @@
     box-shadow: 0 0 0 3px rgba(61,43,32,.08);
   }
 
-  /* Total */
+  /* ==== TOTAL ==== */
   .total-box {
     background: linear-gradient(135deg, #f0e9e2 0%, #e8ded2 100%);
     border: 1.5px solid var(--accent);
     border-radius: var(--radius);
-    padding: 18px 20px;
-    margin: 24px 0;
+    padding: 12px 16px;
+    margin: 16px 0 14px;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+    row-gap: 2px;
   }
   .total-box .lbl {
-    font-size: .74rem;
+    font-size: .66rem;
     font-weight: 800;
     color: var(--accent);
     text-transform: uppercase;
-    letter-spacing: .6px;
-    margin-bottom: 4px;
+    letter-spacing: .5px;
   }
   .total-box .valor {
-    font-size: 1.75rem;
+    font-size: 1.25rem;
     font-weight: 800;
     color: var(--primary);
     letter-spacing: -.02em;
     font-variant-numeric: tabular-nums;
     line-height: 1.15;
+    margin-left: auto;
   }
 
-  /* Alerta > 3% */
+  /* ==== ALERTA > 3% ==== */
   .alerta-box {
     background: #fff7ed;
     border: 1px solid #fed7aa;
-    border-left: 4px solid #ea580c;
+    border-left: 3px solid var(--warn);
     border-radius: var(--radius-sm);
-    padding: 14px 16px;
-    margin-bottom: 20px;
-    font-size: .88rem;
-    line-height: 1.55;
+    padding: 10px 12px;
+    margin-bottom: 14px;
+    font-size: .8rem;
+    line-height: 1.5;
     color: #7c2d12;
     display: none;
   }
@@ -275,35 +327,40 @@
   .alerta-box strong { font-weight: 800; }
   .alerta-box .pct {
     display: inline-block;
-    background: #ea580c;
+    background: var(--warn);
     color: #fff;
-    padding: 1px 8px;
+    padding: 1px 7px;
     border-radius: 999px;
     font-weight: 800;
-    font-size: .82rem;
+    font-size: .76rem;
     margin: 0 2px;
   }
 
-  /* Botões */
+  /* ==== BOTÕES ==== */
   .btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    padding: 13px 20px;
+    gap: 6px;
+    padding: 12px 18px;
     border-radius: var(--radius-sm);
     border: 1px solid transparent;
     cursor: pointer;
     font-family: inherit;
-    font-size: .92rem;
+    font-size: .9rem;
     font-weight: 700;
     transition: all .15s;
     width: 100%;
     text-decoration: none;
+    line-height: 1.2;
+    min-height: 46px;
   }
   .btn:disabled { opacity: .5; cursor: not-allowed; }
-  .btn-primary { background: #16a34a; color: #fff; }
-  .btn-primary:hover:not(:disabled) { background: #15803d; }
+  .btn-primary {
+    background: var(--success);
+    color: #fff;
+  }
+  .btn-primary:hover:not(:disabled) { background: var(--success-hover); }
   .btn-secondary {
     background: #fff;
     color: var(--text);
@@ -314,67 +371,74 @@
   .action-row {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    margin-top: 8px;
+    gap: 8px;
+    margin-top: 6px;
   }
 
-  /* Loading / erro */
-  .loading-wrap, .erro-wrap { text-align: center; padding: 60px 20px; }
+  /* ==== LOADING / ERRO ==== */
+  .loading-wrap, .erro-wrap {
+    text-align: center;
+    padding: 50px 16px;
+  }
   .spinner {
-    width: 44px; height: 44px;
+    width: 38px;
+    height: 38px;
     border: 3px solid rgba(61,43,32,.15);
     border-top-color: var(--primary);
     border-radius: 50%;
     animation: spin .8s linear infinite;
-    margin: 0 auto 16px;
+    margin: 0 auto 14px;
   }
   @keyframes spin { to { transform: rotate(360deg); } }
-  .loading-wrap p { color: var(--text-soft); font-size: .9rem; }
+  .loading-wrap p { color: var(--text-soft); font-size: .85rem; }
 
   .erro-wrap h2 {
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: var(--text);
-    margin-bottom: 10px;
-  }
-  .erro-wrap p {
-    color: var(--text-soft);
-    font-size: .9rem;
-    line-height: 1.55;
-  }
-
-  /* Sucesso */
-  .sucesso-wrap { text-align: center; padding: 40px 20px; }
-  .sucesso-wrap .icon {
-    width: 72px; height: 72px;
-    background: #dcfce7;
-    color: #16a34a;
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    margin: 0 auto 20px;
-    font-size: 2rem;
-  }
-  .sucesso-wrap h2 {
-    font-size: 1.2rem;
+    font-size: 1rem;
     font-weight: 700;
     color: var(--text);
     margin-bottom: 8px;
   }
+  .erro-wrap p {
+    color: var(--text-soft);
+    font-size: .85rem;
+    line-height: 1.5;
+  }
+
+  /* ==== SUCESSO ==== */
+  .sucesso-wrap { text-align: center; padding: 30px 16px; }
+  .sucesso-wrap .icon {
+    width: 60px;
+    height: 60px;
+    background: #dcfce7;
+    color: var(--success);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+    font-size: 1.7rem;
+  }
+  .sucesso-wrap h2 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
   .sucesso-wrap p {
     color: var(--text-soft);
-    font-size: .92rem;
-    line-height: 1.55;
-    margin-bottom: 24px;
+    font-size: .86rem;
+    line-height: 1.5;
+    margin-bottom: 20px;
   }
 
   .hidden { display: none !important; }
-  .text-muted { color: var(--muted); }
 
   .footer {
     text-align: center;
-    margin-top: 32px;
-    font-size: .72rem;
+    margin-top: 20px;
+    font-size: .66rem;
     color: var(--muted);
+    letter-spacing: .2px;
   }
 </style>
 </head>
@@ -409,18 +473,18 @@
   <div id="formView" class="card hidden">
     <h1>Como você pretende adquirir este imóvel?</h1>
 
-    <!-- Bloco destacado do imóvel -->
+    <!-- Hero compacto do imóvel -->
     <div class="imovel-hero">
-      <div class="imovel-hero-top">
-        <span class="lbl">Imóvel visitado</span>
-        <span class="corretor-badge-hero" id="imCorretor">—</span>
+      <div class="hero-top">
+        <span class="hero-lbl">Imóvel visitado</span>
+        <span class="hero-corretor" id="imCorretor">—</span>
       </div>
-      <div class="endereco" id="imEndereco">—</div>
-      <div class="valor-imovel">
-        <span class="lbl-valor">Valor do imóvel</span>
-        <span class="val" id="imValor">—</span>
+      <div class="hero-endereco" id="imEndereco">—</div>
+      <div class="hero-valor-linha">
+        <span class="hero-valor-lbl">Valor</span>
+        <span class="hero-valor" id="imValor">—</span>
+        <span class="hero-codigo" id="imCodigo">—</span>
       </div>
-      <div class="codigo-chip">Código <strong id="imCodigo">—</strong></div>
     </div>
 
     <div class="field">
@@ -448,24 +512,21 @@
     </div>
 
     <div class="total-box">
-      <div class="lbl">Total das condições</div>
-      <div class="valor" id="valorTotal">R$ 0,00</div>
+      <span class="lbl">Total</span>
+      <span class="valor" id="valorTotal">R$ 0,00</span>
     </div>
 
     <div id="alerta2pct" class="alerta-box">
-      <strong>Observação:</strong>
-      notamos que o valor total informado está
+      <strong>Atenção:</strong> o valor total está
       <span class="pct" id="alertaPct">0%</span>
-      abaixo do valor de anúncio. Em imóveis com boa procura, condições
-      muito abaixo do valor podem reduzir a chance de aceite, caso outro
-      interessado apresente uma oferta superior.
-      <br><br>
-      Se este imóvel é sua prioridade, considere ajustar os valores.
+      abaixo do valor de anúncio. Em imóveis disputados, isso pode reduzir
+      a chance de aceite caso outro interessado ofereça mais. Se este imóvel é
+      sua prioridade, considere ajustar os valores.
     </div>
 
     <div class="field">
       <label>Observações <span class="hint">— opcional</span></label>
-      <textarea id="obsCliente" placeholder="Alguma observação que gostaria de acrescentar? (opcional)" maxlength="1000"></textarea>
+      <textarea id="obsCliente" placeholder="Algo a acrescentar? (opcional)" maxlength="1000"></textarea>
     </div>
 
     <div class="action-row" id="actionRow">
@@ -482,10 +543,10 @@
   <div id="sucessoView" class="card hidden">
     <div class="sucesso-wrap">
       <div class="icon">✓</div>
-      <h2>Pronto! Condições registradas.</h2>
+      <h2>Pronto! Condições enviadas.</h2>
       <p>
         Suas informações foram encaminhadas para o seu corretor.
-        Em breve ele entrará em contato para dar seguimento à conversa.
+        Em breve ele entrará em contato.
       </p>
       <button class="btn btn-secondary" onclick="location.reload()">
         Revisar valores
@@ -503,7 +564,7 @@
    CONFIG
 ===================================================== */
 const API_URL = 'https://script.google.com/macros/s/AKfycbzuCjg_5ZJDMWWKmjYp1ThW34iWS0YouviWFdiMGx8W3yApv0F1fdUcjeZdjm0s6Mg/exec';
-const LIMITE_ALERTA_PCT = 3; // só alerta quando estritamente > 3%
+const LIMITE_ALERTA_PCT = 3;
 
 /* =====================================================
    ESTADO
@@ -514,8 +575,7 @@ const state = {
   imovel: null,
   cliente: null,
   valorImovel: 0,
-  valorTotalAtual: 0,
-  pctAbaixo: 0
+  valorTotalAtual: 0
 };
 
 const $ = id => document.getElementById(id);
@@ -548,12 +608,40 @@ function mascaraMoeda(input) {
   const reaisFmt = reais.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
   input.value = reaisFmt + ',' + cents;
 }
-function nomeCorretorCompleto_(nomeCurto){
-  if(!nomeCurto) return '';
-  const n = String(nomeCurto).trim().toLowerCase();
-  if(n === 'hugo') return 'Hugo Ribeiro';
-  if(n === 'carolina' || n === 'carol') return 'Carolina Lima';
-  return nomeCurto;
+
+/**
+ * Resolve o nome do corretor.
+ *
+ * Regra: pega o PRIMEIRO nome (antes do "/"), normaliza (minúsculo, sem acento) e:
+ *   - começa com "hugo"  → "Hugo Ribeiro"
+ *   - começa com "carol" → "Carolina Lima" (pega tanto "Carol" quanto "Carolina")
+ *   - qualquer outro     → retorna o primeiro nome como veio, só com 1ª letra maiúscula
+ *
+ * Exemplos:
+ *   "Hugo"          → Hugo Ribeiro
+ *   "Hugo/Iasmin"   → Hugo Ribeiro
+ *   "Hugo/Carol"    → Hugo Ribeiro
+ *   "Carolina"      → Carolina Lima
+ *   "Carol"         → Carolina Lima
+ *   "Carol/Hugo"    → Carolina Lima
+ *   "Carol/Iasmin"  → Carolina Lima
+ *   "Iasmin"        → Iasmin
+ *   "Fulano"        → Fulano
+ */
+function nomeCorretor_(valorBruto) {
+  if (!valorBruto) return '';
+  const primeiro = String(valorBruto).split('/')[0].trim();
+  if (!primeiro) return '';
+
+  const normalizado = primeiro
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '');
+
+  if (normalizado.indexOf('hugo') === 0) return 'Hugo Ribeiro';
+  if (normalizado.indexOf('carol') === 0) return 'Carolina Lima';
+
+  return primeiro.charAt(0).toUpperCase() + primeiro.slice(1).toLowerCase();
 }
 
 async function api(action, params) {
@@ -611,9 +699,10 @@ async function carregarDados() {
   state.cliente = res.cliente;
   state.valorImovel = parseMoeda(res.imovel.valor);
 
-  // Corretor (prioriza o do imóvel)
-  const nomeCorretor = res.imovel.corretor || res.cliente.corretor || '';
-  $('imCorretor').textContent = nomeCorretorCompleto_(nomeCorretor) || '—';
+  // Corretor: prioriza o do imóvel, senão o do cliente
+  const nomeCorretorBruto = res.imovel.corretor || res.cliente.corretor || '';
+  const nomeFinal = nomeCorretor_(nomeCorretorBruto);
+  $('imCorretor').textContent = nomeFinal || '—';
 
   const enderecoCompleto = [
     res.imovel.rua,
@@ -621,7 +710,7 @@ async function carregarDados() {
   ].filter(Boolean).join(', ') + (res.imovel.bairro ? ' — ' + res.imovel.bairro : '');
 
   $('imEndereco').textContent = enderecoCompleto || 'Endereço não informado';
-  $('imCodigo').textContent = res.imovel.codigo || state.codigo;
+  $('imCodigo').textContent = '#' + (res.imovel.codigo || state.codigo);
   $('imValor').textContent = res.imovel.valor ? formatarMoeda(parseMoeda(res.imovel.valor)) : '—';
 
   $('loadingView').classList.add('hidden');
@@ -658,13 +747,10 @@ function atualizarTotal() {
     const diff = valorImovel - total;
     pct = (diff / valorImovel) * 100;
   }
-  state.pctAbaixo = pct;
 
-  // Regra: alerta APENAS quando > 3% (estritamente)
   const mostrarAlerta = pct > LIMITE_ALERTA_PCT;
 
   if (mostrarAlerta) {
-    // Formata com 1 decimal (ex: 3.1%) e troca ponto por vírgula
     const pctFmt = pct.toFixed(1).replace('.', ',');
     $('alertaPct').textContent = pctFmt + '%';
     alerta.classList.add('show');
@@ -683,8 +769,6 @@ function ajustarValores() {
 
 /* =====================================================
    ENVIO
-   Mensagem em texto corrido, com saudação pelo nome do corretor,
-   dados do imóvel e condições. Parece natural, escrita pelo cliente.
 ===================================================== */
 async function enviarParaWhatsApp() {
   const avista = parseMoeda($('valAvista').value);
@@ -720,7 +804,6 @@ async function enviarParaWhatsApp() {
     return;
   }
 
-  // Monta a mensagem pessoal — parece escrita pelo cliente
   const endereco = [
     res.imovel.rua,
     res.imovel.numero
