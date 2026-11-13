@@ -807,6 +807,7 @@ const STORAGE_KEY_MATCH_HASH = 'catalogo_match_hash_v2';
 const STORAGE_KEY_FILTROS = 'catalogo_geral_filtros_v1';
 const STORAGE_KEY_MAPA_CACHE = 'coordenadas_imoveis_cache';
 const STORAGE_KEY_IMOVEIS_ATIVOS = 'catalogo_ativos_cache'; // Novo cache offline
+
  const REGIOES_BH = {
   'Centro-Sul': ['Anchieta','Barro Preto','Belvedere','Boaventura','Carmo','Centro','Cidade Jardim','Comiteco','Cruzeiro','Funcionários','Floresta','Gutierrez','Horto','Lourdes','Luxemburgo','Mangabeiras','Mercado','Prado','Santa Efigênia','Santa Lúcia','Santo Agostinho','São Bento','São Lucas','São Pedro','Santo Antônio','Savassi','Serra','Sion','Vila Paris'],
   'Norte': ['Aparecida','Boa Vista','Candelária','Concórdia','Dom Joaquim','Floramar','Frei Leopoldo','Guarani','Ipê','Jardim Montanhês','Jaqueline','Lagoa','Lagoinha','Maria Goretti','Minaslândia','Piratininga','Planalto','Providência','Primeiro de Maio','São Bernardo','São Cristóvão','São Gonçalo','São João Batista','Tupi','União','Vila Clóris','Vila Nova','Vila Primeiro de Maio','Cachoeirinha','Colégio Batista','Fernão Dias','Jardim Guanabara','Jardim São José','Nova Floresta','Paquetá','Santa Inês','Santa Terezinha','Silveira','Zilah Spósito'],
@@ -1164,7 +1165,35 @@ function passarFiltrosAvancados(im){
   
   return true;
 }
-
+function temInformacaoFaltando(im){
+  if(isVendido(im)) return [];
+  const f = []; 
+  const tipo = extrairTipoImovel(im.descricao||''); 
+  const isC = tipo==='Casa';
+  
+  if(!String(im.preco||'').trim()) f.push('Preço');
+  if(!isC && !String(im.condominio||'').trim()) f.push('Condomínio');
+  if(!String(im.iptu||'').trim()) f.push('IPTU');
+  if(!String(im.rua||'').trim()) f.push('Rua');
+  if(!String(im.numero||'').trim()) f.push('Número');
+  if(!String(im.bairro||'').trim()) f.push('Bairro');
+  
+  const info = extrairAptoBlocoChave(im.chaveTexto||'');
+  if(!isC && !info.apto) f.push('Apartamento');
+  if(!String(im.chaveTexto||'').trim()) f.push('Chave');
+  
+  const vn = normalizaTexto(String(im.vaga||'').trim());
+  const vv = ['livre 100%','parcial (linha)','presa (depende 3º)','livre + parcial (linha)','livre + presa','estacionamento','nao sei'];
+  if(!vv.includes(vn)) f.push('Vaga');
+  
+  const en = normalizaTexto(String(im.elevador||'').trim());
+  if(en!=='sim' && en!=='nao') f.push('Elevador');
+  
+  if(!tipo) f.push('Tipo');
+  if(!descricaoSemTipo(im.descricao||'').trim()) f.push('Descrição');
+  
+  return f;
+}
 function aplicarFiltrosNaTela(){
   // 1. Filtra os imóveis baseados na aba (Ativos, Vendidos, etc) e filtros avançados
   state.imoveis = state.imoveisBrutos.filter(im => {
