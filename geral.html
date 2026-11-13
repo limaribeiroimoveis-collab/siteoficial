@@ -601,6 +601,20 @@
     position: relative;
     z-index: 1;
   }
+  .mapa-container {
+    display: none;
+    height: calc(100vh - 150px);
+    margin-top: 14px;
+    gap: 14px;
+  }
+  .modo-mapa-ativo #grid,
+  .modo-mapa-ativo #emptyState {
+    display: none !important;
+  }
+  .modo-mapa-ativo .mapa-container {
+    display: flex;
+  }
+ 
   .mapa-sidebar {
     width: 20%;
     min-width: 280px;
@@ -695,12 +709,23 @@
         </button>
       </div>
 
-  <div class="container">
+    <div class="container">
     <div class="grid" id="grid" data-cols="4"></div>
     <div class="empty-state hidden" id="emptyState">
       <h3>Nenhum imóvel encontrado</h3>
       <p>Ajuste os filtros ou a busca.</p>
     </div>
+    
+    <!-- NOVO: Container do Mapa -->
+    <div class="mapa-container" id="mapaContainer">
+      <div class="mapa-sidebar" id="mapaSidebar">
+        <!-- Os cards vão ser injetados aqui via JS -->
+      </div>
+      <div class="mapa-view" id="mapaView">
+        <!-- O mapa vai ser injetado aqui via JS -->
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -1877,7 +1902,7 @@ function renderizar(){
     grid.innerHTML = lista.map(cardHTML).join('');
   }
   
-  // ✅ CHAMADA DO MAPA AQUI
+   // ✅ CHAMADA DO MAPA AQUI
   const container = document.querySelector('.container');
   if (container && container.classList.contains('modo-mapa-ativo')) {
     renderizarCardsMapa(lista);
@@ -2581,19 +2606,18 @@ window.testarSuite = async function(codigo, suitesValue) {
 // ==========================================
 let mapaLeaflet = null;
 let marcadoresLayer = null;
+const dicionarioPinos = {}; // Guarda as coordenadas de cada código
 
 function iniciarMapa() {
   state._mapaIniciado = true;
   const mapDiv = $('mapaView');
   if(!mapDiv) return;
   
-  // Se o mapa já existe, só arruma o tamanho e retorna (não recria)
   if (mapaLeaflet !== null) {
-    setTimeout(() => { mapaLeaflet.invalidateSize(); }, 100);
+    setTimeout(() => { mapaLeaflet.invalidateSize(); }, 200);
     return;
   }
 
-  // Cria o mapa apenas uma vez
   mapaLeaflet = L.map('mapaView', {
     zoomControl: true,
     scrollWheelZoom: true
@@ -2606,12 +2630,16 @@ function iniciarMapa() {
   
   marcadoresLayer = L.layerGroup().addTo(mapaLeaflet);
   
+  // Corrige o problema de tamanho do Leaflet
   setTimeout(() => { mapaLeaflet.invalidateSize(); }, 400);
 }
 
 async function renderizarPinosMapa(lista) {
   if (!mapaLeaflet || !marcadoresLayer) return;
   marcadoresLayer.clearLayers();
+  
+  // Limpa o dicionário de pinos
+  for (let key in dicionarioPinos) delete dicionarioPinos[key];
   
   if (lista.length === 0) return;
   
@@ -2631,6 +2659,9 @@ async function renderizarPinosMapa(lista) {
         const lng = parseFloat(dados[0].lon);
         
         const marker = L.marker([lat, lng]);
+        
+        // Salva a referência no dicionário
+        dicionarioPinos[im.codigo] = marker;
         
         marker.bindPopup(`
           <div style="font-family:var(--font); width:160px;">
@@ -2665,22 +2696,19 @@ async function renderizarPinosMapa(lista) {
 }
 
 function centralizarMapa(codigo, abrirPopup = false) {
-  if (!mapaLeaflet || !marcadoresLayer) return;
+  if (!mapaLeaflet) return;
   
-  let achou = false;
-  marcadoresLayer.eachLayer(function(marker) {
-    if (achou) return;
-    const popupContent = marker.getPopup().getContent();
-    if (popupContent.includes(codigo)) {
-      achou = true;
-      mapaLeaflet.setView(marker.getLatLng(), 16, { animate: true });
-      if (abrirPopup) marker.openPopup();
-      
-      document.querySelectorAll('.card-compacto').forEach(c => c.style.borderColor = 'var(--border)');
-      const card = document.querySelector(`.card-compacto[data-codigo="${codigo}"]`);
-      if (card) card.style.borderColor = 'var(--purple)';
-    }
-  });
+  const marker = dicionarioPinos[codigo];
+  
+  if (marker) {
+    mapaLeaflet.setView(marker.getLatLng(), 16, { animate: true });
+    if (abrirPopup) marker.openPopup();
+  }
+  
+  // Destaca visualmente o card na esquerda
+  document.querySelectorAll('.card-compacto').forEach(c => c.style.borderColor = 'var(--border)');
+  const card = document.querySelector(`.card-compacto[data-codigo="${codigo}"]`);
+  if (card) card.style.borderColor = 'var(--purple)';
 }
 window.addEventListener('resize', () => aplicarColunas(carregarColunas()));
 document.addEventListener('DOMContentLoaded', () => {
