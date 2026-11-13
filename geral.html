@@ -1059,10 +1059,17 @@ function confirmarAcao(opts){
 })();
 
 function iniciarComFiltros(){
-  $('welcomeOverlay').style.display = 'none';
-  $('conteudoView').classList.remove('hidden');
+  console.log('[WELCOME] Iniciando com filtros...');
   
-  // Carrega clientes e corretores (leve) mas NÃO os imóveis ainda
+  // 1. Fecha o overlay PRIMEIRO (garante que mesmo com erro, ele some)
+  const overlay = $('welcomeOverlay');
+  if (overlay) overlay.style.display = 'none';
+  
+  // 2. Mostra a tela principal
+  const conteudo = $('conteudoView');
+  if (conteudo) conteudo.classList.remove('hidden');
+  
+  // 3. Carrega clientes e corretores (leve) em background
   Promise.all([
     api('listarClientes', { senha: SENHA_ADMIN }),
     api('listarCorretores', { senha: SENHA_ADMIN })
@@ -1070,10 +1077,19 @@ function iniciarComFiltros(){
     state.clientes = (rCli.ok && rCli.data) ? rCli.data : [];
     state.corretores = (rCor.ok && rCor.data) ? rCor.data : [];
     preencherDatalistClientes();
-  });
+    console.log('[WELCOME] Clientes e corretores carregados');
+  }).catch(e => console.warn('[WELCOME] Erro ao carregar clientes/corretores:', e));
   
-  // Abre o modal de filtros automaticamente
-  setTimeout(() => abrirModalFiltro(), 300);
+  // 4. Abre o modal de filtro após pequeno delay
+  setTimeout(() => {
+    try {
+      console.log('[WELCOME] Abrindo modal de filtros...');
+      abrirModalFiltro();
+    } catch (e) {
+      console.error('[WELCOME] Erro ao abrir modal de filtro:', e);
+      toast('Erro ao abrir filtros. Recarregue a página.', 'error');
+    }
+  }, 300);
 }
 
 /* =========================================================
