@@ -1534,6 +1534,7 @@ function confirmarAcao(opts){
     $('erroTitulo').textContent = 'Senha não informada'; $('erroTexto').textContent = 'Abra esta página pelo botão GERAL na vitrine admin.';
     return;
   }
+  
   $('loadingView').style.display = 'flex';
   
   // Valida a senha
@@ -1543,7 +1544,7 @@ function confirmarAcao(opts){
     $('erroTitulo').textContent = 'Senha inválida'; return;
   }
   
-  // Carrega apenas clientes e corretores
+  // Carrega tudo, mas NÃO desenha os cards ainda (como definimos no carregarTudo)
   await carregarTudo();
   
   $('loadingView').style.display = 'none'; 
@@ -1551,25 +1552,29 @@ function confirmarAcao(opts){
 })();
 
 async function carregarTudo(){
-  // Busca APENAS clientes e corretores (rápido) e NÃO busca imóveis ainda
-  const [resCli, resCor] = await Promise.all([
+  const [resIm, resCli, resCor] = await Promise.all([
+    api('listarImoveisGeral', { senha: SENHA_ADMIN }), 
     api('listarClientes', { senha: SENHA_ADMIN }), 
     api('listarCorretores', { senha: SENHA_ADMIN })
   ]);
   
+  state.imoveis = (resIm.ok && resIm.data) ? resIm.data : [];
   state.clientes = (resCli.ok && resCli.data) ? resCli.data : [];
   state.corretores = (resCor.ok && resCor.data) ? resCor.data : [];
   
   preencherDatalistClientes();
+  atualizarContadores(); 
+  popularFiltros(); 
   
-  // Limpa o grid e mostra que está vazio, aguardando o filtro
-  state.imoveis = [];
+  // ✅ IMPORTANTE: Limpa o grid e mostra "Nenhum imóvel encontrado" (para não renderizar os cards ainda)
   const grid = $('grid');
   if(grid) grid.innerHTML = '';
   if($('emptyState')) $('emptyState').classList.remove('hidden');
   
-  atualizarContadores(); 
-  popularFiltros(); 
+  // Inicia os matches em background, mas sem exibir os cards
+  setTimeout(() => {
+    iniciarMatchesBackground();
+  }, 500);
 }
  
 async function recarregar(){
@@ -1842,19 +1847,9 @@ function atualizarTextoMultiBairros(){
   else { txt.textContent = `${lista.length} bairros selecionados`; txt.classList.add('tem-valor'); contador.textContent = lista.length; contador.style.display = 'inline-block'; }
 }
 
- async function buscarImovelTopo() {
-  if (state.imoveis.length === 0) {
-    $('loadingFiltro').classList.remove('hidden');
-    try {
-      const resIm = await api('listarImoveisGeral', { senha: SENHA_ADMIN });
-      state.imoveis = (resIm.ok && resIm.data) ? resIm.data : [];
-      atualizarContadores();
-      popularFiltros();
-      setTimeout(() => { iniciarMatchesBackground(); }, 500);
-    } catch(e) {} finally {
-      $('loadingFiltro').classList.add('hidden');
-    }
-  }
+function buscarImovelTopo() {
+  // Como os imóveis já foram carregados no carregarTudo (mas não desenhados),
+  // basta chamar a renderizar para desenhar a lista filtrada
   renderizar();
 }
 
