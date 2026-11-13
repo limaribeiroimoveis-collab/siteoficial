@@ -419,7 +419,23 @@
   .multi-select-trigger .txt-trigger { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--text-soft); }
   .multi-select-trigger .txt-trigger.tem-valor { color: var(--text); font-weight: 600; }
   .multi-select-trigger .contador-bairros { background: var(--purple); color: #fff; padding: 1px 8px; border-radius: 10px; font-size: 0.68rem; font-weight: 800; flex-shrink: 0; }
-  .multi-select-dropdown { display: none; position: absolute; top: calc(100% + 4px); left: 0; right: 0; background: #fff; border: 1.5px solid var(--border-strong); border-radius: 12px; box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15); z-index: 100; max-height: 280px; overflow-y: auto; padding: 6px; }
+ .multi-select-dropdown { 
+  display: none; 
+  position: absolute; 
+  top: calc(100% + 4px); 
+  left: 0; 
+  right: 0; 
+  background: #fff; 
+  border: 1.5px solid var(--border-strong); 
+  border-radius: 12px; 
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15); 
+  z-index: 100; 
+  max-height: 380px; /* Aumentei um pouco */
+  overflow-y: auto; 
+  padding: 8px; 
+  min-width: 400px; /* Garante espaço para 3 colunas */
+  width: max-content; /* Deixa o dropdown mais largo que o botão */
+}
   .multi-select-dropdown.aberto { display: block; }
   .ms-item { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 8px; cursor: pointer; font-size: 0.86rem; font-weight: 500; color: var(--text); }
   .ms-item:hover { background: var(--purple-soft); }
@@ -1060,6 +1076,98 @@ function normalizaTel(t){ return String(t || '').replace(/\D/g, ''); }
 function esc(s){
   return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 }
+
+ // ==========================================
+// UTILITÁRIOS DE AGRUPAMENTO DE BAIRROS
+// ==========================================
+function levenshtein(a, b) {
+  if (a.length === 0) return b.length;
+  if (b.length === 0) return a.length;
+  const matrix = [];
+  for (let i = 0; i <= b.length; i++) matrix[i] = [i];
+  for (let j = 0; j <= a.length; j++) matrix[0][j] = j;
+  for (let i = 1; i <= b.length; i++) {
+    for (let j = 1; j <= a.length; j++) {
+      if (b.charAt(i - 1) === a.charAt(j - 1)) {
+        matrix[i][j] = matrix[i - 1][j - 1];
+      } else {
+        matrix[i][j] = Math.min(matrix[i - 1][j - 1] + 1, matrix[i][j - 1] + 1, matrix[i - 1][j] + 1);
+      }
+    }
+  }
+  return matrix[b.length][a.length];
+}
+
+function normalizaBairroParaAgrupar(b) {
+  if (!b) return '';
+  let s = String(b).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  s = s.replace(/\b(bh|belo horizonte|mg|minas gerais)\b/gi, '');
+  s = s.replace(/[^a-z0-9\s]/g, ' ');
+  s = s.replace(/\s+/g, ' ').trim();
+  return s;
+}
+
+function saoBairrosIguais(b1, b2) {
+  const n1 = normalizaBairroParaAgrupar(b1);
+  const n2 = normalizaBairroParaAgrupar(b2);
+  if (n1 === n2) return true;
+  if (!n1 || !n2) return false;
+  
+  const dist = levenshtein(n1, n2);
+  const maxLen = Math.max(n1.length, n2.length);
+  
+  // Tolerância: 2 para nomes longos (>=6), 1 para curtos
+  if (maxLen >= 6 && dist <= 2) return true;
+  if (maxLen < 6 && dist <= 1) return true;
+  return false;
+}
+
+function agruparBairros(imoveis) {
+  const mapContagem = {};
+  imoveis.forEach(im => {
+    const b = String(im.bairro || '').trim();
+    if (!b) return;
+    if (!mapContagem[b]) mapContagem[b] = 0;
+    mapContagem[b]++;
+  });
+
+  const grafias = Object.keys(mapContagem).sort((a, b) => mapContagem[b] - mapContagem[a]);
+  const grupos = [];
+  const processados = new Set();
+
+  grafias.forEach(grafia => {
+    if (processados.has(grafia)) return;
+    const grupo = {
+      canônico: grafia,
+      variantes: [grafia],
+      qtd: mapContagem[grafia]
+    };
+    processados.add(grafia);
+
+    grafias.forEach(outra => {
+      if (processados.has(outra)) return;
+      if (saoBairrosIguais(grafia, outra)) {
+        grupo.variantes.push(outra);
+        grupo.qtd += mapContagem[outra];
+        processados.add(outra);
+      }
+    });
+    grupos.push(grupo);
+  });
+
+  return grupos.sort((a, b) => a.canônico.localeCompare(b.canônico, 'pt-BR'));
+}
+
+function bairroCombinaComFiltro(bairroImovel, bairroFiltroCanonico, grupos) {
+  if (!bairroImovel || !bairroFiltroCanonico) return false;
+  if (bairroImovel === bairroFiltroCanonico) return true;
+  for (const g of grupos) {
+    if (g.canônico === bairroFiltroCanonico) {
+      return g.variantes.includes(bairroImovel);
+    }
+  }
+  return false;
+}
 function fmtTel(t){
   const n = normalizaTel(t);
   if(n.length === 11) return `(${n.slice(0,2)}) ${n.slice(2,3)} ${n.slice(3,7)}-${n.slice(7)}`;
@@ -1431,30 +1539,49 @@ function preencherDatalistClientes(){
 }
 
 function popularFiltros(){
-  const bairros = {};
-  state.imoveis.forEach(im => { if(im.bairro) bairros[im.bairro] = (bairros[im.bairro] || 0) + 1; });
-  const listaBairros = Object.entries(bairros).sort((a,b) => a[0].localeCompare(b[0], 'pt-BR'));
+  // Agrupa os bairros usando a nova lógica
+  const grupos = agruparBairros(state.imoveis);
+  state._gruposBairros = grupos; // Salva no estado global para usar no filtro
+
   const container = $('listaBairrosCheckboxes');
   if(container){
-    container.innerHTML = listaBairros.map(([b, n]) => `
-      <label class="ms-item">
-        <input type="checkbox" onchange="toggleBairroCheck(this, '${esc(b).replace(/'/g, "\\'")}')">
-        <span>${esc(b)}</span>
-        <span class="qtd-b">${n}</span>
-      </label>
-    `).join('');
+    container.innerHTML = `
+      <div style="padding: 6px 4px 10px; position: sticky; top: 0; background: #fff; z-index: 5; border-bottom: 1px solid var(--border); margin-bottom: 8px;">
+        <input type="text" id="buscaBairroInput" placeholder="Digite para buscar bairro..." oninput="filtrarListaBairros(this.value)" style="width: 100%; padding: 8px 12px; border: 1px solid var(--border-strong); border-radius: 6px; font-size: 0.85rem;">
+      </div>
+      <div id="bairrosGrid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px;">
+        ${grupos.map(g => `
+          <label class="ms-item" style="padding: 6px 8px; font-size: 0.8rem; margin-bottom: 0;">
+            <input type="checkbox" onchange="toggleBairroCheck(this, '${esc(g.canônico).replace(/'/g, "\\'")}')">
+            <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${esc(g.canônico)}">${esc(g.canônico)}</span>
+            <span class="qtd-b">${g.qtd}</span>
+          </label>
+        `).join('')}
+      </div>
+    `;
   }
   
+  // Atualiza os chips de região baseados nos grupos
   document.querySelectorAll('#chipsRegiao .chip-regiao').forEach(btn => {
     const reg = btn.dataset.regiao;
     const bReg = REGIOES_BH[reg] || [];
-    const bCat = bReg.filter(b => {
-      const alvo = normalizaTexto(b);
-      return state.imoveis.some(im => normalizaTexto(im.bairro) === alvo);
-    });
+    const gruposNaRegiao = grupos.filter(g => 
+      bReg.some(b => saoBairrosIguais(g.canônico, b))
+    );
+    
     const qtdEl = btn.querySelector('.qtd-reg');
-    if(qtdEl) qtdEl.textContent = bCat.length > 0 ? `0/${bCat.length}` : '0';
-    btn.style.display = bCat.length > 0 ? '' : 'none';
+    if(qtdEl) qtdEl.textContent = gruposNaRegiao.length > 0 ? `0/${gruposNaRegiao.length}` : '0';
+    btn.style.display = gruposNaRegiao.length > 0 ? '' : 'none';
+  });
+}
+
+// Função auxiliar para o campo de busca de bairro
+function filtrarListaBairros(termo) {
+  const termoNorm = normalizaTexto(termo);
+  const itens = document.querySelectorAll('#bairrosGrid .ms-item');
+  itens.forEach(item => {
+    const texto = normalizaTexto(item.querySelector('span').textContent);
+    item.style.display = texto.includes(termoNorm) ? 'flex' : 'none';
   });
 }
 
@@ -1468,23 +1595,40 @@ document.addEventListener('click', (e) => {
   if(dropdown && dropdown.classList.contains('aberto') && !e.target.closest('.multi-select-wrap')) dropdown.classList.remove('aberto');
 });
 
-function toggleBairroCheck(checkbox, bairro){
+function toggleBairroCheck(checkbox, bairroCanonico){
   const lista = state._filtrosAvancados.bairros || [];
-  if (checkbox.checked) { if (!lista.includes(bairro)) lista.push(bairro); } 
-  else { const idx = lista.indexOf(bairro); if (idx > -1) lista.splice(idx, 1); }
+  const idx = lista.indexOf(bairroCanonico);
+  if (checkbox.checked) { 
+    if (idx === -1) lista.push(bairroCanonico); 
+  } else { 
+    if (idx > -1) lista.splice(idx, 1); 
+  }
   state._filtrosAvancados.bairros = lista;
-  atualizarTextoMultiBairros(); atualizarChipsRegiao();
+  atualizarTextoMultiBairros(); 
+  atualizarChipsRegiao();
 }
+
 function selecionarTodosBairros(){
-  state._filtrosAvancados.bairros = Array.from(document.querySelectorAll('#listaBairrosCheckboxes .ms-item span:nth-child(2)')).map(s => s.textContent);
-  document.querySelectorAll('#listaBairrosCheckboxes input').forEach(c => c.checked = true);
-  atualizarTextoMultiBairros(); atualizarChipsRegiao();
+  const visiveis = Array.from(document.querySelectorAll('#bairrosGrid .ms-item'))
+    .filter(item => item.style.display !== 'none');
+  
+  const novos = visiveis.map(item => item.querySelector('span').textContent);
+  const listaAtual = state._filtrosAvancados.bairros || [];
+  novos.forEach(b => { if(!listaAtual.includes(b)) listaAtual.push(b); });
+  
+  state._filtrosAvancados.bairros = listaAtual;
+  document.querySelectorAll('#bairrosGrid input').forEach(c => c.checked = true);
+  atualizarTextoMultiBairros(); 
+  atualizarChipsRegiao();
 }
+
 function limparSelecaoBairros(){
   state._filtrosAvancados.bairros = [];
-  document.querySelectorAll('#listaBairrosCheckboxes input').forEach(c => c.checked = false);
-  atualizarTextoMultiBairros(); atualizarChipsRegiao();
+  document.querySelectorAll('#bairrosGrid input').forEach(c => c.checked = false);
+  atualizarTextoMultiBairros(); 
+  atualizarChipsRegiao();
 }
+
 function atualizarTextoMultiBairros(){
   const lista = state._filtrosAvancados.bairros || [], txt = $('txtMultiBairros'), contador = $('contadorBairros');
   if (lista.length === 0) { txt.textContent = 'Todos os bairros'; txt.classList.remove('tem-valor'); contador.style.display = 'none'; }
@@ -1494,32 +1638,51 @@ function atualizarTextoMultiBairros(){
 
 function toggleRegiao(regiao){
   const bReg = REGIOES_BH[regiao] || [];
-  const bCat = bReg.filter(b => { const a = normalizaTexto(b); return state.imoveis.some(im => normalizaTexto(im.bairro) === a); });
+  const grupos = state._gruposBairros || [];
+  
+  // Acha os grupos canônicos que pertencem a esta região
+  const gruposDaRegiao = grupos.filter(g => 
+    bReg.some(b => saoBairrosIguais(g.canônico, b))
+  ).map(g => g.canônico);
+
   const lista = state._filtrosAvancados.bairros || [];
-  const todosMarcados = bCat.every(b => lista.includes(b));
-  if (todosMarcados) {
-    state._filtrosAvancados.bairros = lista.filter(b => !bCat.includes(b));
+  const todosMarcados = gruposDaRegiao.every(b => lista.includes(b));
+  
+  if (todosMarcados && gruposDaRegiao.length > 0) {
+    state._filtrosAvancados.bairros = lista.filter(b => !gruposDaRegiao.includes(b));
   } else {
-    bCat.forEach(b => { if(!lista.includes(b)) lista.push(b); });
+    gruposDaRegiao.forEach(b => { if(!lista.includes(b)) lista.push(b); });
     state._filtrosAvancados.bairros = lista;
   }
-  document.querySelectorAll('#listaBairrosCheckboxes input').forEach(c => {
+  
+  document.querySelectorAll('#bairrosGrid input').forEach(c => {
     const label = c.closest('.ms-item');
-    const b = label.querySelector('span:nth-child(2)').textContent;
+    const b = label.querySelector('span').textContent;
     c.checked = state._filtrosAvancados.bairros.includes(b);
   });
-  atualizarTextoMultiBairros(); atualizarChipsRegiao();
+  atualizarTextoMultiBairros(); 
+  atualizarChipsRegiao();
 }
+
 function atualizarChipsRegiao(){
+  const grupos = state._gruposBairros || [];
   document.querySelectorAll('#chipsRegiao .chip-regiao').forEach(btn => {
     const reg = btn.dataset.regiao, bReg = REGIOES_BH[reg] || [];
-    const bCat = bReg.filter(b => { const a = normalizaTexto(b); return state.imoveis.some(im => normalizaTexto(im.bairro) === a); });
-    const marcados = bCat.filter(b => state._filtrosAvancados.bairros.includes(b)).length;
-    if (marcados === bCat.length && bCat.length > 0) { btn.classList.add('ativa'); btn.classList.remove('parcial'); }
-    else if (marcados > 0) { btn.classList.remove('ativa'); btn.classList.add('parcial'); }
-    else { btn.classList.remove('ativa', 'parcial'); }
+    const gruposDaRegiao = grupos.filter(g => 
+      bReg.some(b => saoBairrosIguais(g.canônico, b))
+    ).map(g => g.canônico);
+
+    const marcados = gruposDaRegiao.filter(b => (state._filtrosAvancados.bairros || []).includes(b)).length;
+    
+    if (marcados === gruposDaRegiao.length && gruposDaRegiao.length > 0) { 
+      btn.classList.add('ativa'); btn.classList.remove('parcial'); 
+    } else if (marcados > 0) { 
+      btn.classList.remove('ativa'); btn.classList.add('parcial'); 
+    } else { 
+      btn.classList.remove('ativa', 'parcial'); 
+    }
     const qtdEl = btn.querySelector('.qtd-reg');
-    if(qtdEl) qtdEl.textContent = bCat.length > 0 ? `${marcados}/${bCat.length}` : '0';
+    if(qtdEl) qtdEl.textContent = gruposDaRegiao.length > 0 ? `${marcados}/${gruposDaRegiao.length}` : '0';
   });
 }
 
@@ -1594,7 +1757,13 @@ function renderizar(){
 
   const f = state._filtrosAvancados; let filtrosAtivos = 0;
 
-  if(f.bairros.length > 0){ filtrosAtivos++; lista = lista.filter(im => f.bairros.includes(im.bairro)); }
+  if(f.bairros.length > 0){ 
+  filtrosAtivos++; 
+  lista = lista.filter(im => {
+    // Verifica se o bairro do imóvel bate com QUALQUER um dos bairros canônicos selecionados
+    return f.bairros.some(bCanonico => bairroCombinaComFiltro(im.bairro, bCanonico, state._gruposBairros || []));
+  }); 
+}
   if(f.tipos.length > 0){
     filtrosAtivos++;
     lista = lista.filter(im => {
@@ -1607,7 +1776,13 @@ function renderizar(){
     });
   }
   if(f.precoMin){ filtrosAtivos++; lista = lista.filter(im => parseNumeroBR(im.preco) >= f.precoMin); }
-  if(f.precoMax){ filtrosAtivos++; lista = lista.filter(im => parseNumeroBR(im.preco) <= f.precoMax); }
+if(f.precoMax !== null && f.precoMax !== undefined && f.precoMax > 0){ 
+  filtrosAtivos++; 
+  lista = lista.filter(im => {
+    const val = parseNumeroBR(im.preco);
+    return val <= f.precoMax + 1; // +1 para segurança contra arredondamento
+  }); 
+}
   if(f.quartos){ filtrosAtivos++; lista = lista.filter(im => { const m = String(im.descricao||'').match(/(\d+)\s*quartos?/i); return m && parseInt(m[1]) >= parseInt(f.quartos); }); }
   if(f.suites){ filtrosAtivos++; lista = lista.filter(im => { const n = parseInt(im.suites || '0'); return n >= parseInt(f.suites); }); }
   if(f.vagasQtd){ 
