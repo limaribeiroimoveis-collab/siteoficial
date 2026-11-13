@@ -35,8 +35,11 @@
   }
   html, body { height: 100%; overflow-x: hidden; }
   body{ font-family: var(--font); background: var(--bg); color: var(--text); min-height: 100vh; -webkit-font-smoothing: antialiased; line-height: 1.5; font-size: 14px; }
+  
+  /* ====== LAYOUT GERAL ====== */
   .container{ max-width: 1800px; margin: 0 auto; padding: 16px; height: calc(100vh - 100px); display: flex; flex-direction: column; }
   @media(max-width:640px){ .container{ padding: 10px; } }
+  
   .ico{ display: inline-block; width: 16px; height: 16px; vertical-align: -3px; flex-shrink: 0; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
   .ico-sm{ width: 14px; height: 14px; vertical-align: -3px; }
   .ico-lg{ width: 20px; height: 20px; }
@@ -49,6 +52,7 @@
   .brand-title{ font-size: .8rem; font-weight: 700; letter-spacing: .2px; color: #fff; }
   .brand-sub{ font-size: .55rem; opacity: .7; letter-spacing: 1.5px; text-transform: uppercase; margin-top: 2px; }
   .header-right{ display: flex; align-items: center; gap: 6px; flex-shrink: 0; flex-wrap: wrap; }
+  
   .btn-header{ background: transparent; color: #ddd6fe; border: 1px solid rgba(255,255,255,.15); padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: .72rem; font-weight: 600; transition: all .15s; font-family: inherit; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
   .btn-header:hover{ background: rgba(255,255,255,.1); color: #fff; border-color: rgba(255,255,255,.25); }
   .btn-header.atualizar{ color: #86efac; border-color: rgba(134,239,172,.35); }
@@ -62,6 +66,7 @@
   .btn-header.filtro-avancado.tem-filtro { background: #fff; color: #4c1d95; }
   .btn-header .badge-filtro { background: var(--orange); color: #fff; padding: 1px 5px; border-radius: 10px; font-size: .6rem; display: none; margin-left: 2px; }
   .btn-header.tem-filtro .badge-filtro { display: inline-block; }
+  
   @media(max-width:900px){ .brand-text{ display: none; } }
   @media(max-width:640px){ header.app-header{ padding: 6px 8px; } .btn-header{ padding: 5px 7px; font-size: .66rem; gap: 0; } .btn-header .lbl-txt{ display: none; } }
 
@@ -82,6 +87,7 @@
   .btn-limpar-cliente{ display: none; align-items: center; justify-content: center; width: 26px; height: 26px; border-radius: 50%; border: 1px solid var(--border); background: #fff; cursor: pointer; color: var(--text-soft); font-size: .7rem; }
   .btn-limpar-cliente.show{ display: inline-flex; }
   .btn-limpar-cliente:hover{ background: var(--danger-soft); color: var(--danger); border-color: var(--danger); }
+  
   .cols-selector{ display: flex; gap: 2px; background: var(--bg-alt); border-radius: var(--radius-sm); padding: 3px; flex-shrink: 0; margin-left: auto; }
   .cols-btn{ display: inline-flex; align-items: center; justify-content: center; gap: 3px; padding: 5px 9px; border-radius: 4px; border: none; background: transparent; cursor: pointer; font-size: .7rem; font-weight: 700; color: var(--text-soft); transition: all .15s; font-family: inherit; white-space: nowrap; }
   .cols-btn:hover{ background: rgba(255,255,255,.6); color: var(--text); }
@@ -110,7 +116,7 @@
   @media(max-width:820px){ .grid[data-cols="1"], .grid[data-cols="2"], .grid[data-cols="3"], .grid[data-cols="4"], .grid[data-cols="5"], .grid[data-cols="lista"]{ grid-template-columns: repeat(2, minmax(0, 1fr)); } }
   @media(max-width:560px){ .grid[data-cols="1"], .grid[data-cols="2"], .grid[data-cols="3"], .grid[data-cols="4"], .grid[data-cols="5"], .grid[data-cols="lista"]{ grid-template-columns: 1fr; } }
 
-  /* ===== MAPA ===== */
+  /* ====== MODO MAPA ====== */
   .mapa-container{ display:none; height:100%; margin-top:14px; gap:14px; position:relative; }
   .modo-mapa-ativo #grid, .modo-mapa-ativo #emptyState{ display:none !important; }
   .modo-mapa-ativo .mapa-container{ display:flex; }
@@ -236,7 +242,7 @@
   .grid[data-cols="lista"] .card-block.expandido{ position:relative; top:0; left:0; right:0; }
   .grid[data-cols="lista"] .card-admin-actions{ position:absolute; bottom:10px; right:10px; width:320px; padding:0; }
 
-  /* Modais */
+  /* ====== MODAIS ====== */
   .modal-backdrop{ position:fixed; inset:0; background:rgba(15,23,42,.6); z-index:1000; display:none; align-items:center; justify-content:center; padding:16px; backdrop-filter:blur(4px); overflow-y:auto; }
   .modal-backdrop.show{ display:flex; }
   .modal{ background:#fff; border-radius:var(--radius-lg); max-width:95%; width:100%; max-height:92vh; overflow:auto; padding:24px; position:relative; box-shadow:var(--shadow-lg); animation:fadeUp 0.25s ease; }
@@ -245,28 +251,8 @@
   .modal-close:hover{ background:var(--bg-alt); color:var(--text); }
   .modal h2{ font-size:1.15rem; font-weight:800; margin-bottom:6px; display:flex; align-items:center; gap:9px; color:var(--text); }
   .modal .sub{ color:var(--text-soft); font-size:0.85rem; margin-bottom:20px; line-height:1.5; }
-  .modal-match{ max-width:600px; padding:0; overflow:hidden; display:flex; flex-direction:column; }
-  .modal-match-header{ background:linear-gradient(135deg,#7c3aed 0%,#5b21b6 100%); padding:20px 24px; color:#fff; position:relative; }
-  .modal-match-header h2{ color:#fff; margin-bottom:4px; font-size:1.25rem; }
-  .modal-match-header p{ color:rgba(255,255,255,.8); font-size:.85rem; margin:0; }
-  .modal-match-header .btn-close-match{ position:absolute; top:16px; right:16px; background:rgba(255,255,255,.2); border:none; color:#fff; width:32px; height:32px; border-radius:50%; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:.15s; }
-  .modal-match-header .btn-close-match:hover{ background:rgba(255,255,255,.4); transform:rotate(90deg); }
-  .modal-match-body{ padding:20px 24px; overflow-y:auto; max-height:65vh; background:#f8fafc; }
-  .cliente-match-card{ display:flex; align-items:center; justify-content:space-between; gap:12px; background:#fff; border:1px solid var(--border); border-radius:var(--radius); padding:12px 16px; margin-bottom:10px; box-shadow:0 1px 3px rgba(0,0,0,.04); transition:.15s; }
-  .cliente-match-card:hover{ border-color:var(--lilac); box-shadow:0 4px 12px rgba(167,139,250,.15); }
-  .cliente-match-left{ display:flex; align-items:center; gap:12px; flex:1; min-width:0; }
-  .cliente-match-left .avatar{ width:42px; height:42px; border-radius:50%; background:var(--purple-soft); color:var(--purple); display:flex; align-items:center; justify-content:center; font-size:1.1rem; font-weight:800; flex-shrink:0; }
-  .cliente-match-info{ min-width:0; }
-  .cliente-match-info .nome{ font-weight:700; font-size:.9rem; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-  .cliente-match-info .meta{ font-size:.75rem; color:var(--text-soft); }
-  .cliente-match-actions{ display:flex; gap:6px; flex-shrink:0; }
-  .btn-match-action{ width:36px; height:36px; border-radius:50%; border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:.15s; }
-  .btn-match-action.btn-send{ background:var(--purple-soft); color:var(--purple); }
-  .btn-match-action.btn-send:hover{ background:var(--purple); color:#fff; }
-  .btn-match-action.btn-discard{ background:var(--bg-alt); color:var(--text-soft); }
-  .btn-match-action.btn-discard:hover{ background:#fee2e2; color:var(--danger-bright); }
-  .modal-match-footer{ padding:16px 24px; background:#fff; border-top:1px solid var(--border); text-align:right; }
 
+  /* Filtros */
   .secao-titulo{ font-size:0.7rem; font-weight:800; text-transform:uppercase; color:var(--purple); margin-bottom:8px; padding-top:12px; border-top:1px dashed var(--border); display:flex; align-items:center; gap:6px; }
   .secao-titulo:first-of-type{ border-top:none; padding-top:0; margin-top:0; }
   .chips-wrap{ display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px; }
@@ -279,6 +265,7 @@
   .chip-regiao.parcial{ background:#f0fdf4; color:#16a34a; border-color:#16a34a; }
   .chip-regiao .qtd-reg{ background:rgba(0,0,0,.08); padding:1px 7px; border-radius:10px; font-size:.65rem; font-weight:800; }
   .chip-regiao.ativa .qtd-reg{ background:rgba(255,255,255,.25); }
+
   .filtro-grupo{ display:flex; flex-direction:column; gap:5px; margin-bottom:12px; }
   .filtro-grupo label{ font-size:0.7rem; font-weight:700; text-transform:uppercase; color:var(--muted); }
   .filtro-grupo select, .filtro-grupo input{ width:100%; padding:10px 12px; border:1.5px solid var(--border-strong); border-radius:8px; font-size:0.86rem; font-family:inherit; background:#fff; color:var(--text); }
@@ -299,6 +286,7 @@
   .ms-acoes-rapidas{ display:flex; gap:6px; padding:6px 4px 8px; border-bottom:1px solid var(--border); margin-bottom:4px; }
   .ms-acoes-rapidas button{ flex:1; padding:6px 8px; border:1px solid var(--border-strong); background:#fff; border-radius:6px; font-family:inherit; font-size:0.7rem; font-weight:700; color:var(--text-soft); cursor:pointer; }
   .ms-acoes-rapidas button:hover{ background:var(--bg-alt); }
+
   .range-preco-wrap{ padding:4px 0 12px; }
   .range-valores{ display:flex; align-items:center; gap:8px; margin-bottom:14px; }
   .range-valores .campo-valor{ flex:1; display:flex; flex-direction:column; gap:3px; }
@@ -316,6 +304,29 @@
   .btn-modal.limpar{ background:var(--bg-alt); color:var(--text); }
   .btn-modal.aplicar{ background:var(--purple); color:#fff; }
 
+  /* Modal Match */
+  .modal-match{ max-width:600px; padding:0; overflow:hidden; display:flex; flex-direction:column; }
+  .modal-match-header{ background:linear-gradient(135deg,#7c3aed 0%,#5b21b6 100%); padding:20px 24px; color:#fff; position:relative; }
+  .modal-match-header h2{ color:#fff; margin-bottom:4px; font-size:1.25rem; }
+  .modal-match-header p{ color:rgba(255,255,255,.8); font-size:.85rem; margin:0; }
+  .modal-match-header .btn-close-match{ position:absolute; top:16px; right:16px; background:rgba(255,255,255,.2); border:none; color:#fff; width:32px; height:32px; border-radius:50%; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:.15s; }
+  .modal-match-header .btn-close-match:hover{ background:rgba(255,255,255,.4); transform:rotate(90deg); }
+  .modal-match-body{ padding:20px 24px; overflow-y:auto; max-height:65vh; background:#f8fafc; }
+  .cliente-match-card{ display:flex; align-items:center; justify-content:space-between; gap:12px; background:#fff; border:1px solid var(--border); border-radius:var(--radius); padding:12px 16px; margin-bottom:10px; box-shadow:0 1px 3px rgba(0,0,0,.04); transition:.15s; }
+  .cliente-match-card:hover{ border-color:var(--lilac); box-shadow:0 4px 12px rgba(167,139,250,.15); }
+  .cliente-match-left{ display:flex; align-items:center; gap:12px; flex:1; min-width:0; }
+  .cliente-match-left .avatar{ width:42px; height:42px; border-radius:50%; background:var(--purple-soft); color:var(--purple); display:flex; align-items:center; justify-content:center; font-size:1.1rem; font-weight:800; flex-shrink:0; }
+  .cliente-match-info{ min-width:0; }
+  .cliente-match-info .nome{ font-weight:700; font-size:.9rem; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .cliente-match-info .meta{ font-size:.75rem; color:var(--text-soft); }
+  .cliente-match-actions{ display:flex; gap:6px; flex-shrink:0; }
+  .btn-match-action{ width:36px; height:36px; border-radius:50%; border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:.15s; }
+  .btn-match-action.btn-send{ background:var(--purple-soft); color:var(--purple); }
+  .btn-match-action.btn-send:hover{ background:var(--purple); color:#fff; }
+  .btn-match-action.btn-discard{ background:var(--bg-alt); color:var(--text-soft); }
+  .btn-match-action.btn-discard:hover{ background:#fee2e2; color:var(--danger-bright); }
+
+  /* Painel Admin */
   .admin-panel{ background:#fff; border-radius:var(--radius-lg); box-shadow:var(--shadow-lg); position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); width:calc(100vw - 32px); max-width:1240px; max-height:calc(100vh - 40px); overflow-y:auto; z-index:1500; border:1px solid var(--border); display:none; }
   .admin-panel.show{ display:block; animation:fadeUp .22s ease-out; }
   .admin-panel-inner{ padding:14px 20px 16px; }
@@ -357,8 +368,6 @@
   .btn-purple:hover:not(:disabled){ background:#5b21b6; }
   .btn-ghost{ background:#fff; color:var(--text-soft); border:1px solid var(--border-strong); }
   .btn-ghost:hover:not(:disabled){ background:var(--bg-alt); color:var(--text); border-color:var(--muted); }
-  .btn-lilac{ background:var(--lilac); color:#fff; }
-  .btn-lilac:hover:not(:disabled){ background:var(--lilac-hover); }
   .toast{ position:fixed; bottom:24px; left:50%; transform:translate(-50%, 30px); background:#0f172a; color:#fff; padding:12px 22px; border-radius:var(--radius); box-shadow:var(--shadow-lg); opacity:0; transition:all .3s; z-index:2001; font-size:.85rem; font-weight:600; max-width:90vw; pointer-events:none; text-align:center; }
   .toast.show{ opacity:1; transform:translate(-50%, 0); }
   .toast.success{ background:var(--success); }
@@ -372,14 +381,6 @@
   #confirmBackdrop .modal{ max-width:420px; text-align:center; }
   #confirmIconWrap{ width:56px; height:56px; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 14px; }
   #confirmIconWrap svg{ width:28px; height:28px; stroke:currentColor; }
-
-  /* Tela inicial (welcome) */
-  .welcome-overlay{ position:fixed; inset:0; background:rgba(15,23,42,.6); z-index:1500; display:flex; align-items:center; justify-content:center; padding:16px; backdrop-filter:blur(4px); }
-  .welcome-box{ background:#fff; border-radius:var(--radius-lg); padding:40px 32px; text-align:center; max-width:420px; box-shadow:var(--shadow-lg); }
-  .welcome-box h2{ font-size:1.3rem; font-weight:800; color:var(--purple); margin-bottom:12px; }
-  .welcome-box p{ color:var(--text-soft); font-size:.92rem; line-height:1.6; margin-bottom:24px; }
-  .welcome-box button{ width:100%; padding:14px; background:var(--purple); color:#fff; border:none; border-radius:10px; font-size:1rem; font-weight:700; cursor:pointer; font-family:inherit; }
-  .welcome-box button:hover{ background:#5b21b6; }
 </style>
 </head>
 <body>
@@ -471,107 +472,6 @@
   </div>
 </div>
 
-
-
- <body>
-
-<header class="app-header" id="appHeader">
-  <div class="header-inner">
-    <div class="brand">
-      <div class="brand-icon">GER</div>
-      <div class="brand-text">
-        <div class="brand-title">Catálogo Geral</div>
-        <div class="brand-sub">Todos os imóveis</div>
-      </div>
-    </div>
-    <div class="header-right">
-      <button class="btn-header filtro-avancado" id="btnFiltroAvancadoTop" onclick="abrirModalFiltro()" title="Filtro Avançado">
-        <svg class="ico" viewBox="0 0 24 24"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
-        <span class="lbl-txt">Filtros</span>
-        <span class="badge-filtro" id="badgeFiltrosAtivos">0</span>
-      </button>
-      <button class="btn-header add" onclick="abrirPainelNovoImovel()" title="Adicionar imóvel">
-        <svg class="ico" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        <span class="lbl-txt">Adicionar</span>
-      </button>
-      <button class="btn-header atualizar" id="btnAtualizarHeader" onclick="recarregar()" title="Recarregar">
-        <svg class="ico" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
-        <span class="lbl-txt">Atualizar</span>
-      </button>
-    </div>
-  </div>
-</header>
-
-<div id="loadingView" class="hidden" style="display:flex; justify-content:center; align-items:center; min-height:60vh; flex-direction:column; gap:16px; color:var(--orange);">
-  <div style="width:46px; height:46px; border:3px solid rgba(249,115,22,.2); border-top-color:var(--orange); border-radius:50%; animation:girar .8s linear infinite;"></div>
-  <p style="color:var(--text-soft); font-size:.9rem;">Carregando catálogo geral...</p>
-</div>
-
-<div id="erroView" class="hidden" style="max-width:480px; margin:80px auto; text-align:center; padding:40px 24px; background:#fff; border-radius:var(--radius-lg); box-shadow:var(--shadow-lg); border:1px solid var(--border);">
-  <h2 id="erroTitulo" style="font-size:1.1rem; margin-bottom:10px;">Não foi possível abrir</h2>
-  <p id="erroTexto" style="font-size:.88rem; color:var(--text-soft); margin-bottom:20px;">Verifique a senha na URL.</p>
-</div>
-
-<div id="conteudoView" class="hidden" style="height:100%;">
-  <div class="topbar">
-    <div class="topbar-inner">
-      <div class="search-wrap">
-        <input type="search" id="buscaInput" placeholder="Buscar endereço, código..." oninput="renderizar()">
-      </div>
-      <div class="filters-inline" id="filters">
-        <button class="filter-btn active" data-filter="todos" onclick="setFiltro('todos', this)">Todos <span class="filter-count" id="cnt-todos">0</span></button>
-        <button class="filter-btn" data-filter="pendente" onclick="setFiltro('pendente', this)">Ativos <span class="filter-count" id="cnt-pendente">0</span></button>
-        <button class="filter-btn" data-filter="vendido" onclick="setFiltro('vendido', this)">Vendidos <span class="filter-count" id="cnt-vendido">0</span></button>
-        <button class="filter-btn" data-filter="corrigir" onclick="setFiltro('corrigir', this)">Corrigir <span class="filter-count" id="cnt-corrigir">0</span></button>
-      </div>
-      <div class="cliente-filter-wrap">
-        <select id="filtroCliente" onchange="onFiltroClienteChange()" title="Filtrar matches por cliente">
-          <option value="">Todos os clientes</option>
-        </select>
-        <button class="btn-limpar-cliente" id="btnLimparCliente" onclick="limparFiltroCliente()" title="Limpar filtro de cliente">✕</button>
-      </div>
-      <div class="cols-selector" role="group" aria-label="Colunas por linha">
-        <button class="cols-btn cols-btn-mobile" data-cols="1" onclick="setColunas('1')" title="1 card por linha"><svg class="ico" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/></svg></button>
-        <button class="cols-btn cols-btn-mobile" data-cols="2" onclick="setColunas('2')" title="2 cards por linha"><svg class="ico" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="18" rx="1"/><rect x="14" y="3" width="7" height="18" rx="1"/></svg></button>
-        <button class="cols-btn cols-btn-desktop" data-cols="2" onclick="setColunas('2')"><span>2</span></button>
-        <button class="cols-btn cols-btn-desktop" data-cols="3" onclick="setColunas('3')"><span>3</span></button>
-        <button class="cols-btn cols-btn-desktop" data-cols="4" onclick="setColunas('4')"><span>4</span></button>
-        <button class="cols-btn cols-btn-desktop" data-cols="5" onclick="setColunas('5')"><span>5</span></button>
-        <button class="cols-btn cols-btn-desktop" data-cols="lista" onclick="setColunas('lista')"><svg class="ico" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/></svg><span>Lista</span></button>
-        <button class="cols-btn cols-btn-desktop" data-cols="mapa" onclick="setColunas('mapa')"><svg class="ico" viewBox="0 0 24 24"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/></svg><span>Mapa</span></button>
-      </div>
-    </div>
-  </div>
-  <div class="container">
-    <div class="grid" id="grid" data-cols="4"></div>
-    <div class="empty-state hidden" id="emptyState"><h3>Nenhum imóvel encontrado</h3><p>Ajuste os filtros ou a busca.</p></div>
-    <div class="mapa-container" id="mapaContainer">
-      <div class="mapa-sidebar" id="mapaSidebar"></div>
-      <div class="mapa-view" id="mapaView"></div>
-      <button class="mapa-filtro-btn" id="mapaFiltroBtn" onclick="abrirModalFiltro()" title="Filtros">
-        <svg class="ico ico-lg" viewBox="0 0 24 24"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
-        <span class="badge-mapa" id="badgeMapa" data-zero="1"></span>
-      </button>
-      <div class="mapa-card-mobile" id="mapaCardMobile">
-        <button class="card-close-btn" onclick="fecharCardMobile()" title="Fechar">
-          <svg class="ico" viewBox="0 0 24 24" style="stroke:#fff;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-        </button>
-        <div class="card-conteudo" id="mapaCardConteudo"></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Overlay de boas-vindas (abre o filtro automaticamente) -->
-<div class="welcome-overlay" id="welcomeOverlay">
-  <div class="welcome-box">
-    <h2>🏢 Catálogo Geral</h2>
-    <p>Para começar, escolha os filtros que deseja aplicar. Depois é só clicar em <strong>Buscar</strong>.</p>
-    <button onclick="iniciarComFiltros()">Escolher filtros</button>
-  </div>
-</div>
-
-  <!-- Modal Match -->
 <div class="modal-backdrop" id="matchModalBackdrop" onclick="if(event.target===this) fecharModalMatch()">
   <div class="modal modal-match">
     <div class="modal-match-header">
@@ -583,7 +483,6 @@
   </div>
 </div>
 
-<!-- Modal Filtro -->
 <div class="modal-backdrop" id="modalFiltro">
   <div class="modal">
     <button class="modal-close" onclick="fecharModalFiltro()"><svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
@@ -726,7 +625,6 @@
   </div>
 </div>
 
-<!-- Painel Admin -->
 <div class="admin-panel" id="adminPanel">
   <div class="admin-panel-header">
     <h3 id="adminPanelTitle">Adicionar imóvel</h3>
@@ -805,7 +703,6 @@
   </div>
 </div>
 
-<!-- Modal Clientes -->
 <div class="modal-backdrop" id="clientesModalBackdrop" onclick="if(event.target===this) fecharClientesImovel()">
   <div class="modal">
     <button class="modal-close" onclick="fecharClientesImovel()"><svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
@@ -815,7 +712,6 @@
   </div>
 </div>
 
-<!-- Modal Clonar -->
 <div class="modal-backdrop" id="clonarModalBackdrop" onclick="if(event.target===this) fecharClonarModal()">
   <div class="modal" style="max-width:500px;">
     <button class="modal-close" onclick="fecharClonarModal()"><svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
@@ -831,7 +727,6 @@
   </div>
 </div>
 
-<!-- Confirm -->
 <div id="confirmBackdrop">
   <div class="modal">
     <div id="confirmIconWrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
@@ -846,7 +741,7 @@
 
 <div class="toast" id="toast"></div>
 
-  <script>
+<script>
 /* =========================================================
    CONSTANTES
    ========================================================= */
@@ -877,7 +772,7 @@ const REGIOES_BH = {
 
 const state = {
   imoveis: [], clientes: [], corretores: [],
-  imoveisBrutos: [],     // ← lista completa vinda do servidor (377)
+  imoveisBrutos: [],
   filtroStatus: 'todos', filtroCliente: '',
   _linkDebounce: null, _codigoLinkAtual: '', _tipoEscolhido: '',
   _clientesPorImovel: {}, _matchesCache: {},
@@ -971,7 +866,7 @@ function sanitizarBloco(input){ let v=String(input.value||'').replace(/[^0-9A-Za
 /* =========================================================
    COLUNAS
    ========================================================= */
-function detectarDefaultCols(){ return window.matchMedia('(max-width: 820px)').matches ? '2' : '4'; }
+function detectarDefaultCols(){ return window.matchMedia('(max-width: 820px)').matches ? '2' : 'mapa'; }
 function carregarColunas(){ const s=localStorage.getItem(STORAGE_KEY_COLS); const isM=window.matchMedia('(max-width:820px)').matches; const v=isM?['1','2','mapa']:['2','3','4','5','lista','mapa']; return (s&&v.includes(s))?s:detectarDefaultCols(); }
 function setColunas(c){ localStorage.setItem(STORAGE_KEY_COLS, c); aplicarColunas(c); }
 function aplicarColunas(c){
@@ -981,12 +876,24 @@ function aplicarColunas(c){
   grid.setAttribute('data-cols', cf);
   document.querySelectorAll('.cols-btn').forEach(b => b.classList.toggle('active', b.getAttribute('data-cols')===c));
   const cont = document.querySelector('.container');
-  if(cf==='mapa'){
+  
+  if(cf === 'mapa'){
     cont.classList.add('modo-mapa-ativo');
-    setTimeout(()=>{ iniciarMapa(); renderizar(); if(mapaLeaflet) mapaLeaflet.invalidateSize(); }, 200);
+    setTimeout(()=>{ 
+      iniciarMapa(); 
+      renderizar(); 
+      if(mapaLeaflet) mapaLeaflet.invalidateSize(); 
+    }, 200);
   } else {
     cont.classList.remove('modo-mapa-ativo');
     fecharCardMobile();
+    // Se ainda não carregou os imóveis, carrega AGORA para as colunas
+    if (!state._filtrosAplicados) {
+      state._filtrosAplicados = true;
+      carregarTudo().then(() => renderizar());
+    } else {
+      renderizar();
+    }
   }
 }
 
@@ -1032,8 +939,6 @@ function confirmarAcao(opts){
    ========================================================= */
 (async function init(){
   aplicarColunas(carregarColunas());
-  
-  // Carrega filtros salvos (se houver)
   carregarFiltrosLocal();
   
   if(!SENHA_ADMIN){
@@ -1044,7 +949,6 @@ function confirmarAcao(opts){
     return;
   }
   
-  // Mostra a tela principal direto (sem overlay)
   $('loadingView').style.display = 'none';
   $('conteudoView').classList.remove('hidden');
   
@@ -1060,51 +964,12 @@ function confirmarAcao(opts){
   
   // Abre o modal de filtros automaticamente
   setTimeout(() => {
-    try {
-      abrirModalFiltro();
-      console.log('[INIT] Modal de filtros aberto automaticamente');
-    } catch (e) {
-      console.error('[INIT] Erro ao abrir filtros:', e);
-    }
-  }, 400);
+    try { abrirModalFiltro(); } catch (e) { console.error('[INIT] Erro ao abrir filtros:', e); }
+  }, 300);
 })();
 
-function iniciarComFiltros(){
-  console.log('[WELCOME] Iniciando com filtros...');
-  
-  // 1. Fecha o overlay PRIMEIRO (garante que mesmo com erro, ele some)
-  const overlay = $('welcomeOverlay');
-  if (overlay) overlay.style.display = 'none';
-  
-  // 2. Mostra a tela principal
-  const conteudo = $('conteudoView');
-  if (conteudo) conteudo.classList.remove('hidden');
-  
-  // 3. Carrega clientes e corretores (leve) em background
-  Promise.all([
-    api('listarClientes', { senha: SENHA_ADMIN }),
-    api('listarCorretores', { senha: SENHA_ADMIN })
-  ]).then(([rCli, rCor]) => {
-    state.clientes = (rCli.ok && rCli.data) ? rCli.data : [];
-    state.corretores = (rCor.ok && rCor.data) ? rCor.data : [];
-    preencherDatalistClientes();
-    console.log('[WELCOME] Clientes e corretores carregados');
-  }).catch(e => console.warn('[WELCOME] Erro ao carregar clientes/corretores:', e));
-  
-  // 4. Abre o modal de filtro após pequeno delay
-  setTimeout(() => {
-    try {
-      console.log('[WELCOME] Abrindo modal de filtros...');
-      abrirModalFiltro();
-    } catch (e) {
-      console.error('[WELCOME] Erro ao abrir modal de filtro:', e);
-      toast('Erro ao abrir filtros. Recarregue a página.', 'error');
-    }
-  }, 300);
-}
-
 /* =========================================================
-   CARREGAMENTO SOB DEMANDA (só após aplicar filtros)
+   CARREGAMENTO SOB DEMANDA
    ========================================================= */
 async function carregarTudo(){
   const t0 = Date.now();
@@ -1120,8 +985,6 @@ async function carregarTudo(){
   
   popularFiltros();
   preencherDatalistClientes();
-  
-  // ⚠️ Só renderiza os imóveis que passam nos filtros
   aplicarFiltrosNaTela();
   
   setTimeout(() => iniciarMatchesBackground(), 1000);
@@ -1349,7 +1212,6 @@ function aplicarFiltrosAvancados(){
   salvarFiltrosLocal();
   fecharModalFiltro();
   
-  // ✅ Se ainda não carregou os imóveis, carrega AGORA
   if (!state._filtrosAplicados) {
     state._filtrosAplicados = true;
     $('loadingView').style.display = 'flex';
@@ -1386,7 +1248,7 @@ function renderizar(){
   if(f.andares.length) ativos++;
   if(f.metragem||f.condominioMax) ativos++;
   const bf = $('btnFiltroAvancadoTop'), bd = $('badgeFiltrosAtivos');
-  if(ativos>0){ bf.classList.add('tem-filtro'); bd.textContent = ativos; } else { bf.classList.remove('tem-filtro'); }
+  if(bf){ if(ativos>0){ bf.classList.add('tem-filtro'); bd.textContent = ativos; } else { bf.classList.remove('tem-filtro'); } }
   const bm = $('badgeMapa'); if(bm){ if(ativos>0){ bm.textContent = ativos; bm.removeAttribute('data-zero'); } else { bm.textContent=''; bm.setAttribute('data-zero','1'); } }
   
   lista.sort((a,b) => {
@@ -1405,7 +1267,7 @@ function renderizar(){
 }
 
 /* =========================================================
-   CARD HTML (mantido igual ao original)
+   CARD HTML
    ========================================================= */
 function cardHTML(im){
   const vendido = isVendido(im);
@@ -1439,6 +1301,7 @@ function cardHTML(im){
   const faixa = `<div class="card-tipo-faixa ${ft?'':'hidden'}" title="Tipo">${ft?esc(tipo):'&nbsp;'}</div>`;
   return `<div class="card${vendido?' card-vendido':''}" data-id="${id}" data-codigo="${esc(codigo)}">${vendido?'<div class="card-status-strip status-vendido">Vendido</div>':''}${alerta}${mb}<div class="card-main"><div class="card-img-col"><div class="card-img-wrap"><img class="card-img" src="${esc(img)}" ${imgAttr} onerror="this.src='https://via.placeholder.com/300x300/e2e8f0/64748b?text=Sem+imagem'">${vendido?'<div class="card-tarja-vendido">VENDIDO</div>':''}${faixa}</div></div><div class="card-body"><div class="card-title">${esc(im.titulo)||'Sem endereço'}</div>${codeActs}<div class="card-preco-row"><span class="card-preco-val">${esc(p)}</span></div><div class="card-info-grid"><div class="card-info-col"><div class="card-info-row"><span class="dlabel">Cond.</span><span class="dvalue">${esc(c)}</span></div><div class="card-info-row"><span class="dlabel">IPTU</span><span class="dvalue">${esc(i)}</span></div><div class="card-info-row"><span class="dlabel">Vaga</span><span class="dvalue">${esc(vg)}</span></div></div><div class="card-info-col"><div class="card-info-row"><span class="dlabel">Apto</span><span class="dvalue mono">${esc(apto)}</span></div><div class="card-info-row"><span class="dlabel">Bloco</span><span class="dvalue mono">${esc(bloco)}</span></div><div class="card-info-row"><span class="dlabel">Elev.</span><span class="dvalue">${esc(el)}</span></div><div class="card-info-row"><span class="dlabel">Suítes</span><span class="dvalue">${esc(s)}</span></div></div></div></div></div>${descB}${complB}<div class="card-admin-actions" onclick="event.stopPropagation();"><button class="adm-btn btn-editar" onclick="editarImovel('${id}')">Editar</button><button class="adm-btn btn-vendido ${vendido?'desmarcar':''}" onclick="toggleVendido('${esc(codigo)}',${vendido})">${vendido?'Reativar':'Vendido'}</button><button class="adm-btn btn-clonar" onclick="abrirClonar('${id}')">Clonar</button></div></div>`;
 }
+
 /* =========================================================
    MAPA (LEAFLET)
    ========================================================= */
@@ -1464,10 +1327,6 @@ function normalizarEnderecoMapa(rua, numero, bairro) {
   return `${limpar(rua)}|${limpar(numero)}|${limpar(bairro)}`;
 }
 
-/* =========================================================
-   RENDERIZAÇÃO DOS PINOS — INTELIGENTE
-   Renderiza do cache IMEDIATAMENTE, geocodifica em background
-   ========================================================= */
 async function renderizarPinosMapa(lista) {
   if (!mapaLeaflet || !marcadoresLayer) return;
   marcadoresLayer.clearLayers();
@@ -1481,7 +1340,6 @@ async function renderizarPinosMapa(lista) {
   let cache = {};
   try { cache = JSON.parse(localStorage.getItem(STORAGE_KEY_MAPA_CACHE)) || {}; } catch(e){}
   
-  // PASSO 1: Renderiza imediatamente os que estão no cache
   let renderizados = 0;
   validos.forEach(im => {
     const chave = normalizarEnderecoMapa(im.rua, im.numero, im.bairro);
@@ -1495,7 +1353,6 @@ async function renderizarPinosMapa(lista) {
   
   if (bounds.isValid()) mapaLeaflet.fitBounds(bounds, { padding:[30,30], maxZoom:16 });
   
-  // PASSO 2: Geocodifica os faltantes em background
   const unicos = new Map();
   validos.forEach(im => {
     const chave = normalizarEnderecoMapa(im.rua, im.numero, im.bairro);
@@ -1904,4 +1761,3 @@ document.addEventListener('visibilitychange', () => {
 </script>
 </body>
 </html>
-   
