@@ -1442,6 +1442,84 @@ function toggleVisualizacaoMobile() {
   }
 }
 const PRECO_MAX_SLIDER = 2000000, PRECO_STEP = 10000;
+ function filtrarListaBairros(t){ 
+  const tn = normalizaTexto(t); 
+  document.querySelectorAll('#bairrosGrid .ms-item').forEach(i => { 
+    const s = normalizaTexto(i.querySelector('span').textContent); 
+    i.style.display = s.includes(tn)?'flex':'none'; 
+  }); 
+}
+
+function toggleMultiBairros(e){ e.stopPropagation(); $('dropdownBairros').classList.toggle('aberto'); }
+
+document.addEventListener('click', e => { 
+  const d = $('dropdownBairros'); 
+  if(d && d.classList.contains('aberto') && !e.target.closest('.multi-select-wrap')) d.classList.remove('aberto'); 
+});
+
+function toggleBairroCheck(cb, b){ 
+  const l = state._filtrosAvancados.bairros; 
+  const i = l.indexOf(b); 
+  if(cb.checked){ if(i===-1) l.push(b); } 
+  else if(i>-1) l.splice(i,1); 
+  state._filtrosAvancados.bairros = l; 
+  atualizarTextoMultiBairros(); 
+  atualizarChipsRegiao(); 
+}
+
+function selecionarTodosBairros(){ 
+  const vis = Array.from(document.querySelectorAll('#bairrosGrid .ms-item')).filter(i => i.style.display !== 'none'); 
+  const novos = vis.map(i => i.querySelector('span').textContent); 
+  const l = state._filtrosAvancados.bairros; 
+  novos.forEach(b => { if(!l.includes(b)) l.push(b); }); 
+  state._filtrosAvancados.bairros = l; 
+  document.querySelectorAll('#bairrosGrid input').forEach(c=>c.checked=true); 
+  atualizarTextoMultiBairros(); 
+  atualizarChipsRegiao(); 
+}
+
+function limparSelecaoBairros(){ 
+  state._filtrosAvancados.bairros = []; 
+  document.querySelectorAll('#bairrosGrid input').forEach(c=>c.checked=false); 
+  atualizarTextoMultiBairros(); 
+  atualizarChipsRegiao(); 
+}
+
+function atualizarTextoMultiBairros(){ 
+  const l = state._filtrosAvancados.bairros||[], t = $('txtMultiBairros'), c = $('contadorBairros'); 
+  if(!t) return; 
+  if(l.length===0){ t.textContent='Todos os bairros'; t.classList.remove('tem-valor'); c.style.display='none'; } 
+  else if(l.length===1){ t.textContent=l[0]; t.classList.add('tem-valor'); c.style.display='none'; } 
+  else { t.textContent=`${l.length} bairros selecionados`; t.classList.add('tem-valor'); c.textContent=l.length; c.style.display='inline-block'; } 
+}
+
+function toggleRegiao(r){
+  const bR = REGIOES_BH[r] || []; 
+  const g = state._gruposBairros||[];
+  const gdr = g.filter(x => bR.some(b => saoBairrosIguais(x.canônico,b))).map(x=>x.canônico);
+  const l = state._filtrosAvancados.bairros; 
+  const tm = gdr.every(b => l.includes(b));
+  if(tm && gdr.length>0) state._filtrosAvancados.bairros = l.filter(b => !gdr.includes(b));
+  else gdr.forEach(b => { if(!l.includes(b)) l.push(b); });
+  document.querySelectorAll('#bairrosGrid input').forEach(c => { const lb=c.closest('.ms-item'); const b=lb.querySelector('span').textContent; c.checked = state._filtrosAvancados.bairros.includes(b); });
+  atualizarTextoMultiBairros(); 
+  atualizarChipsRegiao();
+}
+
+function atualizarChipsRegiao(){
+  const g = state._gruposBairros||[];
+  document.querySelectorAll('#chipsRegiao .chip-regiao').forEach(btn => {
+    const r = btn.dataset.regiao; 
+    const bR = REGIOES_BH[r]||[];
+    const gdr = g.filter(x => bR.some(b => saoBairrosIguais(x.canônico,b))).map(x=>x.canônico);
+    const m = gdr.filter(b => (state._filtrosAvancados.bairros||[]).includes(b)).length;
+    if(m===gdr.length && gdr.length>0){ btn.classList.add('ativa'); btn.classList.remove('parcial'); }
+    else if(m>0){ btn.classList.remove('ativa'); btn.classList.add('parcial'); }
+    else { btn.classList.remove('ativa','parcial'); }
+    const q = btn.querySelector('.qtd-reg'); if(q) q.textContent = gdr.length>0 ? `${m}/${gdr.length}` : '0';
+  });
+}
+  
   /* =========================================================
    FUNÇÕES DE FILTROS E SLIDER (Faltantes)
    ========================================================= */
