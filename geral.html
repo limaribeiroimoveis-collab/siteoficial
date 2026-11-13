@@ -8,6 +8,8 @@
 <title>Catálogo Geral — Lima Ribeiro Imóveis</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%231e3a5f'/><text x='50' y='68' font-family='-apple-system,sans-serif' font-size='42' font-weight='800' fill='white' text-anchor='middle'>GER</text></svg>">
 <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32;800&display=swap" rel="stylesheet">
+ <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   :root{
@@ -588,6 +590,27 @@
   #confirmBackdrop .modal { max-width: 420px; text-align: center; }
   #confirmIconWrap { width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 14px; }
   #confirmIconWrap svg { width: 28px; height: 28px; stroke: currentColor; }
+
+   .mapa-view {
+    flex: 1;
+    background: #e2e8f0;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
+    position: relative;
+    z-index: 1; /* Para o mapa não ficar atrás do menu */
+  }
+  .mapa-sidebar {
+    width: 20%;
+    min-width: 280px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    overflow-y: auto;
+    padding-right: 4px;
+    max-height: 100%;
+  }
+  .mapa-sidebar::-webkit-scrollbar { width: 6px; }
+  .mapa-sidebar::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 4px; } 
 </style>
 </head>
 <body>
@@ -1320,10 +1343,16 @@ function aplicarColunas(cols){
   grid.setAttribute('data-cols', colsFinal);
   document.querySelectorAll('.cols-btn').forEach(b => b.classList.toggle('active', b.getAttribute('data-cols') === cols));
   
-  // Adiciona ou remove a classe de layout de mapa no container
   const container = document.querySelector('.container');
   if (colsFinal === 'mapa') {
     container.classList.add('modo-mapa-ativo');
+    // O setTimeout dá um tempo para o navegador desenhar a tela antes de inicializar o mapa
+    setTimeout(() => {
+      if (!state._mapaIniciado) {
+        iniciarMapa();
+      }
+      renderizar(); // Atualiza os pinos e a barra lateral
+    }, 50);
   } else {
     container.classList.remove('modo-mapa-ativo');
   }
@@ -1767,12 +1796,11 @@ function renderizar(){
   const f = state._filtrosAvancados; let filtrosAtivos = 0;
 
   if(f.bairros.length > 0){ 
-  filtrosAtivos++; 
-  lista = lista.filter(im => {
-    // Verifica se o bairro do imóvel bate com QUALQUER um dos bairros canônicos selecionados
-    return f.bairros.some(bCanonico => bairroCombinaComFiltro(im.bairro, bCanonico, state._gruposBairros || []));
-  }); 
-}
+    filtrosAtivos++; 
+    lista = lista.filter(im => {
+      return f.bairros.some(bCanonico => bairroCombinaComFiltro(im.bairro, bCanonico, state._gruposBairros || []));
+    }); 
+  }
   if(f.tipos.length > 0){
     filtrosAtivos++;
     lista = lista.filter(im => {
@@ -1785,13 +1813,13 @@ function renderizar(){
     });
   }
   if(f.precoMin){ filtrosAtivos++; lista = lista.filter(im => parseNumeroBR(im.preco) >= f.precoMin); }
-if(f.precoMax !== null && f.precoMax !== undefined && f.precoMax > 0){ 
-  filtrosAtivos++; 
-  lista = lista.filter(im => {
-    const val = parseNumeroBR(im.preco);
-    return val <= f.precoMax + 1; // +1 para segurança contra arredondamento
-  }); 
-}
+  if(f.precoMax !== null && f.precoMax !== undefined && f.precoMax > 0){ 
+    filtrosAtivos++; 
+    lista = lista.filter(im => {
+      const val = parseNumeroBR(im.preco);
+      return val <= f.precoMax + 1; 
+    }); 
+  }
   if(f.quartos){ filtrosAtivos++; lista = lista.filter(im => { const m = String(im.descricao||'').match(/(\d+)\s*quartos?/i); return m && parseInt(m[1]) >= parseInt(f.quartos); }); }
   if(f.suites){ filtrosAtivos++; lista = lista.filter(im => { const n = parseInt(im.suites || '0'); return n >= parseInt(f.suites); }); }
   if(f.vagasQtd){ 
@@ -1836,12 +1864,58 @@ if(f.precoMax !== null && f.precoMax !== undefined && f.precoMax > 0){
     return new Date(b.dataCadastro || 0) - new Date(a.dataCadastro || 0);
   });
 
-  if(lista.length === 0){ grid.innerHTML = ''; $('emptyState').classList.remove('hidden'); return; }
-  $('emptyState').classList.add('hidden'); grid.innerHTML = lista.map(cardHTML).join('');
+  if(lista.length === 0){ grid.innerHTML = ''; $('emptyState').classList.remove('hidden'); } 
+  else { 
+    $('emptyState').classList.add('hidden'); 
+    grid.innerHTML = lista.map(cardHTML).join('');
+  }
+  
+  // ✅ CHAMADA DO MAPA AQUI
+  const container = document.querySelector('.container');
+  if (container && container.classList.contains('modo-mapa-ativo')) {
+    renderizarCardsMapa(lista);
+    renderizarPinosMapa(lista);
+  }
   
   atualizarBadgesClientes();
   aplicarCacheMatchesNoDOM();
   setTimeout(() => carregarMatchesFaltantesBackground(), 200);
+}
+
+ function renderizarCardsMapa(lista) {
+  const sidebar = $('mapaSidebar');
+  if (!sidebar) return;
+  
+  if (lista.length === 0) {
+    sidebar.innerHTML = '<div style="text-align:center; padding:20px; color:var(--muted); font-size:0.8rem;">Nenhum imóvel encontrado com estes filtros.</div>';
+    return;
+  }
+  
+  sidebar.innerHTML = lista.map(im => {
+    const vendido = isVendido(im);
+    const codigo = String(im.codigo || '').trim();
+    const matchCount = state._matchesCache[codigo] !== undefined ? state._matchesCache[codigo].length : '…';
+    
+    return `
+    <div class="card-compacto" data-codigo="${esc(codigo)}" onclick="centralizarMapa('${esc(codigo)}')">
+      <img class="c-img" src="${esc(im.imagem || 'https://via.placeholder.com/100')}" alt="img" onerror="this.src='https://via.placeholder.com/100'">
+      <div class="c-info">
+        <div class="c-title" title="${esc(im.titulo)}">${esc(im.titulo || 'Sem endereço')}</div>
+        
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top: 4px;">
+          <span class="c-price">${esc(formatarMoeda(im.preco))}</span>
+          ${vendido ? '<span style="font-size:0.6rem; color:var(--danger); font-weight:800;">VENDIDO</span>' : ''}
+        </div>
+        
+        <div style="display:flex; gap:4px; margin-top: 6px; flex-wrap: wrap;" onclick="event.stopPropagation();">
+          ${codigo ? `<button class="card-code-btn" style="padding: 2px 4px; font-size: 0.6rem;" onclick="abrirModalMatch('${esc(codigo)}', '${esc(im.titulo || '')}')">Match (${matchCount})</button>` : ''}
+          <button class="card-code-btn" style="padding: 2px 4px; font-size: 0.6rem;" onclick="editarImovel('${esc(im.id)}')">Editar</button>
+          ${codigo ? `<button class="card-code-btn" style="padding: 2px 4px; font-size: 0.6rem;" onclick="abrirClientesImovel('${esc(codigo)}', '${esc(im.titulo || '')}')">Clientes</button>` : ''}
+        </div>
+      </div>
+    </div>
+    `;
+  }).join('');
 }
 
 function cardHTML(im){
