@@ -105,15 +105,21 @@
   .cols-btn.active{ background: #fff; color: var(--purple); box-shadow: var(--shadow-xs); }
   .cols-btn .ico{ width: 12px; height: 12px; }
   
-    @media(max-width:820px){
-    .topbar-inner { padding: 8px; flex-direction: row; flex-wrap: wrap; gap: 8px; }
-    .search-wrap { display: flex !important; order: 1; width: 100%; max-width: none; }
-    .filters-inline { order: 2; width: 100%; padding: 0; border: none; overflow-x: auto; }
-    .filter-btn { flex: 1; justify-content: center; padding: 8px 4px; font-size: .7rem; }
-    .cols-selector { display: none !important; }
-    .cliente-filter-wrap { display: none !important; }
+     @media(max-width:820px){
+    /* Esconde a barra de busca no header, usando a lupa */
+    .topbar { display: none !important; } 
+    
+    /* Mostra o botão de alternar no mobile */
+    #mapaViewBtn { display: inline-flex !important; }
+    
+    /* Ajusta o header */
+    .header-inner { gap: 4px; }
+    .btn-header { padding: 6px; }
+    .btn-header .lbl-txt { display: none; }
   }
-
+  @media(min-width:821px){
+    #mapaViewBtn { display: none !important; } /* Esconde no desktop */
+  }
   /* GRID E CARDS */
   .container{ max-width: 1800px; margin: 0 auto; padding: 16px; height: calc(100vh - 100px); display: flex; flex-direction: column; }
   .grid{ display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin-top: 14px; overflow-y: auto; flex: 1; align-content: start; }
@@ -441,22 +447,42 @@
         <div class="brand-sub">Todos os imóveis</div>
       </div>
     </div>
-    <div class="header-right">
+       <div class="header-right">
+      <!-- Botão Lupa -->
+      <button class="btn-header" id="btnLupa" onclick="toggleBusca()" title="Buscar">
+        <svg class="ico" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </button>
+      
+      <!-- Botão Limpar Filtros -->
+      <button class="btn-header" onclick="limparFiltros()" title="Limpar Filtros" style="color: #fecaca; border-color: rgba(254,202,202,.4);">
+        <svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+
+      <!-- Botão Alternar Cards/Mapa (Só aparece no mobile via CSS) -->
+      <button class="btn-header" id="mapaViewBtn" onclick="toggleVisualizacaoMobile()" title="Alternar visualização">
+        <svg class="ico" id="icoViewMapa" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="18" rx="1"/><rect x="14" y="3" width="7" height="18" rx="1"/></svg>
+        <span class="lbl-txt" id="txtViewMapa">Cards</span>
+      </button>
+
+      <!-- Filtros (Mantido) -->
       <button class="btn-header filtro-avancado" id="btnFiltroAvancadoTop" onclick="abrirModalFiltro()" title="Filtro Avançado">
         <svg class="ico" viewBox="0 0 24 24"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
         <span class="lbl-txt">Filtros</span>
         <span class="badge-filtro" id="badgeFiltrosAtivos">0</span>
       </button>
+      
+      <!-- Adicionar (Mantido) -->
       <button class="btn-header add" onclick="abrirPainelNovoImovel()" title="Adicionar imóvel">
         <svg class="ico" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         <span class="lbl-txt">Adicionar</span>
       </button>
+      
+      <!-- Atualizar (Mantido) -->
       <button class="btn-header atualizar" id="btnAtualizarHeader" onclick="forcarAtualizacaoTotal()" title="Atualizar Tudo">
         <svg class="ico" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
         <span class="lbl-txt">Atualizar</span>
       </button>
     </div>
-  </div>
 </header>
 
 <div id="loadingView" class="hidden" style="display:flex; justify-content:center; align-items:center; min-height:60vh; flex-direction:column; gap:16px; color:var(--orange);">
@@ -533,11 +559,7 @@
       </div>
     </div>
 
-    <!-- BOTÃO FLUTUANTE DE ALTERNAR (FORA DO MAPA) -->
-    <button class="mapa-view-btn" id="mapaViewBtn" onclick="toggleVisualizacaoMobile()" title="Alternar visualização" style="display: none;">
-      <svg class="ico" id="icoViewMapa" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="18" rx="1"/><rect x="14" y="3" width="7" height="18" rx="1"/></svg>
-      <span id="txtViewMapa">Cards</span>
-    </button>
+   
    
   </div>
 
@@ -1993,14 +2015,43 @@ function abrirModalPendencias(id){
 }
 function fecharModalPendencias(){ const m = $('pendenciasBackdrop'); if(m) m.remove(); }
 function toggleBusca() {
-  const input = $('buscaInput');
-  if (input.style.display === 'none') {
-    input.style.display = 'block';
-    input.focus();
+  // Cria um overlay de busca no mobile
+  if (window.matchMedia('(max-width:820px)').matches) {
+    let overlay = document.getElementById('buscaMobileOverlay');
+    if (overlay) { overlay.remove(); return; } // Se já está aberto, fecha
+
+    overlay = document.createElement('div');
+    overlay.id = 'buscaMobileOverlay';
+    overlay.style.cssText = 'position:fixed; top:0; left:0; right:0; bottom:0; background:#fff; z-index:3000; padding:16px; display:flex; flex-direction:column;';
+    
+    overlay.innerHTML = `
+      <div style="display:flex; gap:8px; margin-bottom:16px;">
+        <input type="search" id="buscaMobileInput" placeholder="Buscar endereço ou código..." style="flex:1; padding:12px; border:1px solid var(--border-strong); border-radius:8px; font-size:1rem;" oninput="onBuscaMobileInput(this.value)">
+        <button onclick="document.getElementById('buscaMobileOverlay').remove()" style="background:var(--danger); color:#fff; border:none; border-radius:8px; padding:0 16px; font-weight:700;">X</button>
+      </div>
+      <div id="buscaMobileResults" style="flex:1; overflow-y:auto;"></div>
+    `;
+    document.body.appendChild(overlay);
+    document.getElementById('buscaMobileInput').focus();
   } else {
-    input.style.display = 'none';
-    input.value = '';
-    onBuscaInput(); // Limpa a busca ao fechar
+    // No desktop, apenas foca no campo normal
+    const input = $('buscaInput');
+    input.focus();
+  }
+}
+
+function onBuscaMobileInput(valor) {
+  state.buscaTexto = valor;
+  aplicarFiltrosNaTela();
+  // Atualiza a lista de resultados no overlay
+  const results = document.getElementById('buscaMobileResults');
+  if (results) {
+    results.innerHTML = state.imoveis.map(im => `
+      <div style="padding:12px; border-bottom:1px solid var(--border); cursor:pointer;" onclick="document.getElementById('buscaMobileOverlay').remove(); abrirCardMobileDoCodigo('${esc(im.codigo)}')">
+        <div style="font-weight:700; font-size:0.9rem;">${esc(im.titulo||'Sem endereço')}</div>
+        <div style="font-size:0.8rem; color:var(--success-bright); font-weight:700;">${esc(formatarMoeda(im.preco))}</div>
+      </div>
+    `).join('') || '<div style="text-align:center; padding:20px; color:var(--muted);">Nenhum resultado.</div>';
   }
 }
 /* =========================================================
