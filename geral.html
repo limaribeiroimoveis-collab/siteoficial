@@ -1013,6 +1013,16 @@ async function api(action, params={}, timeoutMs=TIMEOUT_API, retries=1){
   sincronizarSilenciosamente();
   carregarContagensClientes();
 })();
+  function preencherDatalistClientes(){
+  const dl = $('listaClientesDatalist'); 
+  if(dl) dl.innerHTML = state.clientes.sort((a,b)=>(a.nome||'').localeCompare(b.nome||'','pt-BR')).map(c=>`<option value="${esc(c.nome)} - ${esc(fmtTel(c.telefone))}" data-tel="${esc(normalizaTel(c.telefone))}"></option>`).join('');
+  
+  const s = $('filtroCliente'), at = state.filtroCliente;
+  if (s) {
+    s.innerHTML = '<option value="">Todos os clientes</option>' + state.clientes.sort((a,b)=>(a.nome||'').localeCompare(b.nome||'','pt-BR')).map(c=>`<option value="${esc(normalizaTel(c.telefone))}">${esc(c.nome||'Sem nome')} · ${esc(fmtTel(c.telefone))}</option>`).join('');
+    if(at) s.value = at;
+  }
+}
 
 async function carregarTudo(silencioso = false){
   if (!silencioso) {
