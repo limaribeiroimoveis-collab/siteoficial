@@ -770,7 +770,7 @@
   <div class="topbar">
     <div class="topbar-inner">
       <div class="search-wrap">
-        <input type="search" id="buscaInput" placeholder="Buscar endereço, código..." oninput="renderizar()">
+       <input type="search" id="buscaInput" placeholder="Buscar endereço, código..." oninput="buscarImovelTopo()">
       </div>
       
       <div class="filters-inline" id="filters">
@@ -1535,13 +1535,19 @@ function confirmarAcao(opts){
     return;
   }
   $('loadingView').style.display = 'flex';
+  
+  // Valida a senha
   const resValid = await api('adminListar', { senha: SENHA_ADMIN });
   if(!resValid.ok){
     $('loadingView').style.display = 'none'; $('erroView').classList.remove('hidden'); $('erroView').style.display = 'block';
     $('erroTitulo').textContent = 'Senha inválida'; return;
   }
+  
+  // Carrega apenas clientes e corretores
   await carregarTudo();
-  $('loadingView').style.display = 'none'; $('conteudoView').classList.remove('hidden');
+  
+  $('loadingView').style.display = 'none'; 
+  $('conteudoView').classList.remove('hidden');
 })();
 
 async function carregarTudo(){
@@ -1568,8 +1574,37 @@ async function carregarTudo(){
  
 async function recarregar(){
   const btn = $('btnAtualizarHeader'); if(btn) btn.classList.add('girando');
-  await carregarTudo(); if(btn) btn.classList.remove('girando');
-  toast('Catálogo atualizado', 'success');
+  
+  $('loadingFiltro').classList.remove('hidden');
+  try {
+    const [resIm, resCli, resCor] = await Promise.all([
+      api('listarImoveisGeral', { senha: SENHA_ADMIN }), 
+      api('listarClientes', { senha: SENHA_ADMIN }), 
+      api('listarCorretores', { senha: SENHA_ADMIN })
+    ]);
+    
+    state.imoveis = (resIm.ok && resIm.data) ? resIm.data : [];
+    state.clientes = (resCli.ok && resCli.data) ? resCli.data : [];
+    state.corretores = (resCor.ok && resCor.data) ? resCor.data : [];
+    
+    atualizarContadores(); 
+    popularFiltros(); 
+    renderizar(); 
+    preencherDatalistClientes(); 
+    carregarContagensClientes();
+    
+    if(state.imoveis.length > 0) {
+      setTimeout(() => { iniciarMatchesBackground(); }, 500);
+      toast('Catálogo atualizado', 'success');
+    } else {
+      toast('Nenhum imóvel encontrado na base.', 'error');
+    }
+  } catch(e) {
+    toast('Erro ao atualizar.', 'error');
+  } finally {
+    if(btn) btn.classList.remove('girando');
+    $('loadingFiltro').classList.add('hidden');
+  }
 }
 
 async function carregarContagensClientes(){
@@ -1805,6 +1840,22 @@ function atualizarTextoMultiBairros(){
   if (lista.length === 0) { txt.textContent = 'Todos os bairros'; txt.classList.remove('tem-valor'); contador.style.display = 'none'; }
   else if (lista.length === 1) { txt.textContent = lista[0]; txt.classList.add('tem-valor'); contador.style.display = 'none'; }
   else { txt.textContent = `${lista.length} bairros selecionados`; txt.classList.add('tem-valor'); contador.textContent = lista.length; contador.style.display = 'inline-block'; }
+}
+
+ async function buscarImovelTopo() {
+  if (state.imoveis.length === 0) {
+    $('loadingFiltro').classList.remove('hidden');
+    try {
+      const resIm = await api('listarImoveisGeral', { senha: SENHA_ADMIN });
+      state.imoveis = (resIm.ok && resIm.data) ? resIm.data : [];
+      atualizarContadores();
+      popularFiltros();
+      setTimeout(() => { iniciarMatchesBackground(); }, 500);
+    } catch(e) {} finally {
+      $('loadingFiltro').classList.add('hidden');
+    }
+  }
+  renderizar();
 }
 
 function toggleRegiao(regiao){
@@ -2059,6 +2110,8 @@ function renderizar(){
   setTimeout(() => carregarMatchesFaltantesBackground(), 200);
 }
 
+
+ 
  function renderizarCardsMapa(lista) {
   const sidebar = $('mapaSidebar');
   if (!sidebar) return;
