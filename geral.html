@@ -1442,6 +1442,36 @@ function toggleVisualizacaoMobile() {
   }
 }
 
+  /* =========================================================
+   FUNÇÕES DE FILTROS E SLIDER (Faltantes)
+   ========================================================= */
+function popularFiltros(){
+  const grupos = agruparBairros(state.imoveisBrutos);
+  state._gruposBairros = grupos;
+  const cont = $('listaBairrosCheckboxes');
+  if(cont){
+    cont.innerHTML = `<div style="padding:6px 4px 10px; position:sticky; top:0; background:#fff; z-index:5; border-bottom:1px solid var(--border); margin-bottom:8px;"><input type="text" id="buscaBairroInput" placeholder="Digite para buscar bairro..." oninput="filtrarListaBairros(this.value)" style="width:100%;padding:8px 12px;border:1px solid var(--border-strong);border-radius:6px;font-size:.85rem;"></div>
+    <div id="bairrosGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px;">${grupos.map(g=>`<label class="ms-item" style="padding:6px 8px;font-size:.8rem;margin-bottom:0;"><input type="checkbox" onchange="toggleBairroCheck(this,'${esc(g.canônico).replace(/'/g,"\\'")}')"><span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" title="${esc(g.canônico)}">${esc(g.canônico)}</span><span class="qtd-b">${g.qtd}</span></label>`).join('')}</div>`;
+  }
+  document.querySelectorAll('#chipsRegiao .chip-regiao').forEach(btn => {
+    const reg = btn.dataset.regiao; const bR = REGIOES_BH[reg] || [];
+    const gnr = grupos.filter(g => bR.some(b => saoBairrosIguais(g.canônico, b)));
+    const q = btn.querySelector('.qtd-reg'); if(q) q.textContent = gnr.length>0 ? `0/${gnr.length}` : '0';
+    btn.style.display = gnr.length>0 ? '' : 'none';
+  });
+  atualizarTextoMultiBairros(); atualizarChipsRegiao();
+}
+
+function initSliderPreco(){
+  const mn = $('precoMinRange'), mx = $('precoMaxRange'), mi = $('precoMinInput'), xi = $('precoMaxInput'), r = $('sliderRange');
+  if(!mn||!mx) return;
+  function at(){ let a=parseInt(mn.value,10), b=parseInt(mx.value,10); if(a>b-PRECO_STEP){ a=b-PRECO_STEP; mn.value=a; } if(b<a+PRECO_STEP){ b=a+PRECO_STEP; mx.value=b; } const pa=(a/PRECO_MAX_SLIDER)*100, pb=(b/PRECO_MAX_SLIDER)*100; r.style.left=pa+'%'; r.style.width=(pb-pa)+'%'; if(document.activeElement!==mi) mi.value=a>0?a:''; if(document.activeElement!==xi) xi.value=b<PRECO_MAX_SLIDER?b:''; }
+  mn.addEventListener('input', at); mx.addEventListener('input', at);
+  mi.addEventListener('input', ()=>{ const v=parseFloat(mi.value)||0; mn.value=Math.min(v,PRECO_MAX_SLIDER); at(); });
+  xi.addEventListener('input', ()=>{ const v=parseFloat(xi.value)||PRECO_MAX_SLIDER; mx.value=Math.min(Math.max(v,0),PRECO_MAX_SLIDER); at(); });
+  at();
+}
+
 /* =========================================================
    MATCH E CLIENTES
    ========================================================= */
