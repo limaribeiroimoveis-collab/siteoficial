@@ -309,74 +309,127 @@
   .mapa-card-mobile .card-close-btn:hover { background: #0f172a; }
   .mapa-card-mobile .card-conteudo { padding: 12px 16px 16px; }
 
-  /* ====== LAYOUT MOBILE DO MAPA ====== */
-  @media(max-width: 820px) {
-    .modo-mapa-ativo .container {
-      padding: 0;
-      height: 100vh;
-      max-width: 100vw;
-    }
-    .modo-mapa-ativo .mapa-container {
-      height: 100vh;
-      margin-top: 0;
-      border-radius: 0;
-      gap: 0;
-    }
-    .modo-mapa-ativo .mapa-sidebar {
-      display: none !important;
-    }
-    .modo-mapa-ativo .mapa-view {
-      border-radius: 0;
-      border: none;
-      height: 100vh;
-      width: 100%;
-    }
-    .modo-mapa-ativo .mapa-filtro-btn {
-      display: flex;
-    }
-    .modo-mapa-ativo .mapa-card-mobile {
-      display: block;
-    }
+ /* ====== LAYOUT MOBILE DO MAPA ====== */
+@media(max-width: 820px) {
+  /* Esconde header e topbar quando o mapa está ativo */
+  .modo-mapa-ativo header.app-header,
+  .modo-mapa-ativo .topbar {
+    display: none !important;
   }
-  @media(min-width: 821px) {
-    .mapa-card-mobile { display: none !important; }
-    .mapa-filtro-btn { display: none !important; }
+  .modo-mapa-ativo .container {
+    padding: 0 !important;
+    height: 100vh !important;
+    max-width: 100vw !important;
+    overflow: hidden;
   }
+  .modo-mapa-ativo .mapa-container {
+    height: 100vh !important;
+    margin-top: 0 !important;
+    border-radius: 0 !important;
+    gap: 0 !important;
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 100 !important;
+  }
+  /* Sidebar sempre escondida no mobile */
+  .modo-mapa-ativo .mapa-sidebar {
+    display: none !important;
+  }
+  .modo-mapa-ativo .mapa-view {
+    border-radius: 0 !important;
+    border: none !important;
+    height: 100vh !important;
+    width: 100vw !important;
+  }
+  /* Botão de filtro visível no canto superior direito */
+  .modo-mapa-ativo .mapa-filtro-btn {
+    display: flex !important;
+    top: 16px !important;
+    right: 16px !important;
+  }
+  /* ⚠️ IMPORTANTE: NÃO forçar display:block no card mobile aqui.
+     Ele só aparece quando receber a classe .aberto (adicionada pelo JS). */
+}
+@media(min-width: 821px) {
+  .mapa-card-mobile { display: none !important; }
+  .mapa-filtro-btn { display: none !important; }
+}
 
-  /* CARDS COMPACTOS (sidebar) */
-  .card-compacto {
-    background: #fff; border: 1px solid var(--border); border-radius: var(--radius);
-    padding: 10px; display: flex; flex-direction: column; gap: 8px; cursor: pointer;
-    transition: all 0.15s; box-shadow: var(--shadow-xs); position: relative;
-  }
-  .card-compacto:hover { border-color: var(--purple); box-shadow: var(--shadow-sm); transform: translateY(-1px); }
-  .card-compacto .c-header { display: flex; gap: 10px; align-items: flex-start; }
-  .card-compacto .c-img {
-    width: 60px; height: 60px; border-radius: 6px; object-fit: cover; flex-shrink: 0;
-    background: var(--bg-alt); cursor: zoom-in;
-  }
-  .card-compacto .c-info { flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center; }
-  .card-compacto .c-title {
-    font-size: 0.75rem; font-weight: 700; color: var(--text); line-height: 1.2;
-    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
-    overflow: hidden; margin-bottom: 2px;
-  }
-  .card-compacto .c-price { font-size: 0.9rem; font-weight: 800; color: var(--success-bright); }
-  .card-compacto .c-details {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 2px 4px; font-size: 0.65rem;
-    color: var(--text-soft); background: #f8fafc; padding: 6px; border-radius: 4px;
-  }
-  .card-compacto .c-details span { font-weight: 600; color: var(--text); }
-  .card-compacto .c-actions { display: flex; flex-wrap: wrap; gap: 4px; }
-  .card-compacto .btn-mini {
-    padding: 3px 6px; font-size: 0.6rem; font-weight: 700; border-radius: 4px;
-    border: 1px solid var(--border-strong); background: #fff; color: var(--text-soft);
-    cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 3px;
-    transition: 0.15s; font-family: inherit;
-  }
-  .card-compacto .btn-mini:hover { background: var(--purple-soft); color: var(--purple); border-color: var(--purple); }
-  .card-compacto .btn-mini.btn-purple { background: var(--purple); color: #fff; border-color: var(--purple); }
-  .card-compacto .btn-mini.btn-purple:hover { background: var(--lilac-hover); }
+/* ====== CARD INFERIOR MOBILE (abre ao clicar no pino) ====== */
+.mapa-card-mobile {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 800;
+  background: #fff;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+  box-shadow: 0 -8px 24px rgba(15,23,42,.25);
+  max-height: 55vh;
+  overflow-y: auto;
+  transform: translateY(100%);
+  transition: transform .25s ease;
+}
+.mapa-card-mobile.aberto {
+  display: block !important;
+  transform: translateY(0);
+}
+.mapa-card-mobile .card-close-btn {
+  position: sticky;
+  top: 8px;
+  float: right;
+  margin: 8px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(15,23,42,.85);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+.mapa-card-mobile .card-close-btn:hover { background: #0f172a; }
+.mapa-card-mobile .card-conteudo { padding: 12px 16px 16px; }
+
+/* CARDS COMPACTOS (sidebar) */
+.card-compacto {
+  background: #fff; border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 10px; display: flex; flex-direction: column; gap: 8px; cursor: pointer;
+  transition: all 0.15s; box-shadow: var(--shadow-xs); position: relative;
+}
+.card-compacto:hover { border-color: var(--purple); box-shadow: var(--shadow-sm); transform: translateY(-1px); }
+.card-compacto .c-header { display: flex; gap: 10px; align-items: flex-start; }
+.card-compacto .c-img {
+  width: 60px; height: 60px; border-radius: 6px; object-fit: cover; flex-shrink: 0;
+  background: var(--bg-alt); cursor: zoom-in;
+}
+.card-compacto .c-info { flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center; }
+.card-compacto .c-title {
+  font-size: 0.75rem; font-weight: 700; color: var(--text); line-height: 1.2;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+  overflow: hidden; margin-bottom: 2px;
+}
+.card-compacto .c-price { font-size: 0.9rem; font-weight: 800; color: var(--success-bright); }
+.card-compacto .c-details {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 2px 4px; font-size: 0.65rem;
+  color: var(--text-soft); background: #f8fafc; padding: 6px; border-radius: 4px;
+}
+.card-compacto .c-details span { font-weight: 600; color: var(--text); }
+.card-compacto .c-actions { display: flex; flex-wrap: wrap; gap: 4px; }
+.card-compacto .btn-mini {
+  padding: 3px 6px; font-size: 0.6rem; font-weight: 700; border-radius: 4px;
+  border: 1px solid var(--border-strong); background: #fff; color: var(--text-soft);
+  cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 3px;
+  transition: 0.15s; font-family: inherit;
+}
+.card-compacto .btn-mini:hover { background: var(--purple-soft); color: var(--purple); border-color: var(--purple); }
+.card-compacto .btn-mini.btn-purple { background: var(--purple); color: #fff; border-color: var(--purple); }
+.card-compacto .btn-mini.btn-purple:hover { background: var(--lilac-hover); }
 
   /* CARDS NORMAIS (Grid) */
   .card{
