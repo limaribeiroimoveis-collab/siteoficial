@@ -8,7 +8,7 @@
 <title>Catálogo Geral — Lima Ribeiro Imóveis</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%231e3a5f'/><text x='50' y='68' font-family='-apple-system,sans-serif' font-size='42' font-weight='800' fill='white' text-anchor='middle'>GER</text></svg>">
 <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32;800&display=swap" rel="stylesheet">
- <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -40,7 +40,7 @@
     -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
     line-height: 1.5; font-size: 14px;
   }
-  .container{ max-width: 1800px; margin: 0 auto; padding: 16px; }
+  .container{ max-width: 1800px; margin: 0 auto; padding: 16px; height: calc(100vh - 100px); display: flex; flex-direction: column; }
   @media(max-width:640px){ .container{ padding: 10px; } }
   
   .ico{ display: inline-block; width: 16px; height: 16px; vertical-align: -3px; flex-shrink: 0; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
@@ -162,7 +162,7 @@
   }
 
   .grid{
-    display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin-top: 14px;
+    display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin-top: 14px; overflow-y: auto; flex: 1; align-content: start;
   }
   .grid[data-cols="1"]{ grid-template-columns: 1fr; }
   .grid[data-cols="2"]{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -191,6 +191,137 @@
     }
   }
 
+  /* MODO MAPA */
+  .mapa-container {
+    display: none;
+    height: 100%;
+    margin-top: 14px;
+    gap: 14px;
+  }
+  .modo-mapa-ativo #grid,
+  .modo-mapa-ativo #emptyState {
+    display: none !important;
+  }
+  .modo-mapa-ativo .mapa-container {
+    display: flex;
+  }
+  
+  .mapa-sidebar {
+    width: 25%;
+    min-width: 320px;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow-y: auto;
+    padding-right: 6px;
+  }
+  .mapa-sidebar::-webkit-scrollbar { width: 6px; }
+  .mapa-sidebar::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 4px; }
+
+  .mapa-view {
+    flex: 1;
+    background: #e2e8f0;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
+    position: relative;
+    z-index: 1;
+  }
+
+  /* CARD COMPACTO (Sidebar do Mapa) */
+  .card-compacto {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    cursor: pointer;
+    transition: all 0.15s;
+    box-shadow: var(--shadow-xs);
+    position: relative;
+  }
+  .card-compacto:hover {
+    border-color: var(--purple);
+    box-shadow: var(--shadow-sm);
+    transform: translateY(-1px);
+  }
+  .card-compacto .c-header {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .card-compacto .c-img {
+    width: 60px;
+    height: 60px;
+    border-radius: 6px;
+    object-fit: cover;
+    flex-shrink: 0;
+    background: var(--bg-alt);
+    cursor: zoom-in;
+  }
+  .card-compacto .c-info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .card-compacto .c-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.2;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-bottom: 2px;
+  }
+  .card-compacto .c-price {
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: var(--success-bright);
+  }
+  .card-compacto .c-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px 4px;
+    font-size: 0.65rem;
+    color: var(--text-soft);
+    background: #f8fafc;
+    padding: 6px;
+    border-radius: 4px;
+  }
+  .card-compacto .c-details span { font-weight: 600; color: var(--text); }
+  
+  .card-compacto .c-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  .card-compacto .btn-mini {
+    padding: 3px 6px;
+    font-size: 0.6rem;
+    font-weight: 700;
+    border-radius: 4px;
+    border: 1px solid var(--border-strong);
+    background: #fff;
+    color: var(--text-soft);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    transition: 0.15s;
+    font-family: inherit;
+  }
+  .card-compacto .btn-mini:hover { background: var(--purple-soft); color: var(--purple); border-color: var(--purple); }
+  .card-compacto .btn-mini.btn-purple { background: var(--purple); color: #fff; border-color: var(--purple); }
+  .card-compacto .btn-mini.btn-purple:hover { background: var(--lilac-hover); }
+
+  /* CARDS NORMAIS (Grid) */
   .card{
     background: #fff; border-radius: var(--radius-lg); overflow: hidden;
     box-shadow: var(--shadow-sm);
@@ -590,43 +721,6 @@
   #confirmBackdrop .modal { max-width: 420px; text-align: center; }
   #confirmIconWrap { width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 14px; }
   #confirmIconWrap svg { width: 28px; height: 28px; stroke: currentColor; }
-
-   .mapa-view {
-    flex: 1;
-    width: 100%;
-    height: 100%; /* OBRIGATÓRIO para o Leaflet desenhar */
-    background: #e2e8f0;
-    border-radius: var(--radius-lg);
-    border: 1px solid var(--border);
-    position: relative;
-    z-index: 1;
-  }
-  .mapa-container {
-    display: none;
-    height: calc(100vh - 150px);
-    margin-top: 14px;
-    gap: 14px;
-  }
-  .modo-mapa-ativo #grid,
-  .modo-mapa-ativo #emptyState {
-    display: none !important;
-  }
-  .modo-mapa-ativo .mapa-container {
-    display: flex;
-  }
- 
-  .mapa-sidebar {
-    width: 20%;
-    min-width: 280px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    overflow-y: auto;
-    padding-right: 4px;
-    max-height: 100%;
-  }
-  .mapa-sidebar::-webkit-scrollbar { width: 6px; }
-  .mapa-sidebar::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 4px; } 
 </style>
 </head>
 <body>
@@ -668,7 +762,7 @@
   <p id="erroTexto" style="font-size: .88rem; color: var(--text-soft); margin-bottom: 20px;">Verifique a senha na URL.</p>
 </div>
 
-<div id="conteudoView" class="hidden">
+<div id="conteudoView" class="hidden" style="height: 100%;">
   <div class="topbar">
     <div class="topbar-inner">
       <div class="search-wrap">
@@ -689,7 +783,7 @@
         <button class="btn-limpar-cliente" id="btnLimparCliente" onclick="limparFiltroCliente()" title="Limpar filtro de cliente">✕</button>
       </div>
       
-           <div class="cols-selector" role="group" aria-label="Colunas por linha">
+      <div class="cols-selector" role="group" aria-label="Colunas por linha">
         <button class="cols-btn cols-btn-mobile" data-cols="1" onclick="setColunas('1')" title="1 card por linha"><svg class="ico" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/></svg></button>
         <button class="cols-btn cols-btn-mobile" data-cols="2" onclick="setColunas('2')" title="2 cards por linha"><svg class="ico" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="18" rx="1"/><rect x="14" y="3" width="7" height="18" rx="1"/></svg></button>
         
@@ -708,8 +802,10 @@
           <span>Mapa</span>
         </button>
       </div>
+    </div>
+  </div>
 
-    <div class="container">
+  <div class="container">
     <div class="grid" id="grid" data-cols="4"></div>
     <div class="empty-state hidden" id="emptyState">
       <h3>Nenhum imóvel encontrado</h3>
@@ -1902,7 +1998,7 @@ function renderizar(){
     grid.innerHTML = lista.map(cardHTML).join('');
   }
   
-   // ✅ CHAMADA DO MAPA AQUI
+  // ✅ CHAMADA DO MAPA AQUI
   const container = document.querySelector('.container');
   if (container && container.classList.contains('modo-mapa-ativo')) {
     renderizarCardsMapa(lista);
@@ -1927,23 +2023,42 @@ function renderizar(){
     const vendido = isVendido(im);
     const codigo = String(im.codigo || '').trim();
     const matchCount = state._matchesCache[codigo] !== undefined ? state._matchesCache[codigo].length : '…';
+    const aptoInfo = extrairAptoBlocoChave(im.chaveTexto || '');
+    const apto = aptoInfo.apto || '—';
+    const bloco = aptoInfo.bloco || '—';
+    const suites = (im.suites !== undefined && im.suites !== null && String(im.suites).trim() !== '') ? im.suites : '—';
+    const vaga = String(im.vaga || '').trim() || '—';
+    const elevador = String(im.elevador || '').trim() || '—';
     
     return `
     <div class="card-compacto" data-codigo="${esc(codigo)}" onclick="centralizarMapa('${esc(codigo)}')">
-      <img class="c-img" src="${esc(im.imagem || 'https://via.placeholder.com/100')}" alt="img" onerror="this.src='https://via.placeholder.com/100'">
-      <div class="c-info">
-        <div class="c-title" title="${esc(im.titulo)}">${esc(im.titulo || 'Sem endereço')}</div>
-        
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-top: 4px;">
-          <span class="c-price">${esc(formatarMoeda(im.preco))}</span>
-          ${vendido ? '<span style="font-size:0.6rem; color:var(--danger); font-weight:800;">VENDIDO</span>' : ''}
+      
+      ${vendido ? '<div style="position:absolute; top:5px; right:5px; background:var(--danger); color:#fff; font-size:0.5rem; font-weight:800; padding:2px 4px; border-radius:4px; z-index:2;">VENDIDO</div>' : ''}
+
+      <div class="c-header">
+        <img class="c-img" src="${esc(im.imagem || 'https://via.placeholder.com/100')}" alt="img" onclick="event.stopPropagation(); abrirFotoModal('${esc(im.imagem)}', '${esc(im.titulo)}')" title="Ver foto">
+        <div class="c-info">
+          <div class="c-title" title="${esc(im.titulo)}">${esc(im.titulo || 'Sem endereço')}</div>
+          <div class="c-price">${esc(formatarMoeda(im.preco))}</div>
         </div>
-        
-        <div style="display:flex; gap:4px; margin-top: 6px; flex-wrap: wrap;" onclick="event.stopPropagation();">
-          ${codigo ? `<button class="card-code-btn" style="padding: 2px 4px; font-size: 0.6rem;" onclick="abrirModalMatch('${esc(codigo)}', '${esc(im.titulo || '')}')">Match (${matchCount})</button>` : ''}
-          <button class="card-code-btn" style="padding: 2px 4px; font-size: 0.6rem;" onclick="editarImovel('${esc(im.id)}')">Editar</button>
-          ${codigo ? `<button class="card-code-btn" style="padding: 2px 4px; font-size: 0.6rem;" onclick="abrirClientesImovel('${esc(codigo)}', '${esc(im.titulo || '')}')">Clientes</button>` : ''}
-        </div>
+      </div>
+
+      <div class="c-details">
+        <div>Cond: <span>${esc(formatarMoeda(im.condominio) || '—')}</span></div>
+        <div>IPTU: <span>${esc(formatarMoeda(im.iptu) || '—')}</span></div>
+        <div>Apto: <span>${esc(apto)}</span></div>
+        <div>Bloco: <span>${esc(bloco)}</span></div>
+        <div>Vaga: <span>${esc(vaga)}</span></div>
+        <div>Elev: <span>${esc(elevador)}</span></div>
+        <div>Suíte: <span>${esc(suites)}</span></div>
+      </div>
+
+      <div class="c-actions" onclick="event.stopPropagation();">
+        ${codigo ? `<button class="btn-mini btn-purple" onclick="abrirModalMatch('${esc(codigo)}', '${esc(im.titulo || '')}')">Match (${matchCount})</button>` : ''}
+        <button class="btn-mini" onclick="editarImovel('${esc(im.id)}')">Editar</button>
+        <button class="btn-mini" onclick="toggleVendido('${esc(codigo)}', ${vendido})">${vendido ? 'Reativar' : 'Vendido'}</button>
+        <button class="btn-mini" onclick="abrirClonar('${esc(im.id)}')">Clonar</button>
+        ${codigo ? `<button class="btn-mini" onclick="abrirClientesImovel('${esc(codigo)}', '${esc(im.titulo || '')}')">Clientes</button>` : ''}
       </div>
     </div>
     `;
@@ -2601,6 +2716,7 @@ window.testarSuite = async function(codigo, suitesValue) {
     console.error('❌ Erro:', res.error);
   }
 };
+
 // ==========================================
 // LÓGICA DO MAPA (LEAFLET)
 // ==========================================
@@ -2630,7 +2746,6 @@ function iniciarMapa() {
   
   marcadoresLayer = L.layerGroup().addTo(mapaLeaflet);
   
-  // Corrige o problema de tamanho do Leaflet
   setTimeout(() => { mapaLeaflet.invalidateSize(); }, 400);
 }
 
@@ -2638,7 +2753,6 @@ async function renderizarPinosMapa(lista) {
   if (!mapaLeaflet || !marcadoresLayer) return;
   marcadoresLayer.clearLayers();
   
-  // Limpa o dicionário de pinos
   for (let key in dicionarioPinos) delete dicionarioPinos[key];
   
   if (lista.length === 0) return;
@@ -2659,16 +2773,24 @@ async function renderizarPinosMapa(lista) {
         const lng = parseFloat(dados[0].lon);
         
         const marker = L.marker([lat, lng]);
-        
-        // Salva a referência no dicionário
         dicionarioPinos[im.codigo] = marker;
         
+        const imgUrl = im.imagem || 'https://via.placeholder.com/200x150';
+        
+        // ✅ NOVO POPUP: Com foto e resumo
         marker.bindPopup(`
-          <div style="font-family:var(--font); width:160px;">
-            <b style="font-size:0.8rem; display:block; margin-bottom:4px;">${esc(im.titulo || 'Imóvel')}</b>
-            <span style="color:var(--success-bright); font-weight:800; font-size:0.85rem;">${esc(formatarMoeda(im.preco))}</span>
-            <br>
-            <button onclick="centralizarMapa('${esc(im.codigo)}', true)" style="margin-top:6px; width:100%; padding:4px; border:none; border-radius:4px; background:var(--purple); color:#fff; font-size:0.65rem; font-weight:700; cursor:pointer;">Ver Detalhes</button>
+          <div style="font-family:var(--font); width:220px; padding:2px;">
+            <img src="${esc(imgUrl)}" style="width:100%; height:120px; object-fit:cover; border-radius:6px; margin-bottom:8px; cursor:pointer;" onclick="abrirFotoModal('${esc(imgUrl)}', '${esc(im.titulo)}')">
+            
+            <b style="font-size:0.85rem; display:block; line-height:1.2; margin-bottom:4px;">${esc(im.titulo || 'Imóvel')}</b>
+            <span style="color:var(--success-bright); font-weight:800; font-size:1rem; display:block; margin-bottom:6px;">${esc(formatarMoeda(im.preco))}</span>
+            
+            <div style="font-size:0.7rem; color:var(--text-soft); margin-bottom:8px;">
+              ${esc(im.bairro)}<br>
+              Cód: <b>${esc(im.codigo)}</b>
+            </div>
+            
+            <button onclick="centralizarMapa('${esc(im.codigo)}', true); document.querySelector('.card-compacto[data-codigo=\\'${esc(im.codigo)}\\']').scrollIntoView({behavior:'smooth', block:'center'})" style="width:100%; padding:6px; border:none; border-radius:6px; background:var(--purple); color:#fff; font-size:0.7rem; font-weight:700; cursor:pointer;">Ver no Card</button>
           </div>
         `);
         
@@ -2710,6 +2832,24 @@ function centralizarMapa(codigo, abrirPopup = false) {
   const card = document.querySelector(`.card-compacto[data-codigo="${codigo}"]`);
   if (card) card.style.borderColor = 'var(--purple)';
 }
+
+function abrirFotoModal(url, titulo) {
+  if(!url) return;
+  const html = `
+    <div class="modal-backdrop show" id="fotoModal" onclick="if(event.target===this) fecharFotoModal()" style="z-index: 3000;">
+      <div style="position:relative; max-width:90vw; max-height:90vh;">
+        <button onclick="fecharFotoModal()" style="position:absolute; top:-15px; right:-15px; background:#fff; border:none; border-radius:50%; width:36px; height:36px; cursor:pointer; font-weight:bold; font-size:1.2rem; box-shadow:0 4px 12px rgba(0,0,0,0.3); z-index:10;">X</button>
+        <img src="${esc(url)}" style="max-width:90vw; max-height:85vh; border-radius:8px; display:block; box-shadow:0 10px 40px rgba(0,0,0,0.5);">
+        <div style="background:#fff; text-align:center; padding:10px; border-radius:0 0 8px 8px; font-weight:bold; font-size:1rem;">${esc(titulo)}</div>
+      </div>
+    </div>
+  `;
+  document.body.insertAdjacentHTML('beforeend', html);
+}
+function fecharFotoModal() {
+  const m = $('fotoModal'); if(m) m.remove();
+}
+
 window.addEventListener('resize', () => aplicarColunas(carregarColunas()));
 document.addEventListener('DOMContentLoaded', () => {
   initSliderPreco();
