@@ -1549,7 +1549,128 @@ function initSliderPreco(){
   xi.addEventListener('input', ()=>{ const v=parseFloat(xi.value)||PRECO_MAX_SLIDER; mx.value=Math.min(Math.max(v,0),PRECO_MAX_SLIDER); at(); });
   at();
 }
+/* =========================================================
+   FUNÇÕES DE FILTRO, BUSCA E CONTADORES
+   ========================================================= */
+function setFiltro(f, el){ 
+  state.filtroStatus = f; 
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active')); 
+  el.classList.add('active'); 
+  salvarFiltrosLocal(); 
+  aplicarFiltrosNaTela(); 
+}
 
+function onBuscaInput() {
+  state.buscaTexto = $('buscaInput').value;
+  salvarFiltrosLocal();
+  aplicarFiltrosNaTela();
+}
+
+function abrirModalFiltro(){
+  const f = state._filtrosAvancados;
+  if($('filtroQuartos')) $('filtroQuartos').value = f.quartos;
+  if($('filtroSuites')) $('filtroSuites').value = f.suites;
+  if($('filtroVagasQtd')) $('filtroVagasQtd').value = f.vagasQtd;
+  if($('filtroMetragem')) $('filtroMetragem').value = f.metragem;
+  if($('filtroCondominioMax')) $('filtroCondominioMax').value = f.condominioMax;
+  if($('filtroOrdenacao')) $('filtroOrdenacao').value = f.ordenacao;
+  setarSliderPreco(f.precoMin||0, f.precoMax||PRECO_MAX_SLIDER);
+  document.querySelectorAll('#chipsTipoImovel .chip').forEach(b => b.classList.toggle('active', (f.tipos||[]).includes(b.dataset.tipo)));
+  document.querySelectorAll('#chipsAndar .chip').forEach(b => b.classList.toggle('active', (f.andares||[]).includes(b.dataset.andar)));
+  document.querySelectorAll('#chipsElevador .chip').forEach(b => b.classList.toggle('active', b.dataset.elevador === (f.elevador||'')));
+  document.querySelectorAll('#chipsVagaTipo .chip').forEach(b => b.classList.toggle('active', (f.vagaTipos||[]).includes(b.dataset.vaga)));
+  document.querySelectorAll('#bairrosGrid .ms-item').forEach(it => {
+    const s = it.querySelector('span'), c = it.querySelector('input');
+    if(s && c) c.checked = (f.bairros||[]).includes(s.textContent.trim());
+  });
+  atualizarTextoMultiBairros(); atualizarChipsRegiao();
+  $('modalFiltro').classList.add('show');
+}
+function fecharModalFiltro(){ $('modalFiltro').classList.remove('show'); }
+
+function limparFiltros(){
+  state._filtrosAvancados = { bairros: [], tipos: [], precoMin: null, precoMax: null, quartos: '', suites: '', vagasQtd: '', vagaTipos: [], elevador: '', andares: [], metragem: '', condominioMax: '', ordenacao: 'recentes' };
+  if($('buscaInput')) $('buscaInput').value = '';
+  state.buscaTexto = '';
+  document.querySelectorAll('#listaBairrosCheckboxes input').forEach(c => c.checked = false);
+  atualizarTextoMultiBairros(); atualizarChipsRegiao(); salvarFiltrosLocal();
+  abrirModalFiltro();
+}
+
+function aplicarFiltrosAvancados(){
+  const t = Array.from(document.querySelectorAll('#chipsTipoImovel .chip.active')).map(b=>b.dataset.tipo);
+  const a = Array.from(document.querySelectorAll('#chipsAndar .chip.active')).map(b=>b.dataset.andar);
+  const v = Array.from(document.querySelectorAll('#chipsVagaTipo .chip.active')).map(b=>b.dataset.vaga);
+  const e = document.querySelector('#chipsElevador .chip.active');
+  const mn = parseFloat($('precoMinRange').value)||0;
+  const mx = parseFloat($('precoMaxRange').value)||0;
+  state._filtrosAvancados.tipos = t;
+  state._filtrosAvancados.andares = a;
+  state._filtrosAvancados.vagaTipos = v;
+  state._filtrosAvancados.elevador = e ? e.dataset.elevador : '';
+  state._filtrosAvancados.precoMin = mn>0?mn:null;
+  state._filtrosAvancados.precoMax = mx>0 && mx<PRECO_MAX_SLIDER?mx:null;
+  state._filtrosAvancados.quartos = $('filtroQuartos').value;
+  state._filtrosAvancados.suites = $('filtroSuites').value;
+  state._filtrosAvancados.vagasQtd = $('filtroVagasQtd').value;
+  state._filtrosAvancados.metragem = $('filtroMetragem').value;
+  state._filtrosAvancados.condominioMax = $('filtroCondominioMax').value;
+  state._filtrosAvancados.ordenacao = $('filtroOrdenacao').value;
+  salvarFiltrosLocal();
+  fecharModalFiltro();
+  
+  if (!state._filtrosAplicados) {
+    state._filtrosAplicados = true;
+    carregarTudo();
+  } else {
+    aplicarFiltrosNaTela();
+  }
+}
+
+async function carregarContagensClientes(){
+  try { 
+    const r = await api('contarClientesPorImovel', { senha: SENHA_ADMIN }); 
+    if(r.ok && r.data){ 
+      state._clientesPorImovel = r.data; 
+      atualizarBadgesClientes(); 
+    } 
+  } catch(e){}
+}
+
+function atualizarBadgesClientes(){
+  document.querySelectorAll('.card[data-codigo]').forEach(card => {
+    const cod = card.getAttribute('data-codigo'); if(!cod) return;
+    const n = state._clientesPorImovel[cod] || 0;
+    const btn = card.querySelector('.btn-clientes');
+    if(btn){ 
+      let b = btn.querySelector('.count-badge'); 
+      if(n>0){ if(!b){ b=document.createElement('span'); b.className='count-badge'; btn.appendChild(b); } b.textContent = n>99?'99+':n; } 
+      else if(b){ b.remove(); } 
+    }
+  });
+}
+
+function initSliderPreco(){
+  const mn = $('precoMinRange'), mx = $('precoMaxRange'), mi = $('precoMinInput'), xi = $('precoMaxInput'), r = $('sliderRange');
+  if(!mn||!mx) return;
+  function at(){ let a=parseInt(mn.value,10), b=parseInt(mx.value,10); if(a>b-PRECO_STEP){ a=b-PRECO_STEP; mn.value=a; } if(b<a+PRECO_STEP){ b=a+PRECO_STEP; mx.value=b; } const pa=(a/PRECO_MAX_SLIDER)*100, pb=(b/PRECO_MAX_SLIDER)*100; r.style.left=pa+'%'; r.style.width=(pb-pa)+'%'; if(document.activeElement!==mi) mi.value=a>0?a:''; if(document.activeElement!==xi) xi.value=b<PRECO_MAX_SLIDER?b:''; }
+  mn.addEventListener('input', at); mx.addEventListener('input', at);
+  mi.addEventListener('input', ()=>{ const v=parseFloat(mi.value)||0; mn.value=Math.min(v,PRECO_MAX_SLIDER); at(); });
+  xi.addEventListener('input', ()=>{ const v=parseFloat(xi.value)||PRECO_MAX_SLIDER; mx.value=Math.min(Math.max(v,0),PRECO_MAX_SLIDER); at(); });
+  at();
+}
+
+function setarSliderPreco(a,b){
+  const mn=$('precoMinRange'), mx=$('precoMaxRange'), mi=$('precoMinInput'), xi=$('precoMaxInput'), r=$('sliderRange');
+  if(!mn) return;
+  mn.value = Math.min(Math.max(a||0,0), PRECO_MAX_SLIDER);
+  mx.value = Math.min(Math.max(b||PRECO_MAX_SLIDER,0), PRECO_MAX_SLIDER);
+  mi.value = a>0?a:''; xi.value = b&&b<PRECO_MAX_SLIDER?b:'';
+  r.style.left = ((mn.value/PRECO_MAX_SLIDER)*100)+'%';
+  r.style.width = (((mx.value-mn.value)/PRECO_MAX_SLIDER)*100)+'%';
+}
+
+const PRECO_MAX_SLIDER = 2000000, PRECO_STEP = 10000;
 /* =========================================================
    MATCH E CLIENTES
    ========================================================= */
