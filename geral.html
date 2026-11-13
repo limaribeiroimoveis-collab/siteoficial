@@ -1313,13 +1313,29 @@ function iniciarMapa() {
   state._mapaIniciado = true;
   const mapDiv = $('mapaView');
   if(!mapDiv) return;
-  if (mapaLeaflet !== null) { setTimeout(()=>mapaLeaflet.invalidateSize(), 200); return; }
+  
+  // Se o mapa já foi criado antes, só força ele a recalcular o tamanho e redesenhar os pinos
+  if (mapaLeaflet !== null) { 
+    setTimeout(() => { 
+      mapaLeaflet.invalidateSize(); 
+      renderizarPinosMapa(state.imoveis); 
+    }, 300); 
+    return; 
+  }
+  
+  // Cria o mapa do zero
   mapaLeaflet = L.map('mapaView', { zoomControl:true, scrollWheelZoom:true }).setView([-19.9208, -43.9378], 12);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution:'&copy; OpenStreetMap', maxZoom:19 }).addTo(mapaLeaflet);
   marcadoresLayer = L.layerGroup().addTo(mapaLeaflet);
-  setTimeout(()=>mapaLeaflet.invalidateSize(), 400);
+  
+  // O pulo do gato: espera meio segundo para o CSS aplicar o tamanho da tela e AÍ manda o Leaflet calcular
+  setTimeout(() => {
+    if (mapaLeaflet) {
+      mapaLeaflet.invalidateSize();
+      renderizarPinosMapa(state.imoveis);
+    }
+  }, 600);
 }
-
 function normalizarEnderecoMapa(rua, numero, bairro) {
   const limpar = (s) => String(s || '').trim().toLowerCase()
     .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
