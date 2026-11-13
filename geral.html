@@ -1430,18 +1430,13 @@ function temInformacaoFaltando(im) {
   const isCasa = tipo === 'Casa';
   
   // 1. Preço
-  const preco = String(im.preco || '').trim();
-  if (!preco) faltas.push('Preço');
+  if (!String(im.preco || '').trim()) faltas.push('Preço');
   
   // 2. Condomínio — só para não-casa
-  if (!isCasa) {
-    const cond = String(im.condominio || '').trim();
-    if (!cond) faltas.push('Condomínio');
-  }
+  if (!isCasa && !String(im.condominio || '').trim()) faltas.push('Condomínio');
   
   // 3. IPTU
-  const iptu = String(im.iptu || '').trim();
-  if (!iptu) faltas.push('IPTU');
+  if (!String(im.iptu || '').trim()) faltas.push('IPTU');
   
   // 4-6. Rua, Número, Bairro
   if (!String(im.rua || '').trim()) faltas.push('Rua');
@@ -1455,33 +1450,27 @@ function temInformacaoFaltando(im) {
   // 8. Chave (texto completo)
   if (!String(im.chaveTexto || '').trim()) faltas.push('Chave');
   
-  // 9. Suítes — 0 é válido, mas vazio/undefined ativa
+  // 9. Suítes (A CORREÇÃO ESTÁ AQUI)
   const suitesVal = im.suites;
+  // Força a ser string, limpa espaços, e checa se é vazio, nulo ou undefined
   const suitesStr = String(suitesVal !== undefined && suitesVal !== null ? suitesVal : '').trim();
+  
+  // Só dá falta se for realmente vazio, null ou undefined (o "0" passa direto!)
   if (suitesStr === '' || suitesStr === 'undefined' || suitesStr === 'null') {
     faltas.push('Suítes');
   }
   
-  // 10. Vaga — ✅ SÓ aceita as 7 opções novas
+  // 10. Vaga
   const vagaNorm = normalizaTexto(String(im.vaga || '').trim());
   const vagasValidas = [
-    'livre 100%',
-    'parcial (linha)',
-    'presa (depende 3º)',
-    'livre + parcial (linha)',
-    'livre + presa',
-    'estacionamento',
-    'nao sei'
+    'livre 100%', 'parcial (linha)', 'presa (depende 3º)',
+    'livre + parcial (linha)', 'livre + presa', 'estacionamento', 'nao sei'
   ];
-  if (!vagasValidas.includes(vagaNorm)) {
-    faltas.push('Vaga');
-  }
+  if (!vagasValidas.includes(vagaNorm)) faltas.push('Vaga');
   
-  // 11. Elevador — Sim ou Não
+  // 11. Elevador
   const elevNorm = normalizaTexto(String(im.elevador || '').trim());
-  if (elevNorm !== 'sim' && elevNorm !== 'nao') {
-    faltas.push('Elevador');
-  }
+  if (elevNorm !== 'sim' && elevNorm !== 'nao') faltas.push('Elevador');
   
   // 12. Tipo
   if (!tipo) faltas.push('Tipo');
