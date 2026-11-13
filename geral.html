@@ -471,14 +471,7 @@
   </div>
 </div>
 
-<!-- Overlay de boas-vindas (abre o filtro automaticamente) -->
-<div class="welcome-overlay" id="welcomeOverlay">
-  <div class="welcome-box">
-    <h2>🏢 Catálogo Geral</h2>
-    <p>Para começar, escolha os filtros que deseja aplicar. Depois é só clicar em <strong>Buscar</strong>.</p>
-    <button onclick="iniciarComFiltros()">Escolher filtros</button>
-  </div>
-</div>
+
 
  <body>
 
@@ -1039,7 +1032,9 @@ function confirmarAcao(opts){
    ========================================================= */
 (async function init(){
   aplicarColunas(carregarColunas());
-  const temSalvos = carregarFiltrosLocal();
+  
+  // Carrega filtros salvos (se houver)
+  carregarFiltrosLocal();
   
   if(!SENHA_ADMIN){
     $('loadingView').style.display = 'none';
@@ -1049,13 +1044,29 @@ function confirmarAcao(opts){
     return;
   }
   
-  // ✅ MUDANÇA PRINCIPAL: NÃO carrega imóveis ainda. Mostra tela de boas-vindas.
-  $('welcomeOverlay').style.display = 'flex';
-  // Se já tem filtros salvos, mostra o botão de "ver resultados" rapidamente
-  if (temSalvos) {
-    document.querySelector('#welcomeOverlay .welcome-box p').innerHTML = 'Você tem filtros salvos da última vez. Quer continuar de onde parou ou escolher novos filtros?';
-    document.querySelector('#welcomeOverlay .welcome-box button').textContent = 'Ver meus filtros';
-  }
+  // Mostra a tela principal direto (sem overlay)
+  $('loadingView').style.display = 'none';
+  $('conteudoView').classList.remove('hidden');
+  
+  // Carrega clientes e corretores em background (leve)
+  Promise.all([
+    api('listarClientes', { senha: SENHA_ADMIN }),
+    api('listarCorretores', { senha: SENHA_ADMIN })
+  ]).then(([rCli, rCor]) => {
+    state.clientes = (rCli.ok && rCli.data) ? rCli.data : [];
+    state.corretores = (rCor.ok && rCor.data) ? rCor.data : [];
+    preencherDatalistClientes();
+  }).catch(e => console.warn('[INIT] Erro:', e));
+  
+  // Abre o modal de filtros automaticamente
+  setTimeout(() => {
+    try {
+      abrirModalFiltro();
+      console.log('[INIT] Modal de filtros aberto automaticamente');
+    } catch (e) {
+      console.error('[INIT] Erro ao abrir filtros:', e);
+    }
+  }, 400);
 })();
 
 function iniciarComFiltros(){
