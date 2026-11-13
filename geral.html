@@ -450,32 +450,44 @@
 
 <div id="conteudoView" class="hidden" style="height:100%;">
   <div class="topbar">
-    <div class="topbar-inner">
-      <div class="search-wrap" id="searchWrap">
-        <svg class="ico search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input type="search" id="buscaInput" placeholder="Buscar endereço ou código..." oninput="onBuscaInput()" autocomplete="off">
-      </div>
-      <div class="filters-inline" id="filters">
-        <button class="filter-btn" data-filter="todos" onclick="setFiltro('todos', this)">Todos <span class="filter-count" id="cnt-todos">0</span></button>
-        <button class="filter-btn active" data-filter="pendente" onclick="setFiltro('pendente', this)">Ativos <span class="filter-count" id="cnt-pendente">0</span></button>
-        <button class="filter-btn" data-filter="vendido" onclick="setFiltro('vendido', this)">Vendidos <span class="filter-count" id="cnt-vendido">0</span></button>
-        <button class="filter-btn" data-filter="corrigir" onclick="setFiltro('corrigir', this)">Corrigir <span class="filter-count" id="cnt-corrigir">0</span></button>
-      </div>
-      <div class="cliente-filter-wrap">
-        <select id="filtroCliente" onchange="onFiltroClienteChange()" title="Filtrar matches por cliente">
-          <option value="">Todos os clientes</option>
-        </select>
-        <button class="btn-limpar-cliente" id="btnLimparCliente" onclick="limparFiltroCliente()" title="Limpar filtro de cliente">✕</button>
-      </div>
-      <div class="cols-selector" role="group" aria-label="Visualização">
-        <button class="cols-btn cols-btn-desktop" data-cols="2" onclick="setColunas('2')"><span>2</span></button>
-        <button class="cols-btn cols-btn-desktop" data-cols="3" onclick="setColunas('3')"><span>3</span></button>
-        <button class="cols-btn cols-btn-desktop" data-cols="4" onclick="setColunas('4')"><span>4</span></button>
-        <button class="cols-btn cols-btn-desktop" data-cols="5" onclick="setColunas('5')"><span>5</span></button>
-        <button class="cols-btn cols-btn-desktop" data-cols="lista" onclick="setColunas('lista')"><svg class="ico" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/></svg><span>Lista</span></button>
-        <button class="cols-btn cols-btn-desktop active" data-cols="mapa" onclick="setColunas('mapa')"><svg class="ico" viewBox="0 0 24 24"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/></svg><span>Mapa</span></button>
-      </div>
-    </div>
+   <div class="topbar-inner">
+  <div class="search-wrap" id="searchWrap" style="display:flex; gap:6px; align-items:center; flex:1; max-width:400px;">
+    <!-- Botão da Lupa -->
+    <button class="filter-btn" id="btnLupa" onclick="toggleBusca()" title="Buscar" style="flex: none; padding: 8px 12px; border-radius: 6px;">
+      <svg class="ico" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    </button>
+    
+    <!-- Input de Busca (Escondido por padrão) -->
+    <input type="search" id="buscaInput" placeholder="Buscar endereço ou código..." oninput="onBuscaInput()" autocomplete="off" style="display:none; flex:1; padding: 8px 12px; border: 1px solid var(--border-strong); border-radius: 6px; font-size: .84rem;">
+    
+    <!-- Botão Limpar Filtros -->
+    <button class="filter-btn" onclick="limparFiltros()" title="Limpar Filtros" style="flex: none; padding: 8px 12px; border-radius: 6px; color: var(--danger); border-color: #fecaca;">
+      <svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  
+  <div class="filters-inline" id="filters">
+    <button class="filter-btn" data-filter="todos" onclick="setFiltro('todos', this)">Todos <span class="filter-count" id="cnt-todos">0</span></button>
+    <button class="filter-btn active" data-filter="pendente" onclick="setFiltro('pendente', this)">Ativos <span class="filter-count" id="cnt-pendente">0</span></button>
+    <button class="filter-btn" data-filter="vendido" onclick="setFiltro('vendido', this)">Vendidos <span class="filter-count" id="cnt-vendido">0</span></button>
+    <button class="filter-btn" data-filter="corrigir" onclick="setFiltro('corrigir', this)">Corrigir <span class="filter-count" id="cnt-corrigir">0</span></button>
+  </div>
+  
+  <div class="cliente-filter-wrap" style="display:none;">
+    <select id="filtroCliente" onchange="onFiltroClienteChange()">
+      <option value="">Todos os clientes</option>
+    </select>
+  </div>
+  
+  <div class="cols-selector" role="group" aria-label="Visualização">
+    <button class="cols-btn cols-btn-desktop" data-cols="2" onclick="setColunas('2')"><span>2</span></button>
+    <button class="cols-btn cols-btn-desktop" data-cols="3" onclick="setColunas('3')"><span>3</span></button>
+    <button class="cols-btn cols-btn-desktop" data-cols="4" onclick="setColunas('4')"><span>4</span></button>
+    <button class="cols-btn cols-btn-desktop" data-cols="5" onclick="setColunas('5')"><span>5</span></button>
+    <button class="cols-btn cols-btn-desktop" data-cols="lista" onclick="setColunas('lista')"><svg class="ico" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/></svg><span>Lista</span></button>
+    <button class="cols-btn cols-btn-desktop active" data-cols="mapa" onclick="setColunas('mapa')"><svg class="ico" viewBox="0 0 24 24"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/></svg><span>Mapa</span></button>
+  </div>
+</div>
   </div>
   
   <div class="container">
@@ -1330,7 +1342,31 @@ function abrirCardMobile(im) {
   const codigo = String(im.codigo || '').trim();
   const info = extrairAptoBlocoChave(im.chaveTexto||'');
   const mc = state._matchesCache[codigo] !== undefined ? state._matchesCache[codigo].length : '…';
-  cont.innerHTML = `<div style="display:flex;gap:12px;margin-bottom:10px;"><img src="${esc(img)}" style="width:100px;height:100px;object-fit:cover;border-radius:8px;flex-shrink:0;"><div style="flex:1;min-width:0;"><div style="font-size:.82rem;font-weight:700;line-height:1.2;margin-bottom:4px;">${esc(im.titulo||'Sem endereço')}</div><div style="font-size:1rem;font-weight:800;color:var(--success-bright);">${esc(formatarMoeda(im.preco)||'R$ 0,00')}</div><div style="font-size:.72rem;color:var(--text-soft);margin-top:4px;">Cond: ${esc(formatarMoeda(im.condominio)||'—')} · IPTU: ${esc(formatarMoeda(im.iptu)||'—')}</div></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 8px;font-size:.72rem;background:#f8fafc;padding:8px;border-radius:6px;margin-bottom:10px;"><div>Apto: <b>${esc(info.apto||'—')}</b></div><div>Bloco: <b>${esc(info.bloco||'—')}</b></div><div>Vaga: <b>${esc(im.vaga||'—')}</b></div><div>Elev: <b>${esc(im.elevador||'—')}</b></div><div>Suítes: <b>${esc(im.suites||'—')}</b></div></div><div style="display:flex;gap:6px;flex-wrap:wrap;">${codigo?`<button class="btn-mini btn-purple" style="flex:1;padding:8px;" onclick="abrirModalMatch('${esc(codigo)}','${esc(im.titulo||'')}')">Match (${mc})</button>`:''}<button class="btn-mini" style="flex:1;padding:8px;" onclick="abrirBuscar('${esc(codigo)}')">Entrada</button><button class="btn-mini" style="flex:1;padding:8px;" onclick="abrirClientesImovel('${esc(codigo)}','${esc(im.titulo||'')}')">Clientes</button><button class="btn-mini" style="flex:1;padding:8px;" onclick="toggleCestaClonagem('${esc(im.id)}', this)">Clonar</button></div>`;
+  
+  cont.innerHTML = `
+    <div style="display:flex;gap:12px;margin-bottom:10px;">
+      <img src="${esc(img)}" style="width:100px;height:100px;object-fit:cover;border-radius:8px;flex-shrink:0;">
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:.82rem;font-weight:700;line-height:1.2;margin-bottom:4px;">${esc(im.titulo||'Sem endereço')}</div>
+        <div style="font-size:1rem;font-weight:800;color:var(--success-bright);">${esc(formatarMoeda(im.preco)||'R$ 0,00')}</div>
+        <div style="font-size:.72rem;color:var(--text-soft);margin-top:4px;">Cond: ${esc(formatarMoeda(im.condominio)||'—')} · IPTU: ${esc(formatarMoeda(im.iptu)||'—')}</div>
+        <div style="display:flex; flex-wrap:wrap; gap:8px; font-size:.7rem; margin-top:6px; color:var(--text-soft);">
+          <span><b>Apto:</b> ${esc(info.apto||'—')}</span>
+          <span><b>Bloco:</b> ${esc(info.bloco||'—')}</span>
+          <span><b>Vaga:</b> ${esc(im.vaga||'—')}</span>
+          <span><b>Suítes:</b> ${esc(im.suites||'—')}</span>
+          <span><b>Elev:</b> ${esc(im.elevador||'—')}</span>
+        </div>
+      </div>
+    </div>
+    
+    <div style="display:flex;gap:6px;flex-wrap:wrap; border-top:1px solid var(--border); padding-top:10px;">
+      ${codigo?`<button class="btn-mini btn-purple" style="flex:1;padding:8px;" onclick="abrirModalMatch('${esc(codigo)}','${esc(im.titulo||'')}')">Match (${mc})</button>`:''}
+      <button class="btn-mini" style="flex:1;padding:8px;" onclick="abrirBuscar('${esc(codigo)}')">Entrada</button>
+      <button class="btn-mini" style="flex:1;padding:8px;" onclick="abrirClientesImovel('${esc(codigo)}','${esc(im.titulo||'')}')">Clientes</button>
+      <button class="btn-mini" style="flex:1;padding:8px;" onclick="toggleCestaClonagem('${esc(im.id)}', this)">Clonar</button>
+    </div>
+  `;
   box.classList.add('aberto');
 }
 function fecharCardMobile() { const b = $('mapaCardMobile'); if (b) b.classList.remove('aberto'); }
@@ -1869,7 +1905,17 @@ function abrirModalPendencias(id){
   document.body.insertAdjacentHTML('beforeend', `<div class="modal-backdrop show" id="pendenciasBackdrop" onclick="if(event.target===this)fecharModalPendencias()"><div class="modal" style="max-width:420px;"><button class="modal-close" onclick="fecharModalPendencias()"><svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button><h2 style="justify-content:center;color:var(--danger-bright);"><svg class="ico" viewBox="0 0 24 24" style="stroke:var(--danger-bright);width:24px;height:24px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg> Pendências</h2><p class="sub" style="text-align:center;">Corrija:</p><ul style="list-style:none;padding:0;margin:8px 0 16px;max-height:250px;overflow-y:auto;">${html}</ul><button class="btn btn-purple" style="width:100%;" onclick="fecharModalPendencias()">Entendi</button></div></div>`);
 }
 function fecharModalPendencias(){ const m = $('pendenciasBackdrop'); if(m) m.remove(); }
-
+function toggleBusca() {
+  const input = $('buscaInput');
+  if (input.style.display === 'none') {
+    input.style.display = 'block';
+    input.focus();
+  } else {
+    input.style.display = 'none';
+    input.value = '';
+    onBuscaInput(); // Limpa a busca ao fechar
+  }
+}
 /* =========================================================
    LISTENERS FINAIS
    ========================================================= */
