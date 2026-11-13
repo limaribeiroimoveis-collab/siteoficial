@@ -807,6 +807,19 @@ const STORAGE_KEY_MATCH_HASH = 'catalogo_match_hash_v2';
 const STORAGE_KEY_FILTROS = 'catalogo_geral_filtros_v1';
 const STORAGE_KEY_MAPA_CACHE = 'coordenadas_imoveis_cache';
 const STORAGE_KEY_IMOVEIS_ATIVOS = 'catalogo_ativos_cache'; // Novo cache offline
+ const REGIOES_BH = {
+  'Centro-Sul': ['Anchieta','Barro Preto','Belvedere','Boaventura','Carmo','Centro','Cidade Jardim','Comiteco','Cruzeiro','Funcionários','Floresta','Gutierrez','Horto','Lourdes','Luxemburgo','Mangabeiras','Mercado','Prado','Santa Efigênia','Santa Lúcia','Santo Agostinho','São Bento','São Lucas','São Pedro','Santo Antônio','Savassi','Serra','Sion','Vila Paris'],
+  'Norte': ['Aparecida','Boa Vista','Candelária','Concórdia','Dom Joaquim','Floramar','Frei Leopoldo','Guarani','Ipê','Jardim Montanhês','Jaqueline','Lagoa','Lagoinha','Maria Goretti','Minaslândia','Piratininga','Planalto','Providência','Primeiro de Maio','São Bernardo','São Cristóvão','São Gonçalo','São João Batista','Tupi','União','Vila Clóris','Vila Nova','Vila Primeiro de Maio','Cachoeirinha','Colégio Batista','Fernão Dias','Jardim Guanabara','Jardim São José','Nova Floresta','Paquetá','Santa Inês','Santa Terezinha','Silveira','Zilah Spósito'],
+  'Sul': ['Santo Antônio','Sion','São Pedro','Santa Lúcia','Savassi','Serra','Belvedere','Mangabeiras','Luxemburgo','Carmo','Cidade Jardim','Vila Paris','Estoril','Comiteco','Pampulha'],
+  'Leste': ['Boa Vista','Cidade Nova','Colégio Batista','Concórdia','Fernão Dias','Floresta','Horto','Ipiranga','Jardim Guanabara','Mariano de Abreu','Nova Floresta','Palmares','Paraíso','Pompéia','Santa Efigênia','Santa Inês','São Geraldo','São Paulo','Sagrada Família','Vera Cruz','Vila São Paulo','Taquaril','União','Casa Branca','Santa Tereza'],
+  'Oeste': ['Alto Barroca','Barroca','Betânia','Buritis','Calafate','Carlos Prates','Cinquentenário','Estrela','Estrela do Oriente','Gameleira','Grajaú','Gutierrez','Jardim América','Nova Granada','Nova Suíça','Nova Esperança','Padre Eustáquio','Palmeiras','Prado','Salgado Filho','Santo Agostinho','Serra','Sion','Vista Alegre','Vila Oeste'],
+  'Nordeste': ['Acaiaca','Araci','Bairro das Indústrias','Bela Vitória','Cachoeirinha','Canaã','Candelária','Capitão Eduardo','Colégio Batista','Concórdia','Eymard','Fernão Dias','Floramar','Frei Leopoldo','Goiânia','Gorduras','Heliópolis','Ipê','Jardim Vitória','Maria Goretti','Maria Helena','Nazareno','Nova Esperança','Nova Granada','Palmares','Paulo VI','Planalto','Primeiro de Maio','Providência','Ribeiro de Abreu','São Bernardo','São Cristóvão','São João Batista','São Marcos','São Paulo','Silveira','Tupi','União','Vila Clóris','Vila Nova','Vila Primeiro de Maio'],
+  'Noroeste': ['Alípio de Melo','Alto dos Pinheiros','Betânia','Bonfim','Buritis','Caiçara','Califórnia','Carlos Prates','Cinquentenário','Cidade Industrial','Conjunto Califórnia','Dom Bosco','Estrela do Oriente','Gameleira','Glória','Gutierrez','Indaiá','Jardim Alvorada','Jardim América','Jardim Montanhês','João Pinheiro','Lagoa','Lagoinha','Monsenhor Messias','Nova Cintra','Nova Esperança','Nova Granada','Nova Suíça','Padre Eustáquio','Palmeiras','Pilar','Pindorama','Prado','Rio Branco','Salgado Filho','Santa Maria','Santo Agostinho','São José','Sion','Sumaré','Vila Oeste','Vista Alegre'],
+  'Sudeste': ['Anchieta','Bairro da Graça','Boa Vista','Cidade Nova','Colégio Batista','Cruzeiro','Esplanada','Floresta','Horto','Ipiranga','Jardim Guanabara','Mariano de Abreu','Nova Floresta','Palmares','Paraíso','Pompéia','Santa Efigênia','Santa Inês','Santa Tereza','São Geraldo','São Lucas','São Paulo','Sagrada Família','Taquaril','União','Vera Cruz','Vila São Paulo','Casa Branca'],
+  'Barreiro': ['Aguas Claras','Barreiro','Brasil Industrial','Caiçara','Cardoso','Cinquentenário','Colorado','Conjunto Bonsucesso','Das Indústrias','Diamante','Estrela do Oriente','Flávio de Oliveira','Flávio Marques Lisboa','Jardim das Alterosas','Jardim Industrial','Lageado','Lindéia','Milionários','Miramar','Nova Cintra','Nova Sion','Olhos D\'Água','Parque Industrial','Pilar','Pongelupe','Santa Helena','Solar do Barreiro','Teixeira Dias','Tirol','Vila Cemig','Vila Ecológica','Vila Formosa','Vila Nova dos Milionários','Vila Pinho','Vila Satélite','Vila Vista Alegre'],
+  'Pampulha': ['Aeroporto','Bandeirantes','Braúnas','Céu Azul','Conjunto Confisco','Copacabana','Dona Clara','Engenho Nogueira','Frei Eustáquio','Garças','Independência','Itacolomi','Itapoã','Jaraguá','Jardim Atlântico','José Bonifácio','Lagoa da Pampulha','Liberdade','Manacás','Minaslândia','Nova Pampulha','Ouro Preto','Paquetá','Santa Amélia','Santa Branca','Santa Rosa','Santa Terezinha','São Francisco','São Luiz','São Tomáz','Serrano','Suzana','Trevo','Universitário','Urca','Vila Aeroporto'],
+  'Venda Nova': ['Aeroporto','Bandeirantes','Canaã','Capitão Eduardo','Centro','Conjunto dos Padres','Etelvina Carneiro','Florença','Jardim dos Comerciários','Jardim Europa','Jardim Leblon','Jardim Vitória','Lagoa','Letícia','Mantiqueira','Maria Helena','Minas Caixa','Monte Azul','Morro Alto','Nova York','Novo Aarão Reis','Ouro Preto','Padre Eustáquio','Palmares','Paquetá','Planalto','Ribeiro de Abreu','Rio Branco','Santa Mônica','São João Batista','Serra Verde','Venda Nova','Vila Bela','Vila dos Anjos','Vila Nova','Vila Satélite']
+};
 
 const state = {
   imoveis: [],       // Lista que está na tela (filtrada)
@@ -1195,7 +1208,30 @@ function aplicarFiltrosNaTela(){
 
   renderizar();
 }
+async function carregarContagensClientes(){
+  try { 
+    const r = await api('contarClientesPorImovel', { senha: SENHA_ADMIN }); 
+    if(r.ok && r.data){ 
+      state._clientesPorImovel = r.data; 
+      atualizarBadgesClientes(); 
+    } 
+  } catch(e){}
+}
 
+function atualizarBadgesClientes(){
+  document.querySelectorAll('.card[data-codigo]').forEach(card => {
+    const cod = card.getAttribute('data-codigo'); if(!cod) return;
+    const n = state._clientesPorImovel[cod] || 0;
+    const btn = card.querySelector('.btn-clientes');
+    if(btn){ 
+      let b = btn.querySelector('.count-badge'); 
+      if(n>0){ 
+        if(!b){ b=document.createElement('span'); b.className='count-badge'; btn.appendChild(b); } 
+        b.textContent = n>99?'99+':n; 
+      } else if(b){ b.remove(); } 
+    }
+  });
+}
 function renderizar(){
   const grid = $('grid'); 
   let lista = [...state.imoveis];
