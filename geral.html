@@ -724,7 +724,11 @@
 </style>
 </head>
 <body>
-
+<!-- Overlay de Carregamento de Filtro -->
+<div id="loadingFiltro" class="hidden" style="position:fixed; inset:0; background:rgba(15,23,42,0.6); z-index:9999; display:flex; flex-direction:column; align-items:center; justify-content:center; backdrop-filter:blur(3px);">
+  <div style="width: 50px; height: 50px; border: 4px solid rgba(255,255,255,0.2); border-top-color: #fff; border-radius: 50%; animation: girar .8s linear infinite;"></div>
+  <p style="color:#fff; margin-top: 16px; font-weight:700; font-size:1rem;">Carregando imóveis para seu filtro...</p>
+</div>
 <header class="app-header">
   <div class="header-inner">
     <div class="brand">
@@ -1541,26 +1545,27 @@ function confirmarAcao(opts){
 })();
 
 async function carregarTudo(){
-  const [resIm, resCli, resCor] = await Promise.all([
-    api('listarImoveisGeral', { senha: SENHA_ADMIN }), 
+  // Busca APENAS clientes e corretores (rápido) e NÃO busca imóveis ainda
+  const [resCli, resCor] = await Promise.all([
     api('listarClientes', { senha: SENHA_ADMIN }), 
     api('listarCorretores', { senha: SENHA_ADMIN })
   ]);
-  state.imoveis = (resIm.ok && resIm.data) ? resIm.data : [];
+  
   state.clientes = (resCli.ok && resCli.data) ? resCli.data : [];
   state.corretores = (resCor.ok && resCor.data) ? resCor.data : [];
   
+  preencherDatalistClientes();
+  
+  // Limpa o grid e mostra que está vazio, aguardando o filtro
+  state.imoveis = [];
+  const grid = $('grid');
+  if(grid) grid.innerHTML = '';
+  if($('emptyState')) $('emptyState').classList.remove('hidden');
+  
   atualizarContadores(); 
   popularFiltros(); 
-  renderizar(); 
-  preencherDatalistClientes(); 
-  carregarContagensClientes();
-  
-  // Roda os matches em background SEM travar a tela
-  setTimeout(() => {
-    iniciarMatchesBackground();
-  }, 500);
 }
+ 
 async function recarregar(){
   const btn = $('btnAtualizarHeader'); if(btn) btn.classList.add('girando');
   await carregarTudo(); if(btn) btn.classList.remove('girando');
@@ -1878,7 +1883,8 @@ function setarSliderPreco(min, max) {
 
 function fecharModalFiltro(){ $('modalFiltro').classList.remove('show'); }
 
-function aplicarFiltrosAvancados(){
+async function aplicarFiltrosAvancados(){
+  // 1. Captura os filtros
   const tiposAtivos = Array.from(document.querySelectorAll('#chipsTipoImovel .chip.active')).map(b => b.dataset.tipo);
   const andaresAtivos = Array.from(document.querySelectorAll('#chipsAndar .chip.active')).map(b => b.dataset.andar);
   const vagaTiposAtivos = Array.from(document.querySelectorAll('#chipsVagaTipo .chip.active')).map(b => b.dataset.vaga);
@@ -1899,21 +1905,64 @@ function aplicarFiltrosAvancados(){
   state._filtrosAvancados.condominioMax = $('filtroCondominioMax').value;
   state._filtrosAvancados.ordenacao = $('filtroOrdenacao').value;
   
-  fecharModalFiltro(); renderizar();
+  fecharModalFiltro(); 
+  
+  // 2. Se já temos imóveis na memória, só renderiza com os filtros
+  if (state.imoveis.length > 0) {
+    renderizar();
+    return;
+  }
+
+  // 3. Se é a primeira filtragem (a tela tá vazia), mostra o loading e busca
+  $('loadingFiltro').classList.remove('hidden');
+  
+  try {
+    const resIm = await api('listarImoveisGeral', { senha: SENHA_ADMIN });
+    state.imoveis = (resIm.ok && resIm.data) ? resIm.data : [];
+    
+    atualizarContadores();
+    popularFiltros();
+    renderizar();
+    
+    // Inicia o carregamento dos matches em background
+    setTimeout(() => { iniciarMatchesBackground(); }, 500);
+    
+  } catch (error) {
+    toast('Erro ao carregar imóveis.', 'error');
+  } finally {
+    $('loadingFiltro').classList.add('hidden');
+  }
 }
 
 function limparFiltros(){
   state._filtrosAvancados = { bairros: [], regioes: [], tipos: [], precoMin: null, precoMax: null, quartos: '', suites: '', vagasQtd: '', vagaTipos: [], elevador: '', andares: [], metragem: '', condominioMax: '', ordenacao: 'recentes' };
-  $('buscaInput').value = ''; document.querySelectorAll('#listaBairrosCheckboxes input').forEach(c => c.checked = false);
-  atualizarTextoMultiBairros(); atualizarChipsRegiao(); abrirModalFiltro(); aplicarFiltrosAvancados();
+  $('buscaInput').value = ''; 
+  document.querySelectorAll('#listaBairrosCheckboxes input').forEach(c => c.checked = false);
+  
+  atualizarTextoMultiBairros(); 
+  atualizarChipsRegiao(); 
+  fecharModalFiltro();
+  
+  // Se os imóveis já foram carregados, renderiza eles novamente sem filtro
+  if (state.imoveis.length > 0) {
+    renderizar(); 
+  } else {
+    // Se a tela ainda estiver vazia (antes do primeiro filtro), só reabre o modal
+    abrirModalFiltro();
+  }
 }
-
-  function toggleVagaTipo(btn) {
-  btn.classList.toggle('active');
-}  
  
 function renderizar(){
-  const grid = $('grid'); let lista = [...state.imoveis];
+  const grid = $('grid'); 
+  
+  // ✅ PROTEÇÃO: Se ainda não buscou os imóveis da API, não faz nada
+  if (state.imoveis.length === 0) {
+    grid.innerHTML = '';
+    $('emptyState').classList.remove('hidden');
+    return;
+  }
+
+  let lista = [...state.imoveis];
   if(state.filtroStatus === 'pendente') lista = lista.filter(im => !isVendido(im));
   else if(state.filtroStatus === 'vendido') lista = lista.filter(im => isVendido(im));
   else if(state.filtroStatus === 'corrigir') lista = lista.filter(im => !isVendido(im) && temInformacaoFaltando(im).length > 0);
@@ -2760,59 +2809,81 @@ async function renderizarPinosMapa(lista) {
   const validos = lista.filter(im => im.rua && im.numero && im.bairro);
   const bounds = L.latLngBounds();
   
+  // Carrega o cache de coordenadas salvas no navegador (se existir)
+  let cacheCoordenadas = {};
+  try {
+    cacheCoordenadas = JSON.parse(localStorage.getItem('coordenadas_imoveis_cache')) || {};
+  } catch(e) {}
+
   for (let i = 0; i < validos.length; i++) {
     const im = validos[i];
     const endereco = `${im.rua}, ${im.numero} - ${im.bairro}, Belo Horizonte, MG`;
     
-    try {
-      const resp = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(endereco)}&limit=1`);
-      const dados = await resp.json();
-      
-      if (dados && dados.length > 0) {
-        const lat = parseFloat(dados[0].lat);
-        const lng = parseFloat(dados[0].lon);
+    let lat, lng;
+    
+    // 1. Verifica se já temos a coordenada salva
+    if (cacheCoordenadas[endereco]) {
+      lat = cacheCoordenadas[endereco].lat;
+      lng = cacheCoordenadas[endereco].lng;
+    } else {
+      // 2. Se não tiver, busca no OpenStreetMap e espera 1 segundo para não ser bloqueado
+      try {
+        const resp = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(endereco)}&limit=1`);
+        const dados = await resp.json();
         
-        const marker = L.marker([lat, lng]);
-        dicionarioPinos[im.codigo] = marker;
-        
-        const imgUrl = im.imagem || 'https://via.placeholder.com/200x150';
-        
-        // ✅ NOVO POPUP: Com foto e resumo
-        marker.bindPopup(`
-          <div style="font-family:var(--font); width:220px; padding:2px;">
-            <img src="${esc(imgUrl)}" style="width:100%; height:120px; object-fit:cover; border-radius:6px; margin-bottom:8px; cursor:pointer;" onclick="abrirFotoModal('${esc(imgUrl)}', '${esc(im.titulo)}')">
-            
-            <b style="font-size:0.85rem; display:block; line-height:1.2; margin-bottom:4px;">${esc(im.titulo || 'Imóvel')}</b>
-            <span style="color:var(--success-bright); font-weight:800; font-size:1rem; display:block; margin-bottom:6px;">${esc(formatarMoeda(im.preco))}</span>
-            
-            <div style="font-size:0.7rem; color:var(--text-soft); margin-bottom:8px;">
-              ${esc(im.bairro)}<br>
-              Cód: <b>${esc(im.codigo)}</b>
-            </div>
-            
-            <button onclick="centralizarMapa('${esc(im.codigo)}', true); document.querySelector('.card-compacto[data-codigo=\\'${esc(im.codigo)}\\']').scrollIntoView({behavior:'smooth', block:'center'})" style="width:100%; padding:6px; border:none; border-radius:6px; background:var(--purple); color:#fff; font-size:0.7rem; font-weight:700; cursor:pointer;">Ver no Card</button>
-          </div>
-        `);
-        
-        marker.on('click', () => {
-           document.querySelectorAll('.card-compacto').forEach(c => c.style.borderColor = 'var(--border)');
-           const card = document.querySelector(`.card-compacto[data-codigo="${im.codigo}"]`);
-           if (card) {
-             card.style.borderColor = 'var(--purple)';
-             card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-           }
-        });
-        
-        marker.addTo(marcadoresLayer);
-        bounds.extend([lat, lng]);
+        if (dados && dados.length > 0) {
+          lat = parseFloat(dados[0].lat);
+          lng = parseFloat(dados[0].lon);
+          
+          // Salva no cache para a próxima vez que filtrar
+          cacheCoordenadas[endereco] = { lat, lng };
+          localStorage.setItem('coordenadas_imoveis_cache', JSON.stringify(cacheCoordenadas));
+        }
+      } catch(e) {
+        console.warn('Erro ao buscar coordenada:', endereco);
       }
-    } catch(e) {
-      console.warn('Erro ao buscar coordenada:', endereco);
+      // Pausa obrigatória do OpenStreetMap
+      await new Promise(r => setTimeout(r, 1000));
     }
-    await new Promise(r => setTimeout(r, 300));
+    
+    if (lat && lng) {
+      const marker = L.marker([lat, lng]);
+      dicionarioPinos[im.codigo] = marker;
+      
+      const imgUrl = im.imagem || 'https://via.placeholder.com/200x150';
+      
+      marker.bindPopup(`
+        <div style="font-family:var(--font); width:220px; padding:2px;">
+          <img src="${esc(imgUrl)}" style="width:100%; height:120px; object-fit:cover; border-radius:6px; margin-bottom:8px; cursor:pointer;" onclick="abrirFotoModal('${esc(imgUrl)}', '${esc(im.titulo)}')">
+          
+          <b style="font-size:0.85rem; display:block; line-height:1.2; margin-bottom:4px;">${esc(im.titulo || 'Imóvel')}</b>
+          <span style="color:var(--success-bright); font-weight:800; font-size:1rem; display:block; margin-bottom:6px;">${esc(formatarMoeda(im.preco))}</span>
+          
+          <div style="font-size:0.7rem; color:var(--text-soft); margin-bottom:8px;">
+            ${esc(im.bairro)}<br>
+            Cód: <b>${esc(im.codigo)}</b>
+          </div>
+          
+          <button onclick="centralizarMapa('${esc(im.codigo)}', true); document.querySelector('.card-compacto[data-codigo=\\'${esc(im.codigo)}\\']').scrollIntoView({behavior:'smooth', block:'center'})" style="width:100%; padding:6px; border:none; border-radius:6px; background:var(--purple); color:#fff; font-size:0.7rem; font-weight:700; cursor:pointer;">Ver no Card</button>
+        </div>
+      `);
+      
+      marker.on('click', () => {
+         document.querySelectorAll('.card-compacto').forEach(c => c.style.borderColor = 'var(--border)');
+         const card = document.querySelector(`.card-compacto[data-codigo="${im.codigo}"]`);
+         if (card) {
+           card.style.borderColor = 'var(--purple)';
+           card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+         }
+      });
+      
+      marker.addTo(marcadoresLayer);
+      bounds.extend([lat, lng]);
+    }
   }
   
   if (bounds.isValid()) {
+    // Dá um zoom para enquadrar todos os pinos encontrados
     mapaLeaflet.fitBounds(bounds, { padding: [30, 30], maxZoom: 16 });
   }
 }
