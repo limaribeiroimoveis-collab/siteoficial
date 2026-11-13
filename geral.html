@@ -2634,320 +2634,160 @@ function iniciarMapa() {
 }
 
 async function renderizarPinosMapa(lista) {
-  if (!mapaLeaflet || !marcadoresLayer) return;
+  if (!mapaLeaflet || !marcadoresLayer) {
+    console.warn('[MAPA] mapaLeaflet ou marcadoresLayer não inicializado');
+    return;
+  }
   marcadoresLayer.clearLayers();
   for (let key in dicionarioPinos) delete dicionarioPinos[key];
-  if (lista.length === 0) return;
+  
+  if (!lista || lista.length === 0) {
+    console.warn('[MAPA] Lista vazia');
+    return;
+  }
+  
   const validos = lista.filter(im => im.rua && im.numero && im.bairro);
+  console.log(`[MAPA] Total: ${lista.length} | Válidos: ${validos.length}`);
+  
+  if (validos.length === 0) return;
+  
   const bounds = L.latLngBounds();
   let cacheCoordenadas = {};
-  try { cacheCoordenadas = JSON.parse(localStorage.getItem(STORAGE_KEY_MAPA_CACHE)) || {}; } catch(e) {}
+  try {
+    cacheCoordenadas = JSON.parse(localStorage.getItem(STORAGE_KEY_MAPA_CACHE)) || {};
+    console.log(`[MAPA] Cache: ${Object.keys(cacheCoordenadas).length} entradas`);
+  } catch(e) { console.warn('[MAPA] Erro ao ler cache:', e); }
+  
   function normalizarEndereco(rua, numero, bairro) {
     const limpar = (s) => String(s || '').trim().toLowerCase()
-      .normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, ' ').replace(/[.,]/g, '').trim();
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      .replace(/\s+/g, ' ').replace(/[.,]/g, '').trim();
     return `${limpar(rua)}|${limpar(numero)}|${limpar(bairro)}`;
   }
-  const enderecosUnicos = new Map();
-  validos.forEach(im => {
-    const chave = normalizarEndereco(im.rua, im.numero, im.bairro);
-    if (!enderecosUnicos.has(chave)) {
-      enderecosUnicos.set(chave, { textoOriginal: `${String(im.rua).replace(/,,/g, ',').trim()}, ${String(im.numero).trim()} - ${String(im.bairro).trim()}, Belo Horizonte, MG` });
-    }
-  });
-  const faltantes = [];
-  enderecosUnicos.forEach((info, chave) => { if (!cacheCoordenadas[chave] || !cacheCoordenadas[chave].lat) faltantes.push({ chave, ...info }); });
-  for (let i = 0; i < faltantes.length; i++) {
-    const { chave, textoOriginal } = faltantes[i];
-    try {
-      const resp = await apiOnce('geocodificarEndereco', { endereco: textoOriginal }, 15000);
-      if (resp && resp.length > 0) {
-        cacheCoordenadas[chave] = { lat: parseFloat(resp[0].lat), lng: parseFloat(resp[0].lon), _ts: Date.now() };
-        localStorage.setItem(STORAGE_KEY_MAPA_CACHE, JSON.stringify(cacheCoordenadas));
-      } else {
-        cacheCoordenadas[chave] = { _naoEncontrado: true, _ts: Date.now() };
-      }
-    } catch(e) {
-      cacheCoordenadas[chave] = { _naoEncontrado: true, _ts: Date.now() };
-    }
-    if (i < faltantes.length - 1) await new Promise(r => setTimeout(r, 1200));
-  }
+  
+  // ==========================================================
+  // PASSO 1: Renderiza IMEDIATAMENTE os que já estão no cache
+  // ==========================================================
+  let pinosRenderizados = 0;
   validos.forEach(im => {
     const chave = normalizarEndereco(im.rua, im.numero, im.bairro);
     const coord = cacheCoordenadas[chave];
     if (coord && coord.lat && coord.lng) {
-      const marker = L.marker([coord.lat, coord.lng]);
-      dicionarioPinos[im.codigo] = marker;
-      const imgUrl = im.imagem || 'https://via.placeholder.com/200x150';
-      marker.bindPopup(`
-        <div style="font-family:var(--font); width:220px; padding:2px;">
-          <img src="${esc(imgUrl)}" style="width:100%; height:120px; object-fit:cover; border-radius:6px; margin-bottom:8px; cursor:pointer;" onclick="abrirFotoModal('${esc(imgUrl)}', '${esc(im.titulo)}')">
-          <b style="font-size:0.85rem; display:block; line-height:1.2; margin-bottom:4px;">${esc(im.titulo || 'Imóvel')}</b>
-          <span style="color:var(--success-bright); font-weight:800; font-size:1rem; display:block; margin-bottom:6px;">${esc(formatarMoeda(im.preco))}</span>
-          <div style="font-size:0.7rem; color:var(--text-soft); margin-bottom:8px;">${esc(im.bairro)}<br>Cód: <b>${esc(im.codigo)}</b></div>
-          <button onclick="abrirCardMobile(${JSON.stringify(im).replace(/</g,'\\u003c')});" style="width:100%; padding:6px; border:none; border-radius:6px; background:var(--purple); color:#fff; font-size:0.7rem; font-weight:700; cursor:pointer;">Ver detalhes</button>
-        </div>
-      `);
-      marker.on('click', () => {
-        document.querySelectorAll('.card-compacto').forEach(c => c.style.borderColor = 'var(--border)');
-        const card = document.querySelector(`.card-compacto[data-codigo="${im.codigo}"]`);
-        if (card) { card.style.borderColor = 'var(--purple)'; card.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
-        // Em mobile, abre card inferior
-        if (window.matchMedia('(max-width: 820px)').matches) {
-          abrirCardMobile(im);
-        }
-      });
-      marker.addTo(marcadoresLayer);
+      criarMarcador(im, coord);
       bounds.extend([coord.lat, coord.lng]);
+      pinosRenderizados++;
     }
   });
-  if (bounds.isValid()) mapaLeaflet.fitBounds(bounds, { padding: [30, 30], maxZoom: 16 });
-}
-
-function centralizarMapa(codigo, abrirPopup = false) {
-  if (!mapaLeaflet) return;
-  const marker = dicionarioPinos[codigo];
-  if (marker) {
-    mapaLeaflet.setView(marker.getLatLng(), 16, { animate: true });
-    if (abrirPopup) marker.openPopup();
+  
+  console.log(`[MAPA] ✅ ${pinosRenderizados} pinos renderizados imediatamente (do cache)`);
+  
+  if (bounds.isValid()) {
+    mapaLeaflet.fitBounds(bounds, { padding: [30, 30], maxZoom: 16 });
   }
-  document.querySelectorAll('.card-compacto').forEach(c => c.style.borderColor = 'var(--border)');
-  const card = document.querySelector(`.card-compacto[data-codigo="${codigo}"]`);
-  if (card) card.style.borderColor = 'var(--purple)';
-}
-
-function abrirFotoModal(url, titulo) {
-  if(!url) return;
-  const html = `
-    <div class="modal-backdrop show" id="fotoModal" onclick="if(event.target===this) fecharFotoModal()" style="z-index: 3000;">
-      <div style="position:relative; max-width:90vw; max-height:90vh;">
-        <button onclick="fecharFotoModal()" style="position:absolute; top:-15px; right:-15px; background:#fff; border:none; border-radius:50%; width:36px; height:36px; cursor:pointer; font-weight:bold; font-size:1.2rem; box-shadow:0 4px 12px rgba(0,0,0,0.3); z-index:10;">X</button>
-        <img src="${esc(url)}" style="max-width:90vw; max-height:85vh; border-radius:8px; display:block; box-shadow:0 10px 40px rgba(0,0,0,0.5);">
-        <div style="background:#fff; text-align:center; padding:10px; border-radius:0 0 8px 8px; font-weight:bold; font-size:1rem;">${esc(titulo)}</div>
+  
+  // ==========================================================
+  // PASSO 2: Geocodifica os faltantes EM BACKGROUND (não trava)
+  // ==========================================================
+  const enderecosUnicos = new Map();
+  validos.forEach(im => {
+    const chave = normalizarEndereco(im.rua, im.numero, im.bairro);
+    if (!enderecosUnicos.has(chave)) {
+      enderecosUnicos.set(chave, {
+        imoveis: [],
+        textoOriginal: `${String(im.rua).replace(/,,/g, ',').trim()}, ${String(im.numero).trim()} - ${String(im.bairro).trim()}, Belo Horizonte, MG`
+      });
+    }
+    enderecosUnicos.get(chave).imoveis.push(im);
+  });
+  
+  const faltantes = [];
+  enderecosUnicos.forEach((info, chave) => {
+    const c = cacheCoordenadas[chave];
+    if (!c || !c.lat || !c.lng) faltantes.push({ chave, ...info });
+  });
+  
+  console.log(`[MAPA] Faltam geocodificar: ${faltantes.length} endereços (background)`);
+  
+  if (faltantes.length === 0) return;
+  
+  // Processa em lotes de 5 (para não travar e dar feedback rápido)
+  const LOTE = 5;
+  let processados = 0;
+  let novosPinos = 0;
+  
+  for (let i = 0; i < faltantes.length; i += LOTE) {
+    const lote = faltantes.slice(i, i + LOTE);
+    
+    // Processa o lote em paralelo (mas com pequeno delay entre eles)
+    await Promise.all(lote.map(async (item, idx) => {
+      await new Promise(r => setTimeout(r, idx * 300));
+      try {
+        const resp = await apiOnce('geocodificarEndereco', { endereco: item.textoOriginal }, 15000);
+        if (resp && Array.isArray(resp) && resp.length > 0 && resp[0].lat && resp[0].lon) {
+          cacheCoordenadas[item.chave] = {
+            lat: parseFloat(resp[0].lat),
+            lng: parseFloat(resp[0].lon),
+            _ts: Date.now()
+          };
+          localStorage.setItem(STORAGE_KEY_MAPA_CACHE, JSON.stringify(cacheCoordenadas));
+          
+          // Adiciona o pino IMEDIATAMENTE na tela
+          item.imoveis.forEach(im => {
+            criarMarcador(im, cacheCoordenadas[item.chave]);
+            bounds.extend([cacheCoordenadas[item.chave].lat, cacheCoordenadas[item.chave].lng]);
+            novosPinos++;
+          });
+        } else {
+          cacheCoordenadas[item.chave] = { _naoEncontrado: true, _ts: Date.now() };
+        }
+      } catch(e) {
+        cacheCoordenadas[item.chave] = { _naoEncontrado: true, _ts: Date.now() };
+      }
+      processados++;
+    }));
+    
+    // A cada lote, atualiza os bounds (se o mapa estiver vazio, centraliza)
+    if (novosPinos > 0 && bounds.isValid()) {
+      mapaLeaflet.fitBounds(bounds, { padding: [30, 30], maxZoom: 16 });
+    }
+    
+    console.log(`[MAPA] Lote ${Math.floor(i/LOTE)+1}/${Math.ceil(faltantes.length/LOTE)} | Progresso: ${processados}/${faltantes.length} | Novos pinos: ${novosPinos}`);
+  }
+  
+  // Salva cache final
+  localStorage.setItem(STORAGE_KEY_MAPA_CACHE, JSON.stringify(cacheCoordenadas));
+  console.log(`[MAPA] 🏁 Finalizado! Total de pinos na tela: ${Object.keys(dicionarioPinos).length}`);
+  
+  // ==========================================================
+  // FUNÇÃO AUXILIAR: cria o marker (usada nos 2 passos)
+  // ==========================================================
+  function criarMarcador(im, coord) {
+    const codigo = String(im.codigo || '').trim();
+    if (dicionarioPinos[codigo]) return; // evita duplicata
+    
+    const marker = L.marker([coord.lat, coord.lng]);
+    dicionarioPinos[codigo] = marker;
+    
+    const imgUrl = im.imagem || 'https://via.placeholder.com/200x150';
+    marker.bindPopup(`
+      <div style="font-family:var(--font); width:220px; padding:2px;">
+        <img src="${esc(imgUrl)}" style="width:100%; height:120px; object-fit:cover; border-radius:6px; margin-bottom:8px; cursor:pointer;" onclick="abrirFotoModal('${esc(imgUrl)}', '${esc(im.titulo)}')">
+        <b style="font-size:0.85rem; display:block; line-height:1.2; margin-bottom:4px;">${esc(im.titulo || 'Imóvel')}</b>
+        <span style="color:var(--success-bright); font-weight:800; font-size:1rem; display:block; margin-bottom:6px;">${esc(formatarMoeda(im.preco))}</span>
+        <div style="font-size:0.7rem; color:var(--text-soft); margin-bottom:8px;">${esc(im.bairro)}<br>Cód: <b>${esc(codigo)}</b></div>
+        <button onclick="abrirCardMobileDoCodigo('${esc(codigo)}')" style="width:100%; padding:6px; border:none; border-radius:6px; background:var(--purple); color:#fff; font-size:0.7rem; font-weight:700; cursor:pointer;">Ver detalhes</button>
       </div>
-    </div>`;
-  document.body.insertAdjacentHTML('beforeend', html);
-}
-function fecharFotoModal() {
-  const m = $('fotoModal'); if(m) m.remove();
-}
-
-/* =========================================================
-   SINCRONIZAÇÃO SILENCIOSA (background)
-   ========================================================= */
-const SYNC_INTERVAL_MS = 2 * 60 * 1000;
-let _syncTimer = null;
-let _syncEmAndamento = false;
-let _ultimoHashLista = '';
-
-function hashDosImoveis(lista) {
-  if (!lista || lista.length === 0) return '0';
-  let h = lista.length + '|';
-  for (const im of lista) {
-    h += (im.id || '') + ':' + (im.codigo || '') + ':' + (im.preco || '') + ':' +
-         (im.condominio || '') + ':' + (im.iptu || '') + ':' +
-         (im.descricao || '').length + ':' + (im.chaveTexto || '').length + ':' +
-         (im.imagem || '').length + ':' + (im.vendido || '') + ':' +
-         (im.desativado || '') + ':' + (im.suites || '') + ':' +
-         (im.vaga || '') + ':' + (im.elevador || '') + '|';
-  }
-  let hash = 5381;
-  for (let i = 0; i < h.length; i++) hash = ((hash << 5) + hash + h.charCodeAt(i)) | 0;
-  return Math.abs(hash).toString(36);
-}
-
-async function sincronizarSilenciosamente() {
-  if (_syncEmAndamento) return;
-  if (!SENHA_ADMIN) return;
-  _syncEmAndamento = true;
-  try {
-    const [resIm, resCli, resCor] = await Promise.all([
-      api('listarImoveisGeral', { senha: SENHA_ADMIN }),
-      api('listarClientes', { senha: SENHA_ADMIN }),
-      api('listarCorretores', { senha: SENHA_ADMIN })
-    ]);
-    if (!resIm.ok) return;
-    const novosImoveis = resIm.data || [];
-    const novosClientes = (resCli.ok && resCli.data) ? resCli.data : state.clientes;
-    const novosCorretores = (resCor.ok && resCor.data) ? resCor.data : state.corretores;
-    const hashAtual = hashDosImoveis(novosImoveis);
-    if (hashAtual === _ultimoHashLista) {
-      console.log('[SYNC] Nada mudou, aguardando próximo ciclo.');
-      return;
-    }
-    const diff = diffImoveis(state.imoveis, novosImoveis);
-    console.log(`[SYNC] Mudanças: +${diff.novos.length} novos, -${diff.removidos.length} removidos, ~${diff.alterados.length} alterados`);
-    state.imoveis = novosImoveis;
-    state.clientes = novosClientes;
-    state.corretores = novosCorretores;
-    _ultimoHashLista = hashAtual;
-    atualizarContadores();
-    atualizarSomenteMudancas(diff);
-    if (diff.novos.length > 0 || diff.removidos.length > 0) popularFiltrosPreservandoSelecao();
-  } catch (e) {
-    console.warn('[SYNC] Erro silencioso:', e);
-  } finally {
-    _syncEmAndamento = false;
-  }
-}
-
-function iniciarSincronizacaoSilenciosa() {
-  if (_syncTimer) clearInterval(_syncTimer);
-  _ultimoHashLista = hashDosImoveis(state.imoveis);
-  _syncTimer = setInterval(sincronizarSilenciosamente, SYNC_INTERVAL_MS);
-  console.log('[SYNC] Sincronização silenciosa ativada (2 min).');
-}
-
-function diffImoveis(antigos, novos) {
-  const mapaAntigo = new Map();
-  antigos.forEach(im => { const cod = String(im.codigo || '').trim() || String(im.id); mapaAntigo.set(cod, im); });
-  const mapaNovo = new Map();
-  novos.forEach(im => { const cod = String(im.codigo || '').trim() || String(im.id); mapaNovo.set(cod, im); });
-  const novosArr = [], removidos = [], alterados = [];
-  mapaNovo.forEach((imNovo, cod) => {
-    const imAntigo = mapaAntigo.get(cod);
-    if (!imAntigo) novosArr.push(imNovo);
-    else {
-      const mudou =
-        imAntigo.preco !== imNovo.preco || imAntigo.condominio !== imNovo.condominio ||
-        imAntigo.iptu !== imNovo.iptu || imAntigo.descricao !== imNovo.descricao ||
-        imAntigo.chaveTexto !== imNovo.chaveTexto || imAntigo.imagem !== imNovo.imagem ||
-        imAntigo.vendido !== imNovo.vendido || imAntigo.desativado !== imNovo.desativado ||
-        imAntigo.suites !== imNovo.suites || imAntigo.vaga !== imNovo.vaga ||
-        imAntigo.elevador !== imNovo.elevador || imAntigo.titulo !== imNovo.titulo ||
-        imAntigo.bairro !== imNovo.bairro || imAntigo.rua !== imNovo.rua || imAntigo.numero !== imNovo.numero;
-      if (mudou) alterados.push({ antigo: imAntigo, novo: imNovo });
-    }
-  });
-  mapaAntigo.forEach((imAntigo, cod) => { if (!mapaNovo.has(cod)) removidos.push(imAntigo); });
-  return { novos: novosArr, removidos, alterados };
-}
-
-function atualizarSomenteMudancas(diff) {
-  if (diff.novos.length === 0 && diff.removidos.length === 0 && diff.alterados.length === 0) return;
-  diff.removidos.forEach(im => {
-    const cod = String(im.codigo || '').trim();
-    const card = document.querySelector(`.card[data-codigo="${cod}"]`);
-    if (card) card.remove();
-  });
-  diff.alterados.forEach(({ antigo, novo }) => {
-    const cod = String(novo.codigo || '').trim();
-    const cardAntigo = document.querySelector(`.card[data-codigo="${cod}"]`);
-    if (cardAntigo) {
-      const temp = document.createElement('div');
-      temp.innerHTML = cardHTML(novo);
-      const cardNovo = temp.firstElementChild;
-      cardAntigo.replaceWith(cardNovo);
-    }
-  });
-  diff.novos.forEach(novo => {
-    const listaFiltrada = filtrarListaAtual([novo]);
-    if (listaFiltrada.length === 0) return;
-    const temp = document.createElement('div');
-    temp.innerHTML = cardHTML(novo);
-    const cardNovo = temp.firstElementChild;
-    const grid = $('grid');
-    if (grid.firstChild) grid.insertBefore(cardNovo, grid.firstChild);
-    else grid.appendChild(cardNovo);
-  });
-  aplicarCacheMatchesNoDOM();
-  const container = document.querySelector('.container');
-  if (container && container.classList.contains('modo-mapa-ativo')) {
-    renderizarCardsMapa(state.imoveis);
-    diff.novos.forEach(im => adicionarPinoIndividual(im));
-    diff.removidos.forEach(im => {
-      const marker = dicionarioPinos[String(im.codigo || '').trim()];
-      if (marker && marcadoresLayer) { marcadoresLayer.removeLayer(marker); delete dicionarioPinos[String(im.codigo || '').trim()]; }
-    });
-    diff.alterados.forEach(({ novo }) => {
-      const marker = dicionarioPinos[String(novo.codigo || '').trim()];
-      if (marker) {
-        marker.setPopupContent(`<b>${esc(novo.titulo)}</b><br>${esc(formatarMoeda(novo.preco))}<br>Cód: <b>${esc(novo.codigo)}</b>`);
+    `);
+    marker.on('click', () => {
+      document.querySelectorAll('.card-compacto').forEach(c => c.style.borderColor = 'var(--border)');
+      const card = document.querySelector(`.card-compacto[data-codigo="${codigo}"]`);
+      if (card) { card.style.borderColor = 'var(--purple)'; card.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+      if (window.matchMedia('(max-width: 820px)').matches) {
+        abrirCardMobile(im);
       }
     });
+    marker.addTo(marcadoresLayer);
   }
-  const totalMudancas = diff.novos.length + diff.alterados.length + diff.removidos.length;
-  if (totalMudancas > 0) console.log(`[SYNC] ${totalMudancas} imóveis atualizados silenciosamente.`);
-}
-
-function filtrarListaAtual(lista) {
-  let filtrada = [...lista];
-  const f = state._filtrosAvancados;
-  if (state.filtroStatus === 'pendente') filtrada = filtrada.filter(im => !isVendido(im));
-  else if (state.filtroStatus === 'vendido') filtrada = filtrada.filter(im => isVendido(im));
-  else if (state.filtroStatus === 'corrigir') filtrada = filtrada.filter(im => !isVendido(im) && temInformacaoFaltando(im).length > 0);
-  const busca = ($('buscaInput').value || '').toLowerCase().trim();
-  if (busca) filtrada = filtrada.filter(i =>
-    (i.titulo || '').toLowerCase().includes(busca) || (i.codigo || '').toLowerCase().includes(busca) || (i.bairro || '').toLowerCase().includes(busca));
-  if (f.bairros.length > 0) filtrada = filtrada.filter(im => f.bairros.some(bCanonico => bairroCombinaComFiltro(im.bairro, bCanonico, state._gruposBairros || [])));
-  if (f.tipos.length > 0) filtrada = filtrada.filter(im => {
-    const tipo = extrairTipoImovel(im.descricao);
-    if (f.tipos.includes('padrao') && (tipo === 'Apartamento Padrão' || !tipo)) return true;
-    if (f.tipos.includes('casa') && tipo === 'Casa') return true;
-    if (f.tipos.includes('cobertura') && tipo === 'Cobertura') return true;
-    if (f.tipos.includes('area-privativa') && tipo === 'Área Privativa') return true;
-    return false;
-  });
-  if (f.precoMin) filtrada = filtrada.filter(im => parseNumeroBR(im.preco) >= f.precoMin);
-  if (f.precoMax !== null && f.precoMax !== undefined && f.precoMax > 0) filtrada = filtrada.filter(im => parseNumeroBR(im.preco) <= f.precoMax + 1);
-  if (f.quartos) filtrada = filtrada.filter(im => { const m = String(im.descricao || '').match(/(\d+)\s*quartos?/i); return m && parseInt(m[1]) >= parseInt(f.quartos); });
-  if (f.suites) filtrada = filtrada.filter(im => parseInt(im.suites || '0') >= parseInt(f.suites));
-  if (f.vagasQtd) filtrada = filtrada.filter(im => { const m = String(im.descricao || '').match(/(\d+)\s*(vagas?|vgs?)/i); const q = m ? parseInt(m[1]) : 0; if (f.vagasQtd === '0') return q === 0; if (f.vagasQtd === '3') return q >= 3; return q === parseInt(f.vagasQtd); });
-  if (f.vagaTipos && f.vagaTipos.length > 0) filtrada = filtrada.filter(im => f.vagaTipos.includes(String(im.vaga || '').trim()));
-  if (f.elevador) filtrada = filtrada.filter(im => im.elevador === f.elevador);
-  if (f.andares.length) filtrada = filtrada.filter(im => {
-    const apto = extrairAptoBlocoChave(im.chaveTexto || '').apto; const num = parseInt(apto) || 0;
-    const andar = num > 0 ? Math.floor(num / 100) || 1 : 0; if (andar === 0) return false;
-    return f.andares.some(a => a === '10' ? andar >= 10 : andar === parseInt(a));
-  });
-  if (f.metragem) filtrada = filtrada.filter(im => { const m = String(im.descricao || '').match(/(\d+)\s*m[²2]/i); return m && parseInt(m[1]) >= parseInt(f.metragem); });
-  if (f.condominioMax) filtrada = filtrada.filter(im => { const c = parseNumeroBR(im.condominio); return c === 0 || c <= parseFloat(f.condominioMax); });
-  if (state.filtroCliente) filtrada = filtrada.filter(im => {
-    const cod = String(im.codigo || '').trim(); if (!cod) return false;
-    if (state._matchesCache[cod]) return state._matchesCache[cod].some(m => normalizaTel(m.telefone) === state.filtroCliente);
-    return false;
-  });
-  return filtrada;
-}
-
-async function adicionarPinoIndividual(im) {
-  if (!im.rua || !im.numero || !im.bairro) return;
-  const normalizarEndereco = (rua, numero, bairro) => {
-    const limpar = (s) => String(s || '').trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, ' ').replace(/[.,]/g, '').trim();
-    return `${limpar(rua)}|${limpar(numero)}|${limpar(bairro)}`;
-  };
-  const chave = normalizarEndereco(im.rua, im.numero, im.bairro);
-  let cache = {};
-  try { cache = JSON.parse(localStorage.getItem(STORAGE_KEY_MAPA_CACHE)) || {}; } catch(e) {}
-  let coord = cache[chave];
-  if (!coord || !coord.lat) {
-    const textoOriginal = `${String(im.rua).replace(/,,/g, ',').trim()}, ${String(im.numero).trim()} - ${String(im.bairro).trim()}, Belo Horizonte, MG`;
-    try {
-      const resp = await apiOnce('geocodificarEndereco', { endereco: textoOriginal }, 15000);
-      if (resp && resp.length > 0) {
-        coord = { lat: parseFloat(resp[0].lat), lng: parseFloat(resp[0].lon), _ts: Date.now() };
-        cache[chave] = coord;
-        localStorage.setItem(STORAGE_KEY_MAPA_CACHE, JSON.stringify(cache));
-      } else return;
-    } catch(e) { return; }
-  }
-  const marker = L.marker([coord.lat, coord.lng]);
-  dicionarioPinos[String(im.codigo || '').trim()] = marker;
-  const imgUrl = im.imagem || 'https://via.placeholder.com/200x150';
-  marker.bindPopup(`
-    <div style="font-family:var(--font); width:220px; padding:2px;">
-      <img src="${esc(imgUrl)}" style="width:100%; height:120px; object-fit:cover; border-radius:6px; margin-bottom:8px;">
-      <b style="font-size:0.85rem; display:block; line-height:1.2; margin-bottom:4px;">${esc(im.titulo || 'Imóvel')}</b>
-      <span style="color:var(--success-bright); font-weight:800; font-size:1rem; display:block; margin-bottom:6px;">${esc(formatarMoeda(im.preco))}</span>
-      <div style="font-size:0.7rem; color:var(--text-soft); margin-bottom:8px;">${esc(im.bairro)}<br>Cód: <b>${esc(im.codigo)}</b></div>
-    </div>
-  `);
-  marker.on('click', () => {
-    document.querySelectorAll('.card-compacto').forEach(c => c.style.borderColor = 'var(--border)');
-    const card = document.querySelector(`.card-compacto[data-codigo="${im.codigo}"]`);
-    if (card) { card.style.borderColor = 'var(--purple)'; card.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
-    if (window.matchMedia('(max-width: 820px)').matches) abrirCardMobile(im);
-  });
-  marker.addTo(marcadoresLayer);
 }
 
 function popularFiltrosPreservandoSelecao() {
