@@ -724,11 +724,7 @@
 </style>
 </head>
 <body>
-<!-- Overlay de Carregamento de Filtro -->
-<div id="loadingFiltro" class="hidden" style="position:fixed; inset:0; background:rgba(15,23,42,0.6); z-index:9999; display:flex; flex-direction:column; align-items:center; justify-content:center; backdrop-filter:blur(3px);">
-  <div style="width: 50px; height: 50px; border: 4px solid rgba(255,255,255,0.2); border-top-color: #fff; border-radius: 50%; animation: girar .8s linear infinite;"></div>
-  <p style="color:#fff; margin-top: 16px; font-weight:700; font-size:1rem;">Carregando imóveis para seu filtro...</p>
-</div>
+
 <header class="app-header">
   <div class="header-inner">
     <div class="brand">
@@ -770,7 +766,7 @@
   <div class="topbar">
     <div class="topbar-inner">
       <div class="search-wrap">
-       <input type="search" id="buscaInput" placeholder="Buscar endereço, código..." oninput="buscarImovelTopo()">
+        <input type="search" id="buscaInput" placeholder="Buscar endereço, código..." oninput="renderizar()">
       </div>
       
       <div class="filters-inline" id="filters">
@@ -1534,21 +1530,14 @@ function confirmarAcao(opts){
     $('erroTitulo').textContent = 'Senha não informada'; $('erroTexto').textContent = 'Abra esta página pelo botão GERAL na vitrine admin.';
     return;
   }
-  
   $('loadingView').style.display = 'flex';
-  
-  // Valida a senha
   const resValid = await api('adminListar', { senha: SENHA_ADMIN });
   if(!resValid.ok){
     $('loadingView').style.display = 'none'; $('erroView').classList.remove('hidden'); $('erroView').style.display = 'block';
     $('erroTitulo').textContent = 'Senha inválida'; return;
   }
-  
-  // Carrega tudo, mas NÃO desenha os cards ainda (como definimos no carregarTudo)
   await carregarTudo();
-  
-  $('loadingView').style.display = 'none'; 
-  $('conteudoView').classList.remove('hidden');
+  $('loadingView').style.display = 'none'; $('conteudoView').classList.remove('hidden');
 })();
 
 async function carregarTudo(){
@@ -1557,59 +1546,25 @@ async function carregarTudo(){
     api('listarClientes', { senha: SENHA_ADMIN }), 
     api('listarCorretores', { senha: SENHA_ADMIN })
   ]);
-  
   state.imoveis = (resIm.ok && resIm.data) ? resIm.data : [];
   state.clientes = (resCli.ok && resCli.data) ? resCli.data : [];
   state.corretores = (resCor.ok && resCor.data) ? resCor.data : [];
   
-  preencherDatalistClientes();
   atualizarContadores(); 
   popularFiltros(); 
+  renderizar(); 
+  preencherDatalistClientes(); 
+  carregarContagensClientes();
   
-  // ✅ IMPORTANTE: Limpa o grid e mostra "Nenhum imóvel encontrado" (para não renderizar os cards ainda)
-  const grid = $('grid');
-  if(grid) grid.innerHTML = '';
-  if($('emptyState')) $('emptyState').classList.remove('hidden');
-  
-  // Inicia os matches em background, mas sem exibir os cards
+  // Roda os matches em background SEM travar a tela
   setTimeout(() => {
     iniciarMatchesBackground();
   }, 500);
 }
- 
 async function recarregar(){
   const btn = $('btnAtualizarHeader'); if(btn) btn.classList.add('girando');
-  
-  $('loadingFiltro').classList.remove('hidden');
-  try {
-    const [resIm, resCli, resCor] = await Promise.all([
-      api('listarImoveisGeral', { senha: SENHA_ADMIN }), 
-      api('listarClientes', { senha: SENHA_ADMIN }), 
-      api('listarCorretores', { senha: SENHA_ADMIN })
-    ]);
-    
-    state.imoveis = (resIm.ok && resIm.data) ? resIm.data : [];
-    state.clientes = (resCli.ok && resCli.data) ? resCli.data : [];
-    state.corretores = (resCor.ok && resCor.data) ? resCor.data : [];
-    
-    atualizarContadores(); 
-    popularFiltros(); 
-    renderizar(); 
-    preencherDatalistClientes(); 
-    carregarContagensClientes();
-    
-    if(state.imoveis.length > 0) {
-      setTimeout(() => { iniciarMatchesBackground(); }, 500);
-      toast('Catálogo atualizado', 'success');
-    } else {
-      toast('Nenhum imóvel encontrado na base.', 'error');
-    }
-  } catch(e) {
-    toast('Erro ao atualizar.', 'error');
-  } finally {
-    if(btn) btn.classList.remove('girando');
-    $('loadingFiltro').classList.add('hidden');
-  }
+  await carregarTudo(); if(btn) btn.classList.remove('girando');
+  toast('Catálogo atualizado', 'success');
 }
 
 async function carregarContagensClientes(){
@@ -1847,12 +1802,6 @@ function atualizarTextoMultiBairros(){
   else { txt.textContent = `${lista.length} bairros selecionados`; txt.classList.add('tem-valor'); contador.textContent = lista.length; contador.style.display = 'inline-block'; }
 }
 
-function buscarImovelTopo() {
-  // Como os imóveis já foram carregados no carregarTudo (mas não desenhados),
-  // basta chamar a renderizar para desenhar a lista filtrada
-  renderizar();
-}
-
 function toggleRegiao(regiao){
   const bReg = REGIOES_BH[regiao] || [];
   const grupos = state._gruposBairros || [];
@@ -1929,8 +1878,7 @@ function setarSliderPreco(min, max) {
 
 function fecharModalFiltro(){ $('modalFiltro').classList.remove('show'); }
 
-async function aplicarFiltrosAvancados(){
-  // 1. Captura os filtros
+function aplicarFiltrosAvancados(){
   const tiposAtivos = Array.from(document.querySelectorAll('#chipsTipoImovel .chip.active')).map(b => b.dataset.tipo);
   const andaresAtivos = Array.from(document.querySelectorAll('#chipsAndar .chip.active')).map(b => b.dataset.andar);
   const vagaTiposAtivos = Array.from(document.querySelectorAll('#chipsVagaTipo .chip.active')).map(b => b.dataset.vaga);
@@ -1951,64 +1899,21 @@ async function aplicarFiltrosAvancados(){
   state._filtrosAvancados.condominioMax = $('filtroCondominioMax').value;
   state._filtrosAvancados.ordenacao = $('filtroOrdenacao').value;
   
-  fecharModalFiltro(); 
-  
-  // 2. Se já temos imóveis na memória, só renderiza com os filtros
-  if (state.imoveis.length > 0) {
-    renderizar();
-    return;
-  }
-
-  // 3. Se é a primeira filtragem (a tela tá vazia), mostra o loading e busca
-  $('loadingFiltro').classList.remove('hidden');
-  
-  try {
-    const resIm = await api('listarImoveisGeral', { senha: SENHA_ADMIN });
-    state.imoveis = (resIm.ok && resIm.data) ? resIm.data : [];
-    
-    atualizarContadores();
-    popularFiltros();
-    renderizar();
-    
-    // Inicia o carregamento dos matches em background
-    setTimeout(() => { iniciarMatchesBackground(); }, 500);
-    
-  } catch (error) {
-    toast('Erro ao carregar imóveis.', 'error');
-  } finally {
-    $('loadingFiltro').classList.add('hidden');
-  }
+  fecharModalFiltro(); renderizar();
 }
 
 function limparFiltros(){
   state._filtrosAvancados = { bairros: [], regioes: [], tipos: [], precoMin: null, precoMax: null, quartos: '', suites: '', vagasQtd: '', vagaTipos: [], elevador: '', andares: [], metragem: '', condominioMax: '', ordenacao: 'recentes' };
-  $('buscaInput').value = ''; 
-  document.querySelectorAll('#listaBairrosCheckboxes input').forEach(c => c.checked = false);
-  
-  atualizarTextoMultiBairros(); 
-  atualizarChipsRegiao(); 
-  fecharModalFiltro();
-  
-  // Se os imóveis já foram carregados, renderiza eles novamente sem filtro
-  if (state.imoveis.length > 0) {
-    renderizar(); 
-  } else {
-    // Se a tela ainda estiver vazia (antes do primeiro filtro), só reabre o modal
-    abrirModalFiltro();
-  }
+  $('buscaInput').value = ''; document.querySelectorAll('#listaBairrosCheckboxes input').forEach(c => c.checked = false);
+  atualizarTextoMultiBairros(); atualizarChipsRegiao(); abrirModalFiltro(); aplicarFiltrosAvancados();
 }
+
+  function toggleVagaTipo(btn) {
+  btn.classList.toggle('active');
+}  
  
 function renderizar(){
-  const grid = $('grid'); 
-  
-  // ✅ PROTEÇÃO: Se ainda não buscou os imóveis da API, não faz nada
-  if (state.imoveis.length === 0) {
-    grid.innerHTML = '';
-    $('emptyState').classList.remove('hidden');
-    return;
-  }
-
-  let lista = [...state.imoveis];
+  const grid = $('grid'); let lista = [...state.imoveis];
   if(state.filtroStatus === 'pendente') lista = lista.filter(im => !isVendido(im));
   else if(state.filtroStatus === 'vendido') lista = lista.filter(im => isVendido(im));
   else if(state.filtroStatus === 'corrigir') lista = lista.filter(im => !isVendido(im) && temInformacaoFaltando(im).length > 0);
@@ -2105,8 +2010,6 @@ function renderizar(){
   setTimeout(() => carregarMatchesFaltantesBackground(), 200);
 }
 
-
- 
  function renderizarCardsMapa(lista) {
   const sidebar = $('mapaSidebar');
   if (!sidebar) return;
