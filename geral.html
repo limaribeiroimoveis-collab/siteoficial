@@ -1525,27 +1525,408 @@ function confirmarAcao(opts){
 
 (async function init(){
   aplicarColunas(carregarColunas());
+  
   if(!SENHA_ADMIN){
-    $('loadingView').style.display = 'none'; $('erroView').classList.remove('hidden'); $('erroView').style.display = 'block';
-    $('erroTitulo').textContent = 'Senha não informada'; $('erroTexto').textContent = 'Abra esta página pelo botão GERAL na vitrine admin.';
+    $('loadingView').style.display = 'none'; 
+    $('erroView').classList.remove('hidden'); 
+    $('erroView').style.display = 'block';
+    $('erroTitulo').textContent = 'Senha não informada'; 
+    $('erroTexto').textContent = 'Abra esta página pelo botão GERAL na vitrine admin.';
     return;
   }
+  
   $('loadingView').style.display = 'flex';
+  
   const resValid = await api('adminListar', { senha: SENHA_ADMIN });
   if(!resValid.ok){
-    $('loadingView').style.display = 'none'; $('erroView').classList.remove('hidden'); $('erroView').style.display = 'block';
-    $('erroTitulo').textContent = 'Senha inválida'; return;
+    $('loadingView').style.display = 'none'; 
+    $('erroView').classList.remove('hidden'); 
+    $('erroView').style.display = 'block';
+    $('erroTitulo').textContent = 'Senha inválida'; 
+    return;
   }
+  
   await carregarTudo();
-  $('loadingView').style.display = 'none'; $('conteudoView').classList.remove('hidden');
+  
+  $('loadingView').style.display = 'none'; 
+  $('conteudoView').classList.remove('hidden');
+  
+  // ✅ LIGA A SINCRONIZAÇÃO SILENCIOSA (após carregar tudo pela 1ª vez)
+  iniciarSincronizacaoSilenciosa();
 })();
 
+ 
+/* =========================================================
+   SINCRONIZAÇÃO SILENCIOSA (background)
+   Roda a cada N minutos e aplica só o que mudou
+   ========================================================= */
+const SYNC_INTERVAL_MS = 2 * 60 * 1000; // 2 minutos
+let _syncTimer = null;
+let _syncEmAndamento = false;
+let _ultimoHashLista = '';
+
+// Gera um hash rápido do estado atual (para detectar se mudou algo)
+function hashDosImoveis(lista) {
+  if (!lista || lista.length === 0) return '0';
+  let h = lista.length + '|';
+  for (const im of lista) {
+    h += (im.id || '') + ':' + 
+         (im.codigo || '') + ':' + 
+         (im.preco || '') + ':' + 
+         (im.condominio || '') + ':' +
+         (im.iptu || '') + ':' +
+         (im.descricao || '').length + ':' +
+         (im.chaveTexto || '').length + ':' +
+         (im.imagem || '').length + ':' +
+         (im.vendido || '') + ':' +
+         (im.desativado || '') + ':' +
+         (im.suites || '') + ':' +
+         (im.vaga || '') + ':' +
+         (im.elevador || '') + '|';
+  }
+  // Hash simples (djb2)
+  let hash = 5381;
+  for (let i = 0; i < h.length; i++) hash = ((hash << 5) + hash + h.charCodeAt(i)) | 0;
+  return Math.abs(hash).toString(36);
+}
+
+async function sincronizarSilenciosamente() {
+  if (_syncEmAndamento) return;       // não sobrepõe
+  if (!SENHA_ADMIN) return;
+  
+  _syncEmAndamento = true;
+  try {
+    // 1. Busca os dados no servidor
+    const [resIm, resCli, resCor] = await Promise.all([
+      api('listarImoveisGeral',  { senha: SENHA_ADMIN }),
+      api('listarClientes',      { senha: SENHA_ADMIN }),
+      api('listarCorretores',    { senha: SENHA_ADMIN })
+    ]);
+    
+    if (!resIm.ok) return; // servidor fora → tenta daqui a 2 min
+    
+    const novosImoveis = resIm.data || [];
+    const novosClientes = (resCli.ok && resCli.data) ? resCli.data : state.clientes;
+    const novosCorretores = (resCor.ok && resCor.data) ? resCor.data : state.corretores;
+    
+    // 2. Calcula hash para ver se REALMENTE mudou algo
+    const hashAtual = hashDosImoveis(novosImoveis);
+    if (hashAtual === _ultimoHashLista) {
+      console.log('[SYNC] Nada mudou, aguardando próximo ciclo.');
+      return;
+    }
+    
+    // 3. Compara em detalhe (diff)
+    const diff = diffImoveis(state.imoveis, novosImoveis);
+    
+    console.log(`[SYNC] Mudanças: +${diff.novos.length} novos, ` +
+                `-${diff.removidos.length} removidos, ` +
+                `~${diff.alterados.length} alterados`);
+    
+    // 4. Aplica no state (silencioso)
+    state.imoveis = novosImoveis;
+    state.clientes = novosClientes;
+    state.corretores = novosCorretores;
+    _ultimoHashLista = hashAtual;
+    
+    // 5. Atualiza APENAS o que mudou (sem re-render completo)
+    atualizarContadores();
+    atualizarSomenteMudancas(diff);
+    
+    // 6. Se algum filtro/bairro mudou, atualiza filtros preservando seleção
+    if (diff.novos.length > 0 || diff.removidos.length > 0) {
+      popularFiltrosPreservandoSelecao();
+    }
+    
+    // 7. Se tem card aberto no match modal, atualiza
+    // (opcional, mas evita "cliente sumiu")
+    
+  } catch (e) {
+    console.warn('[SYNC] Erro silencioso:', e);
+  } finally {
+    _syncEmAndamento = false;
+  }
+}
+
+// Inicia o ciclo
+
+ 
+function iniciarSincronizacaoSilenciosa() {
+  if (_syncTimer) clearInterval(_syncTimer);
+  _ultimoHashLista = hashDosImoveis(state.imoveis); // baseline
+  _syncTimer = setInterval(sincronizarSilenciosamente, SYNC_INTERVAL_MS);
+  console.log('[SYNC] Sincronização silenciosa ativada (2 min).');
+}
+
+// Para quando a página sai do foco (economia de recursos)
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) {
+    if (_syncTimer) { clearInterval(_syncTimer); _syncTimer = null; }
+  } else {
+    // Ao voltar, sincroniza imediatamente (caso tenha mudado algo)
+    sincronizarSilenciosamente();
+    iniciarSincronizacaoSilenciosa();
+  }
+});
+ function diffImoveis(antigos, novos) {
+  // Mapa por código (chave única do imóvel)
+  const mapaAntigo = new Map();
+  antigos.forEach(im => {
+    const cod = String(im.codigo || '').trim() || String(im.id);
+    mapaAntigo.set(cod, im);
+  });
+  
+  const mapaNovo = new Map();
+  novos.forEach(im => {
+    const cod = String(im.codigo || '').trim() || String(im.id);
+    mapaNovo.set(cod, im);
+  });
+  
+  const novosArr = [];
+  const removidos = [];
+  const alterados = [];
+  
+  // Novos e alterados
+  mapaNovo.forEach((imNovo, cod) => {
+    const imAntigo = mapaAntigo.get(cod);
+    if (!imAntigo) {
+      novosArr.push(imNovo);
+    } else {
+      // Compara campos relevantes
+      const mudou = 
+        imAntigo.preco !== imNovo.preco ||
+        imAntigo.condominio !== imNovo.condominio ||
+        imAntigo.iptu !== imNovo.iptu ||
+        imAntigo.descricao !== imNovo.descricao ||
+        imAntigo.chaveTexto !== imNovo.chaveTexto ||
+        imAntigo.imagem !== imNovo.imagem ||
+        imAntigo.vendido !== imNovo.vendido ||
+        imAntigo.desativado !== imNovo.desativado ||
+        imAntigo.suites !== imNovo.suites ||
+        imAntigo.vaga !== imNovo.vaga ||
+        imAntigo.elevador !== imNovo.elevador ||
+        imAntigo.titulo !== imNovo.titulo ||
+        imAntigo.bairro !== imNovo.bairro ||
+        imAntigo.rua !== imNovo.rua ||
+        imAntigo.numero !== imNovo.numero;
+      if (mudou) alterados.push({ antigo: imAntigo, novo: imNovo });
+    }
+  });
+  
+  // Removidos
+  mapaAntigo.forEach((imAntigo, cod) => {
+    if (!mapaNovo.has(cod)) removidos.push(imAntigo);
+  });
+  
+  return { novos: novosArr, removidos, alterados };
+}
+
+ function atualizarSomenteMudancas(diff) {
+  // Nada mudou → não faz nada (economia)
+  if (diff.novos.length === 0 && diff.removidos.length === 0 && diff.alterados.length === 0) {
+    return;
+  }
+  
+  // ✅ 1. Remove cards de imóveis removidos
+  diff.removidos.forEach(im => {
+    const cod = String(im.codigo || '').trim();
+    const card = document.querySelector(`.card[data-codigo="${cod}"]`);
+    if (card) card.remove();
+  });
+  
+  // ✅ 2. Atualiza cards de imóveis alterados
+  diff.alterados.forEach(({ antigo, novo }) => {
+    const cod = String(novo.codigo || '').trim();
+    const cardAntigo = document.querySelector(`.card[data-codigo="${cod}"]`);
+    if (cardAntigo) {
+      // Gera novo HTML e substitui no lugar
+      const temp = document.createElement('div');
+      temp.innerHTML = cardHTML(novo);
+      const cardNovo = temp.firstElementChild;
+      cardAntigo.replaceWith(cardNovo);
+    }
+  });
+  
+  // ✅ 3. Adiciona cards novos (no topo, igual ao sort padrão)
+  diff.novos.forEach(novo => {
+    const cod = String(novo.codigo || '').trim();
+    // Verifica se o novo imóvel passa nos filtros atuais
+    const listaFiltrada = filtrarListaAtual([novo]);
+    if (listaFiltrada.length === 0) return; // não passa nos filtros → ignora
+    
+    const temp = document.createElement('div');
+    temp.innerHTML = cardHTML(novo);
+    const cardNovo = temp.firstElementChild;
+    
+    // Insere no início do grid
+    const grid = $('grid');
+    if (grid.firstChild) grid.insertBefore(cardNovo, grid.firstChild);
+    else grid.appendChild(cardNovo);
+  });
+  
+  // ✅ 4. Reaplica badges de match (cache existente)
+  aplicarCacheMatchesNoDOM();
+  
+  // ✅ 5. Se o mapa estiver aberto, atualiza só os pinos novos/alterados
+  const container = document.querySelector('.container');
+  if (container && container.classList.contains('modo-mapa-ativo')) {
+    // Atualiza sidebar (recria os cards compactos)
+    renderizarCardsMapa(state.imoveis);
+    
+    // Para os pinos: adiciona novos e remove removidos
+    diff.novos.forEach(im => {
+      // Tenta buscar coordenada (do cache ou API)
+      adicionarPinoIndividual(im);
+    });
+    diff.removidos.forEach(im => {
+      const marker = dicionarioPinos[String(im.codigo || '').trim()];
+      if (marker && marcadoresLayer) {
+        marcadoresLayer.removeLayer(marker);
+        delete dicionarioPinos[String(im.codigo || '').trim()];
+      }
+    });
+    // Para alterados, atualiza popup se ele já tem pino
+    diff.alterados.forEach(({ novo }) => {
+      const marker = dicionarioPinos[String(novo.codigo || '').trim()];
+      if (marker) {
+        // Rebind popup com dados novos
+        const imgUrl = novo.imagem || 'https://via.placeholder.com/200x150';
+        marker.setPopupContent(`
+          <b>${esc(novo.titulo)}</b><br>
+          ${esc(formatarMoeda(novo.preco))}<br>
+          Cód: <b>${esc(novo.codigo)}</b>
+        `);
+      }
+    });
+  }
+  
+  // ✅ 6. Toast discreto (opcional)
+  const totalMudancas = diff.novos.length + diff.alterados.length + diff.removidos.length;
+  if (totalMudancas > 0) {
+    console.log(`[SYNC] ${totalMudancas} imóveis atualizados silenciosamente.`);
+    // toast(`🔄 ${totalMudancas} atualizações`, 'success'); // ← descomente se quiser aviso
+  }
+}
+
+// Helper: filtra uma lista usando os filtros atuais (reutiliza a lógica do renderizar)
+
+ async function adicionarPinoIndividual(im) {
+  if (!im.rua || !im.numero || !im.bairro) return;
+  
+  // Normaliza endereço (mesma função do renderizarPinosMapa)
+  const normalizarEndereco = (rua, numero, bairro) => {
+    const limpar = (s) => String(s || '')
+      .trim().toLowerCase()
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      .replace(/\s+/g, ' ').replace(/[.,]/g, '').trim();
+    return `${limpar(rua)}|${limpar(numero)}|${limpar(bairro)}`;
+  };
+  
+  const chave = normalizarEndereco(im.rua, im.numero, im.bairro);
+  
+  // Verifica cache primeiro
+  let cache = {};
+  try { cache = JSON.parse(localStorage.getItem('coordenadas_imoveis_cache')) || {}; } catch(e) {}
+  
+  let coord = cache[chave];
+  
+  // Se não tem no cache, busca agora (com pausa)
+  if (!coord || !coord.lat) {
+    const textoOriginal = `${String(im.rua).replace(/,,/g, ',').trim()}, ${String(im.numero).trim()} - ${String(im.bairro).trim()}, Belo Horizonte, MG`;
+    try {
+      const resp = await apiOnce('geocodificarEndereco', { endereco: textoOriginal }, 15000);
+      if (resp && resp.length > 0) {
+        coord = { lat: parseFloat(resp[0].lat), lng: parseFloat(resp[0].lon), _ts: Date.now() };
+        cache[chave] = coord;
+        localStorage.setItem('coordenadas_imoveis_cache', JSON.stringify(cache));
+      } else {
+        return; // não achou coordenada, não adiciona pino
+      }
+    } catch(e) {
+      return; // erro, tenta na próxima sync
+    }
+  }
+  
+  // Cria marcador
+  const marker = L.marker([coord.lat, coord.lng]);
+  dicionarioPinos[String(im.codigo || '').trim()] = marker;
+  
+  const imgUrl = im.imagem || 'https://via.placeholder.com/200x150';
+  marker.bindPopup(`
+    <div style="font-family:var(--font); width:220px; padding:2px;">
+      <img src="${esc(imgUrl)}" style="width:100%; height:120px; object-fit:cover; border-radius:6px; margin-bottom:8px;">
+      <b style="font-size:0.85rem; display:block; line-height:1.2; margin-bottom:4px;">${esc(im.titulo || 'Imóvel')}</b>
+      <span style="color:var(--success-bright); font-weight:800; font-size:1rem; display:block; margin-bottom:6px;">${esc(formatarMoeda(im.preco))}</span>
+      <div style="font-size:0.7rem; color:var(--text-soft); margin-bottom:8px;">${esc(im.bairro)}<br>Cód: <b>${esc(im.codigo)}</b></div>
+    </div>
+  `);
+  
+  marker.on('click', () => {
+    document.querySelectorAll('.card-compacto').forEach(c => c.style.borderColor = 'var(--border)');
+    const card = document.querySelector(`.card-compacto[data-codigo="${im.codigo}"]`);
+    if (card) { card.style.borderColor = 'var(--purple)'; card.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+  });
+  
+  marker.addTo(marcadoresLayer);
+}
+
+ function popularFiltrosPreservandoSelecao() {
+  // Salva seleção atual
+  const selecionadosAntes = new Set(state._filtrosAvancados.bairros || []);
+  
+  // Roda o popularFiltros normal
+  popularFiltros();
+  
+  // Restaura checkboxes que ainda existem
+  const bairrosDisponiveis = new Set((state._gruposBairros || []).map(g => g.canônico));
+  const mantidos = new Set();
+  
+  document.querySelectorAll('#bairrosGrid .ms-item').forEach(item => {
+    const span = item.querySelector('span');
+    const checkbox = item.querySelector('input');
+    if (!span || !checkbox) return;
+    const bairro = span.textContent.trim();
+    if (selecionadosAntes.has(bairro) && bairrosDisponiveis.has(bairro)) {
+      checkbox.checked = true;
+      mantidos.add(bairro);
+    }
+  });
+  
+  // Atualiza state com os que sobraram
+  state._filtrosAvancados.bairros = Array.from(mantidos);
+  atualizarTextoMultiBairros();
+  atualizarChipsRegiao();
+}
+
+ 
+function filtrarListaAtual(lista) {
+  // Simula renderizar() mas só com filtros (sem tocar no DOM)
+  let filtrada = [...lista];
+  const f = state._filtrosAvancados;
+  
+  if (state.filtroStatus === 'pendente') filtrada = filtrada.filter(im => !isVendido(im));
+  else if (state.filtroStatus === 'vendido') filtrada = filtrada.filter(im => isVendido(im));
+  else if (state.filtroStatus === 'corrigir') filtrada = filtrada.filter(im => !isVendido(im) && temInformacaoFaltando(im).length > 0);
+  
+  const busca = ($('buscaInput').value || '').toLowerCase().trim();
+  if (busca) filtrada = filtrada.filter(i => 
+    (i.titulo || '').toLowerCase().includes(busca) || 
+    (i.codigo || '').toLowerCase().includes(busca) || 
+    (i.bairro || '').toLowerCase().includes(busca)
+  );
+  
+  // (Aplique aqui os mesmos filtros avançados que você já usa no renderizar())
+  // ... (bairros, tipos, preço, quartos, etc.)
+  
+  return filtrada;
+}
 async function carregarTudo(){
   const [resIm, resCli, resCor] = await Promise.all([
     api('listarImoveisGeral', { senha: SENHA_ADMIN }), 
     api('listarClientes', { senha: SENHA_ADMIN }), 
     api('listarCorretores', { senha: SENHA_ADMIN })
   ]);
+  
   state.imoveis = (resIm.ok && resIm.data) ? resIm.data : [];
   state.clientes = (resCli.ok && resCli.data) ? resCli.data : [];
   state.corretores = (resCor.ok && resCor.data) ? resCor.data : [];
@@ -1556,10 +1937,15 @@ async function carregarTudo(){
   preencherDatalistClientes(); 
   carregarContagensClientes();
   
-  // Roda os matches em background SEM travar a tela
+  // Roda matches em background SEM travar a tela
   setTimeout(() => {
     iniciarMatchesBackground();
   }, 500);
+  
+  // ✅ Reset do hash (para o sync não achar que nada mudou)
+  if (typeof _ultimoHashLista !== 'undefined') {
+    _ultimoHashLista = hashDosImoveis(state.imoveis);
+  }
 }
 async function recarregar(){
   const btn = $('btnAtualizarHeader'); if(btn) btn.classList.add('girando');
@@ -2758,44 +3144,83 @@ async function renderizarPinosMapa(lista) {
   const validos = lista.filter(im => im.rua && im.numero && im.bairro);
   const bounds = L.latLngBounds();
   
+  // 1. Carrega o cache do localStorage (persistente entre sessões)
   let cacheCoordenadas = {};
   try {
     cacheCoordenadas = JSON.parse(localStorage.getItem('coordenadas_imoveis_cache')) || {};
   } catch(e) {}
 
-  const enderecosUnicos = [...new Set(validos.map(im => {
-    const ruaLimpa = String(im.rua).replace(/,,/g, ',').trim();
-    return `${ruaLimpa}, ${im.numero} - ${im.bairro}, Belo Horizonte, MG`;
-  }))];
+  // 2. Função de normalização (chave canônica)
+  function normalizarEndereco(rua, numero, bairro) {
+    const limpar = (s) => String(s || '')
+      .trim()
+      .toLowerCase()
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // remove acentos
+      .replace(/\s+/g, ' ') // espaços múltiplos
+      .replace(/[.,]/g, '') // remove pontos e vírgulas
+      .trim();
+    return `${limpar(rua)}|${limpar(numero)}|${limpar(bairro)}`;
+  }
 
-  for (let i = 0; i < enderecosUnicos.length; i++) {
-    const endereco = enderecosUnicos[i];
-    if (!cacheCoordenadas[endereco]) {
-      try {
-        const resp = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(endereco)}&limit=1`, {
-          headers: {
-            'Accept': 'application/json',
-            'User-Agent': 'LimaRibeiroImoveis/1.0 (contato@limaribeiroimoveis.com.br)'
-          }
-        });
-        if (resp.ok) {
-          const dados = await resp.json();
-          if (dados && dados.length > 0) {
-            cacheCoordenadas[endereco] = { lat: parseFloat(dados[0].lat), lng: parseFloat(dados[0].lon) };
-            localStorage.setItem('coordenadas_imoveis_cache', JSON.stringify(cacheCoordenadas));
-          }
-        }
-      } catch(e) { console.warn('Erro ao buscar coordenada:', endereco); }
-      await new Promise(r => setTimeout(r, 1200)); 
+  // 3. Deduplicação com Set (evita buscar o mesmo endereço 2x na mesma sessão)
+  const enderecosUnicos = new Map(); // chaveCanonica -> {rua, numero, bairro, textoOriginal}
+  validos.forEach(im => {
+    const chave = normalizarEndereco(im.rua, im.numero, im.bairro);
+    if (!enderecosUnicos.has(chave)) {
+      enderecosUnicos.set(chave, {
+        rua: String(im.rua).replace(/,,/g, ',').trim(),
+        numero: String(im.numero).trim(),
+        bairro: String(im.bairro).trim(),
+        textoOriginal: `${String(im.rua).replace(/,,/g, ',').trim()}, ${String(im.numero).trim()} - ${String(im.bairro).trim()}, Belo Horizonte, MG`
+      });
+    }
+  });
+
+  // 4. Processa apenas os que NÃO estão no cache
+  const faltantes = [];
+  enderecosUnicos.forEach((info, chave) => {
+    if (!cacheCoordenadas[chave]) {
+      faltantes.push({ chave, ...info });
+    }
+  });
+
+  console.log(`[MAPA] ${enderecosUnicos.size} endereços únicos | ${faltantes.length} para buscar | ${enderecosUnicos.size - faltantes.length} no cache`);
+
+  // 5. Busca os faltantes (com pausa para não sobrecarregar)
+  for (let i = 0; i < faltantes.length; i++) {
+    const { chave, textoOriginal } = faltantes[i];
+    
+    try {
+      const resp = await apiOnce('geocodificarEndereco', { endereco: textoOriginal }, 15000);
+      
+      if (resp && resp.length > 0) {
+        cacheCoordenadas[chave] = { 
+          lat: parseFloat(resp[0].lat), 
+          lng: parseFloat(resp[0].lon) 
+        };
+        // Salva a cada item (se a página fechar, não perde o que já buscou)
+        localStorage.setItem('coordenadas_imoveis_cache', JSON.stringify(cacheCoordenadas));
+      } else {
+        // Marca como "não encontrado" para não tentar de novo na mesma sessão
+        cacheCoordenadas[chave] = null;
+      }
+    } catch(e) {
+      console.warn('Erro ao buscar:', chave, e);
+      cacheCoordenadas[chave] = null;
+    }
+    
+    // Pausa entre requisições (o Apps Script aguenta, mas o Nominatim pede 1req/s)
+    if (i < faltantes.length - 1) {
+      await new Promise(r => setTimeout(r, 1200));
     }
   }
-  
+
+  // 6. Agora monta os pinos usando o cache (rápido, sem requisição)
   validos.forEach(im => {
-    const ruaLimpa = String(im.rua).replace(/,,/g, ',').trim();
-    const endereco = `${ruaLimpa}, ${im.numero} - ${im.bairro}, Belo Horizonte, MG`;
-    const coord = cacheCoordenadas[endereco];
+    const chave = normalizarEndereco(im.rua, im.numero, im.bairro);
+    const coord = cacheCoordenadas[chave];
     
-    if (coord) {
+    if (coord && coord.lat && coord.lng) {
       const marker = L.marker([coord.lat, coord.lng]);
       dicionarioPinos[im.codigo] = marker;
       const imgUrl = im.imagem || 'https://via.placeholder.com/200x150';
@@ -2850,16 +3275,326 @@ function abrirFotoModal(url, titulo) {
 function fecharFotoModal() {
   const m = $('fotoModal'); if(m) m.remove();
 }
+/* =========================================================
+   SINCRONIZAÇÃO SILENCIOSA (background)
+   Roda a cada N minutos e aplica só o que mudou
+   ========================================================= */
+const SYNC_INTERVAL_MS = 2 * 60 * 1000; // 2 minutos
+let _syncTimer = null;
+let _syncEmAndamento = false;
+let _ultimoHashLista = '';
 
+// Gera um hash rápido do estado atual (para detectar se mudou algo)
+function hashDosImoveis(lista) {
+  if (!lista || lista.length === 0) return '0';
+  let h = lista.length + '|';
+  for (const im of lista) {
+    h += (im.id || '') + ':' + (im.codigo || '') + ':' + (im.preco || '') + ':' +
+         (im.condominio || '') + ':' + (im.iptu || '') + ':' +
+         (im.descricao || '').length + ':' + (im.chaveTexto || '').length + ':' +
+         (im.imagem || '').length + ':' + (im.vendido || '') + ':' +
+         (im.desativado || '') + ':' + (im.suites || '') + ':' +
+         (im.vaga || '') + ':' + (im.elevador || '') + '|';
+  }
+  let hash = 5381;
+  for (let i = 0; i < h.length; i++) hash = ((hash << 5) + hash + h.charCodeAt(i)) | 0;
+  return Math.abs(hash).toString(36);
+}
+
+async function sincronizarSilenciosamente() {
+  if (_syncEmAndamento) return;
+  if (!SENHA_ADMIN) return;
+  
+  _syncEmAndamento = true;
+  try {
+    const [resIm, resCli, resCor] = await Promise.all([
+      api('listarImoveisGeral',  { senha: SENHA_ADMIN }),
+      api('listarClientes',      { senha: SENHA_ADMIN }),
+      api('listarCorretores',    { senha: SENHA_ADMIN })
+    ]);
+    
+    if (!resIm.ok) return;
+    
+    const novosImoveis = resIm.data || [];
+    const novosClientes = (resCli.ok && resCli.data) ? resCli.data : state.clientes;
+    const novosCorretores = (resCor.ok && resCor.data) ? resCor.data : state.corretores;
+    
+    const hashAtual = hashDosImoveis(novosImoveis);
+    if (hashAtual === _ultimoHashLista) {
+      console.log('[SYNC] Nada mudou, aguardando próximo ciclo.');
+      return;
+    }
+    
+    const diff = diffImoveis(state.imoveis, novosImoveis);
+    
+    console.log(`[SYNC] Mudanças: +${diff.novos.length} novos, -${diff.removidos.length} removidos, ~${diff.alterados.length} alterados`);
+    
+    state.imoveis = novosImoveis;
+    state.clientes = novosClientes;
+    state.corretores = novosCorretores;
+    _ultimoHashLista = hashAtual;
+    
+    atualizarContadores();
+    atualizarSomenteMudancas(diff);
+    
+    if (diff.novos.length > 0 || diff.removidos.length > 0) {
+      popularFiltrosPreservandoSelecao();
+    }
+  } catch (e) {
+    console.warn('[SYNC] Erro silencioso:', e);
+  } finally {
+    _syncEmAndamento = false;
+  }
+}
+
+function iniciarSincronizacaoSilenciosa() {
+  if (_syncTimer) clearInterval(_syncTimer);
+  _ultimoHashLista = hashDosImoveis(state.imoveis);
+  _syncTimer = setInterval(sincronizarSilenciosamente, SYNC_INTERVAL_MS);
+  console.log('[SYNC] Sincronização silenciosa ativada (2 min).');
+}
+
+function diffImoveis(antigos, novos) {
+  const mapaAntigo = new Map();
+  antigos.forEach(im => {
+    const cod = String(im.codigo || '').trim() || String(im.id);
+    mapaAntigo.set(cod, im);
+  });
+  const mapaNovo = new Map();
+  novos.forEach(im => {
+    const cod = String(im.codigo || '').trim() || String(im.id);
+    mapaNovo.set(cod, im);
+  });
+  
+  const novosArr = [];
+  const removidos = [];
+  const alterados = [];
+  
+  mapaNovo.forEach((imNovo, cod) => {
+    const imAntigo = mapaAntigo.get(cod);
+    if (!imAntigo) {
+      novosArr.push(imNovo);
+    } else {
+      const mudou = 
+        imAntigo.preco !== imNovo.preco ||
+        imAntigo.condominio !== imNovo.condominio ||
+        imAntigo.iptu !== imNovo.iptu ||
+        imAntigo.descricao !== imNovo.descricao ||
+        imAntigo.chaveTexto !== imNovo.chaveTexto ||
+        imAntigo.imagem !== imNovo.imagem ||
+        imAntigo.vendido !== imNovo.vendido ||
+        imAntigo.desativado !== imNovo.desativado ||
+        imAntigo.suites !== imNovo.suites ||
+        imAntigo.vaga !== imNovo.vaga ||
+        imAntigo.elevador !== imNovo.elevador ||
+        imAntigo.titulo !== imNovo.titulo ||
+        imAntigo.bairro !== imNovo.bairro ||
+        imAntigo.rua !== imNovo.rua ||
+        imAntigo.numero !== imNovo.numero;
+      if (mudou) alterados.push({ antigo: imAntigo, novo: imNovo });
+    }
+  });
+  
+  mapaAntigo.forEach((imAntigo, cod) => {
+    if (!mapaNovo.has(cod)) removidos.push(imAntigo);
+  });
+  
+  return { novos: novosArr, removidos, alterados };
+}
+
+function atualizarSomenteMudancas(diff) {
+  if (diff.novos.length === 0 && diff.removidos.length === 0 && diff.alterados.length === 0) {
+    return;
+  }
+  
+  // 1. Remove cards removidos
+  diff.removidos.forEach(im => {
+    const cod = String(im.codigo || '').trim();
+    const card = document.querySelector(`.card[data-codigo="${cod}"]`);
+    if (card) card.remove();
+  });
+  
+  // 2. Atualiza cards alterados
+  diff.alterados.forEach(({ antigo, novo }) => {
+    const cod = String(novo.codigo || '').trim();
+    const cardAntigo = document.querySelector(`.card[data-codigo="${cod}"]`);
+    if (cardAntigo) {
+      const temp = document.createElement('div');
+      temp.innerHTML = cardHTML(novo);
+      const cardNovo = temp.firstElementChild;
+      cardAntigo.replaceWith(cardNovo);
+    }
+  });
+  
+  // 3. Adiciona novos (se passarem nos filtros atuais)
+  diff.novos.forEach(novo => {
+    const cod = String(novo.codigo || '').trim();
+    const listaFiltrada = filtrarListaAtual([novo]);
+    if (listaFiltrada.length === 0) return;
+    
+    const temp = document.createElement('div');
+    temp.innerHTML = cardHTML(novo);
+    const cardNovo = temp.firstElementChild;
+    
+    const grid = $('grid');
+    if (grid.firstChild) grid.insertBefore(cardNovo, grid.firstChild);
+    else grid.appendChild(cardNovo);
+  });
+  
+  // 4. Reaplica badges de match
+  aplicarCacheMatchesNoDOM();
+  
+  // 5. Se o mapa estiver aberto, atualiza
+  const container = document.querySelector('.container');
+  if (container && container.classList.contains('modo-mapa-ativo')) {
+    renderizarCardsMapa(state.imoveis);
+    diff.novos.forEach(im => adicionarPinoIndividual(im));
+    diff.removidos.forEach(im => {
+      const marker = dicionarioPinos[String(im.codigo || '').trim()];
+      if (marker && marcadoresLayer) {
+        marcadoresLayer.removeLayer(marker);
+        delete dicionarioPinos[String(im.codigo || '').trim()];
+      }
+    });
+    diff.alterados.forEach(({ novo }) => {
+      const marker = dicionarioPinos[String(novo.codigo || '').trim()];
+      if (marker) {
+        const imgUrl = novo.imagem || 'https://via.placeholder.com/200x150';
+        marker.setPopupContent(`
+          <b>${esc(novo.titulo)}</b><br>
+          ${esc(formatarMoeda(novo.preco))}<br>
+          Cód: <b>${esc(novo.codigo)}</b>
+        `);
+      }
+    });
+  }
+  
+  const totalMudancas = diff.novos.length + diff.alterados.length + diff.removidos.length;
+  if (totalMudancas > 0) {
+    console.log(`[SYNC] ${totalMudancas} imóveis atualizados silenciosamente.`);
+  }
+}
+
+function filtrarListaAtual(lista) {
+  let filtrada = [...lista];
+  const f = state._filtrosAvancados;
+  
+  if (state.filtroStatus === 'pendente') filtrada = filtrada.filter(im => !isVendido(im));
+  else if (state.filtroStatus === 'vendido') filtrada = filtrada.filter(im => isVendido(im));
+  else if (state.filtroStatus === 'corrigir') filtrada = filtrada.filter(im => !isVendido(im) && temInformacaoFaltando(im).length > 0);
+  
+  const busca = ($('buscaInput').value || '').toLowerCase().trim();
+  if (busca) filtrada = filtrada.filter(i => 
+    (i.titulo || '').toLowerCase().includes(busca) || 
+    (i.codigo || '').toLowerCase().includes(busca) || 
+    (i.bairro || '').toLowerCase().includes(busca)
+  );
+  
+  return filtrada;
+}
+
+async function adicionarPinoIndividual(im) {
+  if (!im.rua || !im.numero || !im.bairro) return;
+  
+  const normalizarEndereco = (rua, numero, bairro) => {
+    const limpar = (s) => String(s || '')
+      .trim().toLowerCase()
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      .replace(/\s+/g, ' ').replace(/[.,]/g, '').trim();
+    return `${limpar(rua)}|${limpar(numero)}|${limpar(bairro)}`;
+  };
+  
+  const chave = normalizarEndereco(im.rua, im.numero, im.bairro);
+  
+  let cache = {};
+  try { cache = JSON.parse(localStorage.getItem('coordenadas_imoveis_cache')) || {}; } catch(e) {}
+  
+  let coord = cache[chave];
+  
+  if (!coord || !coord.lat) {
+    const textoOriginal = `${String(im.rua).replace(/,,/g, ',').trim()}, ${String(im.numero).trim()} - ${String(im.bairro).trim()}, Belo Horizonte, MG`;
+    try {
+      const resp = await apiOnce('geocodificarEndereco', { endereco: textoOriginal }, 15000);
+      if (resp && resp.length > 0) {
+        coord = { lat: parseFloat(resp[0].lat), lng: parseFloat(resp[0].lon), _ts: Date.now() };
+        cache[chave] = coord;
+        localStorage.setItem('coordenadas_imoveis_cache', JSON.stringify(cache));
+      } else {
+        return;
+      }
+    } catch(e) {
+      return;
+    }
+  }
+  
+  const marker = L.marker([coord.lat, coord.lng]);
+  dicionarioPinos[String(im.codigo || '').trim()] = marker;
+  
+  const imgUrl = im.imagem || 'https://via.placeholder.com/200x150';
+  marker.bindPopup(`
+    <div style="font-family:var(--font); width:220px; padding:2px;">
+      <img src="${esc(imgUrl)}" style="width:100%; height:120px; object-fit:cover; border-radius:6px; margin-bottom:8px;">
+      <b style="font-size:0.85rem; display:block; line-height:1.2; margin-bottom:4px;">${esc(im.titulo || 'Imóvel')}</b>
+      <span style="color:var(--success-bright); font-weight:800; font-size:1rem; display:block; margin-bottom:6px;">${esc(formatarMoeda(im.preco))}</span>
+      <div style="font-size:0.7rem; color:var(--text-soft); margin-bottom:8px;">${esc(im.bairro)}<br>Cód: <b>${esc(im.codigo)}</b></div>
+    </div>
+  `);
+  
+  marker.on('click', () => {
+    document.querySelectorAll('.card-compacto').forEach(c => c.style.borderColor = 'var(--border)');
+    const card = document.querySelector(`.card-compacto[data-codigo="${im.codigo}"]`);
+    if (card) { card.style.borderColor = 'var(--purple)'; card.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+  });
+  
+  marker.addTo(marcadoresLayer);
+}
+
+function popularFiltrosPreservandoSelecao() {
+  const selecionadosAntes = new Set(state._filtrosAvancados.bairros || []);
+  popularFiltros();
+  
+  const bairrosDisponiveis = new Set((state._gruposBairros || []).map(g => g.canônico));
+  const mantidos = new Set();
+  
+  document.querySelectorAll('#bairrosGrid .ms-item').forEach(item => {
+    const span = item.querySelector('span');
+    const checkbox = item.querySelector('input');
+    if (!span || !checkbox) return;
+    const bairro = span.textContent.trim();
+    if (selecionadosAntes.has(bairro) && bairrosDisponiveis.has(bairro)) {
+      checkbox.checked = true;
+      mantidos.add(bairro);
+    }
+  });
+  
+  state._filtrosAvancados.bairros = Array.from(mantidos);
+  atualizarTextoMultiBairros();
+  atualizarChipsRegiao();
+}
 window.addEventListener('resize', () => aplicarColunas(carregarColunas()));
+
 document.addEventListener('DOMContentLoaded', () => {
   initSliderPreco();
   document.querySelectorAll('#chipsTipoImovel .chip, #chipsAndar .chip').forEach(b => b.addEventListener('click', () => b.classList.toggle('active')));
   document.querySelectorAll('#chipsElevador .chip').forEach(b => b.addEventListener('click', () => { document.querySelectorAll('#chipsElevador .chip').forEach(x => x.classList.remove('active')); b.classList.add('active'); }));
   document.querySelectorAll('#chipsRegiao .chip-regiao').forEach(btn => btn.addEventListener('click', () => toggleRegiao(btn.dataset.regiao)));
- // ✅ NOVO: Listener dos chips de tipo de vaga
+  // ✅ NOVO: Listener dos chips de tipo de vaga
   document.querySelectorAll('#chipsVagaTipo .chip').forEach(b => b.addEventListener('click', () => b.classList.toggle('active')));
 });
+
+// ✅ SINCRONIZAÇÃO SILENCIOSA — pausa quando a aba fica em background
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) {
+    if (_syncTimer) { clearInterval(_syncTimer); _syncTimer = null; }
+    console.log('[SYNC] Aba em background — sincronização pausada.');
+  } else {
+    console.log('[SYNC] Aba voltou ao foco — sincronizando agora.');
+    sincronizarSilenciosamente();
+    iniciarSincronizacaoSilenciosa();
+  }
+});
+
+ 
 </script>
 </body>
 </html>
