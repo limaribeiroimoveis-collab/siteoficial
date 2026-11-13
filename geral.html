@@ -2718,11 +2718,11 @@ window.testarSuite = async function(codigo, suitesValue) {
 };
 
 // ==========================================
-// LÓGICA DO MAPA (LEAFLET)
+// LÓGICA DO MAPA (LEAFLET) E PERFORMANCE
 // ==========================================
 let mapaLeaflet = null;
 let marcadoresLayer = null;
-const dicionarioPinos = {}; // Guarda as coordenadas de cada código
+const dicionarioPinos = {}; 
 
 function iniciarMapa() {
   state._mapaIniciado = true;
@@ -2745,23 +2745,90 @@ function iniciarMapa() {
   }).addTo(mapaLeaflet);
   
   marcadoresLayer = L.layerGroup().addTo(mapaLeaflet);
-  
   setTimeout(() => { mapaLeaflet.invalidateSize(); }, 400);
 }
 
-renderizarPinosMapa
+async function renderizarPinosMapa(lista) {
+  if (!mapaLeaflet || !marcadoresLayer) return;
+  marcadoresLayer.clearLayers();
+  
+  for (let key in dicionarioPinos) delete dicionarioPinos[key];
+  if (lista.length === 0) return;
+  
+  const validos = lista.filter(im => im.rua && im.numero && im.bairro);
+  const bounds = L.latLngBounds();
+  
+  let cacheCoordenadas = {};
+  try {
+    cacheCoordenadas = JSON.parse(localStorage.getItem('coordenadas_imoveis_cache')) || {};
+  } catch(e) {}
+
+  const enderecosUnicos = [...new Set(validos.map(im => {
+    const ruaLimpa = String(im.rua).replace(/,,/g, ',').trim();
+    return `${ruaLimpa}, ${im.numero} - ${im.bairro}, Belo Horizonte, MG`;
+  }))];
+
+  for (let i = 0; i < enderecosUnicos.length; i++) {
+    const endereco = enderecosUnicos[i];
+    if (!cacheCoordenadas[endereco]) {
+      try {
+        const resp = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(endereco)}&limit=1`, {
+          headers: {
+            'Accept': 'application/json',
+            'User-Agent': 'LimaRibeiroImoveis/1.0 (contato@limaribeiroimoveis.com.br)'
+          }
+        });
+        if (resp.ok) {
+          const dados = await resp.json();
+          if (dados && dados.length > 0) {
+            cacheCoordenadas[endereco] = { lat: parseFloat(dados[0].lat), lng: parseFloat(dados[0].lon) };
+            localStorage.setItem('coordenadas_imoveis_cache', JSON.stringify(cacheCoordenadas));
+          }
+        }
+      } catch(e) { console.warn('Erro ao buscar coordenada:', endereco); }
+      await new Promise(r => setTimeout(r, 1200)); 
+    }
+  }
+  
+  validos.forEach(im => {
+    const ruaLimpa = String(im.rua).replace(/,,/g, ',').trim();
+    const endereco = `${ruaLimpa}, ${im.numero} - ${im.bairro}, Belo Horizonte, MG`;
+    const coord = cacheCoordenadas[endereco];
+    
+    if (coord) {
+      const marker = L.marker([coord.lat, coord.lng]);
+      dicionarioPinos[im.codigo] = marker;
+      const imgUrl = im.imagem || 'https://via.placeholder.com/200x150';
+      
+      marker.bindPopup(`
+        <div style="font-family:var(--font); width:220px; padding:2px;">
+          <img src="${esc(imgUrl)}" style="width:100%; height:120px; object-fit:cover; border-radius:6px; margin-bottom:8px; cursor:pointer;" onclick="abrirFotoModal('${esc(imgUrl)}', '${esc(im.titulo)}')">
+          <b style="font-size:0.85rem; display:block; line-height:1.2; margin-bottom:4px;">${esc(im.titulo || 'Imóvel')}</b>
+          <span style="color:var(--success-bright); font-weight:800; font-size:1rem; display:block; margin-bottom:6px;">${esc(formatarMoeda(im.preco))}</span>
+          <div style="font-size:0.7rem; color:var(--text-soft); margin-bottom:8px;">${esc(im.bairro)}<br>Cód: <b>${esc(im.codigo)}</b></div>
+          <button onclick="centralizarMapa('${esc(im.codigo)}', true); document.querySelector('.card-compacto[data-codigo=\\'${esc(im.codigo)}\\']').scrollIntoView({behavior:'smooth', block:'center'})" style="width:100%; padding:6px; border:none; border-radius:6px; background:var(--purple); color:#fff; font-size:0.7rem; font-weight:700; cursor:pointer;">Ver no Card</button>
+        </div>
+      `);
+      marker.on('click', () => {
+         document.querySelectorAll('.card-compacto').forEach(c => c.style.borderColor = 'var(--border)');
+         const card = document.querySelector(`.card-compacto[data-codigo="${im.codigo}"]`);
+         if (card) { card.style.borderColor = 'var(--purple)'; card.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+      });
+      marker.addTo(marcadoresLayer);
+      bounds.extend([coord.lat, coord.lng]);
+    }
+  });
+  
+  if (bounds.isValid()) mapaLeaflet.fitBounds(bounds, { padding: [30, 30], maxZoom: 16 });
+}
 
 function centralizarMapa(codigo, abrirPopup = false) {
   if (!mapaLeaflet) return;
-  
   const marker = dicionarioPinos[codigo];
-  
   if (marker) {
     mapaLeaflet.setView(marker.getLatLng(), 16, { animate: true });
     if (abrirPopup) marker.openPopup();
   }
-  
-  // Destaca visualmente o card na esquerda
   document.querySelectorAll('.card-compacto').forEach(c => c.style.borderColor = 'var(--border)');
   const card = document.querySelector(`.card-compacto[data-codigo="${codigo}"]`);
   if (card) card.style.borderColor = 'var(--purple)';
