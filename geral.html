@@ -1371,15 +1371,25 @@ function confirmarAcao(opts){
 
 async function carregarTudo(){
   const [resIm, resCli, resCor] = await Promise.all([
-    api('listarImoveisGeral', { senha: SENHA_ADMIN }), api('listarClientes', { senha: SENHA_ADMIN }), api('listarCorretores', { senha: SENHA_ADMIN })
+    api('listarImoveisGeral', { senha: SENHA_ADMIN }), 
+    api('listarClientes', { senha: SENHA_ADMIN }), 
+    api('listarCorretores', { senha: SENHA_ADMIN })
   ]);
   state.imoveis = (resIm.ok && resIm.data) ? resIm.data : [];
   state.clientes = (resCli.ok && resCli.data) ? resCli.data : [];
   state.corretores = (resCor.ok && resCor.data) ? resCor.data : [];
-  atualizarContadores(); popularFiltros(); renderizar(); preencherDatalistClientes(); carregarContagensClientes();
-  iniciarMatchesBackground();
+  
+  atualizarContadores(); 
+  popularFiltros(); 
+  renderizar(); 
+  preencherDatalistClientes(); 
+  carregarContagensClientes();
+  
+  // Roda os matches em background SEM travar a tela
+  setTimeout(() => {
+    iniciarMatchesBackground();
+  }, 500);
 }
-
 async function recarregar(){
   const btn = $('btnAtualizarHeader'); if(btn) btn.classList.add('girando');
   await carregarTudo(); if(btn) btn.classList.remove('girando');
@@ -2053,7 +2063,6 @@ async function iniciarMatchesBackground() {
   state._matchEmAndamento = true;
   
   const cacheOk = carregarCacheMatches();
-  
   if (cacheOk) {
     aplicarCacheMatchesNoDOM();
     state._matchEmAndamento = false;
@@ -2062,21 +2071,22 @@ async function iniciarMatchesBackground() {
   
   const codigosUnicos = [...new Set(state.imoveis.filter(i => !isVendido(i)).map(i => String(i.codigo || '').trim()).filter(Boolean))];
   
-  const LOTE = 8;
-  for (let i = 0; i < codigosUnicos.length; i += LOTE) {
-    const lote = codigosUnicos.slice(i, i + LOTE);
-    await Promise.all(lote.map(async cod => {
-      if (state._matchesCache[cod] !== undefined) return;
+  // MUDANÇA: Processa 1 por 1 com pausa de 300ms (evita sobrecarga no AppScript)
+  for (let i = 0; i < codigosUnicos.length; i++) {
+    const cod = codigosUnicos[i];
+    
+    if (state._matchesCache[cod] === undefined) {
       try {
         const res = await api('listarMatchesDoImovel', { senha: SENHA_ADMIN, codigo: cod }, TIMEOUT_API, 0);
-        const lista = (res.ok && res.data) ? res.data : [];
-        state._matchesCache[cod] = lista;
+        state._matchesCache[cod] = (res.ok && res.data) ? res.data : [];
       } catch(e) {
         state._matchesCache[cod] = [];
       }
-    }));
-    aplicarCacheMatchesNoDOM();
-    await new Promise(r => setTimeout(r, 100));
+      aplicarCacheMatchesNoDOM(); // Atualiza o card individualmente na tela
+    }
+    
+    // Pausa de 300ms entre cada requisição
+    await new Promise(r => setTimeout(r, 300));
   }
   
   salvarCacheMatches();
@@ -2084,6 +2094,10 @@ async function iniciarMatchesBackground() {
 }
 
 async function carregarMatchesFaltantesBackground() {
+  // Essa função rodava toda vez que você mudava um filtro. 
+  // Agora ela só roda se você NÃO tiver o cache completo.
+  if (state._matchEmAndamento) return;
+  
   const cards = Array.from(document.querySelectorAll('.card[data-codigo]:not(.card-vendido)'));
   const faltantes = cards
     .map(c => c.getAttribute('data-codigo'))
@@ -2091,23 +2105,25 @@ async function carregarMatchesFaltantesBackground() {
   
   if (faltantes.length === 0) return;
   
-  const LOTE = 5;
-  for (let i = 0; i < faltantes.length; i += LOTE) {
-    const lote = faltantes.slice(i, i + LOTE);
-    await Promise.all(lote.map(async cod => {
-      if (state._matchesCache[cod] !== undefined) return;
-      try {
-        const res = await api('listarMatchesDoImovel', { senha: SENHA_ADMIN, codigo: cod }, TIMEOUT_API, 0);
-        const lista = (res.ok && res.data) ? res.data : [];
-        state._matchesCache[cod] = lista;
-      } catch(e) {
-        state._matchesCache[cod] = [];
-      }
-    }));
+  state._matchEmAndamento = true;
+  
+  for (let i = 0; i < faltantes.length; i++) {
+    const cod = faltantes[i];
+    if (state._matchesCache[cod] !== undefined) continue;
+    
+    try {
+      const res = await api('listarMatchesDoImovel', { senha: SENHA_ADMIN, codigo: cod }, TIMEOUT_API, 0);
+      state._matchesCache[cod] = (res.ok && res.data) ? res.data : [];
+    } catch(e) {
+      state._matchesCache[cod] = [];
+    }
+    
     aplicarCacheMatchesNoDOM();
-    await new Promise(r => setTimeout(r, 150));
+    await new Promise(r => setTimeout(r, 300));
   }
+  
   salvarCacheMatches();
+  state._matchEmAndamento = false;
 }
 
 async function abrirModalMatch(codigo, titulo){
