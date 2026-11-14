@@ -1152,38 +1152,41 @@ document.addEventListener('visibilitychange', () => {
    ========================================================= */
 let _buscaTimeout = null;
 function onBuscaInput() {
-  // Pega o valor do input (ou do modal mobile)
+  // Pega o valor do input (tanto no desktop quanto no mobile)
   const inputEl = $('buscaInput') || document.getElementById('buscaMobileInput');
   if (!inputEl) return;
 
-  state.buscaTexto = inputEl.value;
+  state.buscaTexto = inputEl.value.toLowerCase().trim();
   salvarFiltrosLocal();
 
-  // Debounce: espera 300ms após o usuário parar de digitar para não travar
+  // Debounce: espera 300ms após o usuário parar de digitar
   clearTimeout(_buscaTimeout);
   _buscaTimeout = setTimeout(() => {
-    aplicarFiltrosNaTela(true); // O 'true' significa "Modo Busca Global"
+    aplicarFiltrosNaTela();
   }, 300);
 }
-
 function passarFiltrosAvancados(im){
   const f = state._filtrosAvancados;
-  const busca = state.buscaTexto.toLowerCase().trim();
+  const busca = state.buscaTexto;
   
-  // 1. Filtro de Cliente (Match)
+  // 1. Lógica da Lupa (Rua ou Bairro)
+  if (busca) {
+    const rua = String(im.rua || '').toLowerCase();
+    const bairro = String(im.bairro || '').toLowerCase();
+    
+    // Se a busca não bate nem com a rua e nem com o bairro, retorna false
+    if (!rua.includes(busca) && !bairro.includes(busca)) return false;
+  }
+
+  // 2. Lógica do Filtro de Cliente (Match)
   if (state.filtroCliente) {
     const cod = String(im.codigo || '').trim();
     if (!cod) return false;
     if (!state._matchesCache[cod]) return false;
     if (!state._matchesCache[cod].some(m => normalizaTel(m.telefone) === state.filtroCliente)) return false;
   }
-
-  // 2. Busca por texto (Lupa)
-  if(busca){
-    if(!(im.titulo||'').toLowerCase().includes(busca) && !(im.codigo||'').toLowerCase().includes(busca) && !(im.bairro||'').toLowerCase().includes(busca)) return false;
-  }
   
-  // 3. Filtros Avançados
+  // 3. Filtros Avançados (Checkboxes, Preço, etc)
   if(f.bairros.length>0 && !f.bairros.some(b => bairroCombinaComFiltro(im.bairro, b, state._gruposBairros||[]))) return false;
   
   if(f.tipos.length>0){
@@ -1211,30 +1214,25 @@ function passarFiltrosAvancados(im){
   return true;
 }
 
-function aplicarFiltrosNaTela(modoBuscaGlobal = false){
-  // Se estiver no modo busca (lupa), ignora filtros de status e filtros avançados
-  if (modoBuscaGlobal && state.buscaTexto.trim().length > 0) {
-    const termo = state.buscaTexto.toLowerCase().trim();
-    
-    // Busca em TODO o banco de dados (imoveisBrutos), ignorando filtros
-    state.imoveis = state.imoveisBrutos.filter(im => {
-      return (im.titulo||'').toLowerCase().includes(termo) || 
-             (im.codigo||'').toLowerCase().includes(termo) || 
-             (im.bairro||'').toLowerCase().includes(termo) ||
-             (im.rua||'').toLowerCase().includes(termo) ||
-             (im.descricao||'').toLowerCase().includes(termo);
-    });
-  } else {
-    // Comportamento normal: aplica filtros de status e avançados
-    state.imoveis = state.imoveisBrutos.filter(im => {
-      if(state.filtroStatus === 'pendente' && isVendido(im)) return false;
-      if(state.filtroStatus === 'vendido' && !isVendido(im)) return false;
-      if(state.filtroStatus === 'corrigir' && (isVendido(im) || temInformacaoFaltando(im).length === 0)) return false;
-      return passarFiltrosAvancados(im);
-    });
+function aplicarFiltrosNaTela(){
+  // Se não tem busca e não tem filtro, fica vazio
+  const temBusca = state.buscaTexto && state.buscaTexto.length > 0;
+  const temFiltroAvancado = state._filtrosAvancados.bairros.length > 0 || state._filtrosAvancados.tipos.length > 0 || state._filtrosAvancados.precoMin !== null || state._filtrosAvancados.precoMax !== null;
+  
+  if (!temBusca && !temFiltroAvancado && state.filtroStatus === 'todos') {
+     // Se a pessoa não digitou nada e não aplicou filtro, mantém vazio
+     // (A menos que você queira o contrário, mas você disse que prefere vazio)
   }
 
-  // Atualiza contadores
+  // Filtra os imóveis
+  state.imoveis = state.imoveisBrutos.filter(im => {
+    if(state.filtroStatus === 'pendente' && isVendido(im)) return false;
+    if(state.filtroStatus === 'vendido' && !isVendido(im)) return false;
+    if(state.filtroStatus === 'corrigir' && (isVendido(im) || temInformacaoFaltando(im).length === 0)) return false;
+    return passarFiltrosAvancados(im);
+  });
+
+  // Contadores
   let cntTodos = state.imoveis.length;
   let cntAtivos = state.imoveis.filter(im => !isVendido(im)).length;
   let cntVendidos = state.imoveis.filter(im => isVendido(im)).length;
@@ -1245,15 +1243,6 @@ function aplicarFiltrosNaTela(modoBuscaGlobal = false){
   if ($('cnt-vendido')) $('cnt-vendido').textContent = cntVendidos;
   if ($('cnt-corrigir')) $('cnt-corrigir').textContent = cntCorrigir;
   
-  const bd = $('badgeFiltrosAtivos'), bf = $('btnFiltroAvancadoTop');
-  let ativos = 0;
-  const f = state._filtrosAvancados;
-  if(f.bairros.length) ativos++; if(f.tipos.length) ativos++; if(f.precoMin||f.precoMax) ativos++; if(f.quartos||f.suites||f.vagasQtd) ativos++; if(f.vagaTipos.length) ativos++; if(f.elevador) ativos++; if(f.andares.length) ativos++; if(f.metragem||f.condominioMax) ativos++;
-  if(ativos>0){ if(bf){ bf.classList.add('tem-filtro'); bd.textContent = ativos; } } else { if(bf){ bf.classList.remove('tem-filtro'); } }
-  
-  const bm = $('badgeMapa'); 
-  if(bm){ if(ativos>0){ bm.textContent = ativos; bm.removeAttribute('data-zero'); } else { bm.textContent=''; bm.setAttribute('data-zero','1'); } }
-
   renderizar();
 }
 
