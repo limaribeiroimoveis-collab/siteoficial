@@ -1156,16 +1156,42 @@ document.addEventListener('visibilitychange', () => {
 function onBuscaInput() {
   state.buscaTexto = $('buscaInput').value;
   salvarFiltrosLocal();
-  aplicarFiltrosNaTela();
+  
+  // Quando o usuário está buscando algo, ignora os filtros avançados temporariamente
+  // para garantir que a busca traga resultados do banco todo.
+  if (state.buscaTexto.trim().length > 0) {
+    const fBackup = JSON.parse(JSON.stringify(state._filtrosAvancados)); // Backup
+    state._filtrosAvancados = { bairros: [], tipos: [], precoMin: null, precoMax: null, quartos: '', suites: '', vagasQtd: '', vagaTipos: [], elevador: '', andares: [], metragem: '', condominioMax: '', ordenacao: 'recentes' };
+    
+    // Filtra
+    aplicarFiltrosNaTela();
+    
+    // Restaura os filtros para quando limpar a busca
+    state._filtrosAvancados = fBackup;
+  } else {
+    // Se a busca está vazia, aplica os filtros normalmente
+    aplicarFiltrosNaTela();
+  }
 }
 
 function passarFiltrosAvancados(im){
   const f = state._filtrosAvancados;
   const busca = state.buscaTexto.toLowerCase().trim();
   
+  // 1. Filtro de Cliente (Match)
+  if (state.filtroCliente) {
+    const cod = String(im.codigo || '').trim();
+    if (!cod) return false;
+    if (!state._matchesCache[cod]) return false;
+    if (!state._matchesCache[cod].some(m => normalizaTel(m.telefone) === state.filtroCliente)) return false;
+  }
+
+  // 2. Busca por texto (Lupa)
   if(busca){
     if(!(im.titulo||'').toLowerCase().includes(busca) && !(im.codigo||'').toLowerCase().includes(busca) && !(im.bairro||'').toLowerCase().includes(busca)) return false;
   }
+  
+  // 3. Filtros Avançados
   if(f.bairros.length>0 && !f.bairros.some(b => bairroCombinaComFiltro(im.bairro, b, state._gruposBairros||[]))) return false;
   
   if(f.tipos.length>0){
@@ -1733,13 +1759,39 @@ function abrirModalFiltro(){
 }
 function fecharModalFiltro(){ $('modalFiltro').classList.remove('show'); }
 
-function limparFiltros(){
+async function limparFiltros(){
+  const ok = await confirmarAcao({
+    titulo: 'Limpar filtros?',
+    texto: 'Deseja realmente limpar todos os filtros selecionados?',
+    btnSim: 'Limpar',
+    tipo: 'danger'
+  });
+  
+  if (!ok) return;
+
   state._filtrosAvancados = { bairros: [], tipos: [], precoMin: null, precoMax: null, quartos: '', suites: '', vagasQtd: '', vagaTipos: [], elevador: '', andares: [], metragem: '', condominioMax: '', ordenacao: 'recentes' };
+  state.filtroCliente = '';
   if($('buscaInput')) $('buscaInput').value = '';
+  if($('filtroCliente')) $('filtroCliente').value = '';
   state.buscaTexto = '';
+  
   document.querySelectorAll('#listaBairrosCheckboxes input').forEach(c => c.checked = false);
-  atualizarTextoMultiBairros(); atualizarChipsRegiao(); salvarFiltrosLocal();
-  abrirModalFiltro();
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector('.filter-btn[data-filter="todos"]')?.classList.add('active');
+  
+  atualizarTextoMultiBairros(); 
+  atualizarChipsRegiao(); 
+  salvarFiltrosLocal();
+  
+  // Recarrega a tela sem filtros (mostrando a lista geral, mas sem buscar do zero no banco)
+  if (state.imoveisBrutos.length > 0) {
+    aplicarFiltrosNaTela();
+  } else {
+    await carregarTudo();
+  }
+  
+  fecharModalFiltro();
+  toast('Filtros limpos', 'success');
 }
 
 function aplicarFiltrosAvancados(){
