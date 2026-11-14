@@ -1153,25 +1153,20 @@ document.addEventListener('visibilitychange', () => {
 /* =========================================================
    FILTROS E RENDERIZAÇÃO
    ========================================================= */
+let _buscaTimeout = null;
 function onBuscaInput() {
-  state.buscaTexto = $('buscaInput').value;
+  // Pega o valor do input (ou do modal mobile)
+  const inputEl = $('buscaInput') || document.getElementById('buscaMobileInput');
+  if (!inputEl) return;
+
+  state.buscaTexto = inputEl.value;
   salvarFiltrosLocal();
-  
-  // Quando o usuário está buscando algo, ignora os filtros avançados temporariamente
-  // para garantir que a busca traga resultados do banco todo.
-  if (state.buscaTexto.trim().length > 0) {
-    const fBackup = JSON.parse(JSON.stringify(state._filtrosAvancados)); // Backup
-    state._filtrosAvancados = { bairros: [], tipos: [], precoMin: null, precoMax: null, quartos: '', suites: '', vagasQtd: '', vagaTipos: [], elevador: '', andares: [], metragem: '', condominioMax: '', ordenacao: 'recentes' };
-    
-    // Filtra
-    aplicarFiltrosNaTela();
-    
-    // Restaura os filtros para quando limpar a busca
-    state._filtrosAvancados = fBackup;
-  } else {
-    // Se a busca está vazia, aplica os filtros normalmente
-    aplicarFiltrosNaTela();
-  }
+
+  // Debounce: espera 300ms após o usuário parar de digitar para não travar
+  clearTimeout(_buscaTimeout);
+  _buscaTimeout = setTimeout(() => {
+    aplicarFiltrosNaTela(true); // O 'true' significa "Modo Busca Global"
+  }, 300);
 }
 
 function passarFiltrosAvancados(im){
@@ -1219,14 +1214,30 @@ function passarFiltrosAvancados(im){
   return true;
 }
 
-function aplicarFiltrosNaTela(){
-  state.imoveis = state.imoveisBrutos.filter(im => {
-    if(state.filtroStatus === 'pendente' && isVendido(im)) return false;
-    if(state.filtroStatus === 'vendido' && !isVendido(im)) return false;
-    if(state.filtroStatus === 'corrigir' && (isVendido(im) || temInformacaoFaltando(im).length === 0)) return false;
-    return passarFiltrosAvancados(im);
-  });
+function aplicarFiltrosNaTela(modoBuscaGlobal = false){
+  // Se estiver no modo busca (lupa), ignora filtros de status e filtros avançados
+  if (modoBuscaGlobal && state.buscaTexto.trim().length > 0) {
+    const termo = state.buscaTexto.toLowerCase().trim();
+    
+    // Busca em TODO o banco de dados (imoveisBrutos), ignorando filtros
+    state.imoveis = state.imoveisBrutos.filter(im => {
+      return (im.titulo||'').toLowerCase().includes(termo) || 
+             (im.codigo||'').toLowerCase().includes(termo) || 
+             (im.bairro||'').toLowerCase().includes(termo) ||
+             (im.rua||'').toLowerCase().includes(termo) ||
+             (im.descricao||'').toLowerCase().includes(termo);
+    });
+  } else {
+    // Comportamento normal: aplica filtros de status e avançados
+    state.imoveis = state.imoveisBrutos.filter(im => {
+      if(state.filtroStatus === 'pendente' && isVendido(im)) return false;
+      if(state.filtroStatus === 'vendido' && !isVendido(im)) return false;
+      if(state.filtroStatus === 'corrigir' && (isVendido(im) || temInformacaoFaltando(im).length === 0)) return false;
+      return passarFiltrosAvancados(im);
+    });
+  }
 
+  // Atualiza contadores
   let cntTodos = state.imoveis.length;
   let cntAtivos = state.imoveis.filter(im => !isVendido(im)).length;
   let cntVendidos = state.imoveis.filter(im => isVendido(im)).length;
@@ -1241,7 +1252,7 @@ function aplicarFiltrosNaTela(){
   let ativos = 0;
   const f = state._filtrosAvancados;
   if(f.bairros.length) ativos++; if(f.tipos.length) ativos++; if(f.precoMin||f.precoMax) ativos++; if(f.quartos||f.suites||f.vagasQtd) ativos++; if(f.vagaTipos.length) ativos++; if(f.elevador) ativos++; if(f.andares.length) ativos++; if(f.metragem||f.condominioMax) ativos++;
-  if(ativos>0){ bf.classList.add('tem-filtro'); bd.textContent = ativos; } else { bf.classList.remove('tem-filtro'); }
+  if(ativos>0){ if(bf){ bf.classList.add('tem-filtro'); bd.textContent = ativos; } } else { if(bf){ bf.classList.remove('tem-filtro'); } }
   
   const bm = $('badgeMapa'); 
   if(bm){ if(ativos>0){ bm.textContent = ativos; bm.removeAttribute('data-zero'); } else { bm.textContent=''; bm.setAttribute('data-zero','1'); } }
