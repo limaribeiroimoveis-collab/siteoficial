@@ -68,11 +68,71 @@
   .btn-header.filtro-avancado.tem-filtro { background: #fff; color: #4c1d95; }
   .btn-header .badge-filtro { background: var(--orange); color: #fff; padding: 1px 5px; border-radius: 10px; font-size: .6rem; display: none; margin-left: 2px; }
   .btn-header.tem-filtro .badge-filtro { display: inline-block; }
+
+  /* Busca no header (lupa com autocomplete) */
+  .busca-header-wrap{ position: relative; display: inline-flex; }
+  .busca-header-dropdown{
+    display: none;
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    width: 340px;
+    background: #fff;
+    border: 1px solid var(--border-strong);
+    border-radius: 10px;
+    box-shadow: 0 12px 40px rgba(15,23,42,.22);
+    padding: 8px;
+    z-index: 9999;
+  }
+  .busca-header-dropdown.aberto{ display: block; }
+  .busca-header-dropdown input{
+    width: 100%;
+    padding: 9px 12px;
+    font-size: .88rem;
+    border: 1px solid var(--border-strong);
+    border-radius: 6px;
+    outline: none;
+    font-family: inherit;
+  }
+  .busca-header-dropdown input:focus{ border-color: var(--purple); box-shadow: 0 0 0 3px rgba(109,40,217,.12); }
+  .busca-header-sugestoes{ max-height: 320px; overflow-y: auto; margin-top: 6px; }
+  .busca-header-sugestoes .bs-item{
+    padding: 8px 10px;
+    font-size: .82rem;
+    color: var(--text);
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .busca-header-sugestoes .bs-item:hover,
+  .busca-header-sugestoes .bs-item.ativo{ background: var(--purple-soft); color: var(--purple); }
+  .busca-header-sugestoes .bs-item .bs-tag{
+    font-size: .58rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .4px;
+    padding: 1px 6px;
+    border-radius: 4px;
+    background: var(--bg-alt);
+    color: var(--text-soft);
+    flex-shrink: 0;
+  }
+  .busca-header-sugestoes .bs-item .bs-tag.tag-rua{ background: #dbeafe; color: #1d4ed8; }
+  .busca-header-sugestoes .bs-item .bs-tag.tag-bairro{ background: #dcfce7; color: #166534; }
+  .busca-header-sugestoes .bs-item .bs-tag.tag-codigo{ background: #fef3c7; color: #92400e; }
+  .busca-header-sugestoes .bs-item .bs-label{ flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .busca-header-sugestoes .bs-vazio{ padding: 14px 10px; text-align: center; color: var(--muted); font-size: .78rem; }
+  @media(max-width:640px){ .busca-header-dropdown{ position: fixed; top: 60px; left: 8px; right: 8px; width: auto; } }
   
   @media(max-width:900px){ .brand-text{ display: none; } }
   @media(max-width:640px){ header.app-header{ padding: 6px 8px; } .btn-header{ padding: 5px 7px; font-size: .66rem; gap: 0; } .btn-header .lbl-txt{ display: none; } }
 
-  /* TOPBAR DESKTOP — status + cols na mesma linha */
+  /* TOPBAR DESKTOP */
   .topbar{ background: #fff; border-bottom: 1px solid var(--border); position: sticky; top: 48px; z-index: 150; box-shadow: var(--shadow-xs); }
   .topbar-inner{ max-width: 1800px; margin: 0 auto; padding: 8px 16px; display: flex; align-items: center; gap: 10px; flex-wrap: nowrap; overflow-x: auto; }
 
@@ -157,7 +217,7 @@
   .card-preco-row{ display:flex; align-items:center; margin:3px 0 2px; }
   .card-preco-val{ font-size:1.05rem; font-weight:800; color:var(--success-bright); letter-spacing:-0.4px; }
 
-  /* ⬇️ NOVO: tipo + 1ª linha da descrição abaixo do preço */
+  /* ⬇️ TIPO + 1ª LINHA DA DESCRIÇÃO (Card Grade) */
   .card-tipo-preco{ display:flex; align-items:center; gap:6px; margin-top:0; }
   .card-tipo-badge{ font-size:.55rem; font-weight:800; text-transform:uppercase; letter-spacing:.4px; padding:2px 7px; border-radius:999px; color:#fff; background:var(--purple); white-space:nowrap; flex-shrink:0; }
   .card-tipo-badge.tipo-padrao{ background:var(--primary); }
@@ -221,7 +281,20 @@
   .card-compacto .c-img{ width:60px; height:60px; border-radius:6px; object-fit:cover; flex-shrink:0; background:var(--bg-alt); cursor:zoom-in; }
   .card-compacto .c-info{ flex:1; min-width:0; display:flex; flex-direction:column; justify-content:center; }
   .card-compacto .c-title{ font-size:.75rem; font-weight:700; color:var(--text); line-height:1.2; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; margin-bottom:2px; }
-  .card-compacto .c-price{ font-size:.9rem; font-weight:800; color:var(--success-bright); }
+  
+  /* ⬇️ NOVO: Tipo + Preço no card do mapa */
+  .card-compacto .c-tipo-preco{ display:flex; align-items:center; gap:5px; margin-bottom:2px; }
+  .card-compacto .c-tipo-badge{ font-size:.5rem; font-weight:800; text-transform:uppercase; letter-spacing:.4px; padding:1px 5px; border-radius:999px; color:#fff; background:var(--purple); white-space:nowrap; flex-shrink:0; }
+  .card-compacto .c-tipo-badge.tipo-padrao{ background:var(--primary); }
+  .card-compacto .c-tipo-badge.tipo-casa{ background:#166534; }
+  .card-compacto .c-tipo-badge.tipo-cobertura{ background:var(--purple); }
+  .card-compacto .c-tipo-badge.tipo-privativa{ background:#b45309; }
+  
+  .card-compacto .c-price{ font-size:.9rem; font-weight:800; color:var(--success-bright); line-height:1.1; }
+  
+  /* ⬇️ NOVO: 1ª linha da descrição no card do mapa */
+  .card-compacto .c-desc-linha{ font-size:.65rem; color:var(--text-soft); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:2px; line-height:1.3; }
+
   .card-compacto .c-details{ display:grid; grid-template-columns:1fr 1fr; gap:2px 4px; font-size:.65rem; color:var(--text-soft); background:#f8fafc; padding:6px; border-radius:4px; }
   .card-compacto .c-details span{ font-weight:600; color:var(--text); }
   .card-compacto .c-actions{ display:flex; flex-wrap:wrap; gap:4px; }
@@ -265,7 +338,6 @@
   .multi-select-dropdown{ display:none; position:absolute; top:calc(100% + 4px); left:0; right:0; background:#fff; border:1.5px solid var(--border-strong); border-radius:12px; box-shadow:0 12px 40px rgba(0,0,0,.15); z-index:100; max-height:380px; overflow-y:auto; padding:8px; min-width:100%; width:100%; }
   .multi-select-dropdown.aberto{ display:block; }
 
-  /* ⬇️ NOVO: bairros em COLUNAS (alfabético descendo) + contagem colada no nome */
   #bairrosGrid{
     display:grid;
     grid-template-columns: repeat(3, minmax(0,1fr));
@@ -370,6 +442,32 @@
   #confirmBackdrop .modal{ max-width:420px; text-align:center; }
   #confirmIconWrap{ width:56px; height:56px; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 14px; }
   #confirmIconWrap svg{ width:28px; height:28px; stroke:currentColor; }
+  
+  /* Aviso: nenhum filtro ativado */
+  .aviso-filtro-backdrop{
+    position: fixed; inset: 0; background: rgba(15,23,42,.55);
+    z-index: 4000; display: none; align-items: center; justify-content: center; padding: 16px;
+    backdrop-filter: blur(3px);
+  }
+  .aviso-filtro-backdrop.show{ display: flex; }
+  .aviso-filtro-modal{
+    background: #fff; border-radius: var(--radius-lg); max-width: 420px; width: 100%;
+    padding: 22px; box-shadow: var(--shadow-lg); text-align: center;
+    animation: fadeUp .2s ease;
+  }
+  .aviso-filtro-modal .ico-wrap{
+    width: 56px; height: 56px; border-radius: 50%; background: var(--warn-soft); color: var(--warn);
+    display: flex; align-items: center; justify-content: center; margin: 0 auto 14px;
+  }
+  .aviso-filtro-modal h3{ font-size: 1.05rem; font-weight: 800; margin-bottom: 8px; color: var(--text); }
+  .aviso-filtro-modal p{ font-size: .86rem; color: var(--text-soft); line-height: 1.5; margin-bottom: 18px; }
+  .aviso-filtro-modal .acoes{ display: flex; gap: 10px; }
+  .aviso-filtro-modal .acoes button{
+    flex: 1; padding: 10px 14px; border-radius: 8px; font-weight: 700; font-size: .84rem;
+    cursor: pointer; font-family: inherit; border: none;
+  }
+  .aviso-filtro-modal .btn-voltar{ background: var(--purple); color: #fff; }
+  .aviso-filtro-modal .btn-fechar{ background: var(--bg-alt); color: var(--text); border: 1px solid var(--border-strong); }
 </style>
 </head>
 <body>
@@ -386,6 +484,20 @@
       </div>
     </div>
     <div class="header-right">
+
+      <!-- LUPA NO HEADER (esquerda do Limpar Filtro) -->
+      <div class="busca-header-wrap" id="buscaHeaderWrap">
+        <button class="btn-header" id="btnLupaHeader" onclick="toggleBuscaHeader(event)" title="Buscar">
+          <svg class="ico" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <span class="lbl-txt">Buscar</span>
+        </button>
+        <div class="busca-header-dropdown" id="buscaHeaderDropdown">
+          <input type="search" id="buscaHeaderInput" placeholder="Rua, bairro ou código..." autocomplete="off"
+                 oninput="onBuscaHeaderInput()" onkeydown="onBuscaHeaderKey(event)">
+          <div class="busca-header-sugestoes" id="buscaHeaderSugestoes"></div>
+        </div>
+      </div>
+
       <button class="btn-header limpar-filtro" onclick="limparFiltros()" title="Limpar Filtro">
         <svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         <span class="lbl-txt">Limpar Filtro</span>
@@ -444,7 +556,7 @@
   
   <div class="container">
     <div class="grid" id="grid" data-cols="4"></div>
-    <div class="empty-state hidden" id="emptyState"><h3>Nenhum imóvel carregado</h3><p>Use a lupa ou os filtros para buscar imóveis. Nada é carregado automaticamente.</p></div>
+    <div class="empty-state hidden" id="emptyState"><h3>Nenhum imóvel carregado</h3><p>Use a lupa no topo ou o botão de filtros para buscar. Nada é carregado automaticamente.</p></div>
     <div class="mapa-container" id="mapaContainer">
       <div class="mapa-sidebar" id="mapaSidebar"></div>
       <div class="mapa-view" id="mapaView"></div>
@@ -483,7 +595,7 @@
   <div class="modal">
     <button class="modal-close" onclick="fecharModalFiltro()"><svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
     <h2><svg class="ico" viewBox="0 0 24 24" style="stroke:var(--purple)"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg> Filtro Avançado</h2>
-    <p class="sub">Combine filtros e clique em <b>Buscar imóveis</b>. Nada é carregado até você buscar.</p>
+    <p class="sub">Combine filtros e clique em <b>Buscar imóveis</b>.</p>
 
     <div class="filtro-grupo" style="margin-bottom:16px;">
       <label>🔍 Buscar por rua, bairro ou código</label>
@@ -744,6 +856,25 @@
   </div>
 </div>
 
+<!-- Aviso Filtro Vazio -->
+<div class="aviso-filtro-backdrop" id="avisoFiltroBackdrop">
+  <div class="aviso-filtro-modal">
+    <div class="ico-wrap">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:28px;height:28px;">
+        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+        <line x1="12" y1="9" x2="12" y2="13"/>
+        <line x1="12" y1="17" x2="12.01" y2="17"/>
+      </svg>
+    </div>
+    <h3>Nenhum filtro ativado</h3>
+    <p>Você ainda não selecionou nenhum filtro nem digitou na busca. Isso carregaria <b>todos os imóveis</b> e pode pesar.</p>
+    <div class="acoes">
+      <button class="btn-fechar" onclick="fecharAvisoFiltro()">Fechar</button>
+      <button class="btn-voltar" onclick="voltarParaFiltros()">Voltar e filtrar</button>
+    </div>
+  </div>
+</div>
+
 <script>
 /* =========================================================
    CONSTANTES
@@ -892,18 +1023,15 @@ async function api(action, params={}, timeoutMs=TIMEOUT_API, retries=1){
     return;
   }
   
-  // Carrega apenas do cache local (não bate na API)
   const cacheImoveis = carregarImoveisCacheLocal();
   if (cacheImoveis.length > 0) {
     state.imoveisBrutos = cacheImoveis;
     popularFiltros();
-    // NÃO chama aplicarFiltrosNaTela() — tela começa vazia
   }
   
   $('loadingView').style.display = 'none';
   $('conteudoView').classList.remove('hidden');
   
-  // Mostra tela vazia com mensagem
   $('emptyState').classList.remove('hidden');
   $('emptyState').innerHTML = '<h3>Nenhum imóvel carregado</h3><p>Use a lupa no topo ou o botão de filtros para buscar. Nada é carregado automaticamente para não sobrecarregar.</p>';
   
@@ -915,8 +1043,6 @@ async function api(action, params={}, timeoutMs=TIMEOUT_API, retries=1){
       $('txtViewMapa').textContent = 'Mapa';
     }
   }
-
-  sincronizarSilenciosamente();
 })();
 
 function preencherDatalistClientes(){
@@ -1404,14 +1530,43 @@ function criarPino(im, coord, bounds) {
 function renderizarCardsMapa(lista) {
   const sb = $('mapaSidebar'); if (!sb) return;
   if (!lista.length) { sb.innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted);font-size:.8rem;">Nenhum imóvel encontrado.</div>'; return; }
+  
   sb.innerHTML = lista.map(im => {
     const vendido = isVendido(im);
     const codigo = String(im.codigo || '').trim();
     const mc = state._matchesCache[codigo] !== undefined ? state._matchesCache[codigo].length : '…';
     const info = extrairAptoBlocoChave(im.chaveTexto||'');
+    
+    // ⬇️ NOVO: Extrai tipo e 1ª linha de descrição para o card do mapa
+    const tipo = extrairTipoImovel(im.descricao||'');
+    const primeiraLinha = primeiraLinhaDescricao(im.descricao || '');
+    
+    let tipoLabel = tipo || '';
+    let tipoCls = 'tipo-padrao';
+    if(tipo === 'Cobertura') tipoCls = 'tipo-cobertura';
+    else if(tipo === 'Casa') tipoCls = 'tipo-casa';
+    else if(tipo === 'Área Privativa') tipoCls = 'tipo-privativa';
+    else if(tipo === 'Apartamento Padrão' || !tipo) { tipoLabel = tipo || 'Padrão'; tipoCls = 'tipo-padrao'; }
+    const tipoBadge = `<span class="c-tipo-badge ${tipoCls}">${esc(tipoLabel)}</span>`;
+    const descLinha = primeiraLinha ? `<div class="c-desc-linha" title="${esc(primeiraLinha)}">${esc(primeiraLinha)}</div>` : '';
+
     return `<div class="card-compacto" data-codigo="${esc(codigo)}" onclick="centralizarMapa('${esc(codigo)}')">
       ${vendido?'<div style="position:absolute;top:5px;right:5px;background:var(--danger);color:#fff;font-size:.5rem;font-weight:800;padding:2px 4px;border-radius:4px;z-index:2;">VENDIDO</div>':''}
-      <div class="c-header"><img class="c-img" src="${esc(im.imagem||'https://via.placeholder.com/100')}" onclick="event.stopPropagation();abrirFotoModal('${esc(im.imagem)}','${esc(im.titulo)}')"><div class="c-info"><div class="c-title">${esc(im.titulo||'Sem endereço')}</div><div class="c-price">${esc(formatarMoeda(im.preco))}</div></div></div>
+      <div class="c-header">
+        <img class="c-img" src="${esc(im.imagem||'https://via.placeholder.com/100')}" onclick="event.stopPropagation();abrirFotoModal('${esc(im.imagem)}','${esc(im.titulo)}')">
+        <div class="c-info">
+          <div class="c-title">${esc(im.titulo||'Sem endereço')}</div>
+          
+          <!-- Tipo + Preço na mesma linha -->
+          <div class="c-tipo-preco">
+            ${tipoBadge}
+            <div class="c-price">${esc(formatarMoeda(im.preco))}</div>
+          </div>
+          
+          <!-- 1ª linha da descrição -->
+          ${descLinha}
+        </div>
+      </div>
       <div class="c-details"><div>Cond: <span>${esc(formatarMoeda(im.condominio)||'—')}</span></div><div>IPTU: <span>${esc(formatarMoeda(im.iptu)||'—')}</span></div><div>Apto: <span>${esc(info.apto||'—')}</span></div><div>Bloco: <span>${esc(info.bloco||'—')}</span></div><div>Vaga: <span>${esc(im.vaga||'—')}</span></div><div>Elev: <span>${esc(im.elevador||'—')}</span></div></div>
       <div class="c-actions" onclick="event.stopPropagation();">${codigo?`<button class="btn-mini btn-purple" onclick="abrirModalMatch('${esc(codigo)}','${esc(im.titulo||'')}')">Match (${mc})</button>`:''}<button class="btn-mini" onclick="abrirBuscar('${esc(codigo)}')">Entrada</button><button class="btn-mini" onclick="abrirClientesImovel('${esc(codigo)}','${esc(im.titulo||'')}')">Clientes</button><button class="btn-mini" onclick="toggleCestaClonagem('${esc(im.id)}', this)">Clonar</button></div>
     </div>`;
@@ -1637,10 +1792,8 @@ function popularFiltros(){
   state._gruposBairros = grupos;
   const cont = $('listaBairrosCheckboxes');
   if(cont){
-    // ⬇️ ORDENAÇÃO ALFABÉTICA e layout em colunas
     const gruposOrd = [...grupos].sort((a,b)=>a.canônico.localeCompare(b.canônico,'pt-BR'));
     const total = gruposOrd.length;
-    // Ajusta o número de linhas para ~1/3 dos itens (mínimo 8)
     const nCols = 3;
     const nRows = Math.max(8, Math.ceil(total / nCols));
     cont.innerHTML = `<div style="padding:6px 4px 10px; position:sticky; top:0; background:#fff; z-index:5; border-bottom:1px solid var(--border); margin-bottom:8px;"><input type="text" id="buscaBairroInput" placeholder="Digite para buscar bairro..." oninput="filtrarListaBairros(this.value)" style="width:100%;padding:8px 12px;border:1px solid var(--border-strong);border-radius:6px;font-size:.85rem;"></div>
@@ -1750,17 +1903,41 @@ function aplicarFiltrosAvancados(){
   state._filtrosAvancados.ordenacao = $('filtroOrdenacao').value;
   if($('buscaFiltroInput')) state.buscaTexto = $('buscaFiltroInput').value.toLowerCase().trim();
   salvarFiltrosLocal();
-  fecharModalFiltro();
-  
-  // Se não tem filtro algum, mostra mensagem
-  const temFiltro = t.length>0 || a.length>0 || v.length>0 || (e && e.dataset.elevador) || state._filtrosAvancados.precoMin || state._filtrosAvancados.precoMax || state._filtrosAvancados.quartos || state._filtrosAvancados.suites || state._filtrosAvancados.vagasQtd || state._filtrosAvancados.metragem || state._filtrosAvancados.condominioMax || (state._filtrosAvancados.bairros||[]).length>0 || state.buscaTexto;
-  
+
+  // ⬇️ Verifica se há algum filtro ativo
+  const f = state._filtrosAvancados;
+  const temFiltro =
+    t.length>0 || a.length>0 || v.length>0 ||
+    (e && e.dataset.elevador) ||
+    f.precoMin || f.precoMax ||
+    f.quartos || f.suites || f.vagasQtd || f.metragem || f.condominioMax ||
+    (f.bairros||[]).length>0 ||
+    state.buscaTexto ||
+    state.filtroCliente;
+
   if(!temFiltro){
-    toast('Selecione ao menos um filtro ou use a lupa', 'error');
+    // ⬇️ Mostra aviso e NÃO busca
+    abrirAvisoFiltro();
     return;
   }
-  
+
+  fecharModalFiltro();
   aplicarFiltrosNaTela();
+}
+
+/* Aviso: nenhum filtro ativado */
+function abrirAvisoFiltro(){
+  const bd = $('avisoFiltroBackdrop');
+  if(bd) bd.classList.add('show');
+}
+function fecharAvisoFiltro(){
+  const bd = $('avisoFiltroBackdrop');
+  if(bd) bd.classList.remove('show');
+}
+function voltarParaFiltros(){
+  fecharAvisoFiltro();
+  // reabre o modal de filtros para o usuário escolher
+  setTimeout(() => abrirModalFiltro(), 150);
 }
 
 /* =========================================================
@@ -1982,6 +2159,160 @@ function toggleBusca() {
     document.getElementById('buscaMobileInput').focus();
   }
 }
+
+/* =========================================================
+   LUPA NO HEADER COM AUTOCOMPLETE
+   ========================================================= */
+let _buscaHeaderTimer = null;
+let _buscaHeaderSugestoes = [];   // cache das sugestões atuais
+let _buscaHeaderIndex = -1;
+
+function toggleBuscaHeader(ev){
+  if(ev) ev.stopPropagation();
+  const dd = $('buscaHeaderDropdown');
+  const wrap = $('buscaHeaderWrap');
+  if(!dd) return;
+  const aberto = dd.classList.contains('aberto');
+  if(aberto){ fecharBuscaHeader(); return; }
+  dd.classList.add('aberto');
+  const inp = $('buscaHeaderInput');
+  if(inp){
+    inp.value = state.buscaTexto || '';
+    inp.focus();
+    inp.select();
+  }
+  renderizarSugestoesHeader('');
+}
+
+function fecharBuscaHeader(){
+  const dd = $('buscaHeaderDropdown');
+  if(dd) dd.classList.remove('aberto');
+  _buscaHeaderIndex = -1;
+}
+
+function onBuscaHeaderInput(){
+  const inp = $('buscaHeaderInput');
+  if(!inp) return;
+  const termo = inp.value;
+  clearTimeout(_buscaHeaderTimer);
+  _buscaHeaderTimer = setTimeout(() => renderizarSugestoesHeader(termo), 120);
+}
+
+function onBuscaHeaderKey(ev){
+  if(ev.key === 'Escape'){ fecharBuscaHeader(); return; }
+  if(ev.key === 'Enter'){
+    ev.preventDefault();
+    const inp = $('buscaHeaderInput');
+    const termo = (inp && inp.value || '').trim();
+    if(_buscaHeaderIndex >= 0 && _buscaHeaderSugestoes[_buscaHeaderIndex]){
+      escolherSugestaoHeader(_buscaHeaderSugestoes[_buscaHeaderIndex]);
+      return;
+    }
+    if(termo){
+      aplicarBuscaHeader(termo);
+    }
+    return;
+  }
+  if(ev.key === 'ArrowDown' || ev.key === 'ArrowUp'){
+    ev.preventDefault();
+    if(!_buscaHeaderSugestoes.length) return;
+    if(ev.key === 'ArrowDown') _buscaHeaderIndex = Math.min(_buscaHeaderIndex + 1, _buscaHeaderSugestoes.length - 1);
+    else _buscaHeaderIndex = Math.max(_buscaHeaderIndex - 1, 0);
+    atualizarSugestaoAtivaHeader();
+  }
+}
+
+function atualizarSugestaoAtivaHeader(){
+  const box = $('buscaHeaderSugestoes');
+  if(!box) return;
+  box.querySelectorAll('.bs-item').forEach((el, i) => {
+    el.classList.toggle('ativo', i === _buscaHeaderIndex);
+    if(i === _buscaHeaderIndex) el.scrollIntoView({ block: 'nearest' });
+  });
+}
+
+/* Constrói a lista de sugestões únicas a partir do cache local */
+function construirSugestoesHeader(){
+  const base = state.imoveisBrutos || [];
+  const map = new Map(); // chave normalizada → { label, tipo }
+  base.forEach(im => {
+    const rua = String(im.rua||'').trim();
+    const bairro = String(im.bairro||'').trim();
+    const codigo = String(im.codigo||'').trim();
+    if(rua){
+      const k = 'r|' + normalizaTexto(rua);
+      if(!map.has(k)) map.set(k, { label: rua, tipo: 'rua' });
+    }
+    if(bairro){
+      const k = 'b|' + normalizaTexto(bairro);
+      if(!map.has(k)) map.set(k, { label: bairro, tipo: 'bairro' });
+    }
+    if(codigo){
+      const k = 'c|' + codigo;
+      if(!map.has(k)) map.set(k, { label: codigo, tipo: 'codigo' });
+    }
+  });
+  return Array.from(map.values()).sort((a,b) => {
+    if(a.tipo !== b.tipo) return a.tipo.localeCompare(b.tipo);
+    return a.label.localeCompare(b.label, 'pt-BR');
+  });
+}
+
+function renderizarSugestoesHeader(termo){
+  const box = $('buscaHeaderSugestoes');
+  if(!box) return;
+  const todas = construirSugestoesHeader();
+  const nTermo = normalizaTexto(termo);
+  let lista;
+  if(!nTermo){
+    // sem termo → mostra até 15 itens (ruas primeiro, depois bairros)
+    lista = todas.slice(0, 15);
+  } else {
+    lista = todas.filter(s => {
+      if(s.tipo === 'codigo') return s.label.includes(termo.trim());
+      return normalizaTexto(s.label).includes(nTermo);
+    }).slice(0, 20);
+  }
+  _buscaHeaderSugestoes = lista;
+  _buscaHeaderIndex = -1;
+
+  if(!lista.length){
+    box.innerHTML = '<div class="bs-vazio">Nenhuma sugestão. Pressione Enter para buscar "' + esc(termo) + '".</div>';
+    return;
+  }
+  box.innerHTML = lista.map((s, i) => {
+    const tagCls = s.tipo === 'rua' ? 'tag-rua' : s.tipo === 'bairro' ? 'tag-bairro' : 'tag-codigo';
+    const tagTxt = s.tipo === 'rua' ? 'Rua' : s.tipo === 'bairro' ? 'Bairro' : 'Cód';
+    return `<div class="bs-item" data-idx="${i}" onclick="escolherSugestaoHeader(_buscaHeaderSugestoes[${i}])">
+      <span class="bs-tag ${tagCls}">${tagTxt}</span>
+      <span class="bs-label">${esc(s.label)}</span>
+    </div>`;
+  }).join('');
+}
+
+function escolherSugestaoHeader(s){
+  if(!s) return;
+  const inp = $('buscaHeaderInput');
+  if(inp) inp.value = s.label;
+  aplicarBuscaHeader(s.label);
+}
+
+function aplicarBuscaHeader(termo){
+  state.buscaTexto = String(termo || '').toLowerCase().trim();
+  salvarFiltrosLocal();
+  fecharBuscaHeader();
+  // Sincroniza com o input do modal de filtro, se existir
+  if($('buscaFiltroInput')) $('buscaFiltroInput').value = termo || '';
+  aplicarFiltrosNaTela();
+}
+
+/* Fecha ao clicar fora */
+document.addEventListener('click', (e) => {
+  const wrap = $('buscaHeaderWrap');
+  if(wrap && !wrap.contains(e.target)){
+    fecharBuscaHeader();
+  }
+});
 
 /* =========================================================
    LISTENERS FINAIS
