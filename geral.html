@@ -1308,9 +1308,12 @@ function aplicarFiltrosNaTela(forcarVazio = false){
   
   state.imoveis = filtrados;
   atualizarContadores(base);
+  
+  // 3. ⬇️ AQUI RENDERIZA TUDO (Cards, Sidebar e PINOS DO MAPA)
   renderizar();
 }
 
+ 
 function atualizarContadores(base){
   const todos = base.filter(im => !isVendido(im)).length;
   const pendentes = base.filter(im => !isVendido(im)).length;
@@ -2301,19 +2304,34 @@ function aplicarBuscaHeader(termo){
   state.buscaTexto = String(termo || '').toLowerCase().trim();
   salvarFiltrosLocal();
   fecharBuscaHeader();
+  
   // Sincroniza com o input do modal de filtro, se existir
   if($('buscaFiltroInput')) $('buscaFiltroInput').value = termo || '';
+  
+  // 1. Aplica os filtros (isso atualiza os cards do grid)
   aplicarFiltrosNaTela();
+
+  // 2. ⬇️ FORÇA O MAPA A DESENHAR OS PINOS DA BUSCA
+  setTimeout(() => {
+    if (mapaLeaflet && marcadoresLayer) {
+      mapaLeaflet.invalidateSize(); // Garante que o mapa está visível
+      renderizarPinosMapa(state.imoveis); // Desenha os pinos baseados na lista filtrada
+      if (state.imoveis.length > 0) {
+        // Opcional: ajusta o zoom para englobar todos os pinos encontrados
+        const bounds = L.latLngBounds();
+        let temPonto = false;
+        state.imoveis.forEach(im => {
+          const cod = String(im.codigo||'').trim();
+          if (dicionarioPinos[cod]) {
+            bounds.extend(dicionarioPinos[cod].getLatLng());
+            temPonto = true;
+          }
+        });
+        if (temPonto) mapaLeaflet.fitBounds(bounds, { padding: [30, 30], maxZoom: 16 });
+      }
+    }
+  }, 300); // Pequeno delay para garantir que o container do mapa já está visível
 }
-
-/* Fecha ao clicar fora */
-document.addEventListener('click', (e) => {
-  const wrap = $('buscaHeaderWrap');
-  if(wrap && !wrap.contains(e.target)){
-    fecharBuscaHeader();
-  }
-});
-
 /* =========================================================
    LISTENERS FINAIS
    ========================================================= */
