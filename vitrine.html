@@ -127,14 +127,14 @@
   .filtro-item .cnt-bairro{ background: var(--bg); color: var(--text-soft); font-size: .7rem; font-weight: 800; padding: 1px 8px; border-radius: 999px; }
 
   /* GRID DE IMÓVEIS */
-  .grid{ display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 8px; transition: all .3s; }
+  .grid{ display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 8px; transition: all .3s; align-items: stretch; }
   @media(min-width:640px){ .grid{ gap: 16px; } }
   @media(min-width:900px){ .grid{ grid-template-columns: repeat(3, 1fr); } }
   @media(min-width:1200px){ .grid{ grid-template-columns: repeat(4, 1fr); } }
   .grid.modo-1col{ grid-template-columns: 1fr !important; gap: 16px; }
 
   /* CARD */
-  .card{ background: var(--card); border-radius: var(--radius-card); border: 1px solid var(--border); overflow: hidden; display: flex; flex-direction: column; transition: transform .2s, box-shadow .2s; animation: cardIn .35s ease-out both; }
+  .card{ background: var(--card); border-radius: var(--radius-card); border: 1px solid var(--border); overflow: hidden; display: flex; flex-direction: column; height: 100%; transition: transform .2s, box-shadow .2s; animation: cardIn .35s ease-out both; }
   .card:hover{ box-shadow: 0 8px 24px rgba(0,0,0,.06); }
   @keyframes cardIn{ from{ opacity: 0; transform: translateY(6px); } to{ opacity: 1; transform: translateY(0); } }
 
@@ -179,7 +179,7 @@
   .carousel-fake .dot{ width: 5px; height: 5px; border-radius: 50%; background: rgba(255,255,255,.5); }
   .carousel-fake .dot.active{ background: #fff; width: 12px; border-radius: 3px; }
 
-  .card-body{ padding: 10px 12px; display: flex; flex-direction: column; gap: 4px; }
+  .card-body{ padding: 10px 12px; display: flex; flex-direction: column; gap: 4px; flex: 1; }
   .card-preco{ font-size: 1.1rem; font-weight: 800; color: var(--text); letter-spacing: -.03em; }
   .card-preco-sec{ font-size: .7rem; color: var(--text-soft); font-weight: 500; display: flex; gap: 8px; flex-wrap: nowrap; align-items: center; }
   .card-preco-sec span{ white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -188,7 +188,9 @@
   .card-desc.expandido .card-desc-texto{ -webkit-line-clamp: unset; }
   .card-desc-toggle{ background: transparent; border: none; color: var(--muted); font-size: .7rem; font-weight: 600; cursor: pointer; text-align: left; padding: 0; margin-top: 2px; }
 
-  .card-actions{ display: flex; align-items: center; justify-content: space-between; padding: 0 12px 8px; border-top: 1px solid var(--border); margin-top: 4px; padding-top: 8px; }
+  /* Card Footer Fix */
+  .card-footer-area { margin-top: auto; display: flex; flex-direction: column; }
+  .card-actions{ display: flex; align-items: center; justify-content: space-between; padding: 0 12px 8px; border-top: 1px solid var(--border); padding-top: 8px; }
   .action-btn{ background: transparent; border: none; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; color: var(--text); font-family: inherit; font-size: .62rem; font-weight: 700; transition: opacity .15s; }
   .action-btn:hover{ opacity: .7; }
   .action-btn svg{ width: 22px; height: 22px; stroke-width: 1.8; stroke: currentColor; fill: none; stroke-linecap: round; stroke-linejoin: round; }
@@ -281,6 +283,12 @@
   .alerta-box-cond.show { display: block; }
   .alerta-box-cond strong { font-weight: 800; }
   .alerta-box-cond .pct-cond { display: inline-block; background: var(--warn); color: #fff; padding: 1px 7px; border-radius: 999px; font-weight: 800; font-size: .76rem; margin: 0 2px; }
+
+  /* MODAL INFORMATIVO */
+  .modal-info-icon { width: 56px; height: 56px; background: var(--primary-soft); color: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; margin: 0 auto 16px; }
+  .modal-info-text { font-size: .85rem; color: var(--text-soft); line-height: 1.6; margin-bottom: 20px; text-align: left; background: var(--bg); padding: 14px; border-radius: var(--radius-card); border: 1px solid var(--border); }
+  .modal-info-text strong { color: var(--primary); }
+  .modal-info-text .highlight { display: inline-block; background: var(--primary-soft); color: var(--primary); padding: 2px 6px; border-radius: 4px; font-weight: 700; font-size: .8rem; }
 </style>
 </head>
 <body>
@@ -473,6 +481,21 @@
   </div>
 </div>
 
+<!-- MODAL INFORMATIVO DE COMPRA -->
+<div class="modal-backdrop" id="modalInfoCompra" onclick="if(event.target===this) fecharModalInfoCompra()">
+  <div class="modal" style="max-width: 400px;">
+    <button class="modal-close" onclick="fecharModalInfoCompra()">×</button>
+    <div class="modal-info-icon">🤝</div>
+    <h2 style="text-align:center; margin-bottom:10px;">Como funciona o envio</h2>
+    <div class="modal-info-text">
+      <p>Este envio <strong>não gera nenhum vínculo</strong>. É apenas o registro da sua intenção de compra e das suas condições.</p>
+      <p style="margin-top:10px;">Ao finalizar, você será direcionado para o <span class="highlight">WhatsApp do seu corretor</span>, com a mensagem já pronta.</p>
+      <p style="margin-top:10px;">Basta confirmar o envio no próprio aplicativo. Simples assim! 😊</p>
+    </div>
+    <button class="btn btn-primary btn-full" onclick="abrirFormularioCompra()">Vamos lá!</button>
+  </div>
+</div>
+
 <!-- MODAL CONDIÇÃO DE COMPRA -->
 <div class="modal-backdrop" id="modalCondicao" onclick="if(event.target===this) fecharModalCondicao()">
   <div class="modal" style="max-width: 500px; padding: 24px 20px;">
@@ -541,8 +564,7 @@
 
 <script>
 /* =====================================================
-   DECLARAÇÃO DAS FUNÇÕES UTILITÁRIAS NO TOPO
-   (Para garantir que nunca dê erro de "is not defined")
+   FUNÇÕES UTILITÁRIAS
 ===================================================== */
 const $ = id => document.getElementById(id);
 const esc = s => String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
@@ -1092,8 +1114,8 @@ function cardHTML(im, idx){
         <button class="btn-wa-outline" onclick="event.stopPropagation(); abrirWhatsDuvida('${im.id}')">
           ${svgWa} Tire dúvidas
         </button>
-        <button class="btn-comprar" onclick="event.stopPropagation(); abrirModalCondicao('${im.id}')">
-          💰 Quero Comprar esse imóvel
+        <button class="btn-comprar" onclick="event.stopPropagation(); abrirModalInfoCompra('${im.id}')">
+          Quero Comprar esse imóvel
         </button>
       `;
   }
@@ -1155,8 +1177,10 @@ function cardHTML(im, idx){
         ` : ''}
       </div>
 
-      ${acoesHtml}
-      ${botoesInferiores}
+      <div class="card-footer-area">
+        ${acoesHtml}
+        ${botoesInferiores}
+      </div>
 
     </div>
   `;
@@ -1435,11 +1459,20 @@ function atualizarTotalCondicao() {
   }
 }
 
-function abrirModalCondicao(id) {
-  const im = state.imoveis.find(i => i.id === id);
+function abrirModalInfoCompra(id) {
+  state.modalImovelIdCond = id; // Salva o ID
+  $('modalInfoCompra').classList.add('show');
+}
+
+function fecharModalInfoCompra() {
+  $('modalInfoCompra').classList.remove('show');
+  // Não limpa o state.modalImovelIdCond aqui para o próximo passo
+}
+
+function abrirFormularioCompra() {
+  fecharModalInfoCompra();
+  const im = state.imoveis.find(i => i.id === state.modalImovelIdCond);
   if (!im) return;
-  
-  state.modalImovelIdCond = id;
   
   const end = enderecoCompleto_(im);
   const valorStr = formatarPreco(im.preco);
@@ -1486,6 +1519,11 @@ async function enviarCondicao() {
   const im = state.imoveis.find(i => i.id === id);
   if (!im) return;
 
+  if (!im.codigo) {
+    toast('Este imóvel não possui um código válido para envio.', 'error');
+    return;
+  }
+
   const avista = parseMoeda($('condAvista').value);
   const fgts = parseMoeda($('condFGTS').value);
   const financ = parseMoeda($('condFinanciamento').value);
@@ -1504,6 +1542,7 @@ async function enviarCondicao() {
 
   const whatsappWindow = window.open('', '_blank');
 
+  // CORREÇÃO: Igualando o payload ao HTML standalone que funciona
   const res = await api('salvarCondicaoCompra', {
     telefone: state.telefone,
     codigo: im.codigo,
@@ -1522,14 +1561,14 @@ async function enviarCondicao() {
     return;
   }
 
-  const endereco = enderecoCompleto_(im);
-  const corretorFinal = nomeCorretor_(im.corretor || 'Hugo');
-  const primeiroNomeCorretor = corretorFinal.split(' ')[0];
+  // CORREÇÃO: Usando os dados da resposta exatamente como o standalone faz
+  const endereco = [res.imovel.rua, res.imovel.numero].filter(Boolean).join(', ') + (res.imovel.bairro ? ' — ' + res.imovel.bairro : '');
+  const primeiroNomeCorretor = String(res.corretor || '').split(/\s+/)[0] || '';
 
   const linhas = [];
   linhas.push('Olá' + (primeiroNomeCorretor ? ', ' + primeiroNomeCorretor : '') + '.');
   linhas.push('');
-  linhas.push('Estive olhando o imóvel na ' + endereco + ' (código ' + im.codigo + ') e gostaria de registrar meu interesse com as seguintes condições:');
+  linhas.push('Estive olhando o imóvel na ' + endereco + ' (código ' + res.imovel.codigo + ') e gostaria de registrar meu interesse com as seguintes condições:');
   linhas.push('');
   if (avista > 0) linhas.push('Valor à vista: ' + formatarMoeda(avista));
   if (fgts > 0) linhas.push('FGTS: ' + formatarMoeda(fgts));
@@ -1543,7 +1582,7 @@ async function enviarCondicao() {
   linhas.push('Fico no aguardo para conversarmos sobre.');
 
   const mensagem = linhas.join('\n');
-  const telCorretor = res.telCorretor || (primeiroNomeCorretor === 'Hugo' ? '5531996070930' : '5531996273985');
+  const telCorretor = res.telCorretor || '5531996070930';
   const urlWhatsapp = 'https://wa.me/' + telCorretor + '?text=' + encodeURIComponent(mensagem);
 
   btn.disabled = false;
@@ -1557,7 +1596,7 @@ async function enviarCondicao() {
   }
 }
 
-/* ====== INIT COM TRATAMENTO DE ERRO ====== */
+/* ====== INIT ====== */
 (async function init(){
   try {
     carregarVistos(); carregarUltimoAcesso();
@@ -1600,7 +1639,6 @@ async function enviarCondicao() {
     } else { mostrarView('loginView'); setTimeout(()=>$('inputTelefone').focus(),200); }
   } catch (err) {
     console.error("Erro na inicialização:", err);
-    // Se der qualquer erro no código, avisa o usuário em vez de deixar a tela em branco
     document.body.innerHTML = `<div style="padding:20px; text-align:center; font-family:sans-serif; display:flex; flex-direction:column; justify-content:center; align-items:center; height:100vh;">
       <h2 style="color:#1e3a5f; margin-bottom:10px;">Ops! Ocorreu um erro ao carregar.</h2>
       <p style="color:#64748b; margin-bottom:20px;">Por favor, clique no botão abaixo para atualizar a página.</p>
