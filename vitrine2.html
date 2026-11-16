@@ -4,24 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="google" content="notranslate">
-<title>LR Imóveis - Quinto Andar</title>
+<title>LR Imóveis - Vitrine</title>
 
-  <!-- Open Graph (WhatsApp, Facebook, LinkedIn) -->
 <meta property="og:type" content="website">
 <meta property="og:title" content="LR Imóveis - Vitrine">
 <meta property="og:description" content="Veja imóveis selecionados para você pela Lima Ribeiro Imóveis.">
 <meta property="og:image" content="https://cdn.awsli.com.br/1608/1608652/arquivos/vitrinelr.jpg">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
 <meta property="og:url" content="https://limaribeiroimoveis.com.br/vitrine.html">
 
-<!-- Twitter Card -->
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="LR Imóveis - Vitrine">
-<meta name="twitter:description" content="Veja imóveis selecionados para você pela Lima Ribeiro Imóveis.">
-<meta name="twitter:image" content="https://cdn.awsli.com.br/1608/1608652/arquivos/vitrinelr.jpg">
-  
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏢</text></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏢</text></svg>">
 
 <script>
   window.__WARMUP_URL__ = 'https://script.google.com/macros/s/AKfycbzuCjg_5ZJDMWWKmjYp1ThW34iWS0YouviWFdiMGx8W3yApv0F1fdUcjeZdjm0s6Mg/exec';
@@ -31,7 +22,7 @@
 </script>
 
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
   :root{
     --primary:#1e3a5f; --primary-dark:#152a45; --primary-soft:#f0f4f8;
     --success:#16a34a; --danger:#dc2626; --warn:#d97706;
@@ -57,8 +48,20 @@
   .brand-title{ font-size: 1rem; font-weight: 800; letter-spacing: -.5px; display: none; }
   @media(min-width:400px){ .brand-title{ display: block; } }
   
+  .header-actions { display: flex; align-items: center; gap: 6px; }
+  .icon-btn { background: transparent; border: none; cursor: pointer; color: var(--text-soft); padding: 6px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all .15s; }
+  .icon-btn:hover { background: var(--bg); color: var(--primary); }
+  .icon-btn svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  
   .btn-site{ background: var(--success); color: #fff; text-decoration: none; font-size: .75rem; font-weight: 700; padding: 8px 12px; border-radius: 999px; display: flex; align-items: center; gap: 6px; white-space: nowrap; transition: background .15s; }
   .btn-site:hover{ background: #15803d; }
+  @media(max-width:480px){ .btn-site{ display: none; } }
+
+  .header-search { background: #fff; padding: 10px 16px; border-top: 1px solid var(--border); display: none; align-items: center; gap: 8px; }
+  .header-search.show { display: flex; }
+  .header-search input { flex: 1; padding: 10px 14px; border-radius: 999px; background: var(--bg); border: 1px solid transparent; font-size: .9rem; }
+  .header-search input:focus { border-color: var(--primary); background: #fff; outline: none; }
+  .btn-close-search { background: var(--bg); border: none; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text); }
 
   /* SAUDAÇÃO */
   .saudacao{ font-size: .85rem; color: var(--text-soft); font-weight: 600; margin: 12px 4px 0; }
@@ -94,7 +97,7 @@
   .carrossel-scroll > *{ scroll-snap-align: start; flex: 0 0 auto; width: 220px; }
 
   .visita-card{ background: #fff; border-radius: var(--radius-card); border: 1px solid var(--border); padding: 16px; box-shadow: 0 2px 8px rgba(0,0,0,.03); border-top: 3px solid var(--danger); }
-  .visita-card-titulo{ font-size: .65rem; font-weight: 800; color: var(--danger); text-transform: uppercase; margin-bottom: 6px; }
+  .visita-card-titulo{ font-size: .65rem; font-weight: 800; color: var(--danger); text-transform: uppercase; margin-bottom: 6px; display: flex; align-items: center; gap: 4px; }
   .visita-card-linhas .endereco{ font-weight: 800; font-size: .85rem; margin-bottom: 4px; }
   .visita-card-linhas .quando{ background: var(--bg); padding: 4px 8px; border-radius: 6px; font-weight: 700; font-size: .75rem; display: inline-block; }
 
@@ -130,23 +133,23 @@
   @media(min-width:1200px){ .grid{ grid-template-columns: repeat(4, 1fr); } }
   .grid.modo-1col{ grid-template-columns: 1fr !important; gap: 16px; }
 
-  /* CARD ESTILO INSTAGRAM */
+  /* CARD */
   .card{ background: var(--card); border-radius: var(--radius-card); border: 1px solid var(--border); overflow: hidden; display: flex; flex-direction: column; transition: transform .2s, box-shadow .2s; animation: cardIn .35s ease-out both; }
   .card:hover{ box-shadow: 0 8px 24px rgba(0,0,0,.06); }
   @keyframes cardIn{ from{ opacity: 0; transform: translateY(6px); } to{ opacity: 1; transform: translateY(0); } }
 
   .card.card-nao-gostei{ opacity: .4; filter: grayscale(100%); }
   .card.card-nao-gostei:hover{ opacity: .6; filter: grayscale(80%); }
-  .card.card-vendido{ opacity: .6; filter: grayscale(80%); pointer-events: none; }
   
-  /* CARD VISITAR (Fundo Marrom Mais Destacado) */
+  .card.card-vendido, .card.card-desativado { opacity: 0.45; filter: grayscale(100%); pointer-events: none; }
+  .card.card-vendido:hover, .card.card-desativado:hover { opacity: 0.6; filter: grayscale(80%); }
+  
   .card.card-quero-visitar { background-color: #e2ccb2; border-color: #c9a57b; box-shadow: 0 4px 12px rgba(160,120,80,0.15); }
   .card.card-quero-visitar .card-actions { border-top-color: #c9a57b; }
   .card.card-quero-visitar .card-header { background-color: transparent; }
   .card.card-quero-visitar .card-bairro { color: #4a3a25; }
   .card.card-quero-visitar .card-rua { color: #6b5a45; }
 
-  /* Topo do Card */
   .card-header{ display: flex; flex-direction: column; padding: 12px 12px 8px; gap: 2px; }
   .card-header-top{ display: flex; align-items: center; justify-content: space-between; gap: 8px; min-width: 0; }
   .card-bairro{ font-size: .82rem; font-weight: 800; color: var(--text); line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1; }
@@ -156,36 +159,28 @@
   .btn-share-min:hover{ background: var(--bg); }
   .btn-share-min svg{ width: 18px; height: 18px; stroke-width: 2; }
 
-  /* Imagem do Card */
   .card-img-wrap{ width: 100%; aspect-ratio: 4 / 3; overflow: hidden; background: var(--bg); position: relative; }
   .card-img{ width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .3s ease; }
   .card:hover .card-img{ transform: scale(1.03); }
 
-  /* BADGES */
   .badge-vendido{ position: absolute; top: 15%; left: 50%; transform: translate(-50%, -50%) rotate(-10deg); background: rgba(220,38,38,.95); color: #fff; font-size: .9rem; font-weight: 900; letter-spacing: 1.5px; padding: 8px 20px; border-radius: 6px; border: 2px solid #fff; z-index: 6; text-transform: uppercase; }
   .badge-desativado{ position: absolute; top: 10px; left: 10px; background: #000; color: #fff; font-size: .6rem; font-weight: 800; padding: 4px 10px; border-radius: 4px; z-index: 6; text-transform: uppercase; letter-spacing: .5px; }
   .badge-novo{ position: absolute; top: 10px; left: 10px; background: var(--success); color: #fff; font-size: .6rem; font-weight: 800; padding: 4px 10px; border-radius: 999px; z-index: 5; }
-  
-  /* BADGE VISITAR */
   .badge-visitar-solicitado { position: absolute; top: 10px; right: 10px; background: var(--success); color: #fff; font-size: .6rem; font-weight: 800; padding: 4px 10px; border-radius: 999px; z-index: 6; text-transform: uppercase; box-shadow: 0 2px 6px rgba(22,163,74,.3); }
 
   .card-heart-top{ position: absolute; top: 10px; right: 10px; width: 32px; height: 32px; background: rgba(255,255,255,.9); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; z-index: 7; animation: heartIn .3s cubic-bezier(.34,1.56,.64,1) both; }
   @keyframes heartIn{ from{ opacity: 0; transform: scale(.3); } to{ opacity: 1; transform: scale(1); } }
-  .card-tag-topo{ position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,.6); backdrop-filter: blur(4px); color: #fff; font-size: .6rem; font-weight: 700; text-transform: uppercase; padding: 4px 8px; border-radius: 4px; z-index: 5; }
+  
+  .card-tag-topo{ position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,.6); backdrop-filter: blur(4px); color: #fff; font-size: .6rem; font-weight: 800; text-transform: uppercase; padding: 4px 10px; border-radius: 6px; z-index: 5; letter-spacing: .5px; }
 
-  /* CARROSSEL FAKE */
   .carousel-fake{ position: absolute; left: 0; right: 0; bottom: 40px; display: flex; align-items: center; justify-content: space-between; padding: 0 10px; z-index: 5; }
   .carousel-fake .arrow{ width: 28px; height: 28px; border-radius: 50%; background: rgba(255,255,255,.9); color: #111; display: flex; align-items: center; justify-content: center; font-size: 1rem; font-weight: 900; cursor: pointer; border: none; }
   .carousel-fake .dots{ display: flex; gap: 4px; align-items: center; justify-content: center; flex: 1; }
   .carousel-fake .dot{ width: 5px; height: 5px; border-radius: 50%; background: rgba(255,255,255,.5); }
   .carousel-fake .dot.active{ background: #fff; width: 12px; border-radius: 3px; }
 
-  .card-overlay-specs{ position: absolute; left: 0; right: 0; bottom: 0; background: linear-gradient(to top, rgba(0,0,0,.8) 0%, rgba(0,0,0,.4) 70%, transparent 100%); color: #fff; font-size: .72rem; font-weight: 600; padding: 20px 10px 8px; z-index: 3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
-  /* Corpo do Card */
   .card-body{ padding: 10px 12px; display: flex; flex-direction: column; gap: 4px; }
   .card-preco{ font-size: 1.1rem; font-weight: 800; color: var(--text); letter-spacing: -.03em; }
-  
   .card-preco-sec{ font-size: .7rem; color: var(--text-soft); font-weight: 500; display: flex; gap: 8px; flex-wrap: nowrap; align-items: center; }
   .card-preco-sec span{ white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
@@ -193,7 +188,6 @@
   .card-desc.expandido .card-desc-texto{ -webkit-line-clamp: unset; }
   .card-desc-toggle{ background: transparent; border: none; color: var(--muted); font-size: .7rem; font-weight: 600; cursor: pointer; text-align: left; padding: 0; margin-top: 2px; }
 
-  /* ÍCONES DE AÇÃO */
   .card-actions{ display: flex; align-items: center; justify-content: space-between; padding: 0 12px 8px; border-top: 1px solid var(--border); margin-top: 4px; padding-top: 8px; }
   .action-btn{ background: transparent; border: none; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; color: var(--text); font-family: inherit; font-size: .62rem; font-weight: 700; transition: opacity .15s; }
   .action-btn:hover{ opacity: .7; }
@@ -202,13 +196,15 @@
   .action-btn.act-visitar.ativo svg{ fill: var(--primary); stroke: var(--primary); color: var(--primary); }
   .action-btn.act-nao.ativo svg{ fill: var(--text); stroke: var(--text); }
 
-  /* BOTÃO WHATSAPP */
-  .btn-wa-outline{ display: flex; align-items: center; justify-content: center; gap: 6px; margin: 0 12px 12px; background: #fff; border: 1.5px solid var(--wa); color: var(--wa); border-radius: 8px; padding: 8px 10px; font-size: .75rem; font-weight: 700; cursor: pointer; transition: all .15s; text-align: center; }
+  .btn-wa-outline{ display: flex; align-items: center; justify-content: center; gap: 6px; margin: 0 12px 8px; background: #fff; border: 1.5px solid var(--wa); color: var(--wa); border-radius: 8px; padding: 8px 10px; font-size: .75rem; font-weight: 700; cursor: pointer; transition: all .15s; text-align: center; }
   .btn-wa-outline:hover{ background: var(--wa); color: #fff; }
   .btn-wa-outline svg{ width: 16px; height: 16px; fill: currentColor; flex-shrink: 0; }
+
+  .btn-comprar { display: flex; align-items: center; justify-content: center; gap: 6px; margin: 0 12px 12px; background: var(--success); border: 1.5px solid var(--success); color: #fff; border-radius: 8px; padding: 10px 10px; font-size: .8rem; font-weight: 800; cursor: pointer; transition: all .15s; text-align: center; }
+  .btn-comprar:hover { background: #15803d; border-color: #15803d; }
+
   .btn-reativar-full{ margin: 0 12px 12px; background: var(--bg); color: var(--text); border: 1px solid var(--border); padding: 10px; border-radius: 8px; font-size: .8rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; }
 
-  /* MENSAGENS VAZIAS */
   .empty-state{ text-align: center; padding: 60px 20px; color: var(--muted); background: #fff; border-radius: var(--radius-card); border: 1px solid var(--border); grid-column: 1 / -1; }
   .empty-state h3{ font-size: 1rem; margin-bottom: 4px; color: var(--text); font-weight: 800; }
   .empty-state p{ margin-bottom: 18px; font-size: .85rem; }
@@ -225,23 +221,14 @@
   .toast.error{ background: var(--danger); }
   .hidden{ display: none !important; }
 
-  /* BOTTOM NAV */
   .bottom-nav{ position: fixed; bottom: 0; left: 0; right: 0; height: calc(var(--navbar-h) + env(safe-area-inset-bottom)); padding-bottom: env(safe-area-inset-bottom); background: var(--primary); border-top: 1px solid var(--primary-dark); display: none; z-index: 900; justify-content: space-around; align-items: center; }
   .bottom-nav.show{ display: flex; }
-  .nav-btn{ display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; background: transparent; border: none; cursor: pointer; color: rgba(255,255,255,.5); padding: 8px 2px; height: 100%; flex: 1; transition: color .15s; }
+  .nav-btn{ display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; background: transparent; border: none; cursor: pointer; color: rgba(255,255,255,.5); padding: 8px 2px; height: 100%; flex: 1; transition: color .15s; }
   .nav-btn.active{ color: #fff; }
-  .nav-btn svg{ width: 22px; height: 22px; stroke-width: 2; stroke: currentColor; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+  .nav-btn svg{ width: 20px; height: 20px; stroke-width: 2; stroke: currentColor; fill: none; stroke-linecap: round; stroke-linejoin: round; }
   .nav-btn.active svg{ stroke-width: 2.5; fill: rgba(255,255,255,.2); }
-  .nav-lbl{ font-size: .55rem; font-weight: 700; white-space: nowrap; }
+  .nav-lbl{ font-size: .5rem; font-weight: 700; white-space: nowrap; }
 
-  /* SEARCH BAR FLUTUANTE */
-  .search-bar-floating { position: fixed; bottom: calc(var(--navbar-h) + env(safe-area-inset-bottom)); left: 0; right: 0; background: #fff; padding: 12px 16px; box-shadow: 0 -4px 16px rgba(0,0,0,.1); z-index: 899; display: flex; gap: 8px; align-items: center; transform: translateY(100%); transition: transform .3s; }
-  .search-bar-floating.show { transform: translateY(0); }
-  .search-bar-floating input { flex: 1; padding: 10px 14px; border-radius: 999px; background: var(--bg); border: 1px solid transparent; font-size: .9rem; }
-  .search-bar-floating input:focus { border-color: var(--primary); background: #fff; }
-  .btn-close-search { background: var(--bg); border: none; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text); }
-
-  /* MODAIS */
   .modal-backdrop{ position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 1500; display: none; align-items: flex-end; justify-content: center; backdrop-filter: blur(2px); }
   @media(min-width:600px){ .modal-backdrop{ align-items: center; } }
   .modal-backdrop.show{ display: flex; }
@@ -249,7 +236,7 @@
   @media(min-width:600px){ .modal{ border-radius: 16px; animation: modalIn .25s ease-out both; } }
   @keyframes slideUp{ from{ transform: translateY(100%); } to{ transform: translateY(0); } }
   @keyframes modalIn{ from{ opacity: 0; transform: scale(.95); } to{ opacity: 1; transform: scale(1); } }
-  .modal-close{ position: absolute; top: 14px; right: 14px; background: var(--bg); border: none; cursor: pointer; color: var(--text); width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+  .modal-close{ position: absolute; top: 14px; right: 14px; background: var(--bg); border: none; cursor: pointer; color: var(--text); width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; z-index: 10; }
   .modal h2{ font-size: 1.2rem; font-weight: 800; margin-bottom: 6px; text-align: center; }
   .modal .sub{ font-size: .85rem; color: var(--muted); text-align: center; margin-bottom: 20px; line-height: 1.4; }
 
@@ -266,6 +253,34 @@
   .turno-btn.active{ background: var(--primary); border-color: var(--primary); color: #fff; }
   
   .aviso-importante{ background: #fffbeb; border-left: 4px solid #f59e0b; border-radius: 6px; padding: 12px; font-size: .75rem; color: #78350f; line-height: 1.5; margin: 10px 0 20px; }
+
+  /* MODAL DE CONDIÇÃO */
+  .imovel-hero-cond { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); border-radius: 12px; padding: 16px; margin-bottom: 16px; color: #fff; position: relative; overflow: hidden; }
+  .imovel-hero-cond::before { content: ''; position: absolute; top: -30px; right: -30px; width: 100px; height: 100px; background: rgba(255,255,255,.05); border-radius: 50%; }
+  .hero-top-cond { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
+  .hero-lbl-cond { font-size: .6rem; font-weight: 800; color: rgba(255,255,255,.65); text-transform: uppercase; letter-spacing: .8px; }
+  .hero-corretor-cond { background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.22); padding: 3px 9px; border-radius: 999px; font-size: .65rem; font-weight: 700; color: #fff; }
+  .hero-endereco-cond { font-size: .95rem; font-weight: 700; color: #fff; line-height: 1.35; margin-bottom: 10px; }
+  .hero-valor-linha-cond { display: flex; align-items: baseline; gap: 8px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,.15); }
+  .hero-valor-lbl-cond { font-size: .6rem; font-weight: 700; color: rgba(255,255,255,.7); text-transform: uppercase; }
+  .hero-valor-cond { font-size: 1.15rem; font-weight: 800; color: #fff; }
+  
+  .field-cond { margin-bottom: 12px; }
+  .field-cond label { display: block; font-size: .72rem; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+  .field-cond label .hint { font-size: .64rem; font-weight: 500; color: var(--muted); margin-left: 3px; }
+  
+  .input-money-wrap-cond { position: relative; }
+  .input-money-wrap-cond .prefix-cond { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-weight: 700; color: var(--text-soft); font-size: .85rem; pointer-events: none; }
+  .input-money-wrap-cond input { padding-left: 40px !important; font-weight: 600; font-variant-numeric: tabular-nums; }
+  
+  .total-box-cond { background: var(--primary-soft); border: 1.5px solid var(--primary); border-radius: 10px; padding: 12px 16px; margin: 16px 0 14px; display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+  .total-box-cond .lbl-cond { font-size: .66rem; font-weight: 800; color: var(--primary); text-transform: uppercase; }
+  .total-box-cond .valor-cond { font-size: 1.25rem; font-weight: 800; color: var(--primary); margin-left: auto; }
+  
+  .alerta-box-cond { background: #fff7ed; border: 1px solid #fed7aa; border-left: 3px solid var(--warn); border-radius: 8px; padding: 10px 12px; margin-bottom: 14px; font-size: .8rem; line-height: 1.5; color: #7c2d12; display: none; }
+  .alerta-box-cond.show { display: block; }
+  .alerta-box-cond strong { font-weight: 800; }
+  .alerta-box-cond .pct-cond { display: inline-block; background: var(--warn); color: #fff; padding: 1px 7px; border-radius: 999px; font-weight: 800; font-size: .76rem; margin: 0 2px; }
 </style>
 </head>
 <body>
@@ -276,14 +291,25 @@
       <div class="brand-icon">LR</div>
       <div class="brand-title">Lima Ribeiro</div>
     </div>
-    <a href="https://limaribeiroimoveis.com.br/imoveis" target="_blank" class="btn-site">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
-      Veja todos os imóveis LR Imóveis
-    </a>
+    <div class="header-actions">
+      <button class="icon-btn" onclick="toggleBusca()" title="Buscar">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </button>
+      <button class="icon-btn" onclick="forcarAtualizacao()" title="Atualização Forçada">
+        <svg viewBox="0 0 24 24"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.3"/></svg>
+      </button>
+      <a href="https://limaribeiroimoveis.com.br/imoveis" target="_blank" class="btn-site">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+        Veja todos
+      </a>
+    </div>
+  </div>
+  <div class="header-search" id="headerSearch">
+    <input type="search" id="buscaInput" placeholder="Buscar por rua, bairro..." oninput="renderizarImoveis()">
+    <button class="btn-close-search" onclick="fecharBusca()">✕</button>
   </div>
 </header>
 
-<!-- VIEWS -->
 <div class="loading-screen hidden" id="loadingView" style="display:flex;justify-content:center;align-items:center;min-height:80vh;"><div class="spinner"></div></div>
 
 <div class="login-wrap hidden" id="loginView">
@@ -333,7 +359,6 @@
     <div class="carrossel-scroll" id="novidadesWrap"></div>
   </div>
 
-  <!-- CONTROLES -->
   <div class="top-controls" id="topControls">
     <button class="btn-filter" id="btnFiltroBairro" onclick="toggleFiltroDropdown(event)">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
@@ -361,21 +386,10 @@
   </div>
 </div>
 
-<!-- BARRA DE BUSCA FLUTUANTE -->
-<div class="search-bar-floating" id="searchBarFloating">
-  <input type="search" id="buscaInput" placeholder="Buscar por rua, bairro..." oninput="renderizarImoveis()">
-  <button class="btn-close-search" onclick="fecharBusca()">✕</button>
-</div>
-
-<!-- NAVBAR INFERIOR -->
 <nav class="bottom-nav" id="bottomNav">
   <button class="nav-btn active" id="navInicio" onclick="navIr('inicio')">
     <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
     <span class="nav-lbl">Início</span>
-  </button>
-  <button class="nav-btn" id="navBuscar" onclick="toggleBusca()">
-    <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-    <span class="nav-lbl">Buscar</span>
   </button>
   <button class="nav-btn" id="navFavoritos" onclick="navIr('gostei')">
     <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
@@ -384,6 +398,10 @@
   <button class="nav-btn" id="navVisitar" onclick="navIr('visitar')">
     <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
     <span class="nav-lbl">Visitar</span>
+  </button>
+  <button class="nav-btn" id="navJaVisitei" onclick="navIr('ja-visitei')">
+    <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    <span class="nav-lbl">Já Visitei</span>
   </button>
   <button class="nav-btn" id="navNaoGostei" onclick="navIr('nao-gostei')">
     <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
@@ -395,7 +413,7 @@
   </button>
 </nav>
 
-<!-- MODAIS -->
+<!-- MODAL GOSTEI -->
 <div class="modal-backdrop" id="modalGostei" onclick="if(event.target===this) fecharModalGostei()">
   <div class="modal">
     <button class="modal-close" onclick="fecharModalGostei()">×</button>
@@ -408,6 +426,7 @@
   </div>
 </div>
 
+<!-- MODAL VISITA -->
 <div class="modal-backdrop" id="modalVisita" onclick="if(event.target===this) fecharModalVisita()">
   <div class="modal">
     <button class="modal-close" onclick="fecharModalVisita()">×</button>
@@ -441,7 +460,7 @@
   </div>
 </div>
 
-<!-- NOVO MODAL: CANCELAR VISITA -->
+<!-- MODAL CANCELAR VISITA -->
 <div class="modal-backdrop" id="modalCancelarVisita" onclick="if(event.target===this) fecharModalCancelarVisita()">
   <div class="modal">
     <button class="modal-close" onclick="fecharModalCancelarVisita()">×</button>
@@ -451,6 +470,70 @@
       <button class="btn btn-ghost btn-full" onclick="fecharModalCancelarVisita()">Não, manter visita</button>
       <button class="btn btn-primary btn-full" id="btnConfirmarCancelamento" style="background:var(--danger);" onclick="confirmarCancelamentoVisita()">Sim, cancelar visita</button>
     </div>
+  </div>
+</div>
+
+<!-- MODAL CONDIÇÃO DE COMPRA -->
+<div class="modal-backdrop" id="modalCondicao" onclick="if(event.target===this) fecharModalCondicao()">
+  <div class="modal" style="max-width: 500px; padding: 24px 20px;">
+    <button class="modal-close" onclick="fecharModalCondicao()">×</button>
+    
+    <div class="imovel-hero-cond">
+      <div class="hero-top-cond">
+        <span class="hero-lbl-cond">Condições para aquisição</span>
+        <span class="hero-corretor-cond" id="condCorretor">—</span>
+      </div>
+      <div class="hero-endereco-cond" id="condEndereco">—</div>
+      <div class="hero-valor-linha-cond">
+        <span class="hero-valor-lbl-cond">Valor</span>
+        <span class="hero-valor-cond" id="condValor">—</span>
+      </div>
+    </div>
+
+    <div class="field-cond">
+      <label>Dinheiro (à vista) <span class="hint">— opcional</span></label>
+      <div class="input-money-wrap-cond">
+        <span class="prefix-cond">R$</span>
+        <input type="text" id="condAvista" inputmode="numeric" placeholder="0,00" autocomplete="off">
+      </div>
+    </div>
+
+    <div class="field-cond">
+      <label>FGTS <span class="hint">— opcional</span></label>
+      <div class="input-money-wrap-cond">
+        <span class="prefix-cond">R$</span>
+        <input type="text" id="condFGTS" inputmode="numeric" placeholder="0,00" autocomplete="off">
+      </div>
+    </div>
+
+    <div class="field-cond">
+      <label>Financiamento ou Consórcio <span class="hint">— opcional</span></label>
+      <div class="input-money-wrap-cond">
+        <span class="prefix-cond">R$</span>
+        <input type="text" id="condFinanciamento" inputmode="numeric" placeholder="0,00" autocomplete="off">
+      </div>
+    </div>
+
+    <div class="total-box-cond">
+      <span class="lbl-cond">Total</span>
+      <span class="valor-cond" id="condTotal">R$ 0,00</span>
+    </div>
+
+    <div id="condAlerta" class="alerta-box-cond">
+      <strong>Atenção:</strong> o valor total está <span class="pct-cond" id="condPct">0%</span> abaixo do valor de anúncio.
+    </div>
+
+    <div class="field-cond">
+      <label>Observações <span class="hint">— opcional</span></label>
+      <textarea id="condObs" placeholder="Algo a acrescentar? (opcional)" maxlength="1000" style="min-height:60px; font-size:.85rem;"></textarea>
+    </div>
+
+    <button class="btn btn-primary btn-full" id="btnEnviarCondicao" onclick="enviarCondicao()" style="background:var(--success); margin-top:10px;">
+      Enviar para WhatsApp
+    </button>
+    <button class="btn btn-ghost btn-full" id="btnAjustarCondicao" onclick="document.getElementById('condAvista').focus()" style="display:none; margin-top:8px; font-size:.8rem;">
+      Quero ajustar os valores
+    </button>
   </div>
 </div>
 
@@ -476,12 +559,39 @@ const state = {
   imoveis: [], filtroNav: null, bairrosSelecionados: new Set(),
   salvandoIds: {}, vistos: new Set(), ultimoAcesso: 0,
   modalImovelId: null, visitaDia: '', visitaTurno: '',
-  modo1Coluna: false // Falso = padrão 2 colunas no celular e 3/4 no PC
+  modo1Coluna: false,
+  modalImovelIdCond: null,
+  valorImovelCond: 0,
+  atualizacaoTimer: null
 };
 
 const $ = id => document.getElementById(id);
 const esc = s => String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 const normalizaTel = t => String(t || '').replace(/\D/g, '');
+
+/* ===== FUNÇÕES UTILITÁRIAS (RESTAURADAS) ===== */
+function fmtTel(t){
+  const n = normalizaTel(t);
+  if(n.length === 11) return `(${n.slice(0,2)}) ${n.slice(2,3)} ${n.slice(3,7)}-${n.slice(7)}`;
+  return t;
+}
+
+function detectarNavegador(){
+  const ua = navigator.userAgent; let nav = 'Navegador', os = '';
+  if(/iPhone|iPad|iPod/i.test(ua)) os = 'iPhone'; else if(/Android/i.test(ua)) os = 'Android';
+  if(/Chrome/i.test(ua)) nav = 'Chrome'; else if(/Safari/i.test(ua)) nav = 'Safari';
+  return (nav + (os ? ' · ' + os : '')).trim();
+}
+
+const DIAS_SEMANA = ['dom','seg','ter','qua','qui','sex','sáb'];
+const MESES_CURTOS = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+
+function fmtDataHoraVisita(iso){
+  if(!iso) return { dataCurta: '', hora: '' };
+  const d = new Date(iso); if(isNaN(d.getTime())) return { dataCurta: '', hora: '' };
+  return { dataCurta: `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}`, hora: `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}` };
+}
+/* ============================================ */
 
 function mascaraTelefone(input){
   let v = input.value.replace(/\D/g, '');
@@ -510,37 +620,17 @@ function formatarPreco(valor){
   return num.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 });
 }
 
-function extrairSpecsDescricao(descricao){
-  if(!descricao) return { specs: '', badge: '' };
-  const linhas = String(descricao).split('\n').map(l => l.trim()).filter(Boolean);
-  let linha1 = linhas[0] || '', badge = '';
-  const mBadge = linha1.match(/\*([^*]+)\*/);
-  if(mBadge && mBadge[1]){ badge = mBadge[1].trim(); linha1 = linha1.replace(mBadge[0], '').trim(); }
-  const temM2 = /\d+\s*m[²2]/i.test(linha1);
-  const temKw = /\b(quarto|vaga|suíte|suite|sala|banheiro|dormitório|área|terreno)\b/i.test(linha1);
-  return { specs: (temM2 || (/\d/.test(linha1) && temKw)) ? linha1 : '', badge: badge };
-}
+function obterTipoImovel(im) {
+  const desc = String(im.descricao || '');
+  const match = desc.match(/\*([^*]+)\*/);
+  if (match && match[1]) return match[1].trim();
 
-function fmtTel(t){
-  const n = normalizaTel(t);
-  if(n.length === 11) return `(${n.slice(0,2)}) ${n.slice(2,3)} ${n.slice(3,7)}-${n.slice(7)}`;
-  return t;
-}
+  const lower = desc.toLowerCase();
+  if (lower.includes('cobertura')) return 'Cobertura';
+  if (lower.includes('casa')) return 'Casa';
+  if (lower.includes('área privativa') || lower.includes('area privativa')) return 'Área Privativa';
 
-const DIAS_SEMANA = ['dom','seg','ter','qua','qui','sex','sáb'];
-const MESES_CURTOS = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
-
-function fmtDataHoraVisita(iso){
-  if(!iso) return { dataCurta: '', hora: '' };
-  const d = new Date(iso); if(isNaN(d.getTime())) return { dataCurta: '', hora: '' };
-  return { dataCurta: `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}`, hora: `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}` };
-}
-
-function detectarNavegador(){
-  const ua = navigator.userAgent; let nav = 'Navegador', os = '';
-  if(/iPhone|iPad|iPod/i.test(ua)) os = 'iPhone'; else if(/Android/i.test(ua)) os = 'Android';
-  if(/Chrome/i.test(ua)) nav = 'Chrome'; else if(/Safari/i.test(ua)) nav = 'Safari';
-  return (nav + (os ? ' · ' + os : '')).trim();
+  return 'Apto Padrão';
 }
 
 function normalizarBairro(s){ return String(s || '').trim().normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase(); }
@@ -552,6 +642,19 @@ function enderecoSemNumero_(im){
 function enderecoCompleto_(im){
   let t = String(im.rua || ''); if(im.numero) t += (t ? ', ' : '') + im.numero; if(im.bairro) t += (t ? ' - ' : '') + im.bairro;
   return t || String(im.titulo || '') || 'Endereço';
+}
+
+function nomeCorretor_(valorBruto) {
+  if (!valorBruto) return '';
+  const primeiro = String(valorBruto).split('/')[0].trim();
+  if (!primeiro) return '';
+
+  const normalizado = primeiro.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+
+  if (normalizado.indexOf('hugo') === 0) return 'Hugo Ribeiro';
+  if (normalizado.indexOf('carol') === 0) return 'Carol Lima';
+
+  return primeiro.charAt(0).toUpperCase() + primeiro.slice(1).toLowerCase();
 }
 
 function carregarVistos(){ try { const raw = localStorage.getItem(VISTOS_KEY); const arr = raw ? JSON.parse(raw) : []; state.vistos = new Set(Array.isArray(arr) ? arr : []); } catch(e){ state.vistos = new Set(); } }
@@ -568,8 +671,6 @@ function imovelEhNovo(im){
 }
 
 function imovelVendido_(im){ const v = String(im?.vendido || '').trim().toLowerCase(); return ['sim','s','true','1','vendido'].includes(v); }
-
-// Verifica se o imóvel está reservado (desativado/oculto na vitrine)
 function imovelReservado_(im) {
   if (!im) return false;
   const v = String(im.vendido || '').trim().toLowerCase();
@@ -612,7 +713,7 @@ function mostrarBloqueioDispositivo(){
 function pedirLiberacaoZap(){
   const tel = state.telefone || $('btnZapLiberar').dataset.telefone || '';
   const corretor = corretorDoCliente(), zap = ZAP_CORRETORES[corretor];
-  const msg = `Olá ${corretor}! Sou *${state.clienteInfo?.nome||'Cliente'}*. Estou tentando acessar minha vitrine em um novo dispositivo (${detectarNavegador()}) e apareceu bloqueado. Pode liberar?`;
+  const msg = `Olá ${corretor}! Sou *${state.clienteInfo?.nome||'Cliente'}*. Estou tentando acessar minha vitrine em um novo dispositivo e apareceu bloqueado. Pode liberar?`;
   window.open(`https://wa.me/${zap}?text=${encodeURIComponent(msg)}`, '_blank');
 }
 
@@ -637,6 +738,16 @@ function mostrarView(id){
 }
 
 function limparUrl(){ try { const url = new URL(window.location.href); if(url.searchParams.has('tel') || url.searchParams.has('senha')){ url.searchParams.delete('tel'); url.searchParams.delete('senha'); window.history.replaceState({}, document.title, url.pathname); } } catch(e){} }
+
+function forcarAtualizacao() {
+  try {
+    localStorage.removeItem(CACHE_KEY);
+    localStorage.removeItem(VISTOS_KEY);
+    localStorage.removeItem(ULTIMO_ACESSO_KEY);
+  } catch(e) {}
+  toast('Cache limpo! Recarregando...', 'success');
+  setTimeout(() => location.reload(), 500);
+}
 
 function mostrarSkeleton(qtd = 6){
   const grid = $('gridImoveis'); let html = '';
@@ -667,7 +778,6 @@ async function loginComRetryForte(tel, senha){
   return ultimoRes;
 }
 
-// Função que busca a lista do admin em segundo plano e sincroniza os dados de reserva
 async function sincronizarReservasAdmin() {
   if (!state.telefone) return;
   try {
@@ -675,7 +785,6 @@ async function sincronizarReservasAdmin() {
     if (!resAdmin.ok || !resAdmin.data) return;
 
     const imoveisAdminDoCliente = resAdmin.data.filter(i => normalizaTel(i.telefone) === state.telefone);
-
     const reservadosIds = new Set();
     imoveisAdminDoCliente.forEach(im => {
       if (String(im.desativado).toLowerCase() === 'sim') {
@@ -744,8 +853,9 @@ async function irParaVitrine(){
   mostrarView('vitrineView');
   $('saudacaoUser').textContent = 'Olá, ' + (state.clienteInfo?.nome ? state.clienteInfo.nome.split(' ')[0] : fmtTel(state.telefone));
   const cache = lerCache();
-  if(cache?.data?.length){ state.imoveis = cache.data; atualizarTela(); if(cache.fresh) { sincronizarReservasAdmin(); return; } } else { mostrarSkeleton(); }
+  if(cache?.data?.length){ state.imoveis = cache.data; atualizarTela(); if(cache.fresh) { sincronizarReservasAdmin(); iniciarAtualizacaoSilenciosa(); return; } } else { mostrarSkeleton(); }
   await carregarImoveis();
+  iniciarAtualizacaoSilenciosa();
 }
 
 async function carregarImoveis(){
@@ -760,6 +870,40 @@ async function carregarImoveis(){
   gravarCache(state.imoveis); atualizarTela();
   sincronizarReservasAdmin();
 }
+
+/* ===== ATUALIZAÇÃO SILENCIOSA ===== */
+async function atualizarSilencioso() {
+  if (!state.telefone || !state.deviceToken) return;
+  if (document.visibilityState !== 'visible') return;
+  try {
+    const res = await api('listarImoveis', { telefone: state.telefone, deviceToken: state.deviceToken }, TIMEOUT_API, 0);
+    if (res.ok && res.data) {
+      const novos = res.data.sort((a,b) => new Date(b.dataCadastro||0) - new Date(a.dataCadastro||0));
+      // Só atualiza se houver mudança real (evita re-render desnecessário)
+      const atual = JSON.stringify(state.imoveis.map(i => i.id + i.status + i.desativado + i.vendido + i.visitaFeita));
+      const novo = JSON.stringify(novos.map(i => i.id + i.status + i.desativado + i.vendido + i.visitaFeita));
+      if (atual !== novo) {
+        state.imoveis = novos;
+        gravarCache(state.imoveis);
+        atualizarTela();
+      }
+    }
+  } catch(e) {
+    console.warn('Atualização silenciosa falhou:', e);
+  }
+}
+
+function iniciarAtualizacaoSilenciosa() {
+  if (state.atualizacaoTimer) clearInterval(state.atualizacaoTimer);
+  state.atualizacaoTimer = setInterval(atualizarSilencioso, 60000); // a cada 1 minuto
+}
+
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') {
+    atualizarSilencioso();
+  }
+});
+/* ==================================== */
 
 function atualizarTela(){ renderizarVisitas(); renderizarNovidades(); renderizarFiltroDropdown(); renderizarImoveis(); }
 
@@ -777,7 +921,7 @@ function renderizarVisitas(){
 
 function renderizarNovidades(){
   const sec = $('sectionNovidades'), wrap = $('novidadesWrap'), cnt = $('novidadesCount');
-  const novos = state.imoveis.filter(im => !imovelVendido_(im) && !imovelReservado_(im) && imovelEhNovo(im) && im.status !== 'nao-gostei');
+  const novos = state.imoveis.filter(im => !imovelVendido_(im) && !imovelReservado_(im) && imovelEhNovo(im) && im.status !== 'nao-gostei' && String(im.visitaFeita).toLowerCase() !== 'sim');
   if(!novos.length){ sec.classList.add('hidden'); return; }
   sec.classList.remove('hidden'); cnt.textContent = novos.length;
   wrap.innerHTML = novos.map(im => `
@@ -791,7 +935,7 @@ function renderizarFiltroDropdown(){
   const dropdown = $('filtroLista'), badge = $('badgeFiltro'), btnLimpar = $('btnLimparFiltro');
   const mapa = new Map();
   state.imoveis.forEach(im => {
-    if(imovelVendido_(im) || imovelReservado_(im) || im.status === 'nao-gostei') return;
+    if(imovelVendido_(im) || imovelReservado_(im) || im.status === 'nao-gostei' || String(im.visitaFeita).toLowerCase() === 'sim') return;
     const nome = String(im.bairro || '').trim(); if(!nome) return;
     const chave = normalizarBairro(nome);
     if(!mapa.has(chave)) mapa.set(chave, { nome, count: 0 });
@@ -836,47 +980,37 @@ function renderizarImoveis(){
   const grid = $('gridImoveis'); 
   let lista = [...state.imoveis];
   
-  // 1. Filtros de Navegação
   if(state.filtroNav === 'gostei') lista = lista.filter(i => i.status === 'gostei');
   else if(state.filtroNav === 'visitar') lista = lista.filter(i => i.status === 'quero-visitar');
+  else if(state.filtroNav === 'ja-visitei') lista = lista.filter(i => String(i.visitaFeita).toLowerCase() === 'sim');
   else if(state.filtroNav === 'nao-gostei') lista = lista.filter(i => i.status === 'nao-gostei');
   else if(state.filtroNav === 'vendidos') lista = lista.filter(i => imovelVendido_(i));
   
-  // 2. Filtros de Bairro e Busca
   if(state.bairrosSelecionados.size > 0) lista = lista.filter(i => state.bairrosSelecionados.has(normalizarBairro(i.bairro)));
   const busca = $('buscaInput')?.value.toLowerCase().trim();
   if(busca) lista = lista.filter(i => (i.titulo||'').toLowerCase().includes(busca) || (enderecoSemNumero_(i)).toLowerCase().includes(busca));
 
-  // 3. ORDENAÇÃO CORRIGIDA
   lista.sort((a, b) => {
     const getPeso = (im) => {
-      // 1º Lugar: VENDIDO (vai para o fim absoluto de tudo)
-      if (imovelVendido_(im)) return 3;
-      
-      // 2º Lugar: DESATIVADO (mas sem ser vendido)
-      if (imovelReservado_(im)) return 2;
-      
-      // 3º Lugar: QUER VISITAR (topo da fila dos ativos)
-      if (im.status === 'quero-visitar') return 0;
-      
-      // 4º Lugar: TODOS OS OUTROS ATIVOS (Pendentes, Gostei, Não Gostei, etc)
-      return 1; 
+      const vendido = imovelVendido_(im);
+      const desativado = imovelReservado_(im);
+      const visitado = String(im.visitaFeita).toLowerCase() === 'sim';
+
+      if (vendido || desativado) return 4;
+      if (visitado) return 3;
+      if (im.status === 'quero-visitar') return 1;
+      return 2;
     };
 
     const pesoA = getPeso(a);
     const pesoB = getPeso(b);
 
-    // Se os pesos forem diferentes, ordena do menor (topo) para o maior (fim)
     if (pesoA !== pesoB) return pesoA - pesoB;
-
-    // Se forem do mesmo peso, ordena pelo mais recente
     return new Date(b.dataCadastro || 0) - new Date(a.dataCadastro || 0);
   });
 
-  // 4. Atualiza o contador
   $('contadorImoveis').textContent = `${lista.length} ${lista.length === 1 ? 'imóvel' : 'imóveis'}`;
 
-  // 5. Renderiza ou mostra tela vazia
   if(!lista.length){
     grid.innerHTML = ''; 
     $('emptyState').classList.remove('hidden');
@@ -892,45 +1026,25 @@ function renderizarImoveis(){
 
 function cardHTML(im, idx){
   const vendido = imovelVendido_(im);
+  const desativado = imovelReservado_(im);
   const descartado = im.status === 'nao-gostei';
   const salvando = !!state.salvandoIds[im.id];
   
-  const specsInfo = extrairSpecsDescricao(im.descricao);
+  const tipoImovel = obterTipoImovel(im);
   const precoFmt = formatarPreco(im.preco);
   
-  let badgeTexto = specsInfo.badge;
-  let ocultarBadge = false;
-  if (badgeTexto) {
-    const bNormalizado = badgeTexto.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
-    if (bNormalizado.includes("apartamento padrao") || bNormalizado.includes("apto padrao")) {
-      ocultarBadge = true;
-    }
-  }
-
-  // ✅ NOVO: Monta a linha de specs (Apenas o que for positivo para o cliente)
   let specsLinha = [];
-  
-  // Suítes (só mostra se > 0)
   const suitesNum = Number(im.suites);
-  if (suitesNum > 0) {
-    specsLinha.push(`${suitesNum} ${suitesNum === 1 ? 'suíte' : 'suítes'}`);
-  }
-
-  // Vaga (só mostra se for livre)
+  if (suitesNum > 0) specsLinha.push(`${suitesNum} ${suitesNum === 1 ? 'suíte' : 'suítes'}`);
   const vagaStr = String(im.vaga || '').trim().toLowerCase();
-  if (vagaStr === 'livre') {
-    specsLinha.push(`Vaga livre`);
-  }
-
-  // Elevador (só mostra se tiver)
+  if (vagaStr === 'livre') specsLinha.push(`Vaga livre`);
   const elev = String(im.elevador).toLowerCase();
-  if (elev === 'sim') {
-    specsLinha.push(`Com elevador`);
-  }
+  if (elev === 'sim') specsLinha.push(`Com elevador`);
 
   let extraClass = ''; 
   if(descartado) extraClass += ' card-nao-gostei'; 
   if(vendido) extraClass += ' card-vendido';
+  if(desativado && !vendido) extraClass += ' card-desativado';
   if(im.status === 'quero-visitar') extraClass += ' card-quero-visitar';
 
   const svgHeart = `<svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`;
@@ -942,8 +1056,8 @@ function cardHTML(im, idx){
   const isGostei = im.status === 'gostei'; const isVisitar = im.status === 'quero-visitar'; const isNao = im.status === 'nao-gostei';
   
   let acoesHtml = '';
-  if(vendido){
-    acoesHtml = `<div class="card-actions" style="justify-content:center;"><span style="font-size:.8rem;font-weight:700;color:var(--muted);">Indisponível</span></div>`;
+  if(vendido || desativado){
+    acoesHtml = `<div class="card-actions" style="justify-content:center; pointer-events:none;"><span style="font-size:.8rem;font-weight:700;color:var(--muted);">Indisponível</span></div>`;
   } else if(descartado){
     acoesHtml = `<div class="card-actions" style="justify-content:center;"><button class="btn-reativar-full" style="margin:0;width:100%;" onclick="marcar('${im.id}','nao-gostei')">↻ Reativar</button></div>`;
   } else {
@@ -965,8 +1079,20 @@ function cardHTML(im, idx){
     `;
   }
 
+  let botoesInferiores = '';
+  if(!vendido && !desativado && !descartado) {
+      botoesInferiores = `
+        <button class="btn-wa-outline" onclick="event.stopPropagation(); abrirWhatsDuvida('${im.id}')">
+          ${svgWa} Tire dúvidas
+        </button>
+        <button class="btn-comprar" onclick="event.stopPropagation(); abrirModalCondicao('${im.id}')">
+          💰 Quero Comprar esse imóvel
+        </button>
+      `;
+  }
+
   return `
-    <div class="card ${extraClass}" data-id="${im.id}" style="animation-delay:${idx*30}ms" onclick="${vendido ? '' : `clicarCard('${im.id}')`}">
+    <div class="card ${extraClass}" data-id="${im.id}" style="animation-delay:${idx*30}ms" onclick="${vendido || desativado ? '' : `clicarCard('${im.id}')`}">
       
       <div class="card-header">
         <div class="card-header-top">
@@ -978,27 +1104,25 @@ function cardHTML(im, idx){
         <div class="card-rua" title="${esc(im.rua || im.titulo || 'Endereço')}">${esc(im.rua || im.titulo || 'Endereço')}</div>
       </div>
 
-      <div class="card-img-wrap" ${im.link && !vendido ? `onclick="event.stopPropagation(); window.open('${esc(im.link)}','_blank');"` : ''}>
+      <div class="card-img-wrap" ${im.link && !vendido && !desativado ? `onclick="event.stopPropagation(); window.open('${esc(im.link)}','_blank');"` : ''}>
         <img class="card-img" src="${esc(im.imagem || 'https://via.placeholder.com/400x300?text=Sem+foto')}" loading="lazy">
         
         ${vendido ? `<div class="badge-vendido">VENDIDO</div>` : ''}
-        ${descartado ? `<div class="badge-desativado">DESATIVADO</div>` : ''}
-        ${imovelEhNovo(im) && !vendido && !descartado ? `<div class="badge-novo">NOVO</div>` : ''}
+        ${desativado && !vendido ? `<div class="badge-desativado">RESERVADO</div>` : ''}
+        ${imovelEhNovo(im) && !vendido && !desativado ? `<div class="badge-novo">NOVO</div>` : ''}
         
-        ${specsInfo.badge && !ocultarBadge ? `<div class="card-tag-topo" style="left: ${imovelEhNovo(im)||descartado ? '80px' : '10px'}">${esc(specsInfo.badge)}</div>` : ''}
-        ${isGostei && !vendido ? `<div class="card-heart-top">❤️</div>` : ''}
-        
-        ${isVisitar && !vendido ? `<div class="badge-visitar-solicitado">Visita Solicitada</div>` : ''}
+        <div class="card-tag-topo" style="left: ${imovelEhNovo(im) && !vendido && !desativado ? '80px' : '10px'}">${esc(tipoImovel)}</div>
 
-        ${!vendido && !descartado ? `
+        ${isGostei && !vendido && !desativado ? `<div class="card-heart-top">❤️</div>` : ''}
+        ${isVisitar && !vendido && !desativado ? `<div class="badge-visitar-solicitado">Visita Solicitada</div>` : ''}
+
+        ${!vendido && !desativado && !descartado ? `
           <div class="carousel-fake" onclick="event.stopPropagation();">
             <button class="arrow" onclick="event.stopPropagation(); window.open('${esc(im.link)}','_blank');">‹</button>
             <div class="dots"><span class="dot active"></span><span class="dot"></span><span class="dot"></span></div>
             <button class="arrow" onclick="event.stopPropagation(); window.open('${esc(im.link)}','_blank');">›</button>
           </div>
         ` : ''}
-
-        ${specsInfo.specs ? `<div class="card-overlay-specs">${esc(specsInfo.specs)}</div>` : ''}
       </div>
 
       <div class="card-body">
@@ -1010,7 +1134,6 @@ function cardHTML(im, idx){
           ${im.iptu ? `<span>IPTU ${esc(im.iptu)}</span>` : ''}
         </div>
 
-        <!-- ✅ NOVO: Linha de specs unificada -->
         ${specsLinha.length > 0 ? `
           <div style="font-size: .75rem; font-weight: 600; color: var(--text-soft); margin-top: 4px; margin-bottom: 2px;">
             ${specsLinha.join(' · ')}
@@ -1026,18 +1149,13 @@ function cardHTML(im, idx){
       </div>
 
       ${acoesHtml}
-
-      ${!vendido && !descartado ? `
-        <button class="btn-wa-outline" onclick="event.stopPropagation(); abrirWhatsDuvida('${im.id}')">
-          ${svgWa} Tire dúvidas sobre esse imóvel
-        </button>
-      ` : ''}
+      ${botoesInferiores}
 
     </div>
   `;
 }
 
-function clicarCard(id){ const im = state.imoveis.find(i => i.id === id); if(!im || imovelVendido_(im)) return; marcarVisto(id); renderizarNovidades(); }
+function clicarCard(id){ const im = state.imoveis.find(i => i.id === id); if(!im || imovelVendido_(im) || imovelReservado_(im)) return; marcarVisto(id); renderizarNovidades(); }
 
 function compartilharImovel(id){
   const im = state.imoveis.find(i => i.id === id); if(!im) return;
@@ -1111,27 +1229,22 @@ function abrirModalGostei(id){ state.modalImovelId = id; $('modalGostei').classL
 function fecharModalGostei(){ $('modalGostei').classList.remove('show'); state.modalImovelId = null; }
 function modalGosteiIrParaVisita(){ const id = state.modalImovelId; fecharModalGostei(); if(id) abrirModalVisita(id); }
 
-// NOVO: Intercepta o clique no botão "Visitar" do card
 function interceptarCliqueVisita(id) {
   const im = state.imoveis.find(i => i.id === id);
   if (!im) return;
-  // Se o status atual for 'quero-visitar', abre o modal de cancelamento
   if (im.status === 'quero-visitar') {
     state.modalImovelId = id;
     $('modalCancelarVisita').classList.add('show');
   } else {
-    // Se não, segue o fluxo normal de agendamento
     abrirModalVisita(id);
   }
 }
 
-// NOVO: Fecha o modal de cancelamento
 function fecharModalCancelarVisita() {
   $('modalCancelarVisita').classList.remove('show');
   state.modalImovelId = null;
 }
 
-// NOVO: Cancela a visita (volta status para pendente)
 async function confirmarCancelamentoVisita() {
   const id = state.modalImovelId;
   if (!id) return;
@@ -1143,10 +1256,9 @@ async function confirmarCancelamentoVisita() {
   btn.innerHTML = 'Cancelando...';
 
   const prevStatus = im.status;
-  im.status = 'pendente'; // Volta para o status inicial
+  im.status = 'pendente';
 
   try {
-    // Atualiza o AppScript que a visita foi cancelada
     const res = await api('atualizarStatus', {
       id,
       telefone: state.telefone,
@@ -1155,11 +1267,9 @@ async function confirmarCancelamentoVisita() {
     }, TIMEOUT_API, 1);
 
     if (!res.ok) {
-      // Se der erro na API, desfaz a alteração local
       im.status = prevStatus;
       toast(res.error || 'Erro ao cancelar. Tente novamente.', 'error');
     } else {
-      // Deu certo! Atualiza a tela
       toast('Visita cancelada com sucesso.', 'success');
       atualizarTela();
       gravarCache(state.imoveis);
@@ -1212,7 +1322,6 @@ async function enviarSolicitacaoVisita(){
   const obsTexto = $('obsVisita').value.trim();
   const textoParaObservacao = `📅 Visita solicitada: ${diasLegivel} (${state.visitaTurno})\n${obsTexto ? '📝 Obs: ' + obsTexto : ''}`;
 
-  // 1. Envia para a planilha de visitas (fluxo normal)
   const res = await api('solicitarVisitaPlanilha', { id, telefone: state.telefone, deviceToken: state.deviceToken, dias: diasLegivel, turno: state.visitaTurno, observacao: obsTexto }, TIMEOUT_API, 1);
   
   if(!res.ok){
@@ -1221,7 +1330,6 @@ async function enviarSolicitacaoVisita(){
     toast(res.error || 'Erro', 'error'); return;
   }
 
-  // 2. Salva a observação no campo de observações do imóvel (para o admin ver no gestor)
   try {
     await api('salvarObservacao', { 
       id: id, 
@@ -1229,36 +1337,34 @@ async function enviarSolicitacaoVisita(){
       telefone: state.telefone, 
       deviceToken: state.deviceToken 
     }, TIMEOUT_API, 0);
-  } catch(e) {
-    console.warn('Não foi possível salvar observação no imóvel:', e);
-  }
+  } catch(e) {}
 
   btn.disabled = false; btn.innerHTML = '📩 Enviar solicitação';
   im.status = 'quero-visitar'; atualizarTela(); gravarCache(state.imoveis);
   fecharModalVisita(); toast('Solicitação enviada!', 'success');
 }
 
-/* ====== NAVEGAÇÃO E BUSCA ====== */
 function toggleBusca(){
-  const barra = $('searchBarFloating');
+  const barra = $('headerSearch');
   barra.classList.toggle('show');
-  if(barra.classList.contains('show')){ setTimeout(() => $('buscaInput').focus(), 100); $('navBuscar').classList.add('active'); }
-  else { $('buscaInput').value = ''; renderizarImoveis(); $('navBuscar').classList.remove('active'); }
+  if(barra.classList.contains('show')){ setTimeout(() => $('buscaInput').focus(), 100); }
+  else { $('buscaInput').value = ''; renderizarImoveis(); }
 }
 
 function fecharBusca(){
-  $('searchBarFloating').classList.remove('show');
-  $('buscaInput').value = ''; renderizarImoveis(); $('navBuscar').classList.remove('active');
+  $('headerSearch').classList.remove('show');
+  $('buscaInput').value = ''; renderizarImoveis();
 }
 
 function navIr(destino){
   fecharBusca();
 
-  ['navInicio','navBuscar','navFavoritos','navVisitar','navNaoGostei','navVendidos'].forEach(id => $(id).classList.remove('active'));
+  ['navInicio','navFavoritos','navVisitar','navJaVisitei','navNaoGostei','navVendidos'].forEach(id => $(id).classList.remove('active'));
   
   if(destino === 'inicio'){ state.filtroNav = null; $('navInicio').classList.add('active'); }
   else if(destino === 'gostei'){ state.filtroNav = 'gostei'; $('navFavoritos').classList.add('active'); }
   else if(destino === 'visitar'){ state.filtroNav = 'visitar'; $('navVisitar').classList.add('active'); }
+  else if(destino === 'ja-visitei'){ state.filtroNav = 'ja-visitei'; $('navJaVisitei').classList.add('active'); }
   else if(destino === 'nao-gostei'){ state.filtroNav = 'nao-gostei'; $('navNaoGostei').classList.add('active'); }
   else if(destino === 'vendidos'){ state.filtroNav = 'vendidos'; $('navVendidos').classList.add('active'); }
   
@@ -1267,6 +1373,184 @@ function navIr(destino){
 
 function limparFiltro(){ state.filtroNav = null; state.bairrosSelecionados.clear(); renderizarFiltroDropdown(); navIr('inicio'); }
 
+/* ====== MODAL DE CONDIÇÃO DE COMPRA ====== */
+function mascaraMoeda(input) {
+  let v = String(input.value || '').replace(/\D/g, '');
+  if (!v) { input.value = ''; return; }
+  v = v.replace(/^0+/, '') || '0';
+  if (v.length > 15) v = v.slice(0, 15);
+  const reais = v.slice(0, -2) || '0';
+  const cents = v.slice(-2).padStart(2, '0');
+  const reaisFmt = reais.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  input.value = reaisFmt + ',' + cents;
+}
+
+function parseMoeda(txt) {
+  if (!txt) return 0;
+  const s = String(txt).replace(/\D/g, '');
+  if (!s) return 0;
+  return parseInt(s, 10) / 100;
+}
+
+function formatarMoeda(n) {
+  const v = Number(n) || 0;
+  return 'R$ ' + v.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+function atualizarTotalCondicao() {
+  const avista = parseMoeda($('condAvista').value);
+  const fgts = parseMoeda($('condFGTS').value);
+  const financ = parseMoeda($('condFinanciamento').value);
+  const total = avista + fgts + financ;
+
+  $('condTotal').textContent = formatarMoeda(total);
+
+  const valorImovel = state.valorImovelCond;
+  const alerta = $('condAlerta');
+  const btnAjustar = $('btnAjustarCondicao');
+
+  let pct = 0;
+  if (valorImovel > 0 && total > 0) {
+    const diff = valorImovel - total;
+    pct = (diff / valorImovel) * 100;
+  }
+
+  const mostrarAlerta = pct > 3;
+
+  if (mostrarAlerta) {
+    const pctFmt = pct.toFixed(1).replace('.', ',');
+    $('condPct').textContent = pctFmt + '%';
+    alerta.classList.add('show');
+    btnAjustar.style.display = '';
+  } else {
+    alerta.classList.remove('show');
+    btnAjustar.style.display = 'none';
+  }
+}
+
+function abrirModalCondicao(id) {
+  const im = state.imoveis.find(i => i.id === id);
+  if (!im) return;
+  
+  state.modalImovelIdCond = id;
+  
+  const end = enderecoCompleto_(im);
+  const valorStr = formatarPreco(im.preco);
+  const valorNum = parseMoeda(valorStr);
+  state.valorImovelCond = valorNum;
+
+  const corretorBruto = im.corretor || getCorretor(im) || corretorDoCliente();
+  const corretorFinal = nomeCorretor_(corretorBruto);
+  const primeiroNome = corretorFinal.split(' ')[0];
+
+  $('condEndereco').textContent = end;
+  $('condValor').textContent = valorStr || 'Consulte';
+  $('condCorretor').textContent = corretorFinal || '—';
+  $('btnEnviarCondicao').textContent = 'Enviar para WhatsApp de ' + primeiroNome;
+
+  $('condAvista').value = '';
+  $('condFGTS').value = '';
+  $('condFinanciamento').value = '';
+  $('condObs').value = '';
+  atualizarTotalCondicao();
+
+  ['condAvista', 'condFGTS', 'condFinanciamento'].forEach(inputId => {
+    const el = $(inputId);
+    el.removeEventListener('input', inputHandlerCond);
+    el.addEventListener('input', inputHandlerCond);
+  });
+
+  $('modalCondicao').classList.add('show');
+}
+
+function inputHandlerCond(e) {
+  mascaraMoeda(e.target);
+  atualizarTotalCondicao();
+}
+
+function fecharModalCondicao() {
+  $('modalCondicao').classList.remove('show');
+  state.modalImovelIdCond = null;
+}
+
+async function enviarCondicao() {
+  const id = state.modalImovelIdCond;
+  if (!id) return;
+  const im = state.imoveis.find(i => i.id === id);
+  if (!im) return;
+
+  const avista = parseMoeda($('condAvista').value);
+  const fgts = parseMoeda($('condFGTS').value);
+  const financ = parseMoeda($('condFinanciamento').value);
+  const total = avista + fgts + financ;
+  const obs = ($('condObs').value || '').trim();
+
+  if (total <= 0) {
+    toast('Informe ao menos um valor para continuar.', 'error');
+    return;
+  }
+
+  const btn = $('btnEnviarCondicao');
+  const textoOriginal = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = 'Enviando...';
+
+  const whatsappWindow = window.open('', '_blank');
+
+  const res = await api('salvarCondicaoCompra', {
+    telefone: state.telefone,
+    codigo: im.codigo,
+    valorAvista: $('condAvista').value,
+    valorFGTS: $('condFGTS').value,
+    valorFinanciamento: $('condFinanciamento').value,
+    valorTotal: $('condTotal').textContent.replace('R$ ', ''),
+    observacao: obs
+  });
+
+  if (!res.ok) {
+    if (whatsappWindow) whatsappWindow.close();
+    btn.disabled = false;
+    btn.textContent = textoOriginal;
+    toast(res.error || 'Erro ao enviar. Tente novamente.', 'error');
+    return;
+  }
+
+  const endereco = enderecoCompleto_(im);
+  const corretorFinal = nomeCorretor_(im.corretor || 'Hugo');
+  const primeiroNomeCorretor = corretorFinal.split(' ')[0];
+
+  const linhas = [];
+  linhas.push('Olá' + (primeiroNomeCorretor ? ', ' + primeiroNomeCorretor : '') + '.');
+  linhas.push('');
+  linhas.push('Estive olhando o imóvel na ' + endereco + ' (código ' + im.codigo + ') e gostaria de registrar meu interesse com as seguintes condições:');
+  linhas.push('');
+  if (avista > 0) linhas.push('Valor à vista: ' + formatarMoeda(avista));
+  if (fgts > 0) linhas.push('FGTS: ' + formatarMoeda(fgts));
+  if (financ > 0) linhas.push('Financiamento: ' + formatarMoeda(financ));
+  linhas.push('Total: ' + formatarMoeda(total));
+  if (obs) {
+    linhas.push('');
+    linhas.push('Observação: ' + obs);
+  }
+  linhas.push('');
+  linhas.push('Fico no aguardo para conversarmos sobre.');
+
+  const mensagem = linhas.join('\n');
+  const telCorretor = res.telCorretor || (primeiroNomeCorretor === 'Hugo' ? '5531996070930' : '5531996273985');
+  const urlWhatsapp = 'https://wa.me/' + telCorretor + '?text=' + encodeURIComponent(mensagem);
+
+  btn.disabled = false;
+  btn.textContent = textoOriginal;
+  fecharModalCondicao();
+
+  if (whatsappWindow) {
+    whatsappWindow.location.href = urlWhatsapp;
+  } else {
+    window.location.href = urlWhatsapp;
+  }
+}
+
+/* ====== INIT ====== */
 (async function init(){
   carregarVistos(); carregarUltimoAcesso();
   const params = new URLSearchParams(window.location.search);
@@ -1292,8 +1576,8 @@ function limparFiltro(){ state.filtroNav = null; state.bairrosSelecionados.clear
       localStorage.setItem(TEL_KEY, telUrl); localStorage.setItem(TOKEN_KEY, state.deviceToken);
       if(res.nome) localStorage.setItem(NOME_KEY, res.nome);
       $('saudacaoUser').textContent = 'Olá, ' + (res.nome ? res.nome.split(' ')[0] : fmtTel(telUrl)); salvarUltimoAcesso(); limparUrl(); limparOriginalUrl();
-      if(res.imoveis?.length){ state.imoveis = res.imoveis.sort((a,b)=>new Date(b.dataCadastro||0)-new Date(a.dataCadastro||0)); gravarCache(state.imoveis); atualizarTela(); sincronizarReservasAdmin(); return; }
-      await carregarImoveis(); return;
+      if(res.imoveis?.length){ state.imoveis = res.imoveis.sort((a,b)=>new Date(b.dataCadastro||0)-new Date(a.dataCadastro||0)); gravarCache(state.imoveis); atualizarTela(); sincronizarReservasAdmin(); iniciarAtualizacaoSilenciosa(); return; }
+      await carregarImoveis(); iniciarAtualizacaoSilenciosa(); return;
     }
     if(erroEhDispositivoVinculado(res.error)){ mostrarBloqueioDispositivo(); return; }
     mostrarErroConexaoComLink(); return;
@@ -1304,6 +1588,7 @@ function limparFiltro(){ state.filtroNav = null; state.bairrosSelecionados.clear
     state.telefone = telSalvo; state.deviceToken = tokenSalvo; state.clienteInfo = { nome: nomeSalvo }; state.imoveis = cache.data;
     mostrarView('vitrineView'); $('saudacaoUser').textContent = 'Olá, ' + (nomeSalvo ? nomeSalvo.split(' ')[0] : fmtTel(telSalvo)); atualizarTela();
     sincronizarReservasAdmin();
+    iniciarAtualizacaoSilenciosa();
   } else { mostrarView('loginView'); setTimeout(()=>$('inputTelefone').focus(),200); }
 })();
 </script>
