@@ -9,7 +9,6 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%231e3a5f'/><text x='50' y='68' font-family='-apple-system,sans-serif' font-size='42' font-weight='800' fill='white' text-anchor='middle'>GER</text></svg>">
 <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-<!-- Plugin de clusterização para performance no mapa -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -501,7 +500,7 @@
       </button>
       <button class="btn-header" id="mapaViewBtn" onclick="toggleVisualizacaoMobile()" title="Alternar visualização">
         <svg class="ico" id="icoViewMapa" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="18" rx="1"/><rect x="14" y="3" width="7" height="18" rx="1"/></svg>
-        <span class="lbl-txt" id="txtViewMapa">Cards</span>
+        <span class="lbl-txt" id="txtViewMapa">Mapa</span>
       </button>
       <button class="btn-header filtro-avancado" id="btnFiltroAvancadoTop" onclick="abrirModalFiltro()" title="Filtro Avançado">
         <svg class="ico" viewBox="0 0 24 24"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
@@ -543,7 +542,7 @@
         <button class="cols-btn" data-cols="2" onclick="setColunas('2')"><span>2</span></button>
         <button class="cols-btn" data-cols="3" onclick="setColunas('3')"><span>3</span></button>
         <button class="cols-btn" data-cols="4" onclick="setColunas('4')"><span>4</span></button>
-        <button class="cols-btn" data-cols="5" onclick="setColunas('5')"><span>5</span></button>
+        <button class="cols-btn active" data-cols="5" onclick="setColunas('5')"><span>5</span></button>
         <button class="cols-btn" data-cols="lista" onclick="setColunas('lista')"><svg class="ico" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/></svg><span>Lista</span></button>
         <button class="cols-btn" data-cols="mapa" onclick="setColunas('mapa')"><svg class="ico" viewBox="0 0 24 24"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/></svg><span>Mapa</span></button>
       </div>
@@ -1000,11 +999,13 @@ async function api(action, params={}, timeoutMs=TIMEOUT_API, retries=1){
 }
 
 /* =========================================================
-   INICIALIZAÇÃO
+   INICIALIZAÇÃO (Sempre em Cards)
    ========================================================= */
 (async function init(){
-  // Aplica as colunas padrão corretas (Desktop 5 cols, Mobile 1 col)
-  aplicarColunas(carregarColunas());
+  // Força a visão de Cards na inicialização (Desktop 5, Mobile 1)
+  state._isMobile = window.matchMedia('(max-width:820px)').matches;
+  aplicarColunas(state._isMobile ? '1' : '5'); 
+  
   carregarFiltrosLocal();
   
   if(!SENHA_ADMIN){
@@ -1015,7 +1016,6 @@ async function api(action, params={}, timeoutMs=TIMEOUT_API, retries=1){
     return;
   }
   
-  // Carrega apenas do cache local (não bate na API)
   const cacheImoveis = carregarImoveisCacheLocal();
   if (cacheImoveis.length > 0) {
     state.imoveisBrutos = cacheImoveis;
@@ -1025,11 +1025,9 @@ async function api(action, params={}, timeoutMs=TIMEOUT_API, retries=1){
   $('loadingView').style.display = 'none';
   $('conteudoView').classList.remove('hidden');
   
-  // Mostra tela vazia inicial
   $('emptyState').classList.remove('hidden');
   $('emptyState').innerHTML = '<h3>Nenhum imóvel carregado</h3><p>Use a lupa no topo ou o botão de filtros para buscar. Nada é carregado automaticamente.</p>';
   
-  // Prepara os botões mobile
   if (state._isMobile) {
     const btnView = $('mapaViewBtn');
     if (btnView) {
@@ -1039,7 +1037,7 @@ async function api(action, params={}, timeoutMs=TIMEOUT_API, retries=1){
     }
   }
 
-  // Garante que contadores de clientes e matches comecem a carregar em background
+  // Busca contagens de clientes e matches
   carregarContagensClientes();
   setTimeout(() => iniciarMatchesBackground(), 1000);
 })();
@@ -1293,7 +1291,10 @@ function aplicarFiltrosNaTela(forcarVazio = false){
 }
 
 function atualizarContadores(base){
-  const todos = base.filter(im => !isVendido(im)).length;
+  // Regra: Ativos = não vendidos. Vendidos = vendidos. Corrigir = faltando info.
+  // 'base' já vem filtrado para não-vendidos (no carregarTudo), então o "Vendidos" só vai contar se tiver dados de vendidos na base. 
+  // Para simplificar, o contador refletirá o que está na base local no momento.
+  const todos = base.length;
   const pendentes = base.filter(im => !isVendido(im)).length;
   const vendidos = base.filter(im => isVendido(im)).length;
   const corrigir = base.filter(im => !isVendido(im) && temInformacaoFaltando(im).length > 0).length;
@@ -1420,7 +1421,6 @@ function iniciarMapa() {
   mapaLeaflet = L.map('mapaView', { zoomControl:true, scrollWheelZoom:true }).setView([-19.9208, -43.9378], 12);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution:'&copy; OpenStreetMap', maxZoom:19 }).addTo(mapaLeaflet);
   
-  // Usando MarkerClusterGroup para performance. MaxClusterRadius 40 evita muitos grupos.
   marcadoresLayer = L.markerClusterGroup({
     showCoverageOnHover: false,
     maxClusterRadius: 40,
@@ -1522,6 +1522,8 @@ function renderizarCardsMapa(lista) {
     const vendido = isVendido(im);
     const codigo = String(im.codigo || '').trim();
     const mc = state._matchesCache[codigo] !== undefined ? state._matchesCache[codigo].length : '…';
+    const nc = state._clientesPorImovel[codigo] || 0; // NOVO: Pega clientes
+    
     const info = extrairAptoBlocoChave(im.chaveTexto||'');
     
     const tipo = extrairTipoImovel(im.descricao||'');
@@ -1552,7 +1554,12 @@ function renderizarCardsMapa(lista) {
         </div>
       </div>
       <div class="c-details"><div>Cond: <span>${esc(formatarMoeda(im.condominio)||'—')}</span></div><div>IPTU: <span>${esc(formatarMoeda(im.iptu)||'—')}</span></div><div>Apto: <span>${esc(info.apto||'—')}</span></div><div>Bloco: <span>${esc(info.bloco||'—')}</span></div><div>Vaga: <span>${esc(im.vaga||'—')}</span></div><div>Elev: <span>${esc(im.elevador||'—')}</span></div></div>
-      <div class="c-actions" onclick="event.stopPropagation();">${codigo?`<button class="btn-mini btn-purple" onclick="abrirModalMatch('${esc(codigo)}','${esc(im.titulo||'')}')">Match (${mc})</button>`:''}<button class="btn-mini" onclick="abrirBuscar('${esc(codigo)}')">Entrada</button><button class="btn-mini" onclick="abrirClientesImovel('${esc(codigo)}','${esc(im.titulo||'')}')">Clientes</button><button class="btn-mini" onclick="toggleCestaClonagem('${esc(im.id)}', this)">Clonar</button></div>
+      <div class="c-actions" onclick="event.stopPropagation();">
+        ${codigo?`<button class="btn-mini btn-purple" onclick="abrirModalMatch('${esc(codigo)}','${esc(im.titulo||'')}')">Match (${mc})</button>`:''}
+        <button class="btn-mini" onclick="abrirBuscar('${esc(codigo)}')">Entrada</button>
+        <button class="btn-mini btn-clientes" onclick="abrirClientesImovel('${esc(codigo)}','${esc(im.titulo||'')}')">Clientes (${nc>0?nc:0})</button>
+        <button class="btn-mini" onclick="toggleCestaClonagem('${esc(im.id)}', this)">Clonar</button>
+      </div>
     </div>`;
   }).join('');
 }
@@ -1561,7 +1568,6 @@ function centralizarMapa(codigo, abrirPopup=false) {
   if (!mapaLeaflet) return;
   const m = dicionarioPinos[codigo];
   if (m) { 
-    // Se estiver agrupado no cluster, abre o cluster e depois centraliza
     if (marcadoresLayer.zoomToShowLayer) {
       marcadoresLayer.zoomToShowLayer(m, () => {
         mapaLeaflet.setView(m.getLatLng(), 17, { animate:true }); 
@@ -1584,6 +1590,7 @@ function abrirCardMobile(im) {
   const codigo = String(im.codigo || '').trim();
   const info = extrairAptoBlocoChave(im.chaveTexto||'');
   const mc = state._matchesCache[codigo] !== undefined ? state._matchesCache[codigo].length : '…';
+  const nc = state._clientesPorImovel[codigo] || 0; // NOVO: Pega clientes
   
   const tipo = extrairTipoImovel(im.descricao||'');
   const primeiraLinha = primeiraLinhaDescricao(im.descricao || '');
@@ -1622,7 +1629,7 @@ function abrirCardMobile(im) {
     <div style="display:flex;gap:6px;flex-wrap:wrap; border-top:1px solid var(--border); padding-top:10px;">
       ${codigo?`<button class="btn-mini btn-purple" style="flex:1;padding:8px;" onclick="abrirModalMatch('${esc(codigo)}','${esc(im.titulo||'')}')">Match (${mc})</button>`:''}
       <button class="btn-mini" style="flex:1;padding:8px;" onclick="abrirBuscar('${esc(codigo)}')">Entrada</button>
-      <button class="btn-mini" style="flex:1;padding:8px;" onclick="abrirClientesImovel('${esc(codigo)}','${esc(im.titulo||'')}')">Clientes</button>
+      <button class="btn-mini btn-clientes" style="flex:1;padding:8px;" onclick="abrirClientesImovel('${esc(codigo)}','${esc(im.titulo||'')}')">Clientes (${nc>0?nc:0})</button>
       <button class="btn-mini" style="flex:1;padding:8px;" onclick="toggleCestaClonagem('${esc(im.id)}', this)">Clonar</button>
     </div>
   `;
