@@ -9,7 +9,12 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%231e3a5f'/><text x='50' y='68' font-family='-apple-system,sans-serif' font-size='42' font-weight='800' fill='white' text-anchor='middle'>GER</text></svg>">
 <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<!-- Plugin de clusterização para performance no mapa -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
   :root{
@@ -162,7 +167,7 @@
 
   /* GRID E CARDS */
   .container{ max-width: 1800px; margin: 0 auto; padding: 16px; height: calc(100vh - 100px); display: flex; flex-direction: column; }
-  .grid{ display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin-top: 14px; overflow-y: auto; flex: 1; align-content: start; }
+  .grid{ display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 14px; margin-top: 14px; overflow-y: auto; flex: 1; align-content: start; }
   .grid[data-cols="1"]{ grid-template-columns: 1fr; }
   .grid[data-cols="2"]{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .grid[data-cols="3"]{ grid-template-columns: repeat(3, minmax(0, 1fr)); }
@@ -216,8 +221,7 @@
   .card-code-btn .count-badge{ background:var(--primary); color:#fff; border-radius:999px; padding:0 5px; font-size:.5rem; font-weight:800; min-width:14px; text-align:center; line-height:1.4; }
   .card-preco-row{ display:flex; align-items:center; margin:3px 0 2px; }
   .card-preco-val{ font-size:1.05rem; font-weight:800; color:var(--success-bright); letter-spacing:-0.4px; }
-
-  /* ⬇️ TIPO + 1ª LINHA DA DESCRIÇÃO (Card Grade) */
+  
   .card-tipo-preco{ display:flex; align-items:center; gap:6px; margin-top:0; }
   .card-tipo-badge{ font-size:.55rem; font-weight:800; text-transform:uppercase; letter-spacing:.4px; padding:2px 7px; border-radius:999px; color:#fff; background:var(--purple); white-space:nowrap; flex-shrink:0; }
   .card-tipo-badge.tipo-padrao{ background:var(--primary); }
@@ -478,7 +482,6 @@
       </div>
     </div>
     <div class="header-right">
-
       <!-- LUPA NO HEADER -->
       <div class="busca-header-wrap" id="buscaHeaderWrap">
         <button class="btn-header" id="btnLupaHeader" onclick="toggleBuscaHeader(event)" title="Buscar">
@@ -528,7 +531,6 @@
 </div>
 
 <div id="conteudoView" class="hidden" style="height:100%;">
-  <!-- TOPBAR DESKTOP -->
   <div class="topbar">
     <div class="topbar-inner">
       <div class="filters-inline" id="filters">
@@ -543,13 +545,13 @@
         <button class="cols-btn" data-cols="4" onclick="setColunas('4')"><span>4</span></button>
         <button class="cols-btn" data-cols="5" onclick="setColunas('5')"><span>5</span></button>
         <button class="cols-btn" data-cols="lista" onclick="setColunas('lista')"><svg class="ico" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/></svg><span>Lista</span></button>
-        <button class="cols-btn active" data-cols="mapa" onclick="setColunas('mapa')"><svg class="ico" viewBox="0 0 24 24"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/></svg><span>Mapa</span></button>
+        <button class="cols-btn" data-cols="mapa" onclick="setColunas('mapa')"><svg class="ico" viewBox="0 0 24 24"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/></svg><span>Mapa</span></button>
       </div>
     </div>
   </div>
   
   <div class="container">
-    <div class="grid" id="grid" data-cols="4"></div>
+    <div class="grid" id="grid" data-cols="5"></div>
     <div class="empty-state hidden" id="emptyState"><h3>Nenhum imóvel carregado</h3><p>Use a lupa no topo ou o botão de filtros para buscar. Nada é carregado automaticamente.</p></div>
     <div class="mapa-container" id="mapaContainer">
       <div class="mapa-sidebar" id="mapaSidebar"></div>
@@ -998,9 +1000,10 @@ async function api(action, params={}, timeoutMs=TIMEOUT_API, retries=1){
 }
 
 /* =========================================================
-   INICIALIZAÇÃO — não carrega todos
+   INICIALIZAÇÃO
    ========================================================= */
 (async function init(){
+  // Aplica as colunas padrão corretas (Desktop 5 cols, Mobile 1 col)
   aplicarColunas(carregarColunas());
   carregarFiltrosLocal();
   
@@ -1012,6 +1015,7 @@ async function api(action, params={}, timeoutMs=TIMEOUT_API, retries=1){
     return;
   }
   
+  // Carrega apenas do cache local (não bate na API)
   const cacheImoveis = carregarImoveisCacheLocal();
   if (cacheImoveis.length > 0) {
     state.imoveisBrutos = cacheImoveis;
@@ -1021,10 +1025,12 @@ async function api(action, params={}, timeoutMs=TIMEOUT_API, retries=1){
   $('loadingView').style.display = 'none';
   $('conteudoView').classList.remove('hidden');
   
+  // Mostra tela vazia inicial
   $('emptyState').classList.remove('hidden');
-  $('emptyState').innerHTML = '<h3>Nenhum imóvel carregado</h3><p>Use a lupa no topo ou o botão de filtros para buscar. Nada é carregado automaticamente para não sobrecarregar.</p>';
+  $('emptyState').innerHTML = '<h3>Nenhum imóvel carregado</h3><p>Use a lupa no topo ou o botão de filtros para buscar. Nada é carregado automaticamente.</p>';
   
-  if (window.matchMedia('(max-width:820px)').matches) {
+  // Prepara os botões mobile
+  if (state._isMobile) {
     const btnView = $('mapaViewBtn');
     if (btnView) {
       btnView.style.display = 'flex';
@@ -1032,6 +1038,10 @@ async function api(action, params={}, timeoutMs=TIMEOUT_API, retries=1){
       $('txtViewMapa').textContent = 'Mapa';
     }
   }
+
+  // Garante que contadores de clientes e matches comecem a carregar em background
+  carregarContagensClientes();
+  setTimeout(() => iniciarMatchesBackground(), 1000);
 })();
 
 function preencherDatalistClientes(){
@@ -1073,7 +1083,6 @@ async function carregarTudo(silencioso = false){
     aplicarFiltrosNaTela();
   }
   
-  setTimeout(() => iniciarMatchesBackground(), 1000);
   _ultimoHashLista = hashDosImoveis(state.imoveisBrutos);
   if (!silencioso) iniciarSincronizacaoSilenciosa();
 }
@@ -1132,21 +1141,6 @@ document.addEventListener('visibilitychange', () => {
   if(document.hidden){ if(_syncTimer){ clearInterval(_syncTimer); _syncTimer = null; } } 
   else { sincronizarSilenciosamente(); iniciarSincronizacaoSilenciosa(); }
 });
-
-/* =========================================================
-   BUSCA
-   ========================================================= */
-let _buscaTimeout = null;
-function onBuscaInput() {
-  const inputEl = $('buscaInput') || $('buscaFiltroInput');
-  if (!inputEl) return;
-  state.buscaTexto = inputEl.value.toLowerCase().trim();
-  salvarFiltrosLocal();
-  clearTimeout(_buscaTimeout);
-  _buscaTimeout = setTimeout(() => {
-    aplicarFiltrosNaTela();
-  }, 300);
-}
 
 /* =========================================================
    FUNÇÃO RECRIADA: passarFiltrosAvancados(im)
@@ -1259,9 +1253,7 @@ function passarFiltrosAvancados(im){
    FUNÇÃO RECRIADA: aplicarFiltrosNaTela()
    ========================================================= */
 function aplicarFiltrosNaTela(forcarVazio = false){
-  // REGRA DE OURO: se o filtro estiver 100% limpo, NÃO MOSTRA NADA (nem cards, nem pinos)
   const f = state._filtrosAvancados;
-  
   const temBusca = !!state.buscaTexto;
   
   const temFiltroAvancado = 
@@ -1275,7 +1267,7 @@ function aplicarFiltrosNaTela(forcarVazio = false){
     f.elevador || f.metragem || f.condominioMax ||
     state.filtroCliente;
 
-  // Se não tem nada, limpa a tela e para
+  // REGRA DE OURO: filtro 100% limpo = 0 imóveis (nem cards, nem pinos)
   if(!temBusca && !temFiltroAvancado && !forcarVazio){
     state.imoveis = [];
     $('grid').innerHTML = '';
@@ -1283,25 +1275,20 @@ function aplicarFiltrosNaTela(forcarVazio = false){
     $('emptyState').innerHTML = '<h3>Nenhum imóvel carregado</h3><p>Use a lupa no topo ou o botão de filtros para buscar. Nada é carregado automaticamente.</p>';
     atualizarContadores(state.imoveisBrutos);
     
-    // Limpa mapa também
     if (mapaLeaflet && marcadoresLayer) marcadoresLayer.clearLayers();
     if ($('mapaSidebar')) $('mapaSidebar').innerHTML = '';
     
-    renderizar(); // renderizar lida com a lógica de grid/mapa vazio
+    renderizar();
     return;
   }
   
-  // Base = cache local
   let base = state.imoveisBrutos.slice();
-  
-  // Filtra
   const filtrados = base.filter(im => {
     try { return passarFiltrosAvancados(im); } catch(e){ return true; }
   });
   
   state.imoveis = filtrados;
   atualizarContadores(base);
-  
   renderizar();
 }
 
@@ -1425,14 +1412,21 @@ function cardHTML(im){
 }
 
 /* =========================================================
-   MAPA
+   MAPA (OTIMIZADO COM CLUSTER)
    ========================================================= */
 function iniciarMapa() {
   const mapDiv = $('mapaView'); if(!mapDiv) return;
   if (mapaLeaflet !== null) { setTimeout(() => { mapaLeaflet.invalidateSize(); renderizarPinosMapa(state.imoveis); }, 300); return; }
   mapaLeaflet = L.map('mapaView', { zoomControl:true, scrollWheelZoom:true }).setView([-19.9208, -43.9378], 12);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution:'&copy; OpenStreetMap', maxZoom:19 }).addTo(mapaLeaflet);
-  marcadoresLayer = L.layerGroup().addTo(mapaLeaflet);
+  
+  // Usando MarkerClusterGroup para performance. MaxClusterRadius 40 evita muitos grupos.
+  marcadoresLayer = L.markerClusterGroup({
+    showCoverageOnHover: false,
+    maxClusterRadius: 40,
+    spiderfyOnMaxZoom: true
+  }).addTo(mapaLeaflet);
+  
   setTimeout(() => { if (mapaLeaflet) { mapaLeaflet.invalidateSize(); renderizarPinosMapa(state.imoveis); } }, 600);
 }
 
@@ -1516,7 +1510,7 @@ function criarPino(im, coord, bounds) {
     if (card) { card.style.borderColor = 'var(--purple)'; card.scrollIntoView({ behavior:'smooth', block:'nearest' }); }
     if (state._isMobile) abrirCardMobile(im);
   });
-  marker.addTo(marcadoresLayer);
+  marcadoresLayer.addLayer(marker);
   if (bounds) bounds.extend([coord.lat, coord.lng]);
 }
 
@@ -1566,7 +1560,18 @@ function renderizarCardsMapa(lista) {
 function centralizarMapa(codigo, abrirPopup=false) {
   if (!mapaLeaflet) return;
   const m = dicionarioPinos[codigo];
-  if (m) { mapaLeaflet.setView(m.getLatLng(), 16, { animate:true }); if (abrirPopup) m.openPopup(); }
+  if (m) { 
+    // Se estiver agrupado no cluster, abre o cluster e depois centraliza
+    if (marcadoresLayer.zoomToShowLayer) {
+      marcadoresLayer.zoomToShowLayer(m, () => {
+        mapaLeaflet.setView(m.getLatLng(), 17, { animate:true }); 
+        if (abrirPopup) m.openPopup();
+      });
+    } else {
+      mapaLeaflet.setView(m.getLatLng(), 16, { animate:true }); 
+      if (abrirPopup) m.openPopup(); 
+    }
+  }
   document.querySelectorAll('.card-compacto').forEach(c => c.style.borderColor = 'var(--border)');
   const card = document.querySelector(`.card-compacto[data-codigo="${codigo}"]`);
   if (card) card.style.borderColor = 'var(--purple)';
@@ -1686,15 +1691,20 @@ async function executarClonagemMultipla(){
 }
 
 /* =========================================================
-   COLUNAS
+   COLUNAS (Padrão: Desktop 5, Mobile 1)
    ========================================================= */
-function detectarDefaultCols(){ return 'mapa'; }
-function carregarColunas(){ const s=localStorage.getItem(STORAGE_KEY_COLS); const isM=state._isMobile; const v=isM?['1','2','mapa']:['2','3','4','5','lista','mapa']; return (s&&v.includes(s))?s:detectarDefaultCols(); }
+function detectarDefaultCols(){ return state._isMobile ? '1' : '5'; }
+function carregarColunas(){ 
+  const s=localStorage.getItem(STORAGE_KEY_COLS); 
+  const isM=state._isMobile; 
+  const v=isM?['1','2','mapa']:['2','3','4','5','lista','mapa']; 
+  return (s && v.includes(s)) ? s : detectarDefaultCols(); 
+}
 function setColunas(c){ localStorage.setItem(STORAGE_KEY_COLS, c); aplicarColunas(c); }
 function aplicarColunas(c){
   const grid = $('grid'); if(!grid) return;
   const isM = state._isMobile;
-  let cf = isM && !['1','2','mapa'].includes(c) ? '2' : c;
+  let cf = isM && !['1','2','mapa'].includes(c) ? '1' : c;
   grid.setAttribute('data-cols', cf);
   document.querySelectorAll('.cols-btn').forEach(b => b.classList.toggle('active', b.getAttribute('data-cols')===c));
   const cont = document.querySelector('.container');
