@@ -375,7 +375,7 @@
     margin-top: 6px;
   }
 
-  /* ==== LOADING / ERRO / MODAL ==== */
+  /* ==== LOADING / ERRO ==== */
   .loading-wrap, .erro-wrap {
     text-align: center;
     padding: 50px 16px;
@@ -404,52 +404,77 @@
     line-height: 1.5;
   }
 
-  /* ==== MODAL ==== */
+  /* ==== MODAL AMIGÁVEL ==== */
   .modal-overlay {
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0,0,0,.6);
+    background: rgba(15, 23, 42, 0.5); /* Fundo um pouco mais suave */
     display: none;
     align-items: center;
     justify-content: center;
     padding: 20px;
     z-index: 1000;
-    backdrop-filter: blur(4px);
+    backdrop-filter: blur(3px);
   }
   .modal-overlay.show { display: flex; }
   .modal-content {
     background: #fff;
     border-radius: var(--radius-lg);
-    max-width: 440px;
+    max-width: 400px;
     width: 100%;
     padding: 24px;
-    box-shadow: 0 10px 25px rgba(0,0,0,.2);
+    box-shadow: 0 10px 25px rgba(0,0,0,.15);
     text-align: center;
     animation: modalFade .3s ease;
   }
   @keyframes modalFade {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
+    from { opacity: 0; transform: translateY(15px) scale(0.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
   }
   .modal-icon {
-    font-size: 2.5rem;
-    margin-bottom: 12px;
+    width: 56px;
+    height: 56px;
+    background: var(--primary-soft);
+    color: var(--primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    margin: 0 auto 16px;
   }
   .modal-title {
     font-size: 1.1rem;
     font-weight: 800;
     color: var(--text);
-    margin-bottom: 12px;
+    margin-bottom: 10px;
+    letter-spacing: -.01em;
   }
   .modal-text {
-    font-size: .88rem;
+    font-size: .85rem;
     color: var(--text-soft);
     line-height: 1.6;
     margin-bottom: 20px;
     text-align: left;
+    background: var(--bg);
+    padding: 14px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
   }
   .modal-text strong {
     color: var(--primary);
+    font-weight: 700;
+  }
+  .modal-text p { margin-bottom: 10px; }
+  .modal-text p:last-child { margin-bottom: 0; }
+  .modal-text .highlight {
+    display: inline-block;
+    background: var(--primary-soft);
+    color: var(--primary);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 700;
+    font-size: .8rem;
   }
 
   /* ==== SUCESSO ==== */
@@ -607,17 +632,17 @@
   </div>
 </div>
 
-<!-- MODAL INFORMATIVO -->
+<!-- MODAL INFORMATIVO AMIGÁVEL -->
 <div id="modalInformativo" class="modal-overlay">
   <div class="modal-content">
-    <div class="modal-icon">⚠️</div>
-    <div class="modal-title">Atenção</div>
+    <div class="modal-icon">🤝</div>
+    <div class="modal-title">Como funciona o envio</div>
     <div class="modal-text">
-      Este envio de condição de compra <strong>não gera nenhum vínculo</strong>. É apenas um registro da sua intenção de compra e apresentação das suas condições.
-      <br><br>
-      Ao finalizar, você será direcionado automaticamente para o <strong>WhatsApp do seu corretor</strong>. Basta confirmar o envio da mensagem no próprio aplicativo.
+      <p>Este envio <strong>não gera nenhum vínculo</strong>. É apenas o registro da sua intenção de compra e das suas condições.</p>
+      <p>Ao finalizar, você será direcionado automaticamente para o <span class="highlight">WhatsApp do seu corretor</span>, com a mensagem já pronta.</p>
+      <p>Basta confirmar o envio no próprio aplicativo. Simples assim! 😊</p>
     </div>
-    <button class="btn btn-primary" onclick="fecharModal()">Entendi</button>
+    <button class="btn btn-primary" onclick="fecharModal()">Vamos lá!</button>
   </div>
 </div>
 
