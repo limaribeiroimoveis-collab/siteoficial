@@ -1064,7 +1064,8 @@ async function carregarTudo(silencioso = false){
   ]);
   
   if (rIm.ok && rIm.data) {
-    state.imoveisBrutos = rIm.data.filter(im => !isVendido(im));
+    // ⬇️ CORRIGIDO: guarda TODOS (ativos + vendidos), sem filtrar
+    state.imoveisBrutos = rIm.data;
     salvarImoveisCacheLocal(state.imoveisBrutos);
   }
   if (rCli.ok && rCli.data) state.clientes = rCli.data;
@@ -1118,11 +1119,14 @@ async function sincronizarSilenciosamente(){
       api('listarCorretores', { senha:SENHA_ADMIN })
     ]);
     if(!ri.ok) return;
-    const novosAtivos = ri.data.filter(im => !isVendido(im));
-    const hashAtual = hashDosImoveis(novosAtivos);
+    
+    // ⬇️ CORRIGIDO: guarda TODOS (ativos + vendidos)
+    const novos = ri.data;
+    const hashAtual = hashDosImoveis(novos);
     if(hashAtual === _ultimoHashLista){ return; }
-    state.imoveisBrutos = novosAtivos;
-    salvarImoveisCacheLocal(novosAtivos);
+    
+    state.imoveisBrutos = novos;
+    salvarImoveisCacheLocal(novos);
     if (rc.ok && rc.data) state.clientes = rc.data;
     if (rr.ok && rr.data) state.corretores = rr.data;
     _ultimoHashLista = hashAtual;
@@ -1291,9 +1295,7 @@ function aplicarFiltrosNaTela(forcarVazio = false){
 }
 
 function atualizarContadores(base){
-  // Regra: Ativos = não vendidos. Vendidos = vendidos. Corrigir = faltando info.
-  // 'base' já vem filtrado para não-vendidos (no carregarTudo), então o "Vendidos" só vai contar se tiver dados de vendidos na base. 
-  // Para simplificar, o contador refletirá o que está na base local no momento.
+  // Base agora tem TODOS (ativos + vendidos)
   const todos = base.length;
   const pendentes = base.filter(im => !isVendido(im)).length;
   const vendidos = base.filter(im => isVendido(im)).length;
