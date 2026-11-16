@@ -375,7 +375,7 @@
     margin-top: 6px;
   }
 
-  /* ==== LOADING / ERRO ==== */
+  /* ==== LOADING / ERRO / MODAL ==== */
   .loading-wrap, .erro-wrap {
     text-align: center;
     padding: 50px 16px;
@@ -402,6 +402,54 @@
     color: var(--text-soft);
     font-size: .85rem;
     line-height: 1.5;
+  }
+
+  /* ==== MODAL ==== */
+  .modal-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,.6);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 1000;
+    backdrop-filter: blur(4px);
+  }
+  .modal-overlay.show { display: flex; }
+  .modal-content {
+    background: #fff;
+    border-radius: var(--radius-lg);
+    max-width: 440px;
+    width: 100%;
+    padding: 24px;
+    box-shadow: 0 10px 25px rgba(0,0,0,.2);
+    text-align: center;
+    animation: modalFade .3s ease;
+  }
+  @keyframes modalFade {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .modal-icon {
+    font-size: 2.5rem;
+    margin-bottom: 12px;
+  }
+  .modal-title {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--text);
+    margin-bottom: 12px;
+  }
+  .modal-text {
+    font-size: .88rem;
+    color: var(--text-soft);
+    line-height: 1.6;
+    margin-bottom: 20px;
+    text-align: left;
+  }
+  .modal-text strong {
+    color: var(--primary);
   }
 
   /* ==== SUCESSO ==== */
@@ -559,6 +607,20 @@
   </div>
 </div>
 
+<!-- MODAL INFORMATIVO -->
+<div id="modalInformativo" class="modal-overlay">
+  <div class="modal-content">
+    <div class="modal-icon">⚠️</div>
+    <div class="modal-title">Atenção</div>
+    <div class="modal-text">
+      Este envio de condição de compra <strong>não gera nenhum vínculo</strong>. É apenas um registro da sua intenção de compra e apresentação das suas condições.
+      <br><br>
+      Ao finalizar, você será direcionado automaticamente para o <strong>WhatsApp do seu corretor</strong>. Basta confirmar o envio da mensagem no próprio aplicativo.
+    </div>
+    <button class="btn btn-primary" onclick="fecharModal()">Entendi</button>
+  </div>
+</div>
+
 <script>
 /* =====================================================
    CONFIG
@@ -575,7 +637,8 @@ const state = {
   imovel: null,
   cliente: null,
   valorImovel: 0,
-  valorTotalAtual: 0
+  valorTotalAtual: 0,
+  nomeCorretor: ''
 };
 
 const $ = id => document.getElementById(id);
@@ -611,22 +674,7 @@ function mascaraMoeda(input) {
 
 /**
  * Resolve o nome do corretor.
- *
- * Regra: pega o PRIMEIRO nome (antes do "/"), normaliza (minúsculo, sem acento) e:
- *   - começa com "hugo"  → "Hugo Ribeiro"
- *   - começa com "carol" → "Carolina Lima" (pega tanto "Carol" quanto "Carolina")
- *   - qualquer outro     → retorna o primeiro nome como veio, só com 1ª letra maiúscula
- *
- * Exemplos:
- *   "Hugo"          → Hugo Ribeiro
- *   "Hugo/Iasmin"   → Hugo Ribeiro
- *   "Hugo/Carol"    → Hugo Ribeiro
- *   "Carolina"      → Carolina Lima
- *   "Carol"         → Carolina Lima
- *   "Carol/Hugo"    → Carolina Lima
- *   "Carol/Iasmin"  → Carolina Lima
- *   "Iasmin"        → Iasmin
- *   "Fulano"        → Fulano
+ * Pega o PRIMEIRO nome (antes do "/") e força a padronização.
  */
 function nomeCorretor_(valorBruto) {
   if (!valorBruto) return '';
@@ -639,7 +687,7 @@ function nomeCorretor_(valorBruto) {
     .replace(/[\u0300-\u036f]/g, '');
 
   if (normalizado.indexOf('hugo') === 0) return 'Hugo Ribeiro';
-  if (normalizado.indexOf('carol') === 0) return 'Carolina Lima';
+  if (normalizado.indexOf('carol') === 0) return 'Carol Lima';
 
   return primeiro.charAt(0).toUpperCase() + primeiro.slice(1).toLowerCase();
 }
@@ -661,7 +709,7 @@ async function api(action, params) {
 }
 
 /* =====================================================
-   INIT
+   INIT & MODAL
 ===================================================== */
 (function init() {
   const params = new URLSearchParams(window.location.search);
@@ -680,6 +728,10 @@ async function api(action, params) {
 
   carregarDados();
 })();
+
+function fecharModal() {
+  $('modalInformativo').classList.remove('show');
+}
 
 async function carregarDados() {
   const res = await api('obterCondicaoAtiva', {
@@ -701,8 +753,12 @@ async function carregarDados() {
 
   // Corretor: prioriza o do imóvel, senão o do cliente
   const nomeCorretorBruto = res.imovel.corretor || res.cliente.corretor || '';
-  const nomeFinal = nomeCorretor_(nomeCorretorBruto);
-  $('imCorretor').textContent = nomeFinal || '—';
+  state.nomeCorretor = nomeCorretor_(nomeCorretorBruto);
+  $('imCorretor').textContent = state.nomeCorretor || '—';
+
+  // Ajusta o texto do botão com base no corretor
+  const primeiroNomeCorretor = state.nomeCorretor.split(' ')[0];
+  $('btnEnviar').textContent = 'Enviar para WhatsApp de ' + (primeiroNomeCorretor || 'Corretor');
 
   const enderecoCompleto = [
     res.imovel.rua,
@@ -715,6 +771,9 @@ async function carregarDados() {
 
   $('loadingView').classList.add('hidden');
   $('formView').classList.remove('hidden');
+  
+  // Exibe o modal informativo após carregar os dados
+  $('modalInformativo').classList.add('show');
 
   ['valAvista', 'valFGTS', 'valFinanciamento'].forEach(id => {
     const el = $(id);
@@ -755,11 +814,15 @@ function atualizarTotal() {
     $('alertaPct').textContent = pctFmt + '%';
     alerta.classList.add('show');
     btnAjustar.style.display = '';
-    btnEnviar.textContent = 'Enviar com valor ' + pctFmt + '% abaixo';
+    
+    const primeiroNomeCorretor = state.nomeCorretor.split(' ')[0];
+    btnEnviar.textContent = 'Enviar com valor ' + pctFmt + '% abaixo (para ' + primeiroNomeCorretor + ')';
   } else {
     alerta.classList.remove('show');
     btnAjustar.style.display = 'none';
-    btnEnviar.textContent = 'Enviar minhas condições';
+    
+    const primeiroNomeCorretor = state.nomeCorretor.split(' ')[0];
+    btnEnviar.textContent = 'Enviar para WhatsApp de ' + (primeiroNomeCorretor || 'Corretor');
   }
 }
 
@@ -768,7 +831,7 @@ function ajustarValores() {
 }
 
 /* =====================================================
-   ENVIO
+   ENVIO AUTOMÁTICO
 ===================================================== */
 async function enviarParaWhatsApp() {
   const avista = parseMoeda($('valAvista').value);
@@ -787,6 +850,10 @@ async function enviarParaWhatsApp() {
   btn.disabled = true;
   btn.textContent = 'Enviando...';
 
+  // TRUQUE PARA BURLAR O BLOQUEADOR DE POP-UP DO NAVEGADOR
+  // Abrimos uma aba em branco imediatamente no clique (enquanto é síncrono)
+  const whatsappWindow = window.open('', '_blank');
+
   const res = await api('salvarCondicaoCompra', {
     telefone: state.telefone,
     codigo: state.codigo,
@@ -798,6 +865,9 @@ async function enviarParaWhatsApp() {
   });
 
   if (!res.ok) {
+    // Se deu erro, fecha a aba em branco que abrimos
+    if (whatsappWindow) whatsappWindow.close();
+    
     btn.disabled = false;
     btn.textContent = textoOriginal;
     alert('Erro ao enviar: ' + (res.error || 'tente novamente'));
@@ -809,6 +879,7 @@ async function enviarParaWhatsApp() {
     res.imovel.numero
   ].filter(Boolean).join(', ') + (res.imovel.bairro ? ' — ' + res.imovel.bairro : '');
 
+  // Pega apenas o primeiro nome do corretor (Hugo ou Carol)
   const primeiroNomeCorretor = String(res.corretor || '').split(/\s+/)[0] || '';
 
   const linhas = [];
@@ -829,13 +900,18 @@ async function enviarParaWhatsApp() {
 
   const mensagem = linhas.join('\n');
   const telCorretor = res.telCorretor || '5531996070930';
+  const urlWhatsapp = 'https://wa.me/' + telCorretor + '?text=' + encodeURIComponent(mensagem);
 
   $('formView').classList.add('hidden');
   $('sucessoView').classList.remove('hidden');
 
-  setTimeout(() => {
-    window.open('https://wa.me/' + telCorretor + '?text=' + encodeURIComponent(mensagem), '_blank');
-  }, 400);
+  // Redireciona a aba em branco para o WhatsApp
+  if (whatsappWindow) {
+    whatsappWindow.location.href = urlWhatsapp;
+  } else {
+    // Fallback caso o navegador bloqueie a janela
+    window.location.href = urlWhatsapp;
+  }
 }
 </script>
 
