@@ -833,36 +833,59 @@ function toggleColunas(){
 }
 
 function renderizarImoveis(){
-  const grid = $('gridImoveis'); let lista = [...state.imoveis];
+  const grid = $('gridImoveis'); 
+  let lista = [...state.imoveis];
   
-  if (state.filtroNav !== 'vendidos') {
-    lista = lista.filter(i => !imovelReservado_(i) && !imovelVendido_(i));
-  }
-
+  // 1. Filtros de Navegação
   if(state.filtroNav === 'gostei') lista = lista.filter(i => i.status === 'gostei');
   else if(state.filtroNav === 'visitar') lista = lista.filter(i => i.status === 'quero-visitar');
   else if(state.filtroNav === 'nao-gostei') lista = lista.filter(i => i.status === 'nao-gostei');
   else if(state.filtroNav === 'vendidos') lista = lista.filter(i => imovelVendido_(i));
-  else {
-    lista.sort((a,b) => {
-      const oa = (a.status === 'nao-gostei') ? 2 : 0, ob = (b.status === 'nao-gostei') ? 2 : 0; if(oa !== ob) return oa - ob;
-      return new Date(b.dataCadastro||0) - new Date(a.dataCadastro||0);
-    });
-  }
-
+  
+  // 2. Filtros de Bairro e Busca
   if(state.bairrosSelecionados.size > 0) lista = lista.filter(i => state.bairrosSelecionados.has(normalizarBairro(i.bairro)));
   const busca = $('buscaInput')?.value.toLowerCase().trim();
   if(busca) lista = lista.filter(i => (i.titulo||'').toLowerCase().includes(busca) || (enderecoSemNumero_(i)).toLowerCase().includes(busca));
 
+  // 3. ORDENAÇÃO CORRIGIDA
+  lista.sort((a, b) => {
+    const getPeso = (im) => {
+      // 1º Lugar: VENDIDO (vai para o fim absoluto de tudo)
+      if (imovelVendido_(im)) return 3;
+      
+      // 2º Lugar: DESATIVADO (mas sem ser vendido)
+      if (imovelReservado_(im)) return 2;
+      
+      // 3º Lugar: QUER VISITAR (topo da fila dos ativos)
+      if (im.status === 'quero-visitar') return 0;
+      
+      // 4º Lugar: TODOS OS OUTROS ATIVOS (Pendentes, Gostei, Não Gostei, etc)
+      return 1; 
+    };
+
+    const pesoA = getPeso(a);
+    const pesoB = getPeso(b);
+
+    // Se os pesos forem diferentes, ordena do menor (topo) para o maior (fim)
+    if (pesoA !== pesoB) return pesoA - pesoB;
+
+    // Se forem do mesmo peso, ordena pelo mais recente
+    return new Date(b.dataCadastro || 0) - new Date(a.dataCadastro || 0);
+  });
+
+  // 4. Atualiza o contador
   $('contadorImoveis').textContent = `${lista.length} ${lista.length === 1 ? 'imóvel' : 'imóveis'}`;
 
+  // 5. Renderiza ou mostra tela vazia
   if(!lista.length){
-    grid.innerHTML = ''; $('emptyState').classList.remove('hidden');
+    grid.innerHTML = ''; 
+    $('emptyState').classList.remove('hidden');
     $('emptyTitulo').textContent = 'Nenhum imóvel';
     $('emptyMsg').textContent = 'Nada para mostrar neste filtro.';
     $('btnVerTodos').classList.toggle('hidden', state.filtroNav === null && state.bairrosSelecionados.size === 0);
     return;
   }
+  
   $('emptyState').classList.add('hidden');
   grid.innerHTML = lista.map((im, i) => cardHTML(im, i)).join('');
 }
@@ -882,6 +905,27 @@ function cardHTML(im, idx){
     if (bNormalizado.includes("apartamento padrao") || bNormalizado.includes("apto padrao")) {
       ocultarBadge = true;
     }
+  }
+
+  // ✅ NOVO: Monta a linha de specs (Apenas o que for positivo para o cliente)
+  let specsLinha = [];
+  
+  // Suítes (só mostra se > 0)
+  const suitesNum = Number(im.suites);
+  if (suitesNum > 0) {
+    specsLinha.push(`${suitesNum} ${suitesNum === 1 ? 'suíte' : 'suítes'}`);
+  }
+
+  // Vaga (só mostra se for livre)
+  const vagaStr = String(im.vaga || '').trim().toLowerCase();
+  if (vagaStr === 'livre') {
+    specsLinha.push(`Vaga livre`);
+  }
+
+  // Elevador (só mostra se tiver)
+  const elev = String(im.elevador).toLowerCase();
+  if (elev === 'sim') {
+    specsLinha.push(`Com elevador`);
   }
 
   let extraClass = ''; 
@@ -909,7 +953,6 @@ function cardHTML(im, idx){
           ${salvando ? '<span class="spinner-btn" style="border-color:#ef4444;border-top-color:transparent;"></span>' : svgHeart}
           <span>Gostei</span>
         </button>
-        <!-- NOVO: Intercepta o clique para checar se já tem visita solicitada -->
         <button class="action-btn act-visitar ${isVisitar?'ativo':''}" onclick="interceptarCliqueVisita('${im.id}')">
           ${svgCalendar}
           <span>Visitar</span>
@@ -966,6 +1009,13 @@ function cardHTML(im, idx){
           ${im.condominio && im.iptu ? `<span class="sep">|</span>` : ''}
           ${im.iptu ? `<span>IPTU ${esc(im.iptu)}</span>` : ''}
         </div>
+
+        <!-- ✅ NOVO: Linha de specs unificada -->
+        ${specsLinha.length > 0 ? `
+          <div style="font-size: .75rem; font-weight: 600; color: var(--text-soft); margin-top: 4px; margin-bottom: 2px;">
+            ${specsLinha.join(' · ')}
+          </div>
+        ` : ''}
         
         ${im.descricao ? `
           <div class="card-desc" id="desc-${im.id}">
@@ -1150,18 +1200,40 @@ async function enviarSolicitacaoVisita(){
   if(!state.visitaDia){ toast('Escolha um dia.', 'error'); return; }
   if(!state.visitaTurno){ toast('Escolha um turno.', 'error'); return; }
   const im = state.imoveis.find(i => i.id === id); if(!im) return;
+  
   const btn = $('btnEnviarVisita'); btn.disabled = true; btn.innerHTML = 'Enviando...';
 
   let diasLegivel = state.visitaDia;
-  try { const d = new Date(state.visitaDia + 'T12:00:00'); diasLegivel = `${DIAS_SEMANA[d.getDay()]} ${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}`; } catch(e){}
+  try { 
+    const d = new Date(state.visitaDia + 'T12:00:00'); 
+    diasLegivel = `${DIAS_SEMANA[d.getDay()]} ${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}`; 
+  } catch(e){}
 
-  const res = await api('solicitarVisitaPlanilha', { id, telefone: state.telefone, deviceToken: state.deviceToken, dias: diasLegivel, turno: state.visitaTurno, observacao: $('obsVisita').value.trim() }, TIMEOUT_API, 1);
-  btn.disabled = false; btn.innerHTML = '📩 Enviar solicitação';
+  const obsTexto = $('obsVisita').value.trim();
+  const textoParaObservacao = `📅 Visita solicitada: ${diasLegivel} (${state.visitaTurno})\n${obsTexto ? '📝 Obs: ' + obsTexto : ''}`;
 
+  // 1. Envia para a planilha de visitas (fluxo normal)
+  const res = await api('solicitarVisitaPlanilha', { id, telefone: state.telefone, deviceToken: state.deviceToken, dias: diasLegivel, turno: state.visitaTurno, observacao: obsTexto }, TIMEOUT_API, 1);
+  
   if(!res.ok){
+    btn.disabled = false; btn.innerHTML = '📩 Enviar solicitação';
     if(erroEhDispositivoVinculado(res.error)) return mostrarBloqueioDispositivo();
     toast(res.error || 'Erro', 'error'); return;
   }
+
+  // 2. Salva a observação no campo de observações do imóvel (para o admin ver no gestor)
+  try {
+    await api('salvarObservacao', { 
+      id: id, 
+      observacao: textoParaObservacao, 
+      telefone: state.telefone, 
+      deviceToken: state.deviceToken 
+    }, TIMEOUT_API, 0);
+  } catch(e) {
+    console.warn('Não foi possível salvar observação no imóvel:', e);
+  }
+
+  btn.disabled = false; btn.innerHTML = '📩 Enviar solicitação';
   im.status = 'quero-visitar'; atualizarTela(); gravarCache(state.imoveis);
   fecharModalVisita(); toast('Solicitação enviada!', 'success');
 }
