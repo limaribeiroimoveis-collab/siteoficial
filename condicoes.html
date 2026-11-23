@@ -220,15 +220,24 @@
 
   /* ==== CAMPOS ==== */
   .field {
-    margin-bottom: 14px;
+    margin-bottom: 16px;
   }
   .field label {
     display: block;
-    font-size: .72rem;
+    font-size: .8rem;
     font-weight: 700;
     color: var(--text);
-    margin-bottom: 5px;
+    margin-bottom: 4px;
     letter-spacing: -.005em;
+    line-height: 1.35;
+  }
+  .field .help {
+    display: block;
+    font-size: .72rem;
+    font-weight: 500;
+    color: var(--text-soft);
+    margin-bottom: 8px;
+    line-height: 1.4;
   }
   .field label .hint {
     font-size: .64rem;
@@ -267,10 +276,10 @@
   }
   textarea {
     resize: vertical;
-    min-height: 72px;
+    min-height: 110px;
     font-weight: 500;
     font-size: .88rem;
-    line-height: 1.45;
+    line-height: 1.5;
     font-variant-numeric: normal;
   }
   input[type="text"]:focus, textarea:focus {
@@ -408,7 +417,7 @@
   .modal-overlay {
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(15, 23, 42, 0.5); /* Fundo um pouco mais suave */
+    background: rgba(15, 23, 42, 0.5);
     display: none;
     align-items: center;
     justify-content: center;
@@ -560,24 +569,30 @@
       </div>
     </div>
 
+    <!-- DINHEIRO À VISTA -->
     <div class="field">
-      <label>Dinheiro (à vista) <span class="hint">— opcional</span></label>
+      <label>Quanto pretende investir à vista? <span class="hint">— opcional</span></label>
+      <span class="help">Valor em dinheiro que você tem disponível para pagamento imediato.</span>
       <div class="input-money-wrap">
         <span class="prefix">R$</span>
         <input type="text" id="valAvista" inputmode="numeric" placeholder="0,00" autocomplete="off">
       </div>
     </div>
 
+    <!-- FGTS -->
     <div class="field">
-      <label>FGTS <span class="hint">— opcional</span></label>
+      <label>Você vai usar algum valor do seu FGTS? <span class="hint">— opcional</span></label>
+      <span class="help">Se você tem saldo no FGTS e pretende utilizá-lo na compra, informe aqui o valor.</span>
       <div class="input-money-wrap">
         <span class="prefix">R$</span>
         <input type="text" id="valFGTS" inputmode="numeric" placeholder="0,00" autocomplete="off">
       </div>
     </div>
 
+    <!-- FINANCIAMENTO / CONSÓRCIO -->
     <div class="field">
-      <label>Financiamento ou Consórcio <span class="hint">— opcional</span></label>
+      <label>Você vai financiar algum valor ou tem uma carta de consórcio contemplada? <span class="hint">— opcional</span></label>
+      <span class="help">Informe o valor que pretende financiar pelo banco ou o valor da sua carta de consórcio já contemplada.</span>
       <div class="input-money-wrap">
         <span class="prefix">R$</span>
         <input type="text" id="valFinanciamento" inputmode="numeric" placeholder="0,00" autocomplete="off">
@@ -597,9 +612,11 @@
       sua prioridade, considere ajustar os valores.
     </div>
 
+    <!-- OBSERVAÇÕES -->
     <div class="field">
-      <label>Observações <span class="hint">— opcional</span></label>
-      <textarea id="obsCliente" placeholder="Algo a acrescentar? (opcional)" maxlength="1000"></textarea>
+      <label>Deixe aqui suas ponderações <span class="hint">— opcional</span></label>
+      <span class="help">Conte ao proprietário o porquê da sua condição. Fique à vontade para escrever tudo do seu jeito — isso ajuda o proprietário a entender melhor sua proposta.</span>
+      <textarea id="obsCliente" placeholder="Ex.: Gostei muito do imóvel e pretendo pagar à vista, por isso estou propondo esse valor. Tenho urgência na mudança e flexibilidade de datas..." maxlength="1000"></textarea>
     </div>
 
     <div class="action-row" id="actionRow">
@@ -698,6 +715,31 @@ function mascaraMoeda(input) {
 }
 
 /**
+ * Monta o endereço completo do imóvel, incluindo complemento,
+ * número do apartamento e bloco quando existirem.
+ */
+function montarEndereco(imovel) {
+  if (!imovel) return 'Endereço não informado';
+
+  // Linha principal: Rua, Número
+  const principal = [
+    imovel.rua,
+    imovel.numero
+  ].filter(Boolean).join(', ');
+
+  // Complementos: bloco e apartamento (e/ou complemento livre)
+  const complementos = [];
+  if (imovel.bloco) complementos.push('Bloco ' + imovel.bloco);
+  if (imovel.apartamento) complementos.push('Apto ' + imovel.apartamento);
+  if (imovel.complemento) complementos.push(imovel.complemento);
+
+  const complementoStr = complementos.length ? ' — ' + complementos.join(', ') : '';
+  const bairroStr = imovel.bairro ? ' — ' + imovel.bairro : '';
+
+  return (principal || 'Endereço não informado') + complementoStr + bairroStr;
+}
+
+/**
  * Resolve o nome do corretor.
  * Pega o PRIMEIRO nome (antes do "/") e força a padronização.
  */
@@ -785,18 +827,14 @@ async function carregarDados() {
   const primeiroNomeCorretor = state.nomeCorretor.split(' ')[0];
   $('btnEnviar').textContent = 'Enviar para WhatsApp de ' + (primeiroNomeCorretor || 'Corretor');
 
-  const enderecoCompleto = [
-    res.imovel.rua,
-    res.imovel.numero
-  ].filter(Boolean).join(', ') + (res.imovel.bairro ? ' — ' + res.imovel.bairro : '');
-
-  $('imEndereco').textContent = enderecoCompleto || 'Endereço não informado';
+  // Endereço completo (com bloco e apartamento quando existirem)
+  $('imEndereco').textContent = montarEndereco(res.imovel);
   $('imCodigo').textContent = '#' + (res.imovel.codigo || state.codigo);
   $('imValor').textContent = res.imovel.valor ? formatarMoeda(parseMoeda(res.imovel.valor)) : '—';
 
   $('loadingView').classList.add('hidden');
   $('formView').classList.remove('hidden');
-  
+
   // Exibe o modal informativo após carregar os dados
   $('modalInformativo').classList.add('show');
 
@@ -839,13 +877,13 @@ function atualizarTotal() {
     $('alertaPct').textContent = pctFmt + '%';
     alerta.classList.add('show');
     btnAjustar.style.display = '';
-    
+
     const primeiroNomeCorretor = state.nomeCorretor.split(' ')[0];
     btnEnviar.textContent = 'Enviar com valor ' + pctFmt + '% abaixo (para ' + primeiroNomeCorretor + ')';
   } else {
     alerta.classList.remove('show');
     btnAjustar.style.display = 'none';
-    
+
     const primeiroNomeCorretor = state.nomeCorretor.split(' ')[0];
     btnEnviar.textContent = 'Enviar para WhatsApp de ' + (primeiroNomeCorretor || 'Corretor');
   }
@@ -875,8 +913,7 @@ async function enviarParaWhatsApp() {
   btn.disabled = true;
   btn.textContent = 'Enviando...';
 
-  // TRUQUE PARA BURLAR O BLOQUEADOR DE POP-UP DO NAVEGADOR
-  // Abrimos uma aba em branco imediatamente no clique (enquanto é síncrono)
+  // Abre uma aba em branco imediatamente para contornar bloqueio de pop-up
   const whatsappWindow = window.open('', '_blank');
 
   const res = await api('salvarCondicaoCompra', {
@@ -890,21 +927,14 @@ async function enviarParaWhatsApp() {
   });
 
   if (!res.ok) {
-    // Se deu erro, fecha a aba em branco que abrimos
     if (whatsappWindow) whatsappWindow.close();
-    
     btn.disabled = false;
     btn.textContent = textoOriginal;
     alert('Erro ao enviar: ' + (res.error || 'tente novamente'));
     return;
   }
 
-  const endereco = [
-    res.imovel.rua,
-    res.imovel.numero
-  ].filter(Boolean).join(', ') + (res.imovel.bairro ? ' — ' + res.imovel.bairro : '');
-
-  // Pega apenas o primeiro nome do corretor (Hugo ou Carol)
+  const endereco = montarEndereco(res.imovel);
   const primeiroNomeCorretor = String(res.corretor || '').split(/\s+/)[0] || '';
 
   const linhas = [];
@@ -914,7 +944,7 @@ async function enviarParaWhatsApp() {
   linhas.push('');
   if (avista > 0) linhas.push('Valor à vista: ' + formatarMoeda(avista));
   if (fgts > 0) linhas.push('FGTS: ' + formatarMoeda(fgts));
-  if (financ > 0) linhas.push('Financiamento: ' + formatarMoeda(financ));
+  if (financ > 0) linhas.push('Financiamento / Consórcio: ' + formatarMoeda(financ));
   linhas.push('Total: ' + formatarMoeda(total));
   if (obs) {
     linhas.push('');
@@ -930,11 +960,9 @@ async function enviarParaWhatsApp() {
   $('formView').classList.add('hidden');
   $('sucessoView').classList.remove('hidden');
 
-  // Redireciona a aba em branco para o WhatsApp
   if (whatsappWindow) {
     whatsappWindow.location.href = urlWhatsapp;
   } else {
-    // Fallback caso o navegador bloqueie a janela
     window.location.href = urlWhatsapp;
   }
 }
