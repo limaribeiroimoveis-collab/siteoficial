@@ -294,7 +294,6 @@
 const API_URL = 'https://script.google.com/macros/s/AKfycbzuCjg_5ZJDMWWKmjYp1ThW34iWS0YouviWFdiMGx8W3yApv0F1fdUcjeZdjm0s6Mg/exec';
 const LIMITE_ALERTA_PCT = 3;
 
-// Telefones de fallback caso a API não retorne
 const TEL_HUGO = '5531996070930';
 const TEL_CAROL = '5531999999999'; // COLOQUE O TELEFONE DA CAROL AQUI
 
@@ -331,15 +330,26 @@ function mascaraMoeda(input) {
   input.value = reaisFmt + ',' + cents;
 }
 
+// FUNÇÃO MELHORADA PARA BUSCAR BLOCO E APTO COM NOMES DIFERENTES
 function montarEndereco(imovel) {
   if (!imovel) return 'Endereço não informado';
+  
   const principal = [imovel.rua, imovel.numero].filter(Boolean).join(', ');
   const complementos = [];
-  if (imovel.bloco) complementos.push('Bloco ' + imovel.bloco);
-  if (imovel.apartamento) complementos.push('Apto ' + imovel.apartamento);
+  
+  // Tenta achar o bloco/torre
+  const bloco = imovel.bloco || imovel.torre || imovel.blocoTorre;
+  if (bloco) complementos.push('Bloco ' + bloco);
+  
+  // Tenta achar o apartamento
+  const apto = imovel.apartamento || imovel.apto || imovel.ap || imovel.unidade;
+  if (apto) complementos.push('Apto ' + apto);
+  
   if (imovel.complemento) complementos.push(imovel.complemento);
+
   const complementoStr = complementos.length ? ' — ' + complementos.join(', ') : '';
   const bairroStr = imovel.bairro ? ' — ' + imovel.bairro : '';
+  
   return (principal || 'Endereço não informado') + complementoStr + bairroStr;
 }
 
@@ -478,7 +488,6 @@ async function enviarParaWhatsApp() {
     return;
   }
 
-  // Mostra overlay de salvamento
   $('overlayLoading').classList.add('show');
   $('btnEnviar').disabled = true;
 
@@ -492,10 +501,6 @@ async function enviarParaWhatsApp() {
     observacao: obs
   });
 
-  // VERIFICAÇÃO INTELIGENTE DO ERRO:
-  // Se a API retornou erro "Link não foi gerado" ou "Solicite ao corretor",
-  // significa que o dado FOI SALVO, mas a API não gerou o link. 
-  // Ignoramos esse erro específico e seguimos para o WhatsApp.
   const erroDeLink = res.error && (
     res.error.includes('Link não foi gerado') || 
     res.error.includes('Solicite ao corretor')
@@ -508,19 +513,15 @@ async function enviarParaWhatsApp() {
     return;
   }
 
-  // Define o telefone do corretor
   let telCorretor = res.telCorretor; 
-  
-  // Se não veio da API, define baseado no nome
   if (!telCorretor) {
     if (state.nomeCorretor.includes('Carol')) {
       telCorretor = TEL_CAROL;
     } else {
-      telCorretor = TEL_HUGO; // Padrão Hugo
+      telCorretor = TEL_HUGO;
     }
   }
 
-  // Monta a mensagem
   const endereco = montarEndereco(state.imovel);
   const primeiroNomeCorretor = state.nomeCorretor.split(/\s+/)[0] || '';
 
@@ -538,14 +539,13 @@ async function enviarParaWhatsApp() {
     linhas.push('Observação: ' + obs);
   }
   linhas.push('');
-  linhas.push('Fico no aguardo para conversarmos sobre.');
+  // FRASE ALTERADA AQUI CONFORME SOLICITADO
+  linhas.push('Fico no aguardo sobre essa minha condição.');
 
   const mensagem = linhas.join('\n');
   
-  // Usa o formato api.whatsapp.com (como no seu Print 2)
   const urlWhatsapp = `https://api.whatsapp.com/send?phone=${telCorretor}&text=${encodeURIComponent(mensagem)}`;
 
-  // Redireciona
   setTimeout(() => {
     window.location.href = urlWhatsapp;
   }, 500);
